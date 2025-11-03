@@ -353,8 +353,10 @@ export function useGlobalChatPermissions(dealerId?: number): UseGlobalChatPermis
         };
       }
 
-      // Check if user is admin (bypass permission checks)
-      if (user.role === 'admin' || user.user_type === 'system_admin') {
+      // Check if user has elevated system role (bypass permission checks)
+      // UPDATED: Changed from 'admin' to 'system_admin'/'supermanager' for role system redesign
+      // Regular users (role='user') get permissions via custom roles below
+      if (user.role === 'system_admin' || user.role === 'supermanager' || user.user_type === 'system_admin') {
         return {
           canCreateDirectChats: true,
           canCreateGroups: true,
@@ -391,13 +393,15 @@ export function useGlobalChatPermissions(dealerId?: number): UseGlobalChatPermis
     refetchOnWindowFocus: false
   });
 
-  // FIX: Protect admin permissions - Never return all-false if user is system admin
-  const isSystemAdmin = user?.role === 'system_admin' ||
-                       (user as any)?.is_system_admin === true ||
-                       user?.user_type === 'system_admin';
+  // FIX: Protect elevated permissions - Never return all-false if user has elevated role
+  // UPDATED: Check for supermanager in addition to system_admin
+  const isElevatedUser = user?.role === 'system_admin' ||
+                         user?.role === 'supermanager' ||
+                         (user as any)?.is_system_admin === true ||
+                         user?.user_type === 'system_admin';
 
-  const fallbackPermissions = isSystemAdmin ? {
-    // System admins always have full permissions, even if there's an error loading
+  const fallbackPermissions = isElevatedUser ? {
+    // System admins and supermanagers always have full permissions, even if there's an error loading
     canCreateDirectChats: true,
     canCreateGroups: true,
     canCreateChannels: true,
@@ -405,7 +409,7 @@ export function useGlobalChatPermissions(dealerId?: number): UseGlobalChatPermis
     canViewAllConversations: true,
     canManageChatSettings: true
   } : {
-    // Non-admins get restricted permissions on error
+    // Regular users get restricted permissions on error
     canCreateDirectChats: false,
     canCreateGroups: false,
     canCreateChannels: false,

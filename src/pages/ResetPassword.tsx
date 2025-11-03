@@ -47,29 +47,57 @@ export default function ResetPassword() {
   useEffect(() => {
     const verifyRecoverySession = async () => {
       console.log('🔐 Verifying recovery session...');
+      console.log('🔍 URL params:', {
+        token: searchParams.get('token'),
+        token_hash: searchParams.get('token_hash'),
+        code: searchParams.get('code'),
+        type: searchParams.get('type'),
+        all: window.location.search
+      });
       
-      // Check if there's a token_hash in the URL (from email link)
-      const tokenHash = searchParams.get('token_hash') || searchParams.get('code');
+      // Supabase can send different parameter names depending on configuration
+      // Check for: token_hash (PKCE flow), token (magic link), or code (legacy)
+      const tokenHash = searchParams.get('token_hash');
+      const token = searchParams.get('token');
+      const code = searchParams.get('code');
       const type = searchParams.get('type');
       
-      if (tokenHash) {
-        console.log('📧 Recovery token found in URL, verifying with Supabase...');
+      // Use whichever parameter is present
+      const recoveryToken = tokenHash || token || code;
+      
+      if (recoveryToken) {
+        console.log('📧 Recovery token found in URL:', {
+          paramName: tokenHash ? 'token_hash' : token ? 'token' : 'code',
+          tokenPreview: recoveryToken.substring(0, 10) + '...',
+          type: type
+        });
         
         try {
-          // Verify the OTP token with Supabase
+          // Try to verify the OTP token with Supabase
+          // For password recovery, we use verifyOtp with token_hash parameter
           const { data, error } = await supabase.auth.verifyOtp({
-            token_hash: tokenHash,
-            type: (type === 'recovery' ? 'recovery' : 'email') as any,
+            token_hash: recoveryToken,
+            type: 'recovery',
           });
           
           if (error) {
-            console.error('❌ Token verification failed:', error.message);
+            console.error('❌ Token verification failed:', error);
+            console.error('Error details:', {
+              message: error.message,
+              status: error.status,
+              name: error.name
+            });
             setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));
           } else if (data.session) {
             console.log('✅ Recovery session established successfully');
+            console.log('Session details:', {
+              user: data.user?.email,
+              expiresAt: data.session.expires_at
+            });
             // Session is now established, user can proceed
           } else {
             console.error('❌ No session returned from token verification');
+            console.log('Response data:', data);
             setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));
           }
         } catch (err) {
@@ -77,9 +105,12 @@ export default function ResetPassword() {
           setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));
         }
       } else if (!session) {
-        // No code in URL and no session
+        // No token in URL and no existing session
         console.error('❌ No recovery token or session found');
+        console.log('Available URL params:', Array.from(searchParams.entries()));
         setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));
+      } else {
+        console.log('✅ Existing session found, no token needed');
       }
       
       setVerifyingSession(false);

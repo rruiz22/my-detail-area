@@ -175,4 +175,3 @@ En Supabase Dashboard → Authentication → URL Configuration, agrega:
 - Los emails se envían automáticamente por Supabase
 - El styling es consistente con el resto de la aplicación
 - Totalmente responsive y accesible (ARIA labels incluidos)
-

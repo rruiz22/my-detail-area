@@ -20,7 +20,7 @@ interface SerializedPermissions {
   email: string;
   dealership_id: number | null;
   is_system_admin: boolean;
-  is_manager: boolean;
+  is_supermanager: boolean;  // UPDATED: Renamed from is_manager for role system redesign
   system_permissions: SystemPermissionKey[];
   module_permissions: [AppModule, ModulePermissionKey[]][];
   custom_roles: any[];
@@ -28,7 +28,7 @@ interface SerializedPermissions {
   version: number;
 }
 
-const CACHE_VERSION = 1;
+const CACHE_VERSION = 2;  // INCREMENTED: Invalidates old caches after role migration
 const CACHE_KEY = 'permissions_cache_v1';
 const CACHE_TTL = 15 * 60 * 1000; // 15 minutes (increased from 5 to reduce re-fetches)
 
@@ -44,7 +44,7 @@ export function serializePermissions(user: EnhancedUserGranular): SerializedPerm
     email: user.email,
     dealership_id: user.dealership_id,
     is_system_admin: user.is_system_admin,
-    is_manager: user.is_manager,
+    is_supermanager: user.is_supermanager,  // UPDATED: Renamed from is_manager
     system_permissions: Array.from(user.system_permissions),
     module_permissions: Array.from(user.module_permissions.entries()).map(
       ([module, perms]) => [module, Array.from(perms)]
@@ -83,7 +83,7 @@ export function deserializePermissions(cached: SerializedPermissions): EnhancedU
       email: cached.email,
       dealership_id: cached.dealership_id,
       is_system_admin: cached.is_system_admin,
-      is_manager: cached.is_manager,
+      is_supermanager: cached.is_supermanager,  // UPDATED: Renamed from is_manager
       system_permissions: new Set(cached.system_permissions),
       module_permissions: new Map(
         cached.module_permissions.map(([module, perms]) => [module, new Set(perms)])

@@ -23,7 +23,7 @@ describe('Permission Serialization', () => {
     email: 'test@example.com',
     dealership_id: 1,
     is_system_admin: false,
-    is_manager: true,
+    is_supermanager: true,  // UPDATED: Renamed from is_manager for role system redesign
     system_permissions: new Set(['view_system_settings', 'manage_users']),
     module_permissions: new Map([
       ['dashboard', new Set(['view', 'edit'])],
@@ -84,7 +84,7 @@ describe('Permission Serialization', () => {
       expect(serialized.email).toBe(mockUser.email);
       expect(serialized.dealership_id).toBe(mockUser.dealership_id);
       expect(serialized.is_system_admin).toBe(mockUser.is_system_admin);
-      expect(serialized.is_manager).toBe(mockUser.is_manager);
+      expect(serialized.is_supermanager).toBe(mockUser.is_supermanager);  // UPDATED: Renamed from is_manager
       expect(serialized.custom_roles).toEqual(mockUser.custom_roles);
     });
   });

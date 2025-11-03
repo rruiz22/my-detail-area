@@ -179,6 +179,7 @@ export interface EnhancedUserGranular {
   email: string;
   dealership_id: number | null;
   is_system_admin: boolean;
+  is_supermanager: boolean;  // NEW: Elevated access but limited (cannot manage platform settings or create system_admins)
   custom_roles: GranularCustomRole[];
   // Aggregated permissions from all roles
   system_permissions: Set<SystemPermissionKey>;
