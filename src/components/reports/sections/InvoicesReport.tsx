@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -65,7 +66,7 @@ import {
   Trash2,
   X
 } from 'lucide-react';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
 
@@ -138,6 +139,14 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     dealerId: dealerId || 'all',
     searchTerm: ''
   });
+
+  // Update invoice filters when global dealer filter changes
+  useEffect(() => {
+    setInvoiceFilters(prev => ({
+      ...prev,
+      dealerId: dealerId || 'all'
+    }));
+  }, [dealerId]);
 
   // Calculate start and end of this week (Monday to Sunday) - using local dates
   const getWeekDates = (date: Date) => {
@@ -222,6 +231,10 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
   // Selected vehicles for new invoice
   const [selectedVehicleIds, setSelectedVehicleIds] = useState<Set<string>>(new Set());
+
+  // Delete confirmation dialog
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [invoiceToDelete, setInvoiceToDelete] = useState<Invoice | null>(null);
 
   // Invoice details
   const [issueDate, setIssueDate] = useState<Date>(today);
@@ -1037,13 +1050,17 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     }
   };
 
-  const handleDeleteInvoice = async (invoice: Invoice) => {
-    if (!confirm(`Are you sure you want to delete invoice ${invoice.invoiceNumber}? This action cannot be undone.`)) {
-      return;
-    }
+  const handleDeleteInvoice = (invoice: Invoice) => {
+    setInvoiceToDelete(invoice);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteInvoice = async () => {
+    if (!invoiceToDelete) return;
 
     try {
-      await deleteInvoiceMutation.mutateAsync(invoice.id);
+      await deleteInvoiceMutation.mutateAsync(invoiceToDelete.id);
+      setInvoiceToDelete(null);
     } catch (error) {
       // Error is handled in the mutation
       console.error('Error deleting invoice:', error);
@@ -1868,6 +1885,18 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title={t('invoices.delete_title')}
+        description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}
+        confirmText={t('common.action_buttons.delete')}
+        cancelText={t('common.action_buttons.cancel')}
+        onConfirm={confirmDeleteInvoice}
+        variant="destructive"
+      />
     </div>
   );
 };

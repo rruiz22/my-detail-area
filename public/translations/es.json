@@ -4457,6 +4457,8 @@
       "send_email": "Enviar Email",
       "download_pdf": "Descargar PDF",
       "view_details": "Ver Detalles",
+      "delete_title": "¿Eliminar Factura?",
+      "delete_description": "¿Estás seguro de que quieres eliminar la factura {{invoiceNumber}}? Esta acción no se puede deshacer.",
       "payment_method": {
         "cash": "Efectivo",
         "check": "Cheque",

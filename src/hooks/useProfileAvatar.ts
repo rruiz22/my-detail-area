@@ -1,5 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { compressImage, shouldCompressImage } from '@/utils/imageCompression';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -36,6 +36,7 @@ interface UploadAvatarInput {
 export function useUploadProfileAvatar() {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation({
