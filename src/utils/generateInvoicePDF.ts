@@ -87,7 +87,7 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
     secondary: '#6b7280',    // Gray-500 (labels)
     muted: '#9ca3af',        // Gray-400 (muted text)
     border: '#e5e7eb',       // Gray-200 (borders)
-    headerBg: '#6366F1',     // Indigo-500 (header background - matches print view)
+    headerBg: '#6B7280',     // Gray-500 (header background - print friendly)
     headerText: '#ffffff',   // White (header text)
     zebraStripe: '#f9fafb',  // Gray-50 (zebra stripe)
   };
@@ -129,6 +129,22 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
   }
   if (invoice.dealership?.email) {
     doc.text(`Email: ${invoice.dealership.email}`, leftCol, yPosition);
+    yPosition += 4;
+  }
+
+  // Department(s)
+  if (invoice.metadata?.departments && invoice.metadata.departments.length > 0) {
+    yPosition += 2;
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(colors.secondary);
+    doc.text('Department:', leftCol, yPosition);
+    yPosition += 4;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor('#6B7280'); // Gray-500
+    const depts = invoice.metadata.departments.map((d: string) => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
+    doc.text(depts, leftCol, yPosition);
   }
 
   // RIGHT SIDE - Invoice number and details
@@ -192,10 +208,43 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
   // Prepare table headers
   const tableHeaders = [['Date', 'Order', poRoTagHeader, 'Vehicle', 'VIN', 'Services', 'Amount']];
 
-  // Prepare table data
-  const tableData = (invoice.items || []).map(item => {
-    // Date (MM/DD)
-    const date = formatShortDate(item.createdAt);
+  // Sort items by date (ascending)
+  const sortedItems = (invoice.items || []).sort((a, b) => {
+    const dateA = a.metadata?.completed_at || a.createdAt;
+    const dateB = b.metadata?.completed_at || b.createdAt;
+    return new Date(dateA).getTime() - new Date(dateB).getTime();
+  });
+
+  // Group items by date
+  const groupedByDate: { date: string; items: any[] }[] = [];
+  let currentDate = '';
+  let currentGroup: any[] = [];
+
+  sortedItems.forEach((item, index) => {
+    const itemDate = formatShortDate(item.metadata?.completed_at || item.createdAt);
+
+    if (itemDate !== currentDate) {
+      if (currentGroup.length > 0) {
+        groupedByDate.push({ date: currentDate, items: currentGroup });
+      }
+      currentDate = itemDate;
+      currentGroup = [item];
+    } else {
+      currentGroup.push(item);
+    }
+
+    // Last group
+    if (index === sortedItems.length - 1) {
+      groupedByDate.push({ date: currentDate, items: currentGroup });
+    }
+  });
+
+  // Build table data with separators
+  const tableData: any[] = [];
+  groupedByDate.forEach((group, groupIndex) => {
+    group.items.forEach(item => {
+      // Date (MM/DD)
+      const date = formatShortDate(item.metadata?.completed_at || item.createdAt);
 
     // Order number
     const orderNumber = item.metadata?.order_number || '';
@@ -208,6 +257,8 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       if (item.metadata.ro) parts.push(item.metadata.ro);
       if (item.metadata.tag) parts.push(item.metadata.tag);
       poRoTagStock = parts.join(' | ');
+    } else if (item.metadata?.order_type === 'carwash') {
+      poRoTagStock = item.metadata?.stock_number || item.metadata?.tag || '';
     } else {
       poRoTagStock = item.metadata?.stock_number || '';
     }
@@ -224,10 +275,18 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
     // Services (service names from metadata)
     const services = item.metadata?.service_names || '';
 
-    // Amount
-    const amount = formatCurrency(item.totalAmount);
+      // Amount
+      const amount = formatCurrency(item.totalAmount);
 
-    return [date, orderNumber, poRoTagStock, vehicle, vin, services, amount];
+      tableData.push([date, orderNumber, poRoTagStock, vehicle, vin, services, amount]);
+    });
+
+    // Add separator row after each group (except last)
+    if (groupIndex < groupedByDate.length - 1) {
+      tableData.push([
+        { content: '', colSpan: 7, styles: { fillColor: '#E5E7EB', minCellHeight: 3 } }
+      ]);
+    }
   });
 
   // Generate table using autoTable

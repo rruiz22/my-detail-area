@@ -56,11 +56,15 @@ interface VehicleForInvoice {
   order_type: string;
   customer_name: string;
   stock_number: string | null;
+  po: string | null;
+  ro: string | null;
+  tag: string | null;
   vehicle_make: string | null;
   vehicle_model: string | null;
   vehicle_year: number | null;
   vehicle_vin: string | null;
   total_amount: number;
+  services: any[] | null;
   status: string;
   created_at: string;
   completed_at: string | null;
@@ -114,6 +118,29 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
     'Payment due within 30 days. Late payments may be subject to fees.'
   );
 
+  // Fetch dealer services for service name resolution
+  const { data: availableServices = [] } = useQuery({
+    queryKey: ['dealer-services', dealerId],
+    queryFn: async () => {
+      if (!dealerId) return [];
+
+      const { data, error } = await supabase
+        .from('dealer_services')
+        .select('id, name, description, price')
+        .eq('dealer_id', dealerId)
+        .eq('is_active', true)
+        .order('name');
+
+      if (error) {
+        console.error('❌ Error fetching services:', error);
+        throw error;
+      }
+
+      return data || [];
+    },
+    enabled: !!dealerId && open,
+  });
+
   // Fetch vehicles without invoices
   const { data: availableVehicles = [], isLoading: loadingVehicles } = useQuery({
     queryKey: ['vehicles-without-invoice', dealerId, orderType, startDate, endDate],
@@ -121,7 +148,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
       // Fetch orders without date filter (will filter client-side by appropriate date field)
       let query = supabase
         .from('orders')
-        .select('id, order_number, custom_order_number, order_type, customer_name, stock_number, vehicle_make, vehicle_model, vehicle_year, vehicle_vin, total_amount, services, status, created_at, completed_at, due_date')
+        .select('id, order_number, custom_order_number, order_type, customer_name, stock_number, po, ro, tag, vehicle_make, vehicle_model, vehicle_year, vehicle_vin, total_amount, services, status, created_at, completed_at, due_date')
         .eq('dealer_id', dealerId)
         .eq('status', 'completed')
         .order('created_at', { ascending: false })
@@ -274,6 +301,16 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
           invoice_notes: invoiceNotes,
           terms_and_conditions: termsAndConditions,
           status: 'pending',
+          metadata: {
+            filter_date_range: {
+              start: startDate,
+              end: endDate,
+              preset: dateRange
+            },
+            vehicle_count: selectedVehicles.length,
+            department: orderType === 'all' ? 'all' : orderType,
+            departments: [...new Set(selectedVehicles.map(v => v.order_type))]
+          }
         })
         .select()
         .single();
@@ -281,25 +318,41 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
       if (invoiceError) throw invoiceError;
 
       // Create invoice items for each vehicle
-      const items = selectedVehicles.map((vehicle, index) => ({
-        invoice_id: invoice.id,
-        item_type: 'service' as const,
-        description: `${vehicle.vehicle_year || ''} ${vehicle.vehicle_make || ''} ${vehicle.vehicle_model || ''} - ${vehicle.stock_number || 'N/A'}`.trim(),
-        quantity: 1,
-        unit_price: vehicle.total_amount || 0,
-        discount_amount: 0,
-        tax_rate: 0, // Tax is applied at invoice level
-        total_amount: vehicle.total_amount || 0,
-        service_reference: vehicle.id, // Store order ID as reference
-        sort_order: index,
-        metadata: {
-          order_number: vehicle.custom_order_number || vehicle.order_number,
-          customer_name: vehicle.customer_name,
-          vehicle_vin: vehicle.vehicle_vin,
-          stock_number: vehicle.stock_number,
-          completed_at: vehicle.completed_at,
-        },
-      }));
+      const items = selectedVehicles.map((vehicle, index) => {
+        // Extract service names from vehicle.services
+        const serviceNames = vehicle.services && Array.isArray(vehicle.services)
+          ? vehicle.services.map((service: any) => {
+              const serviceId = service.id || service.type || service;
+              const serviceName = availableServices.find(s => s.id === serviceId)?.name || serviceId;
+              return serviceName;
+            }).join(', ')
+          : 'N/A';
+
+        return {
+          invoice_id: invoice.id,
+          item_type: 'service' as const,
+          description: `${vehicle.vehicle_year || ''} ${vehicle.vehicle_make || ''} ${vehicle.vehicle_model || ''} - ${vehicle.stock_number || 'N/A'}`.trim(),
+          quantity: 1,
+          unit_price: vehicle.total_amount || 0,
+          discount_amount: 0,
+          tax_rate: 0, // Tax is applied at invoice level
+          total_amount: vehicle.total_amount || 0,
+          service_reference: vehicle.id, // Store order ID as reference
+          sort_order: index,
+          metadata: {
+            order_number: vehicle.custom_order_number || vehicle.order_number,
+            order_type: vehicle.order_type,
+            customer_name: vehicle.customer_name,
+            vehicle_vin: vehicle.vehicle_vin,
+            stock_number: vehicle.stock_number,
+            po: vehicle.po,
+            ro: vehicle.ro,
+            tag: vehicle.tag,
+            completed_at: vehicle.completed_at,
+            service_names: serviceNames,
+          },
+        };
+      });
 
       const { error: itemsError } = await supabase
         .from('invoice_items')

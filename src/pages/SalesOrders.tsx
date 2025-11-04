@@ -16,6 +16,7 @@ import { Plus, RefreshCw } from 'lucide-react';
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useDealerFilter } from '@/contexts/DealerFilterContext';
 
 // Direct imports - no lazy loading for maximum speed
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
@@ -50,6 +51,7 @@ export default function SalesOrders() {
   const [searchParams, setSearchParams] = useSearchParams();
   const orderIdFromUrl = searchParams.get('order');
   const { hasModulePermission, enhancedUser } = usePermissions();
+  const { selectedDealerId } = useDealerFilter(); // ✅ FIX: Get dealer filter for cache operations
 
   // Accessibility: Live region for screen reader announcements
   const [liveRegionMessage, setLiveRegionMessage] = useState<string>('');
@@ -269,7 +271,8 @@ export default function SalesOrders() {
       setShowModal(false);
 
       // Invalidate query cache to trigger automatic refetch (like ServiceOrders)
-      queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
+      // ✅ FIX: Include selectedDealerId in queryKey to match polling query
+      queryClient.invalidateQueries({ queryKey: ['orders', 'all', selectedDealerId] });
 
     } catch (error) {
       logError('Error saving order:', error);
@@ -282,7 +285,7 @@ export default function SalesOrders() {
       // Re-throw to let modal handle it
       throw error;
     }
-  }, [selectedOrder, updateOrder, createOrder, toast, t, queryClient]);
+  }, [selectedOrder, updateOrder, createOrder, toast, t, queryClient, selectedDealerId]);
 
   const handleStatusChange = useCallback(async (orderId: string, newStatus: string) => {
     try {
@@ -322,7 +325,8 @@ export default function SalesOrders() {
       await updateOrder(orderId, updates);
 
       // Invalidate queries for silent background update
-      queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
+      // ✅ FIX: Include selectedDealerId in queryKey to match polling query
+      queryClient.invalidateQueries({ queryKey: ['orders', 'all', selectedDealerId] });
 
       // Dispatch event to notify other components
       window.dispatchEvent(new CustomEvent('orderUpdated', {
@@ -334,7 +338,7 @@ export default function SalesOrders() {
       logError('Order update failed:', error);
       throw error;
     }
-  }, [updateOrder, queryClient]);
+  }, [updateOrder, queryClient, selectedDealerId]);
 
 
   const handleCardClick = useCallback((filter: string) => {
