@@ -82,6 +82,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
 }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { toast } = useToast();
   const { data: invoice, isLoading } = useInvoice(invoiceId);
   const deleteMutation = useDeleteInvoice();
   const deletePaymentMutation = useDeletePayment();
@@ -305,8 +306,13 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               border-bottom: 2px solid #E5E7EB;
             }
             tbody tr.date-separator td {
-              border-top: 2px solid #E5E7EB;
-              padding-top: 10px;
+              border: none;
+              background: #E5E7EB;
+              padding: 6px;
+              text-align: center;
+              font-weight: bold;
+              font-size: 8pt;
+              color: #6B7280;
             }
             .font-mono {
               font-family: 'Courier New', monospace;
@@ -430,7 +436,9 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
             <tbody>
               ${(() => {
                 let lastDate = '';
-                return sortedItems.map((item, index) => {
+                let rows = '';
+
+                sortedItems.forEach((item, index) => {
                   const po = item.metadata?.po || '';
                   const ro = item.metadata?.ro || '';
                   const tag = item.metadata?.tag || '';
@@ -449,13 +457,18 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                     ? format(parseISO(item.metadata.completed_at), 'MM/dd')
                     : format(parseISO(invoice.issueDate), 'MM/dd');
 
-                  const isNewDate = itemDate !== lastDate && index > 0;
+                  // Add separator row if date changes
+                  if (itemDate !== lastDate && index > 0) {
+                    rows += `
+                      <tr class="date-separator">
+                        <td colspan="7">${itemDate}</td>
+                      </tr>
+                    `;
+                  }
                   lastDate = itemDate;
 
-                  const rowClass = isNewDate ? 'date-separator' : '';
-
-                  return `
-                    <tr class="${rowClass}">
+                  rows += `
+                    <tr>
                       <td>${itemDate}</td>
                       <td style="font-weight: 600; white-space: nowrap;">${item.metadata?.order_number || 'N/A'}</td>
                       <td class="po-ro-tag" style="white-space: nowrap;">${poRoTag}</td>
@@ -465,7 +478,9 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                       <td class="amount-cell">${formatCurrency(item.totalAmount)}</td>
                     </tr>
                   `;
-                }).join('');
+                });
+
+                return rows;
               })()}
             </tbody>
           </table>
@@ -797,11 +812,13 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                       });
 
                       let lastDate = '';
-                      return sortedItems.map((item, index) => {
-                      const po = item.metadata?.po || '';
-                      const ro = item.metadata?.ro || '';
-                      const tag = item.metadata?.tag || '';
-                      const orderType = item.metadata?.order_type || '';
+                      const rows: JSX.Element[] = [];
+
+                      sortedItems.forEach((item, index) => {
+                        const po = item.metadata?.po || '';
+                        const ro = item.metadata?.ro || '';
+                        const tag = item.metadata?.tag || '';
+                        const orderType = item.metadata?.order_type || '';
 
                         let poRoTag = '';
                         if (orderType === 'service') {
@@ -818,13 +835,22 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                           ? format(parseISO(item.createdAt), 'MM/dd')
                           : format(parseISO(invoice.issueDate), 'MM/dd');
 
-                        const isNewDate = itemDate !== lastDate && index > 0;
+                        // Add separator row if date changes
+                        if (itemDate !== lastDate && index > 0) {
+                          rows.push(
+                            <TableRow key={`separator-${index}`} className="bg-gray-200 hover:bg-gray-200">
+                              <TableCell colSpan={7} className="text-center font-bold text-gray-600 py-2">
+                                {itemDate}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        }
                         lastDate = itemDate;
 
-                        return (
+                        rows.push(
                           <TableRow
                             key={item.id}
-                            className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50/50 transition-colors ${isNewDate ? 'border-t-2 border-gray-300' : ''}`}
+                            className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50/50 transition-colors`}
                           >
                           <TableCell className="text-sm text-center font-medium text-gray-700">
                             {item.metadata?.completed_at
@@ -854,6 +880,8 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                           </TableRow>
                         );
                       });
+
+                      return rows;
                     })()
                   ) : (
                     <TableRow>

@@ -275,7 +275,20 @@ export async function generateInvoiceExcel(invoice: InvoiceWithDetails): Promise
     }
 
     const vin = item.metadata?.vehicle_vin || 'N/A';
-    const services = item.metadata?.service_names || 'N/A';
+
+    // Services (service names from metadata, with fallback)
+    let services = item.metadata?.service_names || '';
+
+    // Fallback: try to extract from services array if service_names is empty
+    if (!services && item.metadata?.services && Array.isArray(item.metadata.services)) {
+      services = item.metadata.services.map((s: any) => {
+        if (typeof s === 'string') return s;
+        return s.name || s.service_name || s.type || s.id || 'Service';
+      }).join(', ');
+    }
+
+    // Final fallback
+    if (!services) services = item.description || 'N/A';
 
     // Set values
     row.getCell(1).value = dateStr;
@@ -319,17 +332,34 @@ export async function generateInvoiceExcel(invoice: InvoiceWithDetails): Promise
       rowIndex++;
     });
 
-    // Add separator row between groups
+    // Add separator row with date between groups
     if (groupIndex < groupedByDate.length - 1) {
+      const nextGroupDate = groupedByDate[groupIndex + 1].date;
       const separatorRow = worksheet.getRow(currentRow);
-      separatorRow.height = 4;
-      for (let col = 1; col <= 7; col++) {
-        separatorRow.getCell(col).fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: 'FFE5E7EB' } // Light gray
-        };
-      }
+      separatorRow.height = 8; // Double height (was 4)
+
+      // Merge all columns for the separator
+      worksheet.mergeCells(currentRow, 1, currentRow, 7);
+
+      // Set the date text in the merged cell
+      const dateCell = separatorRow.getCell(1);
+      dateCell.value = nextGroupDate;
+      dateCell.font = {
+        name: 'Calibri',
+        size: 9,
+        bold: true,
+        color: { argb: 'FF6B7280' } // Gray-500
+      };
+      dateCell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFE5E7EB' } // Light gray
+      };
+      dateCell.alignment = {
+        vertical: 'middle',
+        horizontal: 'center'
+      };
+
       currentRow++;
     }
   });
