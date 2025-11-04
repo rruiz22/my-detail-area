@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -38,6 +39,7 @@ export function PlatformBrandingSettings() {
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [deleteLogoDialogOpen, setDeleteLogoDialogOpen] = useState(false);
 
   // Update local state when branding loads
   useEffect(() => {
@@ -124,13 +126,12 @@ export function PlatformBrandingSettings() {
     }
   };
 
-  const handleRemoveLogo = async () => {
+  const handleRemoveLogo = () => {
     if (!logoUrl) return;
+    setDeleteLogoDialogOpen(true);
+  };
 
-    if (!confirm(t('settings.confirm_remove_logo', 'Remove logo? This will take effect when you save changes.'))) {
-      return;
-    }
-
+  const confirmRemoveLogo = async () => {
     setLogoUrl(null);
   };
 
@@ -369,6 +370,18 @@ export function PlatformBrandingSettings() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Delete Logo Confirmation Dialog */}
+      <ConfirmDialog
+        open={deleteLogoDialogOpen}
+        onOpenChange={setDeleteLogoDialogOpen}
+        title={t('settings.remove_logo_title', { defaultValue: 'Remove Logo?' })}
+        description={t('settings.confirm_remove_logo', { defaultValue: 'Remove logo? This will take effect when you save changes.' })}
+        confirmText={t('common.action_buttons.remove', { defaultValue: 'Remove' })}
+        cancelText={t('common.action_buttons.cancel')}
+        onConfirm={confirmRemoveLogo}
+        variant="destructive"
+      />
     </div>
   );
 }

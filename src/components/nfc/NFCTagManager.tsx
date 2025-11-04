@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -10,13 +11,13 @@ import { Switch } from '@/components/ui/switch';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { 
-  Plus, 
-  Radio, 
-  Car, 
-  MapPin, 
-  Edit, 
-  Trash2, 
+import {
+  Plus,
+  Radio,
+  Car,
+  MapPin,
+  Edit,
+  Trash2,
   Search,
   Filter,
   QrCode,
@@ -53,13 +54,13 @@ interface TagFormData {
 
 export function NFCTagManager({ className }: NFCTagManagerProps) {
   const { t, i18n } = useTranslation();
-  const { 
-    tags, 
-    loading, 
-    loadTags, 
-    createTag, 
-    updateTag, 
-    deleteTag 
+  const {
+    tags,
+    loading,
+    loadTags,
+    createTag,
+    updateTag,
+    deleteTag
   } = useNFCManagement();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -71,7 +72,9 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
   const [isReaderDialogOpen, setIsReaderDialogOpen] = useState(false);
   const [writingTag, setWritingTag] = useState<NFCTag | null>(null);
   const [isTemplatesDialogOpen, setIsTemplatesDialogOpen] = useState(false);
-  
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [tagToDelete, setTagToDelete] = useState<string | null>(null);
+
   const [formData, setFormData] = useState<TagFormData>({
     name: '',
     tag_uid: '',
@@ -101,12 +104,12 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
     const matchesSearch = tag.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          tag.tag_uid.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          tag.vehicle_vin?.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesType = filterType === 'all' || tag.tag_type === filterType;
-    const matchesStatus = filterStatus === 'all' || 
+    const matchesStatus = filterStatus === 'all' ||
                          (filterStatus === 'active' && tag.is_active) ||
                          (filterStatus === 'inactive' && !tag.is_active);
-    
+
     return matchesSearch && matchesType && matchesStatus;
   });
 
@@ -116,7 +119,7 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
         ...formData,
         dealer_id: 1 // This should come from auth context
       });
-      
+
       setShowCreateDialog(false);
       resetForm();
     } catch (error) {
@@ -126,7 +129,7 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
 
   const handleUpdateTag = async () => {
     if (!editingTag) return;
-    
+
     try {
       await updateTag(editingTag.id, formData);
       setEditingTag(null);
@@ -136,13 +139,18 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
     }
   };
 
-  const handleDeleteTag = async (tagId: string) => {
-    if (confirm(t('nfc_tracking.tag_manager.confirm_delete'))) {
-      try {
-        await deleteTag(tagId);
-      } catch (error) {
-        console.error('Failed to delete tag:', error);
-      }
+  const handleDeleteTag = (tagId: string) => {
+    setTagToDelete(tagId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteTag = async () => {
+    if (!tagToDelete) return;
+    try {
+      await deleteTag(tagToDelete);
+      setTagToDelete(null);
+    } catch (error) {
+      console.error('Failed to delete tag:', error);
     }
   };
 
@@ -190,7 +198,7 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
             placeholder={t('nfc_tracking.tag_manager.tag_name_placeholder')}
           />
         </div>
-        
+
         <div>
           <Label htmlFor="tag_uid">{t('nfc_tracking.tag_manager.tag_uid')}</Label>
           <div className="flex gap-2">
@@ -209,8 +217,8 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
 
       <div>
         <Label htmlFor="tag_type">{t('nfc_tracking.tag_manager.tag_type')}</Label>
-        <Select 
-          value={formData.tag_type} 
+        <Select
+          value={formData.tag_type}
           onValueChange={(value) => setFormData(prev => ({ ...prev, tag_type: value }))}
         >
           <SelectTrigger>
@@ -308,7 +316,7 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button 
+          <Button
             variant="outline"
             onClick={() => setIsTemplatesDialogOpen(true)}
             className="mr-2"
@@ -316,7 +324,7 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
             <Settings className="h-4 w-4 mr-2" />
             {t('nfc.templates.quick_create')}
           </Button>
-          <Button 
+          <Button
             variant="outline"
             onClick={() => setIsReaderDialogOpen(true)}
             className="mr-2"
@@ -413,7 +421,7 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
                       <Edit className="h-4 w-4 mr-2" />
                       {t('common.edit')}
                     </DropdownMenuItem>
-                    <DropdownMenuItem 
+                    <DropdownMenuItem
                       onClick={() => handleDeleteTag(tag.id)}
                       className="text-destructive"
                     >
@@ -466,9 +474,9 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
                 <span>{tag.scan_count} {t('nfc_tracking.tag_manager.scans')}</span>
                 <span>
                   {tag.last_scanned_at
-                    ? formatDistanceToNow(new Date(tag.last_scanned_at), { 
-                        addSuffix: true, 
-                        locale: getLocale() 
+                    ? formatDistanceToNow(new Date(tag.last_scanned_at), {
+                        addSuffix: true,
+                        locale: getLocale()
                       })
                     : t('nfc_tracking.tag_manager.never_scanned')
                   }
@@ -573,6 +581,18 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
           // Refresh tags after creating from template
           loadTags();
         }}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title={t('nfc_tracking.tag_manager.delete_title', { defaultValue: 'Delete NFC Tag?' })}
+        description={t('nfc_tracking.tag_manager.confirm_delete', { defaultValue: 'Are you sure you want to delete this NFC tag? This action cannot be undone.' })}
+        confirmText={t('common.action_buttons.delete')}
+        cancelText={t('common.action_buttons.cancel')}
+        onConfirm={confirmDeleteTag}
+        variant="destructive"
       />
     </div>
   );

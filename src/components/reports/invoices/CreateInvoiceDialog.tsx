@@ -41,6 +41,7 @@ import { AlertCircle, Calendar, Car, DollarSign, FileText, Filter, Receipt, Sear
 import React, { useState, useMemo } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDateCalculations } from '@/hooks/useDateCalculations';
 
 interface CreateInvoiceDialogProps {
   open: boolean;
@@ -63,6 +64,7 @@ interface VehicleForInvoice {
   status: string;
   created_at: string;
   completed_at: string | null;
+  due_date: string | null;
 }
 
 export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
@@ -71,85 +73,31 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
   dealerId,
 }) => {
   const { user } = useAuth();
+  const { toast } = useToast();
+  const { calculateDateRange } = useDateCalculations();
+
   const today = new Date();
   const defaultDueDate = new Date(today);
   defaultDueDate.setDate(today.getDate() + 30);
 
-  // Calculate start and end of this week (Monday to Sunday) - using local dates
-  const getWeekDates = (date: Date) => {
-    const current = new Date(date.getFullYear(), date.getMonth(), date.getDate()); // Local date only
-    const day = current.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-
-    // Calculate days to Monday
-    const daysToMonday = day === 0 ? -6 : 1 - day; // Sunday: -6, Monday: 0, Tuesday: -1, ..., Saturday: -5
-
-    const monday = new Date(current);
-    monday.setDate(current.getDate() + daysToMonday);
-
-    const sunday = new Date(monday);
-    sunday.setDate(monday.getDate() + 6); // Add 6 days to get Sunday
-
-    return { monday, sunday };
-  };
-
-  const { monday: startOfThisWeek, sunday: endOfThisWeek } = getWeekDates(new Date());
+  // Get this week's date range using platform timezone
+  const { startDate: startOfThisWeek, endDate: endOfThisWeek } = calculateDateRange('this_week');
 
   // Filters
   const [orderType, setOrderType] = useState<string>('all');
   const [dateRange, setDateRange] = useState<'today' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'last_3_months' | 'custom'>('this_week');
-  const [startDate, setStartDate] = useState<string>(format(startOfThisWeek, 'yyyy-MM-dd'));
-  const [endDate, setEndDate] = useState<string>(format(endOfThisWeek, 'yyyy-MM-dd'));
+  const [startDate, setStartDate] = useState<string>(startOfThisWeek);
+  const [endDate, setEndDate] = useState<string>(endOfThisWeek);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Handle date range preset changes
+  // Handle date range preset changes - now uses platform timezone
   const handleDateRangeChange = (value: 'today' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'last_3_months' | 'custom') => {
     setDateRange(value);
-    const now = new Date();
 
-    switch (value) {
-      case 'today':
-        setStartDate(format(now, 'yyyy-MM-dd'));
-        setEndDate(format(now, 'yyyy-MM-dd'));
-        break;
-      case 'this_week':
-        // This week: Monday to Sunday (using local dates)
-        const current = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const day = current.getDay();
-        const daysToMonday = day === 0 ? -6 : 1 - day;
-        const startOfWeek = new Date(current);
-        startOfWeek.setDate(current.getDate() + daysToMonday);
-        const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 6);
-        setStartDate(format(startOfWeek, 'yyyy-MM-dd'));
-        setEndDate(format(endOfWeek, 'yyyy-MM-dd'));
-        break;
-      case 'last_week':
-        // Last week: Monday to Sunday (using local dates)
-        const currentDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const currentDay = currentDate.getDay();
-        const daysToLastMonday = currentDay === 0 ? -13 : 1 - currentDay - 7;
-        const lastWeekStart = new Date(currentDate);
-        lastWeekStart.setDate(currentDate.getDate() + daysToLastMonday);
-        const lastWeekEnd = new Date(lastWeekStart);
-        lastWeekEnd.setDate(lastWeekStart.getDate() + 6);
-        setStartDate(format(lastWeekStart, 'yyyy-MM-dd'));
-        setEndDate(format(lastWeekEnd, 'yyyy-MM-dd'));
-        break;
-      case 'this_month':
-        setStartDate(format(new Date(now.getFullYear(), now.getMonth(), 1), 'yyyy-MM-dd'));
-        setEndDate(format(now, 'yyyy-MM-dd'));
-        break;
-      case 'last_month':
-        const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
-        setStartDate(format(lastMonth, 'yyyy-MM-dd'));
-        setEndDate(format(lastMonthEnd, 'yyyy-MM-dd'));
-        break;
-      case 'last_3_months':
-        const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 3, 1);
-        setStartDate(format(threeMonthsAgo, 'yyyy-MM-dd'));
-        setEndDate(format(now, 'yyyy-MM-dd'));
-        break;
+    if (value !== 'custom') {
+      const { startDate: start, endDate: end } = calculateDateRange(value);
+      setStartDate(start);
+      setEndDate(end);
     }
   };
 
@@ -170,35 +118,47 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
   const { data: availableVehicles = [], isLoading: loadingVehicles } = useQuery({
     queryKey: ['vehicles-without-invoice', dealerId, orderType, startDate, endDate],
     queryFn: async (): Promise<VehicleForInvoice[]> => {
+      // Fetch orders without date filter (will filter client-side by appropriate date field)
       let query = supabase
         .from('orders')
-        .select('id, order_number, custom_order_number, order_type, customer_name, stock_number, vehicle_make, vehicle_model, vehicle_year, vehicle_vin, total_amount, services, status, created_at, completed_at, updated_at')
+        .select('id, order_number, custom_order_number, order_type, customer_name, stock_number, vehicle_make, vehicle_model, vehicle_year, vehicle_vin, total_amount, services, status, created_at, completed_at, due_date')
         .eq('dealer_id', dealerId)
         .eq('status', 'completed')
-        .limit(500);
+        .order('created_at', { ascending: false })
+        .limit(1000); // Increased limit since we filter client-side
 
       // Apply order type filter
       if (orderType !== 'all') {
         query = query.eq('order_type', orderType);
       }
 
-      // Use updated_at as fallback for date filtering (handles sales/service orders)
-      if (startDate) {
-        query = query.gte('updated_at', parseISO(startDate).toISOString());
-      }
-      if (endDate) {
-        const endDateTime = parseISO(endDate);
-        endDateTime.setHours(23, 59, 59, 999);
-        query = query.lte('updated_at', endDateTime.toISOString());
-      }
-
-      // Order by updated_at
-      query = query.order('updated_at', { ascending: false });
-
       const { data: orders, error: ordersError } = await query;
 
       if (ordersError) throw ordersError;
       if (!orders) return [];
+
+      // Filter by appropriate date field based on order_type
+      // Sales/Service: use due_date, Recon/CarWash: use completed_at
+      const startDateTime = parseISO(startDate);
+      const endDateTime = parseISO(endDate);
+      endDateTime.setHours(23, 59, 59, 999);
+
+      const filteredByDate = orders.filter(order => {
+        let reportDate: Date;
+
+        if (order.order_type === 'sales' || order.order_type === 'service') {
+          // Sales and Service orders: use due_date (fallback to created_at)
+          reportDate = order.due_date ? new Date(order.due_date) : new Date(order.created_at);
+        } else if (order.order_type === 'recon' || order.order_type === 'carwash') {
+          // Recon and CarWash orders: use completed_at (fallback to created_at)
+          reportDate = order.completed_at ? new Date(order.completed_at) : new Date(order.created_at);
+        } else {
+          // Other types: fallback to created_at
+          reportDate = new Date(order.created_at);
+        }
+
+        return reportDate >= startDateTime && reportDate <= endDateTime;
+      });
 
       // Get existing invoice items to filter out already invoiced orders
       const { data: existingInvoiceItems, error: itemsError } = await supabase
@@ -216,7 +176,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
       );
 
       // Filter out orders that are already invoiced
-      const ordersWithoutInvoices = orders.filter(
+      const ordersWithoutInvoices = filteredByDate.filter(
         order => !invoicedOrderIds.has(order.id)
       );
 
@@ -381,7 +341,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
             Create Bulk Invoice
           </DialogTitle>
           <DialogDescription>
-            Select vehicles to include in the invoice
+            Select completed orders to include in the invoice
           </DialogDescription>
         </DialogHeader>
 
@@ -390,7 +350,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
           <div className="border rounded-lg p-4 mb-4 bg-white">
             <div className="flex items-center gap-2 text-sm font-semibold mb-3">
               <Filter className="h-4 w-4" />
-              Filter Vehicles
+              Filter Orders
             </div>
 
             {/* First Row: Department and Date Range Preset */}
@@ -481,22 +441,22 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Calendar className="h-3.5 w-3.5" />
                 <span>
-                  Showing vehicles from <span className="font-medium text-foreground">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className="font-medium text-foreground">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>
+                  Showing completed orders from <span className="font-medium text-foreground">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className="font-medium text-foreground">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Vehicles Table */}
+          {/* Orders Table */}
           <div className="flex-1 overflow-auto border rounded-lg">
             {loadingVehicles ? (
               <div className="flex items-center justify-center h-64">
-                <div className="text-muted-foreground">Loading vehicles...</div>
+                <div className="text-muted-foreground">Loading orders...</div>
               </div>
             ) : filteredVehicles.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-64">
                 <Car className="h-12 w-12 text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">No vehicles found</p>
+                <p className="text-muted-foreground">No orders found</p>
                 <p className="text-sm text-muted-foreground">Try adjusting your filters</p>
               </div>
             ) : (
@@ -616,7 +576,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
               <div className="border rounded-lg p-4 bg-white">
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <div className="text-xs font-medium text-muted-foreground mb-1">Selected Vehicles</div>
+                    <div className="text-xs font-medium text-muted-foreground mb-1">Selected Orders</div>
                     <div className="text-3xl font-bold">{selectedVehicleIds.size}</div>
                   </div>
                   <div>
@@ -658,7 +618,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
               type="submit"
               disabled={selectedVehicleIds.size === 0}
             >
-              Create Invoice ({selectedVehicleIds.size} vehicles)
+              Create Invoice ({selectedVehicleIds.size} orders)
             </Button>
           </DialogFooter>
         </form>

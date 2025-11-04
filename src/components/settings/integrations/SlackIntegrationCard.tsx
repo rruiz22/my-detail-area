@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
@@ -47,6 +48,7 @@ export function SlackIntegrationCard() {
   const [loading, setLoading] = useState(true);
   const [connecting, setConnecting] = useState(false);
   const [toggling, setToggling] = useState(false);
+  const [disconnectDialogOpen, setDisconnectDialogOpen] = useState(false);
 
   // Check for OAuth callback status in URL
   useEffect(() => {
@@ -208,12 +210,13 @@ export function SlackIntegrationCard() {
   };
 
   // Disconnect integration
-  const handleDisconnect = async () => {
+  const handleDisconnect = () => {
     if (!integration) return;
+    setDisconnectDialogOpen(true);
+  };
 
-    if (!confirm(t('integrations.slack.disconnect_confirm'))) {
-      return;
-    }
+  const confirmDisconnect = async () => {
+    if (!integration) return;
 
     try {
       const { error } = await supabase
@@ -273,6 +276,7 @@ export function SlackIntegrationCard() {
   }
 
   return (
+    <>
     <Card className="card-enhanced">
       <CardHeader>
         <div className="flex items-center justify-between">
@@ -453,5 +457,17 @@ export function SlackIntegrationCard() {
         )}
       </CardContent>
     </Card>
+
+    {/* Disconnect Confirmation Dialog */}
+    <ConfirmDialog
+      open={disconnectDialogOpen}
+      onOpenChange={setDisconnectDialogOpen}
+      title={t('integrations.slack.disconnect_title', { defaultValue: 'Disconnect Slack?' })}
+      description={t('integrations.slack.disconnect_confirm', { defaultValue: 'Are you sure you want to disconnect your Slack integration? This action cannot be undone.' })}
+      confirmText={t('common.action_buttons.disconnect', { defaultValue: 'Disconnect' })}
+      cancelText={t('common.action_buttons.cancel')}
+      onConfirm={confirmDisconnect}
+      variant="destructive"
+    />
   );
 }

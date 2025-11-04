@@ -353,8 +353,12 @@ export const useCreateInvoice = () => {
       return invoice;
     },
     onSuccess: () => {
+      // Invalidate all invoice-related queries to refresh lists automatically
       queryClient.invalidateQueries({ queryKey: ['invoices'] });
       queryClient.invalidateQueries({ queryKey: ['invoice-summary'] });
+      queryClient.invalidateQueries({ queryKey: ['all-vehicles-for-counts'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicles-without-invoice'] });
+      queryClient.invalidateQueries({ queryKey: ['operational-vehicles-list'] });
       toast({ description: 'Invoice created successfully' });
     },
     onError: (error: Error) => {
@@ -401,6 +405,7 @@ export const useRecordPayment = () => {
       return payment;
     },
     onSuccess: (_, variables) => {
+      // Invalidate all invoice-related queries
       queryClient.invalidateQueries({ queryKey: ['invoices'] });
       queryClient.invalidateQueries({ queryKey: ['invoice', variables.invoiceId] });
       queryClient.invalidateQueries({ queryKey: ['invoice-summary'] });
@@ -435,7 +440,9 @@ export const useSendInvoiceEmail = () => {
       return { success: true };
     },
     onSuccess: (_, variables) => {
+      // Invalidate specific invoice and list to refresh email status
       queryClient.invalidateQueries({ queryKey: ['invoice', variables.invoiceId] });
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
       toast({ description: 'Invoice sent successfully' });
     },
     onError: (error: Error) => {
@@ -471,8 +478,12 @@ export const useDeleteInvoice = () => {
       return { success: true };
     },
     onSuccess: () => {
+      // Invalidate all invoice-related queries to refresh lists and make vehicles available again
       queryClient.invalidateQueries({ queryKey: ['invoices'] });
       queryClient.invalidateQueries({ queryKey: ['invoice-summary'] });
+      queryClient.invalidateQueries({ queryKey: ['all-vehicles-for-counts'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicles-without-invoice'] });
+      queryClient.invalidateQueries({ queryKey: ['operational-vehicles-list'] });
       toast({ description: 'Invoice deleted successfully - vehicles are now available for billing' });
     },
     onError: (error: Error) => {
@@ -497,6 +508,7 @@ export const useDeletePayment = () => {
       return { success: true };
     },
     onSuccess: (_, paymentId) => {
+      // Invalidate all invoice-related queries to refresh payment status
       queryClient.invalidateQueries({ queryKey: ['invoices'] });
       queryClient.invalidateQueries({ queryKey: ['invoice'] });
       queryClient.invalidateQueries({ queryKey: ['invoice-summary'] });
