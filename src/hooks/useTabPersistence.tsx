@@ -38,7 +38,7 @@ export const TAB_CONFIGS = {
   admin_dashboard: {
     key: 'admin',
     defaultTab: 'dealerships',
-    validTabs: ['dealerships', 'users', 'reports', 'system']
+    validTabs: ['dealerships', 'users', 'system_users']
   },
   settings: {
     key: 'settings',

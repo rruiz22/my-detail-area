@@ -122,3 +122,5 @@ Por favor copia y pega aquí los resultados de las queries en `DIAGNOSE_ORDER_NU
 
 Con esa información podré crear el fix exacto para tu caso.
 
+
+

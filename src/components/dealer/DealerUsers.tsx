@@ -15,6 +15,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
@@ -87,10 +94,11 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
   const [showDeactivateDialog, setShowDeactivateDialog] = useState(false);
   const [userToToggle, setUserToToggle] = useState<DealerMembership | null>(null);
   const [isToggling, setIsToggling] = useState(false);
+  const [showArchivedModal, setShowArchivedModal] = useState(false);
 
-  // TanStack Query for users with cache and automatic refetch
+  // TanStack Query for ACTIVE users with cache and automatic refetch
   const {
-    data: users = [],
+    data: allUsers = [],
     isLoading: loading,
     error: usersError
   } = useQuery({
@@ -166,13 +174,17 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
     enabled: !!dealerId
   });
 
+  // Filter active and inactive users
+  const activeUsers = allUsers.filter(user => user.is_active);
+  const archivedUsers = allUsers.filter(user => !user.is_active);
+
   // Show error toast if query fails
   React.useEffect(() => {
     if (usersError) {
       console.error('Error fetching users:', usersError);
       toast({
         title: t('common.error'),
-        description: t('dealer.users.error_loading_users'),
+        description: t('dealer.view.users.error_loading_users'),
         variant: 'destructive'
       });
     }
@@ -221,8 +233,8 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
       toast({
         title: t('common.success'),
         description: user.is_active
-          ? t('dealer.users.user_deactivated')
-          : t('dealer.users.user_activated')
+          ? t('dealer.view.users.user_deactivated')
+          : t('dealer.view.users.user_activated')
       });
 
       console.log('✅ [DealerUsers] User status updated successfully');
@@ -232,7 +244,7 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
       console.error('💥 [DealerUsers] Error updating user status:', error);
       toast({
         title: t('common.error'),
-        description: error?.message || t('dealer.users.error_updating_status'),
+        description: error?.message || t('dealer.view.users.error_updating_status'),
         variant: 'destructive'
       });
     } finally {
@@ -335,13 +347,23 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">{t('dealer.users.title')}</h2>
-          <p className="text-muted-foreground">{t('dealer.users.description')}</p>
+          <h2 className="text-2xl font-bold">{t('dealer.view.users.title')}</h2>
+          <p className="text-muted-foreground">{t('dealer.view.users.description')}</p>
         </div>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setShowArchivedModal(true)}
+            disabled={archivedUsers.length === 0}
+          >
+            <UserX className="h-4 w-4 mr-2" />
+            {t('dealer.view.users.view_archived')} ({archivedUsers.length})
+          </Button>
         <Button onClick={() => setShowInviteModal(true)}>
           <Plus className="h-4 w-4 mr-2" />
-          {t('dealer.users.invite_user')}
+            {t('dealer.view.users.invite_user')}
         </Button>
+        </div>
       </div>
 
       {/* Users Table */}
@@ -350,26 +372,26 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('dealer.users.table.user')}</TableHead>
-                <TableHead>{t('dealer.users.table.email')}</TableHead>
-                <TableHead>{t('dealer.users.table.role')}</TableHead>
-                <TableHead>{t('dealer.users.table.status')}</TableHead>
-                <TableHead>{t('dealer.users.table.joined')}</TableHead>
+                <TableHead>{t('dealer.view.users.table.user')}</TableHead>
+                <TableHead>{t('dealer.view.users.table.email')}</TableHead>
+                <TableHead>{t('dealer.view.users.table.role')}</TableHead>
+                <TableHead>{t('dealer.view.users.table.status')}</TableHead>
+                <TableHead>{t('dealer.view.users.table.joined')}</TableHead>
                 <TableHead className="w-[70px]"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.length === 0 ? (
+              {activeUsers.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-8">
                     <div className="flex flex-col items-center space-y-2">
                       <Users className="h-8 w-8 text-muted-foreground" />
-                      <p className="text-muted-foreground">{t('dealer.users.no_users')}</p>
+                      <p className="text-muted-foreground">{t('dealer.view.users.no_active_users')}</p>
                     </div>
                   </TableCell>
                 </TableRow>
               ) : (
-                users.map((user) => (
+                activeUsers.map((user) => (
                   <TableRow key={user.id}>
                     {/* User Info */}
                     <TableCell>
@@ -403,7 +425,7 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
                         </div>
                       ) : (
                         <Badge variant="outline" className="text-xs bg-amber-500 hover:bg-amber-600 text-white border-amber-600">
-                          {t('dealer.users.no_role')}
+                          {t('dealer.view.users.no_role')}
                         </Badge>
                       )}
                     </TableCell>
@@ -437,7 +459,7 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => handleEditUserRole(user)}>
                             <Edit className="h-4 w-4 mr-2" />
-                            {t('dealer.users.edit_role')}
+                            {t('dealer.view.users.edit_role')}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => handleToggleUserStatusClick(user)}
@@ -446,12 +468,12 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
                             {user.is_active ? (
                               <>
                                 <UserX className="h-4 w-4 mr-2" />
-                                {t('dealer.users.deactivate')}
+                                {t('dealer.view.users.deactivate')}
                               </>
                             ) : (
                               <>
                                 <UserCheck className="h-4 w-4 mr-2" />
-                                {t('dealer.users.activate')}
+                                {t('dealer.view.users.activate')}
                               </>
                             )}
                           </DropdownMenuItem>
@@ -500,14 +522,31 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
       <AlertDialog open={showDeactivateDialog} onOpenChange={setShowDeactivateDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              {t('dealer.users.deactivate_user_title', { defaultValue: 'Deactivate User' })}
+            <AlertDialogTitle className="flex items-center gap-2">
+              {userToToggle?.is_active ? (
+                <>
+                  <UserX className="h-5 w-5 text-rose-600" />
+                  {t('dealer.view.users.deactivate_user_title', { defaultValue: 'Deactivate User' })}
+                </>
+              ) : (
+                <>
+                  <UserCheck className="h-5 w-5 text-emerald-600" />
+                  {t('dealer.view.users.activate_user_title', { defaultValue: 'Activate User' })}
+                </>
+              )}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              {t('dealer.users.deactivate_user_description', {
-                defaultValue: 'Are you sure you want to deactivate {{name}}? They will no longer be able to access the system.',
-                name: userToToggle ? getFullName(userToToggle) : ''
-              })}
+              {userToToggle?.is_active ? (
+                t('dealer.view.users.deactivate_user_description', {
+                  defaultValue: 'Are you sure you want to deactivate {{name}}? They will no longer be able to access the system.',
+                  name: userToToggle ? getFullName(userToToggle) : ''
+                })
+              ) : (
+                t('dealer.view.users.activate_user_description', {
+                  defaultValue: 'Are you sure you want to activate {{name}}? They will regain access to the system.',
+                  name: userToToggle ? getFullName(userToToggle) : ''
+                })
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -517,20 +556,124 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
             <AlertDialogAction
               onClick={() => userToToggle && confirmToggleUserStatus(userToToggle)}
               disabled={isToggling}
-              className="bg-rose-600 hover:bg-rose-700"
+              className={userToToggle?.is_active
+                ? "bg-rose-600 hover:bg-rose-700"
+                : "bg-emerald-600 hover:bg-emerald-700"
+              }
             >
               {isToggling ? (
                 <>
                   <span className="mr-2">⏳</span>
                   {t('common.loading')}
                 </>
+              ) : userToToggle?.is_active ? (
+                t('dealer.view.users.deactivate')
               ) : (
-                t('dealer.users.deactivate')
+                t('dealer.view.users.activate')
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Archived Users Modal */}
+      <Dialog open={showArchivedModal} onOpenChange={setShowArchivedModal}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <UserX className="h-5 w-5" />
+              {t('dealer.view.users.archived_users_title')}
+            </DialogTitle>
+            <DialogDescription>
+              {t('dealer.view.users.archived_users_description')}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            {archivedUsers.length === 0 ? (
+              <div className="text-center py-8">
+                <UserCheck className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
+                <p className="text-muted-foreground">{t('dealer.view.users.no_archived_users')}</p>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('dealer.view.users.table.user')}</TableHead>
+                    <TableHead>{t('dealer.view.users.table.email')}</TableHead>
+                    <TableHead>{t('dealer.view.users.table.role')}</TableHead>
+                    <TableHead>{t('dealer.view.users.table.joined')}</TableHead>
+                    <TableHead className="w-[100px]"></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {archivedUsers.map((user) => (
+                    <TableRow key={user.id} className="opacity-60">
+                      {/* User Info */}
+                      <TableCell>
+                        <div className="flex items-center space-x-3">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src="" />
+                            <AvatarFallback className="text-xs">
+                              {getInitials(user)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="font-medium">{getFullName(user)}</span>
+                        </div>
+                      </TableCell>
+
+                      {/* Email */}
+                      <TableCell className="text-muted-foreground">
+                        {user.profiles?.email || t('common.no_email')}
+                      </TableCell>
+
+                      {/* Roles */}
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          {user.custom_roles && user.custom_roles.length > 0 ? (
+                            user.custom_roles.map((role) => (
+                              <Badge
+                                key={role.id}
+                                variant="outline"
+                                className={getRoleBadgeClasses(role.role_name)}
+                              >
+                                {role.display_name}
+                              </Badge>
+                            ))
+                          ) : (
+                            <span className="text-sm text-muted-foreground">
+                              {t('dealer.view.users.no_role')}
+                            </span>
+                          )}
+                        </div>
+                      </TableCell>
+
+                      {/* Joined Date */}
+                      <TableCell className="text-sm text-muted-foreground">
+                        {safeFormatDateOnly(user.joined_at)}
+                      </TableCell>
+
+                      {/* Actions */}
+                      <TableCell>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleToggleUserStatusClick(user)}
+                          disabled={isToggling}
+                          className="w-full"
+                        >
+                          <UserCheck className="h-3 w-3 mr-1" />
+                          {t('dealer.view.users.activate')}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

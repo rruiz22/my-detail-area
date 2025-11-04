@@ -126,7 +126,7 @@ export async function generateReportExcel(options: ExcelExportOptions): Promise<
   }
 
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = 'My Detail Area';
+  workbook.creator = 'Dealer Detail Service LLC';
   workbook.created = new Date();
 
   // Add worksheet

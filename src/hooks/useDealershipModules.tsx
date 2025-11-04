@@ -31,7 +31,7 @@ export const useDealershipModules = (
   const refreshModules = useCallback(async () => {
     // ✅ SUPERMANAGER/SYSTEM_ADMIN FIX: If user is supermanager or system_admin,
     // they have access to ALL modules regardless of dealerId
-    if (!dealerId && (isSystemAdmin || isSupermanager)) {
+    if (isSystemAdmin || isSupermanager) {
       logger.dev('🔓 [useDealershipModules] Supermanager/System Admin - enabling ALL modules by default');
 
       // Return all modules as enabled for supermanagers/system_admins

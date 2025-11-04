@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -21,9 +21,11 @@ import { useTranslation } from 'react-i18next';
 import { formatDistanceToNow, format } from 'date-fns';
 import { es, ptBR } from 'date-fns/locale';
 import { useRecentActivity } from '@/hooks/useRecentActivity';
+import { usePermissions } from '@/hooks/usePermissions';
 
 export function RecentActivity() {
   const { t, i18n } = useTranslation();
+  const { hasPermission } = usePermissions();
   const [filter, setFilter] = useState<string>('all');
   const [showFilters, setShowFilters] = useState<boolean>(true);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -38,6 +40,19 @@ export function RecentActivity() {
     }
   };
 
+  // Map order type to permission module
+  const getPermissionModuleFromOrderType = (orderType?: string): string | null => {
+    if (!orderType) return 'sales_orders';
+    const moduleMap: Record<string, string> = {
+      'sales': 'sales_orders',
+      'service': 'service_orders',
+      'recon': 'recon_orders',
+      'car_wash': 'car_wash',
+      'carwash': 'car_wash'
+    };
+    return moduleMap[orderType] || null;
+  };
+
   // Map activity type to department
   const getDepartmentFromOrderType = (orderType?: string) => {
     if (!orderType) return 'Sales';
@@ -50,6 +65,29 @@ export function RecentActivity() {
     };
     return typeMap[orderType] || 'Sales';
   };
+
+  // Filter activities by user permissions (only show activities for modules they have access to)
+  const permissionFilteredActivities = useMemo(() => {
+    return activities.filter(activity => {
+      const module = getPermissionModuleFromOrderType(activity.order_type);
+      // If we can't determine the module, don't show it
+      if (!module) return false;
+      // Only show if user has 'view' permission for this module
+      return hasPermission(module, 'view');
+    });
+  }, [activities, hasPermission]);
+
+  // Determine which departments the user has access to (for filter badges)
+  const availableDepartments = useMemo(() => {
+    const departments = new Set<string>();
+
+    if (hasPermission('sales_orders', 'view')) departments.add('Sales');
+    if (hasPermission('service_orders', 'view')) departments.add('Service');
+    if (hasPermission('recon_orders', 'view')) departments.add('Recon');
+    if (hasPermission('car_wash', 'view')) departments.add('Car Wash');
+
+    return Array.from(departments);
+  }, [hasPermission]);
 
   // Format activity description with old/new values
   const formatActivityDescription = (activity: typeof activities[0]) => {
@@ -109,10 +147,10 @@ export function RecentActivity() {
     return value;
   };
 
-  // Filter activities by department
+  // Filter activities by department (after permission filtering)
   const filteredActivities = filter === 'all'
-    ? activities
-    : activities.filter(activity => {
+    ? permissionFilteredActivities
+    : permissionFilteredActivities.filter(activity => {
         const dept = getDepartmentFromOrderType(activity.order_type);
         return dept === filter;
       });
@@ -179,8 +217,8 @@ export function RecentActivity() {
           </div>
         </div>
 
-        {/* Filter Badges - Collapsible */}
-        {showFilters && (
+        {/* Filter Badges - Collapsible (only show departments user has access to) */}
+        {showFilters && availableDepartments.length > 0 && (
           <div className="flex flex-wrap gap-2 pt-2">
             <Badge
               variant={filter === 'all' ? 'default' : 'secondary'}
@@ -189,34 +227,42 @@ export function RecentActivity() {
             >
               {t('dashboard.activity.all')}
             </Badge>
-            <Badge
-              variant={filter === 'Sales' ? 'default' : 'secondary'}
-              className="cursor-pointer"
-              onClick={() => setFilter('Sales')}
-            >
-              {t('dashboard.departments.sales')}
-            </Badge>
-            <Badge
-              variant={filter === 'Service' ? 'default' : 'secondary'}
-              className="cursor-pointer"
-              onClick={() => setFilter('Service')}
-            >
-              {t('dashboard.departments.service')}
-            </Badge>
-            <Badge
-              variant={filter === 'Recon' ? 'default' : 'secondary'}
-              className="cursor-pointer"
-              onClick={() => setFilter('Recon')}
-            >
-              {t('dashboard.departments.recon')}
-            </Badge>
-            <Badge
-              variant={filter === 'Car Wash' ? 'default' : 'secondary'}
-              className="cursor-pointer"
-              onClick={() => setFilter('Car Wash')}
-            >
-              {t('dashboard.departments.car_wash')}
-            </Badge>
+            {availableDepartments.includes('Sales') && (
+              <Badge
+                variant={filter === 'Sales' ? 'default' : 'secondary'}
+                className="cursor-pointer"
+                onClick={() => setFilter('Sales')}
+              >
+                {t('dashboard.departments.sales')}
+              </Badge>
+            )}
+            {availableDepartments.includes('Service') && (
+              <Badge
+                variant={filter === 'Service' ? 'default' : 'secondary'}
+                className="cursor-pointer"
+                onClick={() => setFilter('Service')}
+              >
+                {t('dashboard.departments.service')}
+              </Badge>
+            )}
+            {availableDepartments.includes('Recon') && (
+              <Badge
+                variant={filter === 'Recon' ? 'default' : 'secondary'}
+                className="cursor-pointer"
+                onClick={() => setFilter('Recon')}
+              >
+                {t('dashboard.departments.recon')}
+              </Badge>
+            )}
+            {availableDepartments.includes('Car Wash') && (
+              <Badge
+                variant={filter === 'Car Wash' ? 'default' : 'secondary'}
+                className="cursor-pointer"
+                onClick={() => setFilter('Car Wash')}
+              >
+                {t('dashboard.departments.car_wash')}
+              </Badge>
+            )}
           </div>
         )}
       </CardHeader>

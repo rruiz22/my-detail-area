@@ -9,6 +9,7 @@ import { format } from 'date-fns';
 import { CalendarIcon, Filter, X } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getSystemTimezone } from '@/utils/dateUtils';
 
 interface ReportFiltersProps {
   filters: ReportsFilters;
@@ -100,9 +101,11 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
     fetchServices();
   }, [filters.dealerId, filters.orderType]);
 
-  // Helper function to get week dates (Monday to Sunday)
+  // Helper function to get week dates (Monday to Sunday) in system timezone
   const getWeekDates = (date: Date) => {
-    const current = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const timezone = getSystemTimezone();
+    const dateInTimezone = new Date(date.toLocaleString('en-US', { timeZone: timezone }));
+    const current = new Date(dateInTimezone.getFullYear(), dateInTimezone.getMonth(), dateInTimezone.getDate());
     const day = current.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 
     // Calculate days to Monday
@@ -189,8 +192,10 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
   ];
 
   const handleQuickDateRange = (rangeType: DateRangeType) => {
+    const timezone = getSystemTimezone();
     const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const todayInTimezone = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
+    const today = new Date(todayInTimezone.getFullYear(), todayInTimezone.getMonth(), todayInTimezone.getDate());
     let startDate: Date;
     let endDate: Date;
 

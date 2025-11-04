@@ -94,6 +94,7 @@ export interface SmartNotification {
   data: NotificationData | null;
   status: 'pending' | 'sent' | 'delivered' | 'failed' | 'read';
   priority: 'low' | 'normal' | 'high' | 'urgent';
+  is_read?: boolean;  // ✅ Campo que existe en notification_log
   created_at: string;
   read_at?: string;
 }
@@ -160,7 +161,7 @@ export function transformSmartNotificationToUnified(
     title: notification.title,
     message: notification.message,
     priority: notification.priority as UnifiedNotificationPriority,
-    is_read: notification.status === 'read',
+    is_read: notification.is_read ?? false,  // ✅ FIX: Usar is_read directamente, no derivar de status
     is_dismissed: false, // notification_log doesn't have dismissed state
     created_at: notification.created_at,
     read_at: notification.read_at || null,

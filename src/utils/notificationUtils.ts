@@ -34,6 +34,22 @@ export async function playNotificationSound(
   priority: 'low' | 'normal' | 'high' | 'urgent' = 'normal'
 ): Promise<void> {
   try {
+    // ✅ Check user preferences first
+    const prefs = getSoundPreferences();
+
+    // Exit if sound globally disabled
+    if (!prefs.enabled) {
+      console.log('[NotificationUtils] Sound disabled by user preference');
+      return;
+    }
+
+    // Exit if sound disabled for this priority level
+    const priorityKey = `playFor${priority.charAt(0).toUpperCase() + priority.slice(1)}` as keyof typeof prefs;
+    if (!prefs[priorityKey]) {
+      console.log(`[NotificationUtils] Sound disabled for priority: ${priority}`);
+      return;
+    }
+
     // Check for Web Audio API support
     if (typeof window === 'undefined' || !window.AudioContext) {
       console.warn('[NotificationUtils] Web Audio API not supported');
@@ -54,10 +70,10 @@ export async function playNotificationSound(
       audioContext.currentTime
     );
 
-    // Configure volume based on priority
+    // ✅ Configure volume based on user preference AND priority
     const volumeMultiplier = priority === 'urgent' || priority === 'high' ? 1.2 : 1.0;
     const finalVolume = Math.min(
-      NOTIFICATION_SOUND_CONFIG.volume * volumeMultiplier,
+      prefs.volume * volumeMultiplier,  // ✅ Use user's volume setting
       0.5 // cap at 50% to avoid being too loud
     );
 
@@ -204,4 +220,34 @@ export async function requestNotificationPermission(): Promise<NotificationPermi
     console.error('[NotificationUtils] Error requesting notification permission:', error);
     return 'denied';
   }
+}
+
+/**
+ * Get notification sound preferences from localStorage
+ * Used by playNotificationSound to check user preferences
+ *
+ * @returns Sound preferences object
+ */
+function getSoundPreferences() {
+  const STORAGE_KEY = 'mda_notification_sound_preferences';
+  const DEFAULT_PREFERENCES = {
+    enabled: true,
+    volume: 0.3,
+    playForUrgent: true,
+    playForHigh: true,
+    playForNormal: false,
+    playForLow: false,
+  };
+
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return { ...DEFAULT_PREFERENCES, ...parsed };
+    }
+  } catch (error) {
+    console.error('[getSoundPreferences] Error loading preferences:', error);
+  }
+
+  return DEFAULT_PREFERENCES;
 }

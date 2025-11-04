@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 802,
-  "totalStrings": 7747,
-  "hardcodedStrings": 1917,
-  "translatedStrings": 5830,
+  "scannedFiles": 812,
+  "totalStrings": 7787,
+  "hardcodedStrings": 1935,
+  "translatedStrings": 5852,
   "issues": {
     "critical": [
       {
@@ -10,309 +10,325 @@
         "hardcodedStrings": [
           {
             "text": "Sender",
-            "line": 321,
-            "context": "320: <Building2 className=\"h-4 w-4\" />\n321: <span className=\"hidden sm:inline\">Sender</span>\n322: </TabsTrigger>"
+            "line": 324,
+            "context": "323: <Building2 className=\"h-4 w-4\" />\n324: <span className=\"hidden sm:inline\">Sender</span>\n325: </TabsTrigger>"
           },
           {
             "text": "Sender Information",
-            "line": 506,
-            "context": "505: <CardTitle className=\"flex items-center gap-2\">\n506: <Building2 className=\"h-5 w-5\" />\n507: Sender Information"
+            "line": 527,
+            "context": "526: <CardTitle className=\"flex items-center gap-2\">\n527: <Building2 className=\"h-5 w-5\" />\n528: Sender Information"
           },
           {
             "text": "Configure your company information that will appear on all exported reports for all dealerships in the system",
-            "line": 509,
-            "context": "508: </CardTitle>\n509: <CardDescription className=\"mt-1.5\">\n510: Configure your company information that will appear on all exported reports for all dealerships in the system"
+            "line": 530,
+            "context": "529: </CardTitle>\n530: <CardDescription className=\"mt-1.5\">\n531: Configure your company information that will appear on all exported reports for all dealerships in the system"
           },
           {
             "text": "Global Settings",
-            "line": 513,
-            "context": "512: </div>\n513: <Badge variant=\"secondary\" className=\"ml-4\">Global Settings</Badge>\n514: </div>"
+            "line": 534,
+            "context": "533: </div>\n534: <Badge variant=\"secondary\" className=\"ml-4\">Global Settings</Badge>\n535: </div>"
           },
           {
             "text": "Company Name",
-            "line": 519,
-            "context": "518: <div className=\"space-y-2\">\n519: <Label htmlFor=\"company_name\">Company Name</Label>\n520: <Input"
+            "line": 540,
+            "context": "539: <div className=\"space-y-2\">\n540: <Label htmlFor=\"company_name\">Company Name</Label>\n541: <Input"
           },
           {
             "text": "Address",
-            "line": 531,
-            "context": "530: <div className=\"space-y-2\">\n531: <Label htmlFor=\"address\">Address</Label>\n532: <Input"
+            "line": 552,
+            "context": "551: <div className=\"space-y-2\">\n552: <Label htmlFor=\"address\">Address</Label>\n553: <Input"
           },
           {
             "text": "City",
-            "line": 543,
-            "context": "542: <div className=\"space-y-2\">\n543: <Label htmlFor=\"city\">City</Label>\n544: <Input"
+            "line": 564,
+            "context": "563: <div className=\"space-y-2\">\n564: <Label htmlFor=\"city\">City</Label>\n565: <Input"
           },
           {
             "text": "State",
-            "line": 552,
-            "context": "551: <div className=\"space-y-2\">\n552: <Label htmlFor=\"state\">State</Label>\n553: <Input"
+            "line": 573,
+            "context": "572: <div className=\"space-y-2\">\n573: <Label htmlFor=\"state\">State</Label>\n574: <Input"
           },
           {
             "text": "Zip Code",
-            "line": 561,
-            "context": "560: <div className=\"space-y-2\">\n561: <Label htmlFor=\"zip_code\">Zip Code</Label>\n562: <Input"
+            "line": 582,
+            "context": "581: <div className=\"space-y-2\">\n582: <Label htmlFor=\"zip_code\">Zip Code</Label>\n583: <Input"
           },
           {
             "text": "Phone",
-            "line": 574,
-            "context": "573: <div className=\"space-y-2\">\n574: <Label htmlFor=\"phone\">Phone</Label>\n575: <Input"
+            "line": 595,
+            "context": "594: <div className=\"space-y-2\">\n595: <Label htmlFor=\"phone\">Phone</Label>\n596: <Input"
           },
           {
             "text": "Email",
-            "line": 584,
-            "context": "583: <div className=\"space-y-2\">\n584: <Label htmlFor=\"email\">Email</Label>\n585: <Input"
+            "line": 605,
+            "context": "604: <div className=\"space-y-2\">\n605: <Label htmlFor=\"email\">Email</Label>\n606: <Input"
           },
           {
             "text": "Website",
-            "line": 597,
-            "context": "596: <div className=\"space-y-2\">\n597: <Label htmlFor=\"website\">Website</Label>\n598: <Input"
+            "line": 618,
+            "context": "617: <div className=\"space-y-2\">\n618: <Label htmlFor=\"website\">Website</Label>\n619: <Input"
           },
           {
             "text": "Global Configuration",
-            "line": 616,
-            "context": "615: <div className=\"flex-1\">\n616: <p className=\"text-sm font-medium text-blue-900 mb-1\">\n617: Global Configuration"
+            "line": 637,
+            "context": "636: <div className=\"flex-1\">\n637: <p className=\"text-sm font-medium text-blue-900 mb-1\">\n638: Global Configuration"
           },
           {
             "text": "Save Sender Information",
-            "line": 626,
-            "context": "625: <Button onClick={saveSenderInfo} disabled={saving} size=\"lg\">\n626: <Save className=\"h-4 w-4 mr-2\" />\n627: Save Sender Information"
+            "line": 647,
+            "context": "646: <Button onClick={saveSenderInfo} disabled={saving} size=\"lg\">\n647: <Save className=\"h-4 w-4 mr-2\" />\n648: Save Sender Information"
           },
           {
             "text": "Dev Only",
-            "line": 656,
-            "context": "655: 🛠️ Storage Development Tools\n656: <Badge variant=\"outline\" className=\"text-xs\">Dev Only</Badge>\n657: </summary>"
+            "line": 677,
+            "context": "676: 🛠️ Storage Development Tools\n677: <Badge variant=\"outline\" className=\"text-xs\">Dev Only</Badge>\n678: </summary>"
           },
           {
             "text": "Dealer Detail Service",
-            "line": 524,
-            "context": "523: onChange={(e) => setSenderInfo({ ...senderInfo, company_name: e.target.value })}\n524: placeholder=\"Dealer Detail Service\"\n525: className=\"font-medium\""
+            "line": 545,
+            "context": "544: onChange={(e) => setSenderInfo({ ...senderInfo, company_name: e.target.value })}\n545: placeholder=\"Dealer Detail Service\"\n546: className=\"font-medium\""
           },
           {
             "text": "Miami",
-            "line": 548,
-            "context": "547: onChange={(e) => setSenderInfo({ ...senderInfo, city: e.target.value })}\n548: placeholder=\"Miami\"\n549: />"
+            "line": 569,
+            "context": "568: onChange={(e) => setSenderInfo({ ...senderInfo, city: e.target.value })}\n569: placeholder=\"Miami\"\n570: />"
           },
           {
             "text": "Company Name",
-            "line": 519,
-            "context": "518: <div className=\"space-y-2\">\n519: <Label htmlFor=\"company_name\">Company Name</Label>\n520: <Input"
+            "line": 540,
+            "context": "539: <div className=\"space-y-2\">\n540: <Label htmlFor=\"company_name\">Company Name</Label>\n541: <Input"
           },
           {
             "text": "Address",
-            "line": 531,
-            "context": "530: <div className=\"space-y-2\">\n531: <Label htmlFor=\"address\">Address</Label>\n532: <Input"
+            "line": 552,
+            "context": "551: <div className=\"space-y-2\">\n552: <Label htmlFor=\"address\">Address</Label>\n553: <Input"
           },
           {
             "text": "City",
-            "line": 543,
-            "context": "542: <div className=\"space-y-2\">\n543: <Label htmlFor=\"city\">City</Label>\n544: <Input"
+            "line": 564,
+            "context": "563: <div className=\"space-y-2\">\n564: <Label htmlFor=\"city\">City</Label>\n565: <Input"
           },
           {
             "text": "State",
-            "line": 552,
-            "context": "551: <div className=\"space-y-2\">\n552: <Label htmlFor=\"state\">State</Label>\n553: <Input"
+            "line": 573,
+            "context": "572: <div className=\"space-y-2\">\n573: <Label htmlFor=\"state\">State</Label>\n574: <Input"
           },
           {
             "text": "Zip Code",
-            "line": 561,
-            "context": "560: <div className=\"space-y-2\">\n561: <Label htmlFor=\"zip_code\">Zip Code</Label>\n562: <Input"
+            "line": 582,
+            "context": "581: <div className=\"space-y-2\">\n582: <Label htmlFor=\"zip_code\">Zip Code</Label>\n583: <Input"
           },
           {
             "text": "Phone",
-            "line": 574,
-            "context": "573: <div className=\"space-y-2\">\n574: <Label htmlFor=\"phone\">Phone</Label>\n575: <Input"
+            "line": 595,
+            "context": "594: <div className=\"space-y-2\">\n595: <Label htmlFor=\"phone\">Phone</Label>\n596: <Input"
           },
           {
             "text": "Email",
-            "line": 584,
-            "context": "583: <div className=\"space-y-2\">\n584: <Label htmlFor=\"email\">Email</Label>\n585: <Input"
+            "line": 605,
+            "context": "604: <div className=\"space-y-2\">\n605: <Label htmlFor=\"email\">Email</Label>\n606: <Input"
           },
           {
             "text": "Website",
-            "line": 597,
-            "context": "596: <div className=\"space-y-2\">\n597: <Label htmlFor=\"website\">Website</Label>\n598: <Input"
+            "line": 618,
+            "context": "617: <div className=\"space-y-2\">\n618: <Label htmlFor=\"website\">Website</Label>\n619: <Input"
           },
           {
             "text": ", error);\n      toast({\n        title: t(",
-            "line": 241,
-            "context": "240: } catch (error) {\n241: console.error('Error saving sender info:', error);\n242: toast({"
+            "line": 244,
+            "context": "243: } catch (error) {\n244: console.error('Error saving sender info:', error);\n245: toast({"
           }
         ],
         "translationCalls": [
           {
             "key": "common.success",
-            "line": 200,
+            "line": 203,
             "exists": true
           },
           {
             "key": "settings.preferences_saved",
-            "line": 201,
+            "line": 204,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 207,
+            "line": 210,
             "exists": true
           },
           {
             "key": "settings.save_error",
-            "line": 208,
+            "line": 211,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 233,
+            "line": 236,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 243,
+            "line": 246,
             "exists": true
           },
           {
             "key": "settings.title",
-            "line": 298,
+            "line": 301,
             "exists": true
           },
           {
             "key": "settings.description",
-            "line": 299,
+            "line": 302,
             "exists": true
           },
           {
             "key": "settings.platform",
-            "line": 308,
+            "line": 311,
             "exists": true
           },
           {
             "key": "settings.profile",
-            "line": 313,
+            "line": 316,
             "exists": true
           },
           {
             "key": "settings.notifications",
-            "line": 317,
+            "line": 320,
             "exists": true
           },
           {
             "key": "settings.integrations",
-            "line": 325,
+            "line": 328,
             "exists": true
           },
           {
             "key": "settings.security",
-            "line": 330,
+            "line": 333,
             "exists": true
           },
           {
             "key": "settings.branding",
-            "line": 343,
+            "line": 346,
             "exists": true
           },
           {
             "key": "settings.general",
-            "line": 347,
+            "line": 350,
+            "exists": true
+          },
+          {
+            "key": "settings.notification_sound.title",
+            "line": 355,
+            "exists": false
+          },
+          {
+            "key": "settings.admin_only",
+            "line": 374,
             "exists": true
           },
           {
             "key": "settings.profile_settings",
-            "line": 368,
+            "line": 389,
             "exists": true
           },
           {
             "key": "settings.profile_description",
-            "line": 371,
+            "line": 392,
             "exists": true
           },
           {
             "key": "settings.current_user",
-            "line": 377,
+            "line": 398,
             "exists": true
           },
           {
             "key": "settings.role",
-            "line": 380,
+            "line": 401,
             "exists": true
           },
           {
             "key": "settings.user_type",
-            "line": 384,
+            "line": 405,
             "exists": true
           },
           {
             "key": "settings.dealership",
-            "line": 387,
-            "exists": true
-          },
-          {
-            "key": "settings.dealership_id",
-            "line": 391,
-            "exists": true
-          },
-          {
-            "key": "settings.preferences",
             "line": 408,
             "exists": true
           },
           {
+            "key": "settings.dealership_id",
+            "line": 412,
+            "exists": true
+          },
+          {
+            "key": "settings.preferences",
+            "line": 429,
+            "exists": true
+          },
+          {
             "key": "settings.templates",
-            "line": 413,
+            "line": 434,
             "exists": true
           },
           {
             "key": "settings.notification_preferences",
-            "line": 427,
+            "line": 448,
             "exists": true
           },
           {
             "key": "settings.notification_description",
-            "line": 430,
-            "exists": true
-          },
-          {
-            "key": "settings.email_notifications",
-            "line": 436,
-            "exists": true
-          },
-          {
-            "key": "settings.email_alerts_description",
-            "line": 438,
-            "exists": true
-          },
-          {
-            "key": "settings.sms_notifications",
-            "line": 449,
-            "exists": true
-          },
-          {
-            "key": "settings.sms_alerts_description",
             "line": 451,
             "exists": true
           },
           {
+            "key": "settings.email_notifications",
+            "line": 457,
+            "exists": true
+          },
+          {
+            "key": "settings.email_alerts_description",
+            "line": 459,
+            "exists": true
+          },
+          {
+            "key": "settings.sms_notifications",
+            "line": 470,
+            "exists": true
+          },
+          {
+            "key": "settings.sms_alerts_description",
+            "line": 472,
+            "exists": true
+          },
+          {
             "key": "settings.in_app_alerts",
-            "line": 462,
+            "line": 483,
             "exists": true
           },
           {
             "key": "settings.toast_description",
-            "line": 464,
+            "line": 485,
             "exists": true
           },
           {
             "key": "settings.save_preferences",
-            "line": 476,
+            "line": 497,
             "exists": true
           },
           {
             "key": "notifications.preferences",
-            "line": 484,
+            "line": 505,
             "exists": true
           }
         ],
-        "missingKeys": [],
-        "coverage": 57,
+        "missingKeys": [
+          {
+            "key": "settings.notification_sound.title",
+            "line": 355,
+            "context": "354: <Volume2 className=\"h-4 w-4\" />\n355: {t('settings.notification_sound.title')}\n356: </TabsTrigger>"
+          }
+        ],
+        "coverage": 58,
         "severity": "critical"
       },
       {
@@ -2265,209 +2281,209 @@
         "hardcodedStrings": [
           {
             "text": "Financial Performance Overview",
-            "line": 713,
-            "context": "712: <CardHeader className=\"pb-3\">\n713: <CardTitle className=\"text-xl\">Financial Performance Overview</CardTitle>\n714: <CardDescription className=\"mt-1\">"
+            "line": 777,
+            "context": "776: <CardHeader className=\"pb-3\">\n777: <CardTitle className=\"text-xl\">Financial Performance Overview</CardTitle>\n778: <CardDescription className=\"mt-1\">"
           },
           {
             "text": "Revenue insights and financial metrics",
-            "line": 714,
-            "context": "713: <CardTitle className=\"text-xl\">Financial Performance Overview</CardTitle>\n714: <CardDescription className=\"mt-1\">\n715: Revenue insights and financial metrics"
+            "line": 778,
+            "context": "777: <CardTitle className=\"text-xl\">Financial Performance Overview</CardTitle>\n778: <CardDescription className=\"mt-1\">\n779: Revenue insights and financial metrics"
           },
           {
             "text": "Total Revenue",
-            "line": 722,
-            "context": "721: <div className=\"flex items-center justify-between\">\n722: <span className=\"text-sm font-medium text-muted-foreground\">Total Revenue</span>\n723: <DollarSign className=\"h-4 w-4 text-muted-foreground\" />"
-          },
-          {
-            "text": "Avg per Week",
-            "line": 743,
-            "context": "742: <div className=\"flex items-center justify-between\">\n743: <span className=\"text-sm font-medium text-muted-foreground\">Avg per Week</span>\n744: <BarChart3 className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 786,
+            "context": "785: <div className=\"flex items-center justify-between\">\n786: <span className=\"text-sm font-medium text-muted-foreground\">Total Revenue</span>\n787: <DollarSign className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Total Orders",
-            "line": 764,
-            "context": "763: <div className=\"flex items-center justify-between\">\n764: <span className=\"text-sm font-medium text-muted-foreground\">Total Orders</span>\n765: <Target className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 830,
+            "context": "829: <div className=\"flex items-center justify-between\">\n830: <span className=\"text-sm font-medium text-muted-foreground\">Total Orders</span>\n831: <Target className=\"h-4 w-4 text-muted-foreground\" />"
+          },
+          {
+            "text": "Total by Departments",
+            "line": 880,
+            "context": "879: <div className=\"flex items-center justify-between\">\n880: <span className=\"text-sm font-medium text-indigo-700\">Total by Departments</span>\n881: <DollarSign className=\"h-4 w-4 text-indigo-600\" />"
           },
           {
             "text": "By Department",
-            "line": 817,
-            "context": "816: <TabsList className=\"grid w-full grid-cols-4\">\n817: <TabsTrigger value=\"departments\">By Department</TabsTrigger>\n818: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>"
+            "line": 895,
+            "context": "894: <TabsList className=\"grid w-full grid-cols-4\">\n895: <TabsTrigger value=\"departments\">By Department</TabsTrigger>\n896: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>"
           },
           {
             "text": "Revenue Trends",
-            "line": 818,
-            "context": "817: <TabsTrigger value=\"departments\">By Department</TabsTrigger>\n818: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>\n819: <TabsTrigger value=\"services\">Top Services</TabsTrigger>"
+            "line": 896,
+            "context": "895: <TabsTrigger value=\"departments\">By Department</TabsTrigger>\n896: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>\n897: <TabsTrigger value=\"services\">Top Services</TabsTrigger>"
           },
           {
             "text": "Top Services",
-            "line": 819,
-            "context": "818: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>\n819: <TabsTrigger value=\"services\">Top Services</TabsTrigger>\n820: <TabsTrigger value=\"analysis\">Detailed Analysis</TabsTrigger>"
+            "line": 897,
+            "context": "896: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>\n897: <TabsTrigger value=\"services\">Top Services</TabsTrigger>\n898: <TabsTrigger value=\"analysis\">Detailed Analysis</TabsTrigger>"
           },
           {
             "text": "Detailed Analysis",
-            "line": 820,
-            "context": "819: <TabsTrigger value=\"services\">Top Services</TabsTrigger>\n820: <TabsTrigger value=\"analysis\">Detailed Analysis</TabsTrigger>\n821: </TabsList>"
+            "line": 898,
+            "context": "897: <TabsTrigger value=\"services\">Top Services</TabsTrigger>\n898: <TabsTrigger value=\"analysis\">Detailed Analysis</TabsTrigger>\n899: </TabsList>"
           },
           {
             "text": "Revenue by Department",
-            "line": 885,
-            "context": "884: <CardHeader>\n885: <CardTitle>Revenue by Department</CardTitle>\n886: <CardDescription>"
+            "line": 963,
+            "context": "962: <CardHeader>\n963: <CardTitle>Revenue by Department</CardTitle>\n964: <CardDescription>"
           },
           {
             "text": "Total revenue generated per department",
-            "line": 886,
-            "context": "885: <CardTitle>Revenue by Department</CardTitle>\n886: <CardDescription>\n887: Total revenue generated per department"
+            "line": 964,
+            "context": "963: <CardTitle>Revenue by Department</CardTitle>\n964: <CardDescription>\n965: Total revenue generated per department"
           },
           {
             "text": "No department data available",
-            "line": 929,
-            "context": "928: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n929: <p>No department data available</p>\n930: </div>"
+            "line": 1007,
+            "context": "1006: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1007: <p>No department data available</p>\n1008: </div>"
           },
           {
             "text": "Average Order Value by Department",
-            "line": 937,
-            "context": "936: <CardHeader>\n937: <CardTitle>Average Order Value by Department</CardTitle>\n938: <CardDescription>"
+            "line": 1015,
+            "context": "1014: <CardHeader>\n1015: <CardTitle>Average Order Value by Department</CardTitle>\n1016: <CardDescription>"
           },
           {
             "text": "Compare average transaction values across departments",
-            "line": 938,
-            "context": "937: <CardTitle>Average Order Value by Department</CardTitle>\n938: <CardDescription>\n939: Compare average transaction values across departments"
+            "line": 1016,
+            "context": "1015: <CardTitle>Average Order Value by Department</CardTitle>\n1016: <CardDescription>\n1017: Compare average transaction values across departments"
           },
           {
             "text": "No department data available",
-            "line": 981,
-            "context": "980: <Target className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n981: <p>No department data available</p>\n982: </div>"
+            "line": 1059,
+            "context": "1058: <Target className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1059: <p>No department data available</p>\n1060: </div>"
           },
           {
             "text": "Department Performance Summary",
-            "line": 991,
-            "context": "990: <CardHeader className=\"bg-slate-50 border-b\">\n991: <CardTitle>Department Performance Summary</CardTitle>\n992: <CardDescription>"
+            "line": 1069,
+            "context": "1068: <CardHeader className=\"bg-slate-50 border-b\">\n1069: <CardTitle>Department Performance Summary</CardTitle>\n1070: <CardDescription>"
           },
           {
             "text": "Detailed metrics for each department",
-            "line": 992,
-            "context": "991: <CardTitle>Department Performance Summary</CardTitle>\n992: <CardDescription>\n993: Detailed metrics for each department"
+            "line": 1070,
+            "context": "1069: <CardTitle>Department Performance Summary</CardTitle>\n1070: <CardDescription>\n1071: Detailed metrics for each department"
           },
           {
             "text": "Department",
-            "line": 1006,
-            "context": "1005: <tr>\n1006: <th className=\"text-left px-6 py-4 text-sm font-bold text-slate-700\">Department</th>\n1007: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>"
+            "line": 1084,
+            "context": "1083: <tr>\n1084: <th className=\"text-left px-6 py-4 text-sm font-bold text-slate-700\">Department</th>\n1085: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>"
           },
           {
             "text": "Total Revenue",
-            "line": 1007,
-            "context": "1006: <th className=\"text-left px-6 py-4 text-sm font-bold text-slate-700\">Department</th>\n1007: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>\n1008: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>"
+            "line": 1085,
+            "context": "1084: <th className=\"text-left px-6 py-4 text-sm font-bold text-slate-700\">Department</th>\n1085: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>\n1086: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>"
           },
           {
             "text": "Orders",
-            "line": 1008,
-            "context": "1007: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>\n1008: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>\n1009: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>"
+            "line": 1086,
+            "context": "1085: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>\n1086: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>\n1087: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>"
           },
           {
             "text": "Avg Order Value",
-            "line": 1009,
-            "context": "1008: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>\n1009: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>\n1010: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Completion Rate</th>"
+            "line": 1087,
+            "context": "1086: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>\n1087: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>\n1088: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Completion Rate</th>"
           },
           {
             "text": "Completion Rate",
-            "line": 1010,
-            "context": "1009: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>\n1010: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Completion Rate</th>\n1011: </tr>"
+            "line": 1088,
+            "context": "1087: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>\n1088: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Completion Rate</th>\n1089: </tr>"
           },
           {
             "text": "No department data available",
-            "line": 1043,
-            "context": "1042: <BarChart3 className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1043: <p className=\"text-muted-foreground\">No department data available</p>\n1044: </div>"
+            "line": 1121,
+            "context": "1120: <BarChart3 className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1121: <p className=\"text-muted-foreground\">No department data available</p>\n1122: </div>"
           },
           {
             "text": "Revenue Performance Over Time",
-            "line": 1053,
-            "context": "1052: <CardHeader>\n1053: <CardTitle>Revenue Performance Over Time</CardTitle>\n1054: <CardDescription>"
+            "line": 1131,
+            "context": "1130: <CardHeader>\n1131: <CardTitle>Revenue Performance Over Time</CardTitle>\n1132: <CardDescription>"
           },
           {
             "text": "Monthly revenue trends with order volume correlation",
-            "line": 1054,
-            "context": "1053: <CardTitle>Revenue Performance Over Time</CardTitle>\n1054: <CardDescription>\n1055: Monthly revenue trends with order volume correlation"
+            "line": 1132,
+            "context": "1131: <CardTitle>Revenue Performance Over Time</CardTitle>\n1132: <CardDescription>\n1133: Monthly revenue trends with order volume correlation"
           },
           {
             "text": "No revenue data available",
-            "line": 1116,
-            "context": "1115: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1116: <p>No revenue data available</p>\n1117: </div>"
+            "line": 1194,
+            "context": "1193: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1194: <p>No revenue data available</p>\n1195: </div>"
           },
           {
             "text": "Top Revenue Generators",
-            "line": 1127,
-            "context": "1126: <CardHeader>\n1127: <CardTitle>Top Revenue Generators</CardTitle>\n1128: <CardDescription>"
+            "line": 1205,
+            "context": "1204: <CardHeader>\n1205: <CardTitle>Top Revenue Generators</CardTitle>\n1206: <CardDescription>"
           },
           {
             "text": "Services ranked by total revenue contribution",
-            "line": 1128,
-            "context": "1127: <CardTitle>Top Revenue Generators</CardTitle>\n1128: <CardDescription>\n1129: Services ranked by total revenue contribution"
+            "line": 1206,
+            "context": "1205: <CardTitle>Top Revenue Generators</CardTitle>\n1206: <CardDescription>\n1207: Services ranked by total revenue contribution"
           },
           {
             "text": "No service data available",
-            "line": 1172,
-            "context": "1171: <PieChart className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1172: <p>No service data available</p>\n1173: </div>"
+            "line": 1250,
+            "context": "1249: <PieChart className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1250: <p>No service data available</p>\n1251: </div>"
           },
           {
             "text": "Revenue Distribution",
-            "line": 1180,
-            "context": "1179: <CardHeader>\n1180: <CardTitle>Revenue Distribution</CardTitle>\n1181: <CardDescription>"
+            "line": 1258,
+            "context": "1257: <CardHeader>\n1258: <CardTitle>Revenue Distribution</CardTitle>\n1259: <CardDescription>"
           },
           {
             "text": "Detailed breakdown of service contributions",
-            "line": 1181,
-            "context": "1180: <CardTitle>Revenue Distribution</CardTitle>\n1181: <CardDescription>\n1182: Detailed breakdown of service contributions"
+            "line": 1259,
+            "context": "1258: <CardTitle>Revenue Distribution</CardTitle>\n1259: <CardDescription>\n1260: Detailed breakdown of service contributions"
           },
           {
             "text": "No service data available",
-            "line": 1229,
-            "context": "1228: <Award className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1229: <p>No service data available</p>\n1230: </div>"
+            "line": 1307,
+            "context": "1306: <Award className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1307: <p>No service data available</p>\n1308: </div>"
           },
           {
             "text": "Average Order Value Analysis",
-            "line": 1240,
-            "context": "1239: <CardHeader>\n1240: <CardTitle>Average Order Value Analysis</CardTitle>\n1241: <CardDescription>"
+            "line": 1318,
+            "context": "1317: <CardHeader>\n1318: <CardTitle>Average Order Value Analysis</CardTitle>\n1319: <CardDescription>"
           },
           {
             "text": "Track changes in transaction values over time",
-            "line": 1241,
-            "context": "1240: <CardTitle>Average Order Value Analysis</CardTitle>\n1241: <CardDescription>\n1242: Track changes in transaction values over time"
+            "line": 1319,
+            "context": "1318: <CardTitle>Average Order Value Analysis</CardTitle>\n1319: <CardDescription>\n1320: Track changes in transaction values over time"
           },
           {
             "text": "No analysis data available",
-            "line": 1279,
-            "context": "1278: <Target className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1279: <p>No analysis data available</p>\n1280: </div>"
+            "line": 1357,
+            "context": "1356: <Target className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1357: <p>No analysis data available</p>\n1358: </div>"
           }
         ],
         "translationCalls": [
           {
             "key": "common.loading",
-            "line": 893,
+            "line": 971,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 945,
+            "line": 1023,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 999,
+            "line": 1077,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 1061,
+            "line": 1139,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 1135,
+            "line": 1213,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 1248,
+            "line": 1326,
             "exists": true
           }
         ],
@@ -3162,249 +3178,249 @@
         "hardcodedStrings": [
           {
             "text": "Performance Report",
-            "line": 318,
-            "context": "317: <CardHeader>\n318: <CardTitle className=\"text-base\">Performance Report</CardTitle>\n319: </CardHeader>"
+            "line": 391,
+            "context": "390: <CardHeader>\n391: <CardTitle className=\"text-base\">Performance Report</CardTitle>\n392: </CardHeader>"
           },
           {
             "text": "View overall workflow performance metrics and KPIs",
-            "line": 321,
-            "context": "320: <CardContent>\n321: <p className=\"text-sm text-muted-foreground mb-4\">\n322: View overall workflow performance metrics and KPIs"
+            "line": 394,
+            "context": "393: <CardContent>\n394: <p className=\"text-sm text-muted-foreground mb-4\">\n395: View overall workflow performance metrics and KPIs"
           },
           {
             "text": "Generate Report",
-            "line": 325,
-            "context": "324: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n325: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n326: Generate Report"
+            "line": 398,
+            "context": "397: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n398: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n399: Generate Report"
           },
           {
             "text": "Vehicle History",
-            "line": 333,
-            "context": "332: <CardHeader>\n333: <CardTitle className=\"text-base\">Vehicle History</CardTitle>\n334: </CardHeader>"
+            "line": 406,
+            "context": "405: <CardHeader>\n406: <CardTitle className=\"text-base\">Vehicle History</CardTitle>\n407: </CardHeader>"
           },
           {
             "text": "Export detailed vehicle movement and status history",
-            "line": 336,
-            "context": "335: <CardContent>\n336: <p className=\"text-sm text-muted-foreground mb-4\">\n337: Export detailed vehicle movement and status history"
+            "line": 409,
+            "context": "408: <CardContent>\n409: <p className=\"text-sm text-muted-foreground mb-4\">\n410: Export detailed vehicle movement and status history"
           },
           {
             "text": "Export Data",
-            "line": 340,
-            "context": "339: <Button className=\"w-full\" onClick={() => handleExport(\"csv\")}>\n340: <FileText className=\"h-4 w-4 mr-2\" />\n341: Export Data"
+            "line": 413,
+            "context": "412: <Button className=\"w-full\" onClick={() => handleExport(\"csv\")}>\n413: <FileText className=\"h-4 w-4 mr-2\" />\n414: Export Data"
           },
           {
             "text": "SLA Compliance",
-            "line": 348,
-            "context": "347: <CardHeader>\n348: <CardTitle className=\"text-base\">SLA Compliance</CardTitle>\n349: </CardHeader>"
+            "line": 421,
+            "context": "420: <CardHeader>\n421: <CardTitle className=\"text-base\">SLA Compliance</CardTitle>\n422: </CardHeader>"
           },
           {
             "text": "Review SLA compliance rates and identify bottlenecks",
-            "line": 351,
-            "context": "350: <CardContent>\n351: <p className=\"text-sm text-muted-foreground mb-4\">\n352: Review SLA compliance rates and identify bottlenecks"
+            "line": 424,
+            "context": "423: <CardContent>\n424: <p className=\"text-sm text-muted-foreground mb-4\">\n425: Review SLA compliance rates and identify bottlenecks"
           },
           {
             "text": "View Report",
-            "line": 355,
-            "context": "354: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n355: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n356: View Report"
+            "line": 428,
+            "context": "427: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n428: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n429: View Report"
           },
           {
             "text": "Recent Exports",
-            "line": 368,
-            "context": "367: <CardHeader>\n368: <CardTitle>Recent Exports</CardTitle>\n369: </CardHeader>"
+            "line": 441,
+            "context": "440: <CardHeader>\n441: <CardTitle>Recent Exports</CardTitle>\n442: </CardHeader>"
           },
           {
             "text": "Searching all steps",
-            "line": 665,
-            "context": "664: <Badge variant=\"outline\" className=\"bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/30 dark:text-amber-400\">\n665: <Search className=\"h-3 w-3 mr-1\" />\n666: Searching all steps"
+            "line": 686,
+            "context": "685: <Badge variant=\"outline\" className=\"bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/30 dark:text-amber-400\">\n686: <Search className=\"h-3 w-3 mr-1\" />\n687: Searching all steps"
           },
           {
             "text": "All Types",
-            "line": 677,
-            "context": "676: <SelectContent>\n677: <SelectItem value=\"all\">All Types</SelectItem>\n678: <SelectItem value=\"standard\">"
+            "line": 698,
+            "context": "697: <SelectContent>\n698: <SelectItem value=\"all\">All Types</SelectItem>\n699: <SelectItem value=\"standard\">"
           },
           {
             "text": "All Priorities",
-            "line": 696,
-            "context": "695: <SelectContent>\n696: <SelectItem value=\"all\">All Priorities</SelectItem>\n697: <SelectItem value=\"low\">Low</SelectItem>"
+            "line": 717,
+            "context": "716: <SelectContent>\n717: <SelectItem value=\"all\">All Priorities</SelectItem>\n718: <SelectItem value=\"low\">Low</SelectItem>"
           },
           {
             "text": "Normal",
-            "line": 698,
-            "context": "697: <SelectItem value=\"low\">Low</SelectItem>\n698: <SelectItem value=\"normal\">Normal</SelectItem>\n699: <SelectItem value=\"high\">High</SelectItem>"
+            "line": 719,
+            "context": "718: <SelectItem value=\"low\">Low</SelectItem>\n719: <SelectItem value=\"normal\">Normal</SelectItem>\n720: <SelectItem value=\"high\">High</SelectItem>"
           },
           {
             "text": "High",
-            "line": 699,
-            "context": "698: <SelectItem value=\"normal\">Normal</SelectItem>\n699: <SelectItem value=\"high\">High</SelectItem>\n700: <SelectItem value=\"urgent\">Urgent</SelectItem>"
+            "line": 720,
+            "context": "719: <SelectItem value=\"normal\">Normal</SelectItem>\n720: <SelectItem value=\"high\">High</SelectItem>\n721: <SelectItem value=\"urgent\">Urgent</SelectItem>"
           },
           {
             "text": "Urgent",
-            "line": 700,
-            "context": "699: <SelectItem value=\"high\">High</SelectItem>\n700: <SelectItem value=\"urgent\">Urgent</SelectItem>\n701: </SelectContent>"
+            "line": 721,
+            "context": "720: <SelectItem value=\"high\">High</SelectItem>\n721: <SelectItem value=\"urgent\">Urgent</SelectItem>\n722: </SelectContent>"
           },
           {
             "text": "Days in Step",
-            "line": 711,
-            "context": "710: <SelectContent>\n711: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n712: <SelectItem value=\"days_to_frontline\">"
+            "line": 732,
+            "context": "731: <SelectContent>\n732: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n733: <SelectItem value=\"days_to_frontline\">"
           },
           {
             "text": "Days to Finish",
-            "line": 712,
-            "context": "711: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n712: <SelectItem value=\"days_to_frontline\">\n713: Days to Finish"
+            "line": 733,
+            "context": "732: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n733: <SelectItem value=\"days_to_frontline\">\n734: Days to Finish"
           },
           {
             "text": "Priority Score",
-            "line": 715,
-            "context": "714: </SelectItem>\n715: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n716: <SelectItem value=\"sla_status\">SLA Status</SelectItem>"
+            "line": 736,
+            "context": "735: </SelectItem>\n736: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n737: <SelectItem value=\"sla_status\">SLA Status</SelectItem>"
           },
           {
             "text": "SLA Status",
-            "line": 716,
-            "context": "715: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n716: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n717: <SelectItem value=\"stock_number\">Stock Number</SelectItem>"
+            "line": 737,
+            "context": "736: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n737: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n738: <SelectItem value=\"stock_number\">Stock Number</SelectItem>"
           },
           {
             "text": "Stock Number",
-            "line": 717,
-            "context": "716: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n717: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n718: <SelectItem value=\"created_at\">Date Added</SelectItem>"
+            "line": 738,
+            "context": "737: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n738: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n739: <SelectItem value=\"created_at\">Date Added</SelectItem>"
           },
           {
             "text": "Date Added",
-            "line": 718,
-            "context": "717: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n718: <SelectItem value=\"created_at\">Date Added</SelectItem>\n719: </SelectContent>"
+            "line": 739,
+            "context": "738: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n739: <SelectItem value=\"created_at\">Date Added</SelectItem>\n740: </SelectContent>"
           },
           {
             "text": "Clear Filters",
-            "line": 740,
-            "context": "739: onClick={clearFilters}\n740: >\n741: Clear Filters"
+            "line": 761,
+            "context": "760: onClick={clearFilters}\n761: >\n762: Clear Filters"
           },
           {
             "text": "Workflow",
-            "line": 674,
-            "context": "673: <SelectTrigger className=\"w-32 h-9\">\n674: <SelectValue placeholder=\"Workflow\" />\n675: </SelectTrigger>"
+            "line": 695,
+            "context": "694: <SelectTrigger className=\"w-32 h-9\">\n695: <SelectValue placeholder=\"Workflow\" />\n696: </SelectTrigger>"
           },
           {
             "text": "Priority",
-            "line": 693,
-            "context": "692: <SelectTrigger className=\"w-32 h-9\">\n693: <SelectValue placeholder=\"Priority\" />\n694: </SelectTrigger>"
+            "line": 714,
+            "context": "713: <SelectTrigger className=\"w-32 h-9\">\n714: <SelectValue placeholder=\"Priority\" />\n715: </SelectTrigger>"
           },
           {
             "text": "Clear Filters\n            ",
-            "line": 735,
-            "context": "734: {hasActiveFilters && (\n735: <Button\n736: variant=\"ghost\""
+            "line": 756,
+            "context": "755: {hasActiveFilters && (\n756: <Button\n757: variant=\"ghost\""
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.vehicle_not_found",
-            "line": 175,
+            "line": 177,
             "exists": true
           },
           {
             "key": "common.data_refreshed",
-            "line": 214,
+            "line": 216,
             "exists": true
           },
           {
             "key": "common.refresh_failed",
-            "line": 220,
+            "line": 222,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_deleted",
-            "line": 260,
+            "line": 262,
             "exists": true
           },
           {
             "key": "get_ready.delete_failed",
-            "line": 269,
+            "line": 271,
             "exists": true
           },
           {
             "key": "get_ready.reports.title",
-            "line": 306,
+            "line": 379,
             "exists": true
           },
           {
             "key": "get_ready.reports.subtitle",
-            "line": 309,
+            "line": 382,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.approved_title",
-            "line": 459,
+            "line": 480,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.no_approved",
-            "line": 465,
+            "line": 486,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.rejected_title",
-            "line": 499,
+            "line": 520,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.no_rejected",
-            "line": 505,
+            "line": 526,
             "exists": true
           },
           {
             "key": "get_ready.approvals.modal.rejection_reason",
-            "line": 528,
+            "line": 549,
             "exists": true
           },
           {
             "key": "get_ready.search_placeholder",
-            "line": 572,
+            "line": 593,
             "exists": true
           },
           {
             "key": "common.action_buttons.refresh",
-            "line": 599,
-            "exists": true
-          },
-          {
-            "key": "common.action_buttons.exporting",
-            "line": 612,
-            "exists": true
-          },
-          {
-            "key": "common.action_buttons.export",
-            "line": 613,
-            "exists": true
-          },
-          {
-            "key": "common.action_buttons.export",
             "line": 620,
             "exists": true
           },
           {
+            "key": "common.action_buttons.exporting",
+            "line": 633,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.export",
+            "line": 634,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.export",
+            "line": 641,
+            "exists": true
+          },
+          {
             "key": "common.action_buttons.export_csv",
-            "line": 625,
+            "line": 646,
             "exists": true
           },
           {
             "key": "common.action_buttons.export_excel",
-            "line": 629,
+            "line": 650,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.add_vehicle",
-            "line": 643,
+            "line": 664,
             "exists": true
           },
           {
             "key": "get_ready.workflow.standard",
-            "line": 679,
+            "line": 700,
             "exists": true
           },
           {
             "key": "get_ready.workflow.express",
-            "line": 682,
+            "line": 703,
             "exists": true
           },
           {
             "key": "get_ready.workflow.priority",
-            "line": 685,
+            "line": 706,
             "exists": true
           }
         ],
@@ -3417,159 +3433,159 @@
         "hardcodedStrings": [
           {
             "text": "Workflow Distribution",
-            "line": 260,
-            "context": "259: <div>\n260: <h3 className=\"text-lg font-semibold mb-4\">Workflow Distribution</h3>\n261: <div className=\"grid gap-4 md:grid-cols-3\">"
+            "line": 264,
+            "context": "263: <div>\n264: <h3 className=\"text-lg font-semibold mb-4\">Workflow Distribution</h3>\n265: <div className=\"grid gap-4 md:grid-cols-3\">"
           },
           {
             "text": "Standard",
-            "line": 266,
-            "context": "265: <CardTitle className=\"text-base flex items-center gap-2\">\n266: <Target className=\"h-5 w-5 text-blue-600\" />\n267: Standard"
+            "line": 270,
+            "context": "269: <CardTitle className=\"text-base flex items-center gap-2\">\n270: <Target className=\"h-5 w-5 text-blue-600\" />\n271: Standard"
           },
           {
             "text": "Express",
-            "line": 291,
-            "context": "290: <CardTitle className=\"text-base flex items-center gap-2\">\n291: <Zap className=\"h-5 w-5 text-emerald-600\" />\n292: Express"
+            "line": 295,
+            "context": "294: <CardTitle className=\"text-base flex items-center gap-2\">\n295: <Zap className=\"h-5 w-5 text-emerald-600\" />\n296: Express"
           },
           {
             "text": "Priority",
-            "line": 316,
-            "context": "315: <CardTitle className=\"text-base flex items-center gap-2\">\n316: <Shield className=\"h-5 w-5 text-purple-600\" />\n317: Priority"
+            "line": 320,
+            "context": "319: <CardTitle className=\"text-base flex items-center gap-2\">\n320: <Shield className=\"h-5 w-5 text-purple-600\" />\n321: Priority"
           },
           {
             "text": "Step Analysis",
-            "line": 345,
-            "context": "344: <CardTitle className=\"flex items-center gap-2\">\n345: <Layers className=\"h-5 w-5\" />\n346: Step Analysis"
+            "line": 349,
+            "context": "348: <CardTitle className=\"flex items-center gap-2\">\n349: <Layers className=\"h-5 w-5\" />\n350: Step Analysis"
           },
           {
             "text": "Vehicle distribution by workflow step",
-            "line": 348,
-            "context": "347: </CardTitle>\n348: <CardDescription>Vehicle distribution by workflow step</CardDescription>\n349: </CardHeader>"
+            "line": 352,
+            "context": "351: </CardTitle>\n352: <CardDescription>Vehicle distribution by workflow step</CardDescription>\n353: </CardHeader>"
           },
           {
             "text": "Priority Breakdown",
-            "line": 389,
-            "context": "388: <CardTitle className=\"flex items-center gap-2\">\n389: <Target className=\"h-5 w-5\" />\n390: Priority Breakdown"
+            "line": 393,
+            "context": "392: <CardTitle className=\"flex items-center gap-2\">\n393: <Target className=\"h-5 w-5\" />\n394: Priority Breakdown"
           },
           {
             "text": "Vehicle priority distribution",
-            "line": 392,
-            "context": "391: </CardTitle>\n392: <CardDescription>Vehicle priority distribution</CardDescription>\n393: </CardHeader>"
+            "line": 396,
+            "context": "395: </CardTitle>\n396: <CardDescription>Vehicle priority distribution</CardDescription>\n397: </CardHeader>"
           },
           {
             "text": "Work Items Summary",
-            "line": 438,
-            "context": "437: <CardTitle className=\"flex items-center gap-2\">\n438: <CheckCircle2 className=\"h-5 w-5\" />\n439: Work Items Summary"
+            "line": 442,
+            "context": "441: <CardTitle className=\"flex items-center gap-2\">\n442: <CheckCircle2 className=\"h-5 w-5\" />\n443: Work Items Summary"
           },
           {
             "text": "Aggregate work items across all vehicles",
-            "line": 441,
-            "context": "440: </CardTitle>\n441: <CardDescription>Aggregate work items across all vehicles</CardDescription>\n442: </CardHeader>"
+            "line": 445,
+            "context": "444: </CardTitle>\n445: <CardDescription>Aggregate work items across all vehicles</CardDescription>\n446: </CardHeader>"
           },
           {
             "text": "Pending",
-            "line": 447,
-            "context": "446: <div className=\"space-y-1\">\n447: <div className=\"text-xs text-muted-foreground\">Pending</div>\n448: <div className=\"text-2xl font-bold text-amber-600\">{workItemsTotal.pending}</div>"
+            "line": 451,
+            "context": "450: <div className=\"space-y-1\">\n451: <div className=\"text-xs text-muted-foreground\">Pending</div>\n452: <div className=\"text-2xl font-bold text-amber-600\">{workItemsTotal.pending}</div>"
           },
           {
             "text": "In Progress",
-            "line": 451,
-            "context": "450: <div className=\"space-y-1\">\n451: <div className=\"text-xs text-muted-foreground\">In Progress</div>\n452: <div className=\"text-2xl font-bold text-sky-600\">{workItemsTotal.in_progress}</div>"
+            "line": 455,
+            "context": "454: <div className=\"space-y-1\">\n455: <div className=\"text-xs text-muted-foreground\">In Progress</div>\n456: <div className=\"text-2xl font-bold text-sky-600\">{workItemsTotal.in_progress}</div>"
           },
           {
             "text": "Completed",
-            "line": 455,
-            "context": "454: <div className=\"space-y-1\">\n455: <div className=\"text-xs text-muted-foreground\">Completed</div>\n456: <div className=\"text-2xl font-bold text-emerald-600\">{workItemsTotal.completed}</div>"
+            "line": 459,
+            "context": "458: <div className=\"space-y-1\">\n459: <div className=\"text-xs text-muted-foreground\">Completed</div>\n460: <div className=\"text-2xl font-bold text-emerald-600\">{workItemsTotal.completed}</div>"
           },
           {
             "text": "Total Items",
-            "line": 459,
-            "context": "458: <div className=\"space-y-1\">\n459: <div className=\"text-xs text-muted-foreground\">Total Items</div>\n460: <div className=\"text-2xl font-bold\">{workItemsTotal.totalItems}</div>"
+            "line": 463,
+            "context": "462: <div className=\"space-y-1\">\n463: <div className=\"text-xs text-muted-foreground\">Total Items</div>\n464: <div className=\"text-2xl font-bold\">{workItemsTotal.totalItems}</div>"
           },
           {
             "text": "Completion Rate",
-            "line": 468,
-            "context": "467: <div className=\"flex items-center justify-between text-sm\">\n468: <span className=\"font-medium\">Completion Rate</span>\n469: <span className=\"text-muted-foreground\">{workItemsTotal.completionRate.toFixed(1)}%</span>"
+            "line": 472,
+            "context": "471: <div className=\"flex items-center justify-between text-sm\">\n472: <span className=\"font-medium\">Completion Rate</span>\n473: <span className=\"text-muted-foreground\">{workItemsTotal.completionRate.toFixed(1)}%</span>"
           },
           {
             "text": "Team Performance",
-            "line": 481,
-            "context": "480: <CardTitle className=\"flex items-center gap-2\">\n481: <Users className=\"h-5 w-5\" />\n482: Team Performance"
+            "line": 485,
+            "context": "484: <CardTitle className=\"flex items-center gap-2\">\n485: <Users className=\"h-5 w-5\" />\n486: Team Performance"
           },
           {
             "text": "Top performers by vehicle count",
-            "line": 484,
-            "context": "483: </CardTitle>\n484: <CardDescription>Top performers by vehicle count</CardDescription>\n485: </CardHeader>"
+            "line": 488,
+            "context": "487: </CardTitle>\n488: <CardDescription>Top performers by vehicle count</CardDescription>\n489: </CardHeader>"
           },
           {
             "text": "No team data available",
-            "line": 489,
-            "context": "488: {teamStats.length === 0 ? (\n489: <div className=\"text-sm text-muted-foreground text-center py-4\">\n490: No team data available"
+            "line": 493,
+            "context": "492: {teamStats.length === 0 ? (\n493: <div className=\"text-sm text-muted-foreground text-center py-4\">\n494: No team data available"
           },
           {
             "text": "Vehicles Added",
-            "line": 534,
-            "context": "533: <div className=\"text-2xl font-bold\">{recentActivity.vehiclesAdded}</div>\n534: <div className=\"text-xs text-muted-foreground\">Vehicles Added</div>\n535: </div>"
+            "line": 538,
+            "context": "537: <div className=\"text-2xl font-bold\">{recentActivity.vehiclesAdded}</div>\n538: <div className=\"text-xs text-muted-foreground\">Vehicles Added</div>\n539: </div>"
           },
           {
             "text": "Ready for Frontline",
-            "line": 541,
-            "context": "540: <div className=\"text-2xl font-bold\">{recentActivity.vehiclesCompleted}</div>\n541: <div className=\"text-xs text-muted-foreground\">Ready for Frontline</div>\n542: </div>"
+            "line": 545,
+            "context": "544: <div className=\"text-2xl font-bold\">{recentActivity.vehiclesCompleted}</div>\n545: <div className=\"text-xs text-muted-foreground\">Ready for Frontline</div>\n546: </div>"
           },
           {
             "text": "Total Active",
-            "line": 548,
-            "context": "547: <div className=\"text-2xl font-bold\">{recentActivity.totalActive}</div>\n548: <div className=\"text-xs text-muted-foreground\">Total Active</div>\n549: </div>"
+            "line": 552,
+            "context": "551: <div className=\"text-2xl font-bold\">{recentActivity.totalActive}</div>\n552: <div className=\"text-xs text-muted-foreground\">Total Active</div>\n553: </div>"
           },
           {
             "text": "Quick Access",
-            "line": 558,
-            "context": "557: <CardHeader>\n558: <CardTitle>Quick Access</CardTitle>\n559: <CardDescription>Jump to specific views with pre-applied filters</CardDescription>"
+            "line": 562,
+            "context": "561: <CardHeader>\n562: <CardTitle>Quick Access</CardTitle>\n563: <CardDescription>Jump to specific views with pre-applied filters</CardDescription>"
           },
           {
             "text": "SLA Risk",
-            "line": 571,
-            "context": "570: <AlertTriangle className=\"h-4 w-4 text-amber-600\" />\n571: <span className=\"text-sm font-medium\">SLA Risk</span>\n572: </div>"
+            "line": 575,
+            "context": "574: <AlertTriangle className=\"h-4 w-4 text-amber-600\" />\n575: <span className=\"text-sm font-medium\">SLA Risk</span>\n576: </div>"
           },
           {
             "text": "Pending Work",
-            "line": 588,
-            "context": "587: <FileText className=\"h-4 w-4\" />\n588: <span className=\"text-sm font-medium\">Pending Work</span>\n589: </div>"
+            "line": 592,
+            "context": "591: <FileText className=\"h-4 w-4\" />\n592: <span className=\"text-sm font-medium\">Pending Work</span>\n593: </div>"
           },
           {
             "text": "Urgent",
-            "line": 603,
-            "context": "602: <AlertTriangle className=\"h-4 w-4 text-red-600\" />\n603: <span className=\"text-sm font-medium\">Urgent</span>\n604: </div>"
+            "line": 607,
+            "context": "606: <AlertTriangle className=\"h-4 w-4 text-red-600\" />\n607: <span className=\"text-sm font-medium\">Urgent</span>\n608: </div>"
           },
           {
             "text": "View All Vehicles",
-            "line": 616,
-            "context": "615: <ArrowRight className=\"h-5 w-5\" />\n616: <span className=\"text-sm font-medium\">View All Vehicles</span>\n617: </Button>"
+            "line": 620,
+            "context": "619: <ArrowRight className=\"h-5 w-5\" />\n620: <span className=\"text-sm font-medium\">View All Vehicles</span>\n621: </Button>"
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.analytics.timeRange",
-            "line": 236,
+            "line": 237,
             "exists": true
           },
           {
             "key": "get_ready.analytics.last7Days",
-            "line": 241,
+            "line": 242,
             "exists": true
           },
           {
             "key": "get_ready.analytics.last30Days",
-            "line": 244,
+            "line": 245,
             "exists": true
           },
           {
             "key": "get_ready.analytics.last90Days",
-            "line": 247,
+            "line": 248,
             "exists": true
           },
           {
             "key": "get_ready.analytics.historicalAnalytics",
-            "line": 626,
+            "line": 630,
             "exists": true
           }
         ],
@@ -7310,7 +7326,7 @@
           {
             "key": "get_ready.workflow.change_workflow",
             "line": 736,
-            "exists": true
+            "exists": false
           },
           {
             "key": "get_ready.workflow.standard",
@@ -7388,6 +7404,11 @@
             "key": "get_ready.workflow.${vehicle.workflow_type}",
             "line": 732,
             "context": "731: >\n732: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n733: </Button>"
+          },
+          {
+            "key": "get_ready.workflow.change_workflow",
+            "line": 736,
+            "context": "735: <DropdownMenuContent align=\"center\">\n736: <DropdownMenuLabel>{t('get_ready.workflow.change_workflow')}</DropdownMenuLabel>\n737: <DropdownMenuSeparator />"
           },
           {
             "key": "get_ready.confirm_delete_title",
@@ -9161,6 +9182,50 @@
         ],
         "missingKeys": [],
         "coverage": 78,
+        "severity": "medium"
+      },
+      {
+        "file": "src\\hooks\\useSmartNotifications.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 44,
+            "context": "43: unreadCount: number;\n44: markAsRead: (notificationId: string, source?: NotificationSource) => Promise<void>;\n45: markAllAsRead: () => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 45,
+            "context": "44: markAsRead: (notificationId: string, source?: NotificationSource) => Promise<void>;\n45: markAllAsRead: () => Promise<void>;\n46: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 46,
+            "context": "45: markAllAsRead: () => Promise<void>;\n46: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n47: deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 47,
+            "context": "46: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n47: deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;\n48: refreshNotifications: () => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 48,
+            "context": "47: deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;\n48: refreshNotifications: () => Promise<void>;\n49: }"
+          },
+          {
+            "text": ", error);\n            throw error;\n          }\n\n          // Check if the RPC returned false (notification not found or unauthorized)\n          if (data === false) {\n            // Rollback\n            queryClient.setQueryData(queryKey, previousData);\n            throw new Error(",
+            "line": 249,
+            "context": "248: queryClient.setQueryData(queryKey, previousData);\n249: logger.error('[markAsRead] RPC error:', error);\n250: throw error;"
+          },
+          {
+            "text": ", error);\n            throw error;\n          }\n\n          // Check if the RPC returned false (notification not found or unauthorized)\n          if (data === false) {\n            // Rollback\n            queryClient.setQueryData(queryKey, previousData);\n            throw new Error(",
+            "line": 423,
+            "context": "422: queryClient.setQueryData(queryKey, previousData);\n423: logger.error('[deleteNotification] RPC error:', error);\n424: throw error;"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
         "severity": "medium"
       },
       {
@@ -12188,6 +12253,77 @@
         "missingKeys": [],
         "coverage": 43,
         "severity": "medium"
+      },
+      {
+        "file": "src\\components\\admin\\EditAllowedModulesModal.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Edit Allowed Modules",
+            "line": 180,
+            "context": "179: <DialogTitle className=\"flex items-center gap-2\">\n180: <Layers className=\"h-5 w-5 text-primary\" />\n181: Edit Allowed Modules"
+          },
+          {
+            "text": "Allowed Modules",
+            "line": 193,
+            "context": "192: <div>\n193: <Label className=\"font-medium\">Allowed Modules</Label>\n194: <p className=\"text-xs text-muted-foreground mt-1\">"
+          },
+          {
+            "text": "Clear All",
+            "line": 220,
+            "context": "219: disabled={loading}\n220: >\n221: Clear All"
+          },
+          {
+            "text": "Save Changes",
+            "line": 300,
+            "context": "299: ) : (\n300: <>Save Changes</>\n301: )}"
+          },
+          {
+            "text": "Allowed Modules",
+            "line": 193,
+            "context": "192: <div>\n193: <Label className=\"font-medium\">Allowed Modules</Label>\n194: <p className=\"text-xs text-muted-foreground mt-1\">"
+          },
+          {
+            "text": "Clear All\r\n              ",
+            "line": 214,
+            "context": "213: </Button>\n214: <Button\n215: type=\"button\""
+          },
+          {
+            "text": ", error);\r\n        throw error;\r\n      }\r\n\r\n      console.log(",
+            "line": 144,
+            "context": "143: if (error) {\n144: console.error('RPC error:', error);\n145: throw error;"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "common.validation_error",
+            "line": 126,
+            "exists": false
+          },
+          {
+            "key": "common.success",
+            "line": 151,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 164,
+            "exists": true
+          },
+          {
+            "key": "common.cancel",
+            "line": 288,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.validation_error",
+            "line": 126,
+            "context": "125: toast({\n126: title: t('common.validation_error'),\n127: description: 'Supermanagers must have at least one allowed module',"
+          }
+        ],
+        "coverage": 36,
+        "severity": "medium"
       }
     ],
     "low": [
@@ -12323,8 +12459,8 @@
         "hardcodedStrings": [
           {
             "text": ", error);\n    return null;\n  }\n}\n\n/**\n * Save permissions to localStorage cache\n *\n * @param user - Enhanced user with permissions to cache\n */\nexport function cachePermissions(user: EnhancedUserGranular): void {\n  try {\n    const serialized = serializePermissions(user);\n    localStorage.setItem(CACHE_KEY, JSON.stringify(serialized));\n    console.log(`✅ Permissions cached for user ${user.email}`);\n  } catch (error) {\n    // Don",
-            "line": 94,
-            "context": "93: } catch (error) {\n94: console.error('❌ Permission deserialization error:', error);\n95: return null;"
+            "line": 100,
+            "context": "99: } catch (error) {\n100: console.error('❌ Permission deserialization error:', error);\n101: return null;"
           }
         ],
         "translationCalls": [],
@@ -13774,60 +13910,60 @@
         "translationCalls": [
           {
             "key": "common.data_refreshed",
-            "line": 112,
+            "line": 119,
             "exists": true
           },
           {
             "key": "common.refresh_failed",
-            "line": 118,
+            "line": 125,
             "exists": true
           },
           {
             "key": "reports.title",
-            "line": 129,
+            "line": 136,
             "exists": true
           },
           {
             "key": "reports.overview",
-            "line": 130,
+            "line": 137,
             "exists": true
           },
           {
             "key": "common.refreshing",
-            "line": 140,
+            "line": 147,
             "exists": false
           },
           {
             "key": "common.refresh",
-            "line": 140,
+            "line": 147,
             "exists": true
           },
           {
             "key": "reports.tabs.operational",
-            "line": 150,
+            "line": 157,
             "exists": true
           },
           {
             "key": "reports.tabs.financial",
-            "line": 153,
+            "line": 160,
             "exists": true
           },
           {
             "key": "reports.tabs.invoices",
-            "line": 156,
+            "line": 163,
             "exists": true
           },
           {
             "key": "reports.tabs.export",
-            "line": 159,
+            "line": 166,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.refreshing",
-            "line": 140,
-            "context": "139: <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />\n140: {isRefreshing ? t('common.refreshing') || 'Refreshing...' : t('common.refresh')}\n141: </Button>"
+            "line": 147,
+            "context": "146: <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />\n147: {isRefreshing ? t('common.refreshing') || 'Refreshing...' : t('common.refresh')}\n148: </Button>"
           }
         ],
         "coverage": 100,
@@ -17657,12 +17793,12 @@
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 228,
+            "line": 236,
             "exists": true
           },
           {
             "key": "notifications.sms_error",
-            "line": 229,
+            "line": 237,
             "exists": true
           }
         ],
@@ -17697,40 +17833,6 @@
             "text": "Promise",
             "line": 167,
             "context": "166: queryKey: string[],\n167: queryFn: () => Promise<T>,\n168: enabled: boolean = true"
-          }
-        ],
-        "translationCalls": [],
-        "missingKeys": [],
-        "coverage": 0,
-        "severity": "low"
-      },
-      {
-        "file": "src\\hooks\\useSmartNotifications.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Promise",
-            "line": 44,
-            "context": "43: unreadCount: number;\n44: markAsRead: (notificationId: string, source?: NotificationSource) => Promise<void>;\n45: markAllAsRead: () => Promise<void>;"
-          },
-          {
-            "text": "Promise",
-            "line": 45,
-            "context": "44: markAsRead: (notificationId: string, source?: NotificationSource) => Promise<void>;\n45: markAllAsRead: () => Promise<void>;\n46: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;"
-          },
-          {
-            "text": "Promise",
-            "line": 46,
-            "context": "45: markAllAsRead: () => Promise<void>;\n46: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n47: deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;"
-          },
-          {
-            "text": "Promise",
-            "line": 47,
-            "context": "46: markEntityAsRead: (entityType: string, entityId: string) => Promise<void>;\n47: deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;\n48: refreshNotifications: () => Promise<void>;"
-          },
-          {
-            "text": "Promise",
-            "line": 48,
-            "context": "47: deleteNotification: (notificationId: string, source?: NotificationSource) => Promise<void>;\n48: refreshNotifications: () => Promise<void>;\n49: }"
           }
         ],
         "translationCalls": [],
@@ -18692,6 +18794,20 @@
         "severity": "low"
       },
       {
+        "file": "src\\hooks\\useNotificationSoundPreferences.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 45,
+            "context": "44: ) => void;\n45: savePreferences: () => Promise<void>;\n46: resetToDefaults: () => void;"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\hooks\\useNotificationRetry.tsx",
         "hardcodedStrings": [
           {
@@ -18976,55 +19092,55 @@
           },
           {
             "key": "notifications.not_supported",
-            "line": 117,
+            "line": 118,
             "exists": true
           },
           {
             "key": "notifications.permission_denied",
-            "line": 131,
+            "line": 132,
             "exists": true
           },
           {
             "key": "notifications.permission_denied",
-            "line": 133,
+            "line": 134,
             "exists": true
           },
           {
             "key": "notifications.enabled",
-            "line": 148,
+            "line": 149,
             "exists": true
           },
           {
             "key": "notifications.error",
-            "line": 156,
+            "line": 157,
             "exists": true
           },
           {
             "key": "notifications.disabled",
-            "line": 183,
+            "line": 184,
             "exists": true
           },
           {
             "key": "notifications.error",
-            "line": 187,
+            "line": 188,
             "exists": true
           },
           {
             "key": "notifications.new_message",
-            "line": 211,
+            "line": 212,
             "exists": true
           },
           {
             "key": "common.view",
-            "line": 218,
+            "line": 219,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.view",
-            "line": 218,
-            "context": "217: ? {\n218: label: t('common.view'),\n219: onClick: () => {"
+            "line": 219,
+            "context": "218: ? {\n219: label: t('common.view'),\n220: onClick: () => {"
           }
         ],
         "coverage": 79,
@@ -19493,22 +19609,22 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 55,
-            "context": "54: refreshDealerships: () => void;\n55: filterByModule: (moduleName: AppModule) => Promise<Dealership[]>;\n56: }"
+            "line": 56,
+            "context": "55: refreshDealerships: () => void;\n56: filterByModule: (moduleName: AppModule) => Promise<Dealership[]>;\n57: }"
           }
         ],
         "translationCalls": [
           {
             "key": "dealerships.error_fetching_dealerships",
-            "line": 208,
+            "line": 209,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "dealerships.error_fetching_dealerships",
-            "line": 208,
-            "context": "207: const error = queryError\n208: ? (t('dealerships.error_fetching_dealerships') || 'Error fetching dealerships')\n209: : null;"
+            "line": 209,
+            "context": "208: const error = queryError\n209: ? (t('dealerships.error_fetching_dealerships') || 'Error fetching dealerships')\n210: : null;"
           }
         ],
         "coverage": 50,
@@ -19675,60 +19791,60 @@
         "translationCalls": [
           {
             "key": "search.global_placeholder",
-            "line": 114,
+            "line": 106,
             "exists": true
           },
           {
             "key": "layout.mobile_menu",
-            "line": 128,
+            "line": 120,
             "exists": true
           },
           {
             "key": "layout.tools",
-            "line": 133,
+            "line": 125,
             "exists": true
           },
           {
             "key": "dealerships.dealership",
-            "line": 139,
+            "line": 131,
             "exists": true
           },
           {
             "key": "layout.preferences",
-            "line": 147,
+            "line": 139,
             "exists": true
           },
           {
             "key": "common.notifications",
-            "line": 159,
+            "line": 151,
             "exists": false
           },
           {
             "key": "layout.footer.copyright",
-            "line": 196,
+            "line": 188,
             "exists": true
           },
           {
             "key": "layout.footer.privacy_policy",
-            "line": 208,
+            "line": 200,
             "exists": true
           },
           {
             "key": "layout.footer.terms_of_service",
-            "line": 216,
+            "line": 208,
             "exists": true
           },
           {
             "key": "layout.footer.support",
-            "line": 224,
+            "line": 216,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.notifications",
-            "line": 159,
-            "context": "158: <label className=\"text-sm font-medium text-muted-foreground\">\n159: {t('common.notifications')}\n160: </label>"
+            "line": 151,
+            "context": "150: <label className=\"text-sm font-medium text-muted-foreground\">\n151: {t('common.notifications')}\n152: </label>"
           }
         ],
         "coverage": 100,
@@ -22925,28 +23041,28 @@
         "hardcodedStrings": [
           {
             "text": "Navigation Menu",
-            "line": 190,
-            "context": "189: <VisuallyHidden>\n190: <SheetTitle>Navigation Menu</SheetTitle>\n191: <SheetDescription>"
+            "line": 204,
+            "context": "203: <VisuallyHidden>\n204: <SheetTitle>Navigation Menu</SheetTitle>\n205: <SheetDescription>"
           },
           {
             "text": "Access navigation links and menu items",
-            "line": 191,
-            "context": "190: <SheetTitle>Navigation Menu</SheetTitle>\n191: <SheetDescription>\n192: Access navigation links and menu items"
+            "line": 205,
+            "context": "204: <SheetTitle>Navigation Menu</SheetTitle>\n205: <SheetDescription>\n206: Access navigation links and menu items"
           },
           {
             "text": "Toggle Sidebar",
-            "line": 266,
-            "context": "265: <PanelLeft />\n266: <span className=\"sr-only\">Toggle Sidebar</span>\n267: </Button>"
+            "line": 280,
+            "context": "279: <PanelLeft />\n280: <span className=\"sr-only\">Toggle Sidebar</span>\n281: </Button>"
           },
           {
             "text": "Toggle Sidebar",
-            "line": 281,
-            "context": "280: data-sidebar=\"rail\"\n281: aria-label=\"Toggle Sidebar\"\n282: tabIndex={-1}"
+            "line": 295,
+            "context": "294: data-sidebar=\"rail\"\n295: aria-label=\"Toggle Sidebar\"\n296: tabIndex={-1}"
           },
           {
             "text": "Toggle Sidebar",
-            "line": 284,
-            "context": "283: onClick={toggleSidebar}\n284: title=\"Toggle Sidebar\"\n285: className={cn("
+            "line": 298,
+            "context": "297: onClick={toggleSidebar}\n298: title=\"Toggle Sidebar\"\n299: className={cn("
           }
         ],
         "translationCalls": [],
@@ -24855,6 +24971,316 @@
         "translationCalls": [],
         "missingKeys": [],
         "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\settings\\NotificationSoundSettings.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "common.success",
+            "line": 50,
+            "exists": true
+          },
+          {
+            "key": "settings.notification_sound.test_played",
+            "line": 51,
+            "exists": false
+          },
+          {
+            "key": "common.error",
+            "line": 55,
+            "exists": true
+          },
+          {
+            "key": "settings.notification_sound.test_error",
+            "line": 56,
+            "exists": false
+          },
+          {
+            "key": "common.success",
+            "line": 66,
+            "exists": true
+          },
+          {
+            "key": "settings.notification_sound.saved",
+            "line": 67,
+            "exists": false
+          },
+          {
+            "key": "common.error",
+            "line": 71,
+            "exists": true
+          },
+          {
+            "key": "settings.notification_sound.save_error",
+            "line": 72,
+            "exists": false
+          },
+          {
+            "key": "common.success",
+            "line": 81,
+            "exists": true
+          },
+          {
+            "key": "settings.notification_sound.reset",
+            "line": 82,
+            "exists": false
+          },
+          {
+            "key": "common.loading",
+            "line": 91,
+            "exists": true
+          },
+          {
+            "key": "settings.notification_sound.title",
+            "line": 108,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.description",
+            "line": 109,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.enable_sounds",
+            "line": 119,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.enable_sounds_description",
+            "line": 122,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.volume",
+            "line": 138,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.volume_description",
+            "line": 153,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.priority_levels",
+            "line": 161,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.priority_levels_description",
+            "line": 164,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.urgent",
+            "line": 172,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.test",
+            "line": 181,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.urgent_description",
+            "line": 185,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.high",
+            "line": 199,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.test",
+            "line": 208,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.high_description",
+            "line": 212,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.normal",
+            "line": 226,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.test",
+            "line": 235,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.normal_description",
+            "line": 239,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.low",
+            "line": 253,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.test",
+            "line": 262,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.low_description",
+            "line": 266,
+            "exists": false
+          },
+          {
+            "key": "settings.notification_sound.technical_details",
+            "line": 278,
+            "exists": false
+          },
+          {
+            "key": "common.action_buttons.reset",
+            "line": 296,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.save",
+            "line": 300,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "settings.notification_sound.test_played",
+            "line": 51,
+            "context": "50: title: t('common.success'),\n51: description: t('settings.notification_sound.test_played', { priority }),\n52: });"
+          },
+          {
+            "key": "settings.notification_sound.test_error",
+            "line": 56,
+            "context": "55: title: t('common.error'),\n56: description: t('settings.notification_sound.test_error'),\n57: variant: 'destructive',"
+          },
+          {
+            "key": "settings.notification_sound.saved",
+            "line": 67,
+            "context": "66: title: t('common.success'),\n67: description: t('settings.notification_sound.saved'),\n68: });"
+          },
+          {
+            "key": "settings.notification_sound.save_error",
+            "line": 72,
+            "context": "71: title: t('common.error'),\n72: description: t('settings.notification_sound.save_error'),\n73: variant: 'destructive',"
+          },
+          {
+            "key": "settings.notification_sound.reset",
+            "line": 82,
+            "context": "81: title: t('common.success'),\n82: description: t('settings.notification_sound.reset'),\n83: });"
+          },
+          {
+            "key": "settings.notification_sound.title",
+            "line": 108,
+            "context": "107: <div>\n108: <CardTitle>{t('settings.notification_sound.title')}</CardTitle>\n109: <CardDescription>{t('settings.notification_sound.description')}</CardDescription>"
+          },
+          {
+            "key": "settings.notification_sound.description",
+            "line": 109,
+            "context": "108: <CardTitle>{t('settings.notification_sound.title')}</CardTitle>\n109: <CardDescription>{t('settings.notification_sound.description')}</CardDescription>\n110: </div>"
+          },
+          {
+            "key": "settings.notification_sound.enable_sounds",
+            "line": 119,
+            "context": "118: <Label className=\"text-base font-medium\">\n119: {t('settings.notification_sound.enable_sounds')}\n120: </Label>"
+          },
+          {
+            "key": "settings.notification_sound.enable_sounds_description",
+            "line": 122,
+            "context": "121: <p className=\"text-sm text-muted-foreground\">\n122: {t('settings.notification_sound.enable_sounds_description')}\n123: </p>"
+          },
+          {
+            "key": "settings.notification_sound.volume",
+            "line": 138,
+            "context": "137: <Label className=\"text-base font-medium\">\n138: {t('settings.notification_sound.volume')}\n139: </Label>"
+          },
+          {
+            "key": "settings.notification_sound.volume_description",
+            "line": 153,
+            "context": "152: <p className=\"text-xs text-muted-foreground\">\n153: {t('settings.notification_sound.volume_description')}\n154: </p>"
+          },
+          {
+            "key": "settings.notification_sound.priority_levels",
+            "line": 161,
+            "context": "160: <Label className=\"text-base font-medium\">\n161: {t('settings.notification_sound.priority_levels')}\n162: </Label>"
+          },
+          {
+            "key": "settings.notification_sound.priority_levels_description",
+            "line": 164,
+            "context": "163: <p className=\"text-sm text-muted-foreground mb-3\">\n164: {t('settings.notification_sound.priority_levels_description')}\n165: </p>"
+          },
+          {
+            "key": "settings.notification_sound.urgent",
+            "line": 172,
+            "context": "171: <Label className=\"font-medium text-red-700\">\n172: {t('settings.notification_sound.urgent')}\n173: </Label>"
+          },
+          {
+            "key": "settings.notification_sound.test",
+            "line": 181,
+            "context": "180: <Play className=\"h-3 w-3 mr-1\" />\n181: {t('settings.notification_sound.test')}\n182: </Button>"
+          },
+          {
+            "key": "settings.notification_sound.urgent_description",
+            "line": 185,
+            "context": "184: <p className=\"text-xs text-muted-foreground mt-1\">\n185: {t('settings.notification_sound.urgent_description')}\n186: </p>"
+          },
+          {
+            "key": "settings.notification_sound.high",
+            "line": 199,
+            "context": "198: <Label className=\"font-medium text-amber-700\">\n199: {t('settings.notification_sound.high')}\n200: </Label>"
+          },
+          {
+            "key": "settings.notification_sound.test",
+            "line": 208,
+            "context": "207: <Play className=\"h-3 w-3 mr-1\" />\n208: {t('settings.notification_sound.test')}\n209: </Button>"
+          },
+          {
+            "key": "settings.notification_sound.high_description",
+            "line": 212,
+            "context": "211: <p className=\"text-xs text-muted-foreground mt-1\">\n212: {t('settings.notification_sound.high_description')}\n213: </p>"
+          },
+          {
+            "key": "settings.notification_sound.normal",
+            "line": 226,
+            "context": "225: <Label className=\"font-medium\">\n226: {t('settings.notification_sound.normal')}\n227: </Label>"
+          },
+          {
+            "key": "settings.notification_sound.test",
+            "line": 235,
+            "context": "234: <Play className=\"h-3 w-3 mr-1\" />\n235: {t('settings.notification_sound.test')}\n236: </Button>"
+          },
+          {
+            "key": "settings.notification_sound.normal_description",
+            "line": 239,
+            "context": "238: <p className=\"text-xs text-muted-foreground mt-1\">\n239: {t('settings.notification_sound.normal_description')}\n240: </p>"
+          },
+          {
+            "key": "settings.notification_sound.low",
+            "line": 253,
+            "context": "252: <Label className=\"font-medium text-muted-foreground\">\n253: {t('settings.notification_sound.low')}\n254: </Label>"
+          },
+          {
+            "key": "settings.notification_sound.test",
+            "line": 262,
+            "context": "261: <Play className=\"h-3 w-3 mr-1\" />\n262: {t('settings.notification_sound.test')}\n263: </Button>"
+          },
+          {
+            "key": "settings.notification_sound.low_description",
+            "line": 266,
+            "context": "265: <p className=\"text-xs text-muted-foreground mt-1\">\n266: {t('settings.notification_sound.low_description')}\n267: </p>"
+          },
+          {
+            "key": "settings.notification_sound.technical_details",
+            "line": 278,
+            "context": "277: <div className=\"p-4 border rounded-lg bg-muted/30\">\n278: <h4 className=\"text-sm font-medium mb-2\">{t('settings.notification_sound.technical_details')}</h4>\n279: <div className=\"space-y-1 text-xs text-muted-foreground font-mono\">"
+          }
+        ],
+        "coverage": 100,
         "severity": "low"
       },
       {
@@ -29335,160 +29761,160 @@
         "translationCalls": [
           {
             "key": "reports.filters.clear_all",
-            "line": 284,
+            "line": 289,
             "exists": true
           },
           {
             "key": "reports.filters.filters",
-            "line": 292,
+            "line": 297,
             "exists": true
           },
           {
             "key": "reports.filters.start_date",
-            "line": 310,
+            "line": 315,
             "exists": true
           },
           {
             "key": "reports.filters.end_date",
-            "line": 339,
+            "line": 344,
             "exists": true
           },
           {
             "key": "reports.filters.select_department",
-            "line": 364,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.all_departments",
-            "line": 367,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.sales",
-            "line": 368,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.service",
             "line": 369,
             "exists": true
           },
           {
-            "key": "reports.filters.recon",
-            "line": 370,
+            "key": "reports.filters.all_departments",
+            "line": 372,
             "exists": true
           },
           {
-            "key": "reports.filters.car_wash",
-            "line": 371,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.select_status",
-            "line": 383,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.all_statuses",
-            "line": 386,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.pending",
-            "line": 387,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.in_progress",
-            "line": 388,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.completed",
-            "line": 389,
-            "exists": true
-          },
-          {
-            "key": "reports.filters.cancelled",
-            "line": 390,
+            "key": "reports.filters.sales",
+            "line": 373,
             "exists": true
           },
           {
             "key": "reports.filters.service",
-            "line": 405,
+            "line": 374,
+            "exists": true
+          },
+          {
+            "key": "reports.filters.recon",
+            "line": 375,
+            "exists": true
+          },
+          {
+            "key": "reports.filters.car_wash",
+            "line": 376,
+            "exists": true
+          },
+          {
+            "key": "reports.filters.select_status",
+            "line": 388,
+            "exists": true
+          },
+          {
+            "key": "reports.filters.all_statuses",
+            "line": 391,
+            "exists": true
+          },
+          {
+            "key": "reports.filters.pending",
+            "line": 392,
+            "exists": true
+          },
+          {
+            "key": "reports.filters.in_progress",
+            "line": 393,
+            "exists": true
+          },
+          {
+            "key": "reports.filters.completed",
+            "line": 394,
+            "exists": true
+          },
+          {
+            "key": "reports.filters.cancelled",
+            "line": 395,
+            "exists": true
+          },
+          {
+            "key": "reports.filters.service",
+            "line": 410,
             "exists": true
           },
           {
             "key": "common.selected",
-            "line": 406,
+            "line": 411,
             "exists": true
           },
           {
             "key": "reports.filters.all_services",
-            "line": 409,
+            "line": 414,
             "exists": true
           },
           {
             "key": "reports.filters.select_service",
-            "line": 417,
+            "line": 422,
             "exists": true
           },
           {
             "key": "common.select_all",
-            "line": 429,
+            "line": 434,
             "exists": false
           },
           {
             "key": "common.clear_all",
-            "line": 439,
+            "line": 444,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 448,
+            "line": 453,
             "exists": true
           },
           {
             "key": "reports.filters.no_services",
-            "line": 452,
+            "line": 457,
             "exists": true
           },
           {
             "key": "reports.filters.active_filters",
-            "line": 527,
+            "line": 532,
             "exists": true
           },
           {
             "key": "reports.filters.${filters.orderType === ",
-            "line": 531,
+            "line": 536,
             "exists": false
           },
           {
             "key": "reports.filters.${filters.status}",
-            "line": 536,
+            "line": 541,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.select_all",
-            "line": 429,
-            "context": "428: >\n429: {t('common.select_all', 'Select All')}\n430: </Button>"
+            "line": 434,
+            "context": "433: >\n434: {t('common.select_all', 'Select All')}\n435: </Button>"
           },
           {
             "key": "common.clear_all",
-            "line": 439,
-            "context": "438: >\n439: {t('common.clear_all', 'Clear All')}\n440: </Button>"
+            "line": 444,
+            "context": "443: >\n444: {t('common.clear_all', 'Clear All')}\n445: </Button>"
           },
           {
             "key": "reports.filters.${filters.orderType === ",
-            "line": 531,
-            "context": "530: <span className=\"px-2 py-1 bg-primary/10 text-primary rounded-md font-medium\">\n531: {t(`reports.filters.${filters.orderType === 'carwash' ? 'car_wash' : filters.orderType}`)}\n532: </span>"
+            "line": 536,
+            "context": "535: <span className=\"px-2 py-1 bg-primary/10 text-primary rounded-md font-medium\">\n536: {t(`reports.filters.${filters.orderType === 'carwash' ? 'car_wash' : filters.orderType}`)}\n537: </span>"
           },
           {
             "key": "reports.filters.${filters.status}",
-            "line": 536,
-            "context": "535: <span className=\"px-2 py-1 bg-emerald-500/10 text-emerald-600 rounded-md font-medium\">\n536: {t(`reports.filters.${filters.status}`)}\n537: </span>"
+            "line": 541,
+            "context": "540: <span className=\"px-2 py-1 bg-emerald-500/10 text-emerald-600 rounded-md font-medium\">\n541: {t(`reports.filters.${filters.status}`)}\n542: </span>"
           }
         ],
         "coverage": 100,
@@ -29528,167 +29954,167 @@
         "hardcodedStrings": [
           {
             "text": "Excel",
-            "line": 187,
-            "context": "186: <div className=\"flex items-center gap-2\">\n187: <FileSpreadsheet className=\"h-4 w-4\" />\n188: Excel"
+            "line": 188,
+            "context": "187: <div className=\"flex items-center gap-2\">\n188: <FileSpreadsheet className=\"h-4 w-4\" />\n189: Excel"
           },
           {
             "text": ", error);\n    } finally {\n      setIsExporting(false);\n    }\n  };\n\n  const handleScheduleEmail = async () => {\n    setIsExporting(true);\n    try {\n      // Simulate scheduling process\n      await new Promise(resolve => setTimeout(resolve, 1500));\n      toast({ description: t(",
-            "line": 141,
-            "context": "140: toast({ variant: 'destructive', description: `${t('reports.export.error_message')}: ${errorMessage}` });\n141: console.error('Export error:', error);\n142: } finally {"
+            "line": 142,
+            "context": "141: toast({ variant: 'destructive', description: `${t('reports.export.error_message')}: ${errorMessage}` });\n142: console.error('Export error:', error);\n143: } finally {"
           }
         ],
         "translationCalls": [
           {
             "key": "reports.export.operational_report",
-            "line": 54,
-            "exists": true
-          },
-          {
-            "key": "reports.export.operational_description",
             "line": 55,
             "exists": true
           },
           {
-            "key": "reports.export.financial_report",
-            "line": 61,
+            "key": "reports.export.operational_description",
+            "line": 56,
             "exists": true
           },
           {
-            "key": "reports.export.financial_description",
+            "key": "reports.export.financial_report",
             "line": 62,
             "exists": true
           },
           {
-            "key": "reports.export.performance_report",
-            "line": 68,
+            "key": "reports.export.financial_description",
+            "line": 63,
             "exists": true
           },
           {
-            "key": "reports.export.performance_description",
+            "key": "reports.export.performance_report",
             "line": 69,
             "exists": true
           },
           {
-            "key": "reports.export.custom_report",
-            "line": 75,
+            "key": "reports.export.performance_description",
+            "line": 70,
             "exists": true
           },
           {
-            "key": "reports.export.custom_description",
+            "key": "reports.export.custom_report",
             "line": 76,
             "exists": true
           },
           {
+            "key": "reports.export.custom_description",
+            "line": 77,
+            "exists": true
+          },
+          {
             "key": "reports.export.success_message",
-            "line": 137,
+            "line": 138,
             "exists": true
           },
           {
             "key": "reports.export.error_message",
-            "line": 140,
+            "line": 141,
             "exists": true
           },
           {
             "key": "reports.export.schedule_success",
-            "line": 152,
+            "line": 153,
             "exists": true
           },
           {
             "key": "reports.export.schedule_error",
-            "line": 154,
+            "line": 155,
             "exists": true
           },
           {
             "key": "reports.export.configuration",
-            "line": 165,
+            "line": 166,
             "exists": true
           },
           {
             "key": "reports.export.configuration_description",
-            "line": 167,
+            "line": 168,
             "exists": true
           },
           {
             "key": "reports.export.format",
-            "line": 173,
+            "line": 174,
             "exists": true
           },
           {
             "key": "reports.export.include_sections",
-            "line": 202,
+            "line": 203,
             "exists": true
           },
           {
             "key": "reports.export.summary_section",
-            "line": 213,
+            "line": 214,
             "exists": true
           },
           {
             "key": "reports.export.charts_section",
-            "line": 225,
+            "line": 226,
             "exists": true
           },
           {
             "key": "reports.export.tables_section",
-            "line": 237,
+            "line": 238,
             "exists": true
           },
           {
             "key": "reports.export.trends_section",
-            "line": 249,
+            "line": 250,
             "exists": true
           },
           {
             "key": "reports.export.available_reports",
-            "line": 261,
+            "line": 262,
             "exists": true
           },
           {
             "key": "reports.export.available_reports_description",
-            "line": 263,
+            "line": 264,
             "exists": true
           },
           {
             "key": "common.exporting",
-            "line": 294,
+            "line": 295,
             "exists": false
           },
           {
             "key": "reports.export.download",
-            "line": 294,
+            "line": 295,
             "exists": true
           },
           {
             "key": "reports.export.scheduled_reports",
-            "line": 307,
+            "line": 308,
             "exists": true
           },
           {
             "key": "reports.export.scheduled_reports_description",
-            "line": 309,
+            "line": 310,
             "exists": true
           },
           {
             "key": "reports.export.email_reports",
-            "line": 317,
+            "line": 318,
             "exists": true
           },
           {
             "key": "reports.export.email_reports_description",
-            "line": 319,
+            "line": 320,
             "exists": true
           },
           {
             "key": "reports.export.schedule",
-            "line": 333,
+            "line": 334,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.exporting",
-            "line": 294,
-            "context": "293: )}\n294: {isExporting ? t('common.exporting') : t('reports.export.download')}\n295: </Button>"
+            "line": 295,
+            "context": "294: )}\n295: {isExporting ? t('common.exporting') : t('reports.export.download')}\n296: </Button>"
           }
         ],
         "coverage": 94,
@@ -39615,104 +40041,185 @@
         "hardcodedStrings": [
           {
             "text": "Mark all",
-            "line": 143,
-            "context": "142: <span className=\"hidden sm:inline\">{t('notifications.actions.mark_all_read')}</span>\n143: <span className=\"inline sm:hidden\">Mark all</span>\n144: </Button>"
+            "line": 249,
+            "context": "248: <span className=\"hidden sm:inline\">{t('notifications.actions.mark_all_read')}</span>\n249: <span className=\"inline sm:hidden\">Mark all</span>\n250: </Button>"
+          },
+          {
+            "text": "Select",
+            "line": 257,
+            "context": "256: <span className=\"hidden sm:inline\">{t('notifications.actions.select_to_delete')}</span>\n257: <span className=\"inline sm:hidden\">Select</span>\n258: </Button>"
           },
           {
             "text": "No grouped notifications",
-            "line": 165,
-            "context": "164: <div className=\"space-y-2\">\n165: <p className=\"font-medium\">No grouped notifications</p>\n166: <p className=\"text-sm\">Switch to \"Recent\" tab to view all {notifications.length} notification{notifications.length !== 1 ? 's' : ''}</p>"
+            "line": 314,
+            "context": "313: <div className=\"space-y-2\">\n314: <p className=\"font-medium\">No grouped notifications</p>\n315: <p className=\"text-sm\">Switch to \"Recent\" tab to view all {notifications.length} notification{notifications.length !== 1 ? 's' : ''}</p>"
+          },
+          {
+            "text": "Mark all read",
+            "line": 345,
+            "context": "344: <Check className=\"h-4 w-4 mr-1\" />\n345: <span className=\"text-xs hidden sm:inline\">Mark all read</span>\n346: </Button>"
           }
         ],
         "translationCalls": [
           {
-            "key": "notifications.loading",
-            "line": 93,
+            "key": "common.success",
+            "line": 163,
             "exists": true
           },
           {
-            "key": "notifications.title",
-            "line": 107,
+            "key": "notifications.bulk_delete_success",
+            "line": 164,
             "exists": true
           },
           {
-            "key": "notifications.filter.all",
-            "line": 121,
+            "key": "common.error",
+            "line": 169,
             "exists": true
           },
           {
-            "key": "notifications.filter.unread",
-            "line": 121,
+            "key": "notifications.bulk_delete_error",
+            "line": 170,
             "exists": true
           },
           {
-            "key": "notifications.filter.important",
-            "line": 121,
-            "exists": true
+            "key": "common.warning",
+            "line": 176,
+            "exists": false
           },
           {
-            "key": "notifications.filter.all_description",
-            "line": 128,
-            "exists": true
-          },
-          {
-            "key": "notifications.filter.unread_description",
-            "line": 131,
-            "exists": true
-          },
-          {
-            "key": "notifications.filter.important_description",
-            "line": 134,
-            "exists": true
-          },
-          {
-            "key": "notifications.actions.mark_all_read",
-            "line": 142,
-            "exists": true
-          },
-          {
-            "key": "notifications.tabs.recent",
-            "line": 152,
-            "exists": true
-          },
-          {
-            "key": "notifications.tabs.grouped",
-            "line": 153,
-            "exists": true
-          },
-          {
-            "key": "notifications.empty.message",
-            "line": 162,
-            "exists": true
-          },
-          {
-            "key": "notifications.count.singular",
-            "line": 180,
-            "exists": true
-          },
-          {
-            "key": "notifications.count.plural",
-            "line": 180,
-            "exists": true
-          },
-          {
-            "key": "notifications.count.unread",
+            "key": "common.error",
             "line": 184,
             "exists": true
           },
           {
-            "key": "notifications.show_more",
-            "line": 212,
+            "key": "notifications.bulk_delete_error",
+            "line": 185,
             "exists": true
           },
           {
-            "key": "notifications.empty.filtered",
-            "line": 229,
+            "key": "notifications.loading",
+            "line": 197,
+            "exists": true
+          },
+          {
+            "key": "notifications.title",
+            "line": 211,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.all",
+            "line": 227,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.unread",
+            "line": 227,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.important",
+            "line": 227,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.all_description",
+            "line": 234,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.unread_description",
+            "line": 237,
+            "exists": true
+          },
+          {
+            "key": "notifications.filter.important_description",
+            "line": 240,
+            "exists": true
+          },
+          {
+            "key": "notifications.actions.mark_all_read",
+            "line": 248,
+            "exists": true
+          },
+          {
+            "key": "notifications.actions.select_to_delete",
+            "line": 256,
+            "exists": true
+          },
+          {
+            "key": "notifications.actions.select_all",
+            "line": 265,
+            "exists": true
+          },
+          {
+            "key": "notifications.actions.deselect_all",
+            "line": 272,
+            "exists": true
+          },
+          {
+            "key": "notifications.actions.delete_selected",
+            "line": 283,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.cancel",
+            "line": 291,
+            "exists": true
+          },
+          {
+            "key": "notifications.tabs.recent",
+            "line": 301,
+            "exists": true
+          },
+          {
+            "key": "notifications.tabs.grouped",
+            "line": 302,
+            "exists": true
+          },
+          {
+            "key": "notifications.empty.message",
+            "line": 311,
+            "exists": true
+          },
+          {
+            "key": "notifications.count.singular",
+            "line": 329,
+            "exists": true
+          },
+          {
+            "key": "notifications.count.plural",
+            "line": 329,
+            "exists": true
+          },
+          {
+            "key": "notifications.count.unread",
+            "line": 333,
+            "exists": true
+          },
+          {
+            "key": "notifications.show_more",
+            "line": 366,
+            "exists": true
+          },
+          {
+            "key": "notifications.empty.title",
+            "line": 383,
+            "exists": true
+          },
+          {
+            "key": "notifications.empty.description",
+            "line": 384,
             "exists": true
           }
         ],
-        "missingKeys": [],
-        "coverage": 89,
+        "missingKeys": [
+          {
+            "key": "common.warning",
+            "line": 176,
+            "context": "175: toast({\n176: title: t('common.warning'),\n177: description: `${successCount} deleted, ${failureCount} failed`,"
+          }
+        ],
+        "coverage": 88,
         "severity": "low"
       },
       {
@@ -47376,7 +47883,7 @@
           {
             "key": "get_ready.metrics.efficiency",
             "line": 161,
-            "exists": true
+            "exists": false
           },
           {
             "key": "get_ready.kpis.weekly_capacity",
@@ -47384,7 +47891,13 @@
             "exists": true
           }
         ],
-        "missingKeys": [],
+        "missingKeys": [
+          {
+            "key": "get_ready.metrics.efficiency",
+            "line": 161,
+            "context": "160: <div className=\"text-sm font-medium\">\n161: {t('get_ready.metrics.efficiency')}\n162: </div>"
+          }
+        ],
         "coverage": 73,
         "severity": "low"
       },
@@ -50594,401 +51107,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\dealer\\DealerUsers_OLD_BACKUP.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "common.error",
-            "line": 95,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.error_loading_users",
-            "line": 96,
-            "exists": true
-          },
-          {
-            "key": "common.success",
-            "line": 135,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.user_deactivated",
-            "line": 137,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.user_activated",
-            "line": 138,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 145,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.error_updating_status",
-            "line": 146,
-            "exists": true
-          },
-          {
-            "key": "common.success",
-            "line": 177,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.groups_updated",
-            "line": 178,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 186,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.error_updating_groups",
-            "line": 187,
-            "exists": true
-          },
-          {
-            "key": "common.unnamed",
-            "line": 203,
-            "exists": false
-          },
-          {
-            "key": "common.unnamed",
-            "line": 209,
-            "exists": false
-          },
-          {
-            "key": "dealer.users.title",
-            "line": 240,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.description",
-            "line": 241,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.invite_user",
-            "line": 245,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.table.user",
-            "line": 254,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.table.email",
-            "line": 255,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.table.status",
-            "line": 256,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.table.groups",
-            "line": 257,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.table.joined",
-            "line": 258,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.no_users",
-            "line": 268,
-            "exists": true
-          },
-          {
-            "key": "common.no_email",
-            "line": 286,
-            "exists": false
-          },
-          {
-            "key": "common.active",
-            "line": 289,
-            "exists": true
-          },
-          {
-            "key": "common.inactive",
-            "line": 289,
-            "exists": false
-          },
-          {
-            "key": "dealer.users.no_role",
-            "line": 305,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.edit_role",
-            "line": 322,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.manage_groups",
-            "line": 326,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.deactivate",
-            "line": 332,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.activate",
-            "line": 337,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.manage_groups",
-            "line": 378,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.manage_groups_desc",
-            "line": 382,
-            "exists": true
-          },
-          {
-            "key": "common.cancel",
-            "line": 408,
-            "exists": true
-          },
-          {
-            "key": "common.save",
-            "line": 411,
-            "exists": true
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "common.unnamed",
-            "line": 203,
-            "context": "202: if (!user.profiles) {\n203: return t('common.unnamed');\n204: }"
-          },
-          {
-            "key": "common.unnamed",
-            "line": 209,
-            "context": "208: }\n209: return first_name || last_name || t('common.unnamed');\n210: };"
-          },
-          {
-            "key": "common.no_email",
-            "line": 286,
-            "context": "285: </TableCell>\n286: <TableCell>{user.profiles?.email || t('common.no_email')}</TableCell>\n287: <TableCell>"
-          },
-          {
-            "key": "common.inactive",
-            "line": 289,
-            "context": "288: <Badge variant={user.is_active ? \"default\" : \"secondary\"}>\n289: {user.is_active ? t('common.active') : t('common.inactive')}\n290: </Badge>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
-        "file": "src\\components\\dealer\\DealerUsers.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "common.error",
-            "line": 174,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.error_loading_users",
-            "line": 175,
-            "exists": true
-          },
-          {
-            "key": "common.success",
-            "line": 222,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.user_deactivated",
-            "line": 224,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.user_activated",
-            "line": 225,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 234,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.error_updating_status",
-            "line": 235,
-            "exists": true
-          },
-          {
-            "key": "common.unnamed",
-            "line": 256,
-            "exists": false
-          },
-          {
-            "key": "common.unnamed",
-            "line": 262,
-            "exists": false
-          },
-          {
-            "key": "dealer.users.title",
-            "line": 338,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.description",
-            "line": 339,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.invite_user",
-            "line": 343,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.table.user",
-            "line": 353,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.table.email",
-            "line": 354,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.table.role",
-            "line": 355,
-            "exists": false
-          },
-          {
-            "key": "dealer.users.table.status",
-            "line": 356,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.table.joined",
-            "line": 357,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.no_users",
-            "line": 367,
-            "exists": true
-          },
-          {
-            "key": "common.no_email",
-            "line": 388,
-            "exists": false
-          },
-          {
-            "key": "dealer.users.no_role",
-            "line": 406,
-            "exists": true
-          },
-          {
-            "key": "common.active",
-            "line": 420,
-            "exists": true
-          },
-          {
-            "key": "common.inactive",
-            "line": 420,
-            "exists": false
-          },
-          {
-            "key": "dealer.users.edit_role",
-            "line": 440,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.deactivate",
-            "line": 449,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.activate",
-            "line": 454,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.deactivate_user_title",
-            "line": 504,
-            "exists": false
-          },
-          {
-            "key": "dealer.users.deactivate_user_description",
-            "line": 507,
-            "exists": false
-          },
-          {
-            "key": "common.cancel",
-            "line": 515,
-            "exists": true
-          },
-          {
-            "key": "common.loading",
-            "line": 525,
-            "exists": true
-          },
-          {
-            "key": "dealer.users.deactivate",
-            "line": 528,
-            "exists": true
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "common.unnamed",
-            "line": 256,
-            "context": "255: if (!user.profiles) {\n256: return t('common.unnamed');\n257: }"
-          },
-          {
-            "key": "common.unnamed",
-            "line": 262,
-            "context": "261: }\n262: return first_name || last_name || t('common.unnamed');\n263: };"
-          },
-          {
-            "key": "dealer.users.table.role",
-            "line": 355,
-            "context": "354: <TableHead>{t('dealer.users.table.email')}</TableHead>\n355: <TableHead>{t('dealer.users.table.role')}</TableHead>\n356: <TableHead>{t('dealer.users.table.status')}</TableHead>"
-          },
-          {
-            "key": "common.no_email",
-            "line": 388,
-            "context": "387: {/* Email */}\n388: <TableCell>{user.profiles?.email || t('common.no_email')}</TableCell>\n389: "
-          },
-          {
-            "key": "common.inactive",
-            "line": 420,
-            "context": "419: >\n420: {user.is_active ? t('common.active') : t('common.inactive')}\n421: </Badge>"
-          },
-          {
-            "key": "dealer.users.deactivate_user_title",
-            "line": 504,
-            "context": "503: <AlertDialogTitle>\n504: {t('dealer.users.deactivate_user_title', { defaultValue: 'Deactivate User' })}\n505: </AlertDialogTitle>"
-          },
-          {
-            "key": "dealer.users.deactivate_user_description",
-            "line": 507,
-            "context": "506: <AlertDialogDescription>\n507: {t('dealer.users.deactivate_user_description', {\n508: defaultValue: 'Are you sure you want to deactivate {{name}}? They will no longer be able to access the system.',"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
         "file": "src\\components\\dealer\\DealerRoles.tsx",
         "hardcodedStrings": [
           {
@@ -52385,65 +52503,65 @@
         "translationCalls": [
           {
             "key": "dashboard.activity.recent_activity",
-            "line": 155,
+            "line": 193,
             "exists": true
           },
           {
             "key": "dashboard.activity.filter",
-            "line": 163,
+            "line": 201,
             "exists": true
           },
           {
             "key": "dashboard.activity.all",
-            "line": 190,
+            "line": 228,
             "exists": true
           },
           {
             "key": "dashboard.departments.sales",
-            "line": 197,
+            "line": 236,
             "exists": true
           },
           {
             "key": "dashboard.departments.service",
-            "line": 204,
+            "line": 245,
             "exists": true
           },
           {
             "key": "dashboard.departments.recon",
-            "line": 211,
+            "line": 254,
             "exists": true
           },
           {
             "key": "dashboard.departments.car_wash",
-            "line": 218,
+            "line": 263,
             "exists": true
           },
           {
             "key": "dashboard.activity.no_recent_activity",
-            "line": 234,
+            "line": 280,
             "exists": true
           },
           {
             "key": "dashboard.activity.customer",
-            "line": 283,
+            "line": 329,
             "exists": true
           },
           {
             "key": "dashboard.activity.stock",
-            "line": 289,
+            "line": 335,
             "exists": true
           },
           {
             "key": "dashboard.departments.${department.toLowerCase().replace(",
-            "line": 315,
+            "line": 361,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "dashboard.departments.${department.toLowerCase().replace(",
-            "line": 315,
-            "context": "314: <Badge className={getDepartmentColor(department)} variant=\"secondary\">\n315: {t(`dashboard.departments.${department.toLowerCase().replace(' ', '_')}`)}\n316: </Badge>"
+            "line": 361,
+            "context": "360: <Badge className={getDepartmentColor(department)} variant=\"secondary\">\n361: {t(`dashboard.departments.${department.toLowerCase().replace(' ', '_')}`)}\n362: </Badge>"
           }
         ],
         "coverage": 100,
@@ -54601,197 +54719,183 @@
       },
       {
         "file": "src\\components\\admin\\SystemUsersManagement.tsx",
-        "hardcodedStrings": [],
+        "hardcodedStrings": [
+          {
+            "text": "Edit Modules",
+            "line": 237,
+            "context": "236: >\n237: <Layers className=\"h-3.5 w-3.5\" />\n238: Edit Modules"
+          }
+        ],
         "translationCalls": [
           {
             "key": "common.access_denied",
-            "line": 76,
+            "line": 97,
             "exists": true
           },
           {
             "key": "admin.system_users_restricted",
-            "line": 79,
+            "line": 100,
             "exists": true
           },
           {
             "key": "admin.system_users_system_admin_only",
-            "line": 84,
+            "line": 105,
             "exists": true
           },
           {
             "key": "admin.system_users",
-            "line": 99,
+            "line": 120,
             "exists": true
           },
           {
             "key": "admin.system_users_description",
-            "line": 102,
+            "line": 123,
             "exists": true
           },
           {
             "key": "admin.add_system_user",
-            "line": 107,
+            "line": 128,
             "exists": true
           },
           {
             "key": "common.error_loading_data",
-            "line": 131,
+            "line": 152,
             "exists": false
           },
           {
             "key": "admin.no_system_users",
-            "line": 137,
+            "line": 158,
             "exists": true
           },
           {
             "key": "admin.create_first_system_user",
-            "line": 139,
+            "line": 160,
             "exists": true
           },
           {
             "key": "admin.add_system_user",
-            "line": 143,
-            "exists": true
-          },
-          {
-            "key": "admin.primary_dealership",
             "line": 164,
             "exists": true
           },
           {
+            "key": "admin.primary_dealership",
+            "line": 185,
+            "exists": true
+          },
+          {
             "key": "roles.system_admin",
-            "line": 177,
+            "line": 198,
             "exists": true
           },
           {
             "key": "roles.supermanager",
-            "line": 178,
+            "line": 199,
             "exists": true
           },
           {
             "key": "admin.system_roles_info",
-            "line": 234,
+            "line": 268,
             "exists": true
           },
           {
             "key": "roles.system_admin",
-            "line": 243,
+            "line": 277,
             "exists": true
           },
           {
             "key": "admin.system_admin_description",
-            "line": 245,
+            "line": 279,
             "exists": true
           },
           {
             "key": "admin.can_manage_platform_settings",
-            "line": 248,
-            "exists": true
-          },
-          {
-            "key": "admin.can_create_system_admins",
-            "line": 249,
-            "exists": true
-          },
-          {
-            "key": "admin.full_access_all_dealerships",
-            "line": 250,
-            "exists": true
-          },
-          {
-            "key": "admin.can_view_global_audit_logs",
-            "line": 251,
-            "exists": true
-          },
-          {
-            "key": "roles.supermanager",
-            "line": 260,
-            "exists": true
-          },
-          {
-            "key": "admin.supermanager_description",
-            "line": 262,
-            "exists": true
-          },
-          {
-            "key": "admin.can_manage_dealerships",
-            "line": 265,
-            "exists": true
-          },
-          {
-            "key": "admin.can_manage_users",
-            "line": 266,
-            "exists": true
-          },
-          {
-            "key": "admin.can_view_audit_logs",
-            "line": 267,
-            "exists": true
-          },
-          {
-            "key": "admin.cannot_manage_platform_settings",
-            "line": 269,
-            "exists": true
-          },
-          {
-            "key": "admin.cannot_create_system_admins",
-            "line": 272,
-            "exists": true
-          },
-          {
-            "key": "roles.user",
             "line": 282,
             "exists": true
           },
           {
-            "key": "admin.user_description",
+            "key": "admin.can_create_system_admins",
+            "line": 283,
+            "exists": true
+          },
+          {
+            "key": "admin.full_access_all_dealerships",
             "line": 284,
             "exists": true
           },
           {
+            "key": "admin.can_view_global_audit_logs",
+            "line": 285,
+            "exists": true
+          },
+          {
+            "key": "roles.supermanager",
+            "line": 294,
+            "exists": true
+          },
+          {
+            "key": "admin.supermanager_description",
+            "line": 296,
+            "exists": true
+          },
+          {
+            "key": "admin.can_manage_dealerships",
+            "line": 299,
+            "exists": true
+          },
+          {
+            "key": "admin.can_manage_users",
+            "line": 300,
+            "exists": true
+          },
+          {
+            "key": "admin.can_view_audit_logs",
+            "line": 301,
+            "exists": true
+          },
+          {
+            "key": "admin.cannot_manage_platform_settings",
+            "line": 303,
+            "exists": true
+          },
+          {
+            "key": "admin.cannot_create_system_admins",
+            "line": 306,
+            "exists": true
+          },
+          {
+            "key": "roles.user",
+            "line": 316,
+            "exists": true
+          },
+          {
+            "key": "admin.user_description",
+            "line": 318,
+            "exists": true
+          },
+          {
             "key": "admin.permissions_via_custom_role",
-            "line": 287,
+            "line": 321,
             "exists": true
           },
           {
             "key": "admin.tied_to_specific_dealership",
-            "line": 288,
+            "line": 322,
             "exists": true
           },
           {
             "key": "admin.created_via_invitation",
-            "line": 289,
-            "exists": true
-          },
-          {
-            "key": "admin.create_system_user",
-            "line": 302,
-            "exists": true
-          },
-          {
-            "key": "admin.create_system_user_placeholder",
-            "line": 304,
-            "exists": true
-          },
-          {
-            "key": "admin.feature_coming_soon",
-            "line": 309,
-            "exists": true
-          },
-          {
-            "key": "common.close",
-            "line": 312,
+            "line": 323,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.error_loading_data",
-            "line": 131,
-            "context": "130: <p className=\"text-sm text-muted-foreground\">\n131: {t('common.error_loading_data')}\n132: </p>"
+            "line": 152,
+            "context": "151: <p className=\"text-sm text-muted-foreground\">\n152: {t('common.error_loading_data')}\n153: </p>"
           }
         ],
-        "coverage": 100,
+        "coverage": 97,
         "severity": "low"
       },
       {
@@ -54998,6 +55102,282 @@
         ],
         "coverage": 100,
         "severity": "low"
+      },
+      {
+        "file": "src\\components\\admin\\CreateSystemUserModal.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Allowed Modules",
+            "line": 486,
+            "context": "485: <Label className=\"font-medium flex items-center gap-2\">\n486: <Layers className=\"h-4 w-4 text-amber-500\" />\n487: Allowed Modules <span className=\"text-destructive\">*</span>"
+          },
+          {
+            "text": "Select which modules this supermanager can access across ALL dealerships",
+            "line": 489,
+            "context": "488: </Label>\n489: <p className=\"text-xs text-muted-foreground mt-1\">\n490: Select which modules this supermanager can access across ALL dealerships"
+          },
+          {
+            "text": "Clear All",
+            "line": 515,
+            "context": "514: disabled={loading}\n515: >\n516: Clear All"
+          },
+          {
+            "text": "Clear All\n                ",
+            "line": 509,
+            "context": "508: </Button>\n509: <Button\n510: type=\"button\""
+          },
+          {
+            "text": ", response.error);\n      console.log(",
+            "line": 237,
+            "context": "236: console.log('Response data:', response.data);\n237: console.log('Response error:', response.error);\n238: console.log('Data type:', typeof response.data);"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "common.error",
+            "line": 117,
+            "exists": true
+          },
+          {
+            "key": "admin.error_loading_dealerships",
+            "line": 118,
+            "exists": true
+          },
+          {
+            "key": "common.validation_error",
+            "line": 167,
+            "exists": false
+          },
+          {
+            "key": "admin.fill_required_fields",
+            "line": 168,
+            "exists": true
+          },
+          {
+            "key": "common.validation_error",
+            "line": 178,
+            "exists": false
+          },
+          {
+            "key": "admin.invalid_email",
+            "line": 179,
+            "exists": true
+          },
+          {
+            "key": "common.validation_error",
+            "line": 188,
+            "exists": false
+          },
+          {
+            "key": "admin.must_be_logged_in",
+            "line": 210,
+            "exists": true
+          },
+          {
+            "key": "common.success",
+            "line": 281,
+            "exists": true
+          },
+          {
+            "key": "admin.system_user_created_successfully",
+            "line": 282,
+            "exists": true
+          },
+          {
+            "key": "roles.system_admin",
+            "line": 285,
+            "exists": true
+          },
+          {
+            "key": "roles.supermanager",
+            "line": 286,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 298,
+            "exists": true
+          },
+          {
+            "key": "admin.error_creating_system_user",
+            "line": 299,
+            "exists": true
+          },
+          {
+            "key": "admin.create_system_user",
+            "line": 313,
+            "exists": true
+          },
+          {
+            "key": "admin.create_system_user_description",
+            "line": 316,
+            "exists": true
+          },
+          {
+            "key": "admin.system_admin_warning",
+            "line": 325,
+            "exists": true
+          },
+          {
+            "key": "common.email",
+            "line": 335,
+            "exists": true
+          },
+          {
+            "key": "common.first_name",
+            "line": 352,
+            "exists": false
+          },
+          {
+            "key": "common.first_name",
+            "line": 357,
+            "exists": false
+          },
+          {
+            "key": "common.last_name",
+            "line": 369,
+            "exists": false
+          },
+          {
+            "key": "common.last_name",
+            "line": 374,
+            "exists": false
+          },
+          {
+            "key": "common.role",
+            "line": 386,
+            "exists": false
+          },
+          {
+            "key": "roles.supermanager",
+            "line": 403,
+            "exists": true
+          },
+          {
+            "key": "admin.supermanager_brief",
+            "line": 405,
+            "exists": true
+          },
+          {
+            "key": "roles.system_admin",
+            "line": 414,
+            "exists": true
+          },
+          {
+            "key": "admin.system_admin_brief",
+            "line": 416,
+            "exists": true
+          },
+          {
+            "key": "admin.primary_dealership",
+            "line": 429,
+            "exists": true
+          },
+          {
+            "key": "common.optional",
+            "line": 429,
+            "exists": true
+          },
+          {
+            "key": "admin.select_dealership_optional",
+            "line": 442,
+            "exists": true
+          },
+          {
+            "key": "common.none",
+            "line": 446,
+            "exists": false
+          },
+          {
+            "key": "admin.primary_dealership_hint",
+            "line": 456,
+            "exists": true
+          },
+          {
+            "key": "admin.send_welcome_email",
+            "line": 464,
+            "exists": true
+          },
+          {
+            "key": "admin.send_welcome_email_hint",
+            "line": 467,
+            "exists": true
+          },
+          {
+            "key": "common.cancel",
+            "line": 573,
+            "exists": true
+          },
+          {
+            "key": "common.creating",
+            "line": 582,
+            "exists": false
+          },
+          {
+            "key": "admin.create_user",
+            "line": 587,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.validation_error",
+            "line": 167,
+            "context": "166: toast({\n167: title: t('common.validation_error'),\n168: description: t('admin.fill_required_fields'),"
+          },
+          {
+            "key": "common.validation_error",
+            "line": 178,
+            "context": "177: toast({\n178: title: t('common.validation_error'),\n179: description: t('admin.invalid_email'),"
+          },
+          {
+            "key": "common.validation_error",
+            "line": 188,
+            "context": "187: toast({\n188: title: t('common.validation_error'),\n189: description: 'Supermanagers must have at least one allowed module',"
+          },
+          {
+            "key": "common.first_name",
+            "line": 352,
+            "context": "351: <User className=\"h-4 w-4\" />\n352: {t('common.first_name')} <span className=\"text-destructive\">*</span>\n353: </Label>"
+          },
+          {
+            "key": "common.first_name",
+            "line": 357,
+            "context": "356: type=\"text\"\n357: placeholder={t('common.first_name')}\n358: value={formData.firstName}"
+          },
+          {
+            "key": "common.last_name",
+            "line": 369,
+            "context": "368: <User className=\"h-4 w-4\" />\n369: {t('common.last_name')} <span className=\"text-destructive\">*</span>\n370: </Label>"
+          },
+          {
+            "key": "common.last_name",
+            "line": 374,
+            "context": "373: type=\"text\"\n374: placeholder={t('common.last_name')}\n375: value={formData.lastName}"
+          },
+          {
+            "key": "common.role",
+            "line": 386,
+            "context": "385: <Shield className=\"h-4 w-4\" />\n386: {t('common.role')} <span className=\"text-destructive\">*</span>\n387: </Label>"
+          },
+          {
+            "key": "common.none",
+            "line": 446,
+            "context": "445: <SelectItem value=\"none\">\n446: {t('common.none')}\n447: </SelectItem>"
+          },
+          {
+            "key": "common.creating",
+            "line": 582,
+            "context": "581: <Loader2 className=\"mr-2 h-4 w-4 animate-spin\" />\n582: {t('common.creating')}\n583: </>"
+          },
+          {
+            "key": "admin.create_user",
+            "line": 587,
+            "context": "586: <Shield className=\"mr-2 h-4 w-4\" />\n587: {t('admin.create_user')}\n588: </>"
+          }
+        ],
+        "coverage": 88,
+        "severity": "low"
       }
     ]
   },
@@ -55044,7 +55424,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Modal Components",
-      "description": "33 Modal components need translation",
+      "description": "35 Modal components need translation",
       "files": [
         "src\\components\\stock\\VehicleDetailsModal.tsx",
         "src\\components\\invitations\\InvitationTemplateModal.tsx",
@@ -55054,8 +55434,10 @@
         "src\\components\\permissions\\RoleAssignmentModal.tsx",
         "src\\components\\dealer\\CreateRoleModal.tsx",
         "src\\components\\dealer\\EditRoleModal.tsx",
+        "src\\components\\admin\\EditAllowedModulesModal.tsx",
         "src\\components\\orders\\ErrorBoundaryModal.tsx",
         "src\\components\\users\\DirectUserCreationModal.tsx",
+        "src\\components\\admin\\CreateSystemUserModal.tsx",
         "src\\components\\orders\\OrderModal.tsx",
         "src\\components\\get-ready\\VehicleFormModal.tsx",
         "src\\components\\dealer\\RoleNotificationsModal.tsx",
@@ -55080,7 +55462,7 @@
         "src\\components\\get-ready\\AddFromTemplatesModal.tsx",
         "src\\components\\get-ready\\vendors\\VendorFormModal.tsx"
       ],
-      "estimatedEffort": "17 hours"
+      "estimatedEffort": "18 hours"
     },
     {
       "priority": "MEDIUM",
@@ -55176,6 +55558,7 @@
         "src\\components\\get-ready\\ImageAnnotator.tsx",
         "src\\components\\get-ready\\approvals\\ApprovalFilters.tsx",
         "src\\pages\\Management.tsx",
+        "src\\hooks\\useSmartNotifications.tsx",
         "src\\hooks\\useChatNotifications.tsx",
         "src\\components\\ErrorBoundary.tsx",
         "src\\components\\orders\\InteractiveTimeline.tsx",
@@ -55197,7 +55580,6 @@
         "src\\pages\\NFCTracking.tsx",
         "src\\hooks\\useUserPresence.tsx",
         "src\\hooks\\useSmartPolling.ts",
-        "src\\hooks\\useSmartNotifications.tsx",
         "src\\hooks\\useDealershipLogo.ts",
         "src\\hooks\\useChatConversations.tsx",
         "src\\contexts\\AuthContext.tsx",
@@ -55226,6 +55608,7 @@
         "src\\components\\sales\\QuickFilterBar.tsx",
         "src\\components\\reports\\RecalculateOrderTotals.tsx",
         "src\\components\\orders\\OrderViewLoadingFallback.tsx",
+        "src\\components\\notifications\\SmartNotificationCenter.tsx",
         "src\\components\\chat\\MessageComposer.tsx",
         "src\\components\\chat\\MessageBubble.tsx",
         "src\\components\\attachments\\AttachmentsList.tsx",
@@ -55284,7 +55667,6 @@
         "src\\components\\reports\\sections\\ExportCenter.tsx",
         "src\\components\\recon-hub\\analytics\\PerformanceComparison.tsx",
         "src\\components\\reactions\\CommentReactions.tsx",
-        "src\\components\\notifications\\SmartNotificationCenter.tsx",
         "src\\components\\notifications\\NotificationBell.tsx",
         "src\\components\\notifications\\analytics\\FailedDeliveriesTable.tsx",
         "src\\components\\loading\\SplashScreen.tsx",
@@ -55320,6 +55702,7 @@
         "src\\hooks\\useServerExport.tsx",
         "src\\hooks\\useSenderInfo.tsx",
         "src\\hooks\\usePerformanceMonitor.ts",
+        "src\\hooks\\useNotificationSoundPreferences.tsx",
         "src\\hooks\\useManualRefresh.ts",
         "src\\hooks\\useGlobalSearch.ts",
         "src\\hooks\\useDeliveryTracking.tsx",
@@ -55371,6 +55754,7 @@
         "src\\components\\chat\\ConversationList.tsx",
         "src\\components\\announcements\\AnnouncementBanner.tsx",
         "src\\components\\ai\\AIAssistant.tsx",
+        "src\\components\\admin\\SystemUsersManagement.tsx",
         "src\\utils\\translationAudit.ts",
         "src\\utils\\stockCSVHelpers.ts",
         "src\\pages\\VinScanner.tsx",
@@ -55406,6 +55790,7 @@
         "src\\components\\stock\\StockCSVUploader.tsx",
         "src\\components\\stock\\vehicle-details\\VehicleInfoTab.tsx",
         "src\\components\\stock\\vehicle-details\\VehicleActivityTab.tsx",
+        "src\\components\\settings\\NotificationSoundSettings.tsx",
         "src\\components\\settings\\security\\SecurityAuditLogViewer.tsx",
         "src\\components\\settings\\notifications\\PushNotificationSettings.tsx",
         "src\\components\\settings\\integrations\\SlackIntegrationCard.tsx",
@@ -55485,8 +55870,6 @@
         "src\\components\\get-ready\\tabs\\VehicleNotesTab.tsx",
         "src\\components\\filters\\DealershipFilter.tsx",
         "src\\components\\dealerships\\DealershipStatsCard.tsx",
-        "src\\components\\dealer\\DealerUsers_OLD_BACKUP.tsx",
-        "src\\components\\dealer\\DealerUsers.tsx",
         "src\\components\\dealer\\DealerOverview.tsx",
         "src\\components\\dealer\\DealerModules.tsx",
         "src\\components\\dealer\\DealerGroups.tsx",
@@ -55501,7 +55884,6 @@
         "src\\components\\attachments\\UploadProgress.tsx",
         "src\\components\\attachments\\DragDropZone.tsx",
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
-        "src\\components\\admin\\SystemUsersManagement.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
       "estimatedEffort": "194 hours"
@@ -55509,9 +55891,9 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2396 translation keys are referenced but missing",
+      "description": "2427 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "120 hours"
+      "estimatedEffort": "122 hours"
     }
   ],
   "coverage": 75

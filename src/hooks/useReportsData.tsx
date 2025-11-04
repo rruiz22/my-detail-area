@@ -147,13 +147,19 @@ export const useRevenueAnalytics = (filters: ReportsFilters, grouping: 'daily' |
       const endOfDay = new Date(filters.endDate);
       endOfDay.setHours(23, 59, 59, 999);
 
-      const { data, error } = await supabase.rpc('get_revenue_analytics', {
+      const params = {
         p_dealer_id: dealerId,
         p_start_date: filters.startDate.toISOString(),
         p_end_date: endOfDay.toISOString(),
         p_grouping: grouping,
+        p_order_type: filters.orderType || 'all',
+        p_status: filters.status || 'all',
         p_service_ids: filters.serviceIds && filters.serviceIds.length > 0 ? filters.serviceIds : null
-      });
+      };
+
+      console.log('🔍 get_revenue_analytics params:', params);
+
+      const { data, error } = await supabase.rpc('get_revenue_analytics', params);
 
       if (error) throw error;
 
@@ -171,7 +177,8 @@ export const useRevenueAnalytics = (filters: ReportsFilters, grouping: 'daily' |
       };
     },
     enabled: !!dealerId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 0, // Temporarily disabled cache for debugging
+    cacheTime: 0, // Don't cache at all
   });
 };
 
@@ -183,14 +190,76 @@ export const useDepartmentRevenue = (filters: ReportsFilters) => {
     queryFn: async () => {
       if (!dealerId) throw new Error('Dealer ID is required');
 
-      const { data: orders, error } = await supabase
+      // Adjust endDate to end of day (23:59:59.999) to include all orders on that day
+      const endOfDay = new Date(filters.endDate);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      // Build query with base filters
+      let query = supabase
         .from('orders')
-        .select('order_type, total_amount, status')
+        .select('order_type, total_amount, status, created_at, completed_at, due_date, services')
         .eq('dealer_id', dealerId)
-        .gte('created_at', filters.startDate.toISOString())
-        .lte('created_at', filters.endDate.toISOString());
+        .neq('status', 'cancelled'); // Exclude cancelled orders to match get_revenue_analytics
+
+      // Apply orderType filter if not 'all'
+      if (filters.orderType && filters.orderType !== 'all') {
+        query = query.eq('order_type', filters.orderType);
+      }
+
+      // Apply status filter if not 'all'
+      if (filters.status && filters.status !== 'all') {
+        query = query.eq('status', filters.status);
+      }
+
+      const { data: orders, error } = await query;
 
       if (error) throw error;
+
+      console.log('🔍 useDepartmentRevenue - Total orders fetched:', orders?.length);
+      console.log('🔍 useDepartmentRevenue - Service filter:', filters.serviceIds);
+
+      // Filter orders using EXACT SAME logic as get_revenue_analytics SQL function:
+      // - sales/service: COALESCE(due_date, created_at)
+      // - recon/carwash: COALESCE(completed_at, created_at)
+      // This ensures Financial tab matches Operational tab behavior
+      const filteredOrders = orders?.filter(order => {
+        let reportDate: Date | null = null;
+        const orderTypeLower = order.order_type?.toLowerCase() || 'sales';
+
+        if (orderTypeLower === 'sales' || orderTypeLower === 'service') {
+          // Use due_date, fallback to created_at
+          reportDate = order.due_date ? new Date(order.due_date) : new Date(order.created_at);
+        } else if (orderTypeLower === 'recon' || orderTypeLower === 'carwash') {
+          // Use completed_at, fallback to created_at (matches SQL COALESCE logic)
+          reportDate = order.completed_at ? new Date(order.completed_at) : new Date(order.created_at);
+        } else {
+          reportDate = new Date(order.created_at);
+        }
+
+        // Check date range
+        const inDateRange = reportDate >= filters.startDate && reportDate <= endOfDay;
+
+        // Check service filter (if provided) - MUST match Operational logic exactly
+        let matchesServiceFilter = true;
+        if (filters.serviceIds && filters.serviceIds.length > 0) {
+          const orderServices = order.services || [];
+
+          // Services can be stored as either array of IDs or array of objects with {id, name, price, type}
+          // Check both id and type fields to match Operational behavior
+          const hasMatchingService = orderServices.some((service: any) => {
+            const serviceId = typeof service === 'string' ? service : service?.id;
+            const serviceType = typeof service === 'object' ? service?.type : null;
+            return filters.serviceIds?.includes(serviceId) ||
+                   (serviceType && filters.serviceIds?.includes(serviceType));
+          });
+          matchesServiceFilter = hasMatchingService;
+        }
+
+        return inDateRange && matchesServiceFilter;
+      }) || [];
+
+      console.log('🔍 useDepartmentRevenue - After filtering:', filteredOrders.length);
+      console.log('🔍 useDepartmentRevenue - Total revenue:', filteredOrders.reduce((sum, o) => sum + (o.total_amount || 0), 0));
 
       // Group by department
       const departments: Record<string, { revenue: number; orders: number; completed: number }> = {
@@ -200,8 +269,9 @@ export const useDepartmentRevenue = (filters: ReportsFilters) => {
         carwash: { revenue: 0, orders: 0, completed: 0 },
       };
 
-      orders?.forEach(order => {
-        const dept = order.order_type || 'sales';
+      filteredOrders.forEach(order => {
+        // Normalize order_type to lowercase for consistent grouping
+        const dept = (order.order_type?.toLowerCase() || 'sales');
         if (departments[dept]) {
           departments[dept].revenue += order.total_amount || 0;
           departments[dept].orders += 1;
@@ -222,7 +292,8 @@ export const useDepartmentRevenue = (filters: ReportsFilters) => {
       }));
     },
     enabled: !!dealerId,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0, // Temporarily disabled cache for debugging
+    cacheTime: 0, // Don't cache at all
   });
 };
 

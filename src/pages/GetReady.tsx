@@ -1,7 +1,6 @@
 import { GetReadyContent } from '@/components/get-ready/GetReadyContent';
 import { VendorManagement } from '@/components/get-ready/VendorManagement';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { GetReadySetup } from './GetReadySetup';
 
 export default function GetReady() {
   return (
@@ -24,8 +23,8 @@ export default function GetReady() {
       {/* Reports */}
       <Route path="reports" element={<GetReadyContent />} />
 
-      {/* Setup - system_admin only */}
-      <Route path="setup" element={<GetReadySetup />} />
+      {/* Setup - system_admin only (content handled by GetReadySplitContent) */}
+      <Route path="setup" element={<GetReadyContent />} />
 
       {/* Direct vehicle link from search - /get-ready/:vehicleId */}
       <Route path=":vehicleId" element={<GetReadyContent />} />

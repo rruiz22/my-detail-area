@@ -17,7 +17,7 @@ import * as logger from "@/utils/logger";
 
 export function AppSidebar() {
   const { state, open, setOpen, isMobile, openMobile, setOpenMobile } = useSidebar();
-  const { enhancedUser, getAllowedOrderTypes, hasPermission } = usePermissions();
+  const { enhancedUser, getAllowedOrderTypes, hasPermission, hasSystemPermission } = usePermissions();
   const { t } = useTranslation();
   const location = useLocation();
   const { selectedDealerId } = useDealerFilter();
@@ -28,17 +28,7 @@ export function AppSidebar() {
   // Get current dealership for logo display
   const { currentDealership } = useAccessibleDealerships();
 
-  // Debug logging for currentDealership changes
-  React.useEffect(() => {
-    logger.dev('🏢 [AppSidebar] currentDealership changed:', {
-      name: currentDealership?.name || 'null',
-      id: currentDealership?.id || 'null',
-      hasLogo: !!currentDealership?.logo_url,
-      hasThumbnail: !!currentDealership?.thumbnail_logo_url,
-      logoUrl: currentDealership?.logo_url || 'null',
-      thumbnailUrl: currentDealership?.thumbnail_logo_url || 'null'
-    });
-  }, [currentDealership]);
+  // ✅ OPTIMIZATION: Removed logging useEffect (use React DevTools for debugging instead)
 
   // Use global filter instead of user's dealership_id for module checking
   // This allows multi-dealer users to see correct sidebar items based on selected dealer
@@ -66,15 +56,25 @@ export function AppSidebar() {
     isSupermanager
   );
 
+  // ✅ OPTIMIZATION: Extract primitives to stabilize useMemo dependencies
+  const userRole = enhancedUser?.role;
+  const isSystemAdmin = userRole === 'system_admin';
+
+  // ✅ OPTIMIZATION: Memoize expensive function call
+  const allowedOrderTypes = React.useMemo(
+    () => getAllowedOrderTypes(),
+    [getAllowedOrderTypes]
+  );
+
   // Core Operations - Filtered by user's allowed order types
   const coreNavItems = React.useMemo(() => {
-    const allowedOrderTypes = getAllowedOrderTypes();
     const baseItems = [
       {
         title: t('navigation.dashboard'),
         url: "/dashboard",
         icon: LayoutDashboard,
-        orderType: null // Dashboard is always accessible
+        orderType: null,
+        module: 'dashboard' as const  // ✅ SECURITY: Enforce permission check
       },
       {
         title: t('navigation.sales_orders'),
@@ -123,7 +123,7 @@ export function AppSidebar() {
         url: "/detail-hub",
         icon: Clock,
         orderType: null, // Accessible based on module permissions
-        module: 'productivity' as const
+        module: 'detail_hub' as const  // ✅ FIX: Separate module from productivity
       },
       {
         title: t('navigation.productivity'),
@@ -140,19 +140,20 @@ export function AppSidebar() {
     return baseItems.filter(item => {
       // First check order type permissions
       const hasOrderTypeAccess = item.orderType === null ||
-        (item.orderType !== null && allowedOrderTypes.includes(item.orderType)) ||
-        enhancedUser?.role === 'system_admin';
+        allowedOrderTypes.includes(item.orderType) ||
+        isSystemAdmin ||
+        isSupermanager;  // ✅ FIX: Add supermanager bypass
 
       // If item has a module property, also check module permissions
       if ('module' in item && item.module) {
         return hasOrderTypeAccess &&
           hasPermission(item.module, 'view') &&
-          (isAdmin || hasModuleAccess(item.module));
+          (isAdmin || isSupermanager || hasModuleAccess(item.module));  // ✅ FIX: Add supermanager bypass
       }
 
       return hasOrderTypeAccess;
     });
-  }, [t, getAllowedOrderTypes, enhancedUser?.role, hasPermission, isAdmin, hasModuleAccess]);
+  }, [t, allowedOrderTypes, isSystemAdmin, isSupermanager, hasPermission, isAdmin, hasModuleAccess]);
 
   // Workflow Management section removed - items moved to Core Operations
 
@@ -183,9 +184,9 @@ export function AppSidebar() {
     // Filter by permissions AND dealer enabled modules
     return baseItems.filter(item =>
       hasPermission(item.module, 'view') &&
-      (isAdmin || hasModuleAccess(item.module))
+      (isAdmin || isSupermanager || hasModuleAccess(item.module))  // ✅ FIX: Add supermanager bypass
     );
-  }, [t, hasPermission, isAdmin, hasModuleAccess]);
+  }, [t, hasPermission, isAdmin, isSupermanager, hasModuleAccess]);
 
   // Productivity section removed - items moved to Core Operations and Management
 
@@ -228,43 +229,60 @@ export function AppSidebar() {
     return baseItems.filter(item => {
       if (!item.module) return true; // Profile always accessible
       return hasPermission(item.module, item.permission) &&
-        (isAdmin || hasModuleAccess(item.module));
+        (isAdmin || isSupermanager || hasModuleAccess(item.module));  // ✅ FIX: Add supermanager bypass
     });
-  }, [t, hasPermission, isAdmin, hasModuleAccess]);
+  }, [t, hasPermission, isAdmin, isSupermanager, hasModuleAccess]);
 
-  // System Admin - only navigation items
+  // ✅ SECURITY FIX: System Admin items now use permission system instead of hardcoded role check
   const systemAdminNavItems = React.useMemo(() => {
-    // Use same logic as isAdmin check to ensure consistency
-    if (!isAdmin) return [];
+    // ✅ Use permission system instead of hardcoded role check
+    if (!hasSystemPermission('manage_all_settings')) return [];
 
-    return [
+    const baseItems = [
       {
         title: t('announcements.title', 'Announcements'),
         url: "/announcements",
-        icon: Megaphone
+        icon: Megaphone,
+        module: 'management' as const,
+        permission: 'admin' as const
       },
       {
         title: t('navigation.landing_page'),
         url: "/landing",
-        icon: Globe
+        icon: Globe,
+        module: 'management' as const,
+        permission: 'admin' as const
       },
       {
         title: 'Phase 3 Dashboard',
         url: "/phase3",
-        icon: Sparkles
+        icon: Sparkles,
+        module: 'management' as const,
+        permission: 'admin' as const
       }
     ];
-  }, [isAdmin, t]);
+
+    // ✅ Apply same filtering as other sections for consistency
+    return baseItems.filter(item =>
+      hasPermission(item.module, item.permission) &&
+      (isAdmin || hasModuleAccess(item.module))
+    );
+  }, [hasSystemPermission, hasPermission, hasModuleAccess, isAdmin, t]);
   const currentPath = location.pathname;
   const collapsed = state === "collapsed";
 
+  // ✅ OPTIMIZATION: Use ref to avoid recreating handleNavClick on every resize
+  const isMobileRef = React.useRef(isMobile);
+  React.useEffect(() => {
+    isMobileRef.current = isMobile;
+  }, [isMobile]);
 
   const handleNavClick = React.useCallback(() => {
     // Close mobile sidebar on navigation
-    if (isMobile) {
+    if (isMobileRef.current) {
       setOpenMobile(false);
     }
-  }, [isMobile, setOpenMobile]);
+  }, [setOpenMobile]);
   const isActive = (path: string) => {
     if (path === "/dashboard") {
       return currentPath === "/dashboard";

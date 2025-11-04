@@ -73,7 +73,7 @@ function generateFilename(invoice: InvoiceWithDetails, extension: string): strin
  */
 export async function generateInvoiceExcelBlob(invoice: InvoiceWithDetails): Promise<{ blob: Blob; filename: string }> {
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = 'My Detail Area';
+  workbook.creator = 'Dealer Detail Service LLC';
   workbook.created = new Date();
 
   const worksheet = workbook.addWorksheet('Invoice', {

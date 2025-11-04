@@ -2,11 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { 
-  Car, 
-  Wrench, 
-  RefreshCw, 
-  Droplets, 
+import {
+  Car,
+  Wrench,
+  RefreshCw,
+  Droplets,
   Plus,
   Eye,
   TrendingUp,
@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { usePermissions } from '@/hooks/usePermissions';
+import { useMemo } from 'react';
 
 interface DepartmentData {
   id: string;
@@ -30,7 +31,7 @@ interface DepartmentData {
     inProgress: number;
     completed: number;
   };
-  revenue: number;
+  // revenue field removed - no financial data in dashboard
   efficiency: number;
   route: string;
 }
@@ -38,22 +39,24 @@ interface DepartmentData {
 export function DepartmentOverview() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { data: dashboardData, isLoading } = useDashboardData();
   const { hasPermission } = usePermissions();
 
-  const formatCurrency = (amount: number) => {
-    const currencyMap = {
-      'en': 'USD',
-      'es': 'USD', // Assuming US Spanish
-      'pt-BR': 'BRL'
-    };
-    const currency = currencyMap[i18n.language as keyof typeof currencyMap] || 'USD';
+  // Calculate which order types the user has permission to view
+  const allowedOrderTypes = useMemo(() => {
+    const types: string[] = [];
 
-    return new Intl.NumberFormat(i18n.language, {
-      style: 'currency',
-      currency: currency
-    }).format(amount);
-  };
+    if (hasPermission('sales_orders', 'view')) types.push('sales');
+    if (hasPermission('service_orders', 'view')) types.push('service');
+    if (hasPermission('recon_orders', 'view')) types.push('recon');
+    if (hasPermission('car_wash', 'view')) types.push('carwash');
+
+    return types;
+  }, [hasPermission]);
+
+  // Fetch dashboard data filtered by allowed order types
+  const { data: dashboardData, isLoading } = useDashboardData(allowedOrderTypes);
+
+  // formatCurrency function removed - no financial data displayed
 
   // Build departments array from real data
   const allDepartments = [
@@ -108,7 +111,7 @@ export function DepartmentOverview() {
         inProgress: deptData?.inProgress || 0,
         completed: deptData?.completed || 0
       },
-      revenue: deptData?.revenue || 0,
+      // revenue field removed - no financial data
       efficiency: deptData?.total ? Math.round((deptData.completed / deptData.total) * 100) : 0
     };
   });

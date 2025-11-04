@@ -1,6 +1,7 @@
 import { shouldUseRealtime } from '@/config/realtimeFeatures';
 import type { OrderStatus } from '@/constants/orderStatus';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDealerFilter } from '@/contexts/DealerFilterContext';
 import { useToast } from '@/hooks/use-toast';
 import { useOrderActions } from '@/hooks/useOrderActions';
 import { usePermissions } from '@/hooks/usePermissions';
@@ -302,6 +303,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
   const { enhancedUser, getAllowedOrderTypes } = usePermissions();
   const { generateQR } = useOrderActions();
   const queryClient = useQueryClient();
+  const { selectedDealerId } = useDealerFilter();  // ✅ FIX: Use dealer filter from context
 
   // Debug and call counting refs
   const refreshCallCountRef = useRef(0);
@@ -827,7 +829,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       );
 
       // Invalidate to ensure data consistency in background
-      queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
+      // ✅ FIX: Include selectedDealerId in queryKey to match polling query
+      queryClient.invalidateQueries({ queryKey: ['orders', 'all', selectedDealerId] });
     } catch (error) {
       logError('Error in createOrder:', error);
       throw error;
@@ -1024,7 +1027,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       // This avoids duplicate SMS and ensures correct shortlink usage
 
       // Invalidate to ensure data consistency in background
-      queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
+      // ✅ FIX: Include selectedDealerId in queryKey to match polling query
+      queryClient.invalidateQueries({ queryKey: ['orders', 'all', selectedDealerId] });
     } catch (error) {
       logError('Error in updateOrder:', error);
       throw error;
@@ -1057,7 +1061,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       );
 
       // Invalidate to ensure data consistency in background
-      queryClient.invalidateQueries({ queryKey: ['orders', 'all'] });
+      // ✅ FIX: Include selectedDealerId in queryKey to match polling query
+      queryClient.invalidateQueries({ queryKey: ['orders', 'all', selectedDealerId] });
     } catch (error) {
       logError('Error in deleteOrder:', error);
       throw error;
@@ -1078,8 +1083,9 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
   // }, [user, enhancedUser, refreshData]); // Wait for both user and enhancedUser
 
   // Smart polling for order data (replaces real-time subscription)
+  // ✅ FIX: Include selectedDealerId in queryKey so cache invalidates when dealer changes
   const ordersPollingQuery = useOrderPolling(
-    ['orders', 'all'],
+    ['orders', 'all', selectedDealerId],  // ✅ FIX: Added selectedDealerId to queryKey
     async () => {
       if (!user || !enhancedUser) return [];
 
@@ -1092,21 +1098,21 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         .eq('order_type', 'sales')
         .order('created_at', { ascending: false });
 
-      // Check global dealer filter with robust validation
-      const savedDealerFilter = localStorage.getItem('selectedDealerFilter');
-      const parsedFilter = savedDealerFilter && savedDealerFilter !== 'null' && savedDealerFilter !== 'undefined'
-        ? (savedDealerFilter === 'all' ? 'all' : parseInt(savedDealerFilter))
-        : 'all';
-      const dealerFilter = typeof parsedFilter === 'number' && !isNaN(parsedFilter) ? parsedFilter : 'all';
-      dev(`🔍 Polling - Dealer filter resolved: "${savedDealerFilter}" → ${dealerFilter}`);
+      // ✅ FIX: Use selectedDealerId from context instead of reading localStorage
+      const dealerFilter = selectedDealerId;
+      dev(`🔍 Polling - Dealer filter resolved: ${dealerFilter}`);
 
       // Handle dealer filtering based on user type and global filter
-      // ✅ FIX: System admins should ALWAYS respect global filter, even if they have dealership_id assigned
+      // ✅ FIX: System admins and supermanagers should ALWAYS respect global filter
       const isSystemAdminPolling = isEnhancedUserV2(enhancedUser)
         ? enhancedUser.is_system_admin
         : isEnhancedUserV1(enhancedUser) && enhancedUser.role === 'system_admin';
 
-      const shouldUseGlobalFilterPolling = enhancedUser.dealership_id === null || isSystemAdminPolling;
+      const isSupermanagerPolling = isEnhancedUserV2(enhancedUser)
+        ? enhancedUser.is_supermanager
+        : isEnhancedUserV1(enhancedUser) && enhancedUser.role === 'supermanager';
+
+      const shouldUseGlobalFilterPolling = enhancedUser.dealership_id === null || isSystemAdminPolling || isSupermanagerPolling;
 
       if (shouldUseGlobalFilterPolling) {
         // Multi-dealer users and system admins - respect global filter
@@ -1196,16 +1202,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
     [ordersPollingQuery.data]
   );
 
-  // Listen for dealer filter changes
-  useEffect(() => {
-    const handleDealerFilterChange = () => {
-      dev('🎯 Dealer filter changed - refreshing data');
-      refreshData();
-    };
-
-    window.addEventListener('dealerFilterChanged', handleDealerFilterChange);
-    return () => window.removeEventListener('dealerFilterChanged', handleDealerFilterChange);
-  }, [refreshData]);
+  // ✅ FIX: Removed manual dealer filter listener - TanStack Query auto-refetches when queryKey changes
+  // The queryKey now includes selectedDealerId, so changing dealer automatically triggers refetch
 
   // Handle filtering when tab or filters change (without full refresh)
   useEffect(() => {

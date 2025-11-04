@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { GetReadyAlerts } from './GetReadyAlerts';
 import { GetReadyDashboardWidget } from './GetReadyDashboardWidget';
+import { GetReadyEnterpriseMetrics } from './GetReadyEnterpriseMetrics';
 import { BottleneckAnalysis, StepPerformanceMatrix, TimeSeriesCharts } from './analytics';
 
 interface GetReadyOverviewProps {
@@ -254,6 +255,9 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
 
       {/* Executive KPIs */}
       <GetReadyDashboardWidget />
+
+      {/* Enterprise Metrics Dashboard */}
+      <GetReadyEnterpriseMetrics allVehicles={allVehicles} timeRange={timeRange} />
 
       {/* Workflow Distribution */}
       <div>

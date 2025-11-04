@@ -40,7 +40,8 @@ export type AppModule =
   | 'settings'
   | 'users'
   | 'dealerships'
-  | 'productivity';
+  | 'productivity'
+  | 'detail_hub';  // ✅ NEW: Separate module for Detail Hub (employee portal, timecards, invoices)
 
 interface DealershipContextType {
   // State

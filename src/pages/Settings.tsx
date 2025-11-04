@@ -1,6 +1,7 @@
 import { StorageDevTools } from "@/components/dev/StorageDevTools";
 import { NotificationPreferencesModal } from '@/components/notifications/NotificationPreferencesModal';
 import { IntegrationSettings } from '@/components/settings/IntegrationSettings';
+import { NotificationSoundSettings } from '@/components/settings/NotificationSoundSettings';
 import { NotificationTemplatesManager, PushNotificationSettings } from '@/components/settings/notifications';
 import { PlatformBrandingSettings } from '@/components/settings/platform/PlatformBrandingSettings';
 import { PlatformGeneralSettings } from '@/components/settings/platform/PlatformGeneralSettings';
@@ -19,7 +20,7 @@ import { usePermissions } from '@/hooks/usePermissions';
 import { useSettingsPermissions } from '@/hooks/useSettingsPermissions';
 import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { supabase } from '@/integrations/supabase/client';
-import { Bell, Building2, Database, Mail, Palette, Save, Settings as SettingsIcon, Shield, User } from "lucide-react";
+import { Bell, Building2, Database, Mail, Palette, Save, Settings as SettingsIcon, Shield, User, Volume2 } from "lucide-react";
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -192,6 +193,8 @@ export default function Settings() {
           in_app_notifications: userPrefs.in_app_alerts,
           notification_frequency: 'immediate',
           updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id'
         });
 
       if (error) throw error;
@@ -302,7 +305,7 @@ export default function Settings() {
       {/* Settings Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-6">
-          {perms.canAccessPlatform && (
+          {perms.canManagePlatform && (
             <TabsTrigger value="platform" className="flex items-center gap-2">
               <SettingsIcon className="h-4 w-4" />
               <span className="hidden sm:inline">{t('settings.platform')}</span>
@@ -324,7 +327,7 @@ export default function Settings() {
             <Database className="h-4 w-4" />
             <span className="hidden sm:inline">{t('settings.integrations')}</span>
           </TabsTrigger>
-          {perms.canAccessSecurity && (
+          {perms.canManageSecurity && (
             <TabsTrigger value="security" className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
               <span className="hidden sm:inline">{t('settings.security')}</span>
@@ -334,7 +337,7 @@ export default function Settings() {
 
 
         {/* Platform Settings */}
-        {perms.canAccessPlatform && (
+        {perms.canManagePlatform && (
           <TabsContent value="platform" className="space-y-6">
             <Tabs defaultValue="branding" className="space-y-6">
               <TabsList>
@@ -346,6 +349,12 @@ export default function Settings() {
                   <SettingsIcon className="h-4 w-4" />
                   {t('settings.general')}
                 </TabsTrigger>
+                {perms.isSystemAdmin && (
+                  <TabsTrigger value="sounds" className="flex items-center gap-2">
+                    <Volume2 className="h-4 w-4" />
+                    {t('settings.notification_sound.title')}
+                  </TabsTrigger>
+                )}
               </TabsList>
 
               <TabsContent value="branding">
@@ -354,6 +363,18 @@ export default function Settings() {
 
               <TabsContent value="general">
                 <PlatformGeneralSettings />
+              </TabsContent>
+
+              <TabsContent value="sounds">
+                {perms.isSystemAdmin ? (
+                  <NotificationSoundSettings />
+                ) : (
+                  <Card>
+                    <CardContent className="p-6 text-center text-muted-foreground">
+                      <p>{t('settings.admin_only')}</p>
+                    </CardContent>
+                  </Card>
+                )}
               </TabsContent>
             </Tabs>
           </TabsContent>

@@ -2,15 +2,20 @@ import dealershipHero from "@/assets/dealership-hero.jpg";
 import { DashboardMetrics } from '@/components/dashboard/DashboardMetrics';
 import { DepartmentOverview } from '@/components/dashboard/DepartmentOverview';
 import { RecentActivity } from '@/components/dashboard/RecentActivity';
+import { TeamPerformance } from '@/components/dashboard/TeamPerformance';
+import { QuickActions } from '@/components/dashboard/QuickActions';
+import { ModuleStatusCards } from '@/components/dashboard/ModuleStatusCards';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { useNotifications } from "@/hooks/useNotifications";
 import { usePermissions } from '@/hooks/usePermissions';
+import { useSenderInfo } from '@/hooks/useSenderInfo';
 import * as logger from '@/utils/logger';
-import { AlertTriangle, Clock, MessageCircle, Plus, Settings, TrendingUp, Users, Zap } from "lucide-react";
+import { AlertTriangle, Clock, MessageCircle, Plus, Zap, Shield, User, Mail } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useMemo } from 'react';
 
 export default function Dashboard() {
   logger.dev('🟢 Dashboard component is RENDERING');
@@ -19,14 +24,90 @@ export default function Dashboard() {
   const notifications = useNotifications();
   const { data: dashboardData } = useDashboardData();
   const { hasPermission } = usePermissions();
+  const { data: senderInfo } = useSenderInfo();
 
   const pendingCount = dashboardData?.overall.pendingOrders || 0;
 
-  const handleQuickAction = (action: string, route?: string) => {
-    if (route) {
-      navigate(route);
-    }
-  };
+  // Check if user has access to any order modules
+  const hasAnyModuleAccess = useMemo(() => {
+    return (
+      hasPermission('sales_orders', 'view') ||
+      hasPermission('service_orders', 'view') ||
+      hasPermission('recon_orders', 'view') ||
+      hasPermission('car_wash', 'view')
+    );
+  }, [hasPermission]);
+
+  // Empty state - No module access
+  if (!hasAnyModuleAccess) {
+    return (
+      <div className="space-y-8">
+        {/* Hero Section - Still show branding */}
+        <div className="relative overflow-hidden rounded-xl bg-gray-900 dark:bg-gray-950 p-4 sm:p-6 lg:p-8">
+          <div className="absolute inset-0 bg-cover bg-center" style={{
+            backgroundImage: `url(${dealershipHero})`
+          }} />
+          <div className="absolute inset-0 bg-black/60 dark:bg-black/70" />
+          <div className="relative z-10">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-white">
+              {t('dashboard.hero.welcome_to')} {senderInfo?.company_name || 'My Detail Area'}
+            </h1>
+            <p className="text-lg sm:text-xl text-white/90">{t('dashboard.hero.subtitle')}</p>
+          </div>
+        </div>
+
+        {/* Empty State Card */}
+        <Card className="border-amber-200 bg-amber-50/50">
+          <CardHeader className="text-center">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center">
+                <Shield className="w-8 h-8 text-amber-600" />
+              </div>
+            </div>
+            <CardTitle className="text-xl">{t('dashboard.empty_state.no_access_title')}</CardTitle>
+            <CardDescription className="text-base">
+              {t('dashboard.empty_state.no_access_message')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <p className="text-sm font-medium mb-3">{t('dashboard.empty_state.contact_admin')}</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="p-3 bg-white rounded-lg border">
+                  <p className="text-sm font-medium mb-1">📊 {t('dashboard.departments.sales')}</p>
+                  <p className="text-xs text-muted-foreground">{t('dashboard.empty_state.sales_module')}</p>
+                </div>
+                <div className="p-3 bg-white rounded-lg border">
+                  <p className="text-sm font-medium mb-1">🔧 {t('dashboard.departments.service')}</p>
+                  <p className="text-xs text-muted-foreground">{t('dashboard.empty_state.service_module')}</p>
+                </div>
+                <div className="p-3 bg-white rounded-lg border">
+                  <p className="text-sm font-medium mb-1">🔄 {t('dashboard.departments.recon')}</p>
+                  <p className="text-xs text-muted-foreground">{t('dashboard.empty_state.recon_module')}</p>
+                </div>
+                <div className="p-3 bg-white rounded-lg border">
+                  <p className="text-sm font-medium mb-1">💧 {t('dashboard.departments.car_wash')}</p>
+                  <p className="text-xs text-muted-foreground">{t('dashboard.empty_state.carwash_module')}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4 border-t">
+              <Button variant="default" onClick={() => navigate('/settings')}>
+                <User className="w-4 h-4 mr-2" />
+                {t('dashboard.empty_state.view_profile')}
+              </Button>
+              <Button variant="outline" onClick={() => navigate('/settings')}>
+                <Mail className="w-4 h-4 mr-2" />
+                {t('dashboard.empty_state.contact_support')}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
         {/* Hero Section */}
@@ -39,7 +120,9 @@ export default function Dashboard() {
           <div className="absolute inset-0 bg-black/60 dark:bg-black/70" />
 
           <div className="relative z-10">
-            <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-white">{t('dashboard.hero.welcome')}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-white">
+              {t('dashboard.hero.welcome_to')} {senderInfo?.company_name || 'My Detail Area'}
+            </h1>
             <p className="text-lg sm:text-xl text-white/90">{t('dashboard.hero.subtitle')}</p>
             <div className="mt-6 flex flex-wrap gap-3">
               {/* New Order - Disabled/Informational only */}
@@ -99,6 +182,12 @@ export default function Dashboard() {
         {/* Enhanced Metrics */}
         <DashboardMetrics />
 
+        {/* Module Status Cards - Quick overview of accessible modules */}
+        <ModuleStatusCards />
+
+        {/* Quick Actions - Permission-based actions */}
+        <QuickActions />
+
         {/* Department Overview & Recent Activity */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           <div className="xl:col-span-2">
@@ -109,62 +198,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Quick Access Tools */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Zap className="w-5 h-5 text-primary" />
-              {t('dashboard.quick_tools.title')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Button
-                variant="outline"
-                className="h-24 flex flex-col gap-3 hover:shadow-md transition-all"
-                onClick={() => handleQuickAction(t('dashboard.quick_tools.vin_scanner'), '/vin-scanner')}
-              >
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <TrendingUp className="w-4 h-4 text-primary" />
-                </div>
-                <span className="text-sm font-medium">{t('dashboard.quick_tools.vin_scanner')}</span>
-              </Button>
-
-              <Button
-                variant="outline"
-                className="h-24 flex flex-col gap-3 hover:shadow-md transition-all"
-                onClick={() => handleQuickAction(t('dashboard.quick_tools.nfc_tracking'), '/nfc-tracking')}
-              >
-                <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center">
-                  <Clock className="w-4 h-4 text-secondary" />
-                </div>
-                <span className="text-sm font-medium">{t('dashboard.quick_tools.nfc_tracking')}</span>
-              </Button>
-
-              <Button
-                variant="outline"
-                className="h-24 flex flex-col gap-3 hover:shadow-md transition-all"
-                onClick={() => handleQuickAction(t('dashboard.quick_tools.chat'), '/chat')}
-              >
-                <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
-                  <Users className="w-4 h-4 text-accent" />
-                </div>
-                <span className="text-sm font-medium">{t('dashboard.quick_tools.chat')}</span>
-              </Button>
-
-              <Button
-                variant="outline"
-                className="h-24 flex flex-col gap-3 hover:shadow-md transition-all"
-                onClick={() => handleQuickAction(t('dashboard.quick_tools.settings'), '/settings')}
-              >
-                <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                  <Settings className="w-4 h-4 text-muted-foreground" />
-                </div>
-                <span className="text-sm font-medium">{t('dashboard.quick_tools.settings')}</span>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Team Performance - Activity in accessible modules */}
+        <TeamPerformance />
     </div>
   );
 }

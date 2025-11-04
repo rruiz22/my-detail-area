@@ -53,8 +53,6 @@ export function useAccessibleDealerships(): UseAccessibleDealershipsReturn {
   // All the complex logic now lives in DealershipProvider
   const context = useDealershipContext();
 
-  logger.dev('🔗 [useAccessibleDealerships] Hook called, proxying to context');
-
   return {
     dealerships: context.dealerships,
     currentDealership: context.currentDealership,

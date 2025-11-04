@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
+import { getSystemTimezone } from '@/utils/dateUtils';
 
 export default function Reports() {
   const { t } = useTranslation();
@@ -28,9 +29,11 @@ export default function Reports() {
     ? (typeof selectedDealerId === 'number' ? selectedDealerId : parseInt(selectedDealerId))
     : defaultDealerId;
 
-  // Helper function to get week dates (Monday to Sunday)
+  // Helper function to get week dates (Monday to Sunday) in system timezone
   const getWeekDates = (date: Date) => {
-    const current = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const timezone = getSystemTimezone();
+    const dateInTimezone = new Date(date.toLocaleString('en-US', { timeZone: timezone }));
+    const current = new Date(dateInTimezone.getFullYear(), dateInTimezone.getMonth(), dateInTimezone.getDate());
     const day = current.getDay();
     const daysToMonday = day === 0 ? -6 : 1 - day;
     const monday = new Date(current);
@@ -48,10 +51,14 @@ export default function Reports() {
       const savedFilters = localStorage.getItem('reports_filters');
       if (savedFilters) {
         const parsed = JSON.parse(savedFilters);
+        const timezone = getSystemTimezone();
+        // Parse dates in system timezone to avoid UTC conversion issues
+        const startDateStr = new Date(parsed.startDate).toLocaleString('en-US', { timeZone: timezone });
+        const endDateStr = new Date(parsed.endDate).toLocaleString('en-US', { timeZone: timezone });
         return {
           ...parsed,
-          startDate: new Date(parsed.startDate),
-          endDate: new Date(parsed.endDate),
+          startDate: new Date(startDateStr),
+          endDate: new Date(endDateStr),
           dealerId: effectiveDealerId // Always use current dealer
         };
       }

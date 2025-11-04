@@ -180,6 +180,13 @@ export interface EnhancedUserGranular {
   dealership_id: number | null;
   is_system_admin: boolean;
   is_supermanager: boolean;  // NEW: Elevated access but limited (cannot manage platform settings or create system_admins)
+
+  /** @deprecated Use allowed_modules instead. Kept for backward compatibility only. */
+  bypass_custom_roles?: boolean;
+
+  /** 🆕 NEW: Global allowed modules for supermanagers (applies to ALL dealers). Empty array or undefined = no access. */
+  allowed_modules?: string[];
+
   custom_roles: GranularCustomRole[];
   // Aggregated permissions from all roles
   system_permissions: Set<SystemPermissionKey>;

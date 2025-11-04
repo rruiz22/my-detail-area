@@ -50,7 +50,7 @@ function formatDateWithYear(dateString: string): string {
 export async function generateInvoiceExcel(invoice: InvoiceWithDetails): Promise<void> {
   // Create workbook and worksheet
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = 'My Detail Area';
+  workbook.creator = 'Dealer Detail Service LLC';
   workbook.created = new Date();
   workbook.modified = new Date();
 

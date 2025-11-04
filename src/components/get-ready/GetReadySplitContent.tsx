@@ -4,6 +4,7 @@ import { ApprovalHeader } from "@/components/get-ready/approvals/ApprovalHeader"
 import { ApprovalHistoryTable } from "@/components/get-ready/approvals/ApprovalHistoryTable";
 import { ApprovalMetricsDashboard } from "@/components/get-ready/approvals/ApprovalMetricsDashboard";
 import { PendingApprovalsTable } from "@/components/get-ready/approvals/PendingApprovalsTable";
+import { PermissionGuard } from "@/components/permissions/PermissionGuard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -51,7 +52,7 @@ import {
     Search,
     XCircle
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { GetReadyDashboardWidget } from "./GetReadyDashboardWidget";
@@ -60,6 +61,7 @@ import { GetReadyVehicleList } from "./GetReadyVehicleList";
 import { VehicleDetailPanel } from "./VehicleDetailPanel";
 import { VehicleFormModal } from "./VehicleFormModal";
 import { VehicleTable } from "./VehicleTable";
+import { GetReadySetup } from "@/pages/GetReadySetup";
 
 interface GetReadySplitContentProps {
   className?: string;
@@ -285,15 +287,86 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
 
   // Determine which content to show based on route
   const isOverview =
-    location.pathname === "/get-ready" || location.pathname === "/get-ready/";
+    location.pathname === "/get-ready/overview" ||
+    location.pathname === "/get-ready" ||
+    location.pathname === "/get-ready/";
   const isDetailsView = location.pathname === "/get-ready/details";
   const isReportsView = location.pathname === "/get-ready/reports";
   const isApprovalsView = location.pathname === "/get-ready/approvals";
+  const isSetupView = location.pathname === "/get-ready/setup";
 
+  // ✅ FIX: Move ALL useMemo hooks BEFORE any early returns
+  // Filter vehicles by approval status - USE UNFILTERED DATA for Approvals tab
+  // ✅ IMPROVED: Only count vehicles that have active work items needing approval
+  // ✅ OPTIMIZED: Wrapped in useMemo to prevent re-execution on every render
+  const pendingApprovalVehicles = useMemo(() => {
+    return allVehiclesUnfiltered.filter((v) => {
+      // Vehicle-level approval check
+      const vehicleNeedsApproval = v.requires_approval === true && v.approval_status === "pending";
+
+      if (!vehicleNeedsApproval) {
+        return false;
+      }
+
+      // ✅ CRITICAL: Must have at least ONE work item that needs approval
+      // A work item needs approval if: approval_required=true AND approval_status NOT IN ('declined', 'approved')
+      const workItemsNeedingApproval = (v.work_items || []).filter(
+        (wi: any) => wi.approval_required &&
+                     wi.approval_status !== 'declined' &&
+                     wi.approval_status !== 'approved'
+      );
+
+      return workItemsNeedingApproval.length > 0;
+    });
+  }, [allVehiclesUnfiltered]);
+
+  // ✅ OPTIMIZED: Wrapped in useMemo to prevent re-execution on every render
+  const approvedTodayVehicles = useMemo(() => {
+    return allVehiclesUnfiltered.filter((v) => {
+      // Include vehicles approved via modal OR auto-approved via work items
+      if (!v.approved_at) return false;
+      if (v.approval_status !== "approved" && v.approval_status !== "not_required") return false;
+
+      const approvedDate = new Date(v.approved_at);
+      const today = new Date();
+      return (
+        approvedDate.getDate() === today.getDate() &&
+        approvedDate.getMonth() === today.getMonth() &&
+        approvedDate.getFullYear() === today.getFullYear()
+      );
+    });
+  }, [allVehiclesUnfiltered]);
+
+  // ✅ OPTIMIZED: Wrapped in useMemo to prevent re-execution on every render
+  const rejectedTodayVehicles = useMemo(() => {
+    return allVehiclesUnfiltered.filter((v) => {
+      if (!v.rejected_at || v.approval_status !== "rejected") return false;
+      const rejectedDate = new Date(v.rejected_at);
+      const today = new Date();
+      return (
+        rejectedDate.getDate() === today.getDate() &&
+        rejectedDate.getMonth() === today.getMonth() &&
+        rejectedDate.getFullYear() === today.getFullYear()
+      );
+    });
+  }, [allVehiclesUnfiltered]);
+
+  // ✅ FIX: Early returns AFTER all hooks
   // Overview Tab - Enhanced Dashboard with Real Data
   // ⚠️ IMPORTANT: Overview must ALWAYS show data from ALL steps, not filtered by selected step
   if (isOverview) {
     return <GetReadyOverview allVehicles={allVehiclesUnfiltered} className={className} />;
+  }
+
+  // Setup Tab - System Configuration (access_setup permission required)
+  if (isSetupView) {
+    return (
+      <div className={cn("h-full overflow-auto", className)}>
+        <PermissionGuard module="get_ready" permission="access_setup" checkDealerModule={true}>
+          <GetReadySetup />
+        </PermissionGuard>
+      </div>
+    );
   }
 
   // Reports View Tab - Analytics and Reports
@@ -376,58 +449,6 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
       </div>
     );
   }
-
-  // Filter vehicles by approval status - USE UNFILTERED DATA for Approvals tab
-  // ✅ IMPROVED: Only count vehicles that have active work items needing approval
-  const pendingApprovalVehicles = allVehiclesUnfiltered.filter((v) => {
-    // Vehicle-level approval check
-    const vehicleNeedsApproval = v.requires_approval === true && v.approval_status === "pending";
-
-    if (!vehicleNeedsApproval) {
-      return false;
-    }
-
-    // ✅ CRITICAL: Must have at least ONE work item that needs approval
-    // A work item needs approval if: approval_required=true AND approval_status NOT IN ('declined', 'approved')
-    const workItemsNeedingApproval = (v.work_items || []).filter(
-      (wi: any) => wi.approval_required &&
-                   wi.approval_status !== 'declined' &&
-                   wi.approval_status !== 'approved'
-    );
-
-    const hasActiveWorkItemsNeedingApproval = workItemsNeedingApproval.length > 0;
-
-    if (!hasActiveWorkItemsNeedingApproval) {
-      console.log(`⏭️ [Approvals Filter] Skipped vehicle: ${v.stock_number} - No active work items needing approval`);
-    }
-
-    return hasActiveWorkItemsNeedingApproval;
-  });
-
-  const approvedTodayVehicles = allVehiclesUnfiltered.filter((v) => {
-    // Include vehicles approved via modal OR auto-approved via work items
-    if (!v.approved_at) return false;
-    if (v.approval_status !== "approved" && v.approval_status !== "not_required") return false;
-
-    const approvedDate = new Date(v.approved_at);
-    const today = new Date();
-    return (
-      approvedDate.getDate() === today.getDate() &&
-      approvedDate.getMonth() === today.getMonth() &&
-      approvedDate.getFullYear() === today.getFullYear()
-    );
-  });
-
-  const rejectedTodayVehicles = allVehiclesUnfiltered.filter((v) => {
-    if (!v.rejected_at || v.approval_status !== "rejected") return false;
-    const rejectedDate = new Date(v.rejected_at);
-    const today = new Date();
-    return (
-      rejectedDate.getDate() === today.getDate() &&
-      rejectedDate.getMonth() === today.getMonth() &&
-      rejectedDate.getFullYear() === today.getFullYear()
-    );
-  });
 
   // Approvals View Tab - Enterprise Dashboard
   if (isApprovalsView) {

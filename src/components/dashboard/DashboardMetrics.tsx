@@ -1,15 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
 import {
   TrendingUp,
   TrendingDown,
   Clock,
   CheckCircle,
-  Car
+  Car,
+  Shield
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useDashboardData } from '@/hooks/useDashboardData';
+import { usePermissions } from '@/hooks/usePermissions';
+import { useMemo } from 'react';
 
 interface MetricCardProps {
   title: string;
@@ -90,9 +94,24 @@ const MetricCard = ({
 
 export function DashboardMetrics() {
   const { t } = useTranslation();
-  const { data: dashboardData, isLoading } = useDashboardData();
+  const { hasPermission } = usePermissions();
 
-  // Use real data from database (respects RLS policies automatically)
+  // Calculate which order types the user has permission to view
+  const allowedOrderTypes = useMemo(() => {
+    const types: string[] = [];
+
+    if (hasPermission('sales_orders', 'view')) types.push('sales');
+    if (hasPermission('service_orders', 'view')) types.push('service');
+    if (hasPermission('recon_orders', 'view')) types.push('recon');
+    if (hasPermission('car_wash', 'view')) types.push('carwash');
+
+    return types;
+  }, [hasPermission]);
+
+  // Pass allowed types to filter dashboard data by permissions
+  const { data: dashboardData, isLoading } = useDashboardData(allowedOrderTypes);
+
+  // Use real data from database (now filtered by permissions)
   const metrics = dashboardData?.overall || {
     totalOrders: 0,
     pendingOrders: 0,
@@ -119,30 +138,45 @@ export function DashboardMetrics() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <MetricCard
-        title={t('dashboard.metrics.total_orders')}
-        value={metrics.totalOrders}
-        icon={<Car className="w-4 h-4" />}
-        color="primary"
-        subtitle={t('dashboard.metrics.orders_this_month')}
-      />
+    <div className="space-y-3">
+      {/* Permission indicator badge - only show if user has limited access */}
+      {allowedOrderTypes.length > 0 && allowedOrderTypes.length < 4 && (
+        <div className="flex justify-end">
+          <Badge variant="outline" className="text-xs">
+            <Shield className="w-3 h-3 mr-1" />
+            {t('dashboard.metrics.showing_modules', {
+              count: allowedOrderTypes.length,
+              total: 4
+            })}
+          </Badge>
+        </div>
+      )}
 
-      <MetricCard
-        title={t('dashboard.metrics.pending_orders')}
-        value={metrics.pendingOrders}
-        icon={<Clock className="w-4 h-4" />}
-        color="warning"
-        subtitle={t('dashboard.metrics.awaiting_processing')}
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <MetricCard
+          title={t('dashboard.metrics.total_orders')}
+          value={metrics.totalOrders}
+          icon={<Car className="w-4 h-4" />}
+          color="primary"
+          subtitle={t('dashboard.metrics.orders_this_month')}
+        />
 
-      <MetricCard
-        title={t('dashboard.metrics.completed_today')}
-        value={metrics.completedToday}
-        icon={<CheckCircle className="w-4 h-4" />}
-        color="success"
-        subtitle={t('dashboard.metrics.finished_today')}
-      />
+        <MetricCard
+          title={t('dashboard.metrics.pending_orders')}
+          value={metrics.pendingOrders}
+          icon={<Clock className="w-4 h-4" />}
+          color="warning"
+          subtitle={t('dashboard.metrics.awaiting_processing')}
+        />
+
+        <MetricCard
+          title={t('dashboard.metrics.completed_today')}
+          value={metrics.completedToday}
+          icon={<CheckCircle className="w-4 h-4" />}
+          color="success"
+          subtitle={t('dashboard.metrics.finished_today')}
+        />
+      </div>
     </div>
   );
 }
