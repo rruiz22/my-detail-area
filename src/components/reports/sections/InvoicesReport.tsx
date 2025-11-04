@@ -633,12 +633,36 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       if (invoiceError) throw invoiceError;
 
       const items = selectedVehicles.map((vehicle, index) => {
-        // Extract service names from vehicle.services
+        // Extract service names from vehicle.services using robust logic
         const serviceNames = vehicle.services && Array.isArray(vehicle.services)
           ? vehicle.services.map((service: any) => {
-              const serviceId = service.id || service.type || service;
-              const serviceName = availableServices.find(s => s.id === serviceId)?.name || serviceId;
-              return serviceName;
+              // Handle different service data structures
+              if (typeof service === 'string') {
+                // If service is just a string ID, try to find it in availableServices
+                const serviceData = availableServices?.find(ds => ds.id === service);
+                return serviceData?.name || service;
+              }
+
+              // If service is an object, try different fields
+              // Priority 1: Direct name field (carwash new format)
+              if (service.name) return service.name;
+
+              // Priority 2: Lookup by type field (carwash with type ID)
+              if (service.type) {
+                const serviceData = availableServices?.find(ds => ds.id === service.type);
+                return serviceData?.name || service.type;
+              }
+
+              // Priority 3: Lookup by id field (Sales/Service/Recon)
+              if (service.id) {
+                const serviceData = availableServices?.find(ds => ds.id === service.id);
+                return serviceData?.name || service.id;
+              }
+
+              // Priority 4: Other name fields
+              if (service.service_name) return service.service_name;
+
+              return 'Unknown';
             }).join(', ')
           : 'N/A';
 
