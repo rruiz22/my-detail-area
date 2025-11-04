@@ -1,8 +1,8 @@
 {
   "scannedFiles": 812,
-  "totalStrings": 7787,
+  "totalStrings": 7796,
   "hardcodedStrings": 1935,
-  "translatedStrings": 5852,
+  "translatedStrings": 5861,
   "issues": {
     "critical": [
       {
@@ -1847,433 +1847,465 @@
         "hardcodedStrings": [
           {
             "text": "Date",
-            "line": 899,
-            "context": "898: <tr>\n899: <th>Date</th>\n900: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>"
+            "line": 912,
+            "context": "911: <tr>\n912: <th>Date</th>\n913: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>"
           },
           {
             "text": "Vehicle",
-            "line": 901,
-            "context": "900: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>\n901: <th>Vehicle</th>\n902: <th>VIN</th>"
+            "line": 914,
+            "context": "913: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>\n914: <th>Vehicle</th>\n915: <th>VIN</th>"
           },
           {
             "text": "Amount",
-            "line": 903,
-            "context": "902: <th>VIN</th>\n903: <th class=\"text-right\">Amount</th>\n904: </tr>"
+            "line": 916,
+            "context": "915: <th>VIN</th>\n916: <th class=\"text-right\">Amount</th>\n917: </tr>"
           },
           {
             "text": "Please select a dealership to manage invoices",
-            "line": 1058,
-            "context": "1057: <AlertCircle className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n1058: <p className=\"text-muted-foreground\">Please select a dealership to manage invoices</p>\n1059: </div>"
+            "line": 1075,
+            "context": "1074: <AlertCircle className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n1075: <p className=\"text-muted-foreground\">Please select a dealership to manage invoices</p>\n1076: </div>"
           },
           {
             "text": "Invoice Management",
-            "line": 1106,
-            "context": "1105: <h2 className=\"text-2xl font-bold tracking-tight flex items-center gap-2\">\n1106: <Receipt className=\"h-6 w-6\" />\n1107: Invoice Management"
+            "line": 1123,
+            "context": "1122: <h2 className=\"text-2xl font-bold tracking-tight flex items-center gap-2\">\n1123: <Receipt className=\"h-6 w-6\" />\n1124: Invoice Management"
           },
           {
             "text": "Manage invoices and billing for your dealership",
-            "line": 1109,
-            "context": "1108: </h2>\n1109: <p className=\"text-muted-foreground text-sm\">Manage invoices and billing for your dealership</p>\n1110: </div>"
+            "line": 1126,
+            "context": "1125: </h2>\n1126: <p className=\"text-muted-foreground text-sm\">Manage invoices and billing for your dealership</p>\n1127: </div>"
           },
           {
             "text": "Quick Invoice",
-            "line": 1112,
-            "context": "1111: <Button onClick={() => setShowQuickCreateDialog(true)}>\n1112: <Plus className=\"h-4 w-4 mr-2\" />\n1113: Quick Invoice"
+            "line": 1129,
+            "context": "1128: <Button onClick={() => setShowQuickCreateDialog(true)}>\n1129: <Plus className=\"h-4 w-4 mr-2\" />\n1130: Quick Invoice"
           },
           {
             "text": "Invoices List",
-            "line": 1144,
-            "context": "1143: <TabsTrigger value=\"invoices\">\n1144: <FileText className=\"h-4 w-4 mr-2\" />\n1145: Invoices List"
+            "line": 1161,
+            "context": "1160: <TabsTrigger value=\"invoices\">\n1161: <FileText className=\"h-4 w-4 mr-2\" />\n1162: Invoices List"
           },
           {
             "text": "Create Invoice",
-            "line": 1148,
-            "context": "1147: <TabsTrigger value=\"create\">\n1148: <Plus className=\"h-4 w-4 mr-2\" />\n1149: Create Invoice"
+            "line": 1165,
+            "context": "1164: <TabsTrigger value=\"create\">\n1165: <Plus className=\"h-4 w-4 mr-2\" />\n1166: Create Invoice"
           },
           {
             "text": "Check Vehicle",
-            "line": 1152,
-            "context": "1151: <TabsTrigger value=\"search\">\n1152: <Search className=\"h-4 w-4 mr-2\" />\n1153: Check Vehicle"
+            "line": 1169,
+            "context": "1168: <TabsTrigger value=\"search\">\n1169: <Search className=\"h-4 w-4 mr-2\" />\n1170: Check Vehicle"
           },
           {
             "text": "Invoices",
-            "line": 1161,
-            "context": "1160: <CardHeader className=\"border-b bg-gray-50/50\">\n1161: <CardTitle>Invoices</CardTitle>\n1162: <CardDescription>View and manage all invoices</CardDescription>"
+            "line": 1178,
+            "context": "1177: <CardHeader className=\"border-b bg-gray-50/50\">\n1178: <CardTitle>Invoices</CardTitle>\n1179: <CardDescription>View and manage all invoices</CardDescription>"
           },
           {
             "text": "View and manage all invoices",
-            "line": 1162,
-            "context": "1161: <CardTitle>Invoices</CardTitle>\n1162: <CardDescription>View and manage all invoices</CardDescription>\n1163: "
+            "line": 1179,
+            "context": "1178: <CardTitle>Invoices</CardTitle>\n1179: <CardDescription>View and manage all invoices</CardDescription>\n1180: "
           },
           {
             "text": "All Status",
-            "line": 1183,
-            "context": "1182: <SelectContent>\n1183: <SelectItem value=\"all\">All Status</SelectItem>\n1184: <SelectItem value=\"pending\">Pending</SelectItem>"
+            "line": 1200,
+            "context": "1199: <SelectContent>\n1200: <SelectItem value=\"all\">All Status</SelectItem>\n1201: <SelectItem value=\"pending\">Pending</SelectItem>"
           },
           {
             "text": "Pending",
-            "line": 1184,
-            "context": "1183: <SelectItem value=\"all\">All Status</SelectItem>\n1184: <SelectItem value=\"pending\">Pending</SelectItem>\n1185: <SelectItem value=\"paid\">Paid</SelectItem>"
+            "line": 1201,
+            "context": "1200: <SelectItem value=\"all\">All Status</SelectItem>\n1201: <SelectItem value=\"pending\">Pending</SelectItem>\n1202: <SelectItem value=\"paid\">Paid</SelectItem>"
           },
           {
             "text": "Paid",
-            "line": 1185,
-            "context": "1184: <SelectItem value=\"pending\">Pending</SelectItem>\n1185: <SelectItem value=\"paid\">Paid</SelectItem>\n1186: <SelectItem value=\"overdue\">Overdue</SelectItem>"
+            "line": 1202,
+            "context": "1201: <SelectItem value=\"pending\">Pending</SelectItem>\n1202: <SelectItem value=\"paid\">Paid</SelectItem>\n1203: <SelectItem value=\"overdue\">Overdue</SelectItem>"
           },
           {
             "text": "Overdue",
-            "line": 1186,
-            "context": "1185: <SelectItem value=\"paid\">Paid</SelectItem>\n1186: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1187: <SelectItem value=\"partially_paid\">Partial</SelectItem>"
+            "line": 1203,
+            "context": "1202: <SelectItem value=\"paid\">Paid</SelectItem>\n1203: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1204: <SelectItem value=\"partially_paid\">Partial</SelectItem>"
           },
           {
             "text": "Partial",
-            "line": 1187,
-            "context": "1186: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1187: <SelectItem value=\"partially_paid\">Partial</SelectItem>\n1188: </SelectContent>"
+            "line": 1204,
+            "context": "1203: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1204: <SelectItem value=\"partially_paid\">Partial</SelectItem>\n1205: </SelectContent>"
           },
           {
             "text": "All Types",
-            "line": 1198,
-            "context": "1197: <SelectContent>\n1198: <SelectItem value=\"all\">All Types</SelectItem>\n1199: <SelectItem value=\"sales\">Sales</SelectItem>"
+            "line": 1215,
+            "context": "1214: <SelectContent>\n1215: <SelectItem value=\"all\">All Types</SelectItem>\n1216: <SelectItem value=\"sales\">Sales</SelectItem>"
           },
           {
             "text": "Sales",
-            "line": 1199,
-            "context": "1198: <SelectItem value=\"all\">All Types</SelectItem>\n1199: <SelectItem value=\"sales\">Sales</SelectItem>\n1200: <SelectItem value=\"service\">Service</SelectItem>"
+            "line": 1216,
+            "context": "1215: <SelectItem value=\"all\">All Types</SelectItem>\n1216: <SelectItem value=\"sales\">Sales</SelectItem>\n1217: <SelectItem value=\"service\">Service</SelectItem>"
           },
           {
             "text": "Service",
-            "line": 1200,
-            "context": "1199: <SelectItem value=\"sales\">Sales</SelectItem>\n1200: <SelectItem value=\"service\">Service</SelectItem>\n1201: <SelectItem value=\"recon\">Recon</SelectItem>"
+            "line": 1217,
+            "context": "1216: <SelectItem value=\"sales\">Sales</SelectItem>\n1217: <SelectItem value=\"service\">Service</SelectItem>\n1218: <SelectItem value=\"recon\">Recon</SelectItem>"
           },
           {
             "text": "Recon",
-            "line": 1201,
-            "context": "1200: <SelectItem value=\"service\">Service</SelectItem>\n1201: <SelectItem value=\"recon\">Recon</SelectItem>\n1202: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
+            "line": 1218,
+            "context": "1217: <SelectItem value=\"service\">Service</SelectItem>\n1218: <SelectItem value=\"recon\">Recon</SelectItem>\n1219: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
           },
           {
             "text": "Car Wash",
-            "line": 1202,
-            "context": "1201: <SelectItem value=\"recon\">Recon</SelectItem>\n1202: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1203: </SelectContent>"
+            "line": 1219,
+            "context": "1218: <SelectItem value=\"recon\">Recon</SelectItem>\n1219: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1220: </SelectContent>"
           },
           {
             "text": "No invoices found",
-            "line": 1216,
-            "context": "1215: <FileText className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n1216: <p className=\"text-muted-foreground\">No invoices found</p>\n1217: </div>"
+            "line": 1233,
+            "context": "1232: <FileText className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n1233: <p className=\"text-muted-foreground\">No invoices found</p>\n1234: </div>"
           },
           {
             "text": "Invoice",
-            "line": 1222,
-            "context": "1221: <TableRow>\n1222: <TableHead className=\"text-center font-bold\">Invoice</TableHead>\n1223: <TableHead className=\"text-center font-bold\">Date Range</TableHead>"
+            "line": 1239,
+            "context": "1238: <TableRow>\n1239: <TableHead className=\"text-center font-bold\">Invoice</TableHead>\n1240: <TableHead className=\"text-center font-bold\">Date Range</TableHead>"
           },
           {
             "text": "Date Range",
-            "line": 1223,
-            "context": "1222: <TableHead className=\"text-center font-bold\">Invoice</TableHead>\n1223: <TableHead className=\"text-center font-bold\">Date Range</TableHead>\n1224: <TableHead className=\"text-center font-bold\">Issue Date</TableHead>"
+            "line": 1240,
+            "context": "1239: <TableHead className=\"text-center font-bold\">Invoice</TableHead>\n1240: <TableHead className=\"text-center font-bold\">Date Range</TableHead>\n1241: <TableHead className=\"text-center font-bold\">Issue Date</TableHead>"
           },
           {
             "text": "Issue Date",
-            "line": 1224,
-            "context": "1223: <TableHead className=\"text-center font-bold\">Date Range</TableHead>\n1224: <TableHead className=\"text-center font-bold\">Issue Date</TableHead>\n1225: <TableHead className=\"text-center font-bold\">Due Date</TableHead>"
+            "line": 1241,
+            "context": "1240: <TableHead className=\"text-center font-bold\">Date Range</TableHead>\n1241: <TableHead className=\"text-center font-bold\">Issue Date</TableHead>\n1242: <TableHead className=\"text-center font-bold\">Due Date</TableHead>"
           },
           {
             "text": "Due Date",
-            "line": 1225,
-            "context": "1224: <TableHead className=\"text-center font-bold\">Issue Date</TableHead>\n1225: <TableHead className=\"text-center font-bold\">Due Date</TableHead>\n1226: <TableHead className=\"text-center font-bold\">Amount</TableHead>"
+            "line": 1242,
+            "context": "1241: <TableHead className=\"text-center font-bold\">Issue Date</TableHead>\n1242: <TableHead className=\"text-center font-bold\">Due Date</TableHead>\n1243: <TableHead className=\"text-center font-bold\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 1226,
-            "context": "1225: <TableHead className=\"text-center font-bold\">Due Date</TableHead>\n1226: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n1227: <TableHead className=\"text-center font-bold\">Paid</TableHead>"
+            "line": 1243,
+            "context": "1242: <TableHead className=\"text-center font-bold\">Due Date</TableHead>\n1243: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n1244: <TableHead className=\"text-center font-bold\">Paid</TableHead>"
           },
           {
             "text": "Paid",
-            "line": 1227,
-            "context": "1226: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n1227: <TableHead className=\"text-center font-bold\">Paid</TableHead>\n1228: <TableHead className=\"text-center font-bold\">Due</TableHead>"
+            "line": 1244,
+            "context": "1243: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n1244: <TableHead className=\"text-center font-bold\">Paid</TableHead>\n1245: <TableHead className=\"text-center font-bold\">Due</TableHead>"
           },
           {
             "text": "Status",
-            "line": 1229,
-            "context": "1228: <TableHead className=\"text-center font-bold\">Due</TableHead>\n1229: <TableHead className=\"text-center font-bold\">Status</TableHead>\n1230: <TableHead className=\"text-center font-bold\">Actions</TableHead>"
+            "line": 1246,
+            "context": "1245: <TableHead className=\"text-center font-bold\">Due</TableHead>\n1246: <TableHead className=\"text-center font-bold\">Status</TableHead>\n1247: <TableHead className=\"text-center font-bold\">Actions</TableHead>"
           },
           {
             "text": "Actions",
-            "line": 1230,
-            "context": "1229: <TableHead className=\"text-center font-bold\">Status</TableHead>\n1230: <TableHead className=\"text-center font-bold\">Actions</TableHead>\n1231: </TableRow>"
+            "line": 1247,
+            "context": "1246: <TableHead className=\"text-center font-bold\">Status</TableHead>\n1247: <TableHead className=\"text-center font-bold\">Actions</TableHead>\n1248: </TableRow>"
           },
           {
             "text": "Filter Vehicles",
-            "line": 1352,
-            "context": "1351: <CardTitle className=\"flex items-center gap-2 text-lg\">\n1352: <Filter className=\"h-5 w-5\" />\n1353: Filter Vehicles"
+            "line": 1369,
+            "context": "1368: <CardTitle className=\"flex items-center gap-2 text-lg\">\n1369: <Filter className=\"h-5 w-5\" />\n1370: Filter Vehicles"
           },
           {
             "text": "Use filters to find the vehicles you want to invoice",
-            "line": 1355,
-            "context": "1354: </CardTitle>\n1355: <CardDescription>Use filters to find the vehicles you want to invoice</CardDescription>\n1356: </CardHeader>"
+            "line": 1372,
+            "context": "1371: </CardTitle>\n1372: <CardDescription>Use filters to find the vehicles you want to invoice</CardDescription>\n1373: </CardHeader>"
           },
           {
             "text": "Department",
-            "line": 1361,
-            "context": "1360: <div className=\"space-y-1.5\">\n1361: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1362: <Select value={orderType} onValueChange={setOrderType}>"
+            "line": 1378,
+            "context": "1377: <div className=\"space-y-1.5\">\n1378: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1379: <Select value={orderType} onValueChange={setOrderType}>"
           },
           {
             "text": "All Departments",
-            "line": 1367,
-            "context": "1366: <SelectContent>\n1367: <SelectItem value=\"all\">All Departments</SelectItem>\n1368: <SelectItem value=\"sales\">Sales</SelectItem>"
+            "line": 1384,
+            "context": "1383: <SelectContent>\n1384: <SelectItem value=\"all\">All Departments</SelectItem>\n1385: <SelectItem value=\"sales\">Sales</SelectItem>"
           },
           {
             "text": "Sales",
-            "line": 1368,
-            "context": "1367: <SelectItem value=\"all\">All Departments</SelectItem>\n1368: <SelectItem value=\"sales\">Sales</SelectItem>\n1369: <SelectItem value=\"service\">Service</SelectItem>"
+            "line": 1385,
+            "context": "1384: <SelectItem value=\"all\">All Departments</SelectItem>\n1385: <SelectItem value=\"sales\">Sales</SelectItem>\n1386: <SelectItem value=\"service\">Service</SelectItem>"
           },
           {
             "text": "Service",
-            "line": 1369,
-            "context": "1368: <SelectItem value=\"sales\">Sales</SelectItem>\n1369: <SelectItem value=\"service\">Service</SelectItem>\n1370: <SelectItem value=\"recon\">Recon</SelectItem>"
+            "line": 1386,
+            "context": "1385: <SelectItem value=\"sales\">Sales</SelectItem>\n1386: <SelectItem value=\"service\">Service</SelectItem>\n1387: <SelectItem value=\"recon\">Recon</SelectItem>"
           },
           {
             "text": "Recon",
-            "line": 1370,
-            "context": "1369: <SelectItem value=\"service\">Service</SelectItem>\n1370: <SelectItem value=\"recon\">Recon</SelectItem>\n1371: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
+            "line": 1387,
+            "context": "1386: <SelectItem value=\"service\">Service</SelectItem>\n1387: <SelectItem value=\"recon\">Recon</SelectItem>\n1388: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
           },
           {
             "text": "Car Wash",
-            "line": 1371,
-            "context": "1370: <SelectItem value=\"recon\">Recon</SelectItem>\n1371: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1372: </SelectContent>"
+            "line": 1388,
+            "context": "1387: <SelectItem value=\"recon\">Recon</SelectItem>\n1388: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1389: </SelectContent>"
           },
           {
             "text": "Status",
-            "line": 1377,
-            "context": "1376: <div className=\"space-y-1.5\">\n1377: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1378: <Select value={orderStatus} onValueChange={setOrderStatus}>"
+            "line": 1394,
+            "context": "1393: <div className=\"space-y-1.5\">\n1394: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1395: <Select value={orderStatus} onValueChange={setOrderStatus}>"
           },
           {
             "text": "Date Range",
-            "line": 1403,
-            "context": "1402: <div className=\"space-y-1.5\">\n1403: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1404: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
+            "line": 1420,
+            "context": "1419: <div className=\"space-y-1.5\">\n1420: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1421: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
           },
           {
             "text": "Today",
-            "line": 1409,
-            "context": "1408: <SelectContent>\n1409: <SelectItem value=\"today\">Today</SelectItem>\n1410: <SelectItem value=\"this_week\">This Week</SelectItem>"
+            "line": 1426,
+            "context": "1425: <SelectContent>\n1426: <SelectItem value=\"today\">Today</SelectItem>\n1427: <SelectItem value=\"this_week\">This Week</SelectItem>"
           },
           {
             "text": "This Week",
-            "line": 1410,
-            "context": "1409: <SelectItem value=\"today\">Today</SelectItem>\n1410: <SelectItem value=\"this_week\">This Week</SelectItem>\n1411: <SelectItem value=\"last_week\">Last Week</SelectItem>"
+            "line": 1427,
+            "context": "1426: <SelectItem value=\"today\">Today</SelectItem>\n1427: <SelectItem value=\"this_week\">This Week</SelectItem>\n1428: <SelectItem value=\"last_week\">Last Week</SelectItem>"
           },
           {
             "text": "Last Week",
-            "line": 1411,
-            "context": "1410: <SelectItem value=\"this_week\">This Week</SelectItem>\n1411: <SelectItem value=\"last_week\">Last Week</SelectItem>\n1412: <SelectItem value=\"this_month\">This Month</SelectItem>"
+            "line": 1428,
+            "context": "1427: <SelectItem value=\"this_week\">This Week</SelectItem>\n1428: <SelectItem value=\"last_week\">Last Week</SelectItem>\n1429: <SelectItem value=\"this_month\">This Month</SelectItem>"
           },
           {
             "text": "This Month",
-            "line": 1412,
-            "context": "1411: <SelectItem value=\"last_week\">Last Week</SelectItem>\n1412: <SelectItem value=\"this_month\">This Month</SelectItem>\n1413: <SelectItem value=\"last_month\">Last Month</SelectItem>"
+            "line": 1429,
+            "context": "1428: <SelectItem value=\"last_week\">Last Week</SelectItem>\n1429: <SelectItem value=\"this_month\">This Month</SelectItem>\n1430: <SelectItem value=\"last_month\">Last Month</SelectItem>"
           },
           {
             "text": "Last Month",
-            "line": 1413,
-            "context": "1412: <SelectItem value=\"this_month\">This Month</SelectItem>\n1413: <SelectItem value=\"last_month\">Last Month</SelectItem>\n1414: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>"
+            "line": 1430,
+            "context": "1429: <SelectItem value=\"this_month\">This Month</SelectItem>\n1430: <SelectItem value=\"last_month\">Last Month</SelectItem>\n1431: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>"
           },
           {
             "text": "Custom Range",
-            "line": 1415,
-            "context": "1414: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>\n1415: <SelectItem value=\"custom\">Custom Range</SelectItem>\n1416: </SelectContent>"
+            "line": 1432,
+            "context": "1431: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>\n1432: <SelectItem value=\"custom\">Custom Range</SelectItem>\n1433: </SelectContent>"
           },
           {
             "text": "Search",
-            "line": 1421,
-            "context": "1420: <div className=\"space-y-1.5\">\n1421: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1422: <div className=\"relative\">"
+            "line": 1438,
+            "context": "1437: <div className=\"space-y-1.5\">\n1438: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1439: <div className=\"relative\">"
           },
           {
             "text": "From Date",
-            "line": 1439,
-            "context": "1438: <div className=\"space-y-1.5\">\n1439: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1440: <Input"
+            "line": 1456,
+            "context": "1455: <div className=\"space-y-1.5\">\n1456: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1457: <Input"
           },
           {
             "text": "To Date",
-            "line": 1452,
-            "context": "1451: <div className=\"space-y-1.5\">\n1452: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1453: <Input"
+            "line": 1469,
+            "context": "1468: <div className=\"space-y-1.5\">\n1469: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1470: <Input"
           },
           {
             "text": "Showing vehicles from",
-            "line": 1471,
-            "context": "1470: <Calendar className=\"h-3.5 w-3.5\" />\n1471: <span>\n1472: Showing vehicles from <span className=\"font-medium text-foreground\">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className=\"font-medium text-foreground\">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>"
+            "line": 1488,
+            "context": "1487: <Calendar className=\"h-3.5 w-3.5\" />\n1488: <span>\n1489: Showing vehicles from <span className=\"font-medium text-foreground\">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className=\"font-medium text-foreground\">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>"
           },
           {
             "text": "Include Only Service",
-            "line": 1480,
-            "context": "1479: <div className=\"space-y-2\">\n1480: <Label>Include Only Service</Label>\n1481: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
+            "line": 1497,
+            "context": "1496: <div className=\"space-y-2\">\n1497: <Label>Include Only Service</Label>\n1498: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
           },
           {
             "text": "No services found for this dealer",
-            "line": 1490,
-            "context": "1489: {availableServices.length === 0 && !loadingServices && (\n1490: <SelectItem value=\"none\" disabled>\n1491: No services found for this dealer"
+            "line": 1507,
+            "context": "1506: {availableServices.length === 0 && !loadingServices && (\n1507: <SelectItem value=\"none\" disabled>\n1508: No services found for this dealer"
           },
           {
             "text": "Exclude Services",
-            "line": 1506,
-            "context": "1505: <div className=\"space-y-2\">\n1506: <Label>Exclude Services</Label>\n1507: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
+            "line": 1523,
+            "context": "1522: <div className=\"space-y-2\">\n1523: <Label>Exclude Services</Label>\n1524: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
           },
           {
             "text": "No services excluded",
-            "line": 1522,
-            "context": "1521: ) : (\n1522: <span className=\"text-sm text-muted-foreground\">No services excluded</span>\n1523: )}"
+            "line": 1539,
+            "context": "1538: ) : (\n1539: <span className=\"text-sm text-muted-foreground\">No services excluded</span>\n1540: )}"
           },
           {
             "text": "Available Vehicles",
-            "line": 1556,
-            "context": "1555: <div>\n1556: <CardTitle>Available Vehicles</CardTitle>\n1557: <CardDescription>"
+            "line": 1573,
+            "context": "1572: <div>\n1573: <CardTitle>Available Vehicles</CardTitle>\n1574: <CardDescription>"
           },
           {
             "text": "No vehicles found",
-            "line": 1576,
-            "context": "1575: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1576: <p className=\"text-muted-foreground\">No vehicles found</p>\n1577: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
+            "line": 1593,
+            "context": "1592: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1593: <p className=\"text-muted-foreground\">No vehicles found</p>\n1594: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
           },
           {
             "text": "Try adjusting your filters",
-            "line": 1577,
-            "context": "1576: <p className=\"text-muted-foreground\">No vehicles found</p>\n1577: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n1578: </div>"
+            "line": 1594,
+            "context": "1593: <p className=\"text-muted-foreground\">No vehicles found</p>\n1594: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n1595: </div>"
           },
           {
             "text": "Order Number",
-            "line": 1590,
-            "context": "1589: </TableHead>\n1590: <TableHead className=\"text-center font-bold\">Order Number</TableHead>\n1591: <TableHead className=\"text-center font-bold\">Date</TableHead>"
+            "line": 1607,
+            "context": "1606: </TableHead>\n1607: <TableHead className=\"text-center font-bold\">Order Number</TableHead>\n1608: <TableHead className=\"text-center font-bold\">Date</TableHead>"
           },
           {
             "text": "Date",
-            "line": 1591,
-            "context": "1590: <TableHead className=\"text-center font-bold\">Order Number</TableHead>\n1591: <TableHead className=\"text-center font-bold\">Date</TableHead>\n1592: <TableHead className=\"text-center font-bold\">"
+            "line": 1608,
+            "context": "1607: <TableHead className=\"text-center font-bold\">Order Number</TableHead>\n1608: <TableHead className=\"text-center font-bold\">Date</TableHead>\n1609: <TableHead className=\"text-center font-bold\">"
           },
           {
             "text": "Vehicle",
-            "line": 1595,
-            "context": "1594: </TableHead>\n1595: <TableHead className=\"text-center font-bold\">Vehicle</TableHead>\n1596: <TableHead className=\"text-center font-bold\">VIN</TableHead>"
+            "line": 1612,
+            "context": "1611: </TableHead>\n1612: <TableHead className=\"text-center font-bold\">Vehicle</TableHead>\n1613: <TableHead className=\"text-center font-bold\">VIN</TableHead>"
           },
           {
             "text": "Services",
-            "line": 1597,
-            "context": "1596: <TableHead className=\"text-center font-bold\">VIN</TableHead>\n1597: <TableHead className=\"text-center font-bold\">Services</TableHead>\n1598: <TableHead className=\"text-center font-bold\">Dept</TableHead>"
+            "line": 1614,
+            "context": "1613: <TableHead className=\"text-center font-bold\">VIN</TableHead>\n1614: <TableHead className=\"text-center font-bold\">Services</TableHead>\n1615: <TableHead className=\"text-center font-bold\">Dept</TableHead>"
           },
           {
             "text": "Dept",
-            "line": 1598,
-            "context": "1597: <TableHead className=\"text-center font-bold\">Services</TableHead>\n1598: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n1599: <TableHead className=\"text-center font-bold\">Amount</TableHead>"
+            "line": 1615,
+            "context": "1614: <TableHead className=\"text-center font-bold\">Services</TableHead>\n1615: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n1616: <TableHead className=\"text-center font-bold\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 1599,
-            "context": "1598: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n1599: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n1600: </TableRow>"
+            "line": 1616,
+            "context": "1615: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n1616: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n1617: </TableRow>"
           },
           {
             "text": "Invoice Details",
-            "line": 1688,
-            "context": "1687: <CardTitle className=\"flex items-center gap-2\">\n1688: <FileText className=\"h-5 w-5\" />\n1689: Invoice Details"
+            "line": 1705,
+            "context": "1704: <CardTitle className=\"flex items-center gap-2\">\n1705: <FileText className=\"h-5 w-5\" />\n1706: Invoice Details"
           },
           {
             "text": "Selected Vehicles",
-            "line": 1742,
-            "context": "1741: <div>\n1742: <div className=\"text-sm text-muted-foreground mb-1\">Selected Vehicles</div>\n1743: <div className=\"text-3xl font-bold\">{selectedVehicleIds.size}</div>"
+            "line": 1759,
+            "context": "1758: <div>\n1759: <div className=\"text-sm text-muted-foreground mb-1\">Selected Vehicles</div>\n1760: <div className=\"text-3xl font-bold\">{selectedVehicleIds.size}</div>"
           },
           {
             "text": "Invoice Total",
-            "line": 1746,
-            "context": "1745: <div>\n1746: <div className=\"text-sm text-muted-foreground mb-1\">Invoice Total</div>\n1747: <div className=\"text-3xl font-bold text-indigo-600\">"
+            "line": 1763,
+            "context": "1762: <div>\n1763: <div className=\"text-sm text-muted-foreground mb-1\">Invoice Total</div>\n1764: <div className=\"text-3xl font-bold text-indigo-600\">"
           },
           {
             "text": "Cancel",
-            "line": 1778,
-            "context": "1777: }}\n1778: >\n1779: Cancel"
+            "line": 1795,
+            "context": "1794: }}\n1795: >\n1796: Cancel"
           },
           {
             "text": "Invoice Preview",
-            "line": 1851,
-            "context": "1850: <div className=\"flex items-center justify-between\">\n1851: <DialogTitle>Invoice Preview</DialogTitle>\n1852: <Button"
+            "line": 1868,
+            "context": "1867: <div className=\"flex items-center justify-between\">\n1868: <DialogTitle>Invoice Preview</DialogTitle>\n1869: <Button"
           },
           {
             "text": "Search invoices...",
-            "line": 1169,
-            "context": "1168: <Input\n1169: placeholder=\"Search invoices...\"\n1170: value={invoiceFilters.searchTerm}"
+            "line": 1186,
+            "context": "1185: <Input\n1186: placeholder=\"Search invoices...\"\n1187: value={invoiceFilters.searchTerm}"
           },
           {
             "text": "Status",
-            "line": 1180,
-            "context": "1179: <SelectTrigger className=\"w-[150px]\">\n1180: <SelectValue placeholder=\"Status\" />\n1181: </SelectTrigger>"
+            "line": 1197,
+            "context": "1196: <SelectTrigger className=\"w-[150px]\">\n1197: <SelectValue placeholder=\"Status\" />\n1198: </SelectTrigger>"
           },
           {
             "text": "Type",
-            "line": 1195,
-            "context": "1194: <SelectTrigger className=\"w-[150px]\">\n1195: <SelectValue placeholder=\"Type\" />\n1196: </SelectTrigger>"
+            "line": 1212,
+            "context": "1211: <SelectTrigger className=\"w-[150px]\">\n1212: <SelectValue placeholder=\"Type\" />\n1213: </SelectTrigger>"
           },
           {
             "text": "Add Payment",
-            "line": 1306,
-            "context": "1305: disabled={invoice.status === 'paid' || invoice.status === 'cancelled'}\n1306: title=\"Add Payment\"\n1307: >"
+            "line": 1323,
+            "context": "1322: disabled={invoice.status === 'paid' || invoice.status === 'cancelled'}\n1323: title=\"Add Payment\"\n1324: >"
           },
           {
             "text": "View Details",
-            "line": 1318,
-            "context": "1317: }}\n1318: title=\"View Details\"\n1319: >"
+            "line": 1335,
+            "context": "1334: }}\n1335: title=\"View Details\"\n1336: >"
           },
           {
             "text": "Delete Invoice",
-            "line": 1330,
-            "context": "1329: disabled={invoice.status === 'paid'}\n1330: title=\"Delete Invoice\"\n1331: >"
+            "line": 1347,
+            "context": "1346: disabled={invoice.status === 'paid'}\n1347: title=\"Delete Invoice\"\n1348: >"
           },
           {
             "text": "VIN, stock, customer...",
-            "line": 1426,
-            "context": "1425: id=\"search-filter-inline\"\n1426: placeholder=\"VIN, stock, customer...\"\n1427: value={searchTerm}"
+            "line": 1443,
+            "context": "1442: id=\"search-filter-inline\"\n1443: placeholder=\"VIN, stock, customer...\"\n1444: value={searchTerm}"
           },
           {
             "text": "Department",
-            "line": 1361,
-            "context": "1360: <div className=\"space-y-1.5\">\n1361: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1362: <Select value={orderType} onValueChange={setOrderType}>"
+            "line": 1378,
+            "context": "1377: <div className=\"space-y-1.5\">\n1378: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1379: <Select value={orderType} onValueChange={setOrderType}>"
           },
           {
             "text": "Status",
-            "line": 1377,
-            "context": "1376: <div className=\"space-y-1.5\">\n1377: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1378: <Select value={orderStatus} onValueChange={setOrderStatus}>"
+            "line": 1394,
+            "context": "1393: <div className=\"space-y-1.5\">\n1394: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1395: <Select value={orderStatus} onValueChange={setOrderStatus}>"
           },
           {
             "text": "Date Range",
-            "line": 1403,
-            "context": "1402: <div className=\"space-y-1.5\">\n1403: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1404: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
+            "line": 1420,
+            "context": "1419: <div className=\"space-y-1.5\">\n1420: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1421: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
           },
           {
             "text": "Search",
-            "line": 1421,
-            "context": "1420: <div className=\"space-y-1.5\">\n1421: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1422: <div className=\"relative\">"
+            "line": 1438,
+            "context": "1437: <div className=\"space-y-1.5\">\n1438: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1439: <div className=\"relative\">"
           },
           {
             "text": "From Date",
-            "line": 1439,
-            "context": "1438: <div className=\"space-y-1.5\">\n1439: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1440: <Input"
+            "line": 1456,
+            "context": "1455: <div className=\"space-y-1.5\">\n1456: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1457: <Input"
           },
           {
             "text": "To Date",
-            "line": 1452,
-            "context": "1451: <div className=\"space-y-1.5\">\n1452: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1453: <Input"
+            "line": 1469,
+            "context": "1468: <div className=\"space-y-1.5\">\n1469: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1470: <Input"
           },
           {
             "text": "Include Only Service",
-            "line": 1480,
-            "context": "1479: <div className=\"space-y-2\">\n1480: <Label>Include Only Service</Label>\n1481: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
+            "line": 1497,
+            "context": "1496: <div className=\"space-y-2\">\n1497: <Label>Include Only Service</Label>\n1498: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
           },
           {
             "text": "Exclude Services",
-            "line": 1506,
-            "context": "1505: <div className=\"space-y-2\">\n1506: <Label>Exclude Services</Label>\n1507: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
+            "line": 1523,
+            "context": "1522: <div className=\"space-y-2\">\n1523: <Label>Exclude Services</Label>\n1524: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
           },
           {
             "text": "Invoice Preview",
-            "line": 1851,
-            "context": "1850: <div className=\"flex items-center justify-between\">\n1851: <DialogTitle>Invoice Preview</DialogTitle>\n1852: <Button"
+            "line": 1868,
+            "context": "1867: <div className=\"flex items-center justify-between\">\n1868: <DialogTitle>Invoice Preview</DialogTitle>\n1869: <Button"
           }
         ],
-        "translationCalls": [],
-        "missingKeys": [],
-        "coverage": 0,
+        "translationCalls": [
+          {
+            "key": "invoices.delete_title",
+            "line": 1893,
+            "exists": false
+          },
+          {
+            "key": "invoices.delete_description",
+            "line": 1894,
+            "exists": false
+          },
+          {
+            "key": "common.action_buttons.delete",
+            "line": 1895,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.cancel",
+            "line": 1896,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "invoices.delete_title",
+            "line": 1893,
+            "context": "1892: onOpenChange={setDeleteDialogOpen}\n1893: title={t('invoices.delete_title')}\n1894: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}"
+          },
+          {
+            "key": "invoices.delete_description",
+            "line": 1894,
+            "context": "1893: title={t('invoices.delete_title')}\n1894: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}\n1895: confirmText={t('common.action_buttons.delete')}"
+          }
+        ],
+        "coverage": 4,
         "severity": "critical"
       },
       {
@@ -8968,72 +9000,72 @@
           },
           {
             "text": ", uploadError);\n        throw new Error(`Failed to upload photo: ${uploadError.message}`);\n      }\n\n      // Get public URL\n      const { data: { publicUrl } } = supabase.storage\n        .from(",
-            "line": 115,
-            "context": "114: if (uploadError) {\n115: console.error('Storage upload error:', uploadError);\n116: throw new Error(`Failed to upload photo: ${uploadError.message}`);"
+            "line": 116,
+            "context": "115: if (uploadError) {\n116: console.error('Storage upload error:', uploadError);\n117: throw new Error(`Failed to upload photo: ${uploadError.message}`);"
           }
         ],
         "translationCalls": [
           {
             "key": "common.success",
-            "line": 151,
+            "line": 152,
             "exists": true
           },
           {
             "key": "stock.photos.upload_success",
-            "line": 152,
+            "line": 153,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 157,
+            "line": 158,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 185,
+            "line": 186,
             "exists": true
           },
           {
             "key": "stock.photos.key_photo_set",
-            "line": 186,
+            "line": 187,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 191,
+            "line": 192,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 228,
+            "line": 229,
             "exists": true
           },
           {
             "key": "stock.photos.delete_success",
-            "line": 229,
+            "line": 230,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 234,
+            "line": 235,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "stock.photos.upload_success",
-            "line": 152,
-            "context": "151: title: t('common.success'),\n152: description: t('stock.photos.upload_success', 'Photo uploaded successfully')\n153: });"
+            "line": 153,
+            "context": "152: title: t('common.success'),\n153: description: t('stock.photos.upload_success', 'Photo uploaded successfully')\n154: });"
           },
           {
             "key": "stock.photos.key_photo_set",
-            "line": 186,
-            "context": "185: title: t('common.success'),\n186: description: t('stock.photos.key_photo_set', 'Key photo updated')\n187: });"
+            "line": 187,
+            "context": "186: title: t('common.success'),\n187: description: t('stock.photos.key_photo_set', 'Key photo updated')\n188: });"
           },
           {
             "key": "stock.photos.delete_success",
-            "line": 229,
-            "context": "228: title: t('common.success'),\n229: description: t('stock.photos.delete_success', 'Photo deleted')\n230: });"
+            "line": 230,
+            "context": "229: title: t('common.success'),\n230: description: t('stock.photos.delete_success', 'Photo deleted')\n231: });"
           }
         ],
         "coverage": 60,
@@ -16029,350 +16061,370 @@
         "translationCalls": [
           {
             "key": "dealerships.all_dealerships",
-            "line": 98,
-            "exists": true
-          },
-          {
-            "key": "messages.confirm_delete",
-            "line": 102,
-            "exists": false
-          },
-          {
-            "key": "contacts.exported_successfully",
-            "line": 141,
+            "line": 101,
             "exists": true
           },
           {
             "key": "contacts.exported_successfully",
-            "line": 146,
+            "line": 150,
+            "exists": true
+          },
+          {
+            "key": "contacts.exported_successfully",
+            "line": 155,
             "exists": true
           },
           {
             "key": "contacts.title",
-            "line": 201,
+            "line": 210,
             "exists": true
           },
           {
             "key": "contacts.directory_note",
-            "line": 204,
+            "line": 213,
             "exists": true
           },
           {
             "key": "common.import",
-            "line": 215,
+            "line": 224,
             "exists": false
           },
           {
             "key": "common.export",
-            "line": 223,
+            "line": 232,
             "exists": false
           },
           {
             "key": "common.export_csv",
-            "line": 229,
+            "line": 238,
             "exists": false
           },
           {
             "key": "common.export_excel",
-            "line": 233,
+            "line": 242,
             "exists": false
           },
           {
             "key": "contacts.add_new",
-            "line": 245,
+            "line": 254,
             "exists": true
           },
           {
             "key": "common.filter",
-            "line": 265,
+            "line": 274,
             "exists": false
           },
           {
             "key": "common.search",
-            "line": 273,
+            "line": 282,
             "exists": false
           },
           {
             "key": "contacts.department",
-            "line": 282,
-            "exists": true
-          },
-          {
-            "key": "contacts.all_departments",
-            "line": 285,
-            "exists": true
-          },
-          {
-            "key": "contacts.sales",
-            "line": 286,
-            "exists": true
-          },
-          {
-            "key": "contacts.service",
-            "line": 287,
-            "exists": true
-          },
-          {
-            "key": "contacts.management",
-            "line": 288,
-            "exists": true
-          },
-          {
-            "key": "contacts.finance",
-            "line": 289,
-            "exists": true
-          },
-          {
-            "key": "contacts.parts",
-            "line": 290,
-            "exists": true
-          },
-          {
-            "key": "contacts.other",
             "line": 291,
             "exists": true
           },
           {
-            "key": "contacts.status",
+            "key": "contacts.all_departments",
+            "line": 294,
+            "exists": true
+          },
+          {
+            "key": "contacts.sales",
+            "line": 295,
+            "exists": true
+          },
+          {
+            "key": "contacts.service",
+            "line": 296,
+            "exists": true
+          },
+          {
+            "key": "contacts.management",
             "line": 297,
             "exists": true
           },
           {
-            "key": "contacts.all_statuses",
+            "key": "contacts.finance",
+            "line": 298,
+            "exists": true
+          },
+          {
+            "key": "contacts.parts",
+            "line": 299,
+            "exists": true
+          },
+          {
+            "key": "contacts.other",
             "line": 300,
             "exists": true
           },
           {
-            "key": "contacts.active",
-            "line": 301,
+            "key": "contacts.status",
+            "line": 306,
             "exists": true
           },
           {
-            "key": "contacts.inactive",
-            "line": 302,
-            "exists": true
-          },
-          {
-            "key": "contacts.suspended",
-            "line": 303,
-            "exists": true
-          },
-          {
-            "key": "contacts.contact_type",
+            "key": "contacts.all_statuses",
             "line": 309,
             "exists": true
           },
           {
-            "key": "contacts.all_contacts",
+            "key": "contacts.active",
+            "line": 310,
+            "exists": true
+          },
+          {
+            "key": "contacts.inactive",
+            "line": 311,
+            "exists": true
+          },
+          {
+            "key": "contacts.suspended",
             "line": 312,
             "exists": true
           },
           {
+            "key": "contacts.contact_type",
+            "line": 318,
+            "exists": true
+          },
+          {
+            "key": "contacts.all_contacts",
+            "line": 321,
+            "exists": true
+          },
+          {
             "key": "contacts.primary_only",
-            "line": 313,
+            "line": 322,
             "exists": true
           },
           {
             "key": "contacts.non_primary",
-            "line": 314,
+            "line": 323,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 326,
+            "line": 335,
             "exists": true
           },
           {
             "key": "common.no_data",
-            "line": 332,
+            "line": 341,
             "exists": false
           },
           {
             "key": "common.view",
-            "line": 366,
+            "line": 375,
             "exists": false
           },
           {
             "key": "common.edit",
-            "line": 371,
+            "line": 380,
             "exists": false
           },
           {
             "key": "contacts.call",
-            "line": 376,
+            "line": 385,
             "exists": true
           },
           {
             "key": "contacts.send_email",
-            "line": 380,
+            "line": 389,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 388,
+            "line": 397,
             "exists": false
           },
           {
             "key": "contacts.${contact.department}",
-            "line": 414,
+            "line": 423,
             "exists": false
           },
           {
             "key": "contacts.primary",
-            "line": 417,
+            "line": 426,
             "exists": false
           },
           {
             "key": "contacts.name",
-            "line": 439,
+            "line": 448,
             "exists": true
           },
           {
             "key": "contacts.contact_info",
-            "line": 443,
+            "line": 452,
             "exists": true
           },
           {
             "key": "contacts.position",
-            "line": 449,
-            "exists": true
-          },
-          {
-            "key": "contacts.department",
             "line": 458,
             "exists": true
           },
           {
+            "key": "contacts.department",
+            "line": 467,
+            "exists": true
+          },
+          {
             "key": "dealerships.title",
-            "line": 462,
+            "line": 471,
             "exists": true
           },
           {
             "key": "common.no_data",
-            "line": 472,
+            "line": 481,
             "exists": false
           },
           {
             "key": "contacts.${contact.department}",
-            "line": 522,
+            "line": 531,
             "exists": false
           },
           {
             "key": "common.view",
-            "line": 540,
+            "line": 549,
             "exists": false
           },
           {
             "key": "common.edit",
-            "line": 545,
+            "line": 554,
             "exists": false
           },
           {
             "key": "contacts.call",
-            "line": 550,
+            "line": 559,
             "exists": true
           },
           {
             "key": "contacts.send_email",
-            "line": 554,
+            "line": 563,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 562,
+            "line": 571,
             "exists": false
+          },
+          {
+            "key": "contacts.delete_title",
+            "line": 627,
+            "exists": false
+          },
+          {
+            "key": "contacts.delete_description",
+            "line": 628,
+            "exists": false
+          },
+          {
+            "key": "common.action_buttons.delete",
+            "line": 629,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.cancel",
+            "line": 630,
+            "exists": true
           }
         ],
         "missingKeys": [
           {
-            "key": "messages.confirm_delete",
-            "line": 102,
-            "context": "101: const handleDelete = async (contact: Contact) => {\n102: if (!confirm(t('messages.confirm_delete'))) return;\n103: await deleteContact(contact.id);"
-          },
-          {
             "key": "common.import",
-            "line": 215,
-            "context": "214: <Upload className=\"h-4 w-4\" />\n215: {t('common.import', 'Import')}\n216: </Button>"
+            "line": 224,
+            "context": "223: <Upload className=\"h-4 w-4\" />\n224: {t('common.import', 'Import')}\n225: </Button>"
           },
           {
             "key": "common.export",
-            "line": 223,
-            "context": "222: <Download className=\"h-4 w-4\" />\n223: {t('common.export', 'Export')}\n224: </Button>"
+            "line": 232,
+            "context": "231: <Download className=\"h-4 w-4\" />\n232: {t('common.export', 'Export')}\n233: </Button>"
           },
           {
             "key": "common.export_csv",
-            "line": 229,
-            "context": "228: <Download className=\"mr-2 h-4 w-4\" />\n229: {t('common.export_csv', 'Export as CSV')}\n230: </DropdownMenuItem>"
+            "line": 238,
+            "context": "237: <Download className=\"mr-2 h-4 w-4\" />\n238: {t('common.export_csv', 'Export as CSV')}\n239: </DropdownMenuItem>"
           },
           {
             "key": "common.export_excel",
-            "line": 233,
-            "context": "232: <Download className=\"mr-2 h-4 w-4\" />\n233: {t('common.export_excel', 'Export as Excel')}\n234: </DropdownMenuItem>"
+            "line": 242,
+            "context": "241: <Download className=\"mr-2 h-4 w-4\" />\n242: {t('common.export_excel', 'Export as Excel')}\n243: </DropdownMenuItem>"
           },
           {
             "key": "common.filter",
-            "line": 265,
-            "context": "264: <Filter className=\"h-5 w-5\" />\n265: {t('common.filter')}\n266: </CardTitle>"
+            "line": 274,
+            "context": "273: <Filter className=\"h-5 w-5\" />\n274: {t('common.filter')}\n275: </CardTitle>"
           },
           {
             "key": "common.search",
-            "line": 273,
-            "context": "272: <Input\n273: placeholder={t('common.search')}\n274: value={filters.search}"
+            "line": 282,
+            "context": "281: <Input\n282: placeholder={t('common.search')}\n283: value={filters.search}"
           },
           {
             "key": "common.no_data",
-            "line": 332,
-            "context": "331: <CardContent className=\"p-6\">\n332: <div className=\"text-center text-muted-foreground\">{t('common.no_data')}</div>\n333: </CardContent>"
+            "line": 341,
+            "context": "340: <CardContent className=\"p-6\">\n341: <div className=\"text-center text-muted-foreground\">{t('common.no_data')}</div>\n342: </CardContent>"
           },
           {
             "key": "common.view",
-            "line": 366,
-            "context": "365: <Eye className=\"mr-2 h-4 w-4\" />\n366: {t('common.view')}\n367: </DropdownMenuItem>"
+            "line": 375,
+            "context": "374: <Eye className=\"mr-2 h-4 w-4\" />\n375: {t('common.view')}\n376: </DropdownMenuItem>"
           },
           {
             "key": "common.edit",
-            "line": 371,
-            "context": "370: <Edit className=\"mr-2 h-4 w-4\" />\n371: {t('common.edit')}\n372: </DropdownMenuItem>"
+            "line": 380,
+            "context": "379: <Edit className=\"mr-2 h-4 w-4\" />\n380: {t('common.edit')}\n381: </DropdownMenuItem>"
           },
           {
             "key": "common.delete",
-            "line": 388,
-            "context": "387: <Trash2 className=\"mr-2 h-4 w-4\" />\n388: {t('common.delete')}\n389: </DropdownMenuItem>"
+            "line": 397,
+            "context": "396: <Trash2 className=\"mr-2 h-4 w-4\" />\n397: {t('common.delete')}\n398: </DropdownMenuItem>"
           },
           {
             "key": "contacts.${contact.department}",
-            "line": 414,
-            "context": "413: <Badge variant={getDepartmentBadgeVariant(contact.department)}>\n414: {t(`contacts.${contact.department}`)}\n415: </Badge>"
+            "line": 423,
+            "context": "422: <Badge variant={getDepartmentBadgeVariant(contact.department)}>\n423: {t(`contacts.${contact.department}`)}\n424: </Badge>"
           },
           {
             "key": "contacts.primary",
-            "line": 417,
-            "context": "416: {contact.is_primary && (\n417: <Badge variant=\"outline\">{t('contacts.primary')}</Badge>\n418: )}"
+            "line": 426,
+            "context": "425: {contact.is_primary && (\n426: <Badge variant=\"outline\">{t('contacts.primary')}</Badge>\n427: )}"
           },
           {
             "key": "common.no_data",
-            "line": 472,
-            "context": "471: <TableCell colSpan={7} className=\"h-24 text-center\">\n472: {t('common.no_data')}\n473: </TableCell>"
+            "line": 481,
+            "context": "480: <TableCell colSpan={7} className=\"h-24 text-center\">\n481: {t('common.no_data')}\n482: </TableCell>"
           },
           {
             "key": "contacts.${contact.department}",
-            "line": 522,
-            "context": "521: <Badge variant={getDepartmentBadgeVariant(contact.department)}>\n522: {t(`contacts.${contact.department}`)}\n523: </Badge>"
+            "line": 531,
+            "context": "530: <Badge variant={getDepartmentBadgeVariant(contact.department)}>\n531: {t(`contacts.${contact.department}`)}\n532: </Badge>"
           },
           {
             "key": "common.view",
-            "line": 540,
-            "context": "539: <Eye className=\"mr-2 h-4 w-4\" />\n540: {t('common.view')}\n541: </DropdownMenuItem>"
+            "line": 549,
+            "context": "548: <Eye className=\"mr-2 h-4 w-4\" />\n549: {t('common.view')}\n550: </DropdownMenuItem>"
           },
           {
             "key": "common.edit",
-            "line": 545,
-            "context": "544: <Edit className=\"mr-2 h-4 w-4\" />\n545: {t('common.edit')}\n546: </DropdownMenuItem>"
+            "line": 554,
+            "context": "553: <Edit className=\"mr-2 h-4 w-4\" />\n554: {t('common.edit')}\n555: </DropdownMenuItem>"
           },
           {
             "key": "common.delete",
-            "line": 562,
-            "context": "561: <Trash2 className=\"mr-2 h-4 w-4\" />\n562: {t('common.delete')}\n563: </DropdownMenuItem>"
+            "line": 571,
+            "context": "570: <Trash2 className=\"mr-2 h-4 w-4\" />\n571: {t('common.delete')}\n572: </DropdownMenuItem>"
+          },
+          {
+            "key": "contacts.delete_title",
+            "line": 627,
+            "context": "626: onOpenChange={setDeleteDialogOpen}\n627: title={t('contacts.delete_title', { defaultValue: 'Delete Contact?' })}\n628: description={t('contacts.delete_description', { defaultValue: 'Are you sure you want to delete this contact? This action cannot be undone.' })}"
+          },
+          {
+            "key": "contacts.delete_description",
+            "line": 628,
+            "context": "627: title={t('contacts.delete_title', { defaultValue: 'Delete Contact?' })}\n628: description={t('contacts.delete_description', { defaultValue: 'Are you sure you want to delete this contact? This action cannot be undone.' })}\n629: confirmText={t('common.action_buttons.delete')}"
           }
         ],
         "coverage": 100,
@@ -17747,30 +17799,30 @@
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 203,
+            "line": 204,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 214,
+            "line": 215,
             "exists": true
           },
           {
             "key": "common.warning",
-            "line": 249,
+            "line": 250,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 312,
+            "line": 313,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.warning",
-            "line": 249,
-            "context": "248: toast({\n249: title: t('common.warning', 'Advertencia'),\n250: description: 'El CSV no contiene columna \"Model\". Los vehículos tendrán este campo vacío.',"
+            "line": 250,
+            "context": "249: toast({\n250: title: t('common.warning', 'Advertencia'),\n251: description: 'El CSV no contiene columna \"Model\". Los vehículos tendrán este campo vacío.',"
           }
         ],
         "coverage": 67,
@@ -18035,77 +18087,77 @@
         "hardcodedStrings": [
           {
             "text": ", uploadError);\n        throw uploadError;\n      }\n\n      console.log(",
-            "line": 115,
-            "context": "114: if (uploadError) {\n115: console.error('❌ Upload error:', uploadError);\n116: throw uploadError;"
+            "line": 116,
+            "context": "115: if (uploadError) {\n116: console.error('❌ Upload error:', uploadError);\n117: throw uploadError;"
           },
           {
             "text": ", updateError);\n        // Clean up uploaded file\n        await supabase.storage.from(",
-            "line": 145,
-            "context": "144: if (updateError) {\n145: console.error('❌ Database update error:', updateError);\n146: // Clean up uploaded file"
+            "line": 146,
+            "context": "145: if (updateError) {\n146: console.error('❌ Database update error:', updateError);\n147: // Clean up uploaded file"
           }
         ],
         "translationCalls": [
           {
             "key": "profile.avatar_too_large",
-            "line": 52,
+            "line": 53,
             "exists": false
           },
           {
             "key": "profile.avatar_invalid_type",
-            "line": 57,
+            "line": 58,
             "exists": false
           },
           {
             "key": "profile.avatar_uploaded",
-            "line": 163,
-            "exists": false
-          },
-          {
-            "key": "profile.avatar_compressed",
             "line": 164,
             "exists": false
           },
           {
+            "key": "profile.avatar_compressed",
+            "line": 165,
+            "exists": false
+          },
+          {
             "key": "common.error",
-            "line": 182,
+            "line": 183,
             "exists": true
           },
           {
             "key": "profile.avatar_removed",
-            "line": 243,
-            "exists": true
-          },
-          {
-            "key": "profile.avatar_reverted",
             "line": 244,
             "exists": true
           },
           {
+            "key": "profile.avatar_reverted",
+            "line": 245,
+            "exists": true
+          },
+          {
             "key": "common.error",
-            "line": 260,
+            "line": 261,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "profile.avatar_too_large",
-            "line": 52,
-            "context": "51: if (file.size > MAX_FILE_SIZE) {\n52: throw new Error(t('profile.avatar_too_large', 'Image must be less than 5MB'));\n53: }"
+            "line": 53,
+            "context": "52: if (file.size > MAX_FILE_SIZE) {\n53: throw new Error(t('profile.avatar_too_large', 'Image must be less than 5MB'));\n54: }"
           },
           {
             "key": "profile.avatar_invalid_type",
-            "line": 57,
-            "context": "56: if (!file.type.startsWith('image/')) {\n57: throw new Error(t('profile.avatar_invalid_type', 'Only image files are allowed'));\n58: }"
+            "line": 58,
+            "context": "57: if (!file.type.startsWith('image/')) {\n58: throw new Error(t('profile.avatar_invalid_type', 'Only image files are allowed'));\n59: }"
           },
           {
             "key": "profile.avatar_uploaded",
-            "line": 163,
-            "context": "162: toast({\n163: title: t('profile.avatar_uploaded', 'Avatar uploaded successfully'),\n164: description: t('profile.avatar_compressed', `Image optimized: ${data.reduction}% smaller`),"
+            "line": 164,
+            "context": "163: toast({\n164: title: t('profile.avatar_uploaded', 'Avatar uploaded successfully'),\n165: description: t('profile.avatar_compressed', `Image optimized: ${data.reduction}% smaller`),"
           },
           {
             "key": "profile.avatar_compressed",
-            "line": 164,
-            "context": "163: title: t('profile.avatar_uploaded', 'Avatar uploaded successfully'),\n164: description: t('profile.avatar_compressed', `Image optimized: ${data.reduction}% smaller`),\n165: });"
+            "line": 165,
+            "context": "164: title: t('profile.avatar_uploaded', 'Avatar uploaded successfully'),\n165: description: t('profile.avatar_compressed', `Image optimized: ${data.reduction}% smaller`),\n166: });"
           }
         ],
         "coverage": 80,
@@ -19242,44 +19294,44 @@
         "hardcodedStrings": [
           {
             "text": ", uploadError);\n        throw uploadError;\n      }\n\n      // ========================================================================\n      // GET PUBLIC URL: Retrieve public URL for the uploaded logo\n      // ========================================================================\n      const { data: urlData } = supabase.storage\n        .from(",
-            "line": 103,
-            "context": "102: if (uploadError) {\n103: console.error('❌ Upload error:', uploadError);\n104: throw uploadError;"
+            "line": 104,
+            "context": "103: if (uploadError) {\n104: console.error('❌ Upload error:', uploadError);\n105: throw uploadError;"
           },
           {
             "text": ", error);\n        throw error;\n      }\n\n      if (!data) {\n        console.warn(",
-            "line": 130,
-            "context": "129: if (error) {\n130: console.error('❌ DB update error:', error);\n131: throw error;"
+            "line": 131,
+            "context": "130: if (error) {\n131: console.error('❌ DB update error:', error);\n132: throw error;"
           },
           {
             "text": ", error);\n      // Error toast is now shown in LogoUploader component for better error context\n    },\n  });\n}\n\n/**\n * Hook: useDeleteDealershipLogo\n *\n * Deletes dealership logo and thumbnail from storage and database\n *\n * CLEANUP:\n * - Removes all files from storage (logo + thumbnail)\n * - Clears both logo_url and thumbnail_logo_url in database\n */\nexport function useDeleteDealershipLogo() {\n  const { t } = useTranslation();\n  const queryClient = useQueryClient();\n\n  return useMutation({\n    mutationFn: async (dealershipId: number) => {\n      // ========================================================================\n      // DELETE FROM STORAGE: Remove all files in dealership folder\n      // ========================================================================\n      const { data: existingFiles } = await supabase.storage\n        .from(",
-            "line": 180,
-            "context": "179: onError: (error: any) => {\n180: console.error('Logo upload error:', error);\n181: // Error toast is now shown in LogoUploader component for better error context"
+            "line": 181,
+            "context": "180: onError: (error: any) => {\n181: console.error('Logo upload error:', error);\n182: // Error toast is now shown in LogoUploader component for better error context"
           },
           {
             "text": ", error);\n        throw error;\n      }\n\n      console.log(",
-            "line": 231,
-            "context": "230: if (error) {\n231: console.error('❌ DB update error:', error);\n232: throw error;"
+            "line": 232,
+            "context": "231: if (error) {\n232: console.error('❌ DB update error:', error);\n233: throw error;"
           },
           {
             "text": ", error);\n      toast({\n        title: t(",
-            "line": 245,
-            "context": "244: onError: (error: any) => {\n245: console.error('Logo deletion error:', error);\n246: toast({"
+            "line": 246,
+            "context": "245: onError: (error: any) => {\n246: console.error('Logo deletion error:', error);\n247: toast({"
           }
         ],
         "translationCalls": [
           {
             "key": "dealerships.logo_too_large",
-            "line": 44,
+            "line": 45,
             "exists": true
           },
           {
             "key": "dealerships.logo_removed_successfully",
-            "line": 241,
+            "line": 242,
             "exists": true
           },
           {
             "key": "dealerships.logo_upload_failed",
-            "line": 247,
+            "line": 248,
             "exists": true
           }
         ],
@@ -22976,8 +23028,8 @@
         "hardcodedStrings": [
           {
             "text": "System Admin",
-            "line": 129,
-            "context": "128: <Badge variant=\"destructive\" className=\"text-xs px-2 py-1 flex-shrink-0\">\n129: <Shield className=\"w-3 h-3 mr-1\" />\n130: System Admin"
+            "line": 125,
+            "context": "124: <Badge variant=\"destructive\" className=\"text-xs px-2 py-1 flex-shrink-0\">\n125: <Shield className=\"w-3 h-3 mr-1\" />\n126: System Admin"
           },
           {
             "text": ", error);\n      setIsSigningOut(false);\n    }\n  };\n\n  const handleProfileClick = () => {\n    navigate(",
@@ -22988,52 +23040,47 @@
         "translationCalls": [
           {
             "key": "roles.system_admin",
-            "line": 68,
+            "line": 64,
             "exists": true
           },
           {
             "key": "roles.dealer_admin",
-            "line": 69,
+            "line": 65,
             "exists": true
           },
           {
             "key": "roles.dealer_manager",
-            "line": 70,
+            "line": 66,
             "exists": true
           },
           {
             "key": "roles.user",
-            "line": 71,
+            "line": 67,
             "exists": true
           },
           {
             "key": "navigation.profile",
-            "line": 152,
-            "exists": true
-          },
-          {
-            "key": "navigation.management",
-            "line": 159,
+            "line": 148,
             "exists": true
           },
           {
             "key": "navigation.settings",
-            "line": 165,
+            "line": 153,
             "exists": true
           },
           {
             "key": "navigation.signing_out",
-            "line": 184,
+            "line": 172,
             "exists": true
           },
           {
             "key": "navigation.sign_out",
-            "line": 184,
+            "line": 172,
             "exists": true
           }
         ],
         "missingKeys": [],
-        "coverage": 82,
+        "coverage": 80,
         "severity": "low"
       },
       {
@@ -35994,140 +36041,160 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 99,
-            "context": "98: onStatusChange?: (orderId: string, newStatus: string) => void;\n99: onUpdate?: (orderId: string, updates: Partial<OrderData>) => Promise<void>;\n100: isLoadingData?: boolean;"
+            "line": 100,
+            "context": "99: onStatusChange?: (orderId: string, newStatus: string) => void;\n100: onUpdate?: (orderId: string, updates: Partial<OrderData>) => Promise<void>;\n101: isLoadingData?: boolean;"
           }
         ],
         "translationCalls": [
           {
             "key": "orders.no_link_available",
-            "line": 251,
+            "line": 253,
             "exists": false
           },
           {
             "key": "order_detail.copy_link",
-            "line": 256,
+            "line": 258,
             "exists": true
           },
           {
             "key": "order_detail.copy_failed",
-            "line": 259,
-            "exists": true
-          },
-          {
-            "key": "messages.confirm_delete_order",
-            "line": 267,
+            "line": 261,
             "exists": true
           },
           {
             "key": "orders.polling_error",
-            "line": 342,
+            "line": 348,
             "exists": true
           },
           {
             "key": "orders.date_updated",
-            "line": 431,
+            "line": 437,
             "exists": false
           },
           {
             "key": "orders.date_update_failed",
-            "line": 434,
+            "line": 440,
             "exists": false
           },
           {
             "key": "orders.unknown_vehicle",
-            "line": 456,
+            "line": 462,
             "exists": false
           },
           {
             "key": "orders.order_details_modal_title",
-            "line": 468,
+            "line": 474,
             "exists": false
           },
           {
             "key": "orders.order_details_description",
-            "line": 476,
+            "line": 482,
             "exists": false
           },
           {
             "key": "orders.delete_order",
-            "line": 571,
+            "line": 577,
             "exists": true
           },
           {
             "key": "orders.edit",
-            "line": 586,
+            "line": 592,
             "exists": true
           },
           {
             "key": "orders.share_order",
-            "line": 598,
+            "line": 604,
             "exists": true
           },
           {
             "key": "common.share",
-            "line": 599,
+            "line": 605,
             "exists": false
           },
           {
             "key": "orders.print",
-            "line": 609,
+            "line": 615,
             "exists": true
           },
           {
             "key": "common.print",
-            "line": 610,
+            "line": 616,
             "exists": false
           },
           {
             "key": "common.action_buttons.close",
-            "line": 618,
+            "line": 624,
+            "exists": true
+          },
+          {
+            "key": "orders.delete_title",
+            "line": 635,
+            "exists": false
+          },
+          {
+            "key": "messages.confirm_delete_order",
+            "line": 636,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.delete",
+            "line": 637,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.cancel",
+            "line": 638,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "orders.no_link_available",
-            "line": 251,
-            "context": "250: if (!shortLink) {\n251: toast({ variant: 'destructive', description: t('orders.no_link_available', 'No link available to share') });\n252: return;"
+            "line": 253,
+            "context": "252: if (!shortLink) {\n253: toast({ variant: 'destructive', description: t('orders.no_link_available', 'No link available to share') });\n254: return;"
           },
           {
             "key": "orders.date_updated",
-            "line": 431,
-            "context": "430: \n431: toast({ description: t('orders.date_updated', 'Date updated successfully') });\n432: } catch (error) {"
+            "line": 437,
+            "context": "436: \n437: toast({ description: t('orders.date_updated', 'Date updated successfully') });\n438: } catch (error) {"
           },
           {
             "key": "orders.date_update_failed",
-            "line": 434,
-            "context": "433: logger.error('Failed to update completed date', error, { orderId, newDate });\n434: toast({ variant: 'destructive', description: t('orders.date_update_failed', 'Failed to update date') });\n435: }"
+            "line": 440,
+            "context": "439: logger.error('Failed to update completed date', error, { orderId, newDate });\n440: toast({ variant: 'destructive', description: t('orders.date_update_failed', 'Failed to update date') });\n441: }"
           },
           {
             "key": "orders.unknown_vehicle",
-            "line": 456,
-            "context": "455: \n456: return baseVehicle ? `${baseVehicle}${trimInfo}` : t('orders.unknown_vehicle');\n457: }, [orderData, t]);"
+            "line": 462,
+            "context": "461: \n462: return baseVehicle ? `${baseVehicle}${trimInfo}` : t('orders.unknown_vehicle');\n463: }, [orderData, t]);"
           },
           {
             "key": "orders.order_details_modal_title",
-            "line": 468,
-            "context": "467: <DialogTitle className=\"sr-only\">\n468: {t('orders.order_details_modal_title', {\n469: defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,"
+            "line": 474,
+            "context": "473: <DialogTitle className=\"sr-only\">\n474: {t('orders.order_details_modal_title', {\n475: defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,"
           },
           {
             "key": "orders.order_details_description",
-            "line": 476,
-            "context": "475: <DialogDescription className=\"sr-only\">\n476: {t('orders.order_details_description', {\n477: defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,"
+            "line": 482,
+            "context": "481: <DialogDescription className=\"sr-only\">\n482: {t('orders.order_details_description', {\n483: defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,"
           },
           {
             "key": "common.share",
-            "line": 599,
-            "context": "598: <span className=\"text-sm font-medium hidden md:inline\">{t('orders.share_order')}</span>\n599: <span className=\"text-sm font-medium md:hidden\">{t('common.share', { defaultValue: 'Share' })}</span>\n600: </Button>"
+            "line": 605,
+            "context": "604: <span className=\"text-sm font-medium hidden md:inline\">{t('orders.share_order')}</span>\n605: <span className=\"text-sm font-medium md:hidden\">{t('common.share', { defaultValue: 'Share' })}</span>\n606: </Button>"
           },
           {
             "key": "common.print",
-            "line": 610,
-            "context": "609: <span className=\"text-sm font-medium hidden md:inline\">{t('orders.print')}</span>\n610: <span className=\"text-sm font-medium md:hidden\">{t('common.print', { defaultValue: 'Print' })}</span>\n611: </Button>"
+            "line": 616,
+            "context": "615: <span className=\"text-sm font-medium hidden md:inline\">{t('orders.print')}</span>\n616: <span className=\"text-sm font-medium md:hidden\">{t('common.print', { defaultValue: 'Print' })}</span>\n617: </Button>"
+          },
+          {
+            "key": "orders.delete_title",
+            "line": 635,
+            "context": "634: onOpenChange={setDeleteDialogOpen}\n635: title={t('orders.delete_title', { defaultValue: 'Delete Order?' })}\n636: description={t('messages.confirm_delete_order', { defaultValue: 'Are you sure you want to delete this order? This action cannot be undone.' })}"
           }
         ],
-        "coverage": 94,
+        "coverage": 95,
         "severity": "low"
       },
       {
@@ -55891,7 +55958,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2427 translation keys are referenced but missing",
+      "description": "2431 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "122 hours"
     }
