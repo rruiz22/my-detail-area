@@ -365,11 +365,24 @@
   "dashboard": {
     "hero": {
       "welcome": "Bem-vindo ao My Detail Area",
+      "welcome_to": "Bem-vindo a",
       "subtitle": "Otimize as operações da sua concessionária com ferramentas e insights poderosos",
       "new_order": "Novo Pedido",
       "view_pending": "Ver Pendentes ({{count}})",
       "get_ready": "Get Ready",
       "team_chat": "Chat da Equipe"
+    },
+    "empty_state": {
+      "no_access_title": "Sem Acesso a Módulos",
+      "no_access_message": "Você ainda não tem permissão para acessar nenhum módulo.",
+      "contact_admin": "Por favor, entre em contato com seu administrador para solicitar acesso a:",
+      "available_modules": "Módulos Disponíveis",
+      "sales_module": "Pedidos de Vendas - Gerenciar vendas e entregas de veículos",
+      "service_module": "Pedidos de Serviço - Processar solicitações do departamento de serviço",
+      "recon_module": "Pedidos de Recondicionamento - Gerenciar fluxo de recondicionamento",
+      "carwash_module": "Lavagem - Pedidos de serviço de lavagem expressa",
+      "view_profile": "Ver Seu Perfil",
+      "contact_support": "Contatar Suporte"
     },
     "actions": {
       "create_order": "Criar Pedido",
@@ -402,13 +415,61 @@
       "customer_rating": "Avaliação do cliente",
       "team_performance": "Desempenho da equipe",
       "of_target": "da meta",
-      "from_last_month": "do mês passado"
+      "from_last_month": "do mês passado",
+      "showing_modules": "Mostrando {{count}} de {{total}} módulos"
     },
     "departments": {
       "sales": "Vendas",
       "service": "Serviços",
       "recon": "Recondicionamento",
       "car_wash": "Lavagem"
+    },
+    "team_performance": {
+      "title": "Desempenho da Equipe",
+      "subtitle": "Atividade nos seus módulos acessíveis",
+      "user": "Usuário",
+      "completed_7d": "Concluídos (7d)",
+      "in_progress": "Em Andamento",
+      "active_in": "Ativo em",
+      "no_activity": "Sem Atividade Recente",
+      "no_team_members": "Nenhum membro da equipe encontrado",
+      "modules": "módulos",
+      "view_all": "Ver Todos os Membros",
+      "orders": "pedidos"
+    },
+    "quick_actions": {
+      "title": "Ações Rápidas",
+      "subtitle": "Acesso rápido a tarefas comuns",
+      "new_sales_order": "Novo Pedido de Vendas",
+      "new_service_order": "Novo Pedido de Serviço",
+      "new_recon_order": "Novo Pedido de Recondicionamento",
+      "new_car_wash": "Nova Lavagem",
+      "view_reports": "Ver Relatórios",
+      "get_ready": "Get Ready",
+      "view_stock": "Ver Estoque",
+      "team_chat": "Chat da Equipe",
+      "no_actions_available": "Nenhuma ação disponível",
+      "contact_admin": "Entre em contato com seu administrador para obter acesso",
+      "create_order": "Criar Pedido",
+      "view_module": "Ver Módulo"
+    },
+    "module_status": {
+      "title": "Status dos Módulos",
+      "subtitle": "Visão geral dos seus módulos acessíveis",
+      "pending": "Pendente",
+      "in_progress": "Em Andamento",
+      "completed": "Concluído",
+      "view_only": "Apenas Visualização",
+      "edit_access": "Acesso de Edição",
+      "full_access": "Acesso Completo",
+      "admin_access": "Acesso de Admin",
+      "healthy": "Saudável",
+      "attention_needed": "Requer Atenção",
+      "critical": "Crítico",
+      "no_modules": "Nenhum módulo acessível",
+      "request_access": "Solicite acesso ao seu administrador",
+      "total_orders": "Total",
+      "click_to_view": "Clique para ver o módulo"
     },
     "department_overview": {
       "title": "Visão Geral dos Departamentos",
@@ -956,6 +1017,7 @@
     "general": "Geral",
     "preferences": "Preferências",
     "templates": "Modelos",
+    "admin_only": "Este recurso está disponível apenas para Administradores do Sistema",
     "platform_settings": {
       "general": {
         "title": "Configurações Gerais",
@@ -978,6 +1040,31 @@
         "saving": "Salvando...",
         "loading": "Carregando configurações...",
         "characters": "caracteres"
+      },
+      "notification_sound": {
+        "title": "Sons de Notificação",
+        "description": "Configurar preferências de som de notificações (Somente Admin do Sistema)",
+        "enable_sounds": "Ativar sons de notificação",
+        "enable_sounds_description": "Reproduzir sons quando novas notificações chegarem",
+        "volume": "Volume",
+        "volume_description": "Ajustar o volume do som de notificações",
+        "priority_levels": "Som por Nível de Prioridade",
+        "priority_levels_description": "Escolher quais níveis de prioridade reproduzem sons",
+        "urgent": "Notificações Urgentes",
+        "urgent_description": "Alertas críticos que requerem atenção imediata",
+        "high": "Prioridade Alta",
+        "high_description": "Notificações importantes",
+        "normal": "Prioridade Normal",
+        "normal_description": "Notificações padrão",
+        "low": "Prioridade Baixa",
+        "low_description": "Notificações informativas",
+        "test": "Testar",
+        "test_played": "Som de teste reproduzido para prioridade {{priority}}",
+        "test_error": "Erro ao reproduzir som de teste",
+        "technical_details": "Detalhes Técnicos",
+        "saved": "Preferências de som salvas com sucesso",
+        "save_error": "Erro ao salvar preferências de som",
+        "reset": "Preferências de som redefinidas para padrões"
       }
     },
     "notification_settings": {
@@ -3961,6 +4048,52 @@
       "needsImprovement": "Precisa de Melhoria",
       "critical": "Crítico",
       "backtrackDetected": "Retrocesso detectado"
+    },
+    "metrics": {
+      "cost_per_vehicle": "Custo Por Veículo",
+      "cost_per_vehicle_tooltip": "Custo médio de manutenção por veículo em recondicionamento",
+      "per_vehicle": "por veículo",
+      "first_pass_yield": "Rendimento de Primeira Passagem",
+      "first_pass_yield_tooltip": "Porcentagem de veículos concluídos sem retrabalho",
+      "rework_rate": "Taxa de Retrabalho Ativo",
+      "rework_rate_tooltip": "Porcentagem de trabalhos recusados que requerem retrabalho",
+      "incidents": "incidentes",
+      "team_utilization": "Utilização da Equipe",
+      "team_utilization_tooltip": "Utilização de capacidade da equipe baseada em veículos por pessoa vs meta",
+      "cost_breakdown": "Detalhamento de Custos",
+      "cost_by_workflow_type": "Custos médios por tipo de fluxo de trabalho",
+      "roi_comparison": "Comparação de ROI",
+      "cost_vs_value_estimation": "Estimativa de custo vs valor (simplificado)",
+      "total_cost": "Custo Total",
+      "est_savings": "Economia Est.",
+      "roi": "ROI",
+      "based_on": "Baseado em",
+      "completed_vehicles": "veículos concluídos",
+      "quality_metrics": "Métricas de Qualidade",
+      "quality_indicators": "Indicadores de desempenho de qualidade",
+      "fpy_trend": "Tendência de Rendimento de Primeira Passagem",
+      "rework_incidents": "Incidentes de Retrabalho",
+      "declined_items": "Trabalhos recusados",
+      "quality_by_step": "Pontuação de Qualidade por Etapa",
+      "efficiency_metrics": "Métricas de Eficiência",
+      "operational_efficiency": "Indicadores de eficiência operacional",
+      "avg_days_per_step": "Dias Médios Por Etapa",
+      "transition_time": "Tempo de Transição",
+      "between_steps": "Tempo médio entre etapas",
+      "utilization_rate": "Taxa de Utilização",
+      "team_performance": "Desempenho da Equipe",
+      "top_performers": "Top 5 melhores por quantidade de veículos",
+      "no_team_data": "Nenhum dado da equipe disponível",
+      "team_member": "Membro da Equipe",
+      "vehicles": "Veículos",
+      "avg_t2l": "T2L Médio",
+      "completion_rate": "Taxa de Conclusão",
+      "quality_score": "Pontuação de Qualidade"
+    },
+    "workflow": {
+      "standard": "Padrão",
+      "express": "Express",
+      "priority": "Prioridade"
     }
   },
   "stock": {
@@ -4804,6 +4937,9 @@
       "important": "Apenas Importantes",
       "none": "Nenhuma"
     },
+    "badge": {
+      "new": "Nova"
+    },
     "loading": "Carregando notificações...",
     "tabs": {
       "grouped": "Agrupadas",
@@ -4829,6 +4965,8 @@
       "unread": "{{count}} não lida(s)"
     },
     "empty": {
+      "title": "Tudo em dia!",
+      "description": "Você não tem notificações no momento",
       "message": "Sem notificações",
       "filtered": "Nenhuma notificação corresponde aos seus filtros"
     },
@@ -4881,8 +5019,14 @@
       "mark_all_read": "Marcar tudo como lido",
       "delete": "Excluir",
       "save_later": "Salvar para depois",
-      "archive": "Arquivar"
-    }
+      "archive": "Arquivar",
+      "select_to_delete": "Selecionar para Excluir",
+      "select_all": "Selecionar Tudo",
+      "deselect_all": "Desmarcar Tudo",
+      "delete_selected": "Excluir {{count}}"
+    },
+    "bulk_delete_success": "{{count}} notificação(ões) excluída(s) com sucesso",
+    "bulk_delete_error": "Falha ao excluir notificações"
   },
   "system_update": {
     "title": "Nova Versão Disponível",
