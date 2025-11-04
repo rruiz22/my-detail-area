@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -92,15 +93,23 @@ export default function Contacts() {
   const [viewingContact, setViewingContact] = useState<Contact | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [contactToDelete, setContactToDelete] = useState<Contact | null>(null);
 
   // Get current dealership name
   const currentDealershipName = selectedDealerId === 'all'
     ? t('dealerships.all_dealerships')
     : currentDealership?.name || '';
 
-  const handleDelete = async (contact: Contact) => {
-    if (!confirm(t('messages.confirm_delete'))) return;
-    await deleteContact(contact.id);
+  const handleDelete = (contact: Contact) => {
+    setContactToDelete(contact);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!contactToDelete) return;
+    await deleteContact(contactToDelete.id);
+    setContactToDelete(null);
   };
 
   const handleEdit = (contact: Contact) => {
@@ -609,6 +618,18 @@ export default function Contacts() {
           onSuccess={handleImportSuccess}
           currentDealershipId={selectedDealerId}
           currentDealershipName={currentDealershipName}
+        />
+
+        {/* Delete Confirmation Dialog */}
+        <ConfirmDialog
+          open={deleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+          title={t('contacts.delete_title', { defaultValue: 'Delete Contact?' })}
+          description={t('contacts.delete_description', { defaultValue: 'Are you sure you want to delete this contact? This action cannot be undone.' })}
+          confirmText={t('common.action_buttons.delete')}
+          cancelText={t('common.action_buttons.cancel')}
+          onConfirm={confirmDelete}
+          variant="destructive"
         />
       </div>
     </>

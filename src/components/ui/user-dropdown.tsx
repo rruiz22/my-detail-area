@@ -13,7 +13,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { usePermissions } from '@/hooks/usePermissions';
-import { Building2, LogOut, Settings, Shield, User, UserCog } from 'lucide-react';
+import { Building2, LogOut, Settings, Shield, User } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -39,10 +39,6 @@ export function UserDropdown() {
 
   const handleProfileClick = () => {
     navigate('/profile');
-  };
-
-  const handleManagementClick = () => {
-    navigate('/management');
   };
 
   const handleSettingsClick = () => {
@@ -151,14 +147,6 @@ export function UserDropdown() {
           <User className="mr-2 h-4 w-4" />
           <span>{t('navigation.profile')}</span>
         </DropdownMenuItem>
-
-        {/* Management (if admin) */}
-        {enhancedUser?.is_system_admin && (
-          <DropdownMenuItem onClick={handleManagementClick} className="cursor-pointer">
-            <UserCog className="mr-2 h-4 w-4" />
-            <span>{t('navigation.management')}</span>
-          </DropdownMenuItem>
-        )}
 
         <DropdownMenuItem onClick={handleSettingsClick} className="cursor-pointer">
           <Settings className="mr-2 h-4 w-4" />

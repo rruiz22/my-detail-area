@@ -4515,6 +4515,8 @@
       "send_email": "Enviar E-mail",
       "download_pdf": "Baixar PDF",
       "view_details": "Ver Detalhes",
+      "delete_title": "Excluir Fatura?",
+      "delete_description": "Tem certeza de que deseja excluir a fatura {{invoiceNumber}}? Esta ação não pode ser desfeita.",
       "payment_method": {
         "cash": "Dinheiro",
         "check": "Cheque",

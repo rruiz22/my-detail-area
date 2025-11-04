@@ -1,6 +1,6 @@
 import { STOCK_CONSTANTS } from '@/constants/stock';
 import { useAuth } from '@/contexts/AuthContext';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { useSmartPolling } from '@/hooks/useSmartPolling';
 import { supabase } from '@/integrations/supabase/client';
@@ -112,6 +112,7 @@ interface UseStockManagementReturn {
 export const useStockManagement = (): UseStockManagementReturn => {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
   const { currentDealership } = useAccessibleDealerships();
 

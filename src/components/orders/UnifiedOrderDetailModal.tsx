@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePermissionContext } from '@/contexts/PermissionContext';
@@ -181,6 +182,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   const { hasPermission } = usePermissionContext();
   const { previewPrint } = usePrintOrder();
   const [orderData, setOrderData] = useState(order);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
     setOrderData(order);
@@ -263,13 +265,17 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   // Handle delete button click
   const handleDelete = useCallback(() => {
     if (canDeleteOrder && onDelete) {
-      // Confirm before deleting
-      if (window.confirm(t('messages.confirm_delete_order', { defaultValue: 'Are you sure you want to delete this order?' }))) {
-        onDelete(orderData.id);
-        onClose(); // Close modal after delete
-      }
+      setDeleteDialogOpen(true);
     }
-  }, [canDeleteOrder, onDelete, orderData.id, onClose, t]);
+  }, [canDeleteOrder, onDelete]);
+
+  // Confirm delete action
+  const confirmDelete = useCallback(async () => {
+    if (onDelete) {
+      onDelete(orderData.id);
+      onClose(); // Close modal after delete
+    }
+  }, [onDelete, orderData.id, onClose]);
 
   // Safe mapper for print functions
   const mapToPrintOrderData = useCallback((data: OrderData) => {
@@ -621,6 +627,18 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
             </div>
           </footer>
       </DialogContent>
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title={t('orders.delete_title', { defaultValue: 'Delete Order?' })}
+        description={t('messages.confirm_delete_order', { defaultValue: 'Are you sure you want to delete this order? This action cannot be undone.' })}
+        confirmText={t('common.action_buttons.delete')}
+        cancelText={t('common.action_buttons.cancel')}
+        onConfirm={confirmDelete}
+        variant="destructive"
+      />
     </Dialog>
   );
 });

@@ -115,6 +115,7 @@ export const useCarWashOrderManagement = () => {
 
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { toast } = useToast();
   const { enhancedUser } = usePermissions();
   const { generateQR } = useOrderActions();
   const queryClient = useQueryClient();

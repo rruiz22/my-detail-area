@@ -1,5 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -45,6 +45,7 @@ interface UseVehiclePhotosReturn {
 export const useVehiclePhotos = ({ vehicleId, dealerId }: UseVehiclePhotosProps): UseVehiclePhotosReturn => {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   // Category priority for sorting

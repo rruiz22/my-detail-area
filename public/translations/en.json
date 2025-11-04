@@ -4650,6 +4650,8 @@
       "send_email": "Send Email",
       "download_pdf": "Download PDF",
       "view_details": "View Details",
+      "delete_title": "Delete Invoice?",
+      "delete_description": "Are you sure you want to delete invoice {{invoiceNumber}}? This action cannot be undone.",
       "payment_method": {
         "cash": "Cash",
         "check": "Check",
