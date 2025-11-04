@@ -49,6 +49,8 @@ import { useQuery } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
 import {
   AlertCircle,
+  ArrowDown,
+  ArrowUp,
   Calendar,
   Car,
   CheckCircle2,
@@ -166,6 +168,10 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
   const [selectedService, setSelectedService] = useState<string>('all');
   const [excludedServices, setExcludedServices] = useState<Set<string>>(new Set());
 
+  // Sorting state
+  const [sortField, setSortField] = useState<'date' | null>('date');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+
   // Handle date range preset changes - now uses platform timezone
   const handleDateRangeChange = (value: 'today' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'last_3_months' | 'custom') => {
     setDateRange(value);
@@ -248,6 +254,81 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       return data || [];
     },
     enabled: !!dealerId,
+  });
+
+  // Fetch TOTAL orders in period (including invoiced ones) - for displaying total count
+  const { data: totalOrdersInPeriodData } = useQuery({
+    queryKey: ['total-orders-in-period', dealerId, orderType, startDate, endDate, orderStatus],
+    queryFn: async (): Promise<{ total: number; excluded: number; available: number; invoiced: number }> => {
+      if (!dealerId) return { total: 0, excluded: 0, available: 0, invoiced: 0 };
+
+      // Query all orders in the period with services
+      let query = supabase
+        .from('orders')
+        .select('id, order_type, created_at, completed_at, due_date, status, services')
+        .eq('dealer_id', dealerId)
+        .limit(2000);
+
+      // Apply order type filter
+      if (orderType !== 'all') {
+        query = query.eq('order_type', orderType);
+      }
+
+      // Apply status filter
+      if (orderStatus !== 'all') {
+        query = query.eq('status', orderStatus);
+      }
+
+      const { data: orders, error: ordersError } = await query;
+
+      if (ordersError) throw ordersError;
+      if (!orders) return { total: 0, excluded: 0, available: 0, invoiced: 0 };
+
+      // Filter by appropriate date field based on order_type (client-side)
+      const startDateTime = parseISO(startDate);
+      const endDateTime = parseISO(endDate);
+      endDateTime.setHours(23, 59, 59, 999);
+
+      const filteredByDate = orders.filter(order => {
+        let reportDate: Date;
+
+        if (order.order_type === 'sales' || order.order_type === 'service') {
+          reportDate = order.due_date ? new Date(order.due_date) : new Date(order.created_at);
+        } else if (order.order_type === 'recon' || order.order_type === 'carwash') {
+          reportDate = order.completed_at ? new Date(order.completed_at) : new Date(order.created_at);
+        } else {
+          reportDate = new Date(order.created_at);
+        }
+
+        return reportDate >= startDateTime && reportDate <= endDateTime;
+      });
+
+      // Get existing invoice items
+      const { data: existingInvoiceItems, error: itemsError } = await supabase
+        .from('invoice_items')
+        .select('service_reference')
+        .not('service_reference', 'is', null);
+
+      if (itemsError) throw itemsError;
+
+      const invoicedOrderIds = new Set(
+        existingInvoiceItems
+          ?.map(item => item.service_reference)
+          .filter(Boolean) || []
+      );
+
+      const availableCount = filteredByDate.filter(order => !invoicedOrderIds.has(order.id)).length;
+      const invoicedCount = filteredByDate.filter(order => invoicedOrderIds.has(order.id)).length;
+
+      return {
+        total: filteredByDate.length,
+        excluded: 0, // Will be calculated separately with excluded services
+        available: availableCount,
+        invoiced: invoicedCount
+      };
+    },
+    enabled: !!dealerId && activeTab === 'create',
+    staleTime: 30 * 1000,
   });
 
   // Fetch ALL vehicles for counts (direct query, no RPC)
@@ -365,8 +446,28 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       });
     }
 
+    // Apply sorting
+    if (sortField === 'date') {
+      filtered.sort((a, b) => {
+        // Get the appropriate date field based on order type
+        const getDate = (vehicle: VehicleForInvoice) => {
+          if (vehicle.order_type === 'sales' || vehicle.order_type === 'service') {
+            return vehicle.due_date || vehicle.created_at;
+          } else if (vehicle.order_type === 'recon' || vehicle.order_type === 'carwash') {
+            return vehicle.completed_at || vehicle.created_at;
+          }
+          return vehicle.created_at;
+        };
+
+        const dateA = new Date(getDate(a)).getTime();
+        const dateB = new Date(getDate(b)).getTime();
+
+        return sortDirection === 'asc' ? dateA - dateB : dateB - dateA;
+      });
+    }
+
     return filtered;
-  }, [availableVehicles, searchTerm, selectedService, excludedServices]);
+  }, [availableVehicles, searchTerm, selectedService, excludedServices, sortField, sortDirection]);
 
   const selectedVehicles = useMemo(() => {
     return filteredVehicles.filter(v => selectedVehicleIds.has(v.id));
@@ -389,10 +490,12 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     return counts;
   }, [allVehiclesForCounts]);
 
+  // Calculate service counts from ALL vehicles (before filtering by excluded services)
   const serviceCounts = useMemo(() => {
     const counts: Record<string, number> = {};
 
-    filteredVehicles.forEach(vehicle => {
+    // Use allVehiclesForCounts to get counts BEFORE excluding services
+    allVehiclesForCounts.forEach(vehicle => {
       if (!vehicle.services || !Array.isArray(vehicle.services)) return;
 
       vehicle.services.forEach((service: any) => {
@@ -402,7 +505,27 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     });
 
     return counts;
-  }, [filteredVehicles]);
+  }, [allVehiclesForCounts]);
+
+  // Calculate how many orders have excluded services
+  const excludedOrdersCount = useMemo(() => {
+    if (excludedServices.size === 0) return 0;
+
+    return allVehiclesForCounts.filter(vehicle => {
+      if (!vehicle.services || !Array.isArray(vehicle.services)) return false;
+      return vehicle.services.some((service: any) => {
+        const serviceId = service.id || service.type || service;
+        return excludedServices.has(serviceId);
+      });
+    }).length;
+  }, [allVehiclesForCounts, excludedServices]);
+
+  // Calculate total orders in period (respecting excluded services filter)
+  const totalOrdersInPeriod = useMemo(() => {
+    if (!totalOrdersInPeriodData) return 0;
+    // Total orders minus the ones with excluded services
+    return totalOrdersInPeriodData.total - excludedOrdersCount;
+  }, [totalOrdersInPeriodData, excludedOrdersCount]);
 
   const subtotal = useMemo(() => {
     return selectedVehicles.reduce((sum, v) => sum + (v.total_amount || 0), 0);
@@ -438,6 +561,17 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       newExcluded.add(serviceId);
     }
     setExcludedServices(newExcluded);
+  };
+
+  const handleSortByDate = () => {
+    if (sortField === 'date') {
+      // Toggle direction if already sorting by date
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      // Start sorting by date in descending order
+      setSortField('date');
+      setSortDirection('desc');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -1462,7 +1596,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Calendar className="h-3.5 w-3.5" />
                   <span>
-                    Showing vehicles from <span className="font-medium text-foreground">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className="font-medium text-foreground">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>
+                    Showing orders from <span className="font-medium text-foreground">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className="font-medium text-foreground">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>
                   </span>
                 </div>
               </div>
@@ -1477,7 +1611,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">
-                        All Services ({availableVehicles.length})
+                        All Services ({filteredVehicles.length})
                       </SelectItem>
                       {availableServices.length === 0 && !loadingServices && (
                         <SelectItem value="none" disabled>
@@ -1501,9 +1635,10 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                     {excludedServices.size > 0 ? (
                       Array.from(excludedServices).map((serviceId) => {
                         const service = availableServices.find(s => s.id === serviceId);
+                        const count = serviceCounts[serviceId] || 0;
                         return (
                           <Badge key={serviceId} variant="secondary" className="flex items-center gap-1">
-                            {service?.name || serviceId}
+                            {service?.name || serviceId} ({count})
                             <X
                               className="h-3 w-3 cursor-pointer"
                               onClick={() => toggleExcludeService(serviceId)}
@@ -1546,9 +1681,12 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Available Vehicles</CardTitle>
+                  <CardTitle>Available Orders</CardTitle>
                   <CardDescription>
-                    {selectedVehicleIds.size} of {filteredVehicles.length} selected
+                    {selectedVehicleIds.size} of {filteredVehicles.length} selected • {totalOrdersInPeriod} total orders in period
+                    {excludedOrdersCount > 0 && (
+                      <span className="text-amber-600"> ({excludedOrdersCount} orders with excluded services)</span>
+                    )}
                   </CardDescription>
                 </div>
                 {filteredVehicles.length > 0 && (
@@ -1561,12 +1699,12 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
             <CardContent>
               {loadingVehicles ? (
                 <div className="flex items-center justify-center h-64">
-                  <div className="text-muted-foreground">Loading vehicles...</div>
+                  <div className="text-muted-foreground">Loading orders...</div>
                 </div>
               ) : filteredVehicles.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-64">
                   <Car className="h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">No vehicles found</p>
+                  <p className="text-muted-foreground">No orders found</p>
                   <p className="text-sm text-muted-foreground">Try adjusting your filters</p>
                 </div>
               ) : (
@@ -1581,7 +1719,21 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                           />
                         </TableHead>
                         <TableHead className="text-center font-bold">Order Number</TableHead>
-                        <TableHead className="text-center font-bold">Date</TableHead>
+                        <TableHead className="text-center font-bold">
+                          <button
+                            onClick={handleSortByDate}
+                            className="flex items-center justify-center gap-1 w-full hover:text-primary transition-colors"
+                          >
+                            Date
+                            {sortField === 'date' && (
+                              sortDirection === 'asc' ? (
+                                <ArrowUp className="h-4 w-4" />
+                              ) : (
+                                <ArrowDown className="h-4 w-4" />
+                              )
+                            )}
+                          </button>
+                        </TableHead>
                         <TableHead className="text-center font-bold">
                           {orderType === 'service' ? 'PO / RO / Tag' : orderType === 'carwash' ? 'Stock / Tag' : 'Stock'}
                         </TableHead>
