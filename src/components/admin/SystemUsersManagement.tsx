@@ -18,18 +18,22 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Shield, UserCog, Plus, Edit, Trash2, AlertTriangle } from 'lucide-react';
+import { Shield, UserCog, Plus, Edit, Trash2, AlertTriangle, Layers } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useState } from 'react';
 import { CACHE_TIMES, GC_TIMES } from '@/constants/cacheConfig';
+import { CreateSystemUserModal } from './CreateSystemUserModal';
+import { EditAllowedModulesModal } from './EditAllowedModulesModal';
 
 export function SystemUsersManagement() {
   const { t } = useTranslation();
   const { enhancedUser } = usePermissions();
+  const queryClient = useQueryClient();
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editModulesUser, setEditModulesUser] = useState<any>(null);
 
   // Fetch system users (system_admin and supermanager)
   const { data: systemUsers, isLoading, error } = useQuery({
@@ -45,7 +49,7 @@ export function SystemUsersManagement() {
           role,
           created_at,
           dealership_id,
-          dealer_memberships!inner (
+          dealer_memberships (
             dealer_id,
             custom_role_id,
             is_active,
@@ -60,7 +64,24 @@ export function SystemUsersManagement() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data;
+
+      // 🆕 Load allowed_modules for each supermanager
+      const usersWithModules = await Promise.all(
+        data.map(async (user) => {
+          if (user.role === 'supermanager') {
+            const { data: modules } = await supabase
+              .rpc('get_user_allowed_modules', { target_user_id: user.id });
+
+            return {
+              ...user,
+              allowed_modules: modules || []
+            };
+          }
+          return user;
+        })
+      );
+
+      return usersWithModules;
     },
     staleTime: CACHE_TIMES.MEDIUM,  // 5 minutes
     gcTime: GC_TIMES.MEDIUM          // 10 minutes
@@ -178,6 +199,17 @@ export function SystemUsersManagement() {
                         : t('roles.supermanager')}
                     </Badge>
 
+                    {/* 🆕 Allowed Modules Display for Supermanagers */}
+                    {user.role === 'supermanager' && (
+                      <Badge
+                        variant={(user as any).allowed_modules?.length > 0 ? "outline" : "destructive"}
+                        className="gap-1.5"
+                      >
+                        <Layers className="h-3 w-3" />
+                        {(user as any).allowed_modules?.length || 0} modules
+                      </Badge>
+                    )}
+
                     {/* Custom Roles (if any) */}
                     {user.dealer_memberships?.map((membership: any) =>
                       membership.dealer_custom_roles && membership.is_active ? (
@@ -194,16 +226,18 @@ export function SystemUsersManagement() {
 
                     {/* Actions */}
                     <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => {
-                          // TODO: Implement edit modal
-                          console.log('Edit system user:', user.id);
-                        }}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
+                      {/* Edit Modules - Only for supermanagers */}
+                      {user.role === 'supermanager' && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setEditModulesUser(user)}
+                          className="gap-2"
+                        >
+                          <Layers className="h-3.5 w-3.5" />
+                          Edit Modules
+                        </Button>
+                      )}
 
                       {/* Only allow deleting if not current user and not last system_admin */}
                       {user.id !== enhancedUser?.id && user.role !== 'system_admin' && (
@@ -294,27 +328,28 @@ export function SystemUsersManagement() {
         </CardContent>
       </Card>
 
-      {/* TODO: CreateSystemUserModal component */}
-      {showCreateModal && (
-        <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle>{t('admin.create_system_user')}</CardTitle>
-              <CardDescription>
-                {t('admin.create_system_user_placeholder')}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                {t('admin.feature_coming_soon')}
-              </p>
-              <Button variant="outline" onClick={() => setShowCreateModal(false)}>
-                {t('common.close')}
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+      {/* Create System User Modal */}
+      <CreateSystemUserModal
+        open={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSuccess={() => {
+          // Refetch system users after creation
+          queryClient.invalidateQueries({ queryKey: ['system-users'] });
+        }}
+      />
+
+      {/* 🆕 Edit Allowed Modules Modal */}
+      <EditAllowedModulesModal
+        open={!!editModulesUser}
+        onClose={() => setEditModulesUser(null)}
+        user={editModulesUser}
+        onSuccess={() => {
+          // Refetch system users after editing modules
+          queryClient.invalidateQueries({ queryKey: ['system-users'] });
+          // Also clear permissions cache to force reload
+          queryClient.invalidateQueries({ queryKey: ['user_profile_permissions'] });
+        }}
+      />
     </div>
   );
 }

@@ -1,382 +1,284 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4'
-import { corsHeaders } from '../_shared/cors.ts'
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+}
 
 interface CreateSystemUserRequest {
   email: string
-  full_name: string
-  custom_role_id?: string | null
+  firstName: string
+  lastName: string
+  role: 'system_admin' | 'supermanager'
+  primaryDealershipId?: number | null
+  sendWelcomeEmail?: boolean
+  allowedModules?: string[]  // 🆕 Required for supermanagers
 }
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
 
   try {
     console.log('=== CREATE SYSTEM USER START ===')
-    console.log('Request method:', req.method)
 
-    // Validate request method
     if (req.method !== 'POST') {
-      console.error('Invalid request method:', req.method)
       return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'Method not allowed. Use POST.'
-        }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 405,
-        }
+        JSON.stringify({ success: false, error: 'Method not allowed' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 405 }
       )
     }
 
-    // Check environment variables
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
 
-    console.log('Environment check:')
-    console.log('- SUPABASE_URL exists:', !!supabaseUrl)
-    console.log('- SUPABASE_SERVICE_ROLE_KEY exists:', !!supabaseServiceKey)
-
     if (!supabaseUrl || !supabaseServiceKey) {
-      console.error('Missing environment variables')
       return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'Server configuration error: Missing environment variables'
-        }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 500,
-        }
+        JSON.stringify({ success: false, error: 'Missing environment variables' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
       )
     }
 
-    // Verify user is authenticated
     const authHeader = req.headers.get('authorization')
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      console.error('Missing or invalid authorization header')
+    if (!authHeader?.startsWith('Bearer ')) {
       return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'Unauthorized: Missing authentication token'
-        }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 401,
-        }
+        JSON.stringify({ success: false, error: 'Missing authentication token' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 }
       )
     }
 
-    // Create Supabase client with service role
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
+      auth: { autoRefreshToken: false, persistSession: false }
     })
 
-    // Get JWT token from authorization header
     const token = authHeader.replace('Bearer ', '')
-
-    // Verify the calling user
     const { data: userData, error: userError } = await supabaseAdmin.auth.getUser(token)
+
     if (userError || !userData.user) {
-      console.error('Invalid authentication token:', userError)
       return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'Unauthorized: Invalid authentication token'
-        }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 401,
-        }
+        JSON.stringify({ success: false, error: 'Invalid authentication token' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 401 }
       )
     }
 
-    // CRITICAL: Check if calling user is system_admin
-    const { data: callerProfile, error: callerProfileError } = await supabaseAdmin
+    const { data: callerProfile } = await supabaseAdmin
       .from('profiles')
       .select('role, email')
       .eq('id', userData.user.id)
       .single()
 
-    if (callerProfileError || !callerProfile || callerProfile.role !== 'system_admin') {
-      console.error('User is not system_admin:', callerProfileError || callerProfile?.role)
-
-      // Log security event
-      await supabaseAdmin
-        .from('security_audit_log')
-        .insert({
-          event_type: 'unauthorized_system_user_creation_attempt',
-          user_id: userData.user.id,
-          event_details: {
-            caller_role: callerProfile?.role || 'unknown',
-            caller_email: callerProfile?.email || 'unknown'
-          },
-          ip_address: req.headers.get('x-forwarded-for') || 'unknown',
-          user_agent: req.headers.get('user-agent') || 'unknown',
-          success: false
-        })
-
+    if (!callerProfile || callerProfile.role !== 'system_admin') {
       return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'Forbidden: Only system_admin can create system users'
-        }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 403,
-        }
+        JSON.stringify({ success: false, error: 'Only system_admin can create system users' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 403 }
       )
     }
 
-    console.log('✅ system_admin authentication verified:', callerProfile.email)
+    const requestBody: CreateSystemUserRequest = await req.json()
+    const { email, firstName, lastName, role, primaryDealershipId, sendWelcomeEmail, allowedModules } = requestBody
 
-    // Parse and validate request body
-    let requestBody: CreateSystemUserRequest
-    try {
-      requestBody = await req.json()
-      console.log('Request body received:', {
-        email: requestBody.email,
-        full_name: requestBody.full_name,
-        has_custom_role: !!requestBody.custom_role_id
-      })
-    } catch (parseError) {
-      console.error('JSON parse error:', parseError)
+    if (!email || !firstName || !lastName || !role) {
       return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'Invalid JSON in request body'
-        }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 400,
-        }
+        JSON.stringify({ success: false, error: 'Missing required fields' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
       )
     }
 
-    // Validate required fields
-    const { email, full_name, custom_role_id } = requestBody
-
-    if (!email || typeof email !== 'string' || !email.includes('@')) {
-      console.error('Invalid email:', email)
+    // 🆕 Validate supermanagers have at least 1 allowed module
+    if (role === 'supermanager' && (!allowedModules || allowedModules.length === 0)) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: 'Invalid email address'
+          error: 'Supermanagers must have at least one allowed module'
         }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 400,
-        }
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
       )
     }
 
-    if (!full_name || typeof full_name !== 'string' || full_name.trim().length === 0) {
-      console.error('Invalid full_name:', full_name)
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'Invalid full_name: must be a non-empty string'
-        }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 400,
-        }
-      )
-    }
+    const fullName = `${firstName} ${lastName}`
 
-    console.log('Validated input data:', { email, full_name, custom_role_id })
-
-    // Check if user already exists
     const { data: existingUser } = await supabaseAdmin
       .from('profiles')
-      .select('id, email')
+      .select('id')
       .eq('email', email)
       .maybeSingle()
 
     if (existingUser) {
-      console.error('User already exists:', email)
       return new Response(
-        JSON.stringify({
-          success: false,
-          error: `User with email ${email} already exists`
-        }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 400,
-        }
+        JSON.stringify({ success: false, error: 'User already exists' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
       )
     }
 
-    // Step 1: Create user in Auth
-    console.log('=== STEP 1: Creating Auth User ===')
+    console.log('Creating auth user:', email)
     const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
-      email: email,
-      email_confirm: true, // Auto-confirm email
-      user_metadata: {
-        full_name: full_name,
-        role: 'supermanager'
-      }
+      email,
+      email_confirm: true,
+      user_metadata: { full_name: fullName, first_name: firstName, last_name: lastName, role }
     })
 
     if (authError || !authUser?.user) {
-      console.error('Auth creation failed:', authError)
+      console.error('Auth error:', authError)
       return new Response(
-        JSON.stringify({
-          success: false,
-          error: `Auth creation failed: ${authError?.message || 'Unknown error'}`,
-          details: authError
-        }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 400,
-        }
+        JSON.stringify({ success: false, error: authError?.message || 'Auth creation failed' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
       )
     }
 
-    console.log('✅ Auth user created:', authUser.user.id)
+    console.log('Auth user created:', authUser.user.id)
+    console.log('Updating profile...')
 
-    // Step 2: Update profile to supermanager
-    console.log('=== STEP 2: Updating Profile to supermanager ===')
     const { error: profileError } = await supabaseAdmin
       .from('profiles')
       .update({
-        role: 'supermanager',
-        dealership_id: null, // Global access - no specific dealership
-        full_name: full_name,
-        updated_at: new Date().toISOString()
+        role,
+        first_name: firstName,
+        last_name: lastName,
+        dealership_id: primaryDealershipId || null
       })
       .eq('id', authUser.user.id)
 
     if (profileError) {
-      console.error('Profile update failed:', profileError)
-
-      // ROLLBACK: Delete auth user
-      try {
-        console.log('Rolling back: deleting auth user')
-        await supabaseAdmin.auth.admin.deleteUser(authUser.user.id)
-        console.log('✅ Rollback successful')
-      } catch (rollbackError) {
-        console.error('❌ Rollback failed:', rollbackError)
-      }
-
+      console.error('Profile update error:', profileError)
+      await supabaseAdmin.auth.admin.deleteUser(authUser.user.id)
       return new Response(
         JSON.stringify({
           success: false,
           error: `Profile update failed: ${profileError.message}`,
           details: profileError
         }),
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 500,
-        }
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
       )
     }
 
-    console.log('✅ Profile updated to supermanager')
+    console.log('Profile updated successfully')
 
-    // Step 3: Optionally assign custom role
-    if (custom_role_id) {
-      console.log('=== STEP 3: Assigning Custom Role ===')
+    // ✅ FIX: Create dealer_memberships based on role type
+    if (role === 'supermanager' || role === 'system_admin') {
+      // For supermanagers/system_admins: create memberships for ALL dealerships (global access)
+      console.log('Creating global dealer memberships for', role)
 
-      // Validate custom role exists
-      const { data: customRole, error: roleCheckError } = await supabaseAdmin
-        .from('dealer_custom_roles')
-        .select('id, name')
-        .eq('id', custom_role_id)
-        .single()
+      const { data: dealerships, error: dealerError } = await supabaseAdmin
+        .from('dealerships')
+        .select('id')
+        .is('deleted_at', null)
 
-      if (roleCheckError || !customRole) {
-        console.warn('⚠️ Custom role not found:', custom_role_id)
-        // Don't fail - supermanager can still function without custom role
-      } else {
-        const { error: roleAssignError } = await supabaseAdmin
-          .from('user_custom_role_assignments')
-          .insert({
-            user_id: authUser.user.id,
-            custom_role_id: custom_role_id,
-            created_at: new Date().toISOString()
-          })
+      if (dealerError) {
+        console.error('Failed to fetch dealerships:', dealerError)
+        await supabaseAdmin.auth.admin.deleteUser(authUser.user.id)
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: `Failed to setup global access: ${dealerError.message}`
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+        )
+      }
 
-        if (roleAssignError) {
-          console.warn('⚠️ Custom role assignment failed:', roleAssignError)
-          // Don't fail - supermanager is created successfully
-        } else {
-          console.log('✅ Custom role assigned:', customRole.name)
+      if (dealerships && dealerships.length > 0) {
+        const memberships = dealerships.map(dealer => ({
+          user_id: authUser.user.id,
+          dealer_id: dealer.id,
+          is_active: true,
+          custom_role_id: null  // Supermanagers bypass via code logic
+        }))
+
+        const { error: membershipError } = await supabaseAdmin
+          .from('dealer_memberships')
+          .insert(memberships)
+
+        if (membershipError) {
+          console.error('Failed to create dealer memberships:', membershipError)
+          await supabaseAdmin.auth.admin.deleteUser(authUser.user.id)
+          return new Response(
+            JSON.stringify({
+              success: false,
+              error: `Failed to setup dealer memberships: ${membershipError.message}`
+            }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+          )
         }
+
+        console.log(`✅ Created ${memberships.length} dealer memberships for ${role}`)
+      }
+    } else if (primaryDealershipId) {
+      // For regular dealer users: create membership for single dealership
+      const { data: adminRole } = await supabaseAdmin
+        .from('dealer_custom_roles')
+        .select('id')
+        .eq('dealer_id', primaryDealershipId)
+        .eq('role_name', 'admin')
+        .maybeSingle()
+
+      const { error: membershipError } = await supabaseAdmin
+        .from('dealer_memberships')
+        .insert({
+          user_id: authUser.user.id,
+          dealer_id: primaryDealershipId,
+          custom_role_id: adminRole?.id,
+          is_active: true
+        })
+
+      if (membershipError) {
+        console.error('Failed to create dealer membership:', membershipError)
+        await supabaseAdmin.auth.admin.deleteUser(authUser.user.id)
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: `Failed to setup dealer membership: ${membershipError.message}`
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+        )
       }
     }
 
-    // Step 4: Log to audit table
-    console.log('=== STEP 4: Logging to Audit ===')
-    try {
-      await supabaseAdmin
-        .from('security_audit_log')
-        .insert({
-          event_type: 'system_user_created',
-          user_id: userData.user.id,
-          event_details: {
-            created_user_id: authUser.user.id,
-            created_user_email: email,
-            created_user_role: 'supermanager',
-            caller_email: callerProfile.email,
-            custom_role_assigned: !!custom_role_id
-          },
-          ip_address: req.headers.get('x-forwarded-for') || 'unknown',
-          user_agent: req.headers.get('user-agent') || 'unknown',
-          success: true
+    // 🆕 Set allowed modules for supermanagers
+    if (role === 'supermanager' && allowedModules && allowedModules.length > 0) {
+      console.log(`Setting ${allowedModules.length} allowed modules for supermanager:`, allowedModules)
+
+      const { error: modulesError } = await supabaseAdmin
+        .rpc('set_user_allowed_modules', {
+          target_user_id: authUser.user.id,
+          modules: allowedModules
         })
-      console.log('✅ Audit logged')
-    } catch (auditError) {
-      console.warn('⚠️ Audit logging failed:', auditError)
-      // Don't fail - user is created successfully
+
+      if (modulesError) {
+        console.error('Failed to set allowed modules:', modulesError)
+        // Rollback: delete user
+        await supabaseAdmin.auth.admin.deleteUser(authUser.user.id)
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: `Failed to set allowed modules: ${modulesError.message}`,
+            details: modulesError
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+        )
+      }
+
+      console.log(`✅ Set allowed modules for ${email}:`, allowedModules)
     }
 
-    console.log('=== SYSTEM USER CREATION COMPLETED ===')
-    console.log('Final user details:', {
-      user_id: authUser.user.id,
-      email: email,
-      role: 'supermanager',
-      dealership_id: null,
-      custom_role_assigned: !!custom_role_id
-    })
+    console.log('User created successfully')
 
     return new Response(
       JSON.stringify({
         success: true,
         user_id: authUser.user.id,
-        email: email,
-        role: 'supermanager',
-        dealership_id: null,
-        message: 'System user (supermanager) created successfully',
-        timestamp: new Date().toISOString()
+        email,
+        role,
+        message: `System user (${role}) created successfully`
       }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200,
-      }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     )
 
   } catch (error) {
-    console.error('=== UNEXPECTED ERROR ===')
-    console.error('Error message:', error?.message)
-    console.error('Error stack:', error?.stack)
-
+    console.error('Unexpected error:', error)
     return new Response(
-      JSON.stringify({
-        success: false,
-        error: error?.message || 'Unexpected error occurred',
-        timestamp: new Date().toISOString()
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 500,
-      }
+      JSON.stringify({ success: false, error: error?.message || 'Unexpected error' }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
     )
   }
 })

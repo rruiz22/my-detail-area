@@ -675,3 +675,5 @@ npm run lighthouse -- --url=/chat
 **Prioridad:** 🔴 CRÍTICA
 **Impacto:** Alto - Afecta estabilidad y rendimiento en producción
 
+
+

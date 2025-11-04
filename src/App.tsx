@@ -175,7 +175,7 @@ const AppRoutes = () => {
           <Route
             path="detail-hub/*"
             element={
-              <PermissionGuard module="productivity" permission="view" checkDealerModule={true}>
+              <PermissionGuard module="detail_hub" permission="view" checkDealerModule={true}>
                 <DetailHub />
               </PermissionGuard>
             }

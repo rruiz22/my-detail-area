@@ -38,9 +38,17 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
         return false;
       }
 
-      // Can only update orders from own dealership
-      if (parseInt(dealerId) !== enhancedUser.dealership_id) {
-        console.warn('⚠️ User cannot update orders from different dealership', {
+      // Supermanagers can update orders from ALL dealerships
+      if (enhancedUser.is_supermanager) {
+        console.log('✅ Supermanager - multi-dealer status change allowed', {
+          userDealership: enhancedUser.dealership_id,
+          orderDealership: dealerId
+        });
+        // Continue to permission check below (don't return yet)
+      }
+      // Dealer users can only update orders from own dealership
+      else if (parseInt(dealerId) !== enhancedUser.dealership_id) {
+        console.warn('⚠️ Dealer user cannot update orders from different dealership', {
           userDealership: enhancedUser.dealership_id,
           orderDealership: dealerId
         });

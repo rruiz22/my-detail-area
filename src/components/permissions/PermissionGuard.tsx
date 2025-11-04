@@ -102,36 +102,22 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = React.memo(({
     else if (module) {
       // IMPORTANT: When checkDealerModule is true, we enforce stricter checks
       if (checkDealerModule && !isSystemAdmin) {
-        if (import.meta.env.DEV) {
-          console.log(`🔍 [PermissionGuard] Enforcing strict module check for ${module}`);
-          const allUserModules = Array.from(enhancedUser?.module_permissions?.keys() || []);
-          console.log(`   📋 User has permissions in ${allUserModules.length} modules: [${allUserModules.join(', ')}]`);
-        }
+        // PRIORITY 1: Supermanager - check allowed_modules
+        if (isSupermanager) {
+          const allowedModules = (enhancedUser as any)?.allowed_modules || [];
 
-        // First, check if dealership has the module enabled
-        // ✅ Safe to call here: modules finished loading (isLoading=false above)
-        const dealerHasModule = hasModuleAccess(module);
-        if (!dealerHasModule) {
-          if (import.meta.env.DEV) {
-            console.warn(`🚫 [PermissionGuard] Dealership doesn't have ${module} module enabled`);
-          }
-          hasAccess = false;
-        } else {
-          // Second, verify user has AT LEAST ONE permission in this module
-          const userModulePerms = enhancedUser?.module_permissions?.get(module);
-          const hasAnyModulePermission = userModulePerms && userModulePerms.size > 0;
-
-          if (import.meta.env.DEV) {
-            console.log(`   🔑 Permissions in "${module}": ${userModulePerms ? `[${Array.from(userModulePerms).join(', ')}]` : 'NONE'}`);
-          }
-
-          if (!hasAnyModulePermission) {
+          if (allowedModules.length === 0) {
+            // No allowed modules = no access
             if (import.meta.env.DEV) {
-              console.warn(`🚫 [PermissionGuard] User has NO permissions for ${module} module`);
+              console.warn(`❌ [PermissionGuard] Supermanager has NO allowed modules`);
             }
             hasAccess = false;
-          } else {
-            // User has permissions, check the specific permission
+          } else if (module && allowedModules.includes(module)) {
+            // Module in allowed list - delegate to hasPermission/hasModulePermission
+            if (import.meta.env.DEV) {
+              console.log(`✅ [PermissionGuard] Module ${module} in allowed list - checking specific permission`);
+            }
+
             const isLegacyLevel = ['none', 'view', 'edit', 'delete', 'admin'].includes(permission as string);
 
             if (isLegacyLevel) {
@@ -146,6 +132,62 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = React.memo(({
                 hasAccess = canEditOrder(order);
               } else if (permission === 'delete' || permission === 'delete_orders') {
                 hasAccess = canDeleteOrder(order);
+              }
+            }
+          } else {
+            // Module NOT in allowed list
+            if (import.meta.env.DEV) {
+              console.warn(`❌ [PermissionGuard] Module ${module} NOT in allowed list: [${allowedModules.join(', ')}]`);
+            }
+            hasAccess = false;
+          }
+        }
+        // PRIORITY 2: Dealer users - strict module check
+        else {
+          if (import.meta.env.DEV) {
+            console.log(`🔍 [PermissionGuard] Enforcing strict module check for ${module}`);
+            const allUserModules = Array.from(enhancedUser?.module_permissions?.keys() || []);
+            console.log(`   📋 User has permissions in ${allUserModules.length} modules: [${allUserModules.join(', ')}]`);
+          }
+
+          // First, check if dealership has the module enabled
+          const dealerHasModule = hasModuleAccess(module);
+          if (!dealerHasModule) {
+            if (import.meta.env.DEV) {
+              console.warn(`🚫 [PermissionGuard] Dealership doesn't have ${module} module enabled`);
+            }
+            hasAccess = false;
+          } else {
+            // Second, verify user has AT LEAST ONE permission in this module
+            const userModulePerms = enhancedUser?.module_permissions?.get(module);
+            const hasAnyModulePermission = userModulePerms && userModulePerms.size > 0;
+
+            if (import.meta.env.DEV) {
+              console.log(`   🔑 Permissions in "${module}": ${userModulePerms ? `[${Array.from(userModulePerms).join(', ')}]` : 'NONE'}`);
+            }
+
+            if (!hasAnyModulePermission) {
+              if (import.meta.env.DEV) {
+                console.warn(`🚫 [PermissionGuard] User has NO permissions for ${module} module`);
+              }
+              hasAccess = false;
+            } else {
+              // User has permissions, check the specific permission
+              const isLegacyLevel = ['none', 'view', 'edit', 'delete', 'admin'].includes(permission as string);
+
+              if (isLegacyLevel) {
+                hasAccess = hasPermission(module, permission as PermissionLevel);
+              } else {
+                hasAccess = hasModulePermission(module, permission as ModulePermissionKey);
+              }
+
+              // Check order-specific permissions
+              if (hasAccess && requireOrderAccess && order) {
+                if (permission === 'edit' || permission === 'edit_orders') {
+                  hasAccess = canEditOrder(order);
+                } else if (permission === 'delete' || permission === 'delete_orders') {
+                  hasAccess = canDeleteOrder(order);
+                }
               }
             }
           }

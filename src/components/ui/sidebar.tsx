@@ -13,6 +13,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import * as logger from "@/utils/logger";
+import { debounce } from "@/lib/notification-analytics";
 
 const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -76,20 +77,33 @@ const SidebarProvider = React.forwardRef<
   // We use openProp and setOpenProp for control from outside the component.
   const [_open, _setOpen] = React.useState(() => readSidebarCookie());
   const open = openProp ?? _open;
+
+  // ✅ OPTIMIZATION: Debounced cookie write to prevent cookie thrashing
+  // Using 50ms delay (consistent with usePersistedState standard)
+  const debouncedCookieWrite = React.useMemo(
+    () =>
+      debounce((value: boolean) => {
+        document.cookie = `${SIDEBAR_COOKIE_NAME}=${value}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+        logger.dev('🍪 [SIDEBAR] Saving cookie (debounced):', value);
+      }, 50),
+    []
+  );
+
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
-      const openState = typeof value === "function" ? value(open) : value;
+      // Need to read current state from _open instead of 'open' to avoid dependency
+      const currentOpen = openProp ?? _open;
+      const openState = typeof value === "function" ? value(currentOpen) : value;
       if (setOpenProp) {
         setOpenProp(openState);
       } else {
         _setOpen(openState);
       }
 
-      // This sets the cookie to keep the sidebar state.
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
-      logger.dev('🍪 [SIDEBAR] Saving cookie:', openState);
+      // ✅ OPTIMIZATION: Debounced cookie write instead of immediate
+      debouncedCookieWrite(openState);
     },
-    [setOpenProp, open],
+    [setOpenProp, openProp, _open, debouncedCookieWrite],
   );
 
   // Helper to toggle the sidebar.

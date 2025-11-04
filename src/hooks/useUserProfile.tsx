@@ -141,9 +141,9 @@ export function useUserProfileForPermissions() {
         return null;
       }
 
-      const { data, error } = await supabase
+      const { data, error} = await supabase
         .from('profiles')
-        .select('id, email, role, user_type, dealership_id, first_name, last_name')
+        .select('id, email, role, user_type, dealership_id, first_name, last_name, bypass_custom_roles')
         .eq('id', user.id)
         .single();
 
@@ -152,7 +152,25 @@ export function useUserProfileForPermissions() {
         return null;
       }
 
-      return data;
+      // 🆕 Load allowed_modules for supermanagers
+      let allowedModules: string[] = [];
+      if (data?.role === 'supermanager') {
+        const { data: modules, error: modulesError } = await supabase
+          .rpc('get_user_allowed_modules', { target_user_id: user.id });
+
+        if (modulesError) {
+          console.error('Error loading allowed modules:', modulesError);
+          // Don't fail completely - just log and continue with empty array
+        } else {
+          allowedModules = modules || [];
+          console.log(`✅ Loaded ${allowedModules.length} allowed modules for supermanager:`, allowedModules);
+        }
+      }
+
+      return {
+        ...data,
+        allowed_modules: allowedModules
+      };
     },
     enabled: !!user?.id,
     staleTime: 900000, // 15 minutes

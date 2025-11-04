@@ -1,4 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { useDealerFilter } from '@/contexts/DealerFilterContext';
 import { useOrderActions } from '@/hooks/useOrderActions';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useOrderPolling } from '@/hooks/useSmartPolling';
@@ -166,10 +167,12 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
   const { enhancedUser, getAllowedOrderTypes } = usePermissions();
   const { generateQR } = useOrderActions();
   const queryClient = useQueryClient();
+  const { selectedDealerId } = useDealerFilter();  // ✅ FIX: Use dealer filter from context
 
   // Smart polling for service order data (replaces real-time subscription and initial refresh)
+  // ✅ FIX: Include selectedDealerId in queryKey so cache invalidates when dealer changes
   const serviceOrdersPollingQuery = useOrderPolling(
-    ['orders', 'service'],
+    ['orders', 'service', selectedDealerId],  // ✅ FIX: Added selectedDealerId to queryKey
     async () => {
       if (!user || !enhancedUser) return [];
 
@@ -182,21 +185,21 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
         .eq('order_type', 'service')
         .order('created_at', { ascending: false });
 
-      // Check global dealer filter
-      const savedDealerFilter = localStorage.getItem('selectedDealerFilter');
-      const parsedFilter = savedDealerFilter && savedDealerFilter !== 'null' && savedDealerFilter !== 'undefined'
-        ? (savedDealerFilter === 'all' ? 'all' : parseInt(savedDealerFilter))
-        : 'all';
-      const dealerFilter = typeof parsedFilter === 'number' && !isNaN(parsedFilter) ? parsedFilter : 'all';
-      dev(`🔍 Service Polling - Dealer filter resolved: "${savedDealerFilter}" → ${dealerFilter}`);
+      // ✅ FIX: Use selectedDealerId from context instead of reading localStorage
+      const dealerFilter = selectedDealerId;
+      dev(`🔍 Service Polling - Dealer filter resolved: ${dealerFilter}`);
 
       // Handle dealer filtering based on user type and global filter
-      // ✅ FIX: System admins should ALWAYS respect global filter, even if they have dealership_id assigned
+      // ✅ FIX: System admins and supermanagers should ALWAYS respect global filter
       const isSystemAdminPolling = enhancedUser && 'is_system_admin' in enhancedUser
         ? enhancedUser.is_system_admin
         : enhancedUser && 'role' in enhancedUser && enhancedUser.role === 'system_admin';
 
-      const shouldUseGlobalFilterPolling = enhancedUser.dealership_id === null || isSystemAdminPolling;
+      const isSupermanagerPolling = enhancedUser && 'is_supermanager' in enhancedUser
+        ? enhancedUser.is_supermanager
+        : enhancedUser && 'role' in enhancedUser && enhancedUser.role === 'supermanager';
+
+      const shouldUseGlobalFilterPolling = enhancedUser.dealership_id === null || isSystemAdminPolling || isSupermanagerPolling;
 
       if (shouldUseGlobalFilterPolling) {
         // Multi-dealer users and system admins - respect global filter

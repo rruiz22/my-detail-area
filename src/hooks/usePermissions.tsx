@@ -41,7 +41,8 @@ export type AppModule =
   | 'users'
   | 'management'
   | 'productivity'
-  | 'contacts';
+  | 'contacts'
+  | 'detail_hub';  // ✅ NEW: Separate module for Detail Hub (employee portal, timecards, invoices)
 
 /**
  * @deprecated Legacy permission levels - Use ModulePermissionKey instead
@@ -359,6 +360,8 @@ export const usePermissions = () => {
           dealership_id: profileData.dealership_id,
           is_system_admin: profileData.role === 'system_admin',
           is_supermanager: profileData.role === 'supermanager',  // UPDATED: Renamed from is_manager
+          bypass_custom_roles: profileData.bypass_custom_roles || false,  // @deprecated
+          allowed_modules: profileData.allowed_modules || [],  // 🆕 NEW: Include allowed modules
           custom_roles: [],
           system_permissions: new Set(),
           module_permissions: new Map()
@@ -532,6 +535,8 @@ export const usePermissions = () => {
         dealership_id: profileData.dealership_id,
         is_system_admin: profileData.role === 'system_admin',
         is_supermanager: profileData.role === 'supermanager',  // UPDATED: Renamed from is_manager
+        bypass_custom_roles: profileData.bypass_custom_roles || false,  // @deprecated
+        allowed_modules: profileData.allowed_modules || [],  // 🆕 NEW: Include allowed modules from profileData
         custom_roles: Array.from(rolesMap.values()),
         system_permissions: aggregatedSystemPerms,
         module_permissions: aggregatedModulePerms
@@ -612,23 +617,17 @@ export const usePermissions = () => {
   const hasSystemPermission = useCallback((permission: SystemPermissionKey): boolean => {
     if (!enhancedUser) return false;
 
-    // System admins have ALL system permissions
+    // PRIORITY 1: System admins have ALL system permissions
     if (enhancedUser.is_system_admin) return true;
 
-    // Supermanagers have MOST system permissions except platform-level settings
-    if (enhancedUser.is_supermanager) {
-      // Supermanagers CANNOT manage platform-wide settings (reserved for system_admin only)
-      const restrictedPermissions: SystemPermissionKey[] = ['manage_all_settings'];
-
-      if (restrictedPermissions.includes(permission)) {
-        return false;  // Denied: Platform settings restricted to system_admin only
-      }
-
-      // All other system permissions granted to supermanager
-      return true;
+    // PRIORITY 2: Supermanagers do NOT have automatic system permissions
+    // System permissions are reserved for system_admin and custom roles only
+    // manage_all_settings is ALWAYS restricted to system_admin
+    if (permission === 'manage_all_settings') {
+      return enhancedUser.is_system_admin;
     }
 
-    // Regular users: Check if they have this system permission via custom role
+    // PRIORITY 3: Regular users - Check if they have this system permission via custom role
     return enhancedUser.system_permissions.has(permission);
   }, [enhancedUser]);
 
@@ -648,31 +647,40 @@ export const usePermissions = () => {
       return false;
     }
 
-    // System admins have ALL module permissions
+    // PRIORITY 1: System admins have ALL module permissions
     if (enhancedUser.is_system_admin) {
       telemetry.trackPermissionCheck(module, permission, true, performance.now() - startTime);
       return true;
     }
 
-    // Supermanagers have MOST module permissions (elevated access)
-    // They can access all modules except platform-level administration
+    // PRIORITY 2: Supermanager - check allowed_modules
     if (enhancedUser.is_supermanager) {
-      // Supermanagers have full access to dealership operations
-      // They CANNOT access platform-level management settings
-      // For those, they need explicit custom role permissions
-      const allowedModules: AppModule[] = [
-        'dashboard', 'sales_orders', 'service_orders', 'recon_orders', 'car_wash',
-        'stock', 'contacts', 'reports', 'users', 'productivity', 'chat',
-        'dealerships', 'get_ready', 'settings' // Dealership settings OK
-      ];
+      const allowedModules = enhancedUser.allowed_modules || [];
 
-      if (allowedModules.includes(module)) {
-        telemetry.trackPermissionCheck(module, permission, true, performance.now() - startTime);
-        return true;  // Supermanager granted
+      // Supermanagers WITHOUT allowed_modules = no access
+      if (allowedModules.length === 0) {
+        if (import.meta.env.DEV) {
+          logger.warn(`❌ Supermanager ${enhancedUser.email} has NO allowed modules`);
+        }
+        telemetry.trackPermissionCheck(module, permission, false, performance.now() - startTime);
+        return false;
       }
 
-      // For management/platform modules, check custom role
-      // (Falls through to custom role check below)
+      // Check if module is in allowed list
+      if (allowedModules.includes(module)) {
+        if (import.meta.env.DEV) {
+          logger.dev(`✅ [allowed_modules] Module ${module}.${permission} permitted for supermanager`);
+        }
+        telemetry.trackPermissionCheck(module, permission, true, performance.now() - startTime);
+        return true;
+      }
+
+      // Module NOT in allowed list - deny access
+      if (import.meta.env.DEV) {
+        logger.dev(`❌ [allowed_modules] Module ${module} NOT in allowed list: [${allowedModules.join(', ')}]`);
+      }
+      telemetry.trackPermissionCheck(module, permission, false, performance.now() - startTime);
+      return false;
     }
 
     // Users without custom roles have no access
@@ -707,9 +715,37 @@ export const usePermissions = () => {
   const hasPermission = useCallback((module: AppModule, requiredLevel: PermissionLevel): boolean => {
     if (!enhancedUser) return false;
 
-    // System admins have full access
+    // PRIORITY 1: System admins have full access
     if (enhancedUser.is_system_admin) return true;
 
+    // PRIORITY 2: Supermanager - check allowed_modules
+    if (enhancedUser.is_supermanager) {
+      const allowedModules = enhancedUser.allowed_modules || [];
+
+      // Supermanagers WITHOUT allowed_modules = no access
+      if (allowedModules.length === 0) {
+        if (import.meta.env.DEV) {
+          logger.warn(`❌ Supermanager ${enhancedUser.email} has NO allowed modules`);
+        }
+        return false;
+      }
+
+      // Check if module is in allowed list
+      if (allowedModules.includes(module)) {
+        if (import.meta.env.DEV) {
+          logger.dev(`✅ [allowed_modules] Module ${module}.${requiredLevel} permitted for supermanager`);
+        }
+        return true;
+      }
+
+      // Module NOT in allowed list
+      if (import.meta.env.DEV) {
+        logger.dev(`❌ [allowed_modules] Module ${module} NOT in allowed list: [${allowedModules.join(', ')}]`);
+      }
+      return false;
+    }
+
+    // PRIORITY 3: Dealer users - Check custom roles
     // Map legacy levels to granular permissions
     const permissionsByLevel: Record<PermissionLevel, ModulePermissionKey[]> = {
       'none': [],
@@ -804,14 +840,35 @@ export const usePermissions = () => {
   const getAllowedOrderTypes = useCallback((): OrderType[] => {
     if (!enhancedUser) return [];
 
-    // System admins have access to all order types
+    // PRIORITY 1: System admins have access to all order types
     if (enhancedUser.is_system_admin) {
       return ['sales', 'service', 'recon', 'carwash'];
     }
 
-    // Supermanagers have access to all dealership order types
+    // PRIORITY 2: Supermanager - return ONLY order types from allowed_modules
     if (enhancedUser.is_supermanager) {
-      return ['sales', 'service', 'recon', 'carwash'];
+      const allowedModules = enhancedUser.allowed_modules || [];
+
+      // Supermanagers WITHOUT allowed_modules = no order access
+      if (allowedModules.length === 0) {
+        if (import.meta.env.DEV) {
+          logger.warn(`❌ Supermanager has NO allowed modules - no order access`);
+        }
+        return [];
+      }
+
+      // Map allowed modules to order types
+      const orderTypes: OrderType[] = [];
+      if (allowedModules.includes('sales_orders')) orderTypes.push('sales');
+      if (allowedModules.includes('service_orders')) orderTypes.push('service');
+      if (allowedModules.includes('recon_orders')) orderTypes.push('recon');
+      if (allowedModules.includes('car_wash')) orderTypes.push('carwash');
+
+      if (import.meta.env.DEV) {
+        logger.dev(`✅ [allowed_modules] Order types permitted: [${orderTypes.join(', ')}]`);
+      }
+
+      return orderTypes;
     }
 
     // Users without custom roles have no order access

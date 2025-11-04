@@ -28,6 +28,7 @@ interface ExportCenterProps {
 
 export const ExportCenter: React.FC<ExportCenterProps> = ({ filters }) => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { dealerships } = useAccessibleDealerships();
   const [exportFormat, setExportFormat] = useState<'pdf' | 'excel' | 'csv'>('pdf');
   const [exportSections, setExportSections] = useState({

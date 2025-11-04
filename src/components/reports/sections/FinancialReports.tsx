@@ -50,7 +50,18 @@ interface FinancialReportsProps {
 
 export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) => {
   const { t } = useTranslation();
-  const { data: revenueData, isLoading } = useRevenueAnalytics(filters, 'monthly');
+  const { toast } = useToast();
+
+  // Determine grouping based on date range for accurate metrics
+  const getDaysInRange = (start: Date, end: Date) => {
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
+
+  const daysInRange = getDaysInRange(filters.startDate, filters.endDate);
+  const grouping = daysInRange <= 7 ? 'daily' : daysInRange <= 31 ? 'weekly' : 'monthly';
+
+  const { data: revenueData, isLoading } = useRevenueAnalytics(filters, grouping);
   const { data: departmentData = [], isLoading: deptLoading } = useDepartmentRevenue(filters);
   const { currentDealership } = useAccessibleDealerships();
   const { senderInfo } = useSenderInfo();
@@ -59,6 +70,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
   const [isExportingExcel, setIsExportingExcel] = useState(false);
 
   const dealerName = currentDealership?.name || 'Unknown Dealer';
+
+  // Safe defaults for senderInfo
+  const companyName = senderInfo?.company_name || 'Dealer Detail Service LLC';
 
   // Get user's full name
   const getUserFullName = () => {
@@ -93,6 +107,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       year: 'numeric',
       month: 'long',
       day: 'numeric',
+      timeZone: 'America/New_York',
     }).format(date);
   };
 
@@ -104,12 +119,15 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
+      timeZone: 'America/New_York',
     }).format(date);
   };
 
   const getWeekInfo = (startDate: Date, endDate: Date) => {
-    const week = getWeek(startDate, { weekStartsOn: 0 });
-    const year = getYear(startDate);
+    // Convert to Boston timezone for accurate week calculation
+    const bostonDate = new Date(startDate.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    const week = getWeek(bostonDate, { weekStartsOn: 0 });
+    const year = getYear(bostonDate);
 
     return `Week ${week} of ${year}`;
   };
@@ -160,7 +178,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       // Company Header - Sender Info
       worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
       const companyCell = worksheet.getCell(`A${currentRow}`);
-      companyCell.value = senderInfo.company_name.toUpperCase();
+      companyCell.value = companyName.toUpperCase();
       companyCell.font = { size: 16, bold: true, color: { argb: 'FF6366F1' } };
       companyCell.alignment = { vertical: 'middle', horizontal: 'center' };
       worksheet.getRow(currentRow).height = 24;
@@ -268,8 +286,8 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
             cell.numFmt = '0.0%';
           }
 
-          // Alignment
-          cell.alignment = { vertical: 'middle', horizontal: colIndex === 0 ? 'left' : 'center' };
+          // Alignment - All columns centered
+          cell.alignment = { vertical: 'middle', horizontal: 'center' };
 
           // Alternating row colors
           if (index % 2 === 0) {
@@ -307,6 +325,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       // Calculate totals
       const totalRevenue = departmentData.reduce((sum, dept) => sum + dept.revenue, 0);
       const totalOrders = departmentData.reduce((sum, dept) => sum + dept.orders, 0);
+      const totalAvgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
       const avgCompletionRate = departmentData.reduce((sum, dept) => sum + dept.completionRate, 0) / departmentData.length / 100;
 
       // Summary table headers
@@ -333,8 +352,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
 
       // Summary data
       const summaryData = [
-        ['Total Revenue', totalRevenue],
-        ['Total Orders', totalOrders],
+        ['Total Revenue (All Departments)', totalRevenue],
+        ['Total Orders (All Departments)', totalOrders],
+        ['Average Order Value (Overall)', totalAvgOrderValue],
         ['Average Completion Rate', avgCompletionRate],
       ];
 
@@ -352,9 +372,11 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
         valueCell.alignment = { vertical: 'middle', horizontal: 'center' };
 
         // Format based on type
-        if (index === 0) {
+        if (index === 0 || index === 2) {
+          // Currency format for Total Revenue and Avg Order Value
           valueCell.numFmt = '$#,##0.00';
-        } else if (index === 2) {
+        } else if (index === 3) {
+          // Percentage format for Completion Rate
           valueCell.numFmt = '0.0%';
         }
 
@@ -394,22 +416,35 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       worksheet.getRow(currentRow).height = 14;
       currentRow += 1;
 
-      // Footer - My Detail Area LLC - Merge cells
+      // Footer - Developed by My Detail Area - Merge cells
       worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
-      const llcCell = worksheet.getCell(`A${currentRow}`);
-      llcCell.value = 'My Detail Area LLC';
-      llcCell.font = { size: 8, color: { argb: 'FF6B7280' }, bold: true };
-      llcCell.alignment = { vertical: 'middle', horizontal: 'center' };
+      const developedByCell = worksheet.getCell(`A${currentRow}`);
+      developedByCell.value = 'Developed by My Detail Area';
+      developedByCell.font = { size: 8, color: { argb: 'FF6366F1' }, bold: true };
+      developedByCell.alignment = { vertical: 'middle', horizontal: 'center' };
       worksheet.getRow(currentRow).height = 14;
       currentRow += 1;
 
       // Footer - Report metadata - Merge cells
       worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
       const metadataCell = worksheet.getCell(`A${currentRow}`);
-      metadataCell.value = `Report ID: DPT-REV-${Date.now()} | ${dealerName}`;
-      metadataCell.font = { size: 7, color: { argb: 'FF9CA3AF' }, italic: true };
+      const reportDate = new Date();
+      const year = reportDate.getFullYear();
+      const month = String(reportDate.getMonth() + 1).padStart(2, '0');
+      const day = String(reportDate.getDate()).padStart(2, '0');
+      const hours = String(reportDate.getHours()).padStart(2, '0');
+      const minutes = String(reportDate.getMinutes()).padStart(2, '0');
+      const timeCode = `${hours}${minutes}`;
+      const reportId = `${year}${month}${day}-${timeCode}`;
+      metadataCell.value = `${dealerName} | Report ID: DPT-REV-${reportId}`;
+      metadataCell.font = {
+        name: 'Arial',
+        size: 8,
+        color: { argb: 'FF4B5563' }, // Gris medio oscuro (#4B5563 - gray-600)
+        italic: true
+      };
       metadataCell.alignment = { vertical: 'middle', horizontal: 'center' };
-      worksheet.getRow(currentRow).height = 12;
+      worksheet.getRow(currentRow).height = 14;
 
       // Auto-adjust columns based on content
       worksheet.columns.forEach((column: any, index) => {
@@ -490,7 +525,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       doc.setFontSize(16);
       doc.setTextColor(colors.primary[0], colors.primary[1], colors.primary[2]);
       doc.setFont('helvetica', 'bold');
-      doc.text(senderInfo.company_name.toUpperCase(), pageWidth / 2, currentY, { align: 'center' });
+      doc.text(companyName.toUpperCase(), pageWidth / 2, currentY, { align: 'center' });
       currentY += 12;
 
       // Dealer Name - More prominent (no background)
@@ -553,10 +588,19 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
           textColor: [255, 255, 255],
           fontStyle: 'bold',
           fontSize: 10,
+          halign: 'center',
         },
         bodyStyles: {
           fontSize: 9,
           textColor: colors.gray700,
+          halign: 'center',
+        },
+        columnStyles: {
+          0: { halign: 'center' }, // Department
+          1: { halign: 'center' }, // Total Revenue
+          2: { halign: 'center' }, // Orders
+          3: { halign: 'center' }, // Avg Order Value
+          4: { halign: 'center' }, // Completion Rate
         },
         alternateRowStyles: {
           fillColor: colors.gray50,
@@ -569,6 +613,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       // Total summary
       const totalRevenue = departmentData.reduce((sum, dept) => sum + dept.revenue, 0);
       const totalOrders = departmentData.reduce((sum, dept) => sum + dept.orders, 0);
+      const totalAvgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
       const avgCompletionRate = departmentData.reduce((sum, dept) => sum + dept.completionRate, 0) / departmentData.length;
 
       doc.setFontSize(12);
@@ -578,8 +623,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       currentY += 8;
 
       const totalData = [
-        ['Total Revenue', formatCurrency(totalRevenue)],
-        ['Total Orders', totalOrders.toString()],
+        ['Total Revenue (All Departments)', formatCurrency(totalRevenue)],
+        ['Total Orders (All Departments)', totalOrders.toString()],
+        ['Average Order Value (Overall)', formatCurrency(totalAvgOrderValue)],
         ['Average Completion Rate', `${avgCompletionRate.toFixed(1)}%`],
       ];
 
@@ -593,10 +639,15 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
           textColor: [255, 255, 255],
           fontStyle: 'bold',
           fontSize: 10,
+          halign: 'center',
         },
         bodyStyles: {
           fontSize: 9,
           textColor: colors.gray700,
+        },
+        columnStyles: {
+          0: { halign: 'left' },   // Metric - mantener a la izquierda para legibilidad
+          1: { halign: 'center' }, // Value - centrado
         },
         alternateRowStyles: {
           fillColor: colors.gray50,
@@ -613,18 +664,27 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       doc.setFont('helvetica', 'italic');
       doc.setTextColor(colors.gray700[0], colors.gray700[1], colors.gray700[2]);
       doc.text(`Generated by ${userName}`, pageWidth / 2, footerY, { align: 'center' });
-      footerY += 4;
+      footerY += 5;
 
-      // My Detail Area LLC
+      // Developed by My Detail Area
       doc.setFont('helvetica', 'bold');
-      doc.text('My Detail Area LLC', pageWidth / 2, footerY, { align: 'center' });
-      footerY += 4;
+      doc.setTextColor(colors.primary[0], colors.primary[1], colors.primary[2]);
+      doc.text('Developed by My Detail Area', pageWidth / 2, footerY, { align: 'center' });
+      footerY += 5;
 
       // Metadata
       doc.setFont('helvetica', 'italic');
       doc.setFontSize(7);
       doc.setTextColor(156, 163, 175); // gray-400
-      doc.text(`Report ID: DPT-REV-${Date.now()} | ${dealerName}`, pageWidth / 2, footerY, { align: 'center' });
+      const reportDate = new Date();
+      const year = reportDate.getFullYear();
+      const month = String(reportDate.getMonth() + 1).padStart(2, '0');
+      const day = String(reportDate.getDate()).padStart(2, '0');
+      const hours = String(reportDate.getHours()).padStart(2, '0');
+      const minutes = String(reportDate.getMinutes()).padStart(2, '0');
+      const timeCode = `${hours}${minutes}`;
+      const reportId = `${year}${month}${day}-${timeCode}`;
+      doc.text(`${dealerName} | Report ID: DPT-REV-${reportId}`, pageWidth / 2, footerY, { align: 'center' });
 
       // Page number
       doc.setFont('helvetica', 'normal');
@@ -705,6 +765,10 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
 
   const isOrdersGrowthPositive = ordersGrowth >= 0;
 
+  // Calculate total from departments (sum of all 4 departments)
+  const totalByDepartments = departmentData.reduce((sum, dept) => sum + dept.revenue, 0);
+  const totalOrdersByDepartments = departmentData.reduce((sum, dept) => sum + dept.orders, 0);
+
   return (
     <div className="space-y-6">
       {/* Executive Financial Summary */}
@@ -716,7 +780,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="p-4 border rounded-lg space-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-muted-foreground">Total Revenue</span>
@@ -740,7 +804,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
             </div>
             <div className="p-4 border rounded-lg space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Avg per Week</span>
+                <span className="text-sm font-medium text-muted-foreground">
+                  Avg per {grouping === 'daily' ? 'Day' : grouping === 'weekly' ? 'Week' : 'Month'}
+                </span>
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="text-2xl font-bold">{formatCurrency(revenueData?.avg_revenue_per_period || 0)}</div>
@@ -756,7 +822,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                     {growthRate.toFixed(1)}%
                   </span>
                 )}
-                <span className="text-muted-foreground">vs last week</span>
+                <span className="text-muted-foreground">vs previous period</span>
               </div>
             </div>
             <div className="p-4 border rounded-lg space-y-1">
@@ -782,7 +848,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
             </div>
             <div className="p-4 border rounded-lg space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Avg Orders/Week</span>
+                <span className="text-sm font-medium text-muted-foreground">
+                  Avg Orders/{grouping === 'daily' ? 'Day' : grouping === 'weekly' ? 'Week' : 'Month'}
+                </span>
                 {isOrdersGrowthPositive ? (
                   <ArrowUpRight className="h-4 w-4 text-green-600" />
                 ) : (
@@ -804,7 +872,17 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                     {ordersGrowth.toFixed(1)}%
                   </span>
                 )}
-                <span className="text-muted-foreground">vs last week</span>
+                <span className="text-muted-foreground">vs previous period</span>
+              </div>
+            </div>
+            <div className="p-4 border rounded-lg space-y-1 bg-gradient-to-br from-indigo-50 to-blue-50 border-indigo-200">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-indigo-700">Total by Departments</span>
+                <DollarSign className="h-4 w-4 text-indigo-600" />
+              </div>
+              <div className="text-2xl font-bold text-indigo-900">{formatCurrency(totalByDepartments)}</div>
+              <div className="flex items-center gap-2 text-xs mt-1">
+                <span className="text-indigo-600 font-medium">{totalOrdersByDepartments} orders</span>
               </div>
             </div>
           </div>

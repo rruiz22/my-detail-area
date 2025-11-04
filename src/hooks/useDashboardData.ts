@@ -9,7 +9,7 @@ export interface DepartmentMetrics {
   pending: number;
   inProgress: number;
   completed: number;
-  revenue: number;
+  // revenue field REMOVED - no financial data in dashboard
   createdToday: number;
   completedToday: number;
   last30Days: number;
@@ -19,7 +19,7 @@ export interface OverallMetrics {
   totalOrders: number;
   pendingOrders: number;
   completedToday: number;
-  revenue: number;
+  // revenue field REMOVED - no financial data in dashboard
   activeVehicles: number;
 }
 
@@ -28,7 +28,7 @@ export interface DashboardData {
   departments: DepartmentMetrics[];
 }
 
-export function useDashboardData() {
+export function useDashboardData(allowedOrderTypes?: string[]) {
   const { user } = useAuth();
   const [selectedDealer, setSelectedDealer] = useState<number | 'all'>('all');
 
@@ -51,7 +51,7 @@ export function useDashboardData() {
   }, []);
 
   return useQuery({
-    queryKey: ['dashboard-data', user?.id, selectedDealer],
+    queryKey: ['dashboard-data', user?.id, selectedDealer, allowedOrderTypes],
     queryFn: async (): Promise<DashboardData> => {
       if (!user) {
         return {
@@ -59,7 +59,7 @@ export function useDashboardData() {
             totalOrders: 0,
             pendingOrders: 0,
             completedToday: 0,
-            revenue: 0,
+            // revenue field removed
             activeVehicles: 0
           },
           departments: []
@@ -67,10 +67,18 @@ export function useDashboardData() {
       }
 
       try {
-        // Fetch all orders data (RLS will automatically filter by user's dealership access)
-        const { data: orders, error } = await supabase
+        // Build query with optional order_type filter for permission-based filtering
+        let query = supabase
           .from('orders')
-          .select('order_type, status, total_amount, created_at, updated_at');
+          .select('order_type, status, created_at, updated_at');
+          // total_amount removed - no financial calculations needed
+
+        // If allowedOrderTypes provided, filter query to only those types (permission filtering)
+        if (allowedOrderTypes && allowedOrderTypes.length > 0) {
+          query = query.in('order_type', allowedOrderTypes);
+        }
+
+        const { data: orders, error } = await query;
 
         if (error) {
           console.error('Error fetching dashboard data:', error);
@@ -100,9 +108,7 @@ export function useDashboardData() {
             o.status === 'completed' &&
             o.updated_at?.startsWith(today)
           ).length,
-          revenue: filteredOrders.reduce((sum, o) =>
-            sum + (parseFloat(o.total_amount || '0')), 0
-          ),
+          // revenue calculation removed - no financial data
           activeVehicles: filteredOrders.filter(o =>
             o.status === 'pending' || o.status === 'in_progress'
           ).length
@@ -120,9 +126,7 @@ export function useDashboardData() {
             pending: deptOrders.filter(o => o.status === 'pending').length,
             inProgress: deptOrders.filter(o => o.status === 'in_progress').length,
             completed: deptOrders.filter(o => o.status === 'completed').length,
-            revenue: deptOrders.reduce((sum, o) =>
-              sum + (parseFloat(o.total_amount || '0')), 0
-            ),
+            // revenue calculation removed - no financial data
             createdToday: deptOrders.filter(o =>
               o.created_at?.startsWith(today)
             ).length,

@@ -438,3 +438,5 @@ COMMENT ON FUNCTION get_orders_analytics IS 'Filters orders by due_date (sales/s
 COMMENT ON FUNCTION get_revenue_analytics IS 'Uses due_date for sales/service, completed_at for recon/carwash. Supports multiple service IDs filtering.';
 COMMENT ON FUNCTION get_performance_trends IS 'Uses due_date for sales/service, completed_at for recon/carwash. Supports multiple service IDs filtering.';
 
+
+

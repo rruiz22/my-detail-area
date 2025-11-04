@@ -47,6 +47,7 @@ interface UseFirebaseMessagingReturn extends FirebaseMessagingState {
  */
 export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { user } = useAuth();
 
   const [state, setState] = useState<FirebaseMessagingState>({

@@ -34,50 +34,42 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
   const { currentDealership } = useAccessibleDealerships();
   const { open, setOpen } = useSidebar();
   const previousPathRef = useRef<string>('');
+  const timeoutRef = useRef<NodeJS.Timeout>();
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
   const [termsModalOpen, setTermsModalOpen] = useState(false);
 
-  // Auto-collapse/expand sidebar for Get Ready module
+  // ✅ OPTIMIZATION: Simplified auto-collapse/expand sidebar for Get Ready module
+  // Consolidates 3 redundant cases into 1 clean logic with proper cleanup
   useEffect(() => {
     const isGetReadyModule = location.pathname.startsWith('/get-ready');
     const wasGetReadyModule = previousPathRef.current.startsWith('/get-ready');
 
-    logger.dev('🏗️ [PROTECTED LAYOUT] Sidebar navigation check:', {
-      pathname: location.pathname,
-      previousPath: previousPathRef.current,
-      isGetReadyModule,
-      wasGetReadyModule,
-      sidebarOpen: open,
-      timestamp: new Date().toISOString()
-    });
+    // Only act if module state changed (entering or leaving Get Ready)
+    if (isGetReadyModule !== wasGetReadyModule) {
+      // ✅ Cancel any pending timeout to prevent accumulation
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
 
-    // Case 1: Entering Get Ready - collapse sidebar
-    if (isGetReadyModule && !wasGetReadyModule && open) {
-      logger.dev('🔧 [PROTECTED LAYOUT] Entering Get Ready - Collapsing sidebar');
-      setTimeout(() => {
-        setOpen(false);
+      const targetState = !isGetReadyModule;
+      logger.dev(`🔧 [PROTECTED LAYOUT] ${isGetReadyModule ? 'Entering' : 'Leaving'} Get Ready - ${targetState ? 'Opening' : 'Collapsing'} sidebar`);
+
+      timeoutRef.current = setTimeout(() => {
+        setOpen(targetState);
       }, 100);
     }
 
-    // Case 2: Leaving Get Ready - expand sidebar
-    if (!isGetReadyModule && wasGetReadyModule && !open) {
-      logger.dev('🔧 [PROTECTED LAYOUT] Leaving Get Ready - Opening sidebar');
-      setTimeout(() => {
-        setOpen(true);
-      }, 100);
-    }
-
-    // Case 3: Already in Get Ready and sidebar is open - keep it collapsed
-    if (isGetReadyModule && open) {
-      logger.dev('🔧 [PROTECTED LAYOUT] In Get Ready with open sidebar - Collapsing');
-      setTimeout(() => {
-        setOpen(false);
-      }, 100);
-    }
-
-    // Update previous path reference
     previousPathRef.current = location.pathname;
-  }, [location.pathname, open, setOpen]);
+  }, [location.pathname, setOpen]);
+
+  // ✅ Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="min-h-screen flex w-full bg-background">
