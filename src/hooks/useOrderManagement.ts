@@ -661,7 +661,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       }
 
       // Update React Query cache for silent updates
-      queryClient.setQueryData(['orders', 'all'], allOrders);
+      // ✅ FIX: Include selectedDealerId in queryKey to match polling query
+      queryClient.setQueryData(['orders', 'all', selectedDealerId], allOrders);
 
       // Force polling query to update
       await queryClient.refetchQueries({ queryKey: ['orders', 'sales'] });
@@ -824,7 +825,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       const enrichedNewOrder = await enrichOrderData(data);
 
       // Optimistic update: Add new order to cache immediately
-      queryClient.setQueryData(['orders', 'all'], (oldData: Order[] | undefined) =>
+      // ✅ FIX: Include selectedDealerId in queryKey to match polling query
+      queryClient.setQueryData(['orders', 'all', selectedDealerId], (oldData: Order[] | undefined) =>
         oldData ? [enrichedNewOrder, ...oldData] : [enrichedNewOrder]
       );
 
@@ -837,7 +839,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
     } finally {
       setLoading(false);
     }
-  }, [user, enhancedUser, generateQR, queryClient, enrichOrderData]);
+  }, [user, enhancedUser, generateQR, queryClient, enrichOrderData, selectedDealerId]);
 
   const updateOrder = useCallback(async (orderId: string, orderData: Partial<OrderFormData>) => {
     if (!user) return;
@@ -997,7 +999,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       const enrichedUpdatedOrder = await enrichOrderData(data);
 
       // Optimistic update: Update the order in cache immediately
-      queryClient.setQueryData(['orders', 'all'], (oldData: Order[] | undefined) =>
+      // ✅ FIX: Include selectedDealerId in queryKey to match polling query
+      queryClient.setQueryData(['orders', 'all', selectedDealerId], (oldData: Order[] | undefined) =>
         oldData
           ? oldData.map(order => order.id === orderId ? enrichedUpdatedOrder : order)
           : [enrichedUpdatedOrder]
@@ -1035,7 +1038,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
     } finally {
       setLoading(false);
     }
-  }, [user, enhancedUser, queryClient, enrichOrderData, toast, t]);
+  }, [user, enhancedUser, queryClient, enrichOrderData, selectedDealerId, toast, t]);
 
   const deleteOrder = useCallback(async (orderId: string) => {
     if (!user) return;
@@ -1056,7 +1059,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       dev('Order deleted successfully');
 
       // Optimistic update: Remove order from cache immediately
-      queryClient.setQueryData(['orders', 'all'], (oldData: Order[] | undefined) =>
+      // ✅ FIX: Include selectedDealerId in queryKey to match polling query
+      queryClient.setQueryData(['orders', 'all', selectedDealerId], (oldData: Order[] | undefined) =>
         oldData ? oldData.filter(order => order.id !== orderId) : []
       );
 
@@ -1069,7 +1073,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
     } finally {
       setLoading(false);
     }
-  }, [user, queryClient]);
+  }, [user, queryClient, selectedDealerId]);
 
   // DISABLED: Initialize data on mount - now using ONLY polling system to prevent double refresh
   // useEffect(() => {
@@ -1265,7 +1269,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
                 const updatedOrder = await enrichOrderData(order);
 
                 // Update React Query cache for realtime updates
-                queryClient.setQueryData(['orders', 'all'], (oldData: Order[] | undefined) =>
+                // ✅ FIX: Include selectedDealerId in queryKey to match polling query
+                queryClient.setQueryData(['orders', 'all', selectedDealerId], (oldData: Order[] | undefined) =>
                   oldData
                     ? oldData.map(existingOrder =>
                         existingOrder.id === updatedOrder.id ? updatedOrder : existingOrder

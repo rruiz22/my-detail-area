@@ -66,7 +66,7 @@ export async function generateInvoiceExcel(invoice: InvoiceWithDetails): Promise
 
   // Define color palette (consistent with UI)
   const colors = {
-    headerBg: 'FF6366F1',      // indigo-500 (matches print view)
+    headerBg: 'FF6B7280',      // gray-500 (print friendly)
     headerText: 'FFFFFFFF',    // white
     titleText: 'FF111827',     // gray-900
     labelText: 'FF6B7280',     // gray-500
@@ -169,7 +169,20 @@ export async function generateInvoiceExcel(invoice: InvoiceWithDetails): Promise
   detailRow.getCell(7).value = invoice.items?.length || 0;
   detailRow.getCell(7).font = { name: 'Calibri', size: 10, bold: true, color: { argb: colors.valueText } };
   detailRow.getCell(7).alignment = { horizontal: 'right' };
-  currentRow += 2; // Empty row before table
+  currentRow++;
+
+  // Row 7: Department (if available)
+  if (invoice.metadata?.departments && invoice.metadata.departments.length > 0) {
+    detailRow = worksheet.getRow(currentRow);
+    detailRow.height = 18;
+    const depts = invoice.metadata.departments.map((d: string) => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
+    detailRow.getCell(1).value = `Department: ${depts}`;
+    detailRow.getCell(1).font = { name: 'Calibri', size: 10, bold: true, color: { argb: '6B7280' } }; // Gray-500
+    worksheet.mergeCells(currentRow, 1, currentRow, 4);
+    currentRow++;
+  }
+
+  currentRow++; // Empty row before table
 
   // ===============================================
   // TABLE HEADER (Dynamic based on order type)
@@ -205,19 +218,55 @@ export async function generateInvoiceExcel(invoice: InvoiceWithDetails): Promise
   // TABLE DATA ROWS (with zebra striping)
   // ===============================================
 
-  const dataStartRow = currentRow;
-  (invoice.items || []).forEach((item, index) => {
-    const row = worksheet.getRow(currentRow);
-    row.height = 20;
+  // Sort items by date (ascending)
+  const sortedItems = (invoice.items || []).sort((a, b) => {
+    const dateA = a.metadata?.completed_at || a.createdAt;
+    const dateB = b.metadata?.completed_at || b.createdAt;
+    return new Date(dateA).getTime() - new Date(dateB).getTime();
+  });
 
-    // Prepare data
-    const dateStr = formatDate(item.createdAt);
+  // Group items by date
+  const groupedByDate: { date: string; items: any[] }[] = [];
+  let currentDate = '';
+  let currentGroup: any[] = [];
+
+  sortedItems.forEach((item, index) => {
+    const itemDate = formatDate(item.metadata?.completed_at || item.createdAt);
+
+    if (itemDate !== currentDate) {
+      if (currentGroup.length > 0) {
+        groupedByDate.push({ date: currentDate, items: currentGroup });
+      }
+      currentDate = itemDate;
+      currentGroup = [item];
+    } else {
+      currentGroup.push(item);
+    }
+
+    // Last group
+    if (index === sortedItems.length - 1) {
+      groupedByDate.push({ date: currentDate, items: currentGroup });
+    }
+  });
+
+  const dataStartRow = currentRow;
+  let rowIndex = 0; // Track overall row index for zebra striping
+
+  groupedByDate.forEach((group, groupIndex) => {
+    group.items.forEach((item) => {
+      const row = worksheet.getRow(currentRow);
+      row.height = 20;
+
+      // Prepare data
+      const dateStr = formatDate(item.metadata?.completed_at || item.createdAt);
     const orderNum = item.metadata?.order_number || 'N/A';
     const poRoTagStock = item.metadata?.order_type === 'service'
       ? [item.metadata?.po, item.metadata?.ro, item.metadata?.tag]
           .filter(Boolean)
           .join(' | ') || 'N/A'
-      : item.metadata?.stock_number || 'N/A';
+      : item.metadata?.order_type === 'carwash'
+        ? item.metadata?.stock_number || item.metadata?.tag || 'N/A'
+        : item.metadata?.stock_number || 'N/A';
 
     // Clean vehicle description - remove stock number suffix if present
     let vehicle = item.description || 'N/A';
@@ -236,37 +285,53 @@ export async function generateInvoiceExcel(invoice: InvoiceWithDetails): Promise
     row.getCell(5).value = vin;
     row.getCell(6).value = services;
     row.getCell(7).value = item.totalAmount;
-    row.getCell(7).numFmt = '$#,##0.00';
+      row.getCell(7).numFmt = '$#,##0.00';
 
-    // Apply zebra striping
-    const isEvenRow = index % 2 === 0;
-    const fillColor = isEvenRow ? 'FFFFFFFF' : colors.zebraStripe;
+      // Apply zebra striping
+      const isEvenRow = rowIndex % 2 === 0;
+      const fillColor = isEvenRow ? 'FFFFFFFF' : colors.zebraStripe;
 
-    row.eachCell((cell, colNumber) => {
-      cell.font = {
-        name: 'Calibri',
-        size: colNumber === 5 ? 8 : 9, // VIN column smaller
-        color: { argb: colors.valueText }
-      };
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: fillColor }
-      };
-      cell.alignment = {
-        vertical: 'middle',
-        horizontal: colNumber === 1 || colNumber === 2 ? 'center' : colNumber === 7 ? 'right' : 'left',
-        wrapText: true
-      };
-      cell.border = {
-        top: { style: 'thin', color: { argb: colors.borderLight } },
-        bottom: { style: 'thin', color: { argb: colors.borderLight } },
-        left: { style: 'thin', color: { argb: colors.borderLight } },
-        right: { style: 'thin', color: { argb: colors.borderLight } }
-      };
+      row.eachCell((cell, colNumber) => {
+        cell.font = {
+          name: 'Calibri',
+          size: colNumber === 5 ? 8 : 9, // VIN column smaller
+          color: { argb: colors.valueText }
+        };
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: fillColor }
+        };
+        cell.alignment = {
+          vertical: 'middle',
+          horizontal: colNumber === 1 || colNumber === 2 ? 'center' : colNumber === 7 ? 'right' : 'left',
+          wrapText: true
+        };
+        cell.border = {
+          top: { style: 'thin', color: { argb: colors.borderLight } },
+          bottom: { style: 'thin', color: { argb: colors.borderLight } },
+          left: { style: 'thin', color: { argb: colors.borderLight } },
+          right: { style: 'thin', color: { argb: colors.borderLight } }
+        };
+      });
+
+      currentRow++;
+      rowIndex++;
     });
 
-    currentRow++;
+    // Add separator row between groups
+    if (groupIndex < groupedByDate.length - 1) {
+      const separatorRow = worksheet.getRow(currentRow);
+      separatorRow.height = 4;
+      for (let col = 1; col <= 7; col++) {
+        separatorRow.getCell(col).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFE5E7EB' } // Light gray
+        };
+      }
+      currentRow++;
+    }
   });
 
   // Auto-adjust Services column width based on content

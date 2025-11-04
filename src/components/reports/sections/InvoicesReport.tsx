@@ -622,7 +622,9 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
               end: endDate,
               preset: dateRange
             },
-            vehicle_count: selectedVehicles.length
+            vehicle_count: selectedVehicles.length,
+            department: orderType === 'all' ? 'all' : orderType,
+            departments: [...new Set(selectedVehicles.map(v => v.order_type))]
           }
         })
         .select()
@@ -630,26 +632,42 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
       if (invoiceError) throw invoiceError;
 
-      const items = selectedVehicles.map((vehicle, index) => ({
-        invoice_id: invoice.id,
-        item_type: 'service' as const,
-        description: `${vehicle.vehicle_year || ''} ${vehicle.vehicle_make || ''} ${vehicle.vehicle_model || ''} - ${vehicle.stock_number || 'N/A'}`.trim(),
-        quantity: 1,
-        unit_price: vehicle.total_amount || 0,
-        discount_amount: 0,
-        tax_rate: 0,
-        total_amount: vehicle.total_amount || 0,
-        service_reference: vehicle.id,
-        sort_order: index,
-        metadata: {
-          order_number: vehicle.custom_order_number || vehicle.order_number,
-          customer_name: vehicle.customer_name,
-          vehicle_vin: vehicle.vehicle_vin,
-          stock_number: vehicle.stock_number,
-          completed_at: vehicle.completed_at,
-          services: vehicle.services,
-        },
-      }));
+      const items = selectedVehicles.map((vehicle, index) => {
+        // Extract service names from vehicle.services
+        const serviceNames = vehicle.services && Array.isArray(vehicle.services)
+          ? vehicle.services.map((service: any) => {
+              const serviceId = service.id || service.type || service;
+              const serviceName = availableServices.find(s => s.id === serviceId)?.name || serviceId;
+              return serviceName;
+            }).join(', ')
+          : 'N/A';
+
+        return {
+          invoice_id: invoice.id,
+          item_type: 'service' as const,
+          description: `${vehicle.vehicle_year || ''} ${vehicle.vehicle_make || ''} ${vehicle.vehicle_model || ''} - ${vehicle.stock_number || 'N/A'}`.trim(),
+          quantity: 1,
+          unit_price: vehicle.total_amount || 0,
+          discount_amount: 0,
+          tax_rate: 0,
+          total_amount: vehicle.total_amount || 0,
+          service_reference: vehicle.id,
+          sort_order: index,
+          metadata: {
+            order_number: vehicle.custom_order_number || vehicle.order_number,
+            order_type: vehicle.order_type,
+            customer_name: vehicle.customer_name,
+            vehicle_vin: vehicle.vehicle_vin,
+            stock_number: vehicle.stock_number,
+            po: vehicle.po,
+            ro: vehicle.ro,
+            tag: vehicle.tag,
+            completed_at: vehicle.completed_at,
+            services: vehicle.services,
+            service_names: serviceNames,
+          },
+        };
+      });
 
       const { error: itemsError } = await supabase
         .from('invoice_items')
@@ -700,16 +718,24 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
         return serviceData?.name || s;
       }
 
-      // If service is an object, try name, type, or id
+      // If service is an object, try different fields
+      // Priority 1: Direct name field (carwash new format)
       if (s.name) return s.name;
-      if (s.type) return s.type;
-      if (s.service_name) return s.service_name;
 
-      // If service has an id, look it up in availableServices
+      // Priority 2: Lookup by type field (carwash with type ID)
+      if (s.type) {
+        const serviceData = availableServices?.find(ds => ds.id === s.type);
+        return serviceData?.name || s.type;
+      }
+
+      // Priority 3: Lookup by id field (Sales/Service/Recon)
       if (s.id) {
         const serviceData = availableServices?.find(ds => ds.id === s.id);
-        if (serviceData) return serviceData.name;
+        return serviceData?.name || s.id;
       }
+
+      // Priority 4: Other name fields
+      if (s.service_name) return s.service_name;
 
       return 'Unknown';
     }).join(', ');
@@ -1769,7 +1795,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                                   setSelectedOrderType(vehicle.order_type as any);
                                   setShowOrderModal(true);
                                 }}
-                                className="font-medium text-indigo-600 hover:text-indigo-800 hover:underline flex flex-col items-center mx-auto"
+                                className="font-medium text-gray-600 hover:text-gray-700 hover:underline flex flex-col items-center mx-auto"
                               >
                                 <span className="text-sm">{orderNumber}</span>
                                 <span className="text-xs text-muted-foreground">
@@ -1789,10 +1815,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                                   {!vehicle.po && !vehicle.ro && !vehicle.tag && 'N/A'}
                                 </div>
                               ) : orderType === 'carwash' ? (
-                                <div className="flex flex-col gap-0.5">
-                                  {vehicle.stock_number && <span className="text-xs font-medium">Stock: {vehicle.stock_number}</span>}
-                                  {vehicle.tag && <span className="text-xs font-medium">Tag: {vehicle.tag}</span>}
-                                  {!vehicle.stock_number && !vehicle.tag && 'N/A'}
+                                <div className="text-xs font-medium">
+                                  {vehicle.stock_number || vehicle.tag || 'N/A'}
                                 </div>
                               ) : (
                                 vehicle.stock_number || 'N/A'
@@ -1889,7 +1913,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                       </div>
                       <div>
                         <div className="text-sm text-muted-foreground mb-1">Invoice Total</div>
-                        <div className="text-3xl font-bold text-indigo-600">
+                        <div className="text-3xl font-bold text-gray-600">
                           {formatCurrency(totalAmount)}
                         </div>
                       </div>

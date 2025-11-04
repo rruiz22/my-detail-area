@@ -128,6 +128,18 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
         ? `${formatDate(invoice.metadata.filter_date_range.start)} - ${formatDate(invoice.metadata.filter_date_range.end)}`
         : null;
 
+      // Get department(s) from metadata
+      const departments = invoice.metadata?.departments && invoice.metadata.departments.length > 0
+        ? invoice.metadata.departments.map((d: string) => d.charAt(0).toUpperCase() + d.slice(1)).join(', ')
+        : null;
+
+      // Sort items by date (ascending)
+      const sortedItems = (invoice.items || []).sort((a, b) => {
+        const dateA = a.metadata?.completed_at || a.createdAt;
+        const dateB = b.metadata?.completed_at || b.createdAt;
+        return new Date(dateA).getTime() - new Date(dateB).getTime();
+      });
+
       // Generate print-friendly HTML
       const printWindow = window.open('', '_blank');
       if (!printWindow) {
@@ -172,7 +184,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
             .sender-name {
               font-size: 13pt;
               font-weight: bold;
-              color: #6366F1;
+              color: #6B7280;
               margin-bottom: 12px;
               letter-spacing: 1px;
             }
@@ -224,6 +236,24 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               margin: 2px 0;
               font-size: 8pt;
             }
+            .bill-to .department-section {
+              margin-top: 12px;
+              padding-top: 10px;
+              border-top: 1px solid #E5E7EB;
+            }
+            .bill-to .department-label {
+              font-size: 7pt;
+              color: #6B7280;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+              margin-bottom: 4px;
+            }
+            .bill-to .department-value {
+              font-size: 10pt;
+              font-weight: 600;
+              color: #6B7280;
+              text-transform: capitalize;
+            }
             .invoice-details {
               text-align: right;
               flex: 1;
@@ -250,7 +280,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               margin: 15px 0;
             }
             thead {
-              background: #6366F1;
+              background: #6B7280;
               color: white;
             }
             th {
@@ -274,9 +304,13 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
             tbody tr:last-child td {
               border-bottom: 2px solid #E5E7EB;
             }
+            tbody tr.date-separator td {
+              border-top: 2px solid #E5E7EB;
+              padding-top: 10px;
+            }
             .font-mono {
               font-family: 'Courier New', monospace;
-              font-size: 7.5pt;
+              font-size: 8.5pt;
               font-weight: 600;
             }
             .text-left { text-align: left; }
@@ -353,6 +387,12 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               ${dealerAddress ? `<p>${dealerAddress}</p>` : ''}
               ${dealerEmail ? `<p>${dealerEmail}</p>` : ''}
               ${dealerPhone ? `<p>${dealerPhone}</p>` : ''}
+              ${departments ? `
+              <div class="department-section">
+                <div class="department-label">Department:</div>
+                <div class="department-value">${departments}</div>
+              </div>
+              ` : ''}
             </div>
             <div class="invoice-details">
               <div class="detail-row">
@@ -369,7 +409,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               </div>
               <div class="detail-row" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #E5E7EB;">
                 <span class="label">Total Amount</span>
-                <div class="value" style="font-size: 14pt; font-weight: 700; color: #6366F1;">${formatCurrency(invoice.totalAmount)}</div>
+                <div class="value" style="font-size: 14pt; font-weight: 700; color: #6B7280;">${formatCurrency(invoice.totalAmount)}</div>
               </div>
             </div>
           </div>
@@ -388,24 +428,45 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               </tr>
             </thead>
             <tbody>
-              ${(invoice.items || []).map(item => {
-                const po = item.metadata?.po || '';
-                const ro = item.metadata?.ro || '';
-                const tag = item.metadata?.tag || '';
-                const poRoTag = [po, ro, tag].filter(Boolean).join(' | ') || (item.metadata?.stock_number || 'N/A');
+              ${(() => {
+                let lastDate = '';
+                return sortedItems.map((item, index) => {
+                  const po = item.metadata?.po || '';
+                  const ro = item.metadata?.ro || '';
+                  const tag = item.metadata?.tag || '';
+                  const orderType = item.metadata?.order_type || '';
 
-                return `
-                  <tr>
-                    <td>${item.metadata?.completed_at ? format(parseISO(item.metadata.completed_at), 'MM/dd') : format(parseISO(invoice.issueDate), 'MM/dd')}</td>
-                    <td style="font-weight: 600;">${item.metadata?.order_number || 'N/A'}</td>
-                    <td class="po-ro-tag">${poRoTag}</td>
-                    <td>${cleanVehicleDescription(item.description)}</td>
-                    <td class="font-mono">${item.metadata?.vehicle_vin || 'N/A'}</td>
-                    <td class="text-left">${item.metadata?.service_names || item.serviceReference || 'N/A'}</td>
-                    <td class="amount-cell">${formatCurrency(item.totalAmount)}</td>
-                  </tr>
-                `;
-              }).join('')}
+                  let poRoTag = '';
+                  if (orderType === 'service') {
+                    poRoTag = [po, ro, tag].filter(Boolean).join(' | ') || 'N/A';
+                  } else if (orderType === 'carwash') {
+                    poRoTag = item.metadata?.stock_number || tag || 'N/A';
+                  } else {
+                    poRoTag = item.metadata?.stock_number || 'N/A';
+                  }
+
+                  const itemDate = item.metadata?.completed_at
+                    ? format(parseISO(item.metadata.completed_at), 'MM/dd')
+                    : format(parseISO(invoice.issueDate), 'MM/dd');
+
+                  const isNewDate = itemDate !== lastDate && index > 0;
+                  lastDate = itemDate;
+
+                  const rowClass = isNewDate ? 'date-separator' : '';
+
+                  return `
+                    <tr class="${rowClass}">
+                      <td>${itemDate}</td>
+                      <td style="font-weight: 600; white-space: nowrap;">${item.metadata?.order_number || 'N/A'}</td>
+                      <td class="po-ro-tag" style="white-space: nowrap;">${poRoTag}</td>
+                      <td>${cleanVehicleDescription(item.description)}</td>
+                      <td class="font-mono" style="white-space: nowrap;">${item.metadata?.vehicle_vin || 'N/A'}</td>
+                      <td class="text-left">${item.metadata?.service_names || item.serviceReference || 'N/A'}</td>
+                      <td class="amount-cell">${formatCurrency(item.totalAmount)}</td>
+                    </tr>
+                  `;
+                }).join('');
+              })()}
             </tbody>
           </table>
 
@@ -648,6 +709,16 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                     {invoice.dealership.phone}
                   </p>
                 )}
+                {invoice.metadata?.departments && invoice.metadata.departments.length > 0 && (
+                  <div className="mt-4 pt-3 border-t border-gray-200">
+                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Department:</p>
+                    <p className="font-semibold text-base text-gray-600 capitalize">
+                      {invoice.metadata.departments.length === 1
+                        ? invoice.metadata.departments[0]
+                        : invoice.metadata.departments.join(', ')}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
             <div className="text-right">
@@ -705,29 +776,56 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
             <div className="border rounded-lg overflow-hidden">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-indigo-500 hover:bg-indigo-500">
+                  <TableRow className="bg-gray-500 hover:bg-gray-500">
                     <TableHead className="font-bold text-center text-white">Date</TableHead>
                     <TableHead className="font-bold text-center text-white">Order</TableHead>
                     <TableHead className="font-bold text-center text-white">PO | RO | Tag</TableHead>
                     <TableHead className="font-bold text-center text-white">Vehicle</TableHead>
                     <TableHead className="font-bold text-center text-white">VIN</TableHead>
-                    <TableHead className="font-bold text-left text-white">Services</TableHead>
+                    <TableHead className="font-bold text-center text-white">Services</TableHead>
                     <TableHead className="font-bold text-center text-white">Amount</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {invoice.items && invoice.items.length > 0 ? (
-                    invoice.items.map((item, index) => {
+                    (() => {
+                      // Sort items by date (ascending)
+                      const sortedItems = [...invoice.items].sort((a, b) => {
+                        const dateA = a.metadata?.completed_at || a.createdAt;
+                        const dateB = b.metadata?.completed_at || b.createdAt;
+                        return new Date(dateA).getTime() - new Date(dateB).getTime();
+                      });
+
+                      let lastDate = '';
+                      return sortedItems.map((item, index) => {
                       const po = item.metadata?.po || '';
                       const ro = item.metadata?.ro || '';
                       const tag = item.metadata?.tag || '';
-                      const poRoTag = [po, ro, tag].filter(Boolean).join(' | ') || (item.metadata?.stock_number || 'N/A');
+                      const orderType = item.metadata?.order_type || '';
 
-                      return (
-                        <TableRow
-                          key={item.id}
-                          className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50/50 transition-colors`}
-                        >
+                        let poRoTag = '';
+                        if (orderType === 'service') {
+                          poRoTag = [po, ro, tag].filter(Boolean).join(' | ') || 'N/A';
+                        } else if (orderType === 'carwash') {
+                          poRoTag = item.metadata?.stock_number || tag || 'N/A';
+                        } else {
+                          poRoTag = item.metadata?.stock_number || 'N/A';
+                        }
+
+                        const itemDate = item.metadata?.completed_at
+                          ? format(parseISO(item.metadata.completed_at), 'MM/dd')
+                          : item.createdAt
+                          ? format(parseISO(item.createdAt), 'MM/dd')
+                          : format(parseISO(invoice.issueDate), 'MM/dd');
+
+                        const isNewDate = itemDate !== lastDate && index > 0;
+                        lastDate = itemDate;
+
+                        return (
+                          <TableRow
+                            key={item.id}
+                            className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50/50 transition-colors ${isNewDate ? 'border-t-2 border-gray-300' : ''}`}
+                          >
                           <TableCell className="text-sm text-center font-medium text-gray-700">
                             {item.metadata?.completed_at
                               ? format(parseISO(item.metadata.completed_at), 'MM/dd')
@@ -735,16 +833,16 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                               ? format(parseISO(item.createdAt), 'MM/dd')
                               : format(parseISO(invoice.issueDate), 'MM/dd')}
                           </TableCell>
-                          <TableCell className="text-sm text-center font-semibold text-gray-900">
+                          <TableCell className="text-sm text-center font-semibold text-gray-900 whitespace-nowrap">
                             {item.metadata?.order_number || 'N/A'}
                           </TableCell>
-                          <TableCell className="text-sm text-center font-medium text-gray-900">
+                          <TableCell className="text-sm text-center font-medium text-gray-900 whitespace-nowrap">
                             {poRoTag}
                           </TableCell>
                           <TableCell className="text-sm text-center font-medium text-gray-800">
                             {cleanVehicleDescription(item.description)}
                           </TableCell>
-                          <TableCell className="font-mono text-xs font-semibold text-center text-gray-700">
+                          <TableCell className="font-mono text-sm font-semibold text-center text-gray-700 whitespace-nowrap">
                             {item.metadata?.vehicle_vin || 'N/A'}
                           </TableCell>
                           <TableCell className="text-sm text-left text-gray-600">
@@ -753,9 +851,10 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                           <TableCell className="text-center font-semibold text-base text-gray-900">
                             {formatCurrency(item.totalAmount)}
                           </TableCell>
-                        </TableRow>
-                      );
-                    })
+                          </TableRow>
+                        );
+                      });
+                    })()
                   ) : (
                     <TableRow>
                       <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
