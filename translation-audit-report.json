@@ -1847,457 +1847,457 @@
         "hardcodedStrings": [
           {
             "text": "Date",
-            "line": 1022,
-            "context": "1021: <tr>\n1022: <th>Date</th>\n1023: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>"
+            "line": 1048,
+            "context": "1047: <tr>\n1048: <th>Date</th>\n1049: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>"
           },
           {
             "text": "Vehicle",
-            "line": 1024,
-            "context": "1023: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>\n1024: <th>Vehicle</th>\n1025: <th>VIN</th>"
+            "line": 1050,
+            "context": "1049: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>\n1050: <th>Vehicle</th>\n1051: <th>VIN</th>"
           },
           {
             "text": "Amount",
-            "line": 1026,
-            "context": "1025: <th>VIN</th>\n1026: <th class=\"text-right\">Amount</th>\n1027: </tr>"
+            "line": 1052,
+            "context": "1051: <th>VIN</th>\n1052: <th class=\"text-right\">Amount</th>\n1053: </tr>"
           },
           {
             "text": "Please select a dealership to manage invoices",
-            "line": 1185,
-            "context": "1184: <AlertCircle className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n1185: <p className=\"text-muted-foreground\">Please select a dealership to manage invoices</p>\n1186: </div>"
+            "line": 1211,
+            "context": "1210: <AlertCircle className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n1211: <p className=\"text-muted-foreground\">Please select a dealership to manage invoices</p>\n1212: </div>"
           },
           {
             "text": "Invoice Management",
-            "line": 1233,
-            "context": "1232: <h2 className=\"text-2xl font-bold tracking-tight flex items-center gap-2\">\n1233: <Receipt className=\"h-6 w-6\" />\n1234: Invoice Management"
+            "line": 1259,
+            "context": "1258: <h2 className=\"text-2xl font-bold tracking-tight flex items-center gap-2\">\n1259: <Receipt className=\"h-6 w-6\" />\n1260: Invoice Management"
           },
           {
             "text": "Manage invoices and billing for your dealership",
-            "line": 1236,
-            "context": "1235: </h2>\n1236: <p className=\"text-muted-foreground text-sm\">Manage invoices and billing for your dealership</p>\n1237: </div>"
+            "line": 1262,
+            "context": "1261: </h2>\n1262: <p className=\"text-muted-foreground text-sm\">Manage invoices and billing for your dealership</p>\n1263: </div>"
           },
           {
             "text": "Quick Invoice",
-            "line": 1239,
-            "context": "1238: <Button onClick={() => setShowQuickCreateDialog(true)}>\n1239: <Plus className=\"h-4 w-4 mr-2\" />\n1240: Quick Invoice"
+            "line": 1265,
+            "context": "1264: <Button onClick={() => setShowQuickCreateDialog(true)}>\n1265: <Plus className=\"h-4 w-4 mr-2\" />\n1266: Quick Invoice"
           },
           {
             "text": "Invoices List",
-            "line": 1271,
-            "context": "1270: <TabsTrigger value=\"invoices\">\n1271: <FileText className=\"h-4 w-4 mr-2\" />\n1272: Invoices List"
+            "line": 1297,
+            "context": "1296: <TabsTrigger value=\"invoices\">\n1297: <FileText className=\"h-4 w-4 mr-2\" />\n1298: Invoices List"
           },
           {
             "text": "Create Invoice",
-            "line": 1275,
-            "context": "1274: <TabsTrigger value=\"create\">\n1275: <Plus className=\"h-4 w-4 mr-2\" />\n1276: Create Invoice"
+            "line": 1301,
+            "context": "1300: <TabsTrigger value=\"create\">\n1301: <Plus className=\"h-4 w-4 mr-2\" />\n1302: Create Invoice"
           },
           {
             "text": "Check Vehicle",
-            "line": 1279,
-            "context": "1278: <TabsTrigger value=\"search\">\n1279: <Search className=\"h-4 w-4 mr-2\" />\n1280: Check Vehicle"
+            "line": 1305,
+            "context": "1304: <TabsTrigger value=\"search\">\n1305: <Search className=\"h-4 w-4 mr-2\" />\n1306: Check Vehicle"
           },
           {
             "text": "Invoices",
-            "line": 1288,
-            "context": "1287: <CardHeader className=\"border-b bg-gray-50/50\">\n1288: <CardTitle>Invoices</CardTitle>\n1289: <CardDescription>View and manage all invoices</CardDescription>"
+            "line": 1314,
+            "context": "1313: <CardHeader className=\"border-b bg-gray-50/50\">\n1314: <CardTitle>Invoices</CardTitle>\n1315: <CardDescription>View and manage all invoices</CardDescription>"
           },
           {
             "text": "View and manage all invoices",
-            "line": 1289,
-            "context": "1288: <CardTitle>Invoices</CardTitle>\n1289: <CardDescription>View and manage all invoices</CardDescription>\n1290: "
+            "line": 1315,
+            "context": "1314: <CardTitle>Invoices</CardTitle>\n1315: <CardDescription>View and manage all invoices</CardDescription>\n1316: "
           },
           {
             "text": "All Status",
-            "line": 1310,
-            "context": "1309: <SelectContent>\n1310: <SelectItem value=\"all\">All Status</SelectItem>\n1311: <SelectItem value=\"pending\">Pending</SelectItem>"
+            "line": 1336,
+            "context": "1335: <SelectContent>\n1336: <SelectItem value=\"all\">All Status</SelectItem>\n1337: <SelectItem value=\"pending\">Pending</SelectItem>"
           },
           {
             "text": "Pending",
-            "line": 1311,
-            "context": "1310: <SelectItem value=\"all\">All Status</SelectItem>\n1311: <SelectItem value=\"pending\">Pending</SelectItem>\n1312: <SelectItem value=\"paid\">Paid</SelectItem>"
+            "line": 1337,
+            "context": "1336: <SelectItem value=\"all\">All Status</SelectItem>\n1337: <SelectItem value=\"pending\">Pending</SelectItem>\n1338: <SelectItem value=\"paid\">Paid</SelectItem>"
           },
           {
             "text": "Paid",
-            "line": 1312,
-            "context": "1311: <SelectItem value=\"pending\">Pending</SelectItem>\n1312: <SelectItem value=\"paid\">Paid</SelectItem>\n1313: <SelectItem value=\"overdue\">Overdue</SelectItem>"
+            "line": 1338,
+            "context": "1337: <SelectItem value=\"pending\">Pending</SelectItem>\n1338: <SelectItem value=\"paid\">Paid</SelectItem>\n1339: <SelectItem value=\"overdue\">Overdue</SelectItem>"
           },
           {
             "text": "Overdue",
-            "line": 1313,
-            "context": "1312: <SelectItem value=\"paid\">Paid</SelectItem>\n1313: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1314: <SelectItem value=\"partially_paid\">Partial</SelectItem>"
+            "line": 1339,
+            "context": "1338: <SelectItem value=\"paid\">Paid</SelectItem>\n1339: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1340: <SelectItem value=\"partially_paid\">Partial</SelectItem>"
           },
           {
             "text": "Partial",
-            "line": 1314,
-            "context": "1313: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1314: <SelectItem value=\"partially_paid\">Partial</SelectItem>\n1315: </SelectContent>"
+            "line": 1340,
+            "context": "1339: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1340: <SelectItem value=\"partially_paid\">Partial</SelectItem>\n1341: </SelectContent>"
           },
           {
             "text": "All Types",
-            "line": 1325,
-            "context": "1324: <SelectContent>\n1325: <SelectItem value=\"all\">All Types</SelectItem>\n1326: <SelectItem value=\"sales\">Sales</SelectItem>"
+            "line": 1351,
+            "context": "1350: <SelectContent>\n1351: <SelectItem value=\"all\">All Types</SelectItem>\n1352: <SelectItem value=\"sales\">Sales</SelectItem>"
           },
           {
             "text": "Sales",
-            "line": 1326,
-            "context": "1325: <SelectItem value=\"all\">All Types</SelectItem>\n1326: <SelectItem value=\"sales\">Sales</SelectItem>\n1327: <SelectItem value=\"service\">Service</SelectItem>"
+            "line": 1352,
+            "context": "1351: <SelectItem value=\"all\">All Types</SelectItem>\n1352: <SelectItem value=\"sales\">Sales</SelectItem>\n1353: <SelectItem value=\"service\">Service</SelectItem>"
           },
           {
             "text": "Service",
-            "line": 1327,
-            "context": "1326: <SelectItem value=\"sales\">Sales</SelectItem>\n1327: <SelectItem value=\"service\">Service</SelectItem>\n1328: <SelectItem value=\"recon\">Recon</SelectItem>"
+            "line": 1353,
+            "context": "1352: <SelectItem value=\"sales\">Sales</SelectItem>\n1353: <SelectItem value=\"service\">Service</SelectItem>\n1354: <SelectItem value=\"recon\">Recon</SelectItem>"
           },
           {
             "text": "Recon",
-            "line": 1328,
-            "context": "1327: <SelectItem value=\"service\">Service</SelectItem>\n1328: <SelectItem value=\"recon\">Recon</SelectItem>\n1329: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
+            "line": 1354,
+            "context": "1353: <SelectItem value=\"service\">Service</SelectItem>\n1354: <SelectItem value=\"recon\">Recon</SelectItem>\n1355: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
           },
           {
             "text": "Car Wash",
-            "line": 1329,
-            "context": "1328: <SelectItem value=\"recon\">Recon</SelectItem>\n1329: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1330: </SelectContent>"
+            "line": 1355,
+            "context": "1354: <SelectItem value=\"recon\">Recon</SelectItem>\n1355: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1356: </SelectContent>"
           },
           {
             "text": "No invoices found",
-            "line": 1343,
-            "context": "1342: <FileText className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n1343: <p className=\"text-muted-foreground\">No invoices found</p>\n1344: </div>"
+            "line": 1369,
+            "context": "1368: <FileText className=\"h-12 w-12 mx-auto text-muted-foreground mb-4\" />\n1369: <p className=\"text-muted-foreground\">No invoices found</p>\n1370: </div>"
           },
           {
             "text": "Invoice",
-            "line": 1349,
-            "context": "1348: <TableRow>\n1349: <TableHead className=\"text-center font-bold\">Invoice</TableHead>\n1350: <TableHead className=\"text-center font-bold\">Date Range</TableHead>"
+            "line": 1375,
+            "context": "1374: <TableRow>\n1375: <TableHead className=\"text-center font-bold\">Invoice</TableHead>\n1376: <TableHead className=\"text-center font-bold\">Date Range</TableHead>"
           },
           {
             "text": "Date Range",
-            "line": 1350,
-            "context": "1349: <TableHead className=\"text-center font-bold\">Invoice</TableHead>\n1350: <TableHead className=\"text-center font-bold\">Date Range</TableHead>\n1351: <TableHead className=\"text-center font-bold\">Issue Date</TableHead>"
+            "line": 1376,
+            "context": "1375: <TableHead className=\"text-center font-bold\">Invoice</TableHead>\n1376: <TableHead className=\"text-center font-bold\">Date Range</TableHead>\n1377: <TableHead className=\"text-center font-bold\">Issue Date</TableHead>"
           },
           {
             "text": "Issue Date",
-            "line": 1351,
-            "context": "1350: <TableHead className=\"text-center font-bold\">Date Range</TableHead>\n1351: <TableHead className=\"text-center font-bold\">Issue Date</TableHead>\n1352: <TableHead className=\"text-center font-bold\">Due Date</TableHead>"
+            "line": 1377,
+            "context": "1376: <TableHead className=\"text-center font-bold\">Date Range</TableHead>\n1377: <TableHead className=\"text-center font-bold\">Issue Date</TableHead>\n1378: <TableHead className=\"text-center font-bold\">Due Date</TableHead>"
           },
           {
             "text": "Due Date",
-            "line": 1352,
-            "context": "1351: <TableHead className=\"text-center font-bold\">Issue Date</TableHead>\n1352: <TableHead className=\"text-center font-bold\">Due Date</TableHead>\n1353: <TableHead className=\"text-center font-bold\">Amount</TableHead>"
+            "line": 1378,
+            "context": "1377: <TableHead className=\"text-center font-bold\">Issue Date</TableHead>\n1378: <TableHead className=\"text-center font-bold\">Due Date</TableHead>\n1379: <TableHead className=\"text-center font-bold\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 1353,
-            "context": "1352: <TableHead className=\"text-center font-bold\">Due Date</TableHead>\n1353: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n1354: <TableHead className=\"text-center font-bold\">Paid</TableHead>"
+            "line": 1379,
+            "context": "1378: <TableHead className=\"text-center font-bold\">Due Date</TableHead>\n1379: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n1380: <TableHead className=\"text-center font-bold\">Paid</TableHead>"
           },
           {
             "text": "Paid",
-            "line": 1354,
-            "context": "1353: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n1354: <TableHead className=\"text-center font-bold\">Paid</TableHead>\n1355: <TableHead className=\"text-center font-bold\">Due</TableHead>"
+            "line": 1380,
+            "context": "1379: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n1380: <TableHead className=\"text-center font-bold\">Paid</TableHead>\n1381: <TableHead className=\"text-center font-bold\">Due</TableHead>"
           },
           {
             "text": "Status",
-            "line": 1356,
-            "context": "1355: <TableHead className=\"text-center font-bold\">Due</TableHead>\n1356: <TableHead className=\"text-center font-bold\">Status</TableHead>\n1357: <TableHead className=\"text-center font-bold\">Actions</TableHead>"
+            "line": 1382,
+            "context": "1381: <TableHead className=\"text-center font-bold\">Due</TableHead>\n1382: <TableHead className=\"text-center font-bold\">Status</TableHead>\n1383: <TableHead className=\"text-center font-bold\">Actions</TableHead>"
           },
           {
             "text": "Actions",
-            "line": 1357,
-            "context": "1356: <TableHead className=\"text-center font-bold\">Status</TableHead>\n1357: <TableHead className=\"text-center font-bold\">Actions</TableHead>\n1358: </TableRow>"
+            "line": 1383,
+            "context": "1382: <TableHead className=\"text-center font-bold\">Status</TableHead>\n1383: <TableHead className=\"text-center font-bold\">Actions</TableHead>\n1384: </TableRow>"
           },
           {
             "text": "Filter Vehicles",
-            "line": 1479,
-            "context": "1478: <CardTitle className=\"flex items-center gap-2 text-lg\">\n1479: <Filter className=\"h-5 w-5\" />\n1480: Filter Vehicles"
+            "line": 1505,
+            "context": "1504: <CardTitle className=\"flex items-center gap-2 text-lg\">\n1505: <Filter className=\"h-5 w-5\" />\n1506: Filter Vehicles"
           },
           {
             "text": "Use filters to find the vehicles you want to invoice",
-            "line": 1482,
-            "context": "1481: </CardTitle>\n1482: <CardDescription>Use filters to find the vehicles you want to invoice</CardDescription>\n1483: </CardHeader>"
+            "line": 1508,
+            "context": "1507: </CardTitle>\n1508: <CardDescription>Use filters to find the vehicles you want to invoice</CardDescription>\n1509: </CardHeader>"
           },
           {
             "text": "Department",
-            "line": 1488,
-            "context": "1487: <div className=\"space-y-1.5\">\n1488: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1489: <Select value={orderType} onValueChange={setOrderType}>"
+            "line": 1514,
+            "context": "1513: <div className=\"space-y-1.5\">\n1514: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1515: <Select value={orderType} onValueChange={setOrderType}>"
           },
           {
             "text": "All Departments",
-            "line": 1494,
-            "context": "1493: <SelectContent>\n1494: <SelectItem value=\"all\">All Departments</SelectItem>\n1495: <SelectItem value=\"sales\">Sales</SelectItem>"
+            "line": 1520,
+            "context": "1519: <SelectContent>\n1520: <SelectItem value=\"all\">All Departments</SelectItem>\n1521: <SelectItem value=\"sales\">Sales</SelectItem>"
           },
           {
             "text": "Sales",
-            "line": 1495,
-            "context": "1494: <SelectItem value=\"all\">All Departments</SelectItem>\n1495: <SelectItem value=\"sales\">Sales</SelectItem>\n1496: <SelectItem value=\"service\">Service</SelectItem>"
+            "line": 1521,
+            "context": "1520: <SelectItem value=\"all\">All Departments</SelectItem>\n1521: <SelectItem value=\"sales\">Sales</SelectItem>\n1522: <SelectItem value=\"service\">Service</SelectItem>"
           },
           {
             "text": "Service",
-            "line": 1496,
-            "context": "1495: <SelectItem value=\"sales\">Sales</SelectItem>\n1496: <SelectItem value=\"service\">Service</SelectItem>\n1497: <SelectItem value=\"recon\">Recon</SelectItem>"
+            "line": 1522,
+            "context": "1521: <SelectItem value=\"sales\">Sales</SelectItem>\n1522: <SelectItem value=\"service\">Service</SelectItem>\n1523: <SelectItem value=\"recon\">Recon</SelectItem>"
           },
           {
             "text": "Recon",
-            "line": 1497,
-            "context": "1496: <SelectItem value=\"service\">Service</SelectItem>\n1497: <SelectItem value=\"recon\">Recon</SelectItem>\n1498: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
+            "line": 1523,
+            "context": "1522: <SelectItem value=\"service\">Service</SelectItem>\n1523: <SelectItem value=\"recon\">Recon</SelectItem>\n1524: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
           },
           {
             "text": "Car Wash",
-            "line": 1498,
-            "context": "1497: <SelectItem value=\"recon\">Recon</SelectItem>\n1498: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1499: </SelectContent>"
+            "line": 1524,
+            "context": "1523: <SelectItem value=\"recon\">Recon</SelectItem>\n1524: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1525: </SelectContent>"
           },
           {
             "text": "Status",
-            "line": 1504,
-            "context": "1503: <div className=\"space-y-1.5\">\n1504: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1505: <Select value={orderStatus} onValueChange={setOrderStatus}>"
+            "line": 1530,
+            "context": "1529: <div className=\"space-y-1.5\">\n1530: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1531: <Select value={orderStatus} onValueChange={setOrderStatus}>"
           },
           {
             "text": "Date Range",
-            "line": 1530,
-            "context": "1529: <div className=\"space-y-1.5\">\n1530: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1531: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
+            "line": 1556,
+            "context": "1555: <div className=\"space-y-1.5\">\n1556: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1557: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
           },
           {
             "text": "Today",
-            "line": 1536,
-            "context": "1535: <SelectContent>\n1536: <SelectItem value=\"today\">Today</SelectItem>\n1537: <SelectItem value=\"this_week\">This Week</SelectItem>"
+            "line": 1562,
+            "context": "1561: <SelectContent>\n1562: <SelectItem value=\"today\">Today</SelectItem>\n1563: <SelectItem value=\"this_week\">This Week</SelectItem>"
           },
           {
             "text": "This Week",
-            "line": 1537,
-            "context": "1536: <SelectItem value=\"today\">Today</SelectItem>\n1537: <SelectItem value=\"this_week\">This Week</SelectItem>\n1538: <SelectItem value=\"last_week\">Last Week</SelectItem>"
+            "line": 1563,
+            "context": "1562: <SelectItem value=\"today\">Today</SelectItem>\n1563: <SelectItem value=\"this_week\">This Week</SelectItem>\n1564: <SelectItem value=\"last_week\">Last Week</SelectItem>"
           },
           {
             "text": "Last Week",
-            "line": 1538,
-            "context": "1537: <SelectItem value=\"this_week\">This Week</SelectItem>\n1538: <SelectItem value=\"last_week\">Last Week</SelectItem>\n1539: <SelectItem value=\"this_month\">This Month</SelectItem>"
+            "line": 1564,
+            "context": "1563: <SelectItem value=\"this_week\">This Week</SelectItem>\n1564: <SelectItem value=\"last_week\">Last Week</SelectItem>\n1565: <SelectItem value=\"this_month\">This Month</SelectItem>"
           },
           {
             "text": "This Month",
-            "line": 1539,
-            "context": "1538: <SelectItem value=\"last_week\">Last Week</SelectItem>\n1539: <SelectItem value=\"this_month\">This Month</SelectItem>\n1540: <SelectItem value=\"last_month\">Last Month</SelectItem>"
+            "line": 1565,
+            "context": "1564: <SelectItem value=\"last_week\">Last Week</SelectItem>\n1565: <SelectItem value=\"this_month\">This Month</SelectItem>\n1566: <SelectItem value=\"last_month\">Last Month</SelectItem>"
           },
           {
             "text": "Last Month",
-            "line": 1540,
-            "context": "1539: <SelectItem value=\"this_month\">This Month</SelectItem>\n1540: <SelectItem value=\"last_month\">Last Month</SelectItem>\n1541: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>"
+            "line": 1566,
+            "context": "1565: <SelectItem value=\"this_month\">This Month</SelectItem>\n1566: <SelectItem value=\"last_month\">Last Month</SelectItem>\n1567: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>"
           },
           {
             "text": "Custom Range",
-            "line": 1542,
-            "context": "1541: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>\n1542: <SelectItem value=\"custom\">Custom Range</SelectItem>\n1543: </SelectContent>"
+            "line": 1568,
+            "context": "1567: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>\n1568: <SelectItem value=\"custom\">Custom Range</SelectItem>\n1569: </SelectContent>"
           },
           {
             "text": "Search",
-            "line": 1548,
-            "context": "1547: <div className=\"space-y-1.5\">\n1548: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1549: <div className=\"relative\">"
+            "line": 1574,
+            "context": "1573: <div className=\"space-y-1.5\">\n1574: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1575: <div className=\"relative\">"
           },
           {
             "text": "From Date",
-            "line": 1566,
-            "context": "1565: <div className=\"space-y-1.5\">\n1566: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1567: <Input"
+            "line": 1592,
+            "context": "1591: <div className=\"space-y-1.5\">\n1592: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1593: <Input"
           },
           {
             "text": "To Date",
-            "line": 1579,
-            "context": "1578: <div className=\"space-y-1.5\">\n1579: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1580: <Input"
+            "line": 1605,
+            "context": "1604: <div className=\"space-y-1.5\">\n1605: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1606: <Input"
           },
           {
             "text": "Showing orders from",
-            "line": 1598,
-            "context": "1597: <Calendar className=\"h-3.5 w-3.5\" />\n1598: <span>\n1599: Showing orders from <span className=\"font-medium text-foreground\">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className=\"font-medium text-foreground\">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>"
+            "line": 1624,
+            "context": "1623: <Calendar className=\"h-3.5 w-3.5\" />\n1624: <span>\n1625: Showing orders from <span className=\"font-medium text-foreground\">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className=\"font-medium text-foreground\">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>"
           },
           {
             "text": "Include Only Service",
-            "line": 1607,
-            "context": "1606: <div className=\"space-y-2\">\n1607: <Label>Include Only Service</Label>\n1608: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
+            "line": 1633,
+            "context": "1632: <div className=\"space-y-2\">\n1633: <Label>Include Only Service</Label>\n1634: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
           },
           {
             "text": "No services found for this dealer",
-            "line": 1617,
-            "context": "1616: {availableServices.length === 0 && !loadingServices && (\n1617: <SelectItem value=\"none\" disabled>\n1618: No services found for this dealer"
+            "line": 1643,
+            "context": "1642: {availableServices.length === 0 && !loadingServices && (\n1643: <SelectItem value=\"none\" disabled>\n1644: No services found for this dealer"
           },
           {
             "text": "Exclude Services",
-            "line": 1633,
-            "context": "1632: <div className=\"space-y-2\">\n1633: <Label>Exclude Services</Label>\n1634: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
+            "line": 1659,
+            "context": "1658: <div className=\"space-y-2\">\n1659: <Label>Exclude Services</Label>\n1660: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
           },
           {
             "text": "No services excluded",
-            "line": 1650,
-            "context": "1649: ) : (\n1650: <span className=\"text-sm text-muted-foreground\">No services excluded</span>\n1651: )}"
+            "line": 1676,
+            "context": "1675: ) : (\n1676: <span className=\"text-sm text-muted-foreground\">No services excluded</span>\n1677: )}"
           },
           {
             "text": "Available Orders",
-            "line": 1684,
-            "context": "1683: <div>\n1684: <CardTitle>Available Orders</CardTitle>\n1685: <CardDescription>"
+            "line": 1710,
+            "context": "1709: <div>\n1710: <CardTitle>Available Orders</CardTitle>\n1711: <CardDescription>"
           },
           {
             "text": "No orders found",
-            "line": 1707,
-            "context": "1706: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1707: <p className=\"text-muted-foreground\">No orders found</p>\n1708: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
+            "line": 1733,
+            "context": "1732: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1733: <p className=\"text-muted-foreground\">No orders found</p>\n1734: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
           },
           {
             "text": "Try adjusting your filters",
-            "line": 1708,
-            "context": "1707: <p className=\"text-muted-foreground\">No orders found</p>\n1708: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n1709: </div>"
+            "line": 1734,
+            "context": "1733: <p className=\"text-muted-foreground\">No orders found</p>\n1734: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n1735: </div>"
           },
           {
             "text": "Order Number",
-            "line": 1721,
-            "context": "1720: </TableHead>\n1721: <TableHead className=\"text-center font-bold\">Order Number</TableHead>\n1722: <TableHead className=\"text-center font-bold\">"
+            "line": 1747,
+            "context": "1746: </TableHead>\n1747: <TableHead className=\"text-center font-bold\">Order Number</TableHead>\n1748: <TableHead className=\"text-center font-bold\">"
           },
           {
             "text": "Vehicle",
-            "line": 1740,
-            "context": "1739: </TableHead>\n1740: <TableHead className=\"text-center font-bold\">Vehicle</TableHead>\n1741: <TableHead className=\"text-center font-bold\">VIN</TableHead>"
+            "line": 1766,
+            "context": "1765: </TableHead>\n1766: <TableHead className=\"text-center font-bold\">Vehicle</TableHead>\n1767: <TableHead className=\"text-center font-bold\">VIN</TableHead>"
           },
           {
             "text": "Services",
-            "line": 1742,
-            "context": "1741: <TableHead className=\"text-center font-bold\">VIN</TableHead>\n1742: <TableHead className=\"text-center font-bold\">Services</TableHead>\n1743: <TableHead className=\"text-center font-bold\">Dept</TableHead>"
+            "line": 1768,
+            "context": "1767: <TableHead className=\"text-center font-bold\">VIN</TableHead>\n1768: <TableHead className=\"text-center font-bold\">Services</TableHead>\n1769: <TableHead className=\"text-center font-bold\">Dept</TableHead>"
           },
           {
             "text": "Dept",
-            "line": 1743,
-            "context": "1742: <TableHead className=\"text-center font-bold\">Services</TableHead>\n1743: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n1744: <TableHead className=\"text-center font-bold\">Amount</TableHead>"
+            "line": 1769,
+            "context": "1768: <TableHead className=\"text-center font-bold\">Services</TableHead>\n1769: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n1770: <TableHead className=\"text-center font-bold\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 1744,
-            "context": "1743: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n1744: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n1745: </TableRow>"
+            "line": 1770,
+            "context": "1769: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n1770: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n1771: </TableRow>"
           },
           {
             "text": "Invoice Details",
-            "line": 1833,
-            "context": "1832: <CardTitle className=\"flex items-center gap-2\">\n1833: <FileText className=\"h-5 w-5\" />\n1834: Invoice Details"
+            "line": 1857,
+            "context": "1856: <CardTitle className=\"flex items-center gap-2\">\n1857: <FileText className=\"h-5 w-5\" />\n1858: Invoice Details"
           },
           {
             "text": "Selected Vehicles",
-            "line": 1887,
-            "context": "1886: <div>\n1887: <div className=\"text-sm text-muted-foreground mb-1\">Selected Vehicles</div>\n1888: <div className=\"text-3xl font-bold\">{selectedVehicleIds.size}</div>"
+            "line": 1911,
+            "context": "1910: <div>\n1911: <div className=\"text-sm text-muted-foreground mb-1\">Selected Vehicles</div>\n1912: <div className=\"text-3xl font-bold\">{selectedVehicleIds.size}</div>"
           },
           {
             "text": "Invoice Total",
-            "line": 1891,
-            "context": "1890: <div>\n1891: <div className=\"text-sm text-muted-foreground mb-1\">Invoice Total</div>\n1892: <div className=\"text-3xl font-bold text-indigo-600\">"
+            "line": 1915,
+            "context": "1914: <div>\n1915: <div className=\"text-sm text-muted-foreground mb-1\">Invoice Total</div>\n1916: <div className=\"text-3xl font-bold text-gray-600\">"
           },
           {
             "text": "Cancel",
-            "line": 1923,
-            "context": "1922: }}\n1923: >\n1924: Cancel"
+            "line": 1947,
+            "context": "1946: }}\n1947: >\n1948: Cancel"
           },
           {
             "text": "Invoice Preview",
-            "line": 1996,
-            "context": "1995: <div className=\"flex items-center justify-between\">\n1996: <DialogTitle>Invoice Preview</DialogTitle>\n1997: <Button"
+            "line": 2020,
+            "context": "2019: <div className=\"flex items-center justify-between\">\n2020: <DialogTitle>Invoice Preview</DialogTitle>\n2021: <Button"
           },
           {
             "text": "Search invoices...",
-            "line": 1296,
-            "context": "1295: <Input\n1296: placeholder=\"Search invoices...\"\n1297: value={invoiceFilters.searchTerm}"
+            "line": 1322,
+            "context": "1321: <Input\n1322: placeholder=\"Search invoices...\"\n1323: value={invoiceFilters.searchTerm}"
           },
           {
             "text": "Status",
-            "line": 1307,
-            "context": "1306: <SelectTrigger className=\"w-[150px]\">\n1307: <SelectValue placeholder=\"Status\" />\n1308: </SelectTrigger>"
+            "line": 1333,
+            "context": "1332: <SelectTrigger className=\"w-[150px]\">\n1333: <SelectValue placeholder=\"Status\" />\n1334: </SelectTrigger>"
           },
           {
             "text": "Type",
-            "line": 1322,
-            "context": "1321: <SelectTrigger className=\"w-[150px]\">\n1322: <SelectValue placeholder=\"Type\" />\n1323: </SelectTrigger>"
+            "line": 1348,
+            "context": "1347: <SelectTrigger className=\"w-[150px]\">\n1348: <SelectValue placeholder=\"Type\" />\n1349: </SelectTrigger>"
           },
           {
             "text": "Add Payment",
-            "line": 1433,
-            "context": "1432: disabled={invoice.status === 'paid' || invoice.status === 'cancelled'}\n1433: title=\"Add Payment\"\n1434: >"
+            "line": 1459,
+            "context": "1458: disabled={invoice.status === 'paid' || invoice.status === 'cancelled'}\n1459: title=\"Add Payment\"\n1460: >"
           },
           {
             "text": "View Details",
-            "line": 1445,
-            "context": "1444: }}\n1445: title=\"View Details\"\n1446: >"
+            "line": 1471,
+            "context": "1470: }}\n1471: title=\"View Details\"\n1472: >"
           },
           {
             "text": "Delete Invoice",
-            "line": 1457,
-            "context": "1456: disabled={invoice.status === 'paid'}\n1457: title=\"Delete Invoice\"\n1458: >"
+            "line": 1483,
+            "context": "1482: disabled={invoice.status === 'paid'}\n1483: title=\"Delete Invoice\"\n1484: >"
           },
           {
             "text": "VIN, stock, customer...",
-            "line": 1553,
-            "context": "1552: id=\"search-filter-inline\"\n1553: placeholder=\"VIN, stock, customer...\"\n1554: value={searchTerm}"
+            "line": 1579,
+            "context": "1578: id=\"search-filter-inline\"\n1579: placeholder=\"VIN, stock, customer...\"\n1580: value={searchTerm}"
           },
           {
             "text": "Department",
-            "line": 1488,
-            "context": "1487: <div className=\"space-y-1.5\">\n1488: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1489: <Select value={orderType} onValueChange={setOrderType}>"
+            "line": 1514,
+            "context": "1513: <div className=\"space-y-1.5\">\n1514: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1515: <Select value={orderType} onValueChange={setOrderType}>"
           },
           {
             "text": "Status",
-            "line": 1504,
-            "context": "1503: <div className=\"space-y-1.5\">\n1504: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1505: <Select value={orderStatus} onValueChange={setOrderStatus}>"
+            "line": 1530,
+            "context": "1529: <div className=\"space-y-1.5\">\n1530: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1531: <Select value={orderStatus} onValueChange={setOrderStatus}>"
           },
           {
             "text": "Date Range",
-            "line": 1530,
-            "context": "1529: <div className=\"space-y-1.5\">\n1530: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1531: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
+            "line": 1556,
+            "context": "1555: <div className=\"space-y-1.5\">\n1556: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1557: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
           },
           {
             "text": "Search",
-            "line": 1548,
-            "context": "1547: <div className=\"space-y-1.5\">\n1548: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1549: <div className=\"relative\">"
+            "line": 1574,
+            "context": "1573: <div className=\"space-y-1.5\">\n1574: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1575: <div className=\"relative\">"
           },
           {
             "text": "From Date",
-            "line": 1566,
-            "context": "1565: <div className=\"space-y-1.5\">\n1566: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1567: <Input"
+            "line": 1592,
+            "context": "1591: <div className=\"space-y-1.5\">\n1592: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1593: <Input"
           },
           {
             "text": "To Date",
-            "line": 1579,
-            "context": "1578: <div className=\"space-y-1.5\">\n1579: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1580: <Input"
+            "line": 1605,
+            "context": "1604: <div className=\"space-y-1.5\">\n1605: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1606: <Input"
           },
           {
             "text": "Include Only Service",
-            "line": 1607,
-            "context": "1606: <div className=\"space-y-2\">\n1607: <Label>Include Only Service</Label>\n1608: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
+            "line": 1633,
+            "context": "1632: <div className=\"space-y-2\">\n1633: <Label>Include Only Service</Label>\n1634: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
           },
           {
             "text": "Exclude Services",
-            "line": 1633,
-            "context": "1632: <div className=\"space-y-2\">\n1633: <Label>Exclude Services</Label>\n1634: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
+            "line": 1659,
+            "context": "1658: <div className=\"space-y-2\">\n1659: <Label>Exclude Services</Label>\n1660: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
           },
           {
             "text": "Invoice Preview",
-            "line": 1996,
-            "context": "1995: <div className=\"flex items-center justify-between\">\n1996: <DialogTitle>Invoice Preview</DialogTitle>\n1997: <Button"
+            "line": 2020,
+            "context": "2019: <div className=\"flex items-center justify-between\">\n2020: <DialogTitle>Invoice Preview</DialogTitle>\n2021: <Button"
           }
         ],
         "translationCalls": [
           {
             "key": "invoices.delete_title",
-            "line": 2021,
+            "line": 2045,
             "exists": false
           },
           {
             "key": "invoices.delete_description",
-            "line": 2022,
+            "line": 2046,
             "exists": false
           },
           {
             "key": "common.action_buttons.delete",
-            "line": 2023,
+            "line": 2047,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 2024,
+            "line": 2048,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "invoices.delete_title",
-            "line": 2021,
-            "context": "2020: onOpenChange={setDeleteDialogOpen}\n2021: title={t('invoices.delete_title')}\n2022: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}"
+            "line": 2045,
+            "context": "2044: onOpenChange={setDeleteDialogOpen}\n2045: title={t('invoices.delete_title')}\n2046: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}"
           },
           {
             "key": "invoices.delete_description",
-            "line": 2022,
-            "context": "2021: title={t('invoices.delete_title')}\n2022: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}\n2023: confirmText={t('common.action_buttons.delete')}"
+            "line": 2046,
+            "context": "2045: title={t('invoices.delete_title')}\n2046: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}\n2047: confirmText={t('common.action_buttons.delete')}"
           }
         ],
         "coverage": 5,
@@ -2523,209 +2523,209 @@
         "hardcodedStrings": [
           {
             "text": "Invoice",
-            "line": 339,
-            "context": "338: <div class=\"sender-name\">${senderName}</div>\n339: <div class=\"doc-title\">Invoice</div>\n340: ${servicePeriod ? `"
+            "line": 373,
+            "context": "372: <div class=\"sender-name\">${senderName}</div>\n373: <div class=\"doc-title\">Invoice</div>\n374: ${servicePeriod ? `"
           },
           {
             "text": "Bill To",
-            "line": 351,
-            "context": "350: <div class=\"bill-to\">\n351: <h3>Bill To</h3>\n352: <div class=\"company\">${dealerName}</div>"
+            "line": 385,
+            "context": "384: <div class=\"bill-to\">\n385: <h3>Bill To</h3>\n386: <div class=\"company\">${dealerName}</div>"
           },
           {
             "text": "Invoice Date",
-            "line": 359,
-            "context": "358: <div class=\"detail-row\">\n359: <span class=\"label\">Invoice Date</span>\n360: <div class=\"value\">${formatDate(invoice.issueDate)}</div>"
+            "line": 399,
+            "context": "398: <div class=\"detail-row\">\n399: <span class=\"label\">Invoice Date</span>\n400: <div class=\"value\">${formatDate(invoice.issueDate)}</div>"
           },
           {
             "text": "Due Date",
-            "line": 363,
-            "context": "362: <div class=\"detail-row\">\n363: <span class=\"label\">Due Date</span>\n364: <div class=\"value\">${formatDate(invoice.dueDate)}</div>"
+            "line": 403,
+            "context": "402: <div class=\"detail-row\">\n403: <span class=\"label\">Due Date</span>\n404: <div class=\"value\">${formatDate(invoice.dueDate)}</div>"
           },
           {
             "text": "Invoice Number",
-            "line": 367,
-            "context": "366: <div class=\"detail-row\">\n367: <span class=\"label\">Invoice Number</span>\n368: <div class=\"value font-mono\">${invoice.invoiceNumber}</div>"
+            "line": 407,
+            "context": "406: <div class=\"detail-row\">\n407: <span class=\"label\">Invoice Number</span>\n408: <div class=\"value font-mono\">${invoice.invoiceNumber}</div>"
           },
           {
             "text": "Total Amount",
-            "line": 371,
-            "context": "370: <div class=\"detail-row\" style=\"margin-top: 12px; padding-top: 12px; border-top: 1px solid #E5E7EB;\">\n371: <span class=\"label\">Total Amount</span>\n372: <div class=\"value\" style=\"font-size: 14pt; font-weight: 700; color: #6366F1;\">${formatCurrency(invoice.totalAmount)}</div>"
+            "line": 411,
+            "context": "410: <div class=\"detail-row\" style=\"margin-top: 12px; padding-top: 12px; border-top: 1px solid #E5E7EB;\">\n411: <span class=\"label\">Total Amount</span>\n412: <div class=\"value\" style=\"font-size: 14pt; font-weight: 700; color: #6B7280;\">${formatCurrency(invoice.totalAmount)}</div>"
           },
           {
             "text": "Date",
-            "line": 381,
-            "context": "380: <tr>\n381: <th style=\"width: 8%;\">Date</th>\n382: <th style=\"width: 10%;\">Order</th>"
+            "line": 421,
+            "context": "420: <tr>\n421: <th style=\"width: 8%;\">Date</th>\n422: <th style=\"width: 10%;\">Order</th>"
           },
           {
             "text": "Order",
-            "line": 382,
-            "context": "381: <th style=\"width: 8%;\">Date</th>\n382: <th style=\"width: 10%;\">Order</th>\n383: <th style=\"width: 18%;\">PO | RO | Tag</th>"
+            "line": 422,
+            "context": "421: <th style=\"width: 8%;\">Date</th>\n422: <th style=\"width: 10%;\">Order</th>\n423: <th style=\"width: 18%;\">PO | RO | Tag</th>"
           },
           {
             "text": "Vehicle",
-            "line": 384,
-            "context": "383: <th style=\"width: 18%;\">PO | RO | Tag</th>\n384: <th style=\"width: 16%;\">Vehicle</th>\n385: <th style=\"width: 14%;\">VIN</th>"
+            "line": 424,
+            "context": "423: <th style=\"width: 18%;\">PO | RO | Tag</th>\n424: <th style=\"width: 16%;\">Vehicle</th>\n425: <th style=\"width: 14%;\">VIN</th>"
           },
           {
             "text": "Services",
-            "line": 386,
-            "context": "385: <th style=\"width: 14%;\">VIN</th>\n386: <th style=\"width: 22%;\" class=\"text-left\">Services</th>\n387: <th style=\"width: 12%;\">Amount</th>"
+            "line": 426,
+            "context": "425: <th style=\"width: 14%;\">VIN</th>\n426: <th style=\"width: 22%;\" class=\"text-left\">Services</th>\n427: <th style=\"width: 12%;\">Amount</th>"
           },
           {
             "text": "Amount",
-            "line": 387,
-            "context": "386: <th style=\"width: 22%;\" class=\"text-left\">Services</th>\n387: <th style=\"width: 12%;\">Amount</th>\n388: </tr>"
+            "line": 427,
+            "context": "426: <th style=\"width: 22%;\" class=\"text-left\">Services</th>\n427: <th style=\"width: 12%;\">Amount</th>\n428: </tr>"
           },
           {
             "text": "My Detail Area LLC",
-            "line": 443,
-            "context": "442: <p style=\"font-style: italic;\">Generated by ${userFullName}</p>\n443: <p class=\"footer-bold\">My Detail Area LLC</p>\n444: <p style=\"font-style: italic;\">Report ID: INV-${invoice.id.substring(0, 8)} | ${dealerName}</p>"
+            "line": 504,
+            "context": "503: <p style=\"font-style: italic;\">Generated by ${userFullName}</p>\n504: <p class=\"footer-bold\">My Detail Area LLC</p>\n505: <p style=\"font-style: italic;\">Report ID: INV-${invoice.id.substring(0, 8)} | ${dealerName}</p>"
           },
           {
             "text": "Loading Invoice",
-            "line": 504,
-            "context": "503: <DialogHeader>\n504: <DialogTitle>Loading Invoice</DialogTitle>\n505: <DialogDescription>"
+            "line": 565,
+            "context": "564: <DialogHeader>\n565: <DialogTitle>Loading Invoice</DialogTitle>\n566: <DialogDescription>"
           },
           {
             "text": "Invoice Not Found",
-            "line": 522,
-            "context": "521: <DialogHeader>\n522: <DialogTitle>Invoice Not Found</DialogTitle>\n523: <DialogDescription>"
+            "line": 583,
+            "context": "582: <DialogHeader>\n583: <DialogTitle>Invoice Not Found</DialogTitle>\n584: <DialogDescription>"
           },
           {
             "text": "Invoice not found",
-            "line": 528,
-            "context": "527: <div className=\"flex items-center justify-center py-12\">\n528: <p className=\"text-muted-foreground\">Invoice not found</p>\n529: </div>"
+            "line": 589,
+            "context": "588: <div className=\"flex items-center justify-center py-12\">\n589: <p className=\"text-muted-foreground\">Invoice not found</p>\n590: </div>"
           },
           {
             "text": "Download PDF",
-            "line": 605,
-            "context": "604: <DropdownMenuItem onClick={handleDownloadPDF}>\n605: <FileText className=\"h-4 w-4 mr-2\" />\n606: Download PDF"
+            "line": 666,
+            "context": "665: <DropdownMenuItem onClick={handleDownloadPDF}>\n666: <FileText className=\"h-4 w-4 mr-2\" />\n667: Download PDF"
           },
           {
             "text": "Download Excel",
-            "line": 609,
-            "context": "608: <DropdownMenuItem onClick={handleDownloadExcel}>\n609: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n610: Download Excel"
+            "line": 670,
+            "context": "669: <DropdownMenuItem onClick={handleDownloadExcel}>\n670: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n671: Download Excel"
           },
           {
             "text": "Total Amount",
-            "line": 668,
-            "context": "667: <div className=\"pt-2 border-t\">\n668: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Total Amount</span>\n669: <p className=\"text-2xl font-bold text-primary\">{formatCurrency(invoice.totalAmount)}</p>"
+            "line": 739,
+            "context": "738: <div className=\"pt-2 border-t\">\n739: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Total Amount</span>\n740: <p className=\"text-2xl font-bold text-primary\">{formatCurrency(invoice.totalAmount)}</p>"
           },
           {
             "text": "Amount Due",
-            "line": 673,
-            "context": "672: <div className=\"pt-2\">\n673: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Amount Due</span>\n674: <p className=\"text-xl font-bold text-amber-600\">{formatCurrency(invoice.amountDue)}</p>"
+            "line": 744,
+            "context": "743: <div className=\"pt-2\">\n744: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Amount Due</span>\n745: <p className=\"text-xl font-bold text-amber-600\">{formatCurrency(invoice.amountDue)}</p>"
           },
           {
             "text": "Vehicles",
-            "line": 698,
-            "context": "697: <div className=\"flex items-center justify-between mb-4\">\n698: <h3 className=\"font-bold text-lg text-gray-900\">\n699: Vehicles"
+            "line": 769,
+            "context": "768: <div className=\"flex items-center justify-between mb-4\">\n769: <h3 className=\"font-bold text-lg text-gray-900\">\n770: Vehicles"
           },
           {
             "text": "Date",
-            "line": 709,
-            "context": "708: <TableRow className=\"bg-indigo-500 hover:bg-indigo-500\">\n709: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n710: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>"
+            "line": 780,
+            "context": "779: <TableRow className=\"bg-gray-500 hover:bg-gray-500\">\n780: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n781: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>"
           },
           {
             "text": "Order",
-            "line": 710,
-            "context": "709: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n710: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>\n711: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>"
+            "line": 781,
+            "context": "780: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n781: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>\n782: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>"
           },
           {
             "text": "Vehicle",
-            "line": 712,
-            "context": "711: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>\n712: <TableHead className=\"font-bold text-center text-white\">Vehicle</TableHead>\n713: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>"
+            "line": 783,
+            "context": "782: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>\n783: <TableHead className=\"font-bold text-center text-white\">Vehicle</TableHead>\n784: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>"
           },
           {
             "text": "Services",
-            "line": 714,
-            "context": "713: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>\n714: <TableHead className=\"font-bold text-left text-white\">Services</TableHead>\n715: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>"
+            "line": 785,
+            "context": "784: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>\n785: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n786: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 715,
-            "context": "714: <TableHead className=\"font-bold text-left text-white\">Services</TableHead>\n715: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>\n716: </TableRow>"
+            "line": 786,
+            "context": "785: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n786: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>\n787: </TableRow>"
           },
           {
             "text": "No items found",
-            "line": 761,
-            "context": "760: <TableRow>\n761: <TableCell colSpan={7} className=\"text-center py-8 text-muted-foreground\">\n762: No items found"
+            "line": 860,
+            "context": "859: <TableRow>\n860: <TableCell colSpan={7} className=\"text-center py-8 text-muted-foreground\">\n861: No items found"
           },
           {
             "text": "Cancel",
-            "line": 936,
-            "context": "935: <AlertDialogFooter>\n936: <AlertDialogCancel>Cancel</AlertDialogCancel>\n937: <AlertDialogAction"
+            "line": 1035,
+            "context": "1034: <AlertDialogFooter>\n1035: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1036: <AlertDialogAction"
           },
           {
             "text": "Loading Invoice",
-            "line": 504,
-            "context": "503: <DialogHeader>\n504: <DialogTitle>Loading Invoice</DialogTitle>\n505: <DialogDescription>"
+            "line": 565,
+            "context": "564: <DialogHeader>\n565: <DialogTitle>Loading Invoice</DialogTitle>\n566: <DialogDescription>"
           },
           {
             "text": "Invoice Not Found",
-            "line": 522,
-            "context": "521: <DialogHeader>\n522: <DialogTitle>Invoice Not Found</DialogTitle>\n523: <DialogDescription>"
+            "line": 583,
+            "context": "582: <DialogHeader>\n583: <DialogTitle>Invoice Not Found</DialogTitle>\n584: <DialogDescription>"
           }
         ],
         "translationCalls": [
           {
             "key": "reports.invoices.delete",
-            "line": 575,
+            "line": 636,
             "exists": true
           },
           {
             "key": "reports.invoices.send_email",
-            "line": 583,
+            "line": 644,
             "exists": true
           },
           {
             "key": "common.action_buttons.print",
-            "line": 591,
+            "line": 652,
             "exists": true
           },
           {
             "key": "common.action_buttons.download",
-            "line": 600,
+            "line": 661,
             "exists": true
           },
           {
             "key": "common.action_buttons.close",
-            "line": 620,
+            "line": 681,
             "exists": true
           },
           {
             "key": "reports.invoices.delete_confirm_title",
-            "line": 889,
+            "line": 988,
             "exists": true
           },
           {
             "key": "reports.invoices.delete_confirm_message",
-            "line": 894,
+            "line": 993,
             "exists": true
           },
           {
             "key": "reports.invoices.vehicles_available_again",
-            "line": 897,
+            "line": 996,
             "exists": true
           },
           {
             "key": "reports.invoices.has_payments_warning",
-            "line": 901,
+            "line": 1000,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 908,
+            "line": 1007,
             "exists": true
           },
           {
             "key": "reports.invoices.deleting",
-            "line": 919,
+            "line": 1018,
             "exists": true
           },
           {
             "key": "reports.invoices.delete_invoice",
-            "line": 920,
+            "line": 1019,
             "exists": true
           }
         ],
@@ -2738,203 +2738,203 @@
         "hardcodedStrings": [
           {
             "text": "Create Bulk Invoice",
-            "line": 340,
-            "context": "339: <DialogTitle className=\"flex items-center gap-2 text-xl\">\n340: <Receipt className=\"h-5 w-5\" />\n341: Create Bulk Invoice"
+            "line": 393,
+            "context": "392: <DialogTitle className=\"flex items-center gap-2 text-xl\">\n393: <Receipt className=\"h-5 w-5\" />\n394: Create Bulk Invoice"
           },
           {
             "text": "Select completed orders to include in the invoice",
-            "line": 343,
-            "context": "342: </DialogTitle>\n343: <DialogDescription>\n344: Select completed orders to include in the invoice"
+            "line": 396,
+            "context": "395: </DialogTitle>\n396: <DialogDescription>\n397: Select completed orders to include in the invoice"
           },
           {
             "text": "Filter Orders",
-            "line": 352,
-            "context": "351: <div className=\"flex items-center gap-2 text-sm font-semibold mb-3\">\n352: <Filter className=\"h-4 w-4\" />\n353: Filter Orders"
+            "line": 405,
+            "context": "404: <div className=\"flex items-center gap-2 text-sm font-semibold mb-3\">\n405: <Filter className=\"h-4 w-4\" />\n406: Filter Orders"
           },
           {
             "text": "Department",
-            "line": 359,
-            "context": "358: <div className=\"space-y-1.5\">\n359: <Label htmlFor=\"orderType\" className=\"text-xs font-medium\">Department</Label>\n360: <Select value={orderType} onValueChange={setOrderType}>"
+            "line": 412,
+            "context": "411: <div className=\"space-y-1.5\">\n412: <Label htmlFor=\"orderType\" className=\"text-xs font-medium\">Department</Label>\n413: <Select value={orderType} onValueChange={setOrderType}>"
           },
           {
             "text": "All Departments",
-            "line": 365,
-            "context": "364: <SelectContent>\n365: <SelectItem value=\"all\">All Departments</SelectItem>\n366: <SelectItem value=\"sales\">Sales</SelectItem>"
+            "line": 418,
+            "context": "417: <SelectContent>\n418: <SelectItem value=\"all\">All Departments</SelectItem>\n419: <SelectItem value=\"sales\">Sales</SelectItem>"
           },
           {
             "text": "Sales",
-            "line": 366,
-            "context": "365: <SelectItem value=\"all\">All Departments</SelectItem>\n366: <SelectItem value=\"sales\">Sales</SelectItem>\n367: <SelectItem value=\"service\">Service</SelectItem>"
+            "line": 419,
+            "context": "418: <SelectItem value=\"all\">All Departments</SelectItem>\n419: <SelectItem value=\"sales\">Sales</SelectItem>\n420: <SelectItem value=\"service\">Service</SelectItem>"
           },
           {
             "text": "Service",
-            "line": 367,
-            "context": "366: <SelectItem value=\"sales\">Sales</SelectItem>\n367: <SelectItem value=\"service\">Service</SelectItem>\n368: <SelectItem value=\"recon\">Recon</SelectItem>"
+            "line": 420,
+            "context": "419: <SelectItem value=\"sales\">Sales</SelectItem>\n420: <SelectItem value=\"service\">Service</SelectItem>\n421: <SelectItem value=\"recon\">Recon</SelectItem>"
           },
           {
             "text": "Recon",
-            "line": 368,
-            "context": "367: <SelectItem value=\"service\">Service</SelectItem>\n368: <SelectItem value=\"recon\">Recon</SelectItem>\n369: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
+            "line": 421,
+            "context": "420: <SelectItem value=\"service\">Service</SelectItem>\n421: <SelectItem value=\"recon\">Recon</SelectItem>\n422: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
           },
           {
             "text": "Car Wash",
-            "line": 369,
-            "context": "368: <SelectItem value=\"recon\">Recon</SelectItem>\n369: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n370: </SelectContent>"
+            "line": 422,
+            "context": "421: <SelectItem value=\"recon\">Recon</SelectItem>\n422: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n423: </SelectContent>"
           },
           {
             "text": "Date Range",
-            "line": 375,
-            "context": "374: <div className=\"space-y-1.5\">\n375: <Label htmlFor=\"dateRange\" className=\"text-xs font-medium\">Date Range</Label>\n376: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
+            "line": 428,
+            "context": "427: <div className=\"space-y-1.5\">\n428: <Label htmlFor=\"dateRange\" className=\"text-xs font-medium\">Date Range</Label>\n429: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
           },
           {
             "text": "Today",
-            "line": 381,
-            "context": "380: <SelectContent>\n381: <SelectItem value=\"today\">Today</SelectItem>\n382: <SelectItem value=\"this_week\">This Week</SelectItem>"
+            "line": 434,
+            "context": "433: <SelectContent>\n434: <SelectItem value=\"today\">Today</SelectItem>\n435: <SelectItem value=\"this_week\">This Week</SelectItem>"
           },
           {
             "text": "This Week",
-            "line": 382,
-            "context": "381: <SelectItem value=\"today\">Today</SelectItem>\n382: <SelectItem value=\"this_week\">This Week</SelectItem>\n383: <SelectItem value=\"last_week\">Last Week</SelectItem>"
+            "line": 435,
+            "context": "434: <SelectItem value=\"today\">Today</SelectItem>\n435: <SelectItem value=\"this_week\">This Week</SelectItem>\n436: <SelectItem value=\"last_week\">Last Week</SelectItem>"
           },
           {
             "text": "Last Week",
-            "line": 383,
-            "context": "382: <SelectItem value=\"this_week\">This Week</SelectItem>\n383: <SelectItem value=\"last_week\">Last Week</SelectItem>\n384: <SelectItem value=\"this_month\">This Month</SelectItem>"
+            "line": 436,
+            "context": "435: <SelectItem value=\"this_week\">This Week</SelectItem>\n436: <SelectItem value=\"last_week\">Last Week</SelectItem>\n437: <SelectItem value=\"this_month\">This Month</SelectItem>"
           },
           {
             "text": "This Month",
-            "line": 384,
-            "context": "383: <SelectItem value=\"last_week\">Last Week</SelectItem>\n384: <SelectItem value=\"this_month\">This Month</SelectItem>\n385: <SelectItem value=\"last_month\">Last Month</SelectItem>"
+            "line": 437,
+            "context": "436: <SelectItem value=\"last_week\">Last Week</SelectItem>\n437: <SelectItem value=\"this_month\">This Month</SelectItem>\n438: <SelectItem value=\"last_month\">Last Month</SelectItem>"
           },
           {
             "text": "Last Month",
-            "line": 385,
-            "context": "384: <SelectItem value=\"this_month\">This Month</SelectItem>\n385: <SelectItem value=\"last_month\">Last Month</SelectItem>\n386: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>"
+            "line": 438,
+            "context": "437: <SelectItem value=\"this_month\">This Month</SelectItem>\n438: <SelectItem value=\"last_month\">Last Month</SelectItem>\n439: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>"
           },
           {
             "text": "Custom Range",
-            "line": 387,
-            "context": "386: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>\n387: <SelectItem value=\"custom\">Custom Range</SelectItem>\n388: </SelectContent>"
+            "line": 440,
+            "context": "439: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>\n440: <SelectItem value=\"custom\">Custom Range</SelectItem>\n441: </SelectContent>"
           },
           {
             "text": "Search",
-            "line": 393,
-            "context": "392: <div className=\"space-y-1.5\">\n393: <Label htmlFor=\"search\" className=\"text-xs font-medium\">Search</Label>\n394: <div className=\"relative\">"
+            "line": 446,
+            "context": "445: <div className=\"space-y-1.5\">\n446: <Label htmlFor=\"search\" className=\"text-xs font-medium\">Search</Label>\n447: <div className=\"relative\">"
           },
           {
             "text": "From Date",
-            "line": 411,
-            "context": "410: <div className=\"space-y-1.5\">\n411: <Label htmlFor=\"startDate\" className=\"text-xs font-medium\">From Date</Label>\n412: <Input"
+            "line": 464,
+            "context": "463: <div className=\"space-y-1.5\">\n464: <Label htmlFor=\"startDate\" className=\"text-xs font-medium\">From Date</Label>\n465: <Input"
           },
           {
             "text": "To Date",
-            "line": 424,
-            "context": "423: <div className=\"space-y-1.5\">\n424: <Label htmlFor=\"endDate\" className=\"text-xs font-medium\">To Date</Label>\n425: <Input"
+            "line": 477,
+            "context": "476: <div className=\"space-y-1.5\">\n477: <Label htmlFor=\"endDate\" className=\"text-xs font-medium\">To Date</Label>\n478: <Input"
           },
           {
             "text": "Showing completed orders from",
-            "line": 443,
-            "context": "442: <Calendar className=\"h-3.5 w-3.5\" />\n443: <span>\n444: Showing completed orders from <span className=\"font-medium text-foreground\">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className=\"font-medium text-foreground\">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>"
+            "line": 496,
+            "context": "495: <Calendar className=\"h-3.5 w-3.5\" />\n496: <span>\n497: Showing completed orders from <span className=\"font-medium text-foreground\">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className=\"font-medium text-foreground\">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>"
           },
           {
             "text": "No orders found",
-            "line": 459,
-            "context": "458: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n459: <p className=\"text-muted-foreground\">No orders found</p>\n460: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
+            "line": 512,
+            "context": "511: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n512: <p className=\"text-muted-foreground\">No orders found</p>\n513: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
           },
           {
             "text": "Try adjusting your filters",
-            "line": 460,
-            "context": "459: <p className=\"text-muted-foreground\">No orders found</p>\n460: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n461: </div>"
+            "line": 513,
+            "context": "512: <p className=\"text-muted-foreground\">No orders found</p>\n513: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n514: </div>"
           },
           {
             "text": "Date",
-            "line": 472,
-            "context": "471: </TableHead>\n472: <TableHead className=\"font-semibold\">Date</TableHead>\n473: <TableHead className=\"font-semibold\">Stock</TableHead>"
+            "line": 525,
+            "context": "524: </TableHead>\n525: <TableHead className=\"font-semibold\">Date</TableHead>\n526: <TableHead className=\"font-semibold\">Stock</TableHead>"
           },
           {
             "text": "Stock",
-            "line": 473,
-            "context": "472: <TableHead className=\"font-semibold\">Date</TableHead>\n473: <TableHead className=\"font-semibold\">Stock</TableHead>\n474: <TableHead className=\"font-semibold\">Vehicle</TableHead>"
+            "line": 526,
+            "context": "525: <TableHead className=\"font-semibold\">Date</TableHead>\n526: <TableHead className=\"font-semibold\">Stock</TableHead>\n527: <TableHead className=\"font-semibold\">Vehicle</TableHead>"
           },
           {
             "text": "Vehicle",
-            "line": 474,
-            "context": "473: <TableHead className=\"font-semibold\">Stock</TableHead>\n474: <TableHead className=\"font-semibold\">Vehicle</TableHead>\n475: <TableHead className=\"font-semibold\">VIN</TableHead>"
+            "line": 527,
+            "context": "526: <TableHead className=\"font-semibold\">Stock</TableHead>\n527: <TableHead className=\"font-semibold\">Vehicle</TableHead>\n528: <TableHead className=\"font-semibold\">VIN</TableHead>"
           },
           {
             "text": "Customer",
-            "line": 476,
-            "context": "475: <TableHead className=\"font-semibold\">VIN</TableHead>\n476: <TableHead className=\"font-semibold\">Customer</TableHead>\n477: <TableHead className=\"font-semibold\">Dept</TableHead>"
+            "line": 529,
+            "context": "528: <TableHead className=\"font-semibold\">VIN</TableHead>\n529: <TableHead className=\"font-semibold\">Customer</TableHead>\n530: <TableHead className=\"font-semibold\">Dept</TableHead>"
           },
           {
             "text": "Dept",
-            "line": 477,
-            "context": "476: <TableHead className=\"font-semibold\">Customer</TableHead>\n477: <TableHead className=\"font-semibold\">Dept</TableHead>\n478: <TableHead className=\"font-semibold text-right\">Amount</TableHead>"
+            "line": 530,
+            "context": "529: <TableHead className=\"font-semibold\">Customer</TableHead>\n530: <TableHead className=\"font-semibold\">Dept</TableHead>\n531: <TableHead className=\"font-semibold text-right\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 478,
-            "context": "477: <TableHead className=\"font-semibold\">Dept</TableHead>\n478: <TableHead className=\"font-semibold text-right\">Amount</TableHead>\n479: </TableRow>"
+            "line": 531,
+            "context": "530: <TableHead className=\"font-semibold\">Dept</TableHead>\n531: <TableHead className=\"font-semibold text-right\">Amount</TableHead>\n532: </TableRow>"
           },
           {
             "text": "Invoice Configuration",
-            "line": 526,
-            "context": "525: <div className=\"border rounded-lg p-4 bg-white\">\n526: <div className=\"text-sm font-semibold mb-3\">Invoice Configuration</div>\n527: <div className=\"grid grid-cols-3 gap-4\">"
+            "line": 579,
+            "context": "578: <div className=\"border rounded-lg p-4 bg-white\">\n579: <div className=\"text-sm font-semibold mb-3\">Invoice Configuration</div>\n580: <div className=\"grid grid-cols-3 gap-4\">"
           },
           {
             "text": "Issue Date",
-            "line": 530,
-            "context": "529: <Label htmlFor=\"issueDate\" className=\"text-xs font-medium flex items-center gap-1\">\n530: <Calendar className=\"h-3 w-3\" />\n531: Issue Date"
+            "line": 583,
+            "context": "582: <Label htmlFor=\"issueDate\" className=\"text-xs font-medium flex items-center gap-1\">\n583: <Calendar className=\"h-3 w-3\" />\n584: Issue Date"
           },
           {
             "text": "Due Date",
-            "line": 544,
-            "context": "543: <Label htmlFor=\"dueDate\" className=\"text-xs font-medium flex items-center gap-1\">\n544: <Calendar className=\"h-3 w-3\" />\n545: Due Date"
+            "line": 597,
+            "context": "596: <Label htmlFor=\"dueDate\" className=\"text-xs font-medium flex items-center gap-1\">\n597: <Calendar className=\"h-3 w-3\" />\n598: Due Date"
           },
           {
             "text": "Selected Orders",
-            "line": 579,
-            "context": "578: <div>\n579: <div className=\"text-xs font-medium text-muted-foreground mb-1\">Selected Orders</div>\n580: <div className=\"text-3xl font-bold\">{selectedVehicleIds.size}</div>"
+            "line": 632,
+            "context": "631: <div>\n632: <div className=\"text-xs font-medium text-muted-foreground mb-1\">Selected Orders</div>\n633: <div className=\"text-3xl font-bold\">{selectedVehicleIds.size}</div>"
           },
           {
             "text": "Invoice Total",
-            "line": 583,
-            "context": "582: <div>\n583: <div className=\"text-xs font-medium text-muted-foreground mb-1\">Invoice Total</div>\n584: <div className=\"text-3xl font-bold text-emerald-600\">"
+            "line": 636,
+            "context": "635: <div>\n636: <div className=\"text-xs font-medium text-muted-foreground mb-1\">Invoice Total</div>\n637: <div className=\"text-3xl font-bold text-emerald-600\">"
           },
           {
             "text": "Cancel",
-            "line": 614,
-            "context": "613: <DialogFooter className=\"mt-4\">\n614: <Button type=\"button\" variant=\"outline\" onClick={() => onOpenChange(false)}>\n615: Cancel"
+            "line": 667,
+            "context": "666: <DialogFooter className=\"mt-4\">\n667: <Button type=\"button\" variant=\"outline\" onClick={() => onOpenChange(false)}>\n668: Cancel"
           },
           {
             "text": "VIN, stock, customer...",
-            "line": 398,
-            "context": "397: id=\"search\"\n398: placeholder=\"VIN, stock, customer...\"\n399: value={searchTerm}"
+            "line": 451,
+            "context": "450: id=\"search\"\n451: placeholder=\"VIN, stock, customer...\"\n452: value={searchTerm}"
           },
           {
             "text": "Department",
-            "line": 359,
-            "context": "358: <div className=\"space-y-1.5\">\n359: <Label htmlFor=\"orderType\" className=\"text-xs font-medium\">Department</Label>\n360: <Select value={orderType} onValueChange={setOrderType}>"
+            "line": 412,
+            "context": "411: <div className=\"space-y-1.5\">\n412: <Label htmlFor=\"orderType\" className=\"text-xs font-medium\">Department</Label>\n413: <Select value={orderType} onValueChange={setOrderType}>"
           },
           {
             "text": "Date Range",
-            "line": 375,
-            "context": "374: <div className=\"space-y-1.5\">\n375: <Label htmlFor=\"dateRange\" className=\"text-xs font-medium\">Date Range</Label>\n376: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
+            "line": 428,
+            "context": "427: <div className=\"space-y-1.5\">\n428: <Label htmlFor=\"dateRange\" className=\"text-xs font-medium\">Date Range</Label>\n429: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
           },
           {
             "text": "Search",
-            "line": 393,
-            "context": "392: <div className=\"space-y-1.5\">\n393: <Label htmlFor=\"search\" className=\"text-xs font-medium\">Search</Label>\n394: <div className=\"relative\">"
+            "line": 446,
+            "context": "445: <div className=\"space-y-1.5\">\n446: <Label htmlFor=\"search\" className=\"text-xs font-medium\">Search</Label>\n447: <div className=\"relative\">"
           },
           {
             "text": "From Date",
-            "line": 411,
-            "context": "410: <div className=\"space-y-1.5\">\n411: <Label htmlFor=\"startDate\" className=\"text-xs font-medium\">From Date</Label>\n412: <Input"
+            "line": 464,
+            "context": "463: <div className=\"space-y-1.5\">\n464: <Label htmlFor=\"startDate\" className=\"text-xs font-medium\">From Date</Label>\n465: <Input"
           },
           {
             "text": "To Date",
-            "line": 424,
-            "context": "423: <div className=\"space-y-1.5\">\n424: <Label htmlFor=\"endDate\" className=\"text-xs font-medium\">To Date</Label>\n425: <Input"
+            "line": 477,
+            "context": "476: <div className=\"space-y-1.5\">\n477: <Label htmlFor=\"endDate\" className=\"text-xs font-medium\">To Date</Label>\n478: <Input"
           }
         ],
         "translationCalls": [],
@@ -13436,205 +13436,205 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 136,
+            "line": 138,
             "exists": true
           },
           {
             "key": "errors.no_permission",
-            "line": 148,
+            "line": 150,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 149,
+            "line": 151,
             "exists": false
           },
           {
             "key": "errors.no_permission",
-            "line": 164,
+            "line": 166,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 165,
+            "line": 167,
             "exists": false
           },
           {
             "key": "orders.deleted_success",
-            "line": 209,
+            "line": 211,
             "exists": false
           },
           {
             "key": "orders.delete_error",
-            "line": 215,
+            "line": 217,
             "exists": false
           },
           {
             "key": "orders.multiple_created_successfully",
-            "line": 240,
+            "line": 242,
             "exists": true
           },
           {
             "key": "orders.updated_successfully",
-            "line": 252,
+            "line": 254,
             "exists": true
           },
           {
             "key": "orders.created_successfully",
-            "line": 260,
+            "line": 262,
             "exists": true
           },
           {
             "key": "orders.save_failed",
-            "line": 276,
+            "line": 279,
             "exists": true
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 303,
+            "line": 306,
             "exists": true
           },
           {
             "key": "orders.status_change_failed",
-            "line": 311,
+            "line": 314,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.dashboard",
-            "line": 350,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.tabs.today",
-            "line": 351,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.tabs.tomorrow",
-            "line": 352,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.tabs.pending",
-            "line": 353,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.in_process_orders",
             "line": 354,
             "exists": true
           },
           {
-            "key": "sales_orders.tabs.week",
+            "key": "sales_orders.tabs.today",
             "line": 355,
             "exists": true
           },
           {
-            "key": "sales_orders.tabs.all",
+            "key": "sales_orders.tabs.tomorrow",
             "line": 356,
             "exists": true
           },
           {
-            "key": "sales_orders.tabs.services",
+            "key": "sales_orders.tabs.pending",
             "line": 357,
             "exists": true
           },
           {
-            "key": "sales_orders.tabs.deleted",
+            "key": "sales_orders.in_process_orders",
             "line": 358,
             "exists": true
           },
           {
+            "key": "sales_orders.tabs.week",
+            "line": 359,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.tabs.all",
+            "line": 360,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.tabs.services",
+            "line": 361,
+            "exists": true
+          },
+          {
+            "key": "sales_orders.tabs.deleted",
+            "line": 362,
+            "exists": true
+          },
+          {
             "key": "pages.sales_orders",
-            "line": 396,
+            "line": 400,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 411,
+            "line": 415,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 417,
+            "line": 421,
             "exists": false
           },
           {
             "key": "common.new_order",
-            "line": 420,
+            "line": 424,
             "exists": true
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 561,
+            "line": 565,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 563,
+            "line": 567,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 567,
+            "line": 571,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 572,
+            "line": 576,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "errors.no_permission",
-            "line": 148,
-            "context": "147: toast({\n148: title: t('errors.no_permission', 'No Permission'),\n149: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 150,
+            "context": "149: toast({\n150: title: t('errors.no_permission', 'No Permission'),\n151: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 149,
-            "context": "148: title: t('errors.no_permission', 'No Permission'),\n149: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n150: variant: 'destructive'"
+            "line": 151,
+            "context": "150: title: t('errors.no_permission', 'No Permission'),\n151: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n152: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 164,
-            "context": "163: toast({\n164: title: t('errors.no_permission', 'No Permission'),\n165: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 166,
+            "context": "165: toast({\n166: title: t('errors.no_permission', 'No Permission'),\n167: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 165,
-            "context": "164: title: t('errors.no_permission', 'No Permission'),\n165: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n166: variant: 'destructive'"
+            "line": 167,
+            "context": "166: title: t('errors.no_permission', 'No Permission'),\n167: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n168: variant: 'destructive'"
           },
           {
             "key": "orders.deleted_success",
-            "line": 209,
-            "context": "208: toast({\n209: title: t('orders.deleted_success', 'Order deleted successfully')\n210: });"
+            "line": 211,
+            "context": "210: toast({\n211: title: t('orders.deleted_success', 'Order deleted successfully')\n212: });"
           },
           {
             "key": "orders.delete_error",
-            "line": 215,
-            "context": "214: variant: 'destructive',\n215: title: t('orders.delete_error', 'Failed to delete order')\n216: });"
+            "line": 217,
+            "context": "216: variant: 'destructive',\n217: title: t('orders.delete_error', 'Failed to delete order')\n218: });"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 417,
-            "context": "416: disabled={!canCreate}\n417: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n418: >"
+            "line": 421,
+            "context": "420: disabled={!canCreate}\n421: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n422: >"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 561,
-            "context": "560: <AlertDialogHeader>\n561: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n562: <AlertDialogDescription>"
+            "line": 565,
+            "context": "564: <AlertDialogHeader>\n565: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n566: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 563,
-            "context": "562: <AlertDialogDescription>\n563: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n564: </AlertDialogDescription>"
+            "line": 567,
+            "context": "566: <AlertDialogDescription>\n567: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n568: </AlertDialogDescription>"
           },
           {
             "key": "common.delete",
-            "line": 572,
-            "context": "571: >\n572: {t('common.delete', 'Delete')}\n573: </AlertDialogAction>"
+            "line": 576,
+            "context": "575: >\n576: {t('common.delete', 'Delete')}\n577: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -20673,24 +20673,24 @@
         "hardcodedStrings": [
           {
             "text": "Dismiss",
-            "line": 41,
-            "context": "40: className=\"text-gray-400 hover:text-gray-200 transition-colors p-1\"\n41: aria-label=\"Dismiss\"\n42: >"
+            "line": 46,
+            "context": "45: className=\"text-gray-400 hover:text-gray-200 transition-colors p-1 h-7 w-7 flex items-center justify-center\"\n46: aria-label=\"Dismiss\"\n47: >"
           }
         ],
         "translationCalls": [
           {
             "key": "system_update.title",
-            "line": 24,
-            "exists": true
-          },
-          {
-            "key": "system_update.message",
             "line": 26,
             "exists": true
           },
           {
+            "key": "system_update.message",
+            "line": 28,
+            "exists": true
+          },
+          {
             "key": "system_update.button",
-            "line": 36,
+            "line": 41,
             "exists": true
           }
         ],
