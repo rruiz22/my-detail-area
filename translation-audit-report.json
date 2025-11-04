@@ -15826,230 +15826,230 @@
         "translationCalls": [
           {
             "key": "messages.error",
-            "line": 118,
+            "line": 119,
             "exists": true
           },
           {
             "key": "messages.confirm_delete",
-            "line": 139,
+            "line": 140,
             "exists": false
           },
           {
             "key": "messages.deleted",
-            "line": 149,
+            "line": 150,
             "exists": false
           },
           {
             "key": "messages.error",
-            "line": 153,
+            "line": 154,
             "exists": true
           },
           {
             "key": "dealerships.title",
-            "line": 232,
+            "line": 233,
             "exists": true
           },
           {
             "key": "dealerships.manage_description",
-            "line": 234,
+            "line": 235,
             "exists": true
           },
           {
             "key": "dealerships.hide_stats",
-            "line": 246,
+            "line": 247,
             "exists": true
           },
           {
             "key": "dealerships.show_stats",
-            "line": 246,
+            "line": 247,
             "exists": true
           },
           {
             "key": "dealerships.add_new",
-            "line": 254,
+            "line": 255,
             "exists": true
           },
           {
             "key": "common.filter",
-            "line": 280,
+            "line": 281,
             "exists": false
           },
           {
             "key": "common.search",
-            "line": 288,
+            "line": 289,
             "exists": false
           },
           {
             "key": "dealerships.status",
-            "line": 296,
+            "line": 297,
             "exists": true
           },
           {
             "key": "dealerships.all_statuses",
-            "line": 299,
-            "exists": true
-          },
-          {
-            "key": "dealerships.active",
             "line": 300,
             "exists": true
           },
           {
-            "key": "dealerships.inactive",
+            "key": "dealerships.active",
             "line": 301,
             "exists": true
           },
           {
-            "key": "dealerships.suspended",
+            "key": "dealerships.inactive",
             "line": 302,
             "exists": true
           },
           {
+            "key": "dealerships.suspended",
+            "line": 303,
+            "exists": true
+          },
+          {
             "key": "dealerships.subscription_plan",
-            "line": 307,
+            "line": 308,
             "exists": true
           },
           {
             "key": "dealerships.all_plans",
-            "line": 310,
-            "exists": true
-          },
-          {
-            "key": "dealerships.basic_plan",
             "line": 311,
             "exists": true
           },
           {
-            "key": "dealerships.premium_plan",
+            "key": "dealerships.basic_plan",
             "line": 312,
             "exists": true
           },
           {
-            "key": "dealerships.enterprise_plan",
+            "key": "dealerships.premium_plan",
             "line": 313,
             "exists": true
           },
           {
-            "key": "dealerships.name",
-            "line": 328,
+            "key": "dealerships.enterprise_plan",
+            "line": 314,
             "exists": true
           },
           {
-            "key": "dealerships.location",
+            "key": "dealerships.name",
             "line": 329,
             "exists": true
           },
           {
-            "key": "dealerships.contacts_count",
+            "key": "dealerships.location",
             "line": 330,
             "exists": true
           },
           {
-            "key": "dealerships.users_count",
+            "key": "dealerships.contacts_count",
             "line": 331,
             "exists": true
           },
           {
-            "key": "dealerships.subscription_plan",
+            "key": "dealerships.users_count",
             "line": 332,
             "exists": true
           },
           {
-            "key": "dealerships.status",
+            "key": "dealerships.subscription_plan",
             "line": 333,
             "exists": true
           },
           {
+            "key": "dealerships.status",
+            "line": 334,
+            "exists": true
+          },
+          {
             "key": "common.loading",
-            "line": 341,
+            "line": 342,
             "exists": true
           },
           {
             "key": "common.no_data",
-            "line": 347,
+            "line": 348,
             "exists": false
           },
           {
             "key": "dealerships.${dealership.subscription_plan}_plan",
-            "line": 393,
+            "line": 394,
             "exists": false
           },
           {
             "key": "dealerships.${dealership.status}",
-            "line": 398,
+            "line": 399,
             "exists": false
           },
           {
             "key": "common.view",
-            "line": 418,
+            "line": 419,
             "exists": false
           },
           {
             "key": "dealerships.invite_user",
-            "line": 425,
+            "line": 426,
             "exists": true
           },
           {
             "key": "common.edit",
-            "line": 432,
+            "line": 433,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 439,
+            "line": 440,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "messages.confirm_delete",
-            "line": 139,
-            "context": "138: const handleDelete = async (dealership: Dealership) => {\n139: if (!confirm(t('messages.confirm_delete'))) return;\n140: "
+            "line": 140,
+            "context": "139: const handleDelete = async (dealership: Dealership) => {\n140: if (!confirm(t('messages.confirm_delete'))) return;\n141: "
           },
           {
             "key": "messages.deleted",
-            "line": 149,
-            "context": "148: \n149: toast({ description: t('messages.deleted') });\n150: fetchDealerships();"
+            "line": 150,
+            "context": "149: \n150: toast({ description: t('messages.deleted') });\n151: fetchDealerships();"
           },
           {
             "key": "common.filter",
-            "line": 280,
-            "context": "279: <Filter className=\"h-5 w-5\" />\n280: {t('common.filter')}\n281: </CardTitle>"
+            "line": 281,
+            "context": "280: <Filter className=\"h-5 w-5\" />\n281: {t('common.filter')}\n282: </CardTitle>"
           },
           {
             "key": "common.search",
-            "line": 288,
-            "context": "287: <Input\n288: placeholder={t('common.search')}\n289: value={search}"
+            "line": 289,
+            "context": "288: <Input\n289: placeholder={t('common.search')}\n290: value={search}"
           },
           {
             "key": "common.no_data",
-            "line": 347,
-            "context": "346: <TableCell colSpan={8} className=\"h-24 text-center\">\n347: {t('common.no_data')}\n348: </TableCell>"
+            "line": 348,
+            "context": "347: <TableCell colSpan={8} className=\"h-24 text-center\">\n348: {t('common.no_data')}\n349: </TableCell>"
           },
           {
             "key": "dealerships.${dealership.subscription_plan}_plan",
-            "line": 393,
-            "context": "392: <Badge variant={getPlanBadgeVariant(dealership.subscription_plan)}>\n393: {t(`dealerships.${dealership.subscription_plan}_plan`)}\n394: </Badge>"
+            "line": 394,
+            "context": "393: <Badge variant={getPlanBadgeVariant(dealership.subscription_plan)}>\n394: {t(`dealerships.${dealership.subscription_plan}_plan`)}\n395: </Badge>"
           },
           {
             "key": "dealerships.${dealership.status}",
-            "line": 398,
-            "context": "397: <Badge variant={getStatusBadgeVariant(dealership.status)}>\n398: {t(`dealerships.${dealership.status}`)}\n399: </Badge>"
+            "line": 399,
+            "context": "398: <Badge variant={getStatusBadgeVariant(dealership.status)}>\n399: {t(`dealerships.${dealership.status}`)}\n400: </Badge>"
           },
           {
             "key": "common.view",
-            "line": 418,
-            "context": "417: <Eye className=\"mr-2 h-4 w-4\" />\n418: {t('common.view')}\n419: </DropdownMenuItem>"
+            "line": 419,
+            "context": "418: <Eye className=\"mr-2 h-4 w-4\" />\n419: {t('common.view')}\n420: </DropdownMenuItem>"
           },
           {
             "key": "common.edit",
-            "line": 432,
-            "context": "431: <Edit className=\"mr-2 h-4 w-4\" />\n432: {t('common.edit')}\n433: </DropdownMenuItem>"
+            "line": 433,
+            "context": "432: <Edit className=\"mr-2 h-4 w-4\" />\n433: {t('common.edit')}\n434: </DropdownMenuItem>"
           },
           {
             "key": "common.delete",
-            "line": 439,
-            "context": "438: <Trash2 className=\"mr-2 h-4 w-4\" />\n439: {t('common.delete')}\n440: </DropdownMenuItem>"
+            "line": 440,
+            "context": "439: <Trash2 className=\"mr-2 h-4 w-4\" />\n440: {t('common.delete')}\n441: </DropdownMenuItem>"
           }
         ],
         "coverage": 100,

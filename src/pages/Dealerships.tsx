@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -27,15 +28,15 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  MoreHorizontal, 
-  Building2, 
-  Users, 
-  UserPlus, 
-  Edit, 
+import {
+  Plus,
+  Search,
+  Filter,
+  MoreHorizontal,
+  Building2,
+  Users,
+  UserPlus,
+  Edit,
   Trash2,
   Eye,
   Mail,
@@ -61,11 +62,13 @@ export function Dealerships() {
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [selectedDealershipForInvite, setSelectedDealershipForInvite] = useState<number | null>(null);
   const [showStats, setShowStats] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [dealershipToDelete, setDealershipToDelete] = useState<Dealership | null>(null);
 
   const fetchDealerships = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       // Build the query with filters
       let query = supabase
         .from('dealerships')
@@ -135,18 +138,24 @@ export function Dealerships() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (dealership: Dealership) => {
-    if (!confirm(t('messages.confirm_delete'))) return;
+  const handleDelete = (dealership: Dealership) => {
+    setDealershipToDelete(dealership);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!dealershipToDelete) return;
 
     try {
       const { error } = await supabase
         .from('dealerships')
         .update({ deleted_at: new Date().toISOString() })
-        .eq('id', dealership.id);
+        .eq('id', dealershipToDelete.id);
 
       if (error) throw error;
 
       toast({ description: t('messages.deleted') });
+      setDealershipToDelete(null);
       fetchDealerships();
     } catch (error) {
       console.error('Error deleting dealership:', error);
@@ -349,8 +358,8 @@ export function Dealerships() {
                   </TableRow>
                   ) : (
                     dealerships.map((dealership) => (
-                    <TableRow 
-                      key={dealership.id} 
+                    <TableRow
+                      key={dealership.id}
                       className="cursor-pointer hover:bg-muted/50"
                       onClick={() => handleViewDealer(dealership)}
                     >
@@ -401,8 +410,8 @@ export function Dealerships() {
                       <TableCell>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button 
-                              variant="ghost" 
+                            <Button
+                              variant="ghost"
                               size="sm"
                               onClick={(e) => e.stopPropagation()}
                             >
@@ -467,6 +476,18 @@ export function Dealerships() {
           onInvitationSent={handleInvitationSent}
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title={t('dealerships.delete_title', { defaultValue: 'Delete Dealership?' })}
+        description={t('dealerships.delete_description', { defaultValue: 'Are you sure you want to delete this dealership? This action cannot be undone.' })}
+        confirmText={t('common.action_buttons.delete')}
+        cancelText={t('common.action_buttons.cancel')}
+        onConfirm={confirmDelete}
+        variant="destructive"
+      />
     </>
   );
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -58,6 +59,8 @@ export const GroupMembershipManagement: React.FC<GroupMembershipManagementProps>
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const [removeUserDialogOpen, setRemoveUserDialogOpen] = useState(false);
+  const [userToRemove, setUserToRemove] = useState<string | null>(null);
 
   // Fetch groups for this dealer
   const fetchGroups = useCallback(async () => {
@@ -195,16 +198,20 @@ export const GroupMembershipManagement: React.FC<GroupMembershipManagementProps>
   };
 
   // Remove user from group
-  const handleRemoveUser = async (userId: string) => {
+  const handleRemoveUser = (userId: string) => {
     if (!selectedGroup) return;
+    setUserToRemove(userId);
+    setRemoveUserDialogOpen(true);
+  };
 
-    if (!confirm(t('groups.confirm_remove_user'))) return;
+  const confirmRemoveUser = async () => {
+    if (!selectedGroup || !userToRemove) return;
 
     try {
       const { error } = await supabase
         .from('user_group_memberships')
         .update({ is_active: false })
-        .eq('user_id', userId)
+        .eq('user_id', userToRemove)
         .eq('group_id', selectedGroup.id);
 
       if (error) throw error;
@@ -214,6 +221,7 @@ export const GroupMembershipManagement: React.FC<GroupMembershipManagementProps>
         description: t('groups.user_removed_successfully')
       });
 
+      setUserToRemove(null);
       fetchGroupMembers();
     } catch (error) {
       console.error('Error removing user:', error);
@@ -475,6 +483,18 @@ export const GroupMembershipManagement: React.FC<GroupMembershipManagementProps>
           </CardContent>
         </Card>
       )}
+
+      {/* Remove User Confirmation Dialog */}
+      <ConfirmDialog
+        open={removeUserDialogOpen}
+        onOpenChange={setRemoveUserDialogOpen}
+        title={t('groups.remove_user_title', { defaultValue: 'Remove User from Group?' })}
+        description={t('groups.confirm_remove_user', { defaultValue: 'Are you sure you want to remove this user from the group? This action cannot be undone.' })}
+        confirmText={t('common.action_buttons.remove', { defaultValue: 'Remove' })}
+        cancelText={t('common.action_buttons.cancel')}
+        onConfirm={confirmRemoveUser}
+        variant="destructive"
+      />
     </div>
   );
 };

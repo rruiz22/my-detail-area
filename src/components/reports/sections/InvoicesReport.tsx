@@ -69,6 +69,8 @@ import {
 import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
+import { useDateCalculations } from '@/hooks/useDateCalculations';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface InvoicesReportProps {
   filters: ReportsFilters;
@@ -94,6 +96,7 @@ interface VehicleForInvoice {
   status: string;
   created_at: string;
   completed_at: string | null;
+  due_date: string | null;
 }
 
 const getStatusBadge = (status: InvoiceStatus) => {
@@ -121,6 +124,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { calculateDateRange } = useDateCalculations();
+  const queryClient = useQueryClient();
 
   const dealerId = filters.dealerId;
 
@@ -148,84 +153,27 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     }));
   }, [dealerId]);
 
-  // Calculate start and end of this week (Monday to Sunday) - using local dates
-  const getWeekDates = (date: Date) => {
-    const current = new Date(date.getFullYear(), date.getMonth(), date.getDate()); // Local date only
-    const day = current.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-
-    // Calculate days to Monday
-    const daysToMonday = day === 0 ? -6 : 1 - day; // Sunday: -6, Monday: 0, Tuesday: -1, ..., Saturday: -5
-
-    const monday = new Date(current);
-    monday.setDate(current.getDate() + daysToMonday);
-
-    const sunday = new Date(monday);
-    sunday.setDate(monday.getDate() + 6); // Add 6 days to get Sunday
-
-    return { monday, sunday };
-  };
-
-  const { monday: startOfThisWeek, sunday: endOfThisWeek } = getWeekDates(new Date());
+  // Get this week's date range using platform timezone
+  const { startDate: startOfThisWeek, endDate: endOfThisWeek } = calculateDateRange('this_week');
 
   // Create invoice filters
   const [orderType, setOrderType] = useState<string>('all');
   const [orderStatus, setOrderStatus] = useState<string>('completed');
   const [dateRange, setDateRange] = useState<'today' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'last_3_months' | 'custom'>('this_week');
-  const [startDate, setStartDate] = useState<string>(format(startOfThisWeek, 'yyyy-MM-dd'));
-  const [endDate, setEndDate] = useState<string>(format(endOfThisWeek, 'yyyy-MM-dd'));
+  const [startDate, setStartDate] = useState<string>(startOfThisWeek);
+  const [endDate, setEndDate] = useState<string>(endOfThisWeek);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedService, setSelectedService] = useState<string>('all');
   const [excludedServices, setExcludedServices] = useState<Set<string>>(new Set());
 
-  // Handle date range preset changes for inline tab
+  // Handle date range preset changes - now uses platform timezone
   const handleDateRangeChange = (value: 'today' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'last_3_months' | 'custom') => {
     setDateRange(value);
-    const now = new Date();
 
-    switch (value) {
-      case 'today':
-        setStartDate(format(now, 'yyyy-MM-dd'));
-        setEndDate(format(now, 'yyyy-MM-dd'));
-        break;
-      case 'this_week':
-        // This week: Monday to Sunday (using local dates)
-        const current = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const day = current.getDay();
-        const daysToMonday = day === 0 ? -6 : 1 - day;
-        const startOfWeek = new Date(current);
-        startOfWeek.setDate(current.getDate() + daysToMonday);
-        const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 6);
-        setStartDate(format(startOfWeek, 'yyyy-MM-dd'));
-        setEndDate(format(endOfWeek, 'yyyy-MM-dd'));
-        break;
-      case 'last_week':
-        // Last week: Monday to Sunday (using local dates)
-        const currentDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const currentDay = currentDate.getDay();
-        const daysToLastMonday = currentDay === 0 ? -13 : 1 - currentDay - 7;
-        const lastWeekStart = new Date(currentDate);
-        lastWeekStart.setDate(currentDate.getDate() + daysToLastMonday);
-        const lastWeekEnd = new Date(lastWeekStart);
-        lastWeekEnd.setDate(lastWeekStart.getDate() + 6);
-        setStartDate(format(lastWeekStart, 'yyyy-MM-dd'));
-        setEndDate(format(lastWeekEnd, 'yyyy-MM-dd'));
-        break;
-      case 'this_month':
-        setStartDate(format(new Date(now.getFullYear(), now.getMonth(), 1), 'yyyy-MM-dd'));
-        setEndDate(format(now, 'yyyy-MM-dd'));
-        break;
-      case 'last_month':
-        const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
-        setStartDate(format(lastMonth, 'yyyy-MM-dd'));
-        setEndDate(format(lastMonthEnd, 'yyyy-MM-dd'));
-        break;
-      case 'last_3_months':
-        const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 3, 1);
-        setStartDate(format(threeMonthsAgo, 'yyyy-MM-dd'));
-        setEndDate(format(now, 'yyyy-MM-dd'));
-        break;
+    if (value !== 'custom') {
+      const { startDate: start, endDate: end } = calculateDateRange(value);
+      setStartDate(start);
+      setEndDate(end);
     }
   };
 
@@ -302,32 +250,54 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     enabled: !!dealerId,
   });
 
-  // Fetch ALL vehicles for counts (without status filter) using RPC
+  // Fetch ALL vehicles for counts (direct query, no RPC)
   const { data: allVehiclesForCounts = [], isLoading: loadingVehicles } = useQuery({
     queryKey: ['all-vehicles-for-counts', dealerId, orderType, startDate, endDate],
     queryFn: async (): Promise<VehicleForInvoice[]> => {
       if (!dealerId) return [];
 
-      // Use RPC function for complex filtering
-      const startDateTime = startDate ? parseISO(startDate).toISOString() : null;
-      const endDateTime = endDate ? (() => {
-        const dt = parseISO(endDate);
-        dt.setHours(23, 59, 59, 999);
-        return dt.toISOString();
-      })() : null;
+      // Direct query instead of missing RPC function
+      let query = supabase
+        .from('orders')
+        .select('id, order_number, custom_order_number, order_type, customer_name, stock_number, po, ro, tag, vehicle_make, vehicle_model, vehicle_year, vehicle_vin, total_amount, services, status, created_at, completed_at, due_date, assigned_group_id')
+        .eq('dealer_id', dealerId)
+        .order('created_at', { ascending: false })
+        .limit(1000); // Increased limit since we filter client-side
 
-      const { data: orders, error: ordersError } = await supabase.rpc('get_orders_for_reports', {
-        p_dealer_id: dealerId,
-        p_order_type: orderType !== 'all' ? orderType : null,
-        p_status: null, // No status filter for counts
-        p_start_date: startDateTime,
-        p_end_date: endDateTime,
-        p_limit: 500
-      });
+      // Apply order type filter
+      if (orderType !== 'all') {
+        query = query.eq('order_type', orderType);
+      }
+
+      const { data: orders, error: ordersError } = await query;
 
       if (ordersError) throw ordersError;
       if (!orders) return [];
 
+      // Filter by appropriate date field based on order_type (client-side)
+      // Sales/Service: use due_date, Recon/CarWash: use completed_at
+      const startDateTime = parseISO(startDate);
+      const endDateTime = parseISO(endDate);
+      endDateTime.setHours(23, 59, 59, 999);
+
+      const filteredByDate = orders.filter(order => {
+        let reportDate: Date;
+
+        if (order.order_type === 'sales' || order.order_type === 'service') {
+          // Sales and Service orders: use due_date (fallback to created_at)
+          reportDate = order.due_date ? new Date(order.due_date) : new Date(order.created_at);
+        } else if (order.order_type === 'recon' || order.order_type === 'carwash') {
+          // Recon and CarWash orders: use completed_at (fallback to created_at)
+          reportDate = order.completed_at ? new Date(order.completed_at) : new Date(order.created_at);
+        } else {
+          // Other types: fallback to created_at
+          reportDate = new Date(order.created_at);
+        }
+
+        return reportDate >= startDateTime && reportDate <= endDateTime;
+      });
+
+      // Get existing invoice items to filter out already invoiced orders
       const { data: existingInvoiceItems, error: itemsError } = await supabase
         .from('invoice_items')
         .select('service_reference')
@@ -341,7 +311,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
           .filter(Boolean) || []
       );
 
-      return orders.filter(order => !invoicedOrderIds.has(order.id)) as VehicleForInvoice[];
+      return filteredByDate.filter(order => !invoicedOrderIds.has(order.id)) as VehicleForInvoice[];
     },
     enabled: !!dealerId && activeTab === 'create',
     staleTime: 30 * 1000,
@@ -554,6 +524,12 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       if (itemsError) throw itemsError;
 
       toast({ description: `Invoice ${invoiceNumber} created with ${selectedVehicles.length} vehicles` });
+
+      // Invalidate queries to refresh the invoice list automatically
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      queryClient.invalidateQueries({ queryKey: ['invoice-summary'] });
+      queryClient.invalidateQueries({ queryKey: ['all-vehicles-for-counts'] });
+      queryClient.invalidateQueries({ queryKey: ['vehicles-without-invoice'] });
 
       // Reset and switch to invoices tab
       setSelectedVehicleIds(new Set());
