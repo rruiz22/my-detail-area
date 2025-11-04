@@ -1,6 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useDealerFilter } from '@/contexts/DealerFilterContext';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { useOrderActions } from '@/hooks/useOrderActions';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useOrderPolling } from '@/hooks/useSmartPolling';
