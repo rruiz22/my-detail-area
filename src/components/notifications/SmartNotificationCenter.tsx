@@ -9,12 +9,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
 import { NotificationGroup, useSmartNotifications } from '@/hooks/useSmartNotifications';
 import {
   Bell,
   Check,
   CheckCheck,
+  ChevronDown,
   Filter,
+  Trash2,
 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +30,7 @@ interface SmartNotificationCenterProps {
 
 export function SmartNotificationCenter({ dealerId, className }: SmartNotificationCenterProps) {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const {
     notifications,
     groupedNotifications,
@@ -35,11 +39,14 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
     markAsRead,
     markAllAsRead,
     markEntityAsRead,
-    deleteNotification
+    deleteNotification,
+    refreshNotifications
   } = useSmartNotifications(dealerId);
 
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'unread' | 'important'>('all');
   const [selectedTab, setSelectedTab] = useState('chronological'); // Default to recent notifications first
+  const [selectedNotifications, setSelectedNotifications] = useState<Set<string>>(new Set());
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
 
   // Filter notifications based on selected filter
   // Filter notifications for chronological view
@@ -83,6 +90,103 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
       .filter(Boolean) as NotificationGroup[];
   }, [groupedNotifications, selectedFilter]);
 
+  // Toggle selection mode
+  const toggleSelectionMode = () => {
+    setIsSelectionMode(!isSelectionMode);
+    if (isSelectionMode) {
+      setSelectedNotifications(new Set());
+    }
+  };
+
+  // Toggle individual notification selection
+  const toggleNotificationSelection = (notificationId: string) => {
+    setSelectedNotifications(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(notificationId)) {
+        newSet.delete(notificationId);
+      } else {
+        newSet.add(notificationId);
+      }
+      return newSet;
+    });
+  };
+
+  // Select all notifications
+  const selectAllNotifications = () => {
+    const allIds = new Set(filteredNotifications.map(n => n.id));
+    setSelectedNotifications(allIds);
+  };
+
+  // Deselect all notifications
+  const deselectAllNotifications = () => {
+    setSelectedNotifications(new Set());
+  };
+
+  // Delete selected notifications
+  const deleteSelectedNotifications = async () => {
+    if (selectedNotifications.size === 0) return;
+
+    const totalCount = selectedNotifications.size;
+
+    try {
+      // Delete each notification individually with Promise.allSettled to handle partial failures
+      const deletePromises = Array.from(selectedNotifications).map(async (id) => {
+        try {
+          await deleteNotification(id);
+          return { id, success: true };
+        } catch (error) {
+          console.error(`Failed to delete notification ${id}:`, error);
+          return { id, success: false, error };
+        }
+      });
+
+      // Wait for all deletions to complete (even if some fail)
+      const results = await Promise.allSettled(deletePromises);
+
+      // Count successes and failures
+      const successCount = results.filter(
+        (r) => r.status === 'fulfilled' && r.value.success
+      ).length;
+      const failureCount = totalCount - successCount;
+
+      // Clear selection and exit selection mode
+      setSelectedNotifications(new Set());
+      setIsSelectionMode(false);
+
+      // Force refresh to update the UI
+      await refreshNotifications();
+
+      // Show appropriate toast based on results
+      if (failureCount === 0) {
+        // All deleted successfully
+        toast({
+          title: t('common.success'),
+          description: t('notifications.bulk_delete_success', { count: successCount }),
+        });
+      } else if (successCount === 0) {
+        // All failed
+        toast({
+          title: t('common.error'),
+          description: t('notifications.bulk_delete_error'),
+          variant: 'destructive',
+        });
+      } else {
+        // Partial success
+        toast({
+          title: t('common.warning'),
+          description: `${successCount} deleted, ${failureCount} failed`,
+          variant: 'default',
+        });
+      }
+    } catch (error) {
+      console.error('Unexpected error during bulk delete:', error);
+      toast({
+        title: t('common.error'),
+        description: t('notifications.bulk_delete_error'),
+        variant: 'destructive',
+      });
+    }
+  };
 
   if (loading) {
     return (
@@ -113,35 +217,80 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
 
         {/* Actions Row - Responsive */}
         <div className="flex flex-wrap items-center gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="text-xs sm:text-sm">
-                <Filter className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                <span className="hidden sm:inline">
-                  {selectedFilter === 'all' ? t('notifications.filter.all') : selectedFilter === 'unread' ? t('notifications.filter.unread') : t('notifications.filter.important')}
-                </span>
-                <span className="inline sm:hidden capitalize">{selectedFilter}</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setSelectedFilter('all')}>
-                {t('notifications.filter.all_description')}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSelectedFilter('unread')}>
-                {t('notifications.filter.unread_description')}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSelectedFilter('important')}>
-                {t('notifications.filter.important_description')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {!isSelectionMode ? (
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="text-xs sm:text-sm">
+                    <Filter className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">
+                      {selectedFilter === 'all' ? t('notifications.filter.all') : selectedFilter === 'unread' ? t('notifications.filter.unread') : t('notifications.filter.important')}
+                    </span>
+                    <span className="inline sm:hidden capitalize">{selectedFilter}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => setSelectedFilter('all')}>
+                    {t('notifications.filter.all_description')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSelectedFilter('unread')}>
+                    {t('notifications.filter.unread_description')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSelectedFilter('important')}>
+                    {t('notifications.filter.important_description')}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-          {unreadCount > 0 && (
-            <Button variant="outline" size="sm" onClick={markAllAsRead} className="text-xs sm:text-sm">
-              <CheckCheck className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-              <span className="hidden sm:inline">{t('notifications.actions.mark_all_read')}</span>
-              <span className="inline sm:hidden">Mark all</span>
-            </Button>
+              {unreadCount > 0 && (
+                <Button variant="outline" size="sm" onClick={markAllAsRead} className="text-xs sm:text-sm">
+                  <CheckCheck className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                  <span className="hidden sm:inline">{t('notifications.actions.mark_all_read')}</span>
+                  <span className="inline sm:hidden">Mark all</span>
+                </Button>
+              )}
+
+              {filteredNotifications.length > 0 && (
+                <Button variant="outline" size="sm" onClick={toggleSelectionMode} className="text-xs sm:text-sm">
+                  <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                  <span className="hidden sm:inline">{t('notifications.actions.select_to_delete')}</span>
+                  <span className="inline sm:hidden">Select</span>
+                </Button>
+              )}
+            </>
+          ) : (
+            <>
+              <Button variant="outline" size="sm" onClick={selectAllNotifications} className="text-xs sm:text-sm">
+                <CheckCheck className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">{t('notifications.actions.select_all')}</span>
+                <span className="inline sm:hidden">All</span>
+              </Button>
+
+              {selectedNotifications.size > 0 && (
+                <>
+                  <Button variant="outline" size="sm" onClick={deselectAllNotifications} className="text-xs sm:text-sm">
+                    {t('notifications.actions.deselect_all')}
+                  </Button>
+
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={deleteSelectedNotifications}
+                    className="text-xs sm:text-sm"
+                  >
+                    <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">
+                      {t('notifications.actions.delete_selected', { count: selectedNotifications.size })}
+                    </span>
+                    <span className="inline sm:hidden">Delete ({selectedNotifications.size})</span>
+                  </Button>
+                </>
+              )}
+
+              <Button variant="ghost" size="sm" onClick={toggleSelectionMode} className="text-xs sm:text-sm">
+                {t('common.action_buttons.cancel')}
+              </Button>
+            </>
           )}
         </div>
       </CardHeader>
@@ -168,19 +317,19 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
                   )}
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3 p-2">
                   {filteredGroupedNotifications.map((group) => (
-                    <div key={`${group.entity_type}_${group.entity_id}`} className="border-b last:border-b-0">
-                      <div className="flex items-center justify-between p-4 bg-muted/30">
+                    <div key={`${group.entity_type}_${group.entity_id}`} className="rounded-lg border border-gray-200 overflow-hidden bg-white">
+                      <div className="flex items-center justify-between px-4 py-3 bg-gray-50/80 border-b border-gray-100">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <Badge variant="outline" className="text-xs">
+                          <Badge variant="outline" className="text-xs font-medium">
                             {group.entity_type}
                           </Badge>
-                          <span className="text-xs sm:text-sm font-medium">
+                          <span className="text-xs sm:text-sm font-medium text-gray-700">
                             {group.notifications.length} {group.notifications.length === 1 ? t('notifications.count.singular') : t('notifications.count.plural')}
                           </span>
                           {group.unreadCount > 0 && (
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge variant="default" className="text-xs">
                               {group.unreadCount} {t('notifications.count.unread')}
                             </Badge>
                           )}
@@ -190,25 +339,30 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
                             variant="ghost"
                             size="sm"
                             onClick={() => markEntityAsRead(group.entity_type, group.entity_id)}
-                            className="flex-shrink-0"
+                            className="flex-shrink-0 h-8"
                           >
-                            <Check className="h-4 w-4" />
+                            <Check className="h-4 w-4 mr-1" />
+                            <span className="text-xs hidden sm:inline">Mark all read</span>
                           </Button>
                         )}
                       </div>
 
-                      <div className="space-y-0">
+                      <div className="divide-y divide-gray-100">
                         {group.notifications.slice(0, 3).map((notification) => (
                           <NotificationItem
                             key={notification.id}
                             notification={notification}
                             onMarkAsRead={markAsRead}
                             onDelete={deleteNotification}
+                            isSelectionMode={isSelectionMode}
+                            isSelected={selectedNotifications.has(notification.id)}
+                            onToggleSelect={toggleNotificationSelection}
                           />
                         ))}
                         {group.notifications.length > 3 && (
-                          <div className="p-4 text-center">
-                            <Button variant="ghost" size="sm" className="text-xs sm:text-sm">
+                          <div className="px-4 py-3 text-center bg-gray-50/50 border-t border-gray-100">
+                            <Button variant="ghost" size="sm" className="text-xs sm:text-sm font-medium text-primary hover:text-primary/80">
+                              <ChevronDown className="h-3 w-3 mr-1" />
                               {t('notifications.show_more', { count: group.notifications.length - 3 })}
                             </Button>
                           </div>
@@ -225,11 +379,12 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
             <ScrollArea className="h-[calc(100vh-280px)] min-h-[300px] sm:h-[400px]">
               {filteredNotifications.length === 0 ? (
                 <div className="p-8 text-center text-muted-foreground">
-                  <Bell className="h-8 w-8 mx-auto mb-4 opacity-50" />
-                  <p>{t('notifications.empty.filtered')}</p>
+                  <Bell className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                  <p className="font-medium text-base mb-1">{t('notifications.empty.title')}</p>
+                  <p className="text-sm">{t('notifications.empty.description')}</p>
                 </div>
               ) : (
-                <div className="space-y-0">
+                <div className="divide-y divide-gray-100">
                   {filteredNotifications.map((notification) => (
                     <NotificationItem
                       key={notification.id}
@@ -237,6 +392,9 @@ export function SmartNotificationCenter({ dealerId, className }: SmartNotificati
                       showEntity={true}
                       onMarkAsRead={markAsRead}
                       onDelete={deleteNotification}
+                      isSelectionMode={isSelectionMode}
+                      isSelected={selectedNotifications.has(notification.id)}
+                      onToggleSelect={toggleNotificationSelection}
                     />
                   ))}
                 </div>

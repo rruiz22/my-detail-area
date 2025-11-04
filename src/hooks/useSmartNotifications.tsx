@@ -198,42 +198,84 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
           }
         }
 
+        // ✅ OPTIMISTIC UPDATE: Actualizar cache inmediatamente para UI instantánea
+        const queryKey = detectedSource === 'notification_log'
+          ? ['smartNotifications', validatedDealerId, user?.id]
+          : ['getReadyNotifications', validatedDealerId, user?.id];
+
+        // Cancelar refetches en curso
+        await queryClient.cancelQueries({ queryKey });
+
+        // Snapshot del estado anterior (para rollback en caso de error)
+        const previousData = queryClient.getQueryData(queryKey);
+
+        // Actualizar cache optimísticamente
+        queryClient.setQueryData(queryKey, (old: any) => {
+          if (!old) return old;
+          return old.map((n: any) =>
+            n.id === notificationId
+              ? { ...n, is_read: true, read_at: new Date().toISOString() }
+              : n
+          );
+        });
+
+        // Ejecutar actualización en BD
         if (detectedSource === 'notification_log') {
           // Update notification_log table
           const { error } = await supabase
             .from('notification_log')
             .update({
-              status: 'read',
+              is_read: true,
               read_at: new Date().toISOString(),
             })
             .eq('id', notificationId);
 
-          if (error) throw error;
+          if (error) {
+            // Rollback en caso de error
+            queryClient.setQueryData(queryKey, previousData);
+            throw error;
+          }
         } else {
-          // Update get_ready_notifications table via RPC
+          // Update get_ready_notifications table via CORRECT RPC
           if (!user?.id) throw new Error('User not authenticated');
 
-          const { error } = await supabase.rpc('mark_notification_as_read', {
+          const { data, error } = await supabase.rpc('mark_get_ready_notification_as_read', {
             p_notification_id: notificationId,
           });
 
-          if (error) throw error;
+          if (error) {
+            // Rollback en caso de error
+            queryClient.setQueryData(queryKey, previousData);
+            logger.error('[markAsRead] RPC error:', error);
+            throw error;
+          }
+
+          // Check if the RPC returned false (notification not found or unauthorized)
+          if (data === false) {
+            // Rollback
+            queryClient.setQueryData(queryKey, previousData);
+            throw new Error('Failed to mark notification as read - not found or unauthorized');
+          }
         }
 
-        // Invalidate queries to refresh data
+        // Invalidar queries para sincronizar con BD (en background)
         queryClient.invalidateQueries({ queryKey: ['smartNotifications'] });
         queryClient.invalidateQueries({ queryKey: ['getReadyNotifications'] });
         queryClient.invalidateQueries({ queryKey: ['notificationUnreadCount'] });
+
+        logger.dev('[markAsRead] Successfully marked notification as read:', notificationId);
       } catch (err) {
+        logger.error('[markAsRead] Error:', err);
         console.error('Error marking notification as read:', err);
         toast({
           title: 'Error',
-          description: 'Failed to mark notification as read',
+          description: err instanceof Error ? err.message : 'Failed to mark notification as read',
           variant: 'destructive',
         });
+        throw err;
       }
     },
-    [notifications, user?.id, queryClient]
+    [notifications, user?.id, validatedDealerId, queryClient]
   );
 
   // =====================================================
@@ -248,12 +290,12 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
       const { error: smartError } = await supabase
         .from('notification_log')
         .update({
-          status: 'read',
+          is_read: true,
           read_at: new Date().toISOString(),
         })
         .eq('user_id', user.id)
         .eq('dealer_id', validatedDealerId)
-        .neq('status', 'read');
+        .eq('is_read', false);
 
       if (smartError) throw smartError;
 
@@ -299,14 +341,14 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
         const { error } = await supabase
           .from('notification_log')
           .update({
-            status: 'read',
+            is_read: true,
             read_at: new Date().toISOString(),
           })
           .eq('user_id', user.id)
           .eq('dealer_id', validatedDealerId)
           .eq('entity_type', entityType)
           .eq('entity_id', entityId)
-          .neq('status', 'read');
+          .eq('is_read', false);
 
         if (error) throw error;
 
@@ -337,6 +379,24 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
           }
         }
 
+        // ✅ OPTIMISTIC UPDATE: Remover de cache inmediatamente para UI instantánea
+        const queryKey = detectedSource === 'notification_log'
+          ? ['smartNotifications', validatedDealerId, user?.id]
+          : ['getReadyNotifications', validatedDealerId, user?.id];
+
+        // Cancelar refetches en curso
+        await queryClient.cancelQueries({ queryKey });
+
+        // Snapshot del estado anterior (para rollback en caso de error)
+        const previousData = queryClient.getQueryData(queryKey);
+
+        // Remover notificación del cache optimísticamente
+        queryClient.setQueryData(queryKey, (old: any) => {
+          if (!old) return old;
+          return old.filter((n: any) => n.id !== notificationId);
+        });
+
+        // Ejecutar borrado en BD
         if (detectedSource === 'notification_log') {
           // Delete from notification_log
           const { error } = await supabase
@@ -344,32 +404,52 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
             .delete()
             .eq('id', notificationId);
 
-          if (error) throw error;
+          if (error) {
+            // Rollback en caso de error
+            queryClient.setQueryData(queryKey, previousData);
+            throw error;
+          }
         } else {
-          // Dismiss get_ready_notification via RPC
+          // Dismiss get_ready_notification via CORRECT RPC
           if (!user?.id) throw new Error('User not authenticated');
 
-          const { error } = await supabase.rpc('dismiss_notification', {
+          const { data, error } = await supabase.rpc('dismiss_get_ready_notification', {
             p_notification_id: notificationId,
           });
 
-          if (error) throw error;
+          if (error) {
+            // Rollback en caso de error
+            queryClient.setQueryData(queryKey, previousData);
+            logger.error('[deleteNotification] RPC error:', error);
+            throw error;
+          }
+
+          // Check if the RPC returned false (notification not found or unauthorized)
+          if (data === false) {
+            // Rollback
+            queryClient.setQueryData(queryKey, previousData);
+            throw new Error('Failed to dismiss notification - not found or unauthorized');
+          }
         }
 
-        // Invalidate queries
+        // Invalidar queries para sincronizar con BD (en background)
         queryClient.invalidateQueries({ queryKey: ['smartNotifications'] });
         queryClient.invalidateQueries({ queryKey: ['getReadyNotifications'] });
         queryClient.invalidateQueries({ queryKey: ['notificationUnreadCount'] });
+
+        logger.dev('[deleteNotification] Successfully deleted/dismissed notification:', notificationId);
       } catch (err) {
+        logger.error('[deleteNotification] Error:', err);
         console.error('Error deleting/dismissing notification:', err);
         toast({
           title: 'Error',
-          description: 'Failed to dismiss notification',
+          description: err instanceof Error ? err.message : 'Failed to dismiss notification',
           variant: 'destructive',
         });
+        throw err; // Re-throw to allow caller to handle
       }
     },
-    [notifications, user?.id, queryClient]
+    [notifications, user?.id, validatedDealerId, queryClient]
   );
 
   // =====================================================

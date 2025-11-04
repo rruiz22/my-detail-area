@@ -123,6 +123,9 @@
     "email": "Correo Electrónico",
     "all": "Todos",
     "active": "Activo",
+    "inactive": "Inactivo",
+    "unnamed": "Sin Nombre",
+    "no_email": "Sin Correo",
     "close": "Cerrar",
     "cancel": "Cancelar"
   },
@@ -374,11 +377,24 @@
   "dashboard": {
     "hero": {
       "welcome": "Bienvenido a My Detail Area",
+      "welcome_to": "Bienvenido a",
       "subtitle": "Optimice las operaciones de su concesionario con herramientas e insights poderosos",
       "new_order": "Nueva Orden",
       "view_pending": "Ver Pendientes ({{count}})",
       "get_ready": "Get Ready",
       "team_chat": "Chat del Equipo"
+    },
+    "empty_state": {
+      "no_access_title": "Sin Acceso a Módulos",
+      "no_access_message": "Aún no tienes permiso para acceder a ningún módulo.",
+      "contact_admin": "Por favor contacta a tu administrador para solicitar acceso a:",
+      "available_modules": "Módulos Disponibles",
+      "sales_module": "Órdenes de Ventas - Gestión de ventas y entregas de vehículos",
+      "service_module": "Órdenes de Servicio - Procesar solicitudes del departamento de servicio",
+      "recon_module": "Órdenes de Reacondicionamiento - Gestión del flujo de reacondicionamiento",
+      "carwash_module": "Lavado de Autos - Órdenes de servicio de lavado express",
+      "view_profile": "Ver Tu Perfil",
+      "contact_support": "Contactar Soporte"
     },
     "actions": {
       "create_order": "Crear Orden",
@@ -411,13 +427,61 @@
       "customer_rating": "Calificación del cliente",
       "team_performance": "Rendimiento del equipo",
       "of_target": "del objetivo",
-      "from_last_month": "del mes pasado"
+      "from_last_month": "del mes pasado",
+      "showing_modules": "Mostrando {{count}} de {{total}} módulos"
     },
     "departments": {
       "sales": "Ventas",
       "service": "Servicio",
       "recon": "Reacondicionamiento",
       "car_wash": "Lavado de Autos"
+    },
+    "team_performance": {
+      "title": "Rendimiento del Equipo",
+      "subtitle": "Actividad en tus módulos accesibles",
+      "user": "Usuario",
+      "completed_7d": "Completados (7d)",
+      "in_progress": "En Progreso",
+      "active_in": "Activo en",
+      "no_activity": "Sin Actividad Reciente",
+      "no_team_members": "No se encontraron miembros del equipo",
+      "modules": "módulos",
+      "view_all": "Ver Todos los Miembros",
+      "orders": "órdenes"
+    },
+    "quick_actions": {
+      "title": "Acciones Rápidas",
+      "subtitle": "Acceso rápido a tareas comunes",
+      "new_sales_order": "Nueva Orden de Ventas",
+      "new_service_order": "Nueva Orden de Servicio",
+      "new_recon_order": "Nueva Orden de Reacondicionamiento",
+      "new_car_wash": "Nuevo Lavado de Auto",
+      "view_reports": "Ver Reportes",
+      "get_ready": "Get Ready",
+      "view_stock": "Ver Inventario",
+      "team_chat": "Chat del Equipo",
+      "no_actions_available": "No hay acciones disponibles",
+      "contact_admin": "Contacte a su administrador para obtener acceso",
+      "create_order": "Crear Orden",
+      "view_module": "Ver Módulo"
+    },
+    "module_status": {
+      "title": "Estado de Módulos",
+      "subtitle": "Vista general de tus módulos accesibles",
+      "pending": "Pendiente",
+      "in_progress": "En Progreso",
+      "completed": "Completado",
+      "view_only": "Solo Lectura",
+      "edit_access": "Acceso de Edición",
+      "full_access": "Acceso Completo",
+      "admin_access": "Acceso de Admin",
+      "healthy": "Saludable",
+      "attention_needed": "Requiere Atención",
+      "critical": "Crítico",
+      "no_modules": "No hay módulos accesibles",
+      "request_access": "Solicite acceso a su administrador",
+      "total_orders": "Total",
+      "click_to_view": "Click para ver módulo"
     },
     "department_overview": {
       "title": "Resumen de Departamentos",
@@ -616,6 +680,24 @@
     "system_users_system_admin_only": "Solo los administradores del sistema pueden gestionar usuarios del sistema.",
     "add_system_user": "Agregar Usuario del Sistema",
     "create_system_user": "Crear Usuario del Sistema",
+    "create_system_user_description": "Crear un nuevo usuario a nivel sistema con privilegios elevados",
+    "system_admin_warning": "⚠️ Los Administradores del Sistema tienen acceso sin restricciones a todas las funciones y datos de la plataforma. Solo asigne este rol a personas de alta confianza.",
+    "supermanager_brief": "Gestionar concesionarios y usuarios",
+    "system_admin_brief": "Acceso completo a la plataforma (máximo privilegio)",
+    "select_dealership_optional": "Seleccionar concesionario principal (opcional)",
+    "primary_dealership_hint": "Los usuarios del sistema pueden acceder a todos los concesionarios. Establecer un concesionario principal es opcional y se usa para el contexto predeterminado.",
+    "send_welcome_email": "Enviar Email de Bienvenida",
+    "send_welcome_email_hint": "El usuario recibirá un email con instrucciones de inicio de sesión y una contraseña temporal",
+    "bypass_custom_roles_title": "Permisos Avanzados",
+    "bypass_custom_roles_label": "Omitir Roles Personalizados",
+    "bypass_custom_roles_hint": "Cuando está habilitado, este usuario omitirá las restricciones de roles personalizados y obtendrá acceso completo a todos los módulos operativos (excepto la gestión de plataforma).",
+    "bypass_custom_roles_warning": "⚠️ Usar con precaución - otorga acceso elevado sin asignación de rol personalizado",
+    "must_be_logged_in": "Debe iniciar sesión para crear usuarios",
+    "fill_required_fields": "Por favor complete todos los campos requeridos",
+    "invalid_email": "Por favor ingrese una dirección de email válida",
+    "system_user_created_successfully": "Usuario del sistema {{name}} ({{role}}) creado exitosamente",
+    "error_creating_system_user": "Error al crear usuario del sistema. Por favor intente nuevamente.",
+    "error_loading_dealerships": "Error al cargar concesionarios",
     "create_system_user_placeholder": "Interfaz de creación de usuario del sistema",
     "feature_coming_soon": "Esta funcionalidad estará disponible pronto",
     "no_system_users": "No se encontraron usuarios del sistema",
@@ -967,6 +1049,7 @@
     "general": "General",
     "preferences": "Preferencias",
     "templates": "Plantillas",
+    "admin_only": "Esta función solo está disponible para Administradores del Sistema",
     "platform_settings": {
       "general": {
         "title": "Configuración General",
@@ -989,6 +1072,31 @@
         "saving": "Guardando...",
         "loading": "Cargando configuración...",
         "characters": "caracteres"
+      },
+      "notification_sound": {
+        "title": "Sonidos de Notificación",
+        "description": "Configurar preferencias de sonido de notificaciones (Solo Admin del Sistema)",
+        "enable_sounds": "Habilitar sonidos de notificación",
+        "enable_sounds_description": "Reproducir sonidos cuando llegan nuevas notificaciones",
+        "volume": "Volumen",
+        "volume_description": "Ajustar el volumen del sonido de notificaciones",
+        "priority_levels": "Sonido por Nivel de Prioridad",
+        "priority_levels_description": "Elegir qué niveles de prioridad reproducen sonidos",
+        "urgent": "Notificaciones Urgentes",
+        "urgent_description": "Alertas críticas que requieren atención inmediata",
+        "high": "Prioridad Alta",
+        "high_description": "Notificaciones importantes",
+        "normal": "Prioridad Normal",
+        "normal_description": "Notificaciones estándar",
+        "low": "Prioridad Baja",
+        "low_description": "Notificaciones informativas",
+        "test": "Probar",
+        "test_played": "Sonido de prueba reproducido para prioridad {{priority}}",
+        "test_error": "Error al reproducir sonido de prueba",
+        "technical_details": "Detalles Técnicos",
+        "saved": "Preferencias de sonido guardadas exitosamente",
+        "save_error": "Error al guardar preferencias de sonido",
+        "reset": "Preferencias de sonido restablecidas a valores predeterminados"
       }
     },
     "notification_settings": {
@@ -2653,16 +2761,23 @@
         "description": "Gestiona las membresías y accesos de usuarios para este concesionario",
         "invite_user": "Invitar Usuario",
         "no_users": "No se encontraron usuarios",
+        "no_active_users": "No hay usuarios activos",
+        "no_archived_users": "No hay usuarios archivados",
         "no_role": "Sin Rol",
         "edit_role": "Gestionar Roles",
         "deactivate": "Desactivar",
         "activate": "Activar",
+        "view_archived": "Ver Archivados",
+        "archived_users_title": "Usuarios Archivados",
+        "archived_users_description": "Ver y restaurar usuarios previamente desactivados. Estos usuarios ya no tienen acceso al sistema.",
         "user_deactivated": "El usuario ha sido desactivado exitosamente",
         "user_activated": "El usuario ha sido activado exitosamente",
         "error_loading_users": "Error al cargar usuarios",
         "error_updating_status": "Error al actualizar el estado del usuario",
         "deactivate_user_title": "Desactivar Usuario",
         "deactivate_user_description": "¿Estás seguro de que deseas desactivar a {{name}}? Ya no podrá acceder al sistema.",
+        "activate_user_title": "Activar Usuario",
+        "activate_user_description": "¿Estás seguro de que deseas activar a {{name}}? Recuperará el acceso al sistema.",
         "table": {
           "user": "Usuario",
           "email": "Correo",
@@ -4136,6 +4251,52 @@
       "needsImprovement": "Necesita Mejora",
       "critical": "Crítico",
       "backtrackDetected": "Retroceso detectado"
+    },
+    "metrics": {
+      "cost_per_vehicle": "Costo Por Vehículo",
+      "cost_per_vehicle_tooltip": "Costo promedio de mantenimiento por vehículo en reacondicionamiento",
+      "per_vehicle": "por vehículo",
+      "first_pass_yield": "Rendimiento de Primera Pasada",
+      "first_pass_yield_tooltip": "Porcentaje de vehículos completados sin retrabajos",
+      "rework_rate": "Tasa de Retrabajo Activo",
+      "rework_rate_tooltip": "Porcentaje de trabajos rechazados que requieren retrabajo",
+      "incidents": "incidentes",
+      "team_utilization": "Utilización del Equipo",
+      "team_utilization_tooltip": "Utilización de capacidad del equipo basada en vehículos por persona vs objetivo",
+      "cost_breakdown": "Desglose de Costos",
+      "cost_by_workflow_type": "Costos promedio por tipo de flujo de trabajo",
+      "roi_comparison": "Comparación de ROI",
+      "cost_vs_value_estimation": "Estimación de costo vs valor (simplificado)",
+      "total_cost": "Costo Total",
+      "est_savings": "Ahorros Est.",
+      "roi": "ROI",
+      "based_on": "Basado en",
+      "completed_vehicles": "vehículos completados",
+      "quality_metrics": "Métricas de Calidad",
+      "quality_indicators": "Indicadores de rendimiento de calidad",
+      "fpy_trend": "Tendencia de Rendimiento de Primera Pasada",
+      "rework_incidents": "Incidentes de Retrabajo",
+      "declined_items": "Trabajos rechazados",
+      "quality_by_step": "Puntuación de Calidad por Paso",
+      "efficiency_metrics": "Métricas de Eficiencia",
+      "operational_efficiency": "Indicadores de eficiencia operacional",
+      "avg_days_per_step": "Días Promedio Por Paso",
+      "transition_time": "Tiempo de Transición",
+      "between_steps": "Tiempo promedio entre pasos",
+      "utilization_rate": "Tasa de Utilización",
+      "team_performance": "Rendimiento del Equipo",
+      "top_performers": "Top 5 mejores por cantidad de vehículos",
+      "no_team_data": "No hay datos del equipo disponibles",
+      "team_member": "Miembro del Equipo",
+      "vehicles": "Vehículos",
+      "avg_t2l": "T2L Promedio",
+      "completion_rate": "Tasa de Finalización",
+      "quality_score": "Puntuación de Calidad"
+    },
+    "workflow": {
+      "standard": "Estándar",
+      "express": "Express",
+      "priority": "Prioridad"
     }
   },
   "reports": {
@@ -5050,6 +5211,9 @@
       "important": "Solo Importantes",
       "none": "Ninguna"
     },
+    "badge": {
+      "new": "Nueva"
+    },
     "loading": "Cargando notificaciones...",
     "tabs": {
       "grouped": "Agrupadas",
@@ -5075,6 +5239,8 @@
       "unread": "{{count}} sin leer"
     },
     "empty": {
+      "title": "¡Todo al día!",
+      "description": "No tienes notificaciones en este momento",
       "message": "No hay notificaciones",
       "filtered": "No hay notificaciones que coincidan con tus filtros"
     },
@@ -5127,8 +5293,14 @@
       "mark_all_read": "Marcar todo como leído",
       "delete": "Eliminar",
       "save_later": "Guardar para después",
-      "archive": "Archivar"
-    }
+      "archive": "Archivar",
+      "select_to_delete": "Seleccionar para Eliminar",
+      "select_all": "Seleccionar Todo",
+      "deselect_all": "Deseleccionar Todo",
+      "delete_selected": "Eliminar {{count}}"
+    },
+    "bulk_delete_success": "{{count}} notificación(es) eliminada(s) exitosamente",
+    "bulk_delete_error": "Error al eliminar notificaciones"
   },
   "system_update": {
     "title": "Nueva Versión Disponible",

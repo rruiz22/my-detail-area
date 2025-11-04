@@ -134,6 +134,9 @@
     "email": "Email",
     "all": "All",
     "active": "Active",
+    "inactive": "Inactive",
+    "unnamed": "Unnamed",
+    "no_email": "No Email",
     "close": "Close",
     "cancel": "Cancel"
   },
@@ -385,11 +388,24 @@
   "dashboard": {
     "hero": {
       "welcome": "Welcome to My Detail Area",
+      "welcome_to": "Welcome to",
       "subtitle": "Streamline your dealership operations with powerful tools and insights",
       "new_order": "New Order",
       "view_pending": "View Pending ({{count}})",
       "get_ready": "Get Ready",
       "team_chat": "Team Chat"
+    },
+    "empty_state": {
+      "no_access_title": "No Module Access",
+      "no_access_message": "You don't have permission to access any modules yet.",
+      "contact_admin": "Please contact your administrator to request access to:",
+      "available_modules": "Available Modules",
+      "sales_module": "Sales Orders - Manage vehicle sales and deliveries",
+      "service_module": "Service Orders - Process service department requests",
+      "recon_module": "Recon Orders - Handle vehicle reconditioning workflow",
+      "carwash_module": "Car Wash - Express wash service orders",
+      "view_profile": "View Your Profile",
+      "contact_support": "Contact Support"
     },
     "actions": {
       "create_order": "Create Order",
@@ -422,13 +438,61 @@
       "customer_rating": "Customer rating",
       "team_performance": "Team performance",
       "of_target": "of target",
-      "from_last_month": "from last month"
+      "from_last_month": "from last month",
+      "showing_modules": "Showing {{count}} of {{total}} modules"
     },
     "departments": {
       "sales": "Sales",
       "service": "Service",
       "recon": "Reconditioning",
       "car_wash": "Car Wash"
+    },
+    "team_performance": {
+      "title": "Team Performance",
+      "subtitle": "Activity in your accessible modules",
+      "user": "User",
+      "completed_7d": "Completed (7d)",
+      "in_progress": "In Progress",
+      "active_in": "Active in",
+      "no_activity": "No Recent Activity",
+      "no_team_members": "No team members found",
+      "modules": "modules",
+      "view_all": "View All Team Members",
+      "orders": "orders"
+    },
+    "quick_actions": {
+      "title": "Quick Actions",
+      "subtitle": "Fast access to common tasks",
+      "new_sales_order": "New Sales Order",
+      "new_service_order": "New Service Order",
+      "new_recon_order": "New Recon Order",
+      "new_car_wash": "New Car Wash",
+      "view_reports": "View Reports",
+      "get_ready": "Get Ready",
+      "view_stock": "View Stock",
+      "team_chat": "Team Chat",
+      "no_actions_available": "No actions available",
+      "contact_admin": "Contact your administrator for access",
+      "create_order": "Create Order",
+      "view_module": "View Module"
+    },
+    "module_status": {
+      "title": "Module Status",
+      "subtitle": "Overview of your accessible modules",
+      "pending": "Pending",
+      "in_progress": "In Progress",
+      "completed": "Completed",
+      "view_only": "View Only",
+      "edit_access": "Edit Access",
+      "full_access": "Full Access",
+      "admin_access": "Admin Access",
+      "healthy": "Healthy",
+      "attention_needed": "Attention Needed",
+      "critical": "Critical",
+      "no_modules": "No modules accessible",
+      "request_access": "Request access from your administrator",
+      "total_orders": "Total",
+      "click_to_view": "Click to view module"
     },
     "department_overview": {
       "title": "Department Overview",
@@ -1218,6 +1282,7 @@
     "general": "General",
     "preferences": "Preferences",
     "templates": "Templates",
+    "admin_only": "This feature is only available for System Administrators",
     "platform_settings": {
       "general": {
         "title": "General Settings",
@@ -1240,6 +1305,31 @@
         "saving": "Saving...",
         "loading": "Loading settings...",
         "characters": "characters"
+      },
+      "notification_sound": {
+        "title": "Notification Sounds",
+        "description": "Configure notification sound preferences (System Admin only)",
+        "enable_sounds": "Enable notification sounds",
+        "enable_sounds_description": "Play sounds when new notifications arrive",
+        "volume": "Volume",
+        "volume_description": "Adjust the notification sound volume",
+        "priority_levels": "Sound by Priority Level",
+        "priority_levels_description": "Choose which priority levels play sounds",
+        "urgent": "Urgent Notifications",
+        "urgent_description": "Critical alerts that require immediate attention",
+        "high": "High Priority",
+        "high_description": "Important notifications",
+        "normal": "Normal Priority",
+        "normal_description": "Standard notifications",
+        "low": "Low Priority",
+        "low_description": "Informational notifications",
+        "test": "Test",
+        "test_played": "Sound test played for {{priority}} priority",
+        "test_error": "Error playing test sound",
+        "technical_details": "Technical Details",
+        "saved": "Sound preferences saved successfully",
+        "save_error": "Failed to save sound preferences",
+        "reset": "Sound preferences reset to defaults"
       }
     },
     "notification_settings": {
@@ -2517,6 +2607,24 @@
     "system_users_system_admin_only": "Only system administrators can manage system users.",
     "add_system_user": "Add System User",
     "create_system_user": "Create System User",
+    "create_system_user_description": "Create a new system-level user with elevated privileges",
+    "system_admin_warning": "⚠️ System Administrators have unrestricted access to all platform features and data. Only assign this role to highly trusted individuals.",
+    "supermanager_brief": "Manage dealerships and users",
+    "system_admin_brief": "Full platform access (highest privilege)",
+    "select_dealership_optional": "Select a primary dealership (optional)",
+    "primary_dealership_hint": "System users can access all dealerships. Setting a primary dealership is optional and used for default context.",
+    "send_welcome_email": "Send Welcome Email",
+    "send_welcome_email_hint": "User will receive an email with login instructions and a temporary password",
+    "bypass_custom_roles_title": "Advanced Permissions",
+    "bypass_custom_roles_label": "Bypass Custom Roles",
+    "bypass_custom_roles_hint": "When enabled, this user will bypass custom role restrictions and get full access to all operational modules (except platform management).",
+    "bypass_custom_roles_warning": "⚠️ Use with caution - grants elevated access without custom role assignment",
+    "must_be_logged_in": "You must be logged in to create users",
+    "fill_required_fields": "Please fill in all required fields",
+    "invalid_email": "Please enter a valid email address",
+    "system_user_created_successfully": "System user {{name}} ({{role}}) created successfully",
+    "error_creating_system_user": "Failed to create system user. Please try again.",
+    "error_loading_dealerships": "Failed to load dealerships",
     "create_system_user_placeholder": "System user creation interface",
     "feature_coming_soon": "This feature is coming soon",
     "no_system_users": "No system users found",
@@ -2963,16 +3071,23 @@
         "description": "Manage user memberships and access for this dealership",
         "invite_user": "Invite User",
         "no_users": "No users found",
+        "no_active_users": "No active users found",
+        "no_archived_users": "No archived users",
         "no_role": "No Role",
         "edit_role": "Manage Roles",
         "deactivate": "Deactivate",
         "activate": "Activate",
+        "view_archived": "View Archived",
+        "archived_users_title": "Archived Users",
+        "archived_users_description": "View and restore previously deactivated users. These users no longer have access to the system.",
         "user_deactivated": "User has been deactivated successfully",
         "user_activated": "User has been activated successfully",
         "error_loading_users": "Failed to load users",
         "error_updating_status": "Failed to update user status",
         "deactivate_user_title": "Deactivate User",
         "deactivate_user_description": "Are you sure you want to deactivate {{name}}? They will no longer be able to access the system.",
+        "activate_user_title": "Activate User",
+        "activate_user_description": "Are you sure you want to activate {{name}}? They will regain access to the system.",
         "table": {
           "user": "User",
           "email": "Email",
@@ -4326,6 +4441,52 @@
       "needsImprovement": "Needs Improvement",
       "critical": "Critical",
       "backtrackDetected": "Backtrack detected"
+    },
+    "metrics": {
+      "cost_per_vehicle": "Cost Per Vehicle",
+      "cost_per_vehicle_tooltip": "Average holding cost per vehicle in reconditioning",
+      "per_vehicle": "per vehicle",
+      "first_pass_yield": "First Pass Yield",
+      "first_pass_yield_tooltip": "Percentage of vehicles completed without rework",
+      "rework_rate": "Active Rework Rate",
+      "rework_rate_tooltip": "Percentage of work items declined requiring rework",
+      "incidents": "incidents",
+      "team_utilization": "Team Utilization",
+      "team_utilization_tooltip": "Team capacity utilization based on vehicles per person vs target",
+      "cost_breakdown": "Cost Breakdown",
+      "cost_by_workflow_type": "Average costs by workflow type",
+      "roi_comparison": "ROI Comparison",
+      "cost_vs_value_estimation": "Cost vs value estimation (simplified)",
+      "total_cost": "Total Cost",
+      "est_savings": "Est. Savings",
+      "roi": "ROI",
+      "based_on": "Based on",
+      "completed_vehicles": "completed vehicles",
+      "quality_metrics": "Quality Metrics",
+      "quality_indicators": "Quality performance indicators",
+      "fpy_trend": "First Pass Yield Trend",
+      "rework_incidents": "Rework Incidents",
+      "declined_items": "Declined work items",
+      "quality_by_step": "Quality Score by Step",
+      "efficiency_metrics": "Efficiency Metrics",
+      "operational_efficiency": "Operational efficiency indicators",
+      "avg_days_per_step": "Avg Days Per Step",
+      "transition_time": "Transition Time",
+      "between_steps": "Average time between steps",
+      "utilization_rate": "Utilization Rate",
+      "team_performance": "Team Performance",
+      "top_performers": "Top 5 performers by vehicle count",
+      "no_team_data": "No team data available",
+      "team_member": "Team Member",
+      "vehicles": "Vehicles",
+      "avg_t2l": "Avg T2L",
+      "completion_rate": "Completion Rate",
+      "quality_score": "Quality Score"
+    },
+    "workflow": {
+      "standard": "Standard",
+      "express": "Express",
+      "priority": "Priority"
     }
   },
   "reports": {
@@ -5243,6 +5404,9 @@
       "important": "Important Only",
       "none": "None"
     },
+    "badge": {
+      "new": "New"
+    },
     "loading": "Loading notifications...",
     "tabs": {
       "grouped": "Grouped",
@@ -5268,6 +5432,8 @@
       "unread": "{{count}} unread"
     },
     "empty": {
+      "title": "All caught up!",
+      "description": "You have no notifications at this time",
       "message": "No notifications",
       "filtered": "No notifications match your filters"
     },
@@ -5320,8 +5486,14 @@
       "mark_all_read": "Mark all as read",
       "delete": "Delete",
       "save_later": "Save for later",
-      "archive": "Archive"
-    }
+      "archive": "Archive",
+      "select_to_delete": "Select to Delete",
+      "select_all": "Select All",
+      "deselect_all": "Deselect All",
+      "delete_selected": "Delete {{count}}"
+    },
+    "bulk_delete_success": "{{count}} notification(s) deleted successfully",
+    "bulk_delete_error": "Failed to delete notifications"
   },
   "system_update": {
     "title": "New Version Available",

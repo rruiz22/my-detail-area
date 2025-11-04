@@ -4,38 +4,38 @@
  * Enterprise-grade with expandable details
  */
 
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Bell,
-  Check,
-  MoreVertical,
-  X,
-  Package,
-  MessageSquare,
-  Phone,
-  AlertCircle,
-  Clock,
-  Archive,
-  Star,
-  ChevronDown,
-  ChevronUp,
-} from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { formatDistanceToNow } from 'date-fns';
-import { cn } from '@/lib/utils';
-import { DeliveryStatusBadge } from './DeliveryStatusBadge';
-import { DeliveryDetails } from './DeliveryDetails';
 import { useDeliveryTracking } from '@/hooks/useDeliveryTracking';
+import { cn } from '@/lib/utils';
 import type { UnifiedNotification } from '@/types/notifications';
+import { formatDistanceToNow } from 'date-fns';
+import {
+    AlertCircle,
+    Archive,
+    Bell,
+    Check,
+    ChevronDown,
+    ChevronUp,
+    Clock,
+    MessageSquare,
+    MoreVertical,
+    Package,
+    Phone,
+    Star,
+    X,
+} from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { DeliveryDetails } from './DeliveryDetails';
+import { DeliveryStatusBadge } from './DeliveryStatusBadge';
 
 interface NotificationItemProps {
   notification: UnifiedNotification;
@@ -43,6 +43,9 @@ interface NotificationItemProps {
   onMarkAsRead: (id: string) => void;
   onDelete: (id: string) => void;
   className?: string;
+  isSelectionMode?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: (id: string) => void;
 }
 
 /**
@@ -92,6 +95,9 @@ export function NotificationItem({
   onMarkAsRead,
   onDelete,
   className,
+  isSelectionMode = false,
+  isSelected = false,
+  onToggleSelect,
 }: NotificationItemProps) {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
@@ -107,17 +113,38 @@ export function NotificationItem({
       className={cn(
         'border-l-4 transition-all',
         getPriorityColor(notification.priority as string),
-        isRead && 'opacity-60',
+        // ✅ Mejor contraste visual entre leída y no leída
+        isRead ? 'bg-gray-50/50 opacity-75' : 'bg-white',
+        isSelected && 'bg-blue-50/50 border-l-blue-500',
         className
       )}
     >
       {/* Main Content */}
-      <div className="flex items-start gap-3 p-4 hover:bg-muted/50">
+      <div className="flex items-start gap-3 px-4 py-3 hover:bg-muted/30 transition-colors">
+        {/* Selection Checkbox */}
+        {isSelectionMode && onToggleSelect && (
+          <div className="flex-shrink-0 pt-1">
+            <input
+              type="checkbox"
+              checked={isSelected}
+              onChange={() => onToggleSelect(notification.id)}
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+            />
+          </div>
+        )}
+
+        {/* Unread Indicator Dot */}
+        {!isRead && !isSelectionMode && (
+          <div className="flex-shrink-0 pt-1.5">
+            <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+          </div>
+        )}
+
         {/* Icon */}
         <div
           className={cn(
             'flex-shrink-0 p-2 rounded-full',
-            isRead ? 'bg-muted' : 'bg-primary/10'
+            isRead ? 'bg-muted text-muted-foreground' : 'bg-primary/10 text-primary'
           )}
         >
           {getNotificationIcon(notification.module || 'default')}
@@ -127,10 +154,20 @@ export function NotificationItem({
         <div className="flex-1 min-w-0">
           {/* Header */}
           <div className="flex items-start justify-between gap-2 mb-1">
-            <div className="flex-1">
-              <h4 className="font-medium text-sm leading-tight">
+            <div className="flex-1 flex items-center gap-2">
+              <h4 className={cn(
+                'text-sm leading-tight',
+                // ✅ Bold para no leídas, normal para leídas
+                isRead ? 'font-normal text-muted-foreground' : 'font-semibold text-foreground'
+              )}>
                 {notification.title}
               </h4>
+              {/* Badge "New" para notificaciones muy recientes no leídas */}
+              {!isRead && new Date().getTime() - new Date(notification.created_at).getTime() < 300000 && (
+                <Badge variant="default" className="text-xs px-1.5 py-0 h-4">
+                  {t('notifications.badge.new')}
+                </Badge>
+              )}
             </div>
 
             {/* Actions */}
@@ -165,32 +202,41 @@ export function NotificationItem({
           </div>
 
           {/* Message */}
-          <p className="text-sm text-muted-foreground mb-2">{notification.message}</p>
+          <p className={cn(
+            'text-sm mb-2 leading-relaxed',
+            isRead ? 'text-muted-foreground/70' : 'text-muted-foreground'
+          )}>
+            {notification.message}
+          </p>
 
           {/* Entity Badge */}
           {showEntity && notification.metadata?.entity_type && (
-            <Badge variant="outline" className="mb-2 text-xs">
+            <Badge variant="outline" className="mb-2 text-xs font-normal">
               {notification.metadata.entity_type as string}: {(notification.metadata.entity_id as string)?.slice(0, 8)}
             </Badge>
           )}
 
           {/* Footer */}
-          <div className="flex items-center justify-between gap-2 flex-wrap">
+          <div className="flex items-center justify-between gap-2 flex-wrap mt-2 pt-2 border-t border-gray-100">
             {/* Left side: Timestamp */}
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Clock className="h-3 w-3" />
-              {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Clock className="h-3 w-3 opacity-60" />
+              <span className="font-medium">
+                {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
+              </span>
             </div>
 
             {/* Right side: Badges and Expand */}
-            <div className="flex items-center gap-2">
-              {/* Priority Badge */}
-              <Badge
-                variant={notification.priority === 'urgent' ? 'destructive' : 'secondary'}
-                className="text-xs"
-              >
-                {notification.priority}
-              </Badge>
+            <div className="flex items-center gap-1.5">
+              {/* Priority Badge - Solo si no es 'low' */}
+              {notification.priority !== 'low' && (
+                <Badge
+                  variant={notification.priority === 'urgent' || notification.priority === 'critical' ? 'destructive' : 'secondary'}
+                  className="text-xs font-medium"
+                >
+                  {notification.priority}
+                </Badge>
+              )}
 
               {/* Delivery Status Badge (only for notification_log) */}
               {notification.source === 'notification_log' && deliveryStatus && !trackingLoading && (
