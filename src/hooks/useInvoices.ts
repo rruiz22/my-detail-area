@@ -279,6 +279,7 @@ export const useInvoiceSummary = (filters: InvoiceFilters) => {
 export const useCreateInvoice = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: async (formData: InvoiceFormData) => {
@@ -365,6 +366,7 @@ export const useCreateInvoice = () => {
 export const useRecordPayment = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: async (formData: PaymentFormData) => {
@@ -412,6 +414,7 @@ export const useRecordPayment = () => {
 
 export const useSendInvoiceEmail = () => {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: async ({ invoiceId, recipient }: { invoiceId: string; recipient: string }) => {
@@ -443,6 +446,7 @@ export const useSendInvoiceEmail = () => {
 
 export const useDeleteInvoice = () => {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: async (invoiceId: string) => {
@@ -479,6 +483,7 @@ export const useDeleteInvoice = () => {
 
 export const useDeletePayment = () => {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: async (paymentId: string) => {
