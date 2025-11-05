@@ -43,12 +43,12 @@ BEGIN
   WHERE id = v_vehicle_id;
 
   -- Vendor removed: A → NULL
-  IF OLD.vendor_id IS NOT NULL AND NEW.vendor_id IS NULL THEN
+  IF OLD.assigned_vendor_id IS NOT NULL AND NEW.assigned_vendor_id IS NULL THEN
 
     -- Get old vendor name from dealership_contacts
     SELECT COALESCE(company_name, full_name, 'Unknown Vendor') INTO v_old_vendor_name
     FROM dealership_contacts
-    WHERE id = OLD.vendor_id;
+    WHERE id = OLD.assigned_vendor_id;
 
     INSERT INTO get_ready_vehicle_activity_log (
       vehicle_id, dealer_id, activity_type, action_by,
@@ -58,31 +58,31 @@ BEGIN
       v_dealer_id,
       'vendor_removed',
       auth.uid(),
-      'vendor_id',
+      'assigned_vendor_id',
       v_old_vendor_name,
       'None',
       format('Vendor removed: %s', v_old_vendor_name),
       jsonb_build_object(
         'work_item_id', NEW.id,
         'work_item_title', NEW.title,
-        'old_vendor_id', OLD.vendor_id,
+        'old_vendor_id', OLD.assigned_vendor_id,
         'old_vendor_name', v_old_vendor_name
       )
     );
   END IF;
 
   -- Vendor reassigned: A → B (log removal of A, assignment of B is handled by existing trigger)
-  IF OLD.vendor_id IS NOT NULL AND NEW.vendor_id IS NOT NULL
-     AND OLD.vendor_id != NEW.vendor_id THEN
+  IF OLD.assigned_vendor_id IS NOT NULL AND NEW.assigned_vendor_id IS NOT NULL
+     AND OLD.assigned_vendor_id != NEW.assigned_vendor_id THEN
 
     -- Get old and new vendor names
     SELECT COALESCE(company_name, full_name, 'Unknown Vendor') INTO v_old_vendor_name
     FROM dealership_contacts
-    WHERE id = OLD.vendor_id;
+    WHERE id = OLD.assigned_vendor_id;
 
     SELECT COALESCE(company_name, full_name, 'Unknown Vendor') INTO v_new_vendor_name
     FROM dealership_contacts
-    WHERE id = NEW.vendor_id;
+    WHERE id = NEW.assigned_vendor_id;
 
     -- Log removal of old vendor
     INSERT INTO get_ready_vehicle_activity_log (
@@ -93,15 +93,15 @@ BEGIN
       v_dealer_id,
       'vendor_removed',
       auth.uid(),
-      'vendor_id',
+      'assigned_vendor_id',
       v_old_vendor_name,
       v_new_vendor_name,
       format('Vendor reassigned from "%s" to "%s"', v_old_vendor_name, v_new_vendor_name),
       jsonb_build_object(
         'work_item_id', NEW.id,
         'work_item_title', NEW.title,
-        'old_vendor_id', OLD.vendor_id,
-        'new_vendor_id', NEW.vendor_id,
+        'old_vendor_id', OLD.assigned_vendor_id,
+        'new_vendor_id', NEW.assigned_vendor_id,
         'old_vendor_name', v_old_vendor_name,
         'new_vendor_name', v_new_vendor_name,
         'is_reassignment', true
@@ -315,8 +315,8 @@ BEGIN
     );
   END IF;
 
-  -- Due Date Changed
-  IF OLD.due_date IS DISTINCT FROM NEW.due_date THEN
+  -- Scheduled End Changed
+  IF OLD.scheduled_end IS DISTINCT FROM NEW.scheduled_end THEN
     INSERT INTO get_ready_vehicle_activity_log (
       vehicle_id, dealer_id, activity_type, action_by,
       field_name, old_value, new_value, description, metadata
@@ -325,17 +325,17 @@ BEGIN
       v_dealer_id,
       'work_item_updated',
       auth.uid(),
-      'due_date',
-      OLD.due_date::TEXT,
-      NEW.due_date::TEXT,
-      format('Work item due date changed from %s to %s',
-        COALESCE(OLD.due_date::TEXT, 'None'),
-        COALESCE(NEW.due_date::TEXT, 'None')),
+      'scheduled_end',
+      OLD.scheduled_end::TEXT,
+      NEW.scheduled_end::TEXT,
+      format('Work item scheduled end changed from %s to %s',
+        COALESCE(OLD.scheduled_end::TEXT, 'None'),
+        COALESCE(NEW.scheduled_end::TEXT, 'None')),
       jsonb_build_object(
         'work_item_id', NEW.id,
         'work_item_title', NEW.title,
-        'old_due_date', OLD.due_date,
-        'new_due_date', NEW.due_date
+        'old_scheduled_end', OLD.scheduled_end,
+        'new_scheduled_end', NEW.scheduled_end
       )
     );
   END IF;
@@ -362,8 +362,8 @@ BEGIN
     );
   END IF;
 
-  -- Cost Estimate Changed
-  IF OLD.cost_estimate IS DISTINCT FROM NEW.cost_estimate THEN
+  -- Estimated Cost Changed
+  IF OLD.estimated_cost IS DISTINCT FROM NEW.estimated_cost THEN
     INSERT INTO get_ready_vehicle_activity_log (
       vehicle_id, dealer_id, activity_type, action_by,
       field_name, old_value, new_value, description, metadata
@@ -372,17 +372,17 @@ BEGIN
       v_dealer_id,
       'work_item_updated',
       auth.uid(),
-      'cost_estimate',
-      OLD.cost_estimate::TEXT,
-      NEW.cost_estimate::TEXT,
-      format('Work item cost estimate changed from $%s to $%s',
-        COALESCE(OLD.cost_estimate::TEXT, '0'),
-        COALESCE(NEW.cost_estimate::TEXT, '0')),
+      'estimated_cost',
+      OLD.estimated_cost::TEXT,
+      NEW.estimated_cost::TEXT,
+      format('Work item estimated cost changed from $%s to $%s',
+        COALESCE(OLD.estimated_cost::TEXT, '0'),
+        COALESCE(NEW.estimated_cost::TEXT, '0')),
       jsonb_build_object(
         'work_item_id', NEW.id,
         'work_item_title', NEW.title,
-        'old_cost', OLD.cost_estimate,
-        'new_cost', NEW.cost_estimate
+        'old_cost', OLD.estimated_cost,
+        'new_cost', NEW.estimated_cost
       )
     );
   END IF;

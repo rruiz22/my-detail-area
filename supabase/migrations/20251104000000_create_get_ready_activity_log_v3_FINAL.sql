@@ -376,7 +376,7 @@ BEGIN
       );
     END IF;
 
-    IF OLD.vendor_id IS DISTINCT FROM NEW.vendor_id AND NEW.vendor_id IS NOT NULL THEN
+    IF OLD.assigned_vendor_id IS DISTINCT FROM NEW.assigned_vendor_id AND NEW.assigned_vendor_id IS NOT NULL THEN
       INSERT INTO get_ready_vehicle_activity_log (
         vehicle_id, dealer_id, activity_type, action_by, description, metadata
       ) VALUES (
@@ -385,7 +385,7 @@ BEGIN
         jsonb_build_object(
           'work_item_id', NEW.id,
           'work_item_title', NEW.title,
-          'vendor_id', NEW.vendor_id
+          'assigned_vendor_id', NEW.assigned_vendor_id
         )
       );
     END IF;
@@ -494,4 +494,3 @@ BEGIN
   RAISE NOTICE '📈 Analytics: get_ready_activity_stats() function ready';
   RAISE NOTICE '🎯 Next step: Refresh your app and test /get-ready/activity';
 END $$;
-

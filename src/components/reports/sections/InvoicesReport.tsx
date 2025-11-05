@@ -137,10 +137,10 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
   const [activeTab, setActiveTab] = useState<'invoices' | 'create'>('invoices');
 
-  // Invoice list filters - Don't filter by date initially to show all invoices
+  // Invoice list filters - Independent from global filters (only respects dealerId)
   const [invoiceFilters, setInvoiceFilters] = useState<InvoiceFilters>({
     status: 'all',
-    orderType: filters.orderType,
+    orderType: 'all', // Independent from global filters
     startDate: undefined, // Don't filter by date - show all invoices
     endDate: undefined,   // Don't filter by date - show all invoices
     dealerId: dealerId || 'all',
@@ -182,6 +182,44 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       setEndDate(end);
     }
   };
+
+  // Invoice list date range state (independent from global filters)
+  const [invoiceDateRange, setInvoiceDateRange] = useState<'all' | 'today' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'custom'>('all');
+  const [invoiceStartDate, setInvoiceStartDate] = useState<string>('');
+  const [invoiceEndDate, setInvoiceEndDate] = useState<string>('');
+
+  const handleInvoiceDateRangeChange = (value: typeof invoiceDateRange) => {
+    setInvoiceDateRange(value);
+
+    if (value === 'all') {
+      setInvoiceFilters(prev => ({
+        ...prev,
+        startDate: undefined,
+        endDate: undefined
+      }));
+    } else if (value !== 'custom') {
+      const { startDate: start, endDate: end } = calculateDateRange(value);
+      const startDateObj = parseISO(start);
+      const endDateObj = parseISO(end);
+
+      setInvoiceFilters(prev => ({
+        ...prev,
+        startDate: startDateObj,
+        endDate: endDateObj
+      }));
+    }
+  };
+
+  // Update filters when custom dates change
+  useEffect(() => {
+    if (invoiceDateRange === 'custom' && invoiceStartDate && invoiceEndDate) {
+      setInvoiceFilters(prev => ({
+        ...prev,
+        startDate: parseISO(invoiceStartDate),
+        endDate: parseISO(invoiceEndDate)
+      }));
+    }
+  }, [invoiceStartDate, invoiceEndDate, invoiceDateRange]);
 
   // Selected vehicles for new invoice
   const [selectedVehicleIds, setSelectedVehicleIds] = useState<Set<string>>(new Set());
@@ -1307,47 +1345,106 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
               <CardTitle>Invoices</CardTitle>
               <CardDescription>View and manage all invoices</CardDescription>
 
-              {/* Filters */}
-              <div className="flex gap-3 mt-4">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search invoices..."
-                    value={invoiceFilters.searchTerm}
-                    onChange={(e) => setInvoiceFilters(prev => ({ ...prev, searchTerm: e.target.value }))}
-                    className="pl-10"
-                  />
+              {/* Filters - Independent from global filters */}
+              <div className="space-y-3 mt-4">
+                {/* First Row: Date Range, Search, Order Type, Status */}
+                <div className="flex gap-3">
+                  <div className="space-y-1.5 w-[180px]">
+                    <Label className="text-xs font-medium">Date Range</Label>
+                    <Select
+                      value={invoiceDateRange}
+                      onValueChange={handleInvoiceDateRangeChange}
+                    >
+                      <SelectTrigger className="h-10">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Time</SelectItem>
+                        <SelectItem value="today">Today</SelectItem>
+                        <SelectItem value="this_week">This Week</SelectItem>
+                        <SelectItem value="last_week">Last Week</SelectItem>
+                        <SelectItem value="this_month">This Month</SelectItem>
+                        <SelectItem value="last_month">Last Month</SelectItem>
+                        <SelectItem value="custom">Custom Range</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="relative flex-1">
+                    <Label className="text-xs font-medium">Search</Label>
+                    <div className="relative mt-1.5">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder="Search invoices..."
+                        value={invoiceFilters.searchTerm}
+                        onChange={(e) => setInvoiceFilters(prev => ({ ...prev, searchTerm: e.target.value }))}
+                        className="pl-10 h-10"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-medium">Type</Label>
+                    <Select
+                      value={invoiceFilters.orderType || 'all'}
+                      onValueChange={(value) => setInvoiceFilters(prev => ({ ...prev, orderType: value as any }))}
+                    >
+                      <SelectTrigger className="w-[150px] h-10">
+                        <SelectValue placeholder="Type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Types</SelectItem>
+                        <SelectItem value="sales">Sales</SelectItem>
+                        <SelectItem value="service">Service</SelectItem>
+                        <SelectItem value="recon">Recon</SelectItem>
+                        <SelectItem value="carwash">Car Wash</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-medium">Status</Label>
+                    <Select
+                      value={invoiceFilters.status || 'all'}
+                      onValueChange={(value) => setInvoiceFilters(prev => ({ ...prev, status: value as any }))}
+                    >
+                      <SelectTrigger className="w-[150px] h-10">
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Status</SelectItem>
+                        <SelectItem value="pending">Pending</SelectItem>
+                        <SelectItem value="paid">Paid</SelectItem>
+                        <SelectItem value="overdue">Overdue</SelectItem>
+                        <SelectItem value="partially_paid">Partial</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-                <Select
-                  value={invoiceFilters.status || 'all'}
-                  onValueChange={(value) => setInvoiceFilters(prev => ({ ...prev, status: value as any }))}
-                >
-                  <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="paid">Paid</SelectItem>
-                    <SelectItem value="overdue">Overdue</SelectItem>
-                    <SelectItem value="partially_paid">Partial</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select
-                  value={invoiceFilters.orderType || 'all'}
-                  onValueChange={(value) => setInvoiceFilters(prev => ({ ...prev, orderType: value as any }))}
-                >
-                  <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder="Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Types</SelectItem>
-                    <SelectItem value="sales">Sales</SelectItem>
-                    <SelectItem value="service">Service</SelectItem>
-                    <SelectItem value="recon">Recon</SelectItem>
-                    <SelectItem value="carwash">Car Wash</SelectItem>
-                  </SelectContent>
-                </Select>
+
+                {/* Second Row: Custom Date Inputs (shown when custom is selected) */}
+                {invoiceDateRange === 'custom' && (
+                  <div className="flex gap-3 pt-2 border-t">
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-medium">From Date</Label>
+                      <Input
+                        type="date"
+                        value={invoiceStartDate}
+                        onChange={(e) => setInvoiceStartDate(e.target.value)}
+                        className="h-10"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-medium">To Date</Label>
+                      <Input
+                        type="date"
+                        value={invoiceEndDate}
+                        onChange={(e) => setInvoiceEndDate(e.target.value)}
+                        className="h-10"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </CardHeader>
 
