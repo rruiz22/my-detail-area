@@ -85,13 +85,13 @@ const InvoiceCenter = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Paid":
-        return <Badge className="bg-green-100 text-green-800">Paid</Badge>;
+        return <Badge className="bg-green-100 text-green-800">{t('detail_hub.invoices.status_values.paid')}</Badge>;
       case "Pending":
-        return <Badge className="bg-blue-100 text-blue-800">Pending</Badge>;
+        return <Badge className="bg-blue-100 text-blue-800">{t('common.status.pending')}</Badge>;
       case "Overdue":
-        return <Badge className="bg-red-100 text-red-800">Overdue</Badge>;
+        return <Badge className="bg-red-100 text-red-800">{t('detail_hub.invoices.status_values.overdue')}</Badge>;
       case "Draft":
-        return <Badge variant="secondary">Draft</Badge>;
+        return <Badge variant="secondary">{t('detail_hub.invoices.status_values.draft')}</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -118,33 +118,33 @@ const InvoiceCenter = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Invoice Center</h1>
-          <p className="text-muted-foreground">Manage billing and invoicing for detail services</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t('detail_hub.invoices.title')}</h1>
+          <p className="text-muted-foreground">{t('detail_hub.invoices.subtitle')}</p>
         </div>
         <Dialog open={isCreatingInvoice} onOpenChange={setIsCreatingInvoice}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="w-4 h-4 mr-2" />
-              Create Invoice
+              {t('detail_hub.invoices.create_invoice')}
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Create New Invoice</DialogTitle>
+              <DialogTitle>{t('detail_hub.invoices.create_invoice')}</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="clientName">Client Name</Label>
+                  <Label htmlFor="clientName">{t('detail_hub.invoices.client_name')}</Label>
                   <Input id="clientName" placeholder="ABC Dealership" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="dueDate">Due Date</Label>
+                  <Label htmlFor="dueDate">{t('detail_hub.invoices.due_date')}</Label>
                   <Input id="dueDate" type="date" />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">{t('detail_hub.invoices.description')}</Label>
                 <Textarea id="description" placeholder="Detail services for December 2024" />
               </div>
               <div className="space-y-2">
@@ -182,10 +182,10 @@ const InvoiceCenter = () => {
             </div>
             <div className="flex justify-end space-x-2">
               <Button variant="outline" onClick={() => setIsCreatingInvoice(false)}>
-                Cancel
+                {t('detail_hub.common.cancel')}
               </Button>
               <Button onClick={() => setIsCreatingInvoice(false)}>
-                Create Invoice
+                {t('detail_hub.invoices.create_invoice')}
               </Button>
             </div>
           </DialogContent>
@@ -198,7 +198,7 @@ const InvoiceCenter = () => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Total Revenue</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('detail_hub.dashboard.stats.total_revenue')}</p>
                 <p className="text-2xl font-bold text-green-600">${totalRevenue.toFixed(2)}</p>
               </div>
               <DollarSign className="w-8 h-8 text-green-600" />
@@ -209,7 +209,7 @@ const InvoiceCenter = () => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Pending</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('common.status.pending')}</p>
                 <p className="text-2xl font-bold text-blue-600">${pendingAmount.toFixed(2)}</p>
               </div>
               <Clock className="w-8 h-8 text-blue-600" />
@@ -220,7 +220,7 @@ const InvoiceCenter = () => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Overdue</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('detail_hub.invoices.status_values.overdue')}</p>
                 <p className="text-2xl font-bold text-red-600">${overdueAmount.toFixed(2)}</p>
               </div>
               <AlertCircle className="w-8 h-8 text-red-600" />
@@ -243,9 +243,9 @@ const InvoiceCenter = () => {
       <Tabs defaultValue="all" className="space-y-4">
         <TabsList>
           <TabsTrigger value="all">All Invoices</TabsTrigger>
-          <TabsTrigger value="pending">Pending</TabsTrigger>
-          <TabsTrigger value="paid">Paid</TabsTrigger>
-          <TabsTrigger value="overdue">Overdue</TabsTrigger>
+          <TabsTrigger value="pending">{t('common.status.pending')}</TabsTrigger>
+          <TabsTrigger value="paid">{t('detail_hub.invoices.status_values.paid')}</TabsTrigger>
+          <TabsTrigger value="overdue">{t('detail_hub.invoices.status_values.overdue')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="space-y-4">
@@ -255,7 +255,7 @@ const InvoiceCenter = () => {
               <div className="flex items-center space-x-2">
                 <Search className="w-4 h-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search invoices..."
+                  placeholder={t('detail_hub.common.search')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="max-w-sm"
@@ -267,18 +267,18 @@ const InvoiceCenter = () => {
           {/* Invoices Table */}
           <Card>
             <CardHeader>
-              <CardTitle>Invoices ({filteredInvoices.length})</CardTitle>
+              <CardTitle>{t('detail_hub.invoices.invoice_list')} ({filteredInvoices.length})</CardTitle>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Invoice</TableHead>
-                    <TableHead>Client</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Due Date</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead>{t('detail_hub.invoices.client_name')}</TableHead>
+                    <TableHead>{t('detail_hub.invoices.amount')}</TableHead>
+                    <TableHead>{t('detail_hub.invoices.status')}</TableHead>
+                    <TableHead>{t('detail_hub.invoices.due_date')}</TableHead>
+                    <TableHead>{t('detail_hub.invoices.actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

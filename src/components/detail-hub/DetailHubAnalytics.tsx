@@ -78,8 +78,8 @@ const DetailHubAnalytics = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Detail Hub Analytics</h1>
-          <p className="text-muted-foreground">Performance insights and business intelligence</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t('detail_hub.analytics.title')}</h1>
+          <p className="text-muted-foreground">{t('detail_hub.analytics.subtitle')}</p>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger className="w-40">
@@ -100,7 +100,7 @@ const DetailHubAnalytics = () => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Active Employees</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('detail_hub.dashboard.stats.active_employees')}</p>
                 <p className="text-2xl font-bold">{kpiData.activeToday}/{kpiData.totalEmployees}</p>
                 <div className="flex items-center space-x-1 text-sm">
                   {getTrendIcon(2)}
@@ -148,7 +148,7 @@ const DetailHubAnalytics = () => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Overtime Hours</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('detail_hub.analytics.overtime')}</p>
                 <p className="text-2xl font-bold">{kpiData.overtimeHours}h</p>
                 <div className="flex items-center space-x-1 text-sm">
                   {getTrendIcon(-5.2)}
@@ -163,9 +163,9 @@ const DetailHubAnalytics = () => {
 
       <Tabs defaultValue="productivity" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="productivity">Productivity</TabsTrigger>
-          <TabsTrigger value="attendance">Attendance</TabsTrigger>
-          <TabsTrigger value="departments">Departments</TabsTrigger>
+          <TabsTrigger value="productivity">{t('detail_hub.analytics.productivity')}</TabsTrigger>
+          <TabsTrigger value="attendance">{t('detail_hub.analytics.attendance')}</TabsTrigger>
+          <TabsTrigger value="departments">{t('detail_hub.analytics.department_comparison')}</TabsTrigger>
           <TabsTrigger value="payroll">Payroll</TabsTrigger>
           <TabsTrigger value="employees">Employee Performance</TabsTrigger>
         </TabsList>
