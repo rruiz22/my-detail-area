@@ -2,11 +2,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { 
-  CheckCircle, 
-  Clock, 
-  AlertTriangle, 
-  Calendar, 
+import {
+  CheckCircle,
+  Clock,
+  AlertTriangle,
+  Calendar,
   Plus,
   TrendingUp,
   ListTodo
@@ -14,31 +14,54 @@ import {
 import { useTranslation } from "react-i18next";
 import { useProductivityTodos } from "@/hooks/useProductivityTodos";
 import { useProductivityCalendars } from "@/hooks/useProductivityCalendars";
+import { useOrderContext } from "@/hooks/useOrderContext";
 import { ProductivityMetrics } from "./ProductivityMetrics";
 import { format, isToday, isTomorrow } from "date-fns";
 import { Link } from "react-router-dom";
+
+// Component to display order number with proper formatting (SV-, CW-, SA-, RC-)
+const OrderLink = ({ orderId }: { orderId: string }) => {
+  const { orderData, loading } = useOrderContext(orderId);
+
+  if (loading) {
+    return (
+      <span className="text-muted-foreground">
+        Order #{orderId.slice(-8)}
+      </span>
+    );
+  }
+
+  return (
+    <Link
+      to={`/productivity?order=${orderId}`}
+      className="text-blue-600 hover:text-blue-800 hover:underline"
+    >
+      Order #{orderData?.orderNumber || orderId.slice(-8)}
+    </Link>
+  );
+};
 
 export const ProductivityDashboard = () => {
   const { t } = useTranslation();
   const { todos, loading: todosLoading } = useProductivityTodos();
   const { events, loading: eventsLoading } = useProductivityCalendars();
 
-  const todayEvents = events.filter(event => 
+  const todayEvents = events.filter(event =>
     isToday(new Date(event.start_time))
   );
 
-  const tomorrowEvents = events.filter(event => 
+  const tomorrowEvents = events.filter(event =>
     isTomorrow(new Date(event.start_time))
   );
 
-  const overdueTodos = todos.filter(todo => 
-    todo.due_date && 
-    new Date(todo.due_date) < new Date() && 
+  const overdueTodos = todos.filter(todo =>
+    todo.due_date &&
+    new Date(todo.due_date) < new Date() &&
     todo.status !== 'completed'
   );
 
-  const urgentTodos = todos.filter(todo => 
-    todo.priority === 'urgent' && 
+  const urgentTodos = todos.filter(todo =>
+    todo.priority === 'urgent' &&
     todo.status !== 'completed'
   );
 
@@ -166,12 +189,7 @@ export const ProductivityDashboard = () => {
                       {todo.order_id && (
                         <>
                           {todo.due_date && <span>•</span>}
-                          <Link
-                            to={`/productivity?order=${todo.order_id}`}
-                            className="text-blue-600 hover:text-blue-800 hover:underline"
-                          >
-                            Order #{todo.order_id}
-                          </Link>
+                          <OrderLink orderId={todo.order_id} />
                         </>
                       )}
                     </div>
@@ -185,7 +203,7 @@ export const ProductivityDashboard = () => {
                 </Badge>
               </div>
             ))}
-            
+
             {todos.length === 0 && (
               <div className="text-center py-6 text-muted-foreground">
                 <ListTodo className="h-12 w-12 mx-auto mb-2 opacity-50" />
@@ -222,7 +240,7 @@ export const ProductivityDashboard = () => {
                 </Badge>
               </div>
             ))}
-            
+
             {todayEvents.length === 0 && (
               <div className="text-center py-6 text-muted-foreground">
                 <Calendar className="h-12 w-12 mx-auto mb-2 opacity-50" />

@@ -104,7 +104,7 @@ export const IntegrationSettings: React.FC = () => {
   const [securityConfig, setSecurityConfig] = useState<SecurityConfig>({
     max_login_attempts: 5,
     session_timeout_hours: 24,
-    password_min_length: 8,
+    password_min_length: 6,
     require_mfa: false,
     allow_password_reset: true
   });
@@ -809,7 +809,7 @@ export const IntegrationSettings: React.FC = () => {
                 value={securityConfig.password_min_length}
                 onChange={(e) => setSecurityConfig(prev => ({
                   ...prev,
-                  password_min_length: parseInt(e.target.value) || 8
+                  password_min_length: parseInt(e.target.value) || 6
                 }))}
               />
             </div>

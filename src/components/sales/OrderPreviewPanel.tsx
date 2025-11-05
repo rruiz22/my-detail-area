@@ -92,7 +92,7 @@ export function OrderPreviewPanel({
         <SheetHeader className="space-y-4">
           <div className="flex items-center justify-between">
             <SheetTitle className="text-xl font-semibold">
-              Order #{order.customOrderNumber || order.id}
+              Order #{order.orderNumber || order.order_number || order.id.slice(-8)}
             </SheetTitle>
             <Button
               variant="outline"

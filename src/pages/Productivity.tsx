@@ -1,11 +1,12 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Calendar, CheckSquare, Clock } from "lucide-react";
+import { Plus, Calendar, CheckSquare, Clock, StickyNote } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { ProductivityTodos } from "@/components/productivity/ProductivityTodos";
 import { ProductivityCalendar } from "@/components/productivity/ProductivityCalendar";
 import { ProductivityDashboard } from "@/components/productivity/ProductivityDashboard";
+import { ProductivityQuickNotes } from "@/components/productivity/ProductivityQuickNotes";
 import { useState, useEffect } from "react";
 
 export default function Productivity() {
@@ -29,10 +30,14 @@ export default function Productivity() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="dashboard" className="flex items-center gap-2">
               <Clock className="h-4 w-4" />
               {t('productivity.dashboard')}
+            </TabsTrigger>
+            <TabsTrigger value="notes" className="flex items-center gap-2">
+              <StickyNote className="h-4 w-4" />
+              {t('productivity.quickNotes')}
             </TabsTrigger>
             <TabsTrigger value="todos" className="flex items-center gap-2">
               <CheckSquare className="h-4 w-4" />
@@ -46,6 +51,10 @@ export default function Productivity() {
 
           <TabsContent value="dashboard" className="space-y-4">
             <ProductivityDashboard />
+          </TabsContent>
+
+          <TabsContent value="notes" className="space-y-4">
+            <ProductivityQuickNotes />
           </TabsContent>
 
           <TabsContent value="todos" className="space-y-4">

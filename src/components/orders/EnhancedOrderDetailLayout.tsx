@@ -211,9 +211,9 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
   // Memoized order identifiers to prevent child re-renders
   const orderIdentifiers = useMemo(() => ({
     id: order.id,
-    orderNumber: order.customOrderNumber || order.order_number || order.custom_order_number,
+    orderNumber: order.orderNumber || order.order_number || order.id.slice(-8),
     dealerId: String(order.dealer_id)
-  }), [order.id, order.customOrderNumber, order.order_number, order.custom_order_number, order.dealer_id]);
+  }), [order.id, order.orderNumber, order.order_number, order.dealer_id]);
 
   // Memoized QR code props to prevent unnecessary re-renders
   const qrCodeProps = useMemo(() => ({
@@ -252,7 +252,7 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
       >
         <div className="h-screen flex flex-col">
           <DialogTitle className="sr-only">
-            {t('orders.order_details')} - {order.customOrderNumber || order.custom_order_number || order.order_number}
+            {t('orders.order_details')} - {order.orderNumber || order.order_number || order.id.slice(-8)}
           </DialogTitle>
           <DialogDescription className="sr-only">
             {t('orders.order_details_description', {
@@ -280,7 +280,7 @@ export const EnhancedOrderDetailLayout = memo(function EnhancedOrderDetailLayout
                           textAlign: 'center'
                         }}
                       >
-                        #{order.customOrderNumber || order.order_number || order.custom_order_number || 'New Order'}
+                        #{order.orderNumber || order.order_number || 'New Order'}
                       </div>
 
                       {/* Edit Button */}

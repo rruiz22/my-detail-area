@@ -282,9 +282,33 @@ export async function generateInvoiceExcel(invoice: InvoiceWithDetails): Promise
     // Fallback: try to extract from services array if service_names is empty
     if (!services && item.metadata?.services && Array.isArray(item.metadata.services)) {
       services = item.metadata.services.map((s: any) => {
-        if (typeof s === 'string') return s;
-        return s.name || s.service_name || s.type || s.id || 'Service';
-      }).join(', ');
+        // Priority 1: Direct name from service object (NEW standard format)
+        if (s && typeof s === 'object' && s.name) {
+          return s.name;
+        }
+
+        // Priority 2: Legacy - service_name field
+        if (s && typeof s === 'object' && s.service_name) {
+          return s.service_name;
+        }
+
+        // Priority 3: Legacy carwash - type field (ID)
+        if (s && typeof s === 'object' && s.type) {
+          return s.type;
+        }
+
+        // Priority 4: Legacy - id field
+        if (s && typeof s === 'object' && s.id) {
+          return s.id;
+        }
+
+        // Priority 5: Legacy string format
+        if (typeof s === 'string') {
+          return s;
+        }
+
+        return 'Service';
+      }).filter(Boolean).join(', ');
     }
 
     // Final fallback

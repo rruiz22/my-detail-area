@@ -23,6 +23,9 @@ export default function GetReady() {
       {/* Reports */}
       <Route path="reports" element={<GetReadyContent />} />
 
+      {/* Activity - Recent activity log */}
+      <Route path="activity" element={<GetReadyContent />} />
+
       {/* Setup - system_admin only (content handled by GetReadySplitContent) */}
       <Route path="setup" element={<GetReadyContent />} />
 

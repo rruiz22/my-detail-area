@@ -61,7 +61,13 @@
       "Bash(python:*)",
       "WebSearch",
       "WebFetch(domain:github.com)",
-      "Bash(npx serve:*)"
+      "Bash(npx serve:*)",
+      "Bash(nul)",
+      "Bash(more:*)",
+      "Bash(for file in DetailHubDashboard.tsx EmployeePortal.tsx DetailHubAnalytics.tsx)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(done)",
+      "Bash(copy:*)"
     ],
     "deny": [],
     "ask": []

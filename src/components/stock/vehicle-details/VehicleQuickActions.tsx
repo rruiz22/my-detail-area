@@ -9,11 +9,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { usePermissions } from '@/hooks/usePermissions';
 import { VehicleInventory } from '@/hooks/useStockManagement';
-import { supabase } from '@/integrations/supabase/client';
-import { Edit, Plus, Wrench } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import { useVehicleStatus } from '@/hooks/useVehicleStatus';
+import { Edit, Plus, Settings, Wrench } from 'lucide-react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { GetReadyStepBadge } from './GetReadyStepBadge';
+import { ReconStatusBadge } from './ReconStatusBadge';
 
 interface VehicleQuickActionsProps {
   vehicle: VehicleInventory;
@@ -21,6 +23,7 @@ interface VehicleQuickActionsProps {
   onOpenSalesModal?: () => void;
   onOpenServiceModal?: () => void;
   onOpenReconModal?: () => void;
+  onOpenGetReadyModal?: () => void;
 }
 
 export const VehicleQuickActions: React.FC<VehicleQuickActionsProps> = ({
@@ -28,38 +31,19 @@ export const VehicleQuickActions: React.FC<VehicleQuickActionsProps> = ({
   canEdit,
   onOpenSalesModal,
   onOpenServiceModal,
-  onOpenReconModal
+  onOpenReconModal,
+  onOpenGetReadyModal
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { hasModulePermission } = usePermissions();
-  const [getReadyItem, setGetReadyItem] = useState<any | null>(null);
-  const [checkingGetReady, setCheckingGetReady] = useState(false);
 
-  // Check if vehicle is linked to Get Ready
-  useEffect(() => {
-    const checkGetReadyLink = async () => {
-      setCheckingGetReady(true);
-      try {
-        const { data, error } = await supabase
-          .from('get_ready_vehicles')
-          .select('*')
-          .or(`stock_number.eq.${vehicle.stock_number},vin.eq.${vehicle.vin}`)
-          .eq('dealer_id', vehicle.dealer_id)
-          .maybeSingle();
-
-        if (!error && data) {
-          setGetReadyItem(data);
-        }
-      } catch (error) {
-        console.error('Error checking Get Ready link:', error);
-      } finally {
-        setCheckingGetReady(false);
-      }
-    };
-
-    checkGetReadyLink();
-  }, [vehicle.stock_number, vehicle.vin, vehicle.dealer_id]);
+  // Use new unified hook to get vehicle status in both Recon and Get Ready
+  const { reconOrder, getReadyVehicle, loading: statusLoading } = useVehicleStatus(
+    vehicle.stock_number,
+    vehicle.vin,
+    vehicle.dealer_id
+  );
 
   const handleCreateOrder = (orderType: 'sales' | 'service' | 'recon') => {
     // Open the corresponding modal instead of navigating
@@ -72,82 +56,105 @@ export const VehicleQuickActions: React.FC<VehicleQuickActionsProps> = ({
     }
   };
 
-  const handleGetReadyAction = () => {
-    if (getReadyItem) {
-      // Navigate to Get Ready with this item
-      navigate('/get-ready', { state: { highlightId: getReadyItem.id } });
-    } else {
-      // Navigate to Get Ready to create new item
-      navigate('/get-ready', {
-        state: {
-          prefillData: {
-            stock_number: vehicle.stock_number,
-            vin: vehicle.vin,
-            vehicle_year: vehicle.year,
-            vehicle_make: vehicle.make,
-            vehicle_model: vehicle.model
-          }
-        }
-      });
-    }
-  };
-
   return (
-    <div className="flex flex-wrap gap-3">
-      {/* Create Order Dropdown */}
-      {(hasModulePermission('sales_orders', 'create_orders') ||
-        hasModulePermission('service_orders', 'create_orders') ||
-        hasModulePermission('recon_orders', 'create_orders')) && (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              {t('stock.vehicleDetails.actions.createOrder', 'Create Order')}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuLabel>{t('stock.vehicleDetails.actions.selectOrderType', 'Select Order Type')}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {hasModulePermission('sales_orders', 'create_orders') && (
-              <DropdownMenuItem onClick={() => handleCreateOrder('sales')}>
-                {t('stock.vehicleDetails.actions.createSalesOrder')}
-              </DropdownMenuItem>
-            )}
-            {hasModulePermission('service_orders', 'create_orders') && (
-              <DropdownMenuItem onClick={() => handleCreateOrder('service')}>
-                {t('stock.vehicleDetails.actions.createServiceOrder')}
-              </DropdownMenuItem>
-            )}
-            {hasModulePermission('recon_orders', 'create_orders') && (
-              <DropdownMenuItem onClick={() => handleCreateOrder('recon')}>
-                {t('stock.vehicleDetails.actions.createReconOrder')}
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+    <div className="space-y-3">
+      {/* Status Badges - Show current vehicle status */}
+      {!statusLoading && (reconOrder || getReadyVehicle) && (
+        <div className="flex flex-wrap gap-2">
+          {reconOrder && (
+            <ReconStatusBadge
+              status={reconOrder.status}
+              orderNumber={reconOrder.orderNumber}
+              onClick={() => navigate(`/recon-orders?order=${reconOrder.id}`)}
+            />
+          )}
+          {getReadyVehicle && (
+            <GetReadyStepBadge
+              stepName={getReadyVehicle.step_name}
+              stepColor={getReadyVehicle.step_color}
+              onClick={() => navigate('/get-ready', { state: { highlightId: getReadyVehicle.id } })}
+            />
+          )}
+        </div>
       )}
 
-      {/* Get Ready Button */}
-      {hasModulePermission('get_ready', 'view_vehicles') && (
-        <Button
-          variant="outline"
-          onClick={handleGetReadyAction}
-          disabled={checkingGetReady}
-        >
-          <Wrench className="w-4 h-4 mr-2" />
-          {getReadyItem
-            ? t('stock.vehicleDetails.actions.viewGetReady', 'View in Get Ready')
-            : t('stock.vehicleDetails.actions.linkGetReady')}
-        </Button>
-      )}
+      {/* Action Buttons */}
+      <div className="flex flex-wrap gap-3">
+        {/* Create Order Dropdown */}
+        {(hasModulePermission('sales_orders', 'create_orders') ||
+          hasModulePermission('service_orders', 'create_orders') ||
+          hasModulePermission('recon_orders', 'create_orders')) && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button>
+                <Plus className="w-4 h-4 mr-2" />
+                {t('stock.vehicleDetails.actions.createOrder', 'Create Order')}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuLabel>{t('stock.vehicleDetails.actions.selectOrderType', 'Select Order Type')}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {hasModulePermission('sales_orders', 'create_orders') && (
+                <DropdownMenuItem onClick={() => handleCreateOrder('sales')}>
+                  {t('stock.vehicleDetails.actions.createSalesOrder')}
+                </DropdownMenuItem>
+              )}
+              {hasModulePermission('service_orders', 'create_orders') && (
+                <DropdownMenuItem onClick={() => handleCreateOrder('service')}>
+                  {t('stock.vehicleDetails.actions.createServiceOrder')}
+                </DropdownMenuItem>
+              )}
+              {hasModulePermission('recon_orders', 'create_orders') && (
+                <DropdownMenuItem onClick={() => handleCreateOrder('recon')}>
+                  {t('stock.vehicleDetails.actions.createReconOrder')}
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
 
-      {/* Edit Vehicle */}
-      {canEdit && (
-        <Button variant="outline">
-          <Edit className="w-4 h-4 mr-2" />
-          {t('stock.vehicleDetails.actions.editVehicle')}
-        </Button>
-      )}
+        {/* Add to Recon Button - Show only if NOT already in recon and has permission */}
+        {!reconOrder && hasModulePermission('recon_orders', 'create_orders') && (
+          <Button
+            variant="outline"
+            onClick={onOpenReconModal}
+          >
+            <Wrench className="w-4 h-4 mr-2" />
+            {t('stock.vehicleDetails.actions.addToRecon', 'Add to Recon')}
+          </Button>
+        )}
+
+        {/* Add to Get Ready Button - Show only if NOT already in get ready */}
+        {!getReadyVehicle && onOpenGetReadyModal && (
+          <Button
+            variant="outline"
+            onClick={onOpenGetReadyModal}
+            disabled={statusLoading}
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            {t('stock.vehicleDetails.actions.addToGetReady', 'Add to Get Ready')}
+          </Button>
+        )}
+
+        {/* View in Get Ready Button - Show only if already in get ready */}
+        {getReadyVehicle && (
+          <Button
+            variant="outline"
+            onClick={() => navigate('/get-ready', { state: { highlightId: getReadyVehicle.id } })}
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            {t('stock.vehicleDetails.actions.viewGetReady', 'View in Get Ready')}
+          </Button>
+        )}
+
+        {/* Edit Vehicle */}
+        {canEdit && (
+          <Button variant="outline">
+            <Edit className="w-4 h-4 mr-2" />
+            {t('stock.vehicleDetails.actions.editVehicle')}
+          </Button>
+        )}
+      </div>
     </div>
   );
 };

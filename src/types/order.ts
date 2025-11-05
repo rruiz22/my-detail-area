@@ -24,7 +24,8 @@ export type PaymentStatus = 'pending' | 'paid' | 'partial' | 'refunded' | 'cance
  */
 export interface OrderData extends DatabaseOrder {
   // Additional camelCase properties for transform compatibility
-  customOrderNumber?: string;
+  orderNumber?: string; // Primary order number (SV-, CW-, SA-, RC- format)
+  customOrderNumber?: string; // @deprecated - Use orderNumber instead
   customerName?: string;
   customerPhone?: string;
   customerEmail?: string;

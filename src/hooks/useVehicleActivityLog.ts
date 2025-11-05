@@ -14,8 +14,8 @@ export interface VehicleActivity {
   description: string;
   metadata?: Record<string, any>;
   created_at: string;
-  // Joined data
-  user: {
+  // Joined data from profiles table
+  profiles?: {
     first_name: string;
     last_name: string;
     avatar_url?: string;
@@ -30,10 +30,14 @@ export function useVehicleActivityLog(vehicleId: string | null) {
     queryFn: async ({ pageParam = 0 }) => {
       if (!vehicleId) return { activities: [], hasMore: false };
 
-      // Fetch activity log
+      // Fetch activity log with optimized join to profiles table
       const { data: activityData, error } = await supabase
         .from('get_ready_vehicle_activity_log')
-        .select('*')
+        .select(`
+          *,
+          profiles:action_by(first_name, last_name, avatar_url),
+          get_ready_vehicles!inner(stock_number, vin, vehicle_year, vehicle_make, vehicle_model)
+        `)
         .eq('vehicle_id', vehicleId)
         .order('created_at', { ascending: false })
         .range(pageParam * PAGE_SIZE, (pageParam + 1) * PAGE_SIZE - 1);
@@ -43,40 +47,8 @@ export function useVehicleActivityLog(vehicleId: string | null) {
         throw error;
       }
 
-      // Get unique user IDs (filter out NULLs)
-      const userIds = [...new Set(
-        activityData
-          ?.map(a => a.action_by)
-          .filter((id): id is string => id != null) || []
-      )];
-
-      // Fetch user profiles only if we have valid user IDs
-      let userProfiles: Record<string, any> = {};
-      if (userIds.length > 0) {
-        const { data: profiles, error: profilesError } = await supabase
-          .from('profiles')
-          .select('id, first_name, last_name, avatar_url')
-          .in('id', userIds);
-
-        if (profilesError) {
-          console.error('Error fetching profiles:', profilesError);
-          // Continue without profiles rather than failing
-        } else {
-          userProfiles = (profiles || []).reduce((acc, profile) => {
-            acc[profile.id] = profile;
-            return acc;
-          }, {} as Record<string, any>);
-        }
-      }
-
-      // Combine data
-      const data = activityData?.map(activity => ({
-        ...activity,
-        user: userProfiles[activity.action_by] || null,
-      }));
-
       return {
-        activities: (data || []) as VehicleActivity[],
+        activities: (activityData || []) as VehicleActivity[],
         hasMore: activityData?.length === PAGE_SIZE,
       };
     },
