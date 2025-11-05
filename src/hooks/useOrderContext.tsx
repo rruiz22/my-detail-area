@@ -5,7 +5,7 @@ import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 
 export interface OrderContext {
   id: string;
-  customOrderNumber: string;
+  orderNumber: string;
   customerName: string;
   customerEmail?: string;
   vehicleMake?: string;
@@ -38,7 +38,7 @@ export const useOrderContext = (orderId?: string | null) => {
           .from('orders')
           .select(`
             id,
-            custom_order_number,
+            order_number,
             customer_name,
             customer_email,
             vehicle_make,
@@ -59,7 +59,7 @@ export const useOrderContext = (orderId?: string | null) => {
         if (data) {
           setOrderData({
             id: data.id,
-            customOrderNumber: data.custom_order_number || data.id.slice(-8),
+            orderNumber: data.order_number || data.id.slice(-8),
             customerName: data.customer_name || 'Unknown Customer',
             customerEmail: data.customer_email || undefined,
             vehicleMake: data.vehicle_make || undefined,

@@ -691,7 +691,15 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
       // Related data
       dealer_id: selectedDealership ? parseInt(selectedDealership) : null,
-      services: selectedServices || [],
+      services: selectedServices.map(serviceId => {
+        const service = services.find((s: { id: string; price?: number; name?: string; description?: string }) => s.id === serviceId);
+        return {
+          id: serviceId,
+          name: service?.name || 'Unknown Service',
+          price: service?.price,
+          description: service?.description
+        };
+      }),
 
       // Financial data - CRITICAL for reports
       total_amount: canViewPrices ? selectedServices.reduce((total, serviceId) => {
@@ -836,12 +844,17 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         const ordersData = selectedServices.map(serviceId => {
           const dbData = transformToDbFormat(formData);
           // Calculate total amount for THIS service only
-          const service = services.find((s: { id: string; price?: number }) => s.id === serviceId);
+          const service = services.find((s: { id: string; price?: number; name?: string; description?: string }) => s.id === serviceId);
           const individualAmount = canViewPrices ? (service?.price || 0) : 0;
 
           return {
             ...dbData,
-            services: [serviceId], // Only include this specific service
+            services: [{
+              id: serviceId,
+              name: service?.name || 'Unknown Service',
+              price: service?.price,
+              description: service?.description
+            }],
             totalAmount: individualAmount // Use individual service price
           };
         });

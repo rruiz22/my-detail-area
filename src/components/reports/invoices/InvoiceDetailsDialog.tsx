@@ -38,9 +38,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useInvoice, useDeleteInvoice, useDeletePayment } from '@/hooks/useInvoices';
+import { useRecalculateInvoice } from '@/hooks/useRecalculateInvoice';
 import type { InvoiceStatus } from '@/types/invoices';
 import { format, parseISO } from 'date-fns';
-import { Download, FileSpreadsheet, FileText, Loader2, Mail, Printer, Trash2, X } from 'lucide-react';
+import { Download, FileSpreadsheet, FileText, Loader2, Mail, Printer, RefreshCw, Trash2, X } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { generateInvoicePDF } from '@/utils/generateInvoicePDF';
@@ -86,7 +87,9 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
   const { data: invoice, isLoading } = useInvoice(invoiceId);
   const deleteMutation = useDeleteInvoice();
   const deletePaymentMutation = useDeletePayment();
+  const recalculateMutation = useRecalculateInvoice();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showRecalculateConfirm, setShowRecalculateConfirm] = useState(false);
   const [paymentToDelete, setPaymentToDelete] = useState<string | null>(null);
   const [showEmailDialog, setShowEmailDialog] = useState(false);
 
@@ -354,37 +357,67 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               color: #111827;
             }
             .footer {
-              position: fixed;
-              bottom: 0;
-              left: 0;
-              right: 0;
-              padding: 10px 40px;
-              border-top: 1px solid #E5E7EB;
-              background: white;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              font-size: 7pt;
-              color: #6B7280;
-            }
-            .footer-left, .footer-center, .footer-right {
-              flex: 1;
-            }
-            .footer-left { text-align: left; }
-            .footer-center { text-align: center; font-weight: bold; color: #111827; }
-            .footer-right { text-align: right; }
-            .footer-bold {
-              font-weight: 600;
-              color: #374151;
+              display: none; /* Hide in screen view */
             }
             @media print {
               body {
                 padding: 0;
-                padding-bottom: 60px;
+                margin: 0;
+                counter-reset: page;
               }
               .no-print { display: none; }
               @page {
-                margin: 0.5in 0.5in 0.75in 0.5in;
+                margin: 0.5in 0.5in 1in 0.5in; /* Extra bottom margin for footer */
+              }
+              table {
+                page-break-inside: auto;
+              }
+              tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+              }
+              thead {
+                display: table-header-group;
+              }
+              tfoot {
+                display: table-footer-group;
+              }
+
+              /* Footer that appears on every page */
+              .footer {
+                display: block;
+                position: fixed;
+                bottom: 0.3in;
+                left: 0.5in;
+                right: 0.5in;
+                padding: 10px 0;
+                border-top: 1px solid #E5E7EB;
+                background: white;
+                font-size: 7pt;
+                color: #6B7280;
+              }
+              .footer-content {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+              }
+              .footer-left, .footer-center, .footer-right {
+                flex: 1;
+              }
+              .footer-left { text-align: left; }
+              .footer-center {
+                text-align: center;
+                font-weight: bold;
+                color: #111827;
+              }
+              .footer-right { text-align: right; }
+              .footer-left div, .footer-right div {
+                line-height: 1.4;
+              }
+
+              /* Page counter - showing current page */
+              .footer-center::after {
+                content: "Page " counter(page);
               }
             }
           </style>
@@ -494,7 +527,23 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                       <td class="po-ro-tag" style="white-space: nowrap;">${poRoTag}</td>
                       <td>${cleanVehicleDescription(item.description)}</td>
                       <td class="font-mono" style="white-space: nowrap;">${item.metadata?.vehicle_vin || 'N/A'}</td>
-                      <td class="text-left">${item.metadata?.service_names || item.serviceReference || 'N/A'}</td>
+                      <td class="text-left">${(() => {
+                        // Extract service names with fallback logic
+                        if (item.metadata?.service_names) {
+                          return item.metadata.service_names;
+                        }
+                        if (item.metadata?.services && Array.isArray(item.metadata.services)) {
+                          return item.metadata.services.map((s: any) => {
+                            if (s && typeof s === 'object' && s.name) return s.name;
+                            if (s && typeof s === 'object' && s.service_name) return s.service_name;
+                            if (s && typeof s === 'object' && s.type) return s.type;
+                            if (s && typeof s === 'object' && s.id) return s.id;
+                            if (typeof s === 'string') return s;
+                            return 'Service';
+                          }).filter(Boolean).join(', ');
+                        }
+                        return item.serviceReference || 'N/A';
+                      })()}</td>
                       <td class="amount-cell">${formatCurrency(item.totalAmount)}</td>
                     </tr>
                   `;
@@ -533,35 +582,28 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
             ` : ''}
           </div>
 
-          <!-- Footer -->
+          <!-- Footer (appears on every printed page) -->
           <div class="footer">
-            <div class="footer-left">
-              <div>Generated: ${format(new Date(), 'MMM dd, yyyy \'at\' h:mm a')}</div>
-              <div>Invoice #${invoice.invoiceNumber}</div>
-              ${departments ? `<div>Dept: ${departments}</div>` : ''}
-            </div>
-            <div class="footer-center">
-              <div class="page-number"></div>
-            </div>
-            <div class="footer-right">
-              <div>${dealerName}</div>
-              ${servicePeriod ? `<div style="font-size: 6pt;">Period: ${servicePeriod}</div>` : ''}
-              <div>${invoice.items?.length || 0} vehicles</div>
+            <div class="footer-content">
+              <div class="footer-left">
+                <div>Generated: ${format(new Date(), 'MMM dd, yyyy \'at\' h:mm a')}</div>
+                <div>Invoice #${invoice.invoiceNumber}</div>
+                ${departments ? `<div>Dept: ${departments}</div>` : ''}
+              </div>
+              <div class="footer-center">
+                <!-- Page numbers auto-generated by CSS counter -->
+              </div>
+              <div class="footer-right">
+                <div>${dealerName}</div>
+                ${servicePeriod ? `<div style="font-size: 6pt;">Period: ${servicePeriod}</div>` : ''}
+                <div>${invoice.items?.length || 0} vehicles</div>
+              </div>
             </div>
           </div>
 
           <script>
-            // Add page numbers
-            function addPageNumbers() {
-              const pageNumbers = document.querySelectorAll('.page-number');
-              pageNumbers.forEach(element => {
-                element.textContent = 'Page 1 of 1';
-              });
-            }
-
             // Auto-print when loaded
             window.onload = function() {
-              addPageNumbers();
               window.print();
             };
             // Close window after printing or canceling
@@ -609,6 +651,12 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
 
   const handleEmail = () => {
     setShowEmailDialog(true);
+  };
+
+  const handleRecalculate = async () => {
+    if (!invoice) return;
+    await recalculateMutation.mutateAsync(invoice.id);
+    setShowRecalculateConfirm(false);
   };
 
   if (isLoading) {
@@ -688,6 +736,20 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 {t('reports.invoices.delete')}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setShowRecalculateConfirm(true)}
+                disabled={recalculateMutation.isPending}
+                className="bg-amber-500 hover:bg-amber-600 text-white border-amber-600"
+              >
+                {recalculateMutation.isPending ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                )}
+                Recalculate
               </Button>
               <Button
                 size="sm"
@@ -911,7 +973,24 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                             {item.metadata?.vehicle_vin || 'N/A'}
                           </TableCell>
                           <TableCell className="text-sm text-left text-gray-600">
-                            {item.metadata?.service_names || item.serviceReference || 'N/A'}
+                            {(() => {
+                              // Extract service names with fallback logic
+                              if (item.metadata?.service_names) {
+                                return item.metadata.service_names;
+                              }
+                              if (item.metadata?.services && Array.isArray(item.metadata.services)) {
+                                const names = item.metadata.services.map((s: any) => {
+                                  if (s && typeof s === 'object' && s.name) return s.name;
+                                  if (s && typeof s === 'object' && s.service_name) return s.service_name;
+                                  if (s && typeof s === 'object' && s.type) return s.type;
+                                  if (s && typeof s === 'object' && s.id) return s.id;
+                                  if (typeof s === 'string') return s;
+                                  return 'Service';
+                                }).filter(Boolean).join(', ');
+                                if (names) return names;
+                              }
+                              return item.serviceReference || 'N/A';
+                            })()}
                           </TableCell>
                           <TableCell className="text-center font-semibold text-base text-gray-900">
                             {formatCurrency(item.totalAmount)}
@@ -1111,6 +1190,48 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                 disabled={deletePaymentMutation.isPending}
               >
                 {deletePaymentMutation.isPending ? 'Deleting...' : 'Delete Payment'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Recalculate Confirmation Dialog */}
+        <AlertDialog open={showRecalculateConfirm} onOpenChange={setShowRecalculateConfirm}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Recalculate Invoice?</AlertDialogTitle>
+              <AlertDialogDescription asChild>
+                <div className="space-y-2">
+                  <p>
+                    This will update all invoice items with the latest data from the orders, including:
+                  </p>
+                  <ul className="list-disc list-inside ml-2 space-y-1 text-sm">
+                    <li>Service names from current dealer services</li>
+                    <li>Order totals and prices</li>
+                    <li>Customer and vehicle information</li>
+                    <li>Invoice totals and tax calculations</li>
+                  </ul>
+                  <p className="text-amber-600 font-semibold mt-3">
+                    Note: If any orders have been modified since invoice creation, the invoice will reflect those changes.
+                  </p>
+                </div>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleRecalculate}
+                className="bg-amber-600 hover:bg-amber-700"
+                disabled={recalculateMutation.isPending}
+              >
+                {recalculateMutation.isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Recalculating...
+                  </>
+                ) : (
+                  'Recalculate Invoice'
+                )}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

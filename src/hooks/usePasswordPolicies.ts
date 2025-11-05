@@ -28,7 +28,7 @@ export interface PasswordPolicy {
 }
 
 export const defaultPasswordPolicy: PasswordPolicy = {
-  min_length: 8,
+  min_length: 6,
   require_uppercase: true,
   require_lowercase: true,
   require_numbers: true,
@@ -49,7 +49,7 @@ export const usePasswordPolicies = (dealerId: number) => {
   const fetchPolicies = async () => {
     try {
       setLoading(true);
-      
+
       const { data, error } = await supabase
         .from('security_policies')
         .select('*')
@@ -59,7 +59,7 @@ export const usePasswordPolicies = (dealerId: number) => {
       if (error) throw error;
 
       setPolicies(data || []);
-      
+
       // Find password policy
       const passwordPolicyData = data?.find(p => p.policy_name === 'password_policy');
       if (passwordPolicyData && passwordPolicyData.policy_value) {
@@ -84,12 +84,12 @@ export const usePasswordPolicies = (dealerId: number) => {
   const updatePasswordPolicy = async (newPolicy: Partial<PasswordPolicy>) => {
     try {
       setLoading(true);
-      
+
       const updatedPolicy = { ...passwordPolicy, ...newPolicy };
-      
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
-      
+
       const { error } = await supabase
         .from('security_policies')
         .upsert({
@@ -105,7 +105,7 @@ export const usePasswordPolicies = (dealerId: number) => {
       if (error) throw error;
 
       setPasswordPolicy(updatedPolicy);
-      
+
       toast({
         title: t('common.success'),
         description: t('password_management.policy_updated'),
@@ -133,10 +133,10 @@ export const usePasswordPolicies = (dealerId: number) => {
   ) => {
     try {
       setLoading(true);
-      
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
-      
+
       const { error } = await supabase
         .from('security_policies')
         .insert({
@@ -198,7 +198,7 @@ export const usePasswordPolicies = (dealerId: number) => {
 
   const validatePassword = (password: string): { isValid: boolean; errors: string[] } => {
     const errors: string[] = [];
-    
+
     if (password.length < passwordPolicy.min_length) {
       errors.push(t('password_management.validation.min_length', { length: passwordPolicy.min_length }));
     }
@@ -230,40 +230,40 @@ export const usePasswordPolicies = (dealerId: number) => {
     const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const numbers = '0123456789';
     const special = '!@#$%^&*()';
-    
+
     let charset = '';
     let password = '';
-    
+
     // Ensure required character types are included
     if (passwordPolicy.require_lowercase) {
       charset += lowercase;
       password += lowercase[Math.floor(Math.random() * lowercase.length)];
     }
-    
+
     if (passwordPolicy.require_uppercase) {
       charset += uppercase;
       password += uppercase[Math.floor(Math.random() * uppercase.length)];
     }
-    
+
     if (passwordPolicy.require_numbers) {
       charset += numbers;
       password += numbers[Math.floor(Math.random() * numbers.length)];
     }
-    
+
     if (passwordPolicy.require_special) {
       charset += special;
       password += special[Math.floor(Math.random() * special.length)];
     }
-    
+
     if (!charset) {
       charset = lowercase + uppercase + numbers;
     }
-    
+
     // Fill remaining length
     for (let i = password.length; i < passwordPolicy.min_length; i++) {
       password += charset[Math.floor(Math.random() * charset.length)];
     }
-    
+
     // Shuffle the password
     return password.split('').sort(() => Math.random() - 0.5).join('');
   };

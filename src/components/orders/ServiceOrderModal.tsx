@@ -521,7 +521,12 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
           ro: formData.ro || undefined,
           tag: formData.tag || undefined,
           assignedGroupId: selectedAssignedTo || undefined,
-          services: [serviceId], // Only include this specific service
+          services: [{
+            id: serviceId,
+            name: service?.name || 'Unknown Service',
+            price: service?.price,
+            description: service?.description
+          }],
           totalAmount: service?.price || 0,
           notes: formData.notes || undefined,
           dueDate: formData.dueDate || undefined,
@@ -563,7 +568,15 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
         ro: formData.ro || undefined,
         tag: formData.tag || undefined,
         assignedGroupId: selectedAssignedTo || undefined,
-        services: selectedServices,
+        services: selectedServices.map(serviceId => {
+          const service = services.find(s => s.id === serviceId);
+          return {
+            id: serviceId,
+            name: service?.name || 'Unknown Service',
+            price: service?.price,
+            description: service?.description
+          };
+        }),
         totalAmount: selectedServices.reduce((total, serviceId) => {
           const service = services.find(s => s.id === serviceId);
           return total + (service?.price || 0);

@@ -1,21 +1,25 @@
+import { ReconOrderModal } from '@/components/orders/ReconOrderModal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { useGetReady } from '@/hooks/useGetReady';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useVehicleDetail, type VehicleDetail } from '@/hooks/useGetReadyVehicles';
+import { usePermissions } from '@/hooks/usePermissions';
 import { useVehicleActivityLog } from '@/hooks/useVehicleActivityLog';
+import { useVehicleManagement } from '@/hooks/useVehicleManagement';
 import { useVehicleMedia } from '@/hooks/useVehicleMedia';
 import { useVehicleNotes } from '@/hooks/useVehicleNotes';
+import { useVehicleStatus } from '@/hooks/useVehicleStatus';
 import { useCurrentStepVisit, useVehicleTimeToLine } from '@/hooks/useVehicleStepHistory';
 import { useWorkItems } from '@/hooks/useVehicleWorkItems';
-import { useVehicleManagement } from '@/hooks/useVehicleManagement';
+import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 import { formatTimeDuration } from '@/utils/timeFormatUtils';
-import { StepDropdown } from './StepDropdown';
 import {
     AlertTriangle,
     Circle,
@@ -34,6 +38,8 @@ import {
 } from 'lucide-react';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { StepDropdown } from './StepDropdown';
 import { VehicleMediaTab } from './tabs/VehicleMediaTab';
 import { VehicleNotesTab } from './tabs/VehicleNotesTab';
 import { VehicleVendorsTab } from './tabs/VehicleVendorsTab';
@@ -47,10 +53,23 @@ interface VehicleDetailPanelProps {
 export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const { steps } = useGetReady();
   const { selectedVehicleId, setSelectedVehicleId } = useGetReadyStore();
   const { data: vehicleDetail, isLoading } = useVehicleDetail(selectedVehicleId);
   const { moveVehicle, isMoving } = useVehicleManagement();
+  const { hasModulePermission } = usePermissions();
+  const { currentDealership } = useAccessibleDealerships();
+
+  // State for Recon Order Modal
+  const [showReconModal, setShowReconModal] = React.useState(false);
+
+  // Check if vehicle is in Recon (only when we have vehicle data)
+  const { reconOrder, loading: statusLoading } = useVehicleStatus(
+    vehicleDetail?.stock_number || '',
+    vehicleDetail?.vin || '',
+    currentDealership?.id || 0
+  );
 
   // Fetch counts for each tab
   const { data: workItems = [] } = useWorkItems(selectedVehicleId);
@@ -163,6 +182,62 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
     const nextStep = availableSteps[currentStepIndex + 1];
     handleMoveToStep(nextStep.id);
   };
+
+  // Handler for adding vehicle to Recon - Opens modal with auto-population
+  const handleAddToRecon = () => {
+    if (!vehicleDetail) return;
+    setShowReconModal(true);
+  };
+
+  // Handler for saving Recon order
+  const handleSaveReconOrder = async (orderData: Record<string, unknown>) => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .insert([orderData])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      toast({
+        title: t('recon_orders.toast.create_success'),
+        description: t('recon_orders.toast.create_success_description'),
+      });
+
+      setShowReconModal(false);
+
+      // Optionally navigate to the new order
+      if (data?.id) {
+        navigate(`/recon-orders?order=${data.id}`);
+      }
+    } catch (error) {
+      console.error('Error creating recon order:', error);
+      toast({
+        title: t('recon_orders.toast.create_error'),
+        description: error instanceof Error ? error.message : t('recon_orders.toast.create_error_description'),
+        variant: 'destructive',
+      });
+    }
+  };
+
+  // Prepare pre-filled data for Recon modal
+  const preFillOrderData = React.useMemo(() => {
+    if (!vehicleDetail) return null;
+
+    return {
+      vehicleVin: vehicleDetail.vin,
+      vehicle_vin: vehicleDetail.vin,
+      vehicleYear: vehicleDetail.vehicle_year?.toString(),
+      vehicle_year: vehicleDetail.vehicle_year?.toString(),
+      vehicleMake: vehicleDetail.vehicle_make,
+      vehicle_make: vehicleDetail.vehicle_make,
+      vehicleModel: vehicleDetail.vehicle_model,
+      vehicle_model: vehicleDetail.vehicle_model,
+      stockNumber: vehicleDetail.stock_number,
+      stock_number: vehicleDetail.stock_number,
+    };
+  }, [vehicleDetail]);
 
   if (!selectedVehicleId) {
     return (
@@ -394,6 +469,21 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
                   className="w-full"
                 />
               </div>
+
+              {/* Add to Recon Button - Show only if NOT in Recon and has permission */}
+              {!reconOrder && !statusLoading && hasModulePermission('recon_orders', 'create_orders') && (
+                <div className="col-span-3 sm:col-span-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleAddToRecon}
+                    className="w-full h-full bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/40"
+                  >
+                    <Wrench className="h-4 w-4 mr-2" />
+                    {t('stock.vehicleDetails.actions.addToRecon')}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -520,6 +610,16 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Recon Order Modal - Opens with auto-populated vehicle data */}
+      {preFillOrderData && (
+        <ReconOrderModal
+          open={showReconModal}
+          onClose={() => setShowReconModal(false)}
+          onSave={handleSaveReconOrder}
+          order={preFillOrderData}
+        />
+      )}
     </div>
   );
 }

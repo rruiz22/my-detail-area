@@ -27,7 +27,6 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { useGetReady } from "@/hooks/useGetReady";
-import { useQueryClient } from "@tanstack/react-query";
 import {
     useGetReadyPriorityFilter,
     useGetReadySearchQuery,
@@ -40,7 +39,9 @@ import { useServerExport } from "@/hooks/useServerExport";
 import { useVehicleManagement } from "@/hooks/useVehicleManagement";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { GetReadySetup } from "@/pages/GetReadySetup";
 import { formatVehiclesForExport } from "@/utils/exportUtils";
+import { useQueryClient } from "@tanstack/react-query";
 import {
     CheckCircle2,
     ChevronDown,
@@ -55,13 +56,13 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { GetReadyActivityFeed } from "./GetReadyActivityFeed";
 import { GetReadyDashboardWidget } from "./GetReadyDashboardWidget";
 import { GetReadyOverview } from "./GetReadyOverview";
 import { GetReadyVehicleList } from "./GetReadyVehicleList";
 import { VehicleDetailPanel } from "./VehicleDetailPanel";
 import { VehicleFormModal } from "./VehicleFormModal";
 import { VehicleTable } from "./VehicleTable";
-import { GetReadySetup } from "@/pages/GetReadySetup";
 
 interface GetReadySplitContentProps {
   className?: string;
@@ -96,12 +97,29 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   // Vehicle form modal state
   const [vehicleFormOpen, setVehicleFormOpen] = useState(false);
   const [editingVehicleId, setEditingVehicleId] = useState<string | null>(null);
+  const [prefillData, setPrefillData] = useState<any>(null);
 
   // Ref to track processed vehicle IDs from URL to prevent infinite loops
   const processedVehicleIdRef = useRef<string | null>(null);
+  const prefillProcessedRef = useRef(false);
 
   // Use the selected step from sidebar, or 'all' if none selected
   const selectedStep = selectedStepId || "all";
+
+  // Auto-open modal when prefillData is provided (e.g., from Stock page)
+  useEffect(() => {
+    const state = location.state as { prefillData?: any; highlightId?: string } | null;
+
+    if (state?.prefillData && !prefillProcessedRef.current) {
+      console.log('📝 [Get Ready] Detected prefillData from navigation:', state.prefillData);
+      setPrefillData(state.prefillData);
+      setVehicleFormOpen(true);
+      prefillProcessedRef.current = true;
+
+      // Clear the state to prevent re-opening on refresh
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, location.pathname, navigate]);
 
   // Fetch vehicles for export (infinite query to get all vehicles)
   const { data: vehiclesData } = useGetReadyVehiclesInfinite({
@@ -292,6 +310,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     location.pathname === "/get-ready/";
   const isDetailsView = location.pathname === "/get-ready/details";
   const isReportsView = location.pathname === "/get-ready/reports";
+  const isActivityView = location.pathname === "/get-ready/activity";
   const isApprovalsView = location.pathname === "/get-ready/approvals";
   const isSetupView = location.pathname === "/get-ready/setup";
 
@@ -446,6 +465,15 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
             </p>
           </CardContent>
         </Card>
+      </div>
+    );
+  }
+
+  // Activity View Tab - Complete Activity Log
+  if (isActivityView) {
+    return (
+      <div className={cn("h-full overflow-auto", className)}>
+        <GetReadyActivityFeed />
       </div>
     );
   }
@@ -794,11 +822,20 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
         {/* Vehicle Form Modal */}
         <VehicleFormModal
           open={vehicleFormOpen}
-          onOpenChange={setVehicleFormOpen}
+          onOpenChange={(open) => {
+            setVehicleFormOpen(open);
+            if (!open) {
+              setPrefillData(null);
+              setEditingVehicleId(null);
+              prefillProcessedRef.current = false;
+            }
+          }}
           vehicleId={editingVehicleId}
+          initialData={prefillData}
           onSuccess={() => {
             refetchSteps();
             refetchKPIs();
+            setPrefillData(null);
           }}
         />
       </div>

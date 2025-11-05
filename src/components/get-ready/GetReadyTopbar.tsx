@@ -6,6 +6,7 @@ import { useGetReadyApprovalCount } from '@/hooks/useGetReadyApprovalCount';
 import { usePermissions } from '@/hooks/usePermissions';
 import { cn } from '@/lib/utils';
 import {
+    Activity,
     BarChart3,
     Eye,
     Grid3X3,
@@ -31,6 +32,7 @@ const TABS: TabConfig[] = [
   { key: 'approvals', icon: UserCheck, path: '/get-ready/approvals' },
   { key: 'vendors', icon: Users, path: '/get-ready/vendors' },
   { key: 'reports', icon: BarChart3, path: '/get-ready/reports' },
+  { key: 'activity', icon: Activity, path: '/get-ready/activity' },
   { key: 'setup', icon: Wrench, path: '/get-ready/setup' }
 ];
 

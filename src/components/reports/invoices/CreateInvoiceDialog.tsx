@@ -322,34 +322,31 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
         // Extract service names from vehicle.services using robust logic
         const serviceNames = vehicle.services && Array.isArray(vehicle.services)
           ? vehicle.services.map((service: any) => {
-              // Handle different service data structures
-              if (typeof service === 'string') {
-                // If service is just a string ID, try to find it in availableServices
-                const serviceData = availableServices?.find(ds => ds.id === service);
-                return serviceData?.name || service;
+              // Priority 1: Direct name from service object (NEW standard format)
+              if (service && typeof service === 'object' && service.name) {
+                return service.name;
               }
 
-              // If service is an object, try different fields
-              // Priority 1: Direct name field (carwash new format)
-              if (service.name) return service.name;
-
-              // Priority 2: Lookup by type field (carwash with type ID)
-              if (service.type) {
-                const serviceData = availableServices?.find(ds => ds.id === service.type);
-                return serviceData?.name || service.type;
-              }
-
-              // Priority 3: Lookup by id field (Sales/Service/Recon)
-              if (service.id) {
+              // Priority 2: Legacy - lookup by id field
+              if (service && typeof service === 'object' && service.id) {
                 const serviceData = availableServices?.find(ds => ds.id === service.id);
                 return serviceData?.name || service.id;
               }
 
-              // Priority 4: Other name fields
-              if (service.service_name) return service.service_name;
+              // Priority 3: Legacy carwash - lookup by type field
+              if (service && typeof service === 'object' && service.type) {
+                const serviceData = availableServices?.find(ds => ds.id === service.type);
+                return serviceData?.name || service.type;
+              }
+
+              // Priority 4: Legacy string format
+              if (typeof service === 'string') {
+                const serviceData = availableServices?.find(ds => ds.id === service);
+                return serviceData?.name || service;
+              }
 
               return 'Unknown';
-            }).join(', ')
+            }).filter(Boolean).join(', ')
           : 'N/A';
 
         return {

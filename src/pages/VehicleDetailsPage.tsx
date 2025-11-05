@@ -1,3 +1,4 @@
+import { VehicleFormModal } from '@/components/get-ready/VehicleFormModal';
 import { OrderModal } from '@/components/orders/OrderModal';
 import { ReconOrderModal } from '@/components/orders/ReconOrderModal';
 import ServiceOrderModal from '@/components/orders/ServiceOrderModal';
@@ -36,6 +37,7 @@ const VehicleDetailsPage: React.FC = () => {
   const [showSalesModal, setShowSalesModal] = useState(false);
   const [showServiceModal, setShowServiceModal] = useState(false);
   const [showReconModal, setShowReconModal] = useState(false);
+  const [showGetReadyModal, setShowGetReadyModal] = useState(false);
 
   // Permission checks
   const canView = hasModulePermission('stock', 'view_inventory');
@@ -85,6 +87,8 @@ const VehicleDetailsPage: React.FC = () => {
     if (!vehicle) return null;
 
     return {
+      dealer_id: vehicle.dealer_id,
+      dealerId: vehicle.dealer_id,
       vehicleVin: vehicle.vin,
       vehicle_vin: vehicle.vin,
       vehicleYear: vehicle.year?.toString(),
@@ -97,6 +101,19 @@ const VehicleDetailsPage: React.FC = () => {
       vehicle_info: `${vehicle.year} ${vehicle.make} ${vehicle.model}`,
       stockNumber: vehicle.stock_number,
       stock_number: vehicle.stock_number,
+    };
+  }, [vehicle]);
+
+  // Prepare pre-filled data for Get Ready
+  const getReadyInitialData = useMemo(() => {
+    if (!vehicle) return undefined;
+
+    return {
+      stock_number: vehicle.stock_number,
+      vin: vehicle.vin,
+      year: vehicle.year?.toString(),
+      make: vehicle.make,
+      model: vehicle.model,
     };
   }, [vehicle]);
 
@@ -136,6 +153,15 @@ const VehicleDetailsPage: React.FC = () => {
     } catch (error) {
       console.error('Error creating recon order:', error);
     }
+  };
+
+  const handleSaveGetReady = () => {
+    // The VehicleFormModal handles the save internally
+    setShowGetReadyModal(false);
+    toast({
+      title: t('common.success'),
+      description: t('get_ready.vehicle_form.success.created')
+    });
   };
 
   // Permission denied
@@ -214,6 +240,7 @@ const VehicleDetailsPage: React.FC = () => {
         onOpenSalesModal={() => setShowSalesModal(true)}
         onOpenServiceModal={() => setShowServiceModal(true)}
         onOpenReconModal={() => setShowReconModal(true)}
+        onOpenGetReadyModal={() => setShowGetReadyModal(true)}
       />
       </div>
 
@@ -278,9 +305,18 @@ const VehicleDetailsPage: React.FC = () => {
             onClose={() => setShowReconModal(false)}
             onSave={handleSaveReconOrder}
             order={preFillOrderData}
+            mode="create"
           />
         </>
       )}
+
+      {/* Get Ready Modal */}
+      <VehicleFormModal
+        open={showGetReadyModal}
+        onOpenChange={setShowGetReadyModal}
+        initialData={getReadyInitialData}
+        onSuccess={handleSaveGetReady}
+      />
     </div>
   );
 };

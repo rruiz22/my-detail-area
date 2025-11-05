@@ -74,10 +74,21 @@ export function useCreateVehicleNote() {
         throw new Error('User must be authenticated to create notes');
       }
 
+      // Get dealer_id from the vehicle
+      const { data: vehicle, error: vehicleError } = await supabase
+        .from('get_ready_vehicles')
+        .select('dealer_id')
+        .eq('id', input.vehicle_id)
+        .single();
+
+      if (vehicleError) throw vehicleError;
+      if (!vehicle) throw new Error('Vehicle not found');
+
       const { data, error } = await supabase
         .from('vehicle_notes')
         .insert({
           vehicle_id: input.vehicle_id,
+          dealer_id: vehicle.dealer_id,
           content: input.content,
           note_type: input.note_type || 'general',
           is_pinned: input.is_pinned || false,

@@ -13,17 +13,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
-import { usePermissionContext } from '@/contexts/PermissionContext';
+import { useToast } from '@/hooks/use-toast';
+import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { useDealerServices, useDealerships } from '@/hooks/useDealerships';
-import { usePermissions } from '@/hooks/usePermissions';
+import { usePermissions, type AppModule } from '@/hooks/usePermissions';
 import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
+import { type ModulePermissionKey } from '@/types/permissions';
 import { safeParseDate } from '@/utils/dateUtils';
-import { canViewPricing } from '@/utils/permissions';
 import { AlertCircle, Loader2, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useToast } from '@/hooks/use-toast';
 
 interface OrderFormData {
   // Order identification
@@ -120,9 +120,11 @@ interface ReconOrderModalProps {
 export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, onClose, onSave, mode = 'create' }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
-  const { roles } = usePermissionContext();
   const { enhancedUser } = usePermissions();
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
+
+  // Get current dealership from context (more robust than localStorage)
+  const { currentDealership } = useAccessibleDealerships();
 
   // Form state
   const [formData, setFormData] = useState<OrderFormData>({
@@ -150,9 +152,8 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
   const [selectedDealership, setSelectedDealership] = useState('');
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleSearchResult | null>(null);
 
-  const globalDealerFilter = localStorage.getItem('selectedDealerFilter');
-  const isGlobalFilterActive = globalDealerFilter && globalDealerFilter !== 'all';
-  const isDealerFieldReadOnly = Boolean(isGlobalFilterActive);
+  // Dealer field is read-only if: current dealership exists OR order has dealer_id (pre-filled from stock)
+  const isDealerFieldReadOnly = Boolean(currentDealership) || Boolean(order?.dealer_id || order?.dealerId);
 
   // Refs to prevent double-setting in Strict Mode
   const editModeInitialized = useRef(false);
@@ -174,9 +175,19 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
   // Combine loading states
   const loading = dealershipsLoading || servicesLoading;
 
-  const canViewPrices = canViewPricing(roles, enhancedUser?.is_system_admin ?? false);
+  // Check if user can view pricing (system admin or has view_pricing permission in any order module)
+  const canViewPrices = enhancedUser?.is_system_admin ||
+    (enhancedUser?.custom_roles?.some(role => {
+      const salesPerms = role.module_permissions?.get('sales_orders' satisfies AppModule);
+      const servicePerms = role.module_permissions?.get('service_orders' satisfies AppModule);
+      const reconPerms = role.module_permissions?.get('recon_orders' satisfies AppModule);
+      return salesPerms?.has('view_pricing' satisfies ModulePermissionKey) ||
+             servicePerms?.has('view_pricing' satisfies ModulePermissionKey) ||
+             reconPerms?.has('view_pricing' satisfies ModulePermissionKey);
+    }) ?? false);
 
-  const isEditing = Boolean(order);
+  // Use mode prop to determine if editing, fallback to checking if order has ID
+  const isEditing = mode === 'edit' || (order?.id !== undefined);
 
   const setSelectedDealershipWithLog = (value: string) => {
     setSelectedDealership(value);
@@ -187,13 +198,16 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
       // Dealerships are now loaded via React Query hook - no need to fetch manually
 
       if (order) {
-        // Prevent double initialization in React Strict Mode
-        if (currentOrderId.current === order.id && editModeInitialized.current) {
+        // Check if this is EDIT mode (has ID) or CREATE with pre-fill (no ID)
+        const isEditMode = Boolean(order.id);
+
+        // For EDIT mode: Prevent double initialization in React Strict Mode
+        if (isEditMode && currentOrderId.current === order.id && editModeInitialized.current) {
           return;
         }
 
-        currentOrderId.current = order.id;
-        editModeInitialized.current = true;
+        currentOrderId.current = order.id || null;
+        editModeInitialized.current = isEditMode;
 
         // Helper function to safely extract field values with fallbacks
         const getFieldValue = (camelCase: unknown, snakeCase: unknown, defaultValue = '') => {
@@ -215,8 +229,8 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
         };
 
         setFormData({
-          // Basic order info
-          orderNumber: getFieldValue(order.orderNumber, order.order_number),
+          // Basic order info - empty order number for create mode
+          orderNumber: isEditMode ? getFieldValue(order.orderNumber, order.order_number) : '',
           orderType: 'recon',
           status: getFieldValue(order.status, order.status, 'pending'),
           priority: getFieldValue(order.priority, order.priority, 'normal'),
@@ -237,16 +251,16 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
           notes: getFieldValue(order.notes, order.notes),
           internalNotes: getFieldValue(order.internalNotes, order.internal_notes),
 
-          // Date fields - handle proper parsing
-          completedAt: parseDateField(order.completedAt, order.completed_at),
+          // Date fields - handle proper parsing, with completion date defaulting to today
+          completedAt: parseDateField(order.completedAt, order.completed_at) || new Date(),
           dueDate: parseDateField(order.dueDate, order.due_date),
           slaDeadline: parseDateField(order.slaDeadline, order.sla_deadline),
           scheduledDate: parseDateField(order.scheduledDate, order.scheduled_date),
           scheduledTime: getFieldValue(order.scheduledTime, order.scheduled_time)
         });
 
-        // Set related data with proper fallbacks
-        const servicesData = Array.isArray(order.services) ? order.services : [];
+        // Set related data with proper fallbacks (only for edit mode)
+        const servicesData = isEditMode && Array.isArray(order.services) ? order.services : [];
         setSelectedServices(servicesData);
       } else if (!order && !editModeInitialized.current) {
         // Only reset form for new order when order is explicitly null/undefined AND not in edit mode
@@ -281,28 +295,26 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
     }
   }, [order?.id, open]); // Only re-run if order ID changes or modal opens
 
+  // CRITICAL: Set dealership based on order data or current dealership from context
   useEffect(() => {
-    if (!order && isGlobalFilterActive && globalDealerFilter && dealerships.length > 0 && !selectedDealership) {
-      handleDealershipChange(globalDealerFilter);
+    // Skip if dealership already selected or dealerships not loaded
+    if (selectedDealership || dealerships.length === 0) return;
+
+    // Priority 1: If order has dealer_id (edit mode OR pre-fill from stock)
+    if (order && (order.dealer_id || order.dealerId)) {
+      const dealershipId = (order.dealer_id || order.dealerId).toString();
+      setSelectedDealershipWithLog(dealershipId);
+      return;
     }
-  }, [order, isGlobalFilterActive, globalDealerFilter, dealerships.length, selectedDealership]);
 
-  // CRITICAL: Set dealership ONLY after dealerships options are loaded
-  useEffect(() => {
-    if (order && dealerships.length > 0 && !selectedDealership) {
-      let dealershipId = null;
-
-      // Try dealer_id first (most reliable)
-      if (order.dealer_id || order.dealerId) {
-        dealershipId = (order.dealer_id || order.dealerId).toString();
-      }
-
-      if (dealershipId) {
-        setSelectedDealership(dealershipId);
-        // Services are now loaded automatically via React Query hook
-      }
+    // Priority 2: If no order and current dealership exists (from context/global filter)
+    if (!order && currentDealership?.id) {
+      setSelectedDealershipWithLog(currentDealership.id.toString());
+      return;
     }
-  }, [dealerships.length, order, selectedDealership]);
+
+    // Priority 3: No dealer selected, field will show "Auto-selected" label
+  }, [order, order?.dealer_id, order?.dealerId, dealerships.length, selectedDealership, currentDealership]);
 
   const handleDealershipChange = (dealershipId: string) => {
     setSelectedDealershipWithLog(dealershipId);
@@ -446,7 +458,15 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
       internalNotes: formData.internalNotes || undefined,
       completedAt: formData.completedAt,
       dealerId: selectedDealership && Number.isInteger(Number(selectedDealership)) ? parseInt(selectedDealership) : undefined,
-      services: selectedServices || [],
+      services: selectedServices.map(serviceId => {
+        const service = services.find((s: DealerService) => s.id === serviceId);
+        return {
+          id: serviceId,
+          name: service?.name || 'Unknown Service',
+          price: service?.price,
+          description: service?.description
+        };
+      }),
       totalAmount: canViewPrices ? selectedServices.reduce((total, serviceId) => {
         const service = services.find((s: DealerService) => s.id === serviceId);
         return total + (service?.price || 0);
@@ -505,7 +525,12 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
 
           return {
             ...dbData,
-            services: [serviceId], // Only include this specific service
+            services: [{
+              id: serviceId,
+              name: service?.name || 'Unknown Service',
+              price: service?.price,
+              description: service?.description
+            }],
             totalAmount: individualAmount // Use individual service price
           };
         });

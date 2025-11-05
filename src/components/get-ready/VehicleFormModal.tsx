@@ -1,20 +1,21 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { VinInputWithScanner } from "@/components/ui/vin-input-with-scanner";
@@ -47,6 +48,7 @@ interface VehicleFormModalProps {
   onOpenChange: (open: boolean) => void;
   vehicleId?: string | null;
   onSuccess?: () => void;
+  initialData?: Partial<VehicleFormData>;
 }
 
 const initialFormData: VehicleFormData = {
@@ -68,23 +70,38 @@ export function VehicleFormModal({
   onOpenChange,
   vehicleId,
   onSuccess,
+  initialData,
 }: VehicleFormModalProps) {
   const { t } = useTranslation();
   const { toast } = useToast();
   const { steps } = useGetReady();
-  const { currentDealership } = useAccessibleDealerships();
+  const { currentDealership, dealerships } = useAccessibleDealerships();
   const { createVehicleAsync, updateVehicleAsync, isCreating, isUpdating } =
     useVehicleManagement();
+  const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
   const [formData, setFormData] = useState<VehicleFormData>(initialFormData);
   const [errors, setErrors] = useState<
     Partial<Record<keyof VehicleFormData, string>>
   >({});
-  const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
+  const [loadingVehicle, setLoadingVehicle] = useState(false);
   const [vinDecoded, setVinDecoded] = useState(false);
 
   const isEditMode = !!vehicleId;
   const loading = isCreating || isUpdating;
-  const [loadingVehicle, setLoadingVehicle] = useState(false);
+
+  // Pre-fill form when initialData is provided (e.g., from Stock page)
+  useEffect(() => {
+    if (initialData && open && !vehicleId) {
+      setFormData(prev => ({
+        ...prev,
+        stock_number: initialData.stock_number?.toUpperCase() || '',
+        vin: initialData.vin?.toUpperCase() || '',
+        year: initialData.year?.toString() || '',
+        make: initialData.make?.toUpperCase() || '',
+        model: initialData.model?.toUpperCase() || '',
+      }));
+    }
+  }, [initialData, open, vehicleId]);
 
   // Load vehicle data when in edit mode
   useEffect(() => {
@@ -299,6 +316,34 @@ export function VehicleFormModal({
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="py-6 space-y-6">
+              {/* Dealership Field */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between mb-2">
+                  <Label htmlFor="dealership">
+                    {t("sales_orders.dealership")}
+                    <span className="text-red-500 ml-1">*</span>
+                  </Label>
+                  <Badge variant="secondary" className="text-xs">
+                    {t("dealerships.auto_selected")}
+                  </Badge>
+                </div>
+                <Select
+                  value={currentDealership?.id?.toString() || ""}
+                  disabled={true}
+                >
+                  <SelectTrigger className="border-input bg-muted">
+                    <SelectValue placeholder={t("sales_orders.select_dealership")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {dealerships.map((dealer) => (
+                      <SelectItem key={dealer.id} value={dealer.id.toString()}>
+                        {dealer.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               {/* Stock Number & VIN */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div className="space-y-1.5">
@@ -467,7 +512,7 @@ export function VehicleFormModal({
                   <Select
                     value={formData.workflow_type}
                     onValueChange={(value) =>
-                      updateFormData("workflow_type", value as any)
+                      updateFormData("workflow_type", value as "standard" | "express" | "priority")
                     }
                   >
                     <SelectTrigger id="workflow_type">
@@ -497,7 +542,7 @@ export function VehicleFormModal({
                   <Select
                     value={formData.priority}
                     onValueChange={(value) =>
-                      updateFormData("priority", value as any)
+                      updateFormData("priority", value as "low" | "normal" | "medium" | "high" | "urgent")
                     }
                   >
                     <SelectTrigger id="priority">

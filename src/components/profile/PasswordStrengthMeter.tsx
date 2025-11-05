@@ -19,9 +19,9 @@ export function PasswordStrengthMeter({ password, onStrengthChange }: PasswordSt
   // Password requirements
   const requirements: PasswordRequirement[] = [
     {
-      label: t('profile.password_min_8_chars', 'At least 8 characters'),
-      met: password.length >= 8,
-      regex: /.{8,}/
+      label: t('profile.password_min_6_chars', 'At least 6 characters'),
+      met: password.length >= 6,
+      regex: /.{6,}/
     },
     {
       label: t('profile.password_uppercase', 'One uppercase letter'),
@@ -39,7 +39,7 @@ export function PasswordStrengthMeter({ password, onStrengthChange }: PasswordSt
       regex: /[0-9]/
     },
     {
-      label: t('profile.password_special', 'One special character (!@#$%^&*)'),
+      label: t('profile.password_special', 'One special character (!@#$%^&*) - Optional'),
       met: /[!@#$%^&*(),.?":{}|<>]/.test(password),
       regex: /[!@#$%^&*(),.?":{}|<>]/
     }
@@ -153,7 +153,7 @@ export function PasswordStrengthMeter({ password, onStrengthChange }: PasswordSt
         </div>
       )}
 
-      {strength < 3 && password.length >= 8 && (
+      {strength < 3 && password.length >= 6 && (
         <div className="p-3 bg-amber-50 border border-amber-200 rounded-md">
           <p className="text-sm text-amber-800">
             {t('profile.password_improve', 'Tip: Add more variety to make your password stronger.')}

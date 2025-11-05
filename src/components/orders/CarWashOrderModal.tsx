@@ -312,13 +312,13 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
           const matchedService = (services as any[]).find((service: any) => normalizeServiceId(service) === serviceId);
           return matchedService
             ? {
-                type: normalizeServiceId(matchedService),
+                id: normalizeServiceId(matchedService),
                 name: matchedService.name,
                 price: matchedService.price ?? undefined,
                 description: matchedService.description ?? undefined,
               }
             : {
-                type: serviceId,
+                id: serviceId,
                 name: 'Unknown Service',
                 price: undefined,
                 description: undefined,

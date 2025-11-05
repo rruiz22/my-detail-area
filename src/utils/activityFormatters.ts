@@ -118,15 +118,15 @@ export function groupActivitiesByDate(
  */
 export function formatUserName(activity: VehicleActivity, t?: (key: string) => string): string {
   // Handle system actions (when action_by is NULL)
-  if (!activity.user && !activity.action_by) {
+  if (!activity.profiles && !activity.action_by) {
     return t ? t('user.system') : 'System';
   }
 
-  if (!activity.user) {
+  if (!activity.profiles) {
     return t ? t('user.system') : 'System';
   }
 
-  const { first_name, last_name } = activity.user;
+  const { first_name, last_name } = activity.profiles;
 
   if (first_name || last_name) {
     return `${first_name || ''} ${last_name || ''}`.trim();

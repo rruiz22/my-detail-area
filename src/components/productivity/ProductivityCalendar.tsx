@@ -1,68 +1,255 @@
-import { useState } from "react";
-import { Calendar, momentLocalizer, View } from 'react-big-calendar';
-import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { 
-  Plus, 
+import { useState, useMemo } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
   Calendar as CalendarIcon,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
   Clock,
   MapPin,
-  Users,
+  CheckSquare,
+  Car,
   Settings,
-  ExternalLink
-} from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { useProductivityCalendars, ProductivityEvent } from "@/hooks/useProductivityCalendars";
-import { format } from "date-fns";
+  Grid3x3,
+  List,
+  Eye,
+  EyeOff,
+} from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { useCalendarData, CalendarItem } from '@/hooks/useCalendarData';
+import { useProductivityCalendars } from '@/hooks/useProductivityCalendars';
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  isSameMonth,
+  isToday,
+  addMonths,
+  subMonths,
+  startOfWeek,
+  endOfWeek,
+  parseISO,
+} from 'date-fns';
+import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { DndContext, DragEndEvent, DragOverlay, useDraggable, useDroppable } from '@dnd-kit/core';
 
-const localizer = momentLocalizer(moment);
+// Modern Event Card Component with drag support
+const EventCard = ({
+  item,
+  onSelect,
+  isDragging,
+}: {
+  item: CalendarItem;
+  onSelect: (item: CalendarItem) => void;
+  isDragging?: boolean;
+}) => {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: item.id,
+    data: item,
+  });
+
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      }
+    : undefined;
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      onClick={() => onSelect(item)}
+      className={cn(
+        'group relative px-2 py-1 mb-1 rounded text-xs cursor-grab active:cursor-grabbing transition-all',
+        'hover:shadow-md hover:scale-102 hover:z-10',
+        isDragging && 'opacity-50',
+        item.type === 'event' && 'bg-blue-50 border-l-2 border-blue-500 text-blue-900',
+        item.type === 'todo' && 'bg-amber-50 border-l-2 border-amber-500 text-amber-900',
+        item.type === 'order' && 'bg-purple-50 border-l-2 border-purple-500 text-purple-900'
+      )}
+    >
+      <div className="flex items-center justify-between gap-1">
+        <div className="flex-1 min-w-0">
+          <div className="font-medium truncate">{item.title}</div>
+          {!item.allDay && (
+            <div className="text-[10px] opacity-75 flex items-center gap-1">
+              <Clock className="h-2.5 w-2.5" />
+              {format(item.start, 'HH:mm')}
+            </div>
+          )}
+        </div>
+        {item.priority && (
+          <div className={cn(
+            'w-1.5 h-1.5 rounded-full',
+            item.priority === 'urgent' && 'bg-red-500',
+            item.priority === 'high' && 'bg-orange-500',
+            item.priority === 'medium' && 'bg-yellow-500',
+            item.priority === 'low' && 'bg-green-500'
+          )} />
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Droppable Day Cell
+const DayCell = ({
+  date,
+  items,
+  isCurrentMonth,
+  onSelect,
+}: {
+  date: Date;
+  items: CalendarItem[];
+  isCurrentMonth: boolean;
+  onSelect: (item: CalendarItem) => void;
+}) => {
+  const { setNodeRef, isOver } = useDroppable({
+    id: date.toISOString(),
+    data: { date },
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={cn(
+        'min-h-[100px] border border-gray-200 p-1 transition-colors',
+        !isCurrentMonth && 'bg-gray-50/50 text-muted-foreground',
+        isToday(date) && 'bg-blue-50/30 ring-1 ring-blue-500 ring-inset',
+        isOver && 'bg-blue-100/50 ring-2 ring-blue-500'
+      )}
+    >
+      <div
+        className={cn(
+          'text-right text-sm font-medium mb-1 px-1',
+          isToday(date) && 'text-blue-600'
+        )}
+      >
+        {format(date, 'd')}
+      </div>
+      <div className="space-y-0.5">
+        {items.slice(0, 3).map((item) => (
+          <EventCard key={item.id} item={item} onSelect={onSelect} />
+        ))}
+        {items.length > 3 && (
+          <div className="text-xs text-muted-foreground text-center py-0.5">
+            +{items.length - 3} more
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export const ProductivityCalendar = () => {
   const { t } = useTranslation();
-  const { calendars, events, loading, createEvent, updateEvent, deleteEvent, createCalendar } = useProductivityCalendars();
+  const { toast } = useToast();
+  const { calendarItems, loading } = useCalendarData();
+  const { calendars, createEvent, updateEvent, createCalendar } = useProductivityCalendars();
+
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedItem, setSelectedItem] = useState<CalendarItem | null>(null);
   const [isCreateEventOpen, setIsCreateEventOpen] = useState(false);
   const [isCreateCalendarOpen, setIsCreateCalendarOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<ProductivityEvent | null>(null);
-  const [calendarView, setCalendarView] = useState<View>('month');
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [viewMode, setViewMode] = useState<'month' | 'list'>('month');
+  const [activeFilters, setActiveFilters] = useState({
+    events: true,
+    todos: true,
+    orders: true,
+  });
+  const [draggedItem, setDraggedItem] = useState<CalendarItem | null>(null);
 
   const [newEvent, setNewEvent] = useState({
-    title: "",
-    description: "",
-    start_time: "",
-    end_time: "",
+    title: '',
+    description: '',
+    start_time: '',
+    end_time: '',
     all_day: false,
-    location: "",
-    event_type: "meeting" as const,
-    calendar_id: "",
+    location: '',
+    event_type: 'meeting' as const,
+    calendar_id: '',
   });
 
   const [newCalendar, setNewCalendar] = useState({
-    name: "",
-    description: "",
-    color: "#3B82F6",
-    calendar_type: "internal" as const,
+    name: '',
+    description: '',
+    color: '#3B82F6',
+    calendar_type: 'internal' as const,
   });
 
-  // Transform events for react-big-calendar
-  const calendarEvents = events.map(event => ({
-    id: event.id,
-    title: event.title,
-    start: new Date(event.start_time),
-    end: new Date(event.end_time),
-    allDay: event.all_day,
-    resource: event,
-  }));
+  // Get calendar days for the current month
+  const monthStart = startOfMonth(currentDate);
+  const monthEnd = endOfMonth(currentDate);
+  const calendarStart = startOfWeek(monthStart);
+  const calendarEnd = endOfWeek(monthEnd);
+  const calendarDays = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
+
+  // Filter items
+  const filteredItems = useMemo(() => {
+    return calendarItems.filter(item => {
+      if (item.type === 'event' && !activeFilters.events) return false;
+      if (item.type === 'todo' && !activeFilters.todos) return false;
+      if (item.type === 'order' && !activeFilters.orders) return false;
+      return true;
+    });
+  }, [calendarItems, activeFilters]);
+
+  // Group items by day
+  const itemsByDay = useMemo(() => {
+    const grouped: Record<string, CalendarItem[]> = {};
+    filteredItems.forEach(item => {
+      const dayKey = format(item.start, 'yyyy-MM-dd');
+      if (!grouped[dayKey]) grouped[dayKey] = [];
+      grouped[dayKey].push(item);
+    });
+    return grouped;
+  }, [filteredItems]);
+
+  // Handle drag end
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+    setDraggedItem(null);
+
+    if (!over || !active.data.current) return;
+
+    const item = active.data.current as CalendarItem;
+    const newDate = parseISO(over.id as string);
+
+    if (item.type === 'event' && item.eventId) {
+      try {
+        const duration = item.end.getTime() - item.start.getTime();
+        const newStart = newDate;
+        const newEnd = new Date(newDate.getTime() + duration);
+
+        await updateEvent(item.eventId, {
+          start_time: newStart.toISOString(),
+          end_time: newEnd.toISOString(),
+        });
+
+        toast({ description: t('productivity.eventMoved') || 'Event moved successfully' });
+      } catch (error) {
+        console.error('Error moving event:', error);
+        toast({
+          variant: 'destructive',
+          description: t('productivity.eventMoveFailed') || 'Failed to move event',
+        });
+      }
+    }
+  };
 
   const handleCreateEvent = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,18 +257,18 @@ export const ProductivityCalendar = () => {
       toast({ variant: 'destructive', description: 'Please select a calendar' });
       return;
     }
-    
+
     try {
       await createEvent(newEvent);
       setNewEvent({
-        title: "",
-        description: "",
-        start_time: "",
-        end_time: "",
+        title: '',
+        description: '',
+        start_time: '',
+        end_time: '',
         all_day: false,
-        location: "",
-        event_type: "meeting",
-        calendar_id: "",
+        location: '',
+        event_type: 'meeting',
+        calendar_id: '',
       });
       setIsCreateEventOpen(false);
     } catch (error) {
@@ -94,10 +281,10 @@ export const ProductivityCalendar = () => {
     try {
       await createCalendar(newCalendar);
       setNewCalendar({
-        name: "",
-        description: "",
-        color: "#3B82F6",
-        calendar_type: "internal",
+        name: '',
+        description: '',
+        color: '#3B82F6',
+        calendar_type: 'internal',
       });
       setIsCreateCalendarOpen(false);
     } catch (error) {
@@ -105,41 +292,11 @@ export const ProductivityCalendar = () => {
     }
   };
 
-  const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
-    setNewEvent({
-      ...newEvent,
-      start_time: start.toISOString().slice(0, 16),
-      end_time: end.toISOString().slice(0, 16),
-    });
-    setIsCreateEventOpen(true);
-  };
-
-  const handleSelectEvent = (event: any) => {
-    setSelectedEvent(event.resource);
-  };
-
-  const eventStyleGetter = (event: any) => {
-    const calendar = calendars.find(cal => cal.id === event.resource.calendar_id);
-    return {
-      style: {
-        backgroundColor: calendar?.color || '#3B82F6',
-        borderRadius: '4px',
-        opacity: 0.8,
-        color: 'white',
-        border: '0px',
-        display: 'block'
-      }
-    };
-  };
-
   if (loading) {
     return (
       <div className="space-y-4">
         <Card className="animate-pulse">
-          <CardHeader>
-            <div className="h-6 bg-muted rounded w-1/4"></div>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <div className="h-96 bg-muted rounded"></div>
           </CardContent>
         </Card>
@@ -148,70 +305,131 @@ export const ProductivityCalendar = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header with Actions */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h2 className="text-2xl font-bold">{format(selectedDate, 'MMMM yyyy')}</h2>
-          <div className="flex items-center gap-2">
-            {calendars.map((calendar) => (
-              <Badge 
-                key={calendar.id} 
-                variant="outline" 
-                className="flex items-center gap-2"
-                style={{ borderColor: calendar.color }}
-              >
-                <div 
-                  className="w-2 h-2 rounded-full" 
-                  style={{ backgroundColor: calendar.color }}
-                />
-                {calendar.name}
-                {calendar.calendar_type !== 'internal' && (
-                  <ExternalLink className="h-3 w-3" />
-                )}
-              </Badge>
-            ))}
+    <DndContext onDragEnd={handleDragEnd} onDragStart={(e) => setDraggedItem(e.active.data.current as CalendarItem)}>
+      <div className="space-y-4">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          {/* Navigation */}
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentDate(subMonths(currentDate, 1))}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentDate(new Date())}
+            >
+              {t('time.today')}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentDate(addMonths(currentDate, 1))}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+            <h2 className="text-xl font-bold">{format(currentDate, 'MMMM yyyy')}</h2>
           </div>
-        </div>
 
-        <div className="flex items-center gap-2">
-          <Dialog open={isCreateCalendarOpen} onOpenChange={setIsCreateCalendarOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline">
-                <Settings className="h-4 w-4 mr-2" />
-                {t('productivity.manageCalendars')}
+          {/* Actions */}
+          <div className="flex flex-wrap items-center gap-2">
+            {/* View Mode Toggle */}
+            <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+              <Button
+                variant={viewMode === 'month' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('month')}
+                className="gap-2"
+              >
+                <Grid3x3 className="h-4 w-4" />
+                <span className="hidden sm:inline">{t('productivity.monthView')}</span>
               </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{t('productivity.createCalendar')}</DialogTitle>
-                <DialogDescription>
-                  {t('productivity.createCalendarDescription')}
-                </DialogDescription>
-              </DialogHeader>
-              <form onSubmit={handleCreateCalendar} className="space-y-4">
-                <div>
-                  <Label htmlFor="cal-name">{t('productivity.calendarName')}</Label>
-                  <Input
-                    id="cal-name"
-                    value={newCalendar.name}
-                    onChange={(e) => setNewCalendar({ ...newCalendar, name: e.target.value })}
-                    placeholder={t('productivity.enterCalendarName')}
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="cal-description">{t('productivity.description')}</Label>
-                  <Textarea
-                    id="cal-description"
-                    value={newCalendar.description}
-                    onChange={(e) => setNewCalendar({ ...newCalendar, description: e.target.value })}
-                    placeholder={t('productivity.enterDescription')}
-                  />
-                </div>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+                className="gap-2"
+              >
+                <List className="h-4 w-4" />
+                <span className="hidden sm:inline">{t('productivity.listView')}</span>
+              </Button>
+            </div>
 
-                <div className="grid grid-cols-2 gap-4">
+            {/* Filters */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant={activeFilters.events ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setActiveFilters({ ...activeFilters, events: !activeFilters.events })}
+                className="gap-2"
+              >
+                {activeFilters.events ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                <CalendarIcon className="h-4 w-4" />
+                <span className="hidden sm:inline">{t('nav.calendar')}</span>
+              </Button>
+              <Button
+                variant={activeFilters.todos ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setActiveFilters({ ...activeFilters, todos: !activeFilters.todos })}
+                className="gap-2"
+              >
+                {activeFilters.todos ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                <CheckSquare className="h-4 w-4" />
+                <span className="hidden sm:inline">{t('productivity.todos')}</span>
+              </Button>
+              <Button
+                variant={activeFilters.orders ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setActiveFilters({ ...activeFilters, orders: !activeFilters.orders })}
+                className="gap-2"
+              >
+                {activeFilters.orders ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                <Car className="h-4 w-4" />
+                <span className="hidden sm:inline">{t('common.orders')}</span>
+              </Button>
+            </div>
+
+            {/* Create Buttons */}
+            <Dialog open={isCreateCalendarOpen} onOpenChange={setIsCreateCalendarOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Settings className="h-4 w-4 mr-2" />
+                  <span className="hidden sm:inline">{t('productivity.manageCalendars')}</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>{t('productivity.createCalendar')}</DialogTitle>
+                  <DialogDescription>
+                    {t('productivity.createCalendarDescription')}
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleCreateCalendar} className="space-y-4">
+                  <div>
+                    <Label htmlFor="cal-name">{t('productivity.calendarName')}</Label>
+                    <Input
+                      id="cal-name"
+                      value={newCalendar.name}
+                      onChange={(e) => setNewCalendar({ ...newCalendar, name: e.target.value })}
+                      placeholder={t('productivity.enterCalendarName')}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="cal-description">{t('common.description')}</Label>
+                    <Textarea
+                      id="cal-description"
+                      value={newCalendar.description}
+                      onChange={(e) => setNewCalendar({ ...newCalendar, description: e.target.value })}
+                      placeholder={t('productivity.enterDescription')}
+                    />
+                  </div>
+
                   <div>
                     <Label htmlFor="cal-color">{t('productivity.color')}</Label>
                     <Input
@@ -222,262 +440,320 @@ export const ProductivityCalendar = () => {
                     />
                   </div>
 
-                  <div>
-                    <Label htmlFor="cal-type">{t('productivity.calendarType')}</Label>
-                    <Select value={newCalendar.calendar_type} onValueChange={(value) => setNewCalendar({ ...newCalendar, calendar_type: value as any })}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="internal">{t('productivity.calendarTypes.internal')}</SelectItem>
-                        <SelectItem value="google">{t('productivity.calendarTypes.google')}</SelectItem>
-                        <SelectItem value="outlook">{t('productivity.calendarTypes.outlook')}</SelectItem>
-                      </SelectContent>
-                    </Select>
+                  <div className="flex justify-end space-x-2">
+                    <Button type="button" variant="outline" onClick={() => setIsCreateCalendarOpen(false)}>
+                      {t('common.cancel')}
+                    </Button>
+                    <Button type="submit">
+                      {t('common.create')}
+                    </Button>
                   </div>
-                </div>
+                </form>
+              </DialogContent>
+            </Dialog>
 
-                <div className="flex justify-end space-x-2">
-                  <Button type="button" variant="outline" onClick={() => setIsCreateCalendarOpen(false)}>
-                    {t('common.cancel')}
-                  </Button>
-                  <Button type="submit">
-                    {t('common.create')}
-                  </Button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
-
-          <Dialog open={isCreateEventOpen} onOpenChange={setIsCreateEventOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                {t('productivity.createEvent')}
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>{t('productivity.createEvent')}</DialogTitle>
-                <DialogDescription>
-                  {t('productivity.createEventDescription')}
-                </DialogDescription>
-              </DialogHeader>
-              <form onSubmit={handleCreateEvent} className="space-y-4">
-                <div>
-                  <Label htmlFor="event-title">{t('productivity.title')}</Label>
-                  <Input
-                    id="event-title"
-                    value={newEvent.title}
-                    onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
-                    placeholder={t('productivity.enterEventTitle')}
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="event-description">{t('productivity.description')}</Label>
-                  <Textarea
-                    id="event-description"
-                    value={newEvent.description}
-                    onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
-                    placeholder={t('productivity.enterDescription')}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
+            <Dialog open={isCreateEventOpen} onOpenChange={setIsCreateEventOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm">
+                  <Plus className="h-4 w-4 mr-2" />
+                  {t('productivity.createEvent')}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>{t('productivity.createEvent')}</DialogTitle>
+                  <DialogDescription>
+                    {t('productivity.createEventDescription')}
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleCreateEvent} className="space-y-4">
                   <div>
-                    <Label htmlFor="event-calendar">{t('productivity.calendar')}</Label>
-                    <Select value={newEvent.calendar_id} onValueChange={(value) => setNewEvent({ ...newEvent, calendar_id: value })}>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('productivity.selectCalendar')} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {calendars.map((calendar) => (
-                          <SelectItem key={calendar.id} value={calendar.id}>
-                            <div className="flex items-center gap-2">
-                              <div 
-                                className="w-2 h-2 rounded-full" 
-                                style={{ backgroundColor: calendar.color }}
-                              />
-                              {calendar.name}
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Label htmlFor="event-title">{t('productivity.title')}</Label>
+                    <Input
+                      id="event-title"
+                      value={newEvent.title}
+                      onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+                      placeholder={t('productivity.enterEventTitle')}
+                      required
+                    />
                   </div>
 
                   <div>
-                    <Label htmlFor="event-type">{t('productivity.eventType')}</Label>
-                    <Select value={newEvent.event_type} onValueChange={(value) => setNewEvent({ ...newEvent, event_type: value as any })}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="meeting">{t('productivity.eventTypes.meeting')}</SelectItem>
-                        <SelectItem value="reminder">{t('productivity.eventTypes.reminder')}</SelectItem>
-                        <SelectItem value="task">{t('productivity.eventTypes.task')}</SelectItem>
-                        <SelectItem value="appointment">{t('productivity.eventTypes.appointment')}</SelectItem>
-                        <SelectItem value="other">{t('productivity.eventTypes.other')}</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label htmlFor="event-description">{t('common.description')}</Label>
+                    <Textarea
+                      id="event-description"
+                      value={newEvent.description}
+                      onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
+                      placeholder={t('productivity.enterDescription')}
+                    />
                   </div>
-                </div>
 
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="all-day"
-                    checked={newEvent.all_day}
-                    onCheckedChange={(checked) => setNewEvent({ ...newEvent, all_day: !!checked })}
-                  />
-                  <Label htmlFor="all-day" className="text-sm font-medium">
-                    {t('productivity.allDay')}
-                  </Label>
-                </div>
-
-                {!newEvent.all_day && (
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="start-time">{t('productivity.startTime')}</Label>
-                      <Input
-                        id="start-time"
-                        type="datetime-local"
-                        value={newEvent.start_time}
-                        onChange={(e) => setNewEvent({ ...newEvent, start_time: e.target.value })}
-                        required
-                      />
+                      <Label htmlFor="event-calendar">{t('nav.calendar')}</Label>
+                      <Select value={newEvent.calendar_id} onValueChange={(value) => setNewEvent({ ...newEvent, calendar_id: value })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder={t('productivity.selectCalendar')} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {calendars.map((calendar) => (
+                            <SelectItem key={calendar.id} value={calendar.id}>
+                              <div className="flex items-center gap-2">
+                                <div
+                                  className="w-2 h-2 rounded-full"
+                                  style={{ backgroundColor: calendar.color }}
+                                />
+                                {calendar.name}
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div>
-                      <Label htmlFor="end-time">{t('productivity.endTime')}</Label>
-                      <Input
-                        id="end-time"
-                        type="datetime-local"
-                        value={newEvent.end_time}
-                        onChange={(e) => setNewEvent({ ...newEvent, end_time: e.target.value })}
-                        required
-                      />
+                      <Label htmlFor="event-type">{t('productivity.eventType')}</Label>
+                      <Select value={newEvent.event_type} onValueChange={(value) => setNewEvent({ ...newEvent, event_type: value as any })}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="meeting">{t('productivity.eventTypes.meeting')}</SelectItem>
+                          <SelectItem value="reminder">{t('productivity.eventTypes.reminder')}</SelectItem>
+                          <SelectItem value="task">{t('productivity.eventTypes.task')}</SelectItem>
+                          <SelectItem value="appointment">{t('productivity.eventTypes.appointment')}</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="all-day"
+                      checked={newEvent.all_day}
+                      onCheckedChange={(checked) => setNewEvent({ ...newEvent, all_day: !!checked })}
+                    />
+                    <Label htmlFor="all-day">{t('productivity.allDay')}</Label>
+                  </div>
+
+                  {!newEvent.all_day && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="start-time">{t('productivity.startTime')}</Label>
+                        <Input
+                          id="start-time"
+                          type="datetime-local"
+                          value={newEvent.start_time}
+                          onChange={(e) => setNewEvent({ ...newEvent, start_time: e.target.value })}
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="end-time">{t('productivity.endTime')}</Label>
+                        <Input
+                          id="end-time"
+                          type="datetime-local"
+                          value={newEvent.end_time}
+                          onChange={(e) => setNewEvent({ ...newEvent, end_time: e.target.value })}
+                          required
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div>
+                    <Label htmlFor="location">{t('productivity.location')}</Label>
+                    <Input
+                      id="location"
+                      value={newEvent.location}
+                      onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
+                      placeholder={t('productivity.enterLocation')}
+                    />
+                  </div>
+
+                  <div className="flex justify-end space-x-2">
+                    <Button type="button" variant="outline" onClick={() => setIsCreateEventOpen(false)}>
+                      {t('common.cancel')}
+                    </Button>
+                    <Button type="submit">
+                      {t('common.create')}
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+
+        {/* Calendar Grid */}
+        {viewMode === 'month' ? (
+          <Card>
+            <CardContent className="p-4">
+              {/* Day Headers */}
+              <div className="grid grid-cols-7 mb-2">
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+                  <div key={day} className="text-center font-semibold text-sm text-muted-foreground py-2">
+                    {day}
+                  </div>
+                ))}
+              </div>
+
+              {/* Calendar Days */}
+              <div className="grid grid-cols-7 gap-px bg-gray-200">
+                {calendarDays.map((day) => {
+                  const dayKey = format(day, 'yyyy-MM-dd');
+                  const dayItems = itemsByDay[dayKey] || [];
+                  return (
+                    <DayCell
+                      key={dayKey}
+                      date={day}
+                      items={dayItems}
+                      isCurrentMonth={isSameMonth(day, currentDate)}
+                      onSelect={setSelectedItem}
+                    />
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          // List View
+          <Card>
+            <CardContent className="p-4">
+              <ScrollArea className="h-[600px]">
+                <div className="space-y-4">
+                  {Object.keys(itemsByDay)
+                    .sort()
+                    .map((dayKey) => {
+                      const day = parseISO(dayKey);
+                      const dayItems = itemsByDay[dayKey];
+                      return (
+                        <div key={dayKey} className="space-y-2">
+                          <h3 className="font-semibold text-sm text-muted-foreground sticky top-0 bg-background py-2">
+                            {format(day, 'EEEE, MMMM d, yyyy')}
+                          </h3>
+                          <div className="space-y-1 pl-4">
+                            {dayItems.map((item) => (
+                              <div
+                                key={item.id}
+                                onClick={() => setSelectedItem(item)}
+                                className="cursor-pointer p-3 rounded-lg border hover:shadow-md transition-all"
+                                style={{ borderLeftWidth: '4px', borderLeftColor: item.color }}
+                              >
+                                <div className="flex items-start justify-between gap-2">
+                                  <div className="flex-1">
+                                    <div className="font-medium">{item.title}</div>
+                                    {item.description && (
+                                      <div className="text-sm text-muted-foreground mt-1">{item.description}</div>
+                                    )}
+                                    {!item.allDay && (
+                                      <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                                        <Clock className="h-3 w-3" />
+                                        {format(item.start, 'HH:mm')} - {format(item.end, 'HH:mm')}
+                                      </div>
+                                    )}
+                                  </div>
+                                  <Badge variant="outline">
+                                    {item.type === 'event' && <CalendarIcon className="h-3 w-3 mr-1" />}
+                                    {item.type === 'todo' && <CheckSquare className="h-3 w-3 mr-1" />}
+                                    {item.type === 'order' && <Car className="h-3 w-3 mr-1" />}
+                                    {item.type}
+                                  </Badge>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Item Details Dialog */}
+        <Dialog open={!!selectedItem} onOpenChange={() => setSelectedItem(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{selectedItem?.title}</DialogTitle>
+              <DialogDescription className="flex items-center gap-2">
+                <Badge>
+                  {selectedItem?.type === 'event' && <CalendarIcon className="h-3 w-3 mr-1" />}
+                  {selectedItem?.type === 'todo' && <CheckSquare className="h-3 w-3 mr-1" />}
+                  {selectedItem?.type === 'order' && <Car className="h-3 w-3 mr-1" />}
+                  {selectedItem?.type}
+                </Badge>
+              </DialogDescription>
+            </DialogHeader>
+            {selectedItem && (
+              <div className="space-y-4">
+                {selectedItem.description && (
+                  <div>
+                    <Label>{t('common.description')}</Label>
+                    <p className="text-sm text-muted-foreground mt-1">{selectedItem.description}</p>
                   </div>
                 )}
 
-                <div>
-                  <Label htmlFor="location">{t('productivity.location')}</Label>
-                  <Input
-                    id="location"
-                    value={newEvent.location}
-                    onChange={(e) => setNewEvent({ ...newEvent, location: e.target.value })}
-                    placeholder={t('productivity.enterLocation')}
-                  />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="flex items-center gap-2">
+                      <Clock className="h-4 w-4" />
+                      {t('productivity.startTime')}
+                    </Label>
+                    <p className="text-sm mt-1">
+                      {format(selectedItem.start, 'MMM dd, yyyy HH:mm')}
+                    </p>
+                  </div>
+
+                  <div>
+                    <Label className="flex items-center gap-2">
+                      <Clock className="h-4 w-4" />
+                      {t('productivity.endTime')}
+                    </Label>
+                    <p className="text-sm mt-1">
+                      {format(selectedItem.end, 'MMM dd, yyyy HH:mm')}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="flex justify-end space-x-2">
-                  <Button type="button" variant="outline" onClick={() => setIsCreateEventOpen(false)}>
-                    {t('common.cancel')}
+                {selectedItem.location && (
+                  <div>
+                    <Label className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4" />
+                      {t('productivity.location')}
+                    </Label>
+                    <p className="text-sm mt-1">{selectedItem.location}</p>
+                  </div>
+                )}
+
+                {selectedItem.status && (
+                  <div>
+                    <Label>{t('common.status')}</Label>
+                    <Badge className="mt-1">{selectedItem.status}</Badge>
+                  </div>
+                )}
+
+                <div className="flex justify-end">
+                  <Button onClick={() => setSelectedItem(null)}>
+                    {t('common.close')}
                   </Button>
-                  <Button type="submit">
-                    {t('common.create')}
-                  </Button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
-
-      {/* Calendar */}
-      <Card>
-        <CardContent className="p-6">
-          <div style={{ height: '600px' }}>
-            <Calendar
-              localizer={localizer}
-              events={calendarEvents}
-              startAccessor="start"
-              endAccessor="end"
-              onSelectSlot={handleSelectSlot}
-              onSelectEvent={handleSelectEvent}
-              selectable={true}
-              eventPropGetter={eventStyleGetter}
-              view={calendarView}
-              onView={setCalendarView}
-              date={selectedDate}
-              onNavigate={setSelectedDate}
-              popup={true}
-              className="productivity-calendar"
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Event Details Dialog */}
-      <Dialog open={!!selectedEvent} onOpenChange={() => setSelectedEvent(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{selectedEvent?.title}</DialogTitle>
-            <DialogDescription>
-              {selectedEvent?.event_type && t(`productivity.eventTypes.${selectedEvent.event_type}`)}
-            </DialogDescription>
-          </DialogHeader>
-          {selectedEvent && (
-            <div className="space-y-4">
-              {selectedEvent.description && (
-                <div>
-                  <Label>{t('productivity.description')}</Label>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {selectedEvent.description}
-                  </p>
-                </div>
-              )}
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="flex items-center gap-2">
-                    <Clock className="h-4 w-4" />
-                    {t('productivity.startTime')}
-                  </Label>
-                  <p className="text-sm mt-1">
-                    {format(new Date(selectedEvent.start_time), 'MMM dd, yyyy HH:mm')}
-                  </p>
-                </div>
-
-                <div>
-                  <Label className="flex items-center gap-2">
-                    <Clock className="h-4 w-4" />
-                    {t('productivity.endTime')}
-                  </Label>
-                  <p className="text-sm mt-1">
-                    {format(new Date(selectedEvent.end_time), 'MMM dd, yyyy HH:mm')}
-                  </p>
                 </div>
               </div>
+            )}
+          </DialogContent>
+        </Dialog>
 
-              {selectedEvent.location && (
-                <div>
-                  <Label className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4" />
-                    {t('productivity.location')}
-                  </Label>
-                  <p className="text-sm mt-1">{selectedEvent.location}</p>
-                </div>
-              )}
-
-              <div className="flex justify-end space-x-2">
-                <Button 
-                  variant="outline" 
-                  onClick={() => deleteEvent(selectedEvent.id)}
-                  className="text-destructive hover:text-destructive"
-                >
-                  {t('common.delete')}
-                </Button>
-                <Button onClick={() => setSelectedEvent(null)}>
-                  {t('common.close')}
-                </Button>
-              </div>
+        {/* Drag Overlay */}
+        <DragOverlay>
+          {draggedItem && (
+            <div className="bg-white shadow-lg rounded p-2 border-2 border-blue-500">
+              {draggedItem.title}
             </div>
           )}
-        </DialogContent>
-      </Dialog>
-    </div>
+        </DragOverlay>
+      </div>
+    </DndContext>
   );
 };

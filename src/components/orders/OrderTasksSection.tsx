@@ -1,5 +1,3 @@
-import { AssignUserDialog } from '@/components/productivity/AssignUserDialog';
-import { UserAvatar } from '@/components/productivity/UserAvatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,8 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useAuth } from '@/contexts/AuthContext';
-import { ProductivityTodo, useProductivityTodos } from '@/hooks/useProductivityTodos';
+import { useProductivityTodos } from '@/hooks/useProductivityTodos';
 import { format } from 'date-fns';
 import {
     AlertCircle,
@@ -19,8 +16,7 @@ import {
     Clock,
     ExternalLink,
     Hash,
-    Plus,
-    UserPlus
+    Plus
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -77,21 +73,16 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
   customerName
 }) => {
   const { t } = useTranslation();
-  const { user } = useAuth();
-  const { todos, createTodo, updateTodo, toggleTodoStatus } = useProductivityTodos();
+  const { todos, createTodo, toggleTodoStatus } = useProductivityTodos();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<string>('');
-  const [isAssignOpen, setIsAssignOpen] = useState(false);
-  const [taskToAssign, setTaskToAssign] = useState<ProductivityTodo | null>(null);
-  const [taskFilter, setTaskFilter] = useState<'all' | 'my_tasks' | 'pending' | 'completed'>('all');
+  const [taskFilter, setTaskFilter] = useState<'all' | 'pending' | 'completed'>('all');
 
-  // Filter todos for this specific order
+  // Filter todos for this specific order (all are personal - no need to filter by user)
   let orderTodos = todos.filter(todo => todo.order_id === orderId);
 
   // Apply additional filters
-  if (taskFilter === 'my_tasks') {
-    orderTodos = orderTodos.filter(todo => todo.assigned_to === user?.id || todo.created_by === user?.id);
-  } else if (taskFilter === 'pending') {
+  if (taskFilter === 'pending') {
     orderTodos = orderTodos.filter(todo => todo.status !== 'completed' && todo.status !== 'cancelled');
   } else if (taskFilter === 'completed') {
     orderTodos = orderTodos.filter(todo => todo.status === 'completed');
@@ -144,23 +135,6 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
     }
   };
 
-  const handleAssignUser = async (userId: string | null) => {
-    if (!taskToAssign) return;
-    try {
-      await updateTodo(taskToAssign.id, {
-        assigned_to: userId
-      });
-      setTaskToAssign(null);
-    } catch (error) {
-      console.error('Failed to assign user:', error);
-    }
-  };
-
-  const openAssignDialog = (task: ProductivityTodo) => {
-    setTaskToAssign(task);
-    setIsAssignOpen(true);
-  };
-
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'urgent': return 'destructive';
@@ -191,7 +165,7 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
             <div className="p-2 rounded-lg bg-primary/10">
               <CheckCircle2 className="w-5 h-5 text-primary" />
             </div>
-            <span className="font-bold">Tasks &amp; Reminders</span>
+            <span className="font-bold">My Tasks & Reminders</span>
           </CardTitle>
           <div className="flex items-center gap-1.5">
             <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
@@ -203,7 +177,7 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Create Task for Order #{orderNumber}</DialogTitle>
+                  <DialogTitle>Create Personal Task for Order #{orderNumber}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleCreateTask} className="space-y-4">
                   <div>
@@ -297,9 +271,8 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
         {/* Filter Tabs */}
         {todos.filter(todo => todo.order_id === orderId).length > 0 && (
           <Tabs value={taskFilter} onValueChange={(value) => setTaskFilter(value as any)}>
-            <TabsList className="grid w-full grid-cols-4 bg-muted/40">
+            <TabsList className="grid w-full grid-cols-3 bg-muted/40">
               <TabsTrigger value="all" className="text-xs font-medium">All</TabsTrigger>
-              <TabsTrigger value="my_tasks" className="text-xs font-medium">My Tasks</TabsTrigger>
               <TabsTrigger value="pending" className="text-xs font-medium">Pending</TabsTrigger>
               <TabsTrigger value="completed" className="text-xs font-medium">Completed</TabsTrigger>
             </TabsList>
@@ -337,8 +310,8 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
               <div className="p-3 rounded-lg bg-muted/60 inline-block mb-3">
                 <CheckCircle2 className="w-10 h-10 text-muted-foreground" />
               </div>
-              <p className="text-sm font-bold text-foreground">No tasks created for this order yet</p>
-              <p className="text-xs text-muted-foreground mt-2">Create tasks to track follow-ups and deliverables</p>
+              <p className="text-sm font-bold text-foreground">No personal tasks for this order yet</p>
+              <p className="text-xs text-muted-foreground mt-2">Create tasks to track your follow-ups and deliverables</p>
             </div>
           ) : (
             orderTodos
@@ -409,25 +382,13 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
                           </span>
                         </div>
                       )}
-
-                      {task.assigned_to && (
-                        <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-muted/60">
-                          <UserAvatar userId={task.assigned_to} size="sm" />
-                        </div>
+                      {task.category && task.category !== 'general' && (
+                        <Badge variant="outline" className="text-xs">
+                          {task.category}
+                        </Badge>
                       )}
                     </div>
                   </div>
-
-                  {/* Assignment button */}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 flex-shrink-0 hover:bg-primary/10"
-                    onClick={() => openAssignDialog(task)}
-                    title="Assign task"
-                  >
-                    <UserPlus className="h-4 w-4 text-primary" />
-                  </Button>
                 </div>
               ))
           )}
@@ -448,15 +409,6 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
           </div>
         )}
       </CardContent>
-
-      {/* Assignment Dialog */}
-      <AssignUserDialog
-        open={isAssignOpen}
-        onOpenChange={setIsAssignOpen}
-        currentAssignedUserId={taskToAssign?.assigned_to}
-        onAssign={handleAssignUser}
-        taskTitle={taskToAssign?.title}
-      />
     </Card>
   );
 };

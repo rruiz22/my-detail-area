@@ -17,7 +17,7 @@ import { supabase } from '@/integrations/supabase/client';
 // Password validation
 const validatePassword = (password: string) => {
   const checks = {
-    length: password.length >= 8,
+    length: password.length >= 6,
     uppercase: /[A-Z]/.test(password),
     lowercase: /[a-z]/.test(password),
     number: /\d/.test(password),
@@ -25,7 +25,8 @@ const validatePassword = (password: string) => {
   };
 
   const score = Object.values(checks).filter(Boolean).length;
-  return { checks, score, isValid: score >= 5 };
+  // Require: length (6+), uppercase, lowercase, number (special is optional)
+  return { checks, score, isValid: checks.length && checks.uppercase && checks.lowercase && checks.number };
 };
 
 export default function ResetPassword() {
@@ -305,7 +306,7 @@ export default function ResetPassword() {
                           <div className="text-xs space-y-1">
                             <div className={`flex items-center gap-2 ${validation.checks.length ? 'text-emerald-500' : 'text-red-500'}`}>
                               {validation.checks.length ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
-                              {t('auth.signup.password_length', 'At least 8 characters')}
+                              {t('auth.signup.password_length', 'At least 6 characters')}
                             </div>
                             <div className={`flex items-center gap-2 ${validation.checks.uppercase ? 'text-emerald-500' : 'text-red-500'}`}>
                               {validation.checks.uppercase ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
