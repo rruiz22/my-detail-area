@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 845,
-  "totalStrings": 8410,
-  "hardcodedStrings": 2050,
-  "translatedStrings": 6360,
+  "scannedFiles": 846,
+  "totalStrings": 8443,
+  "hardcodedStrings": 2056,
+  "translatedStrings": 6387,
   "issues": {
     "critical": [
       {
@@ -2967,123 +2967,143 @@
         "hardcodedStrings": [
           {
             "text": "Unpin",
-            "line": 134,
-            "context": "133: <>\n134: <PinOff className=\"h-4 w-4 mr-2\" />\n135: Unpin"
+            "line": 204,
+            "context": "203: <>\n204: <PinOff className=\"h-4 w-4 mr-2\" />\n205: Unpin"
           },
           {
             "text": "Pin to top",
-            "line": 139,
-            "context": "138: <>\n139: <Pin className=\"h-4 w-4 mr-2\" />\n140: Pin to top"
+            "line": 209,
+            "context": "208: <>\n209: <Pin className=\"h-4 w-4 mr-2\" />\n210: Pin to top"
           },
           {
-            "text": "Edit",
-            "line": 145,
-            "context": "144: <DropdownMenuItem onClick={() => onEdit(note)}>\n145: <Edit className=\"h-4 w-4 mr-2\" />\n146: Edit"
+            "text": "Edit Full",
+            "line": 218,
+            "context": "217: }}>\n218: <Edit className=\"h-4 w-4 mr-2\" />\n219: Edit Full"
           },
           {
             "text": "Delete",
-            "line": 153,
-            "context": "152: >\n153: <Trash2 className=\"h-4 w-4 mr-2\" />\n154: Delete"
-          },
-          {
-            "text": "Content",
-            "line": 240,
-            "context": "239: <div>\n240: <Label htmlFor=\"content\">Content</Label>\n241: <Textarea"
-          },
-          {
-            "text": "Color",
-            "line": 252,
-            "context": "251: <div>\n252: <Label>Color</Label>\n253: <div className=\"flex gap-2 flex-wrap mt-2\">"
-          },
-          {
-            "text": "Tags",
-            "line": 271,
-            "context": "270: <div>\n271: <Label htmlFor=\"tags\">Tags</Label>\n272: <div className=\"flex gap-2\">"
-          },
-          {
-            "text": "Pin this note to the top",
-            "line": 311,
-            "context": "310: />\n311: <Label htmlFor=\"is_pinned\" className=\"cursor-pointer\">\n312: Pin this note to the top"
+            "line": 229,
+            "context": "228: >\n229: <Trash2 className=\"h-4 w-4 mr-2\" />\n230: Delete"
           },
           {
             "text": "Cancel",
-            "line": 317,
-            "context": "316: <div className=\"flex justify-end space-x-2\">\n317: <Button type=\"button\" variant=\"outline\" onClick={onClose}>\n318: Cancel"
+            "line": 271,
+            "context": "270: className=\"h-7 text-xs\"\n271: >\n272: Cancel"
           },
           {
-            "text": "New Quick Note",
-            "line": 401,
-            "context": "400: <Button className=\"gap-2\">\n401: <Plus className=\"h-4 w-4\" />\n402: New Quick Note"
-          },
-          {
-            "text": "Create Quick Note",
-            "line": 407,
-            "context": "406: <DialogHeader>\n407: <DialogTitle>Create Quick Note</DialogTitle>\n408: <DialogDescription>"
-          },
-          {
-            "text": "Create Quick Note",
-            "line": 473,
-            "context": "472: <Button onClick={() => setIsCreateOpen(true)}>\n473: <Plus className=\"h-4 w-4 mr-2\" />\n474: Create Quick Note"
-          },
-          {
-            "text": "Edit Quick Note",
-            "line": 485,
-            "context": "484: <DialogHeader>\n485: <DialogTitle>Edit Quick Note</DialogTitle>\n486: <DialogDescription>"
-          },
-          {
-            "text": "Enter note title...",
-            "line": 235,
-            "context": "234: onChange={(e) => setFormData({ ...formData, title: e.target.value })}\n235: placeholder=\"Enter note title...\"\n236: />"
-          },
-          {
-            "text": "Write your note here...",
-            "line": 245,
-            "context": "244: onChange={(e) => setFormData({ ...formData, content: e.target.value })}\n245: placeholder=\"Write your note here...\"\n246: required"
-          },
-          {
-            "text": "Add tag...",
-            "line": 278,
-            "context": "277: onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}\n278: placeholder=\"Add tag...\"\n279: />"
-          },
-          {
-            "text": "Search notes...",
-            "line": 390,
-            "context": "389: <Input\n390: placeholder=\"Search notes...\"\n391: value={searchTerm}"
+            "text": "Save",
+            "line": 281,
+            "context": "280: className=\"h-7 text-xs\"\n281: >\n282: Save"
           },
           {
             "text": "Content",
-            "line": 240,
-            "context": "239: <div>\n240: <Label htmlFor=\"content\">Content</Label>\n241: <Textarea"
+            "line": 373,
+            "context": "372: <div>\n373: <Label htmlFor=\"content\">Content</Label>\n374: <Textarea"
           },
           {
             "text": "Color",
-            "line": 252,
-            "context": "251: <div>\n252: <Label>Color</Label>\n253: <div className=\"flex gap-2 flex-wrap mt-2\">"
+            "line": 385,
+            "context": "384: <div>\n385: <Label>Color</Label>\n386: <div className=\"flex gap-2 flex-wrap mt-2\">"
           },
           {
             "text": "Tags",
-            "line": 271,
-            "context": "270: <div>\n271: <Label htmlFor=\"tags\">Tags</Label>\n272: <div className=\"flex gap-2\">"
+            "line": 404,
+            "context": "403: <div>\n404: <Label htmlFor=\"tags\">Tags</Label>\n405: <div className=\"flex gap-2\">"
           },
           {
-            "text": "Pin this note to the top\n        ",
-            "line": 311,
-            "context": "310: />\n311: <Label htmlFor=\"is_pinned\" className=\"cursor-pointer\">\n312: Pin this note to the top"
+            "text": "Pin this note to the top",
+            "line": 444,
+            "context": "443: />\n444: <Label htmlFor=\"is_pinned\" className=\"cursor-pointer\">\n445: Pin this note to the top"
           },
           {
-            "text": "Cancel\n        ",
-            "line": 317,
-            "context": "316: <div className=\"flex justify-end space-x-2\">\n317: <Button type=\"button\" variant=\"outline\" onClick={onClose}>\n318: Cancel"
+            "text": "Cancel",
+            "line": 450,
+            "context": "449: <div className=\"flex justify-end space-x-2\">\n450: <Button type=\"button\" variant=\"outline\" onClick={onClose}>\n451: Cancel"
+          },
+          {
+            "text": "New Quick Note",
+            "line": 538,
+            "context": "537: <Button className=\"gap-2\">\n538: <Plus className=\"h-4 w-4\" />\n539: New Quick Note"
           },
           {
             "text": "Create Quick Note",
-            "line": 407,
-            "context": "406: <DialogHeader>\n407: <DialogTitle>Create Quick Note</DialogTitle>\n408: <DialogDescription>"
+            "line": 544,
+            "context": "543: <DialogHeader>\n544: <DialogTitle>Create Quick Note</DialogTitle>\n545: <DialogDescription>"
+          },
+          {
+            "text": "Create Quick Note",
+            "line": 611,
+            "context": "610: <Button onClick={() => setIsCreateOpen(true)}>\n611: <Plus className=\"h-4 w-4 mr-2\" />\n612: Create Quick Note"
           },
           {
             "text": "Edit Quick Note",
-            "line": 485,
-            "context": "484: <DialogHeader>\n485: <DialogTitle>Edit Quick Note</DialogTitle>\n486: <DialogDescription>"
+            "line": 623,
+            "context": "622: <DialogHeader>\n623: <DialogTitle>Edit Quick Note</DialogTitle>\n624: <DialogDescription>"
+          },
+          {
+            "text": "Note title (optional)",
+            "line": 167,
+            "context": "166: onKeyDown={handleKeyDown}\n167: placeholder=\"Note title (optional)\"\n168: className={cn(\"font-bold text-sm bg-transparent border-0 focus:ring-1 focus:ring-offset-0 p-0\", colors.text)}"
+          },
+          {
+            "text": "Write your note content...",
+            "line": 256,
+            "context": "255: }}\n256: placeholder=\"Write your note content...\"\n257: autoFocus"
+          },
+          {
+            "text": "Enter note title...",
+            "line": 368,
+            "context": "367: onChange={(e) => setFormData({ ...formData, title: e.target.value })}\n368: placeholder=\"Enter note title...\"\n369: />"
+          },
+          {
+            "text": "Write your note here...",
+            "line": 378,
+            "context": "377: onChange={(e) => setFormData({ ...formData, content: e.target.value })}\n378: placeholder=\"Write your note here...\"\n379: required"
+          },
+          {
+            "text": "Add tag...",
+            "line": 411,
+            "context": "410: onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}\n411: placeholder=\"Add tag...\"\n412: />"
+          },
+          {
+            "text": "Search notes...",
+            "line": 527,
+            "context": "526: <Input\n527: placeholder=\"Search notes...\"\n528: value={searchTerm}"
+          },
+          {
+            "text": "Content",
+            "line": 373,
+            "context": "372: <div>\n373: <Label htmlFor=\"content\">Content</Label>\n374: <Textarea"
+          },
+          {
+            "text": "Color",
+            "line": 385,
+            "context": "384: <div>\n385: <Label>Color</Label>\n386: <div className=\"flex gap-2 flex-wrap mt-2\">"
+          },
+          {
+            "text": "Tags",
+            "line": 404,
+            "context": "403: <div>\n404: <Label htmlFor=\"tags\">Tags</Label>\n405: <div className=\"flex gap-2\">"
+          },
+          {
+            "text": "Pin this note to the top\n        ",
+            "line": 444,
+            "context": "443: />\n444: <Label htmlFor=\"is_pinned\" className=\"cursor-pointer\">\n445: Pin this note to the top"
+          },
+          {
+            "text": "Cancel\n        ",
+            "line": 450,
+            "context": "449: <div className=\"flex justify-end space-x-2\">\n450: <Button type=\"button\" variant=\"outline\" onClick={onClose}>\n451: Cancel"
+          },
+          {
+            "text": "Create Quick Note",
+            "line": 544,
+            "context": "543: <DialogHeader>\n544: <DialogTitle>Create Quick Note</DialogTitle>\n545: <DialogDescription>"
+          },
+          {
+            "text": "Edit Quick Note",
+            "line": 623,
+            "context": "622: <DialogHeader>\n623: <DialogTitle>Edit Quick Note</DialogTitle>\n624: <DialogDescription>"
           }
         ],
         "translationCalls": [],
@@ -10036,13 +10056,13 @@
           },
           {
             "text": ", error);\n            throw error;\n          }\n\n          // Check if the RPC returned false (notification not found or unauthorized)\n          if (data === false) {\n            // Rollback\n            queryClient.setQueryData(queryKey, previousData);\n            throw new Error(",
-            "line": 249,
-            "context": "248: queryClient.setQueryData(queryKey, previousData);\n249: logger.error('[markAsRead] RPC error:', error);\n250: throw error;"
+            "line": 260,
+            "context": "259: queryClient.setQueryData(queryKey, previousData);\n260: logger.error('[markAsRead] RPC error:', error);\n261: throw error;"
           },
           {
             "text": ", error);\n            throw error;\n          }\n\n          // Check if the RPC returned false (notification not found or unauthorized)\n          if (data === false) {\n            // Rollback\n            queryClient.setQueryData(queryKey, previousData);\n            throw new Error(",
-            "line": 423,
-            "context": "422: queryClient.setQueryData(queryKey, previousData);\n423: logger.error('[deleteNotification] RPC error:', error);\n424: throw error;"
+            "line": 436,
+            "context": "435: queryClient.setQueryData(queryKey, previousData);\n436: logger.error('[deleteNotification] RPC error:', error);\n437: throw error;"
           }
         ],
         "translationCalls": [],
@@ -11624,262 +11644,262 @@
         "hardcodedStrings": [
           {
             "text": "Vehicle",
-            "line": 314,
-            "context": "313: <div className=\"p-2 rounded\">\n314: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n315: <div className=\"text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis\">"
+            "line": 327,
+            "context": "326: <div className=\"p-2 rounded\">\n327: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n328: <div className=\"text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis\">"
           },
           {
             "text": "Previous",
-            "line": 457,
-            "context": "456: disabled={currentPage === 1}\n457: >\n458: Previous"
+            "line": 470,
+            "context": "469: disabled={currentPage === 1}\n470: >\n471: Previous"
           },
           {
             "text": "Next",
-            "line": 468,
-            "context": "467: disabled={currentPage >= totalPages}\n468: >\n469: Next"
+            "line": 481,
+            "context": "480: disabled={currentPage >= totalPages}\n481: >\n482: Next"
           },
           {
             "text": "Order ID",
-            "line": 489,
-            "context": "488: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n489: <TableHead className=\"w-[140px] font-medium text-foreground text-center\">Order ID</TableHead>\n490: <TableHead className=\"font-medium text-foreground text-center\">"
+            "line": 502,
+            "context": "501: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n502: <TableHead className=\"w-[140px] font-medium text-foreground text-center\">Order ID</TableHead>\n503: <TableHead className=\"font-medium text-foreground text-center\">"
           },
           {
             "text": "Vehicle",
-            "line": 493,
-            "context": "492: </TableHead>\n493: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">Vehicle</TableHead>\n494: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>"
+            "line": 506,
+            "context": "505: </TableHead>\n506: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">Vehicle</TableHead>\n507: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>"
           },
           {
             "text": "Status",
-            "line": 496,
-            "context": "495: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>\n496: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n497: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
+            "line": 509,
+            "context": "508: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>\n509: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n510: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
           },
           {
             "text": "Actions",
-            "line": 497,
-            "context": "496: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n497: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n498: </TableRow>"
+            "line": 510,
+            "context": "509: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n510: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n511: </TableRow>"
           },
           {
             "text": "Previous",
-            "line": 796,
-            "context": "795: disabled={currentPage === 1}\n796: >\n797: Previous"
+            "line": 820,
+            "context": "819: disabled={currentPage === 1}\n820: >\n821: Previous"
           },
           {
             "text": "Next",
-            "line": 807,
-            "context": "806: disabled={currentPage >= totalPages}\n807: >\n808: Next"
+            "line": 831,
+            "context": "830: disabled={currentPage >= totalPages}\n831: >\n832: Next"
           }
         ],
         "translationCalls": [
           {
             "key": "errors.no_permission_status_change",
-            "line": 132,
+            "line": 134,
             "exists": false
           },
           {
             "key": "errors.status_update_failed",
-            "line": 163,
+            "line": 165,
             "exists": false
           },
           {
             "key": "common.vin_copied",
-            "line": 173,
+            "line": 175,
             "exists": false
           },
           {
             "key": "errors.copy_vin_failed",
-            "line": 179,
+            "line": 181,
             "exists": false
           },
           {
             "key": "data_table.days_overdue",
-            "line": 195,
+            "line": 197,
             "exists": false
           },
           {
             "key": "data_table.due_today",
-            "line": 197,
+            "line": 199,
             "exists": true
           },
           {
             "key": "data_table.due_tomorrow",
-            "line": 199,
-            "exists": false
-          },
-          {
-            "key": "data_table.due_in_days",
             "line": 201,
             "exists": false
           },
           {
+            "key": "data_table.due_in_days",
+            "line": 203,
+            "exists": false
+          },
+          {
             "key": "data_table.unknown_dealer",
-            "line": 286,
+            "line": 299,
             "exists": true
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 337,
+            "line": 350,
             "exists": true
           },
           {
             "key": "data_table.no_stock",
-            "line": 361,
+            "line": 374,
             "exists": true
           },
           {
             "key": "recon.completion_date",
-            "line": 376,
+            "line": 389,
             "exists": true
           },
           {
             "key": "data_table.no_date_set",
-            "line": 390,
+            "line": 403,
             "exists": true
           },
           {
             "key": "data_table.view",
-            "line": 410,
+            "line": 423,
             "exists": true
           },
           {
             "key": "data_table.edit",
-            "line": 422,
-            "exists": true
-          },
-          {
-            "key": "data_table.delete",
             "line": 435,
             "exists": true
           },
           {
+            "key": "data_table.delete",
+            "line": 448,
+            "exists": true
+          },
+          {
             "key": "data_table.showing_range",
-            "line": 449,
+            "line": 462,
             "exists": true
           },
           {
             "key": "data_table.page_of",
-            "line": 461,
+            "line": 474,
             "exists": true
           },
           {
             "key": "data_table.orders_count",
-            "line": 480,
+            "line": 493,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 494,
+            "line": 507,
             "exists": true
           },
           {
             "key": "recon.completion_date",
-            "line": 495,
+            "line": 508,
             "exists": true
           },
           {
             "key": "data_table.unknown_dealer",
-            "line": 550,
+            "line": 574,
             "exists": true
           },
           {
             "key": "data_table.no_stock",
-            "line": 573,
+            "line": 597,
             "exists": true
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 611,
+            "line": 635,
             "exists": true
           },
           {
             "key": "data_table.no_date_set",
-            "line": 650,
+            "line": 674,
             "exists": true
           },
           {
             "key": "data_table.no_time_set",
-            "line": 669,
+            "line": 693,
             "exists": true
           },
           {
             "key": "data_table.view_details",
-            "line": 698,
+            "line": 722,
             "exists": true
           },
           {
             "key": "data_table.edit_order",
-            "line": 710,
+            "line": 734,
             "exists": true
           },
           {
             "key": "data_table.print_order",
-            "line": 721,
+            "line": 745,
             "exists": true
           },
           {
             "key": "data_table.delete_order",
-            "line": 733,
+            "line": 757,
             "exists": true
           },
           {
             "key": "data_table.no_orders_found",
-            "line": 749,
+            "line": 773,
             "exists": true
           },
           {
             "key": "data_table.adjust_filters_or_create",
-            "line": 750,
+            "line": 774,
             "exists": true
           },
           {
             "key": "data_table.showing_range",
-            "line": 765,
+            "line": 789,
             "exists": true
           },
           {
             "key": "data_table.items_per_page",
-            "line": 768,
+            "line": 792,
             "exists": true
           },
           {
             "key": "data_table.page_of",
-            "line": 800,
+            "line": 824,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "errors.no_permission_status_change",
-            "line": 132,
-            "context": "131: variant: 'destructive',\n132: description: t('errors.no_permission_status_change', 'You do not have permission to change order status')\n133: });"
+            "line": 134,
+            "context": "133: variant: 'destructive',\n134: description: t('errors.no_permission_status_change', 'You do not have permission to change order status')\n135: });"
           },
           {
             "key": "errors.status_update_failed",
-            "line": 163,
-            "context": "162: variant: 'destructive',\n163: description: t('errors.status_update_failed', 'Failed to update order status')\n164: });"
+            "line": 165,
+            "context": "164: variant: 'destructive',\n165: description: t('errors.status_update_failed', 'Failed to update order status')\n166: });"
           },
           {
             "key": "common.vin_copied",
-            "line": 173,
-            "context": "172: toast({\n173: description: t('common.vin_copied', 'VIN copied to clipboard')\n174: });"
+            "line": 175,
+            "context": "174: toast({\n175: description: t('common.vin_copied', 'VIN copied to clipboard')\n176: });"
           },
           {
             "key": "errors.copy_vin_failed",
-            "line": 179,
-            "context": "178: variant: 'destructive',\n179: description: t('errors.copy_vin_failed', 'Failed to copy VIN')\n180: });"
+            "line": 181,
+            "context": "180: variant: 'destructive',\n181: description: t('errors.copy_vin_failed', 'Failed to copy VIN')\n182: });"
           },
           {
             "key": "data_table.days_overdue",
-            "line": 195,
-            "context": "194: if (diffDays < 0) {\n195: return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground whitespace-nowrap' };\n196: } else if (diffDays === 0) {"
+            "line": 197,
+            "context": "196: if (diffDays < 0) {\n197: return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground whitespace-nowrap' };\n198: } else if (diffDays === 0) {"
           },
           {
             "key": "data_table.due_tomorrow",
-            "line": 199,
-            "context": "198: } else if (diffDays === 1) {\n199: return { text: t('data_table.due_tomorrow'), variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };\n200: } else {"
+            "line": 201,
+            "context": "200: } else if (diffDays === 1) {\n201: return { text: t('data_table.due_tomorrow'), variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };\n202: } else {"
           },
           {
             "key": "data_table.due_in_days",
-            "line": 201,
-            "context": "200: } else {\n201: return { text: t('data_table.due_in_days', { days: diffDays }), variant: 'outline' as const, className: 'border-border text-foreground' };\n202: }"
+            "line": 203,
+            "context": "202: } else {\n203: return { text: t('data_table.due_in_days', { days: diffDays }), variant: 'outline' as const, className: 'border-border text-foreground' };\n204: }"
           }
         ],
         "coverage": 80,
@@ -21013,17 +21033,17 @@
           },
           {
             "key": "layout.footer.privacy_policy",
-            "line": 200,
+            "line": 201,
             "exists": true
           },
           {
             "key": "layout.footer.terms_of_service",
-            "line": 208,
+            "line": 210,
             "exists": true
           },
           {
             "key": "layout.footer.support",
-            "line": 216,
+            "line": 219,
             "exists": true
           }
         ],
@@ -24293,6 +24313,30 @@
             "text": "Go to next page",
             "line": 58,
             "context": "57: const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof PaginationLink>) => (\n58: <PaginationLink aria-label=\"Go to next page\" size=\"default\" className={cn(\"gap-1 pr-2.5\", className)} {...props}>\n59: <span>Next</span>"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\ui\\notes-tooltip.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Order Note",
+            "line": 59,
+            "context": "58: <p className=\"font-semibold text-sm text-foreground flex items-center gap-2\">\n59: <StickyNote className=\"w-4 h-4 text-amber-500\" />\n60: Order Note"
+          },
+          {
+            "text": "Note added during order creation",
+            "line": 62,
+            "context": "61: </p>\n62: <p className=\"text-xs text-muted-foreground mt-1\">\n63: Note added during order creation"
+          },
+          {
+            "text": "Click to view full order details",
+            "line": 95,
+            "context": "94: <div className=\"flex items-center justify-center gap-1.5\">\n95: <Eye className=\"w-3.5 h-3.5\" />\n96: Click to view full order details"
           }
         ],
         "translationCalls": [],
@@ -36555,98 +36599,68 @@
           },
           {
             "key": "productivity.allDay",
-            "line": 151,
+            "line": 152,
             "exists": true
           },
           {
+            "key": "common.click",
+            "line": 191,
+            "exists": false
+          },
+          {
+            "key": "common.view_details",
+            "line": 191,
+            "exists": false
+          },
+          {
             "key": "productivity.eventMoved",
-            "line": 328,
+            "line": 334,
             "exists": true
           },
           {
             "key": "productivity.eventMoveFailed",
-            "line": 333,
+            "line": 339,
+            "exists": true
+          },
+          {
+            "key": "productivity.upcomingActivity",
+            "line": 403,
+            "exists": true
+          },
+          {
+            "key": "productivity.nextDays",
+            "line": 406,
+            "exists": true
+          },
+          {
+            "key": "productivity.noUpcomingActivity",
+            "line": 414,
             "exists": true
           },
           {
             "key": "time.today",
-            "line": 411,
+            "line": 489,
             "exists": true
           },
           {
-            "key": "productivity.monthView",
-            "line": 434,
+            "key": "productivity.events",
+            "line": 511,
             "exists": true
-          },
-          {
-            "key": "productivity.listView",
-            "line": 443,
-            "exists": true
-          },
-          {
-            "key": "nav.calendar",
-            "line": 457,
-            "exists": false
           },
           {
             "key": "productivity.todos",
-            "line": 467,
+            "line": 521,
             "exists": true
           },
           {
             "key": "common.orders",
-            "line": 477,
+            "line": 531,
             "exists": true
           },
           {
-            "key": "productivity.manageCalendars",
-            "line": 486,
+            "key": "productivity.createEvent",
+            "line": 539,
             "exists": true
-          },
-          {
-            "key": "productivity.createCalendar",
-            "line": 491,
-            "exists": true
-          },
-          {
-            "key": "productivity.createCalendarDescription",
-            "line": 493,
-            "exists": true
-          },
-          {
-            "key": "productivity.calendarName",
-            "line": 498,
-            "exists": true
-          },
-          {
-            "key": "productivity.enterCalendarName",
-            "line": 503,
-            "exists": true
-          },
-          {
-            "key": "common.description",
-            "line": 509,
-            "exists": false
-          },
-          {
-            "key": "productivity.enterDescription",
-            "line": 514,
-            "exists": true
-          },
-          {
-            "key": "productivity.color",
-            "line": 519,
-            "exists": true
-          },
-          {
-            "key": "common.cancel",
-            "line": 530,
-            "exists": true
-          },
-          {
-            "key": "common.create",
-            "line": 533,
-            "exists": false
           },
           {
             "key": "productivity.createEvent",
@@ -36654,171 +36668,171 @@
             "exists": true
           },
           {
-            "key": "productivity.createEvent",
-            "line": 549,
-            "exists": true
-          },
-          {
             "key": "productivity.createEventDescription",
-            "line": 551,
+            "line": 546,
             "exists": true
           },
           {
             "key": "productivity.title",
-            "line": 556,
+            "line": 551,
             "exists": true
           },
           {
             "key": "productivity.enterEventTitle",
-            "line": 561,
+            "line": 556,
             "exists": true
           },
           {
             "key": "common.description",
-            "line": 567,
+            "line": 562,
             "exists": false
           },
           {
             "key": "productivity.enterDescription",
-            "line": 572,
+            "line": 567,
             "exists": true
           },
           {
             "key": "nav.calendar",
-            "line": 578,
+            "line": 573,
             "exists": false
           },
           {
             "key": "productivity.selectCalendar",
-            "line": 581,
+            "line": 576,
             "exists": true
           },
           {
             "key": "productivity.eventType",
-            "line": 600,
+            "line": 595,
             "exists": true
           },
           {
             "key": "productivity.eventTypes.meeting",
-            "line": 606,
+            "line": 601,
             "exists": true
           },
           {
             "key": "productivity.eventTypes.reminder",
-            "line": 607,
+            "line": 602,
             "exists": true
           },
           {
             "key": "productivity.eventTypes.task",
-            "line": 608,
+            "line": 603,
             "exists": true
           },
           {
             "key": "productivity.eventTypes.appointment",
-            "line": 609,
+            "line": 604,
             "exists": true
           },
           {
             "key": "productivity.allDay",
-            "line": 621,
+            "line": 616,
             "exists": true
           },
           {
             "key": "productivity.startTime",
-            "line": 627,
+            "line": 622,
             "exists": true
           },
           {
             "key": "productivity.endTime",
-            "line": 638,
+            "line": 633,
             "exists": true
           },
           {
             "key": "productivity.location",
-            "line": 651,
+            "line": 646,
             "exists": true
           },
           {
             "key": "productivity.enterLocation",
-            "line": 656,
+            "line": 651,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 662,
+            "line": 657,
             "exists": true
           },
           {
             "key": "common.create",
-            "line": 665,
+            "line": 660,
             "exists": false
           },
           {
+            "key": "productivity.monthView",
+            "line": 679,
+            "exists": true
+          },
+          {
+            "key": "productivity.listView",
+            "line": 688,
+            "exists": true
+          },
+          {
             "key": "common.description",
-            "line": 779,
+            "line": 798,
             "exists": false
           },
           {
             "key": "productivity.startTime",
-            "line": 788,
+            "line": 807,
             "exists": true
           },
           {
             "key": "productivity.endTime",
-            "line": 798,
+            "line": 817,
             "exists": true
           },
           {
             "key": "productivity.location",
-            "line": 810,
+            "line": 829,
             "exists": true
           },
           {
             "key": "common.status",
-            "line": 818,
+            "line": 837,
             "exists": true
           },
           {
             "key": "common.close",
-            "line": 825,
+            "line": 844,
             "exists": true
           }
         ],
         "missingKeys": [
           {
-            "key": "nav.calendar",
-            "line": 457,
-            "context": "456: <CalendarIcon className=\"h-4 w-4\" />\n457: <span className=\"hidden sm:inline\">{t('nav.calendar')}</span>\n458: </Button>"
+            "key": "common.click",
+            "line": 191,
+            "context": "190: <div className=\"text-[10px] text-muted-foreground text-center pt-1 border-t italic\">\n191: {t('common.click')} {t('common.view_details')}\n192: </div>"
+          },
+          {
+            "key": "common.view_details",
+            "line": 191,
+            "context": "190: <div className=\"text-[10px] text-muted-foreground text-center pt-1 border-t italic\">\n191: {t('common.click')} {t('common.view_details')}\n192: </div>"
           },
           {
             "key": "common.description",
-            "line": 509,
-            "context": "508: <div>\n509: <Label htmlFor=\"cal-description\">{t('common.description')}</Label>\n510: <Textarea"
-          },
-          {
-            "key": "common.create",
-            "line": 533,
-            "context": "532: <Button type=\"submit\">\n533: {t('common.create')}\n534: </Button>"
-          },
-          {
-            "key": "common.description",
-            "line": 567,
-            "context": "566: <div>\n567: <Label htmlFor=\"event-description\">{t('common.description')}</Label>\n568: <Textarea"
+            "line": 562,
+            "context": "561: <div>\n562: <Label htmlFor=\"event-description\">{t('common.description')}</Label>\n563: <Textarea"
           },
           {
             "key": "nav.calendar",
-            "line": 578,
-            "context": "577: <div>\n578: <Label htmlFor=\"event-calendar\">{t('nav.calendar')}</Label>\n579: <Select value={newEvent.calendar_id} onValueChange={(value) => setNewEvent({ ...newEvent, calendar_id: value })}>"
+            "line": 573,
+            "context": "572: <div>\n573: <Label htmlFor=\"event-calendar\">{t('nav.calendar')}</Label>\n574: <Select value={newEvent.calendar_id} onValueChange={(value) => setNewEvent({ ...newEvent, calendar_id: value })}>"
           },
           {
             "key": "common.create",
-            "line": 665,
-            "context": "664: <Button type=\"submit\">\n665: {t('common.create')}\n666: </Button>"
+            "line": 660,
+            "context": "659: <Button type=\"submit\">\n660: {t('common.create')}\n661: </Button>"
           },
           {
             "key": "common.description",
-            "line": 779,
-            "context": "778: <div>\n779: <Label>{t('common.description')}</Label>\n780: <p className=\"text-sm text-muted-foreground mt-1\">{selectedItem.description}</p>"
+            "line": 798,
+            "context": "797: <div>\n798: <Label>{t('common.description')}</Label>\n799: <p className=\"text-sm text-muted-foreground mt-1\">{selectedItem.description}</p>"
           }
         ],
         "coverage": 100,
@@ -38208,9 +38222,19 @@
             "exists": true
           },
           {
-            "key": "qr_block.words_in_general",
+            "key": "order_detail.words",
             "line": 45,
-            "exists": false
+            "exists": true
+          },
+          {
+            "key": "order_detail.characters",
+            "line": 45,
+            "exists": true
+          },
+          {
+            "key": "order_detail.added",
+            "line": 48,
+            "exists": true
           },
           {
             "key": "common.recently",
@@ -38220,14 +38244,9 @@
         ],
         "missingKeys": [
           {
-            "key": "qr_block.words_in_general",
-            "line": 45,
-            "context": "44: <span>\n45: {order.notes.split(' ').length} {t('qr_block.words_in_general').split(' ')[0]} • {order.notes.length} characters\n46: </span>"
-          },
-          {
             "key": "common.recently",
             "line": 48,
-            "context": "47: <span>\n48: Added {order.created_at ? new Date(order.created_at).toLocaleDateString() : t('common.recently')}\n49: </span>"
+            "context": "47: <span>\n48: {t('order_detail.added')} {order.created_at ? new Date(order.created_at).toLocaleDateString() : t('common.recently')}\n49: </span>"
           }
         ],
         "coverage": 100,
@@ -40918,6 +40937,161 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\orders\\EnhancedQRCodeBlock.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "order_detail.short_link_created",
+            "line": 122,
+            "exists": true
+          },
+          {
+            "key": "order_detail.qr_generation_failed",
+            "line": 127,
+            "exists": true
+          },
+          {
+            "key": "order_detail.regenerate_qr",
+            "line": 167,
+            "exists": true
+          },
+          {
+            "key": "order_detail.qr_regeneration_failed",
+            "line": 172,
+            "exists": true
+          },
+          {
+            "key": "order_detail.copy_link",
+            "line": 188,
+            "exists": true
+          },
+          {
+            "key": "order_detail.copy_failed",
+            "line": 190,
+            "exists": true
+          },
+          {
+            "key": "orders.qr_code",
+            "line": 225,
+            "exists": true
+          },
+          {
+            "key": "orders.short_link",
+            "line": 225,
+            "exists": true
+          },
+          {
+            "key": "orders.retrying",
+            "line": 245,
+            "exists": true
+          },
+          {
+            "key": "orders.try_again",
+            "line": 250,
+            "exists": true
+          },
+          {
+            "key": "orders.qr_generating",
+            "line": 267,
+            "exists": true
+          },
+          {
+            "key": "orders.qr_generating_desc",
+            "line": 270,
+            "exists": true
+          },
+          {
+            "key": "orders.qr_generation_failed",
+            "line": 284,
+            "exists": true
+          },
+          {
+            "key": "orders.qr_retry_desc",
+            "line": 287,
+            "exists": true
+          },
+          {
+            "key": "orders.retry_qr_generation",
+            "line": 296,
+            "exists": true
+          },
+          {
+            "key": "orders.view_qr_enlarged",
+            "line": 320,
+            "exists": true
+          },
+          {
+            "key": "orders.scan_for_quick_access",
+            "line": 340,
+            "exists": true
+          },
+          {
+            "key": "orders.click_to_enlarge",
+            "line": 343,
+            "exists": true
+          },
+          {
+            "key": "orders.short_link",
+            "line": 353,
+            "exists": true
+          },
+          {
+            "key": "orders.regenerate_qr",
+            "line": 387,
+            "exists": true
+          },
+          {
+            "key": "orders.qr_code",
+            "line": 409,
+            "exists": true
+          },
+          {
+            "key": "orders.short_link",
+            "line": 431,
+            "exists": true
+          },
+          {
+            "key": "orders.click_to_copy",
+            "line": 445,
+            "exists": true
+          },
+          {
+            "key": "orders.copy_link",
+            "line": 454,
+            "exists": false
+          },
+          {
+            "key": "orders.no_qr_code",
+            "line": 474,
+            "exists": true
+          },
+          {
+            "key": "orders.generate_qr_desc",
+            "line": 477,
+            "exists": true
+          },
+          {
+            "key": "orders.generating",
+            "line": 488,
+            "exists": true
+          },
+          {
+            "key": "orders.generate_qr",
+            "line": 493,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "orders.copy_link",
+            "line": 454,
+            "context": "453: className=\"flex-shrink-0 h-9 w-9 p-0\"\n454: title={t('orders.copy_link', 'Copy link')}\n455: >"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\orders\\EnhancedOrderDetailModal.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -41893,185 +42067,190 @@
         "hardcodedStrings": [
           {
             "text": "Mark all",
-            "line": 249,
-            "context": "248: <span className=\"hidden sm:inline\">{t('notifications.actions.mark_all_read')}</span>\n249: <span className=\"inline sm:hidden\">Mark all</span>\n250: </Button>"
+            "line": 258,
+            "context": "257: <span className=\"hidden sm:inline\">{t('notifications.actions.mark_all_read')}</span>\n258: <span className=\"inline sm:hidden\">Mark all</span>\n259: </Button>"
           },
           {
             "text": "Select",
-            "line": 257,
-            "context": "256: <span className=\"hidden sm:inline\">{t('notifications.actions.select_to_delete')}</span>\n257: <span className=\"inline sm:hidden\">Select</span>\n258: </Button>"
-          },
-          {
-            "text": "No grouped notifications",
-            "line": 314,
-            "context": "313: <div className=\"space-y-2\">\n314: <p className=\"font-medium\">No grouped notifications</p>\n315: <p className=\"text-sm\">Switch to \"Recent\" tab to view all {notifications.length} notification{notifications.length !== 1 ? 's' : ''}</p>"
+            "line": 266,
+            "context": "265: <span className=\"hidden sm:inline\">{t('notifications.actions.select_to_delete')}</span>\n266: <span className=\"inline sm:hidden\">Select</span>\n267: </Button>"
           },
           {
             "text": "Mark all read",
-            "line": 345,
-            "context": "344: <Check className=\"h-4 w-4 mr-1\" />\n345: <span className=\"text-xs hidden sm:inline\">Mark all read</span>\n346: </Button>"
+            "line": 358,
+            "context": "357: <Check className=\"h-3 w-3 mr-1\" />\n358: <span className=\"hidden sm:inline\">Mark all read</span>\n359: </Button>"
           }
         ],
         "translationCalls": [
           {
             "key": "common.success",
-            "line": 163,
+            "line": 171,
             "exists": true
           },
           {
             "key": "notifications.bulk_delete_success",
-            "line": 164,
+            "line": 172,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 169,
+            "line": 177,
             "exists": true
           },
           {
             "key": "notifications.bulk_delete_error",
-            "line": 170,
+            "line": 178,
             "exists": true
           },
           {
             "key": "common.warning",
-            "line": 176,
+            "line": 184,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 184,
+            "line": 192,
             "exists": true
           },
           {
             "key": "notifications.bulk_delete_error",
-            "line": 185,
+            "line": 193,
             "exists": true
           },
           {
             "key": "notifications.loading",
-            "line": 197,
+            "line": 205,
             "exists": true
           },
           {
             "key": "notifications.title",
-            "line": 211,
+            "line": 220,
             "exists": true
           },
           {
             "key": "notifications.filter.all",
-            "line": 227,
+            "line": 236,
             "exists": true
           },
           {
             "key": "notifications.filter.unread",
-            "line": 227,
+            "line": 236,
             "exists": true
           },
           {
             "key": "notifications.filter.important",
-            "line": 227,
+            "line": 236,
             "exists": true
           },
           {
             "key": "notifications.filter.all_description",
-            "line": 234,
+            "line": 243,
             "exists": true
           },
           {
             "key": "notifications.filter.unread_description",
-            "line": 237,
+            "line": 246,
             "exists": true
           },
           {
             "key": "notifications.filter.important_description",
-            "line": 240,
+            "line": 249,
             "exists": true
           },
           {
             "key": "notifications.actions.mark_all_read",
-            "line": 248,
+            "line": 257,
             "exists": true
           },
           {
             "key": "notifications.actions.select_to_delete",
-            "line": 256,
-            "exists": true
-          },
-          {
-            "key": "notifications.actions.select_all",
             "line": 265,
             "exists": true
           },
           {
+            "key": "notifications.actions.select_all",
+            "line": 274,
+            "exists": true
+          },
+          {
             "key": "notifications.actions.deselect_all",
-            "line": 272,
+            "line": 281,
             "exists": true
           },
           {
             "key": "notifications.actions.delete_selected",
-            "line": 283,
+            "line": 292,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 291,
+            "line": 300,
             "exists": true
           },
           {
             "key": "notifications.tabs.recent",
-            "line": 301,
-            "exists": true
-          },
-          {
-            "key": "notifications.tabs.grouped",
-            "line": 302,
-            "exists": true
-          },
-          {
-            "key": "notifications.empty.message",
             "line": 311,
             "exists": true
           },
           {
+            "key": "notifications.tabs.grouped",
+            "line": 312,
+            "exists": true
+          },
+          {
+            "key": "notifications.empty.message",
+            "line": 322,
+            "exists": true
+          },
+          {
+            "key": "notifications.empty.no_grouped",
+            "line": 326,
+            "exists": true
+          },
+          {
+            "key": "notifications.empty.switch_to_recent",
+            "line": 327,
+            "exists": true
+          },
+          {
             "key": "notifications.count.singular",
-            "line": 329,
+            "line": 342,
             "exists": true
           },
           {
             "key": "notifications.count.plural",
-            "line": 329,
+            "line": 342,
             "exists": true
           },
           {
             "key": "notifications.count.unread",
-            "line": 333,
+            "line": 346,
             "exists": true
           },
           {
             "key": "notifications.show_more",
-            "line": 366,
+            "line": 380,
             "exists": true
           },
           {
             "key": "notifications.empty.title",
-            "line": 383,
+            "line": 398,
             "exists": true
           },
           {
             "key": "notifications.empty.description",
-            "line": 384,
+            "line": 399,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.warning",
-            "line": 176,
-            "context": "175: toast({\n176: title: t('common.warning'),\n177: description: `${successCount} deleted, ${failureCount} failed`,"
+            "line": 184,
+            "context": "183: toast({\n184: title: t('common.warning'),\n185: description: `${successCount} deleted, ${failureCount} failed`,"
           }
         ],
-        "coverage": 88,
+        "coverage": 91,
         "severity": "low"
       },
       {
@@ -58861,7 +59040,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "404 Component components need translation",
+      "description": "406 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\reports\\sections\\OperationalReports.tsx",
@@ -58870,11 +59049,11 @@
         "src\\hooks\\useChatPermissions.examples.tsx",
         "src\\components\\reports\\sections\\FinancialReports.tsx",
         "src\\components\\reports\\invoices\\InvoiceDetailsDialog.tsx",
+        "src\\components\\productivity\\ProductivityQuickNotes.tsx",
         "src\\components\\chat\\ContextualChatLauncher.tsx",
         "src\\pages\\Settings.tsx",
         "src\\components\\get-ready\\GetReadySplitContent.tsx",
         "src\\components\\get-ready\\GetReadyOverview.tsx",
-        "src\\components\\productivity\\ProductivityQuickNotes.tsx",
         "src\\components\\orders\\OrderTasksSection.tsx",
         "src\\components\\detail-hub\\TimecardSystem.BACKUP.tsx",
         "src\\components\\get-ready\\GetReadyActivityFeed.tsx",
@@ -58979,7 +59158,6 @@
         "src\\components\\sales\\QuickFilterBar.tsx",
         "src\\components\\reports\\RecalculateOrderTotals.tsx",
         "src\\components\\orders\\OrderViewLoadingFallback.tsx",
-        "src\\components\\notifications\\SmartNotificationCenter.tsx",
         "src\\components\\detail-hub\\PunchClockKiosk.FULL_FEATURES.tsx",
         "src\\components\\detail-hub\\PunchClockKiosk.COMPLEX.tsx",
         "src\\components\\detail-hub\\PhotoReviewCard.tsx",
@@ -59001,12 +59179,14 @@
         "src\\hooks\\useNotificationTemplates.ts",
         "src\\hooks\\useFirebaseMessaging.ts",
         "src\\hooks\\useContacts.ts",
+        "src\\components\\ui\\notes-tooltip.tsx",
         "src\\components\\ui\\comments-tooltip.tsx",
         "src\\components\\settings\\platform\\PlatformBrandingSettings.tsx",
         "src\\components\\recon-hub\\analytics\\ReportExportCenter.tsx",
         "src\\components\\orders\\TeamCommunicationBlock.tsx",
         "src\\components\\orders\\OrderViewErrorBoundary.tsx",
         "src\\components\\orders\\EnhancedOrderDetailLayout.tsx",
+        "src\\components\\notifications\\SmartNotificationCenter.tsx",
         "src\\components\\notifications\\DeliveryDetails.tsx",
         "src\\components\\management\\SystemBrandingEditor.tsx",
         "src\\components\\management\\OrderNumberMigration.tsx",
@@ -59213,6 +59393,7 @@
         "src\\components\\orders\\OrderComments.tsx",
         "src\\components\\orders\\OrderCalendarView.tsx",
         "src\\components\\orders\\FollowersBlock.tsx",
+        "src\\components\\orders\\EnhancedQRCodeBlock.tsx",
         "src\\components\\orders\\CommunicationActions.tsx",
         "src\\components\\orders\\communication\\VoiceRecorder.tsx",
         "src\\components\\orders\\communication\\VoicePlayer.tsx",
@@ -59268,12 +59449,12 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "202 hours"
+      "estimatedEffort": "203 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2439 translation keys are referenced but missing",
+      "description": "2438 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "122 hours"
     }
