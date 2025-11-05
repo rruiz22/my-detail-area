@@ -7,16 +7,17 @@ import { ProductivityTodos } from "@/components/productivity/ProductivityTodos";
 import { ProductivityCalendar } from "@/components/productivity/ProductivityCalendar";
 import { ProductivityDashboard } from "@/components/productivity/ProductivityDashboard";
 import { ProductivityQuickNotes } from "@/components/productivity/ProductivityQuickNotes";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useTabPersistence } from "@/hooks/useTabPersistence";
 
 export default function Productivity() {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useTabPersistence('productivity');
 
   useEffect(() => {
-    console.log('[RouteMount] Productivity mounted');
+    console.log('[RouteMount] Productivity mounted, activeTab:', activeTab);
     return () => console.log('[RouteUnmount] Productivity unmounted');
-  }, []);
+  }, [activeTab]);
 
   return (
     <div className="container mx-auto py-6 space-y-6">

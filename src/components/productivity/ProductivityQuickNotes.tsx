@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -78,23 +78,75 @@ interface NoteCardProps {
   onEdit: (note: ProductivityNote) => void;
   onDelete: (id: string) => void;
   onTogglePin: (id: string, isPinned: boolean) => void;
+  onUpdate: (id: string, data: Partial<CreateNoteData>) => void;
 }
 
-const NoteCard = ({ note, onEdit, onDelete, onTogglePin }: NoteCardProps) => {
+const NoteCard = ({ note, onEdit, onDelete, onTogglePin, onUpdate }: NoteCardProps) => {
   const colors = NOTE_COLORS[note.color];
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(note.content);
+  const [editTitle, setEditTitle] = useState(note.title || '');
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  // Update local state when note changes
+  useEffect(() => {
+    setEditContent(note.content);
+    setEditTitle(note.title || '');
+  }, [note.content, note.title]);
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Don't trigger edit mode if clicking on action buttons
+    const target = e.target as HTMLElement;
+    if (target.closest('button') || target.closest('[role="menuitem"]')) {
+      return;
+    }
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    if (editContent.trim() !== note.content || editTitle !== note.title) {
+      onUpdate(note.id, {
+        content: editContent.trim(),
+        title: editTitle.trim() || null,
+      });
+    }
+    setIsEditing(false);
+  };
+
+  const handleBlur = () => {
+    // Auto-save on blur
+    handleSave();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Save on Ctrl/Cmd + Enter
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      handleSave();
+    }
+    // Cancel on Escape
+    if (e.key === 'Escape') {
+      setEditContent(note.content);
+      setEditTitle(note.title || '');
+      setIsEditing(false);
+    }
+  };
 
   return (
     <Card
       className={cn(
-        "relative transition-all hover:shadow-xl cursor-pointer border-2 transform hover:scale-105",
+        "relative transition-all border-2",
         colors.bg,
         colors.border,
-        "group"
+        "group",
+        isEditing ? "shadow-2xl scale-105 z-10" : "hover:shadow-xl cursor-pointer hover:scale-105"
       )}
       style={{
-        minHeight: '200px',
-        boxShadow: '4px 4px 8px rgba(0,0,0,0.1)',
+        minHeight: isEditing ? 'auto' : '200px',
+        maxHeight: isEditing ? '600px' : '400px',
+        boxShadow: isEditing ? '6px 6px 16px rgba(0,0,0,0.2)' : '4px 4px 8px rgba(0,0,0,0.1)',
       }}
+      onClick={handleCardClick}
     >
       {/* Pin indicator */}
       {note.is_pinned && (
@@ -107,77 +159,158 @@ const NoteCard = ({ note, onEdit, onDelete, onTogglePin }: NoteCardProps) => {
       <CardHeader className={cn("p-3 rounded-t-lg", colors.header)}>
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            {note.title && (
-              <h3 className={cn("font-bold text-sm truncate", colors.text)}>
-                {note.title}
-              </h3>
+            {isEditing ? (
+              <Input
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Note title (optional)"
+                className={cn("font-bold text-sm bg-transparent border-0 focus:ring-1 focus:ring-offset-0 p-0", colors.text)}
+                onClick={(e) => e.stopPropagation()}
+              />
+            ) : (
+              <>
+                {note.title && (
+                  <h3 className={cn("font-bold text-sm truncate", colors.text)}>
+                    {note.title}
+                  </h3>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  {format(new Date(note.updated_at), 'MMM dd, HH:mm')}
+                </p>
+              </>
             )}
-            <p className="text-xs text-muted-foreground">
-              {format(new Date(note.updated_at), 'MMM dd, HH:mm')}
-            </p>
           </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onTogglePin(note.id, note.is_pinned)}>
-                {note.is_pinned ? (
-                  <>
-                    <PinOff className="h-4 w-4 mr-2" />
-                    Unpin
-                  </>
-                ) : (
-                  <>
-                    <Pin className="h-4 w-4 mr-2" />
-                    Pin to top
-                  </>
-                )}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onEdit(note)}>
-                <Edit className="h-4 w-4 mr-2" />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => onDelete(note.id)}
-                className="text-destructive"
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {!isEditing && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={(e) => {
+                  e.stopPropagation();
+                  onTogglePin(note.id, note.is_pinned);
+                }}>
+                  {note.is_pinned ? (
+                    <>
+                      <PinOff className="h-4 w-4 mr-2" />
+                      Unpin
+                    </>
+                  ) : (
+                    <>
+                      <Pin className="h-4 w-4 mr-2" />
+                      Pin to top
+                    </>
+                  )}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit(note);
+                }}>
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit Full
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(note.id);
+                  }}
+                  className="text-destructive"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </CardHeader>
 
       {/* Content */}
       <CardContent className="p-3 space-y-2">
-        <p className={cn("text-sm whitespace-pre-wrap", colors.text)} style={{ minHeight: '80px' }}>
-          {note.content}
-        </p>
-
-        {/* Tags */}
-        {note.tags && note.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 pt-2 border-t border-current/20">
-            {note.tags.map((tag, index) => (
-              <Badge
-                key={index}
-                variant="outline"
-                className={cn("text-xs", colors.text)}
+        {isEditing ? (
+          <div className="space-y-2">
+            <Textarea
+              value={editContent}
+              onChange={(e) => setEditContent(e.target.value)}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
+              className={cn(
+                "text-sm bg-transparent border-0 focus:ring-1 focus:ring-offset-0 resize-none p-2",
+                colors.text
+              )}
+              style={{
+                minHeight: '120px',
+                maxHeight: '400px',
+                overflowY: 'auto',
+              }}
+              placeholder="Write your note content..."
+              autoFocus
+              onClick={(e) => e.stopPropagation()}
+            />
+            <div className="flex justify-end gap-2 pt-2 border-t border-current/20">
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setEditContent(note.content);
+                  setEditTitle(note.title || '');
+                  setIsEditing(false);
+                }}
+                className="h-7 text-xs"
               >
-                <Hash className="h-3 w-3 mr-1" />
-                {tag}
-              </Badge>
-            ))}
+                Cancel
+              </Button>
+              <Button
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSave();
+                }}
+                className="h-7 text-xs"
+              >
+                Save
+              </Button>
+            </div>
           </div>
+        ) : (
+          <>
+            <div
+              className={cn("text-sm whitespace-pre-wrap overflow-y-auto", colors.text)}
+              style={{
+                minHeight: '80px',
+                maxHeight: '300px',
+              }}
+            >
+              {note.content}
+            </div>
+
+            {/* Tags */}
+            {note.tags && note.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1 pt-2 border-t border-current/20">
+                {note.tags.map((tag, index) => (
+                  <Badge
+                    key={index}
+                    variant="outline"
+                    className={cn("text-xs", colors.text)}
+                  >
+                    <Hash className="h-3 w-3 mr-1" />
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </CardContent>
     </Card>
@@ -358,6 +491,10 @@ export const ProductivityQuickNotes = () => {
     }
   };
 
+  const handleInlineUpdate = async (id: string, data: Partial<CreateNoteData>) => {
+    await updateNote(id, data);
+  };
+
   if (loading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -451,6 +588,7 @@ export const ProductivityQuickNotes = () => {
             onEdit={setEditingNote}
             onDelete={deleteNote}
             onTogglePin={togglePin}
+            onUpdate={handleInlineUpdate}
           />
         ))}
       </div>

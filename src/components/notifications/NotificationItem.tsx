@@ -119,8 +119,8 @@ export function NotificationItem({
         className
       )}
     >
-      {/* Main Content */}
-      <div className="flex items-start gap-3 px-4 py-3 hover:bg-muted/30 transition-colors">
+      {/* Main Content - ✅ COMPACT DESIGN */}
+      <div className="flex items-start gap-2 px-3 py-2 hover:bg-muted/20 transition-colors">
         {/* Selection Checkbox */}
         {isSelectionMode && onToggleSelect && (
           <div className="flex-shrink-0 pt-1">
@@ -140,23 +140,25 @@ export function NotificationItem({
           </div>
         )}
 
-        {/* Icon */}
+        {/* Icon - ✅ SMALLER */}
         <div
           className={cn(
-            'flex-shrink-0 p-2 rounded-full',
+            'flex-shrink-0 p-1.5 rounded-full',
             isRead ? 'bg-muted text-muted-foreground' : 'bg-primary/10 text-primary'
           )}
         >
-          {getNotificationIcon(notification.module || 'default')}
+          <div className="h-3 w-3">
+            {getNotificationIcon(notification.module || 'default')}
+          </div>
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          {/* Header */}
-          <div className="flex items-start justify-between gap-2 mb-1">
-            <div className="flex-1 flex items-center gap-2">
+          {/* Header - ✅ COMPACT */}
+          <div className="flex items-start justify-between gap-2 mb-0.5">
+            <div className="flex-1 flex items-center gap-1.5">
               <h4 className={cn(
-                'text-sm leading-tight',
+                'text-xs leading-tight',
                 // ✅ Bold para no leídas, normal para leídas
                 isRead ? 'font-normal text-muted-foreground' : 'font-semibold text-foreground'
               )}>
@@ -164,16 +166,16 @@ export function NotificationItem({
               </h4>
               {/* Badge "New" para notificaciones muy recientes no leídas */}
               {!isRead && new Date().getTime() - new Date(notification.created_at).getTime() < 300000 && (
-                <Badge variant="default" className="text-xs px-1.5 py-0 h-4">
+                <Badge variant="default" className="text-[9px] px-1 py-0 h-3.5">
                   {t('notifications.badge.new')}
                 </Badge>
               )}
             </div>
 
-            {/* Actions */}
+            {/* Actions - ✅ SMALLER */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+                <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
                   <MoreVertical className="h-3 w-3" />
                 </Button>
               </DropdownMenuTrigger>
@@ -201,38 +203,38 @@ export function NotificationItem({
             </DropdownMenu>
           </div>
 
-          {/* Message */}
+          {/* Message - ✅ COMPACT */}
           <p className={cn(
-            'text-sm mb-2 leading-relaxed',
+            'text-[11px] mb-1.5 leading-snug',
             isRead ? 'text-muted-foreground/70' : 'text-muted-foreground'
           )}>
             {notification.message}
           </p>
 
-          {/* Entity Badge */}
+          {/* Entity Badge - ✅ SMALLER */}
           {showEntity && notification.metadata?.entity_type && (
-            <Badge variant="outline" className="mb-2 text-xs font-normal">
+            <Badge variant="outline" className="mb-1.5 text-[9px] h-4 font-normal">
               {notification.metadata.entity_type as string}: {(notification.metadata.entity_id as string)?.slice(0, 8)}
             </Badge>
           )}
 
-          {/* Footer */}
-          <div className="flex items-center justify-between gap-2 flex-wrap mt-2 pt-2 border-t border-gray-100">
+          {/* Footer - ✅ COMPACT */}
+          <div className="flex items-center justify-between gap-2 flex-wrap mt-1.5 pt-1.5 border-t border-gray-100">
             {/* Left side: Timestamp */}
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Clock className="h-3 w-3 opacity-60" />
+            <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+              <Clock className="h-2.5 w-2.5 opacity-60" />
               <span className="font-medium">
                 {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
               </span>
             </div>
 
-            {/* Right side: Badges and Expand */}
-            <div className="flex items-center gap-1.5">
+            {/* Right side: Badges and Expand - ✅ SMALLER */}
+            <div className="flex items-center gap-1">
               {/* Priority Badge - Solo si no es 'low' */}
               {notification.priority !== 'low' && (
                 <Badge
                   variant={notification.priority === 'urgent' || notification.priority === 'critical' ? 'destructive' : 'secondary'}
-                  className="text-xs font-medium"
+                  className="text-[9px] h-4 font-medium"
                 >
                   {notification.priority}
                 </Badge>
@@ -249,22 +251,22 @@ export function NotificationItem({
                 />
               )}
 
-              {/* Expand Button */}
+              {/* Expand Button - ✅ SMALLER */}
               {deliveryStatus && deliveryMetadata && (
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setExpanded(!expanded)}
-                  className="h-6 px-2 text-xs"
+                  className="h-5 px-1.5 text-[10px]"
                 >
                   {expanded ? (
                     <>
-                      <ChevronUp className="h-3 w-3 mr-1" />
+                      <ChevronUp className="h-2.5 w-2.5 mr-0.5" />
                       {t('notifications.delivery.hide_details')}
                     </>
                   ) : (
                     <>
-                      <ChevronDown className="h-3 w-3 mr-1" />
+                      <ChevronDown className="h-2.5 w-2.5 mr-0.5" />
                       {t('notifications.delivery.view_details')}
                     </>
                   )}

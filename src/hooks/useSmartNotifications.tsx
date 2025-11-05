@@ -154,8 +154,19 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
     // Combine both arrays
     const combined = [...transformedSmart, ...transformedGetReady];
 
+    // ✅ DEDUPLICATION: Remove duplicate IDs (in case a notification exists in both tables)
+    const deduplicatedMap = new Map<string, UnifiedNotification>();
+    combined.forEach(notification => {
+      // Keep the first occurrence (notification_log has priority since it comes first)
+      if (!deduplicatedMap.has(notification.id)) {
+        deduplicatedMap.set(notification.id, notification);
+      }
+    });
+
+    const deduplicated = Array.from(deduplicatedMap.values());
+
     // Sort by created_at (newest first)
-    return combined.sort(
+    return deduplicated.sort(
       (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
   }, [smartNotifications, getReadyNotifications]);
@@ -286,7 +297,7 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
     if (!user?.id || !validatedDealerId) return;
 
     try {
-      // Mark all notification_log as read
+      // ✅ ROBUST: Mark all notification_log as read (direct SQL update)
       const { error: smartError } = await supabase
         .from('notification_log')
         .update({
@@ -299,14 +310,16 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
 
       if (smartError) throw smartError;
 
-      // Mark all get_ready_notifications as read via RPC
-      const { error: getReadyError } = await supabase.rpc(
-        'mark_all_notifications_read',
-        {
-          p_user_id: user.id,
-          p_dealer_id: validatedDealerId,
-        }
-      );
+      // ✅ ROBUST: Mark all get_ready_notifications as read (direct SQL update)
+      const { error: getReadyError } = await supabase
+        .from('get_ready_notifications')
+        .update({
+          is_read: true,
+          read_at: new Date().toISOString(),
+        })
+        .eq('dealer_id', validatedDealerId)
+        .or(`user_id.eq.${user.id},user_id.is.null`) // User-specific OR broadcast notifications
+        .eq('is_read', false);
 
       if (getReadyError) throw getReadyError;
 
@@ -327,7 +340,7 @@ export function useSmartNotifications(dealerId?: number): UseSmartNotificationsR
         variant: 'destructive',
       });
     }
-  }, [user?.id, validatedDealerId, queryClient]);
+  }, [user?.id, validatedDealerId, queryClient]); // toast is stable, doesn't need to be a dependency
 
   // =====================================================
   // MARK ENTITY AS READ (notification_log only)

@@ -25,37 +25,31 @@ export function usePersistedState<T>(
     ...storageOptions
   } = options;
 
-  const [state, setState] = useState<T>(defaultValue);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  
-  const debounceRef = useRef<NodeJS.Timeout>();
-  const mountedRef = useRef(true);
-
-  // Load initial value
-  useEffect(() => {
+  // Load initial value synchronously
+  const [state, setState] = useState<T>(() => {
     try {
       const storedValue = storage.get(key, defaultValue, storageOptions);
-      
+
       // Validate if validator provided
       if (validateValue && !validateValue(storedValue)) {
         console.warn(`⚠️ Invalid stored value for ${key}, using default`);
-        setState(defaultValue);
-      } else {
-        setState(storedValue);
+        return defaultValue;
       }
-      
-      setError(null);
+
+      return storedValue;
     } catch (err) {
       const errorMsg = `Failed to load persisted state for ${key}`;
       console.error(errorMsg, err);
-      setError(errorMsg);
       onError?.(err instanceof Error ? err : new Error(errorMsg));
-      setState(defaultValue);
-    } finally {
-      setIsLoading(false);
+      return defaultValue;
     }
-  }, [key, defaultValue, validateValue, onError, storageOptions]);
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const debounceRef = useRef<NodeJS.Timeout>();
+  const mountedRef = useRef(true);
 
   // Debounced save function
   const debouncedSave = useCallback((value: T) => {

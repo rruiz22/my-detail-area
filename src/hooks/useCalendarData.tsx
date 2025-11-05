@@ -43,33 +43,58 @@ export const useCalendarData = () => {
     queryFn: async () => {
       if (!user || !currentDealership) return [];
 
-      const { data, error } = await supabase
-        .from('order_followers')
-        .select(`
-          order_id,
-          orders (
-            id,
-            order_number,
-            customer_name,
-            status,
-            scheduled_date,
-            due_date,
-            module_type,
-            total_amount,
-            vehicle_make,
-            vehicle_model
-          )
-        `)
+      // Step 1: Get entity_ids for followed orders
+      const { data: followers, error: followersError } = await supabase
+        .from('entity_followers')
+        .select('entity_id')
+        .eq('entity_type', 'order')
         .eq('user_id', user.id)
-        .eq('orders.dealer_id', currentDealership.id)
-        .not('orders.status', 'in', '(cancelled,completed)')
-        .order('orders.scheduled_date', { ascending: true });
+        .eq('dealer_id', currentDealership.id)
+        .eq('is_active', true);
 
-      if (error) throw error;
+      if (followersError) {
+        console.error('Error fetching entity followers:', followersError);
+        return [];
+      }
 
-      return (data || [])
-        .map(item => item.orders)
-        .filter(order => order && (order.scheduled_date || order.due_date));
+      if (!followers || followers.length === 0) {
+        return [];
+      }
+
+      const orderIds = followers.map(f => f.entity_id);
+
+      // Step 2: Fetch the actual orders
+      const { data: orders, error: ordersError } = await supabase
+        .from('orders')
+        .select(`
+          id,
+          order_number,
+          customer_name,
+          status,
+          scheduled_date,
+          due_date,
+          order_type,
+          total_amount,
+          vehicle_make,
+          vehicle_model,
+          dealer_id
+        `)
+        .in('id', orderIds)
+        .eq('dealer_id', currentDealership.id);
+
+      if (ordersError) {
+        console.error('Error fetching orders:', ordersError);
+        return [];
+      }
+
+      return (orders || [])
+        .filter(order => {
+          if (!order) return false;
+          // Filter out cancelled and completed orders
+          if (order.status === 'cancelled' || order.status === 'completed') return false;
+          // Only include orders with dates
+          return order.scheduled_date || order.due_date;
+        });
     },
     enabled: !!user && !!currentDealership,
     staleTime: 60 * 1000, // 1 minute
@@ -129,11 +154,11 @@ export const useCalendarData = () => {
       items.push({
         id: `order-${order.id}`,
         orderId: order.id,
-        title: `${getModuleIcon(order.module_type)} ${order.customer_name || 'Order'} - ${order.order_number}`,
+        title: `${getModuleIcon(order.order_type)} ${order.customer_name || 'Order'} - ${order.order_number}`,
         start: startDate,
         end: endDate,
         type: 'order',
-        color: getOrderColor(order.module_type),
+        color: getOrderColor(order.order_type),
         status: order.status,
         description: `${order.vehicle_make || ''} ${order.vehicle_model || ''}`.trim() || undefined,
         allDay: !order.scheduled_date,

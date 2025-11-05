@@ -1,8 +1,8 @@
 {
   "scannedFiles": 845,
-  "totalStrings": 8406,
+  "totalStrings": 8410,
   "hardcodedStrings": 2050,
-  "translatedStrings": 6356,
+  "translatedStrings": 6360,
   "issues": {
     "critical": [
       {
@@ -36539,266 +36539,286 @@
         "hardcodedStrings": [],
         "translationCalls": [
           {
-            "key": "productivity.eventMoved",
-            "line": 243,
+            "key": "productivity.events",
+            "line": 85,
             "exists": true
-          },
-          {
-            "key": "productivity.eventMoveFailed",
-            "line": 248,
-            "exists": true
-          },
-          {
-            "key": "time.today",
-            "line": 326,
-            "exists": true
-          },
-          {
-            "key": "productivity.monthView",
-            "line": 349,
-            "exists": true
-          },
-          {
-            "key": "productivity.listView",
-            "line": 358,
-            "exists": true
-          },
-          {
-            "key": "nav.calendar",
-            "line": 372,
-            "exists": false
           },
           {
             "key": "productivity.todos",
-            "line": 382,
+            "line": 86,
             "exists": true
           },
           {
             "key": "common.orders",
-            "line": 392,
-            "exists": true
-          },
-          {
-            "key": "productivity.manageCalendars",
-            "line": 401,
-            "exists": true
-          },
-          {
-            "key": "productivity.createCalendar",
-            "line": 406,
-            "exists": true
-          },
-          {
-            "key": "productivity.createCalendarDescription",
-            "line": 408,
-            "exists": true
-          },
-          {
-            "key": "productivity.calendarName",
-            "line": 413,
-            "exists": true
-          },
-          {
-            "key": "productivity.enterCalendarName",
-            "line": 418,
-            "exists": true
-          },
-          {
-            "key": "common.description",
-            "line": 424,
-            "exists": false
-          },
-          {
-            "key": "productivity.enterDescription",
-            "line": 429,
-            "exists": true
-          },
-          {
-            "key": "productivity.color",
-            "line": 434,
-            "exists": true
-          },
-          {
-            "key": "common.cancel",
-            "line": 445,
-            "exists": true
-          },
-          {
-            "key": "common.create",
-            "line": 448,
-            "exists": false
-          },
-          {
-            "key": "productivity.createEvent",
-            "line": 459,
-            "exists": true
-          },
-          {
-            "key": "productivity.createEvent",
-            "line": 464,
-            "exists": true
-          },
-          {
-            "key": "productivity.createEventDescription",
-            "line": 466,
-            "exists": true
-          },
-          {
-            "key": "productivity.title",
-            "line": 471,
-            "exists": true
-          },
-          {
-            "key": "productivity.enterEventTitle",
-            "line": 476,
-            "exists": true
-          },
-          {
-            "key": "common.description",
-            "line": 482,
-            "exists": false
-          },
-          {
-            "key": "productivity.enterDescription",
-            "line": 487,
-            "exists": true
-          },
-          {
-            "key": "nav.calendar",
-            "line": 493,
-            "exists": false
-          },
-          {
-            "key": "productivity.selectCalendar",
-            "line": 496,
-            "exists": true
-          },
-          {
-            "key": "productivity.eventType",
-            "line": 515,
-            "exists": true
-          },
-          {
-            "key": "productivity.eventTypes.meeting",
-            "line": 521,
-            "exists": true
-          },
-          {
-            "key": "productivity.eventTypes.reminder",
-            "line": 522,
-            "exists": true
-          },
-          {
-            "key": "productivity.eventTypes.task",
-            "line": 523,
-            "exists": true
-          },
-          {
-            "key": "productivity.eventTypes.appointment",
-            "line": 524,
+            "line": 87,
             "exists": true
           },
           {
             "key": "productivity.allDay",
-            "line": 536,
+            "line": 151,
             "exists": true
           },
           {
-            "key": "productivity.startTime",
-            "line": 542,
+            "key": "productivity.eventMoved",
+            "line": 328,
             "exists": true
           },
           {
-            "key": "productivity.endTime",
-            "line": 553,
+            "key": "productivity.eventMoveFailed",
+            "line": 333,
             "exists": true
           },
           {
-            "key": "productivity.location",
-            "line": 566,
+            "key": "time.today",
+            "line": 411,
             "exists": true
           },
           {
-            "key": "productivity.enterLocation",
-            "line": 571,
+            "key": "productivity.monthView",
+            "line": 434,
+            "exists": true
+          },
+          {
+            "key": "productivity.listView",
+            "line": 443,
+            "exists": true
+          },
+          {
+            "key": "nav.calendar",
+            "line": 457,
+            "exists": false
+          },
+          {
+            "key": "productivity.todos",
+            "line": 467,
+            "exists": true
+          },
+          {
+            "key": "common.orders",
+            "line": 477,
+            "exists": true
+          },
+          {
+            "key": "productivity.manageCalendars",
+            "line": 486,
+            "exists": true
+          },
+          {
+            "key": "productivity.createCalendar",
+            "line": 491,
+            "exists": true
+          },
+          {
+            "key": "productivity.createCalendarDescription",
+            "line": 493,
+            "exists": true
+          },
+          {
+            "key": "productivity.calendarName",
+            "line": 498,
+            "exists": true
+          },
+          {
+            "key": "productivity.enterCalendarName",
+            "line": 503,
+            "exists": true
+          },
+          {
+            "key": "common.description",
+            "line": 509,
+            "exists": false
+          },
+          {
+            "key": "productivity.enterDescription",
+            "line": 514,
+            "exists": true
+          },
+          {
+            "key": "productivity.color",
+            "line": 519,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 577,
+            "line": 530,
             "exists": true
           },
           {
             "key": "common.create",
-            "line": 580,
+            "line": 533,
             "exists": false
+          },
+          {
+            "key": "productivity.createEvent",
+            "line": 544,
+            "exists": true
+          },
+          {
+            "key": "productivity.createEvent",
+            "line": 549,
+            "exists": true
+          },
+          {
+            "key": "productivity.createEventDescription",
+            "line": 551,
+            "exists": true
+          },
+          {
+            "key": "productivity.title",
+            "line": 556,
+            "exists": true
+          },
+          {
+            "key": "productivity.enterEventTitle",
+            "line": 561,
+            "exists": true
           },
           {
             "key": "common.description",
-            "line": 694,
+            "line": 567,
             "exists": false
           },
           {
+            "key": "productivity.enterDescription",
+            "line": 572,
+            "exists": true
+          },
+          {
+            "key": "nav.calendar",
+            "line": 578,
+            "exists": false
+          },
+          {
+            "key": "productivity.selectCalendar",
+            "line": 581,
+            "exists": true
+          },
+          {
+            "key": "productivity.eventType",
+            "line": 600,
+            "exists": true
+          },
+          {
+            "key": "productivity.eventTypes.meeting",
+            "line": 606,
+            "exists": true
+          },
+          {
+            "key": "productivity.eventTypes.reminder",
+            "line": 607,
+            "exists": true
+          },
+          {
+            "key": "productivity.eventTypes.task",
+            "line": 608,
+            "exists": true
+          },
+          {
+            "key": "productivity.eventTypes.appointment",
+            "line": 609,
+            "exists": true
+          },
+          {
+            "key": "productivity.allDay",
+            "line": 621,
+            "exists": true
+          },
+          {
             "key": "productivity.startTime",
-            "line": 703,
+            "line": 627,
             "exists": true
           },
           {
             "key": "productivity.endTime",
-            "line": 713,
+            "line": 638,
             "exists": true
           },
           {
             "key": "productivity.location",
-            "line": 725,
+            "line": 651,
+            "exists": true
+          },
+          {
+            "key": "productivity.enterLocation",
+            "line": 656,
+            "exists": true
+          },
+          {
+            "key": "common.cancel",
+            "line": 662,
+            "exists": true
+          },
+          {
+            "key": "common.create",
+            "line": 665,
+            "exists": false
+          },
+          {
+            "key": "common.description",
+            "line": 779,
+            "exists": false
+          },
+          {
+            "key": "productivity.startTime",
+            "line": 788,
+            "exists": true
+          },
+          {
+            "key": "productivity.endTime",
+            "line": 798,
+            "exists": true
+          },
+          {
+            "key": "productivity.location",
+            "line": 810,
             "exists": true
           },
           {
             "key": "common.status",
-            "line": 733,
+            "line": 818,
             "exists": true
           },
           {
             "key": "common.close",
-            "line": 740,
+            "line": 825,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "nav.calendar",
-            "line": 372,
-            "context": "371: <CalendarIcon className=\"h-4 w-4\" />\n372: <span className=\"hidden sm:inline\">{t('nav.calendar')}</span>\n373: </Button>"
+            "line": 457,
+            "context": "456: <CalendarIcon className=\"h-4 w-4\" />\n457: <span className=\"hidden sm:inline\">{t('nav.calendar')}</span>\n458: </Button>"
           },
           {
             "key": "common.description",
-            "line": 424,
-            "context": "423: <div>\n424: <Label htmlFor=\"cal-description\">{t('common.description')}</Label>\n425: <Textarea"
+            "line": 509,
+            "context": "508: <div>\n509: <Label htmlFor=\"cal-description\">{t('common.description')}</Label>\n510: <Textarea"
           },
           {
             "key": "common.create",
-            "line": 448,
-            "context": "447: <Button type=\"submit\">\n448: {t('common.create')}\n449: </Button>"
+            "line": 533,
+            "context": "532: <Button type=\"submit\">\n533: {t('common.create')}\n534: </Button>"
           },
           {
             "key": "common.description",
-            "line": 482,
-            "context": "481: <div>\n482: <Label htmlFor=\"event-description\">{t('common.description')}</Label>\n483: <Textarea"
+            "line": 567,
+            "context": "566: <div>\n567: <Label htmlFor=\"event-description\">{t('common.description')}</Label>\n568: <Textarea"
           },
           {
             "key": "nav.calendar",
-            "line": 493,
-            "context": "492: <div>\n493: <Label htmlFor=\"event-calendar\">{t('nav.calendar')}</Label>\n494: <Select value={newEvent.calendar_id} onValueChange={(value) => setNewEvent({ ...newEvent, calendar_id: value })}>"
+            "line": 578,
+            "context": "577: <div>\n578: <Label htmlFor=\"event-calendar\">{t('nav.calendar')}</Label>\n579: <Select value={newEvent.calendar_id} onValueChange={(value) => setNewEvent({ ...newEvent, calendar_id: value })}>"
           },
           {
             "key": "common.create",
-            "line": 580,
-            "context": "579: <Button type=\"submit\">\n580: {t('common.create')}\n581: </Button>"
+            "line": 665,
+            "context": "664: <Button type=\"submit\">\n665: {t('common.create')}\n666: </Button>"
           },
           {
             "key": "common.description",
-            "line": 694,
-            "context": "693: <div>\n694: <Label>{t('common.description')}</Label>\n695: <p className=\"text-sm text-muted-foreground mt-1\">{selectedItem.description}</p>"
+            "line": 779,
+            "context": "778: <div>\n779: <Label>{t('common.description')}</Label>\n780: <p className=\"text-sm text-muted-foreground mt-1\">{selectedItem.description}</p>"
           }
         ],
         "coverage": 100,

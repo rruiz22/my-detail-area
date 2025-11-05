@@ -2,6 +2,7 @@ import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CommentsTooltip } from '@/components/ui/comments-tooltip';
+import { NotesTooltip } from '@/components/ui/notes-tooltip';
 import { DueDateIndicator } from '@/components/ui/due-date-indicator';
 import { DuplicateBadge } from '@/components/ui/duplicate-badge';
 import { DuplicateTooltip } from '@/components/ui/duplicate-tooltip';
@@ -42,7 +43,8 @@ import {
     Eye,
     MessageSquare,
     Printer,
-    Trash2
+    Trash2,
+    StickyNote
 } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -279,6 +281,17 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                               <span className="text-xs font-semibold text-blue-600">{order.comments}</span>
                             </span>
                           </CommentsTooltip>
+                        )}
+                        {/* Notes Indicator */}
+                        {order.notes && order.notes.trim() !== '' && (
+                          <NotesTooltip
+                            noteContent={order.notes}
+                            onViewClick={() => onView(order)}
+                          >
+                            <span className="inline-flex items-center gap-0.5 cursor-pointer hover:bg-amber-50 px-1.5 py-0.5 rounded transition-colors">
+                              <StickyNote className="w-3.5 h-3.5 text-amber-500" />
+                            </span>
+                          </NotesTooltip>
                         )}
                       </div>
                       <div className="flex items-center text-sm text-muted-foreground mt-1">
@@ -543,6 +556,17 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                                 <span className="text-xs font-semibold text-blue-600">{order.comments}</span>
                               </span>
                             </CommentsTooltip>
+                          )}
+                          {/* Notes Indicator */}
+                          {order.notes && order.notes.trim() !== '' && (
+                            <NotesTooltip
+                              noteContent={order.notes}
+                              onViewClick={() => onView(order)}
+                            >
+                              <span className="inline-flex items-center gap-0.5 cursor-pointer hover:bg-amber-50 px-1.5 py-0.5 rounded transition-colors">
+                                <StickyNote className="w-3.5 h-3.5 text-amber-500" />
+                              </span>
+                            </NotesTooltip>
                           )}
                         </div>
                         <div className="flex items-center justify-center text-sm text-muted-foreground">

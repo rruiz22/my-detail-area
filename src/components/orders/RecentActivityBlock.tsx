@@ -607,30 +607,30 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
 
   return (
     <Card className="shadow-sm border-border/60">
-      <CardHeader className="pb-4 bg-gradient-to-br from-background to-muted/20">
-        <CardTitle className="flex items-center gap-2.5 text-base">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <Activity className="h-5 w-5 text-primary" />
+      <CardHeader className="pb-3 bg-gradient-to-br from-background to-muted/20">
+        <CardTitle className="flex items-center gap-2 text-sm">
+          <div className="p-1.5 rounded-lg bg-primary/10">
+            <Activity className="h-4 w-4 text-primary" />
           </div>
           <span className="font-bold">{t('recent_activity.title')}</span>
           {activities.length > 0 && (
-            <Badge variant="secondary" className="text-xs font-bold px-2.5 py-1">
+            <Badge variant="secondary" className="text-xs font-bold px-1.5 py-0.5">
               {activities.length}
             </Badge>
           )}
           {debugInfo.errors.length > 0 && (
             <button
               onClick={() => setShowDebug(!showDebug)}
-              className="ml-auto text-xs font-medium text-muted-foreground hover:text-foreground flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-muted/50 transition-colors"
+              className="ml-auto text-xs font-medium text-muted-foreground hover:text-foreground flex items-center gap-1 px-1.5 py-0.5 rounded-lg hover:bg-muted/50 transition-colors"
             >
-              <Code className="h-3.5 w-3.5" />
+              <Code className="h-3 w-3" />
               {showDebug ? t('recent_activity.hide_debug') : t('recent_activity.show_debug')}
             </button>
           )}
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="space-y-3 pt-4">
+      <CardContent className="space-y-2.5 pt-3">
         {/* Debug Information */}
         {showDebug && (
           <div className="bg-gray-100 p-3 rounded text-xs space-y-1 font-mono">
@@ -671,67 +671,67 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
             </button>
           </div>
         ) : activities.length === 0 ? (
-          <div className="text-center py-8 px-4 rounded-xl bg-muted/40 border-2 border-dashed border-border">
-            <div className="p-3 rounded-lg bg-muted/60 inline-block mb-3">
-              <Activity className="h-10 w-10 text-muted-foreground" />
+          <div className="text-center py-4 px-3 rounded-lg bg-muted/40 border border-dashed border-border">
+            <div className="p-2 rounded-lg bg-muted/60 inline-block mb-2">
+              <Activity className="h-6 w-6 text-muted-foreground" />
             </div>
-            <p className="text-sm font-bold text-foreground">{t('recent_activity.no_activity')}</p>
-            <p className="text-xs text-muted-foreground mt-2">{t('recent_activity.no_activity_description')}</p>
+            <p className="text-xs font-semibold text-foreground">{t('recent_activity.no_activity')}</p>
+            <p className="text-xs text-muted-foreground mt-1">{t('recent_activity.no_activity_description')}</p>
           </div>
         ) : (
-          <div className="space-y-2.5 max-h-[500px] overflow-y-auto pr-1">
+          <div className="space-y-2 max-h-[450px] overflow-y-auto pr-1">
             {activities.map((activity) => (
               <div
                 key={activity.id}
-                className={`p-3 rounded-xl border-l-4 shadow-sm hover:shadow-md transition-shadow ${getActivityColor(activity.action_type)}`}
+                className={`p-2.5 rounded-lg border-l-3 shadow-sm hover:shadow transition-shadow ${getActivityColor(activity.action_type)}`}
               >
-                <div className="flex items-start gap-3">
-                  {/* Icon with circle background - Dashboard style */}
-                  <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-background to-muted/40 flex items-center justify-center flex-shrink-0 shadow-sm ring-1 ring-border/50">
+                <div className="flex items-start gap-2">
+                  {/* Icon with circle background - Compact */}
+                  <div className="w-8 h-8 rounded-md bg-gradient-to-br from-background to-muted/40 flex items-center justify-center flex-shrink-0 shadow-sm ring-1 ring-border/50">
                     {getActivityIcon(activity.action_type)}
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                      <span className="text-sm font-bold text-foreground">{activity.action}</span>
-                      <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-muted/60 text-xs font-medium text-muted-foreground">
+                    <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
+                      <span className="text-xs font-semibold text-foreground">{activity.action}</span>
+                      <div className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-muted/60 text-xs text-muted-foreground">
                         <Clock className="h-3 w-3" />
-                        {getTimeAgo(activity.created_at)}
+                        <span className="text-[11px]">{getTimeAgo(activity.created_at)}</span>
                       </div>
                     </div>
 
-                    <p className="text-xs font-medium text-muted-foreground mb-2">
+                    <p className="text-xs text-muted-foreground mb-1 line-clamp-1">
                       {activity.description}
                     </p>
 
-                    {/* Show old/new values if available - Dashboard style */}
+                    {/* Show old/new values if available - Compact */}
                     {(activity.old_value || activity.new_value) && (
-                      <div className="flex items-center gap-2 flex-wrap mb-2">
+                      <div className="flex items-center gap-1.5 flex-wrap mb-1">
                         {activity.old_value && activity.new_value ? (
                           <>
-                            <Badge variant="outline" className="text-xs font-medium bg-red-50 text-red-700 border-red-300 px-2 py-0.5">
+                            <Badge variant="outline" className="text-[10px] font-medium bg-red-50 text-red-700 border-red-300 px-1.5 py-0">
                               {translateValue(activity.old_value, activity.field_name || null)}
                             </Badge>
-                            <ArrowRight className="w-3.5 h-3.5 text-primary flex-shrink-0" />
-                            <Badge variant="outline" className="text-xs font-medium bg-emerald-50 text-emerald-700 border-emerald-300 px-2 py-0.5">
+                            <ArrowRight className="w-2.5 h-2.5 text-primary flex-shrink-0" />
+                            <Badge variant="outline" className="text-[10px] font-medium bg-emerald-50 text-emerald-700 border-emerald-300 px-1.5 py-0">
                               {translateValue(activity.new_value, activity.field_name || null)}
                             </Badge>
                           </>
                         ) : activity.new_value ? (
-                          <Badge variant="outline" className="text-xs font-medium bg-emerald-50 text-emerald-700 border-emerald-300 px-2 py-0.5">
+                          <Badge variant="outline" className="text-[10px] font-medium bg-emerald-50 text-emerald-700 border-emerald-300 px-1.5 py-0">
                             {translateValue(activity.new_value, activity.field_name || null)}
                           </Badge>
                         ) : null}
                       </div>
                     )}
 
-                    <div className="flex items-center gap-2">
-                      <Avatar className="w-6 h-6 ring-2 ring-primary/10">
-                        <AvatarFallback className="text-xs font-bold">
+                    <div className="flex items-center gap-1.5">
+                      <Avatar className="w-5 h-5 ring-1 ring-primary/10">
+                        <AvatarFallback className="text-[10px] font-bold">
                           {activity.user_name.charAt(0).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="text-xs font-medium text-muted-foreground">
+                      <span className="text-[11px] text-muted-foreground">
                         {t('recent_activity.user.by', { name: activity.user_name })}
                       </span>
                     </div>
@@ -744,8 +744,8 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
 
         {/* Activity Summary */}
         {activities.length > 0 && (
-          <div className="pt-3 border-t border-border/60 text-center">
-            <p className="text-xs font-medium text-muted-foreground">
+          <div className="pt-2 border-t border-border/60 text-center">
+            <p className="text-[10px] text-muted-foreground">
               {t('recent_activity.last_activity')}: {activities[0] ? getTimeAgo(activities[0].created_at) : t('recent_activity.none')}
             </p>
           </div>

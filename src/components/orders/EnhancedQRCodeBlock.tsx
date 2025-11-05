@@ -1,12 +1,15 @@
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { ShortLinkData, shortLinkService } from '@/services/shortLinkService';
+import { useAuth } from '@/contexts/AuthContext';
 import {
     AlertCircle,
     Copy,
     ExternalLink,
     QrCode,
-    RefreshCw
+    RefreshCw,
+    X
 } from 'lucide-react';
 import { QRCodeCanvas } from 'qrcode.react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -33,10 +36,12 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
 }: EnhancedQRCodeBlockProps) {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const { user } = useAuth();
   const [qrData, setQrData] = useState<ShortLinkData | null>(null);
   const [loading, setLoading] = useState(false);
   const [analytics, setAnalytics] = useState<ShortLinkData['analytics']>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showQRModal, setShowQRModal] = useState(false);
   const isMountedRef = useRef(true);
 
 
@@ -203,6 +208,14 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
     };
   }, [analytics]);
 
+  // ✅ Check if user can regenerate QR (only system_admin and supermanager)
+  const canRegenerateQR = useMemo(() => {
+    if (!user?.role) return false;
+    const userRole = user.role;
+    // Only allow regenerate for system_admin and supermanager
+    return userRole === 'system_admin' || userRole === 'supermanager';
+  }, [user]);
+
   return (
     <div className="bg-gradient-to-br from-background to-muted/20 p-4 sm:p-5 rounded-xl border border-border/60 shadow-sm">
       <div className="flex items-center gap-2.5 mb-4">
@@ -289,31 +302,47 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
         // Case 3: QR exists - show QR code and controls
         if (qrUrl) {
           return (
-            <div className="space-y-4">
-              {/* QR Code Display */}
-              <div className="bg-white p-4 sm:p-6 rounded-xl border-2 border-border/60 text-center shadow-md">
-                <div className="w-36 h-36 sm:w-40 sm:h-40 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl mx-auto mb-4 flex items-center justify-center shadow-lg ring-4 ring-primary/10">
-                  {qrUrl ? (
-                    <QRCodeCanvas
-                      value={qrUrl}
-                      size={140}
-                      level="M"
-                      includeMargin
-                      imageSettings={{
-                        src: "/favicon-mda.svg",
-                        width: 20,
-                        height: 20,
-                        excavate: true
-                      }}
-                    />
-                  ) : (
-                    <QrCode className="h-16 w-16 sm:h-20 sm:w-20 text-gray-400" />
-                  )}
+            <>
+              <div className="space-y-4">
+                {/* QR Code Display - ✅ CLICKABLE */}
+                <div className="bg-white p-4 sm:p-6 rounded-xl border-2 border-border/60 text-center shadow-md">
+                  <div
+                    className="w-36 h-36 sm:w-40 sm:h-40 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl mx-auto mb-4 flex items-center justify-center shadow-lg ring-4 ring-primary/10 cursor-pointer hover:ring-primary/20 transition-all hover:scale-105"
+                    onClick={() => setShowQRModal(true)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setShowQRModal(true);
+                      }
+                    }}
+                    aria-label={t('orders.view_qr_enlarged', 'Click to view QR code enlarged')}
+                  >
+                    {qrUrl ? (
+                      <QRCodeCanvas
+                        value={qrUrl}
+                        size={140}
+                        level="M"
+                        includeMargin
+                        imageSettings={{
+                          src: "/favicon-mda.svg",
+                          width: 20,
+                          height: 20,
+                          excavate: true
+                        }}
+                      />
+                    ) : (
+                      <QrCode className="h-16 w-16 sm:h-20 sm:w-20 text-gray-400" />
+                    )}
+                  </div>
+                  <p className="text-sm font-bold text-foreground">
+                    {t('orders.scan_for_quick_access')}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {t('orders.click_to_enlarge', 'Click to enlarge')}
+                  </p>
                 </div>
-                <p className="text-sm font-bold text-foreground">
-                  {t('orders.scan_for_quick_access')}
-                </p>
-              </div>
 
               {/* Short Link */}
               <div className="space-y-3 p-4 rounded-xl bg-muted/40 border border-border/50">
@@ -340,24 +369,98 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
               </div>
 
 
-              {/* Actions - Only Regenerate */}
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={regenerateQR}
-                  disabled={loading}
-                  className="flex-1 font-medium shadow-sm hover:shadow-md transition-shadow"
-                >
-                  {loading ? (
-                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                  )}
-                  {t('orders.regenerate_qr', 'Regenerate QR')}
-                </Button>
-              </div>
+              {/* Actions - ✅ ONLY VISIBLE TO NON-USER ROLES */}
+              {canRegenerateQR && (
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={regenerateQR}
+                    disabled={loading}
+                    className="flex-1 font-medium shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    {loading ? (
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                    )}
+                    {t('orders.regenerate_qr', 'Regenerate QR')}
+                  </Button>
+                </div>
+              )}
             </div>
+
+            {/* ✅ QR CODE ENLARGED MODAL */}
+            <Dialog open={showQRModal} onOpenChange={setShowQRModal}>
+              <DialogContent className="max-w-md p-0 overflow-hidden">
+                <div className="relative bg-white p-8">
+                  {/* Close button */}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowQRModal(false)}
+                    className="absolute top-2 right-2 h-8 w-8 p-0 rounded-full hover:bg-gray-100"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+
+                  {/* Title */}
+                  <h2 className="text-lg font-bold text-center mb-6">
+                    {t('orders.qr_code', 'QR Code')}
+                  </h2>
+
+                  {/* Enlarged QR Code */}
+                  <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 flex items-center justify-center">
+                    <QRCodeCanvas
+                      value={qrUrl}
+                      size={320}
+                      level="M"
+                      includeMargin
+                      imageSettings={{
+                        src: "/favicon-mda.svg",
+                        width: 45,
+                        height: 45,
+                        excavate: true
+                      }}
+                    />
+                  </div>
+
+                  {/* Short Link Display - ✅ CLICKABLE + COPY BUTTON */}
+                  <div className="mt-6 space-y-2">
+                    <p className="text-xs font-medium text-muted-foreground text-center">
+                      {t('orders.short_link', 'Short Link')}:
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <code
+                        className="flex-1 text-xs bg-gray-100 p-3 rounded-lg font-mono text-center break-all cursor-pointer hover:bg-gray-200 transition-colors"
+                        onClick={copyLink}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            copyLink();
+                          }
+                        }}
+                        title={t('orders.click_to_copy', 'Click to copy')}
+                      >
+                        {qrUrl}
+                      </code>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={copyLink}
+                        className="flex-shrink-0 h-9 w-9 p-0"
+                        title={t('orders.copy_link', 'Copy link')}
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </>
           );
         }
 
