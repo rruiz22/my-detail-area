@@ -862,6 +862,9 @@
     "generating": "Generando...",
     "regenerate_qr": "Regenerar QR",
     "scan_for_quick_access": "Escanea para acceso rápido",
+    "click_to_enlarge": "Haz clic para ampliar",
+    "view_qr_enlarged": "Haz clic para ver el código QR ampliado",
+    "click_to_copy": "Haz clic para copiar",
     "edit": "Editar Orden",
     "share_order": "Copiar Orden",
     "delete_order": "Eliminar Orden",
@@ -2093,6 +2096,9 @@
     "inProgress": "en progreso",
     "monthView": "Vista Mensual",
     "events": "Eventos",
+    "upcomingActivity": "Actividad Próxima",
+    "noUpcomingActivity": "No hay actividades próximas",
+    "nextDays": "Próximos {{count}} días",
     "eventMoved": "Evento movido exitosamente",
     "eventMoveFailed": "Error al mover evento",
     "manageCalendars": "Gestionar Calendarios",
@@ -2152,33 +2158,6 @@
       "delete_success": "Tarea eliminada exitosamente",
       "create_success": "Tarea creada exitosamente",
       "update_success": "Tarea actualizada exitosamente"
-    },
-    "monthView": "Vista Mensual",
-    "events": "Eventos",
-    "eventMoved": "Evento movido exitosamente",
-    "eventMoveFailed": "Error al mover evento",
-    "manageCalendars": "Gestionar Calendarios",
-    "createCalendar": "Crear Calendario",
-    "createCalendarDescription": "Crea un nuevo calendario para organizar tus eventos",
-    "calendarName": "Nombre del Calendario",
-    "enterCalendarName": "Ingresa el nombre del calendario",
-    "selectCalendar": "Selecciona un calendario",
-    "enterEventTitle": "Ingresa el título del evento",
-    "title": "Título",
-    "eventType": "Tipo de Evento",
-    "allDay": "Todo el Día",
-    "startTime": "Hora de Inicio",
-    "endTime": "Hora de Fin",
-    "location": "Ubicación",
-    "enterLocation": "Ingresa la ubicación",
-    "enterDescription": "Ingresa la descripción",
-    "color": "Color",
-    "eventTypes": {
-      "meeting": "Reunión",
-      "reminder": "Recordatorio",
-      "task": "Tarea",
-      "appointment": "Cita",
-      "other": "Otro"
     },
     "calendar_section": {
       "title": "Calendario",
@@ -2419,6 +2398,9 @@
   "order_detail": {
     "simple_notes": "Notas",
     "no_notes_provided": "Sin notas proporcionadas",
+    "words": "palabras",
+    "characters": "caracteres",
+    "added": "Añadido",
     "short_link_created": "Código QR generado exitosamente",
     "qr_generation_failed": "Error al generar código QR",
     "regenerate_qr": "Código QR regenerado exitosamente",
@@ -5375,7 +5357,9 @@
       "title": "¡Todo al día!",
       "description": "No tienes notificaciones en este momento",
       "message": "No hay notificaciones",
-      "filtered": "No hay notificaciones que coincidan con tus filtros"
+      "filtered": "No hay notificaciones que coincidan con tus filtros",
+      "no_grouped": "No hay notificaciones agrupadas",
+      "switch_to_recent": "Cambia a la pestaña \"Recientes\" para ver las {{count}} notificación(es)"
     },
     "show_more": "Mostrar {{count}} más",
     "toast": {
@@ -5790,6 +5774,9 @@
       "reports": "Reportes",
       "invoices": "Facturas",
       "kiosks": "Kioscos"
+    },
+    "qr_block": {
+      "words_in_general": "Escanea el código QR con la cámara de tu teléfono para ver los detalles de esta orden y compartir con el equipo"
     }
   }
 }

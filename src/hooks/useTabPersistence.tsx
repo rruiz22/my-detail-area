@@ -69,6 +69,16 @@ export const TAB_CONFIGS = {
     key: 'stock',
     defaultTab: 'inventory',
     validTabs: ['inventory', 'analytics', 'dms_config', 'sync_history']
+  },
+  productivity: {
+    key: 'productivity',
+    defaultTab: 'dashboard',
+    validTabs: ['dashboard', 'notes', 'todos', 'calendar']
+  },
+  'notification-center': {
+    key: 'notification-center',
+    defaultTab: 'chronological',
+    validTabs: ['chronological', 'grouped']
   }
 } as const;
 
@@ -76,37 +86,90 @@ export type PageKey = keyof typeof TAB_CONFIGS;
 
 /**
  * Hook for tab persistence with real localStorage support
+ * ✅ ROBUST: Handles missing configs, invalid tabs, and localStorage failures gracefully
+ *
+ * @param pageKey - The page identifier (must exist in TAB_CONFIGS)
+ * @param defaultTab - Optional override for default tab
+ * @param enableCloudSync - Enable cloud synchronization (future feature)
+ *
+ * @example
+ * const [tab, setTab] = useTabPersistence('notification-center', 'chronological');
  */
-export function useTabPersistence(pageKey: PageKey, dealerId?: string, enableCloudSync = false) {
+export function useTabPersistence(
+  pageKey: PageKey,
+  defaultTab?: string,
+  enableCloudSync = false
+) {
+  // ✅ DEFENSIVE: Get config with null check
   const config = TAB_CONFIGS[pageKey];
-  const storageKey = `${pageKey}_activeTab`;
 
-  // Initialize from localStorage or default
+  // ✅ ROBUST: Handle missing config gracefully (should never happen with PageKey type)
+  if (!config) {
+    console.error(
+      `[useTabPersistence] FATAL: No config found for pageKey "${pageKey}". ` +
+      `This should never happen. Check TAB_CONFIGS.`
+    );
+    // Fallback to simple non-persisted state
+    const fallback = defaultTab || 'default';
+    return [fallback, () => {}] as const;
+  }
+
+  const storageKey = `${pageKey}_activeTab`;
+  const initialTab = defaultTab && config.validTabs.includes(defaultTab)
+    ? defaultTab
+    : config.defaultTab;
+
+  // ✅ SAFE: Initialize from localStorage with validation
   const [activeTab, setActiveTab] = useState(() => {
     try {
       const stored = localStorage.getItem(storageKey);
-      if (stored && config.validTabs.includes(stored)) {
-        return stored;
+
+      // Validate stored tab
+      if (stored) {
+        if (config.validTabs.includes(stored)) {
+          return stored;
+        } else {
+          console.warn(
+            `[useTabPersistence] Invalid stored tab "${stored}" for "${pageKey}". ` +
+            `Valid tabs: ${config.validTabs.join(', ')}. Using default.`
+          );
+        }
       }
     } catch (error) {
-      console.warn('Failed to read tab from localStorage:', error);
+      console.warn(
+        `[useTabPersistence] localStorage read failed for "${pageKey}":`,
+        error
+      );
     }
-    return config.defaultTab;
+
+    return initialTab;
   });
 
+  // ✅ VALIDATED: Only accept valid tabs
   const setValidatedTab = useCallback((tab: string) => {
-    if (config.validTabs.includes(tab)) {
-      setActiveTab(tab);
-      // Save to localStorage
-      try {
-        localStorage.setItem(storageKey, tab);
-      } catch (error) {
-        console.warn('Failed to save tab to localStorage:', error);
-      }
-    } else {
-      console.warn(`⚠️ Invalid tab ${tab}, ignoring`);
+    // Type guard: ensure tab is valid
+    if (!config.validTabs.includes(tab)) {
+      console.warn(
+        `[useTabPersistence] Rejecting invalid tab "${tab}" for "${pageKey}". ` +
+        `Valid tabs: ${config.validTabs.join(', ')}`
+      );
+      return;
     }
-  }, [config.validTabs, storageKey]);
+
+    // Update state
+    setActiveTab(tab);
+
+    // ✅ SAFE: Persist to localStorage with error handling
+    try {
+      localStorage.setItem(storageKey, tab);
+    } catch (error) {
+      console.warn(
+        `[useTabPersistence] localStorage write failed for "${pageKey}":`,
+        error
+      );
+      // Continue execution - state is still updated in memory
+    }
+  }, [config.validTabs, storageKey, pageKey]);
 
   return [activeTab, setValidatedTab] as const;
 }

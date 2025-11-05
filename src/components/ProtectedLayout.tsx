@@ -181,36 +181,39 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
            })()}
           </main>
 
-          {/* Footer - Enterprise */}
-          <footer className="border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 px-6 py-4">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-2 sm:gap-4 text-sm text-muted-foreground flex-wrap justify-center sm:justify-start">
-                <span>{t('layout.footer.copyright', { year: new Date().getFullYear() })}</span>
+          {/* Footer - Enterprise (Compact) */}
+          <footer className="border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 px-4 sm:px-6 py-2.5 sm:py-3">
+            <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-2 sm:gap-3">
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                <span className="hidden sm:inline">{t('layout.footer.copyright', { year: new Date().getFullYear() })}</span>
+                <span className="sm:hidden">© {new Date().getFullYear()}</span>
                 <span className="hidden sm:inline">•</span>
                 <VersionDisplay showDetails={true} />
               </div>
 
-              <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm">
                 <Button
                   variant="link"
                   size="sm"
-                  className="text-muted-foreground hover:text-foreground h-auto p-0"
+                  className="text-muted-foreground hover:text-foreground h-auto p-0 text-xs sm:text-sm"
                   onClick={() => setPrivacyModalOpen(true)}
                 >
                   {t('layout.footer.privacy_policy')}
                 </Button>
+                <span className="text-muted-foreground/30">•</span>
                 <Button
                   variant="link"
                   size="sm"
-                  className="text-muted-foreground hover:text-foreground h-auto p-0"
+                  className="text-muted-foreground hover:text-foreground h-auto p-0 text-xs sm:text-sm"
                   onClick={() => setTermsModalOpen(true)}
                 >
                   {t('layout.footer.terms_of_service')}
                 </Button>
+                <span className="text-muted-foreground/30">•</span>
                 <Button
                   variant="link"
                   size="sm"
-                  className="text-muted-foreground hover:text-foreground h-auto p-0"
+                  className="text-muted-foreground hover:text-foreground h-auto p-0 text-xs sm:text-sm"
                   onClick={() => window.open('mailto:support@mydetailarea.com', '_blank')}
                 >
                   {t('layout.footer.support')}

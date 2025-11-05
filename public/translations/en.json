@@ -796,6 +796,9 @@
     "generating": "Generating...",
     "regenerate_qr": "Regenerate QR",
     "scan_for_quick_access": "Scan for quick access",
+    "click_to_enlarge": "Click to enlarge",
+    "view_qr_enlarged": "Click to view QR code enlarged",
+    "click_to_copy": "Click to copy",
     "legacy_order_qr_desc": "QR code for easy order access",
     "generate_qr_legacy": "Generate QR Code",
     "edit": "Edit Order",
@@ -2403,6 +2406,9 @@
     "inProgress": "in progress",
     "monthView": "Month View",
     "events": "Events",
+    "upcomingActivity": "Upcoming Activity",
+    "noUpcomingActivity": "No upcoming activities",
+    "nextDays": "Next {{count}} days",
     "eventMoved": "Event moved successfully",
     "eventMoveFailed": "Failed to move event",
     "manageCalendars": "Manage Calendars",
@@ -2481,33 +2487,6 @@
       "all_day": "All Day",
       "event_type": "Event Type",
       "location": "Location"
-    },
-    "monthView": "Month View",
-    "events": "Events",
-    "eventMoved": "Event moved successfully",
-    "eventMoveFailed": "Failed to move event",
-    "manageCalendars": "Manage Calendars",
-    "createCalendar": "Create Calendar",
-    "createCalendarDescription": "Create a new calendar to organize your events",
-    "calendarName": "Calendar Name",
-    "enterCalendarName": "Enter calendar name",
-    "selectCalendar": "Select a calendar",
-    "enterEventTitle": "Enter event title",
-    "title": "Title",
-    "eventType": "Event Type",
-    "allDay": "All Day",
-    "startTime": "Start Time",
-    "endTime": "End Time",
-    "location": "Location",
-    "enterLocation": "Enter location",
-    "enterDescription": "Enter description",
-    "color": "Color",
-    "eventTypes": {
-      "meeting": "Meeting",
-      "reminder": "Reminder",
-      "task": "Task",
-      "appointment": "Appointment",
-      "other": "Other"
     },
     "order_context": {
       "showing_tasks_for": "Showing tasks for",
@@ -2845,6 +2824,9 @@
   "order_detail": {
     "simple_notes": "Notes",
     "no_notes_provided": "No notes provided",
+    "words": "words",
+    "characters": "characters",
+    "added": "Added",
     "short_link_created": "QR code generated successfully",
     "qr_generation_failed": "Failed to generate QR code",
     "regenerate_qr": "QR code regenerated successfully",
@@ -5568,7 +5550,9 @@
       "title": "All caught up!",
       "description": "You have no notifications at this time",
       "message": "No notifications",
-      "filtered": "No notifications match your filters"
+      "filtered": "No notifications match your filters",
+      "no_grouped": "No grouped notifications",
+      "switch_to_recent": "Switch to \"Recent\" tab to view all {{count}} notification(s)"
     },
     "show_more": "Show {{count}} more",
     "toast": {
@@ -5983,6 +5967,9 @@
       "reports": "Reports",
       "invoices": "Invoices",
       "kiosks": "Kiosks"
+    },
+    "qr_block": {
+      "words_in_general": "Scan QR code with your phone camera to view this order details and share with team members"
     }
   }
 }

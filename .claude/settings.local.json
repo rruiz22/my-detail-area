@@ -67,7 +67,13 @@
       "Bash(for file in DetailHubDashboard.tsx EmployeePortal.tsx DetailHubAnalytics.tsx)",
       "Bash(do echo \"=== $file ===\")",
       "Bash(done)",
-      "Bash(copy:*)"
+      "Bash(copy:*)",
+      "Bash(npx prettier:*)",
+      "Bash(if exist \"node_modules\\.vite\" rmdir /s /q \"node_modules\\.vite\")",
+      "Bash(if exist \".vite\" rmdir /s /q \".vite\")",
+      "Bash(if exist \"dist\" rmdir /s /q \"dist\")",
+      "Bash(then echo \"✅ .env exists\")",
+      "Bash(else echo \"❌ No .env file\")"
     ],
     "deny": [],
     "ask": []

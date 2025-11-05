@@ -42,10 +42,10 @@ export function SimpleNotesDisplay({ order }: SimpleNotesDisplayProps) {
           <div className="mt-3 pt-3 border-t">
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span>
-                {order.notes.split(' ').length} {t('qr_block.words_in_general').split(' ')[0]} • {order.notes.length} characters
+                {order.notes.split(' ').length} {t('order_detail.words')} • {order.notes.length} {t('order_detail.characters')}
               </span>
               <span>
-                Added {order.created_at ? new Date(order.created_at).toLocaleDateString() : t('common.recently')}
+                {t('order_detail.added')} {order.created_at ? new Date(order.created_at).toLocaleDateString() : t('common.recently')}
               </span>
             </div>
           </div>
