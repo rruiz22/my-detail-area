@@ -371,7 +371,7 @@ BEGIN
           'work_item_title', NEW.title,
           'actual_cost', NEW.actual_cost,
           'actual_hours', NEW.actual_hours,
-          'completed_at', NEW.completed_at
+          'actual_end', NEW.actual_end
         )
       );
     END IF;

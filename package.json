@@ -12,6 +12,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "migration:apply": "node scripts/apply_vehicle_step_history_migration.js",
+    "migration:fix-triggers": "node scripts/apply_trigger_fixes.js",
     "translation:audit": "node scripts/translation-scanner.js",
     "translation:fix": "node scripts/translation-batch-fix.js fix",
     "translation:fix-restore": "node scripts/translation-batch-fix.js restore",

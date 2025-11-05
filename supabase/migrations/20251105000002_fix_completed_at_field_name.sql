@@ -1,124 +1,27 @@
 -- =====================================================
--- FIX: Vendor ID Column Name in Activity Log Triggers
+-- FIX: completed_at Field Name in Work Item Activity Trigger
 -- Date: November 5, 2025
--- Issue: Triggers were using 'vendor_id' but the actual column is 'assigned_vendor_id'
+-- Issue: Trigger was using 'completed_at' but the actual column is 'actual_end'
 -- =====================================================
 
--- This migration fixes the column name mismatch in the activity log triggers
--- that was causing "record 'old' has no field 'vendor_id'" errors when
--- starting work items.
+-- This migration fixes the column name mismatch in the activity log trigger
+-- that was causing "record 'new' has no field 'completed_at'" errors when
+-- completing work items.
 
 -- =====================================================
--- STEP 1: Drop existing triggers
+-- STEP 1: Drop existing trigger
 -- =====================================================
 
-DROP TRIGGER IF EXISTS trigger_log_vendor_removal ON public.get_ready_work_items;
 DROP TRIGGER IF EXISTS trigger_log_work_item_activities ON public.get_ready_work_items;
 
 -- =====================================================
--- STEP 2: Drop existing functions
+-- STEP 2: Drop existing function
 -- =====================================================
 
-DROP FUNCTION IF EXISTS log_vendor_removal();
 DROP FUNCTION IF EXISTS log_work_item_activities();
 
 -- =====================================================
--- STEP 3: Recreate log_vendor_removal() with correct column name
--- =====================================================
-
-CREATE OR REPLACE FUNCTION log_vendor_removal()
-RETURNS TRIGGER AS $$
-DECLARE
-  v_vehicle_id UUID;
-  v_dealer_id BIGINT;
-  v_old_vendor_name TEXT;
-  v_new_vendor_name TEXT;
-BEGIN
-  -- Only process UPDATEs
-  IF TG_OP != 'UPDATE' THEN
-    RETURN NEW;
-  END IF;
-
-  v_vehicle_id := NEW.vehicle_id;
-
-  -- Get dealer_id from vehicle
-  SELECT dealer_id INTO v_dealer_id
-  FROM get_ready_vehicles
-  WHERE id = v_vehicle_id;
-
-  -- Vendor removed: A → NULL
-  IF OLD.assigned_vendor_id IS NOT NULL AND NEW.assigned_vendor_id IS NULL THEN
-
-    -- Get old vendor name from dealership_contacts
-    SELECT COALESCE(company_name, full_name, 'Unknown Vendor') INTO v_old_vendor_name
-    FROM dealership_contacts
-    WHERE id = OLD.assigned_vendor_id;
-
-    INSERT INTO get_ready_vehicle_activity_log (
-      vehicle_id, dealer_id, activity_type, action_by,
-      field_name, old_value, new_value, description, metadata
-    ) VALUES (
-      v_vehicle_id,
-      v_dealer_id,
-      'vendor_removed',
-      auth.uid(),
-      'assigned_vendor_id',
-      v_old_vendor_name,
-      'None',
-      format('Vendor removed: %s', v_old_vendor_name),
-      jsonb_build_object(
-        'work_item_id', NEW.id,
-        'work_item_title', NEW.title,
-        'old_vendor_id', OLD.assigned_vendor_id,
-        'old_vendor_name', v_old_vendor_name
-      )
-    );
-  END IF;
-
-  -- Vendor reassigned: A → B (log removal of A, assignment of B is handled by existing trigger)
-  IF OLD.assigned_vendor_id IS NOT NULL AND NEW.assigned_vendor_id IS NOT NULL
-     AND OLD.assigned_vendor_id != NEW.assigned_vendor_id THEN
-
-    -- Get old and new vendor names
-    SELECT COALESCE(company_name, full_name, 'Unknown Vendor') INTO v_old_vendor_name
-    FROM dealership_contacts
-    WHERE id = OLD.assigned_vendor_id;
-
-    SELECT COALESCE(company_name, full_name, 'Unknown Vendor') INTO v_new_vendor_name
-    FROM dealership_contacts
-    WHERE id = NEW.assigned_vendor_id;
-
-    -- Log removal of old vendor
-    INSERT INTO get_ready_vehicle_activity_log (
-      vehicle_id, dealer_id, activity_type, action_by,
-      field_name, old_value, new_value, description, metadata
-    ) VALUES (
-      v_vehicle_id,
-      v_dealer_id,
-      'vendor_removed',
-      auth.uid(),
-      'assigned_vendor_id',
-      v_old_vendor_name,
-      v_new_vendor_name,
-      format('Vendor reassigned from "%s" to "%s"', v_old_vendor_name, v_new_vendor_name),
-      jsonb_build_object(
-        'work_item_id', NEW.id,
-        'work_item_title', NEW.title,
-        'old_vendor_id', OLD.assigned_vendor_id,
-        'new_vendor_id', NEW.assigned_vendor_id,
-        'old_vendor_name', v_old_vendor_name,
-        'new_vendor_name', v_new_vendor_name,
-        'is_reassignment', true
-      )
-    );
-  END IF;
-
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
-
--- =====================================================
--- STEP 4: Recreate log_work_item_activities() with correct column name
+-- STEP 3: Recreate function with correct column name
 -- =====================================================
 
 CREATE OR REPLACE FUNCTION log_work_item_activities()
@@ -183,6 +86,7 @@ BEGIN
       END IF;
     END IF;
 
+    -- ✅ FIXED: Changed completed_at to actual_end (the actual column name)
     IF OLD.status IS DISTINCT FROM NEW.status AND NEW.status = 'completed' THEN
       INSERT INTO get_ready_vehicle_activity_log (
         vehicle_id, dealer_id, activity_type, action_by, description, metadata
@@ -199,7 +103,6 @@ BEGIN
       );
     END IF;
 
-    -- ✅ FIXED: Changed vendor_id to assigned_vendor_id
     IF OLD.assigned_vendor_id IS DISTINCT FROM NEW.assigned_vendor_id AND NEW.assigned_vendor_id IS NOT NULL THEN
       INSERT INTO get_ready_vehicle_activity_log (
         vehicle_id, dealer_id, activity_type, action_by, description, metadata
@@ -233,13 +136,8 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- =====================================================
--- STEP 5: Recreate triggers
+-- STEP 4: Recreate trigger
 -- =====================================================
-
-CREATE TRIGGER trigger_log_vendor_removal
-  AFTER UPDATE ON public.get_ready_work_items
-  FOR EACH ROW
-  EXECUTE FUNCTION log_vendor_removal();
 
 CREATE TRIGGER trigger_log_work_item_activities
   AFTER INSERT OR UPDATE OR DELETE ON public.get_ready_work_items
@@ -250,8 +148,5 @@ CREATE TRIGGER trigger_log_work_item_activities
 -- VERIFICATION
 -- =====================================================
 
-COMMENT ON FUNCTION log_vendor_removal() IS
-  'Fixed version: Uses assigned_vendor_id instead of vendor_id to match actual column name in get_ready_work_items table';
-
 COMMENT ON FUNCTION log_work_item_activities() IS
-  'Fixed version: Uses assigned_vendor_id instead of vendor_id to match actual column name in get_ready_work_items table';
+  'Fixed version: Uses actual_end instead of completed_at to match actual column name in get_ready_work_items table';
