@@ -1,46 +1,88 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Clock, Users, DollarSign, Calendar, UserCheck, TrendingUp, AlertCircle, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+// REAL DATABASE INTEGRATION
+import { useDetailHubEmployees, useDetailHubTimeEntries, usePendingReviews } from "@/hooks/useDetailHubDatabase";
+// SUB-COMPONENTS (for tabs)
+import EmployeePortal from "./EmployeePortal";
+import TimecardSystem from "./TimecardSystem";
+import DetailHubAnalytics from "./DetailHubAnalytics";
+import ReportsCenter from "./ReportsCenter";
+import InvoiceCenter from "./InvoiceCenter";
+import KioskManager from "./KioskManager";
+import { TimeClockModal } from "./TimeClockModal";
 
 const DetailHubDashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [showTimeClock, setShowTimeClock] = useState(false); // Modal state
+
+  // REAL DATABASE INTEGRATION
+  const { data: employees = [], isLoading: loadingEmployees } = useDetailHubEmployees();
+  const { data: timeEntries = [], isLoading: loadingEntries } = useDetailHubTimeEntries();
+  const { data: pendingReviews = [] } = usePendingReviews();
+
+  // Calculate real stats from database
+  const activeEmployees = employees.filter(e => e.status === 'active').length;
+  const todayEntries = timeEntries.filter(e => {
+    const today = new Date().toDateString();
+    return new Date(e.clock_in).toDateString() === today;
+  });
+  const todayHours = todayEntries.reduce((sum, e) => sum + (e.total_hours || 0), 0);
 
   const stats = [
-    { title: "Active Employees", value: "24", icon: Users, change: "+2", color: "text-blue-600" },
-    { title: "Today's Hours", value: "192", icon: Clock, change: "+5%", color: "text-green-600" },
-    { title: "Pending Invoices", value: "$12,450", icon: DollarSign, change: "-3%", color: "text-orange-600" },
-    { title: "Attendance Rate", value: "96%", icon: UserCheck, change: "+1%", color: "text-emerald-600" }
+    { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: "+2", color: "text-blue-600" },
+    { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: "+5%", color: "text-green-600" },
+    { title: t('detail_hub.dashboard.stats.pending_reviews'), value: pendingReviews.length.toString(), icon: AlertCircle, change: "", color: "text-orange-600" },
+    { title: "Total Employees", value: employees.length.toString(), icon: UserCheck, change: "", color: "text-emerald-600" }
   ];
 
-  const recentActivity = [
-    { employee: "John Smith", action: "Clocked In", time: "8:00 AM", status: "success" },
-    { employee: "Maria Garcia", action: "Break Started", time: "10:15 AM", status: "warning" },
-    { employee: "Mike Johnson", action: "Clocked Out", time: "5:30 PM", status: "success" },
-    { employee: "Sarah Wilson", action: "Late Check-in", time: "8:45 AM", status: "error" }
-  ];
+  // Recent activity from time entries (last 5)
+  const recentActivity = timeEntries.slice(0, 5).map(entry => ({
+    employee: entry.employee_id, // TODO: Join with employees to get name
+    action: entry.clock_out ? t('detail_hub.toasts.clocked_out') : t('detail_hub.toasts.clocked_in'),
+    time: new Date(entry.clock_in).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),
+    status: entry.status === 'complete' ? 'success' : 'warning'
+  }));
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Detail Hub</h1>
-          <p className="text-muted-foreground">Employee management and time tracking dashboard</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t('detail_hub.title')}</h1>
+          <p className="text-muted-foreground">{t('detail_hub.subtitle')}</p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={() => navigate("/detail-hub/kiosk")}>
+          <Button onClick={() => setShowTimeClock(true)}>
             <Clock className="w-4 h-4 mr-2" />
-            Open Kiosk
-          </Button>
-          <Button variant="outline" onClick={() => navigate("/detail-hub/employees")}>
-            <Users className="w-4 h-4 mr-2" />
-            Manage Employees
+            {t('detail_hub.dashboard.quick_actions.time_clock')}
           </Button>
         </div>
       </div>
+
+      {/* Time Clock Modal */}
+      <TimeClockModal open={showTimeClock} onClose={() => setShowTimeClock(false)} />
+
+      {/* Tabs for all Detail Hub functionality */}
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-7">
+          <TabsTrigger value="overview">{t('detail_hub.tabs.overview')}</TabsTrigger>
+          <TabsTrigger value="employees">{t('detail_hub.tabs.employees')}</TabsTrigger>
+          <TabsTrigger value="timecards">{t('detail_hub.tabs.timecards')}</TabsTrigger>
+          <TabsTrigger value="analytics">{t('detail_hub.tabs.analytics')}</TabsTrigger>
+          <TabsTrigger value="reports">{t('detail_hub.tabs.reports')}</TabsTrigger>
+          <TabsTrigger value="invoices">{t('detail_hub.tabs.invoices')}</TabsTrigger>
+          <TabsTrigger value="kiosks">{t('detail_hub.tabs.kiosks')}</TabsTrigger>
+        </TabsList>
+
+        {/* TAB: Overview (contenido actual) */}
+        <TabsContent value="overview" className="space-y-6">
 
       {/* Stats Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -56,7 +98,7 @@ const DetailHubDashboard = () => {
                 <span className={stat.change.startsWith('+') ? 'text-green-600' : stat.change.startsWith('-') ? 'text-red-600' : 'text-muted-foreground'}>
                   {stat.change}
                 </span>
-                {" "}from last week
+                {" "}{t('time.last_week')}
               </p>
             </CardContent>
           </Card>
@@ -67,40 +109,40 @@ const DetailHubDashboard = () => {
         {/* Quick Actions */}
         <Card>
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
+            <CardTitle>{t('detail_hub.dashboard.quick_actions.title')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Button 
-              variant="outline" 
-              className="w-full justify-start" 
+            <Button
+              variant="outline"
+              className="w-full justify-start"
               onClick={() => navigate("/detail-hub/timecard")}
             >
               <Calendar className="w-4 h-4 mr-2" />
-              View Timecard System
+              {t('detail_hub.timecard.title')}
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="w-full justify-start"
               onClick={() => navigate("/detail-hub/invoices")}
             >
               <DollarSign className="w-4 h-4 mr-2" />
-              Invoice Center
+              {t('detail_hub.invoices.title')}
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="w-full justify-start"
               onClick={() => navigate("/detail-hub/reports")}
             >
               <TrendingUp className="w-4 h-4 mr-2" />
-              Reports & Analytics
+              {t('detail_hub.reports.title')}
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="w-full justify-start"
               onClick={() => navigate("/detail-hub/kiosk-manager")}
             >
               <UserCheck className="w-4 h-4 mr-2" />
-              Kiosk Manager
+              {t('detail_hub.kiosk_manager.title')}
             </Button>
           </CardContent>
         </Card>
@@ -108,7 +150,7 @@ const DetailHubDashboard = () => {
         {/* Recent Activity */}
         <Card>
           <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
+            <CardTitle>{t('detail_hub.dashboard.recent_activity')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -137,25 +179,57 @@ const DetailHubDashboard = () => {
       {/* System Status */}
       <Card>
         <CardHeader>
-          <CardTitle>System Status</CardTitle>
+          <CardTitle>{t('detail_hub.punch_clock.status.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-4 h-4 text-green-500" />
-              <span className="text-sm">Facial Recognition: Online</span>
+              <span className="text-sm">{t('detail_hub.punch_clock.status.face_recognition')}: {t('detail_hub.punch_clock.status.online')}</span>
             </div>
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-4 h-4 text-green-500" />
-              <span className="text-sm">Time Clock: Active</span>
+              <span className="text-sm">{t('detail_hub.dashboard.quick_actions.time_clock')}: {t('detail_hub.punch_clock.status.active')}</span>
             </div>
             <div className="flex items-center space-x-2">
               <AlertCircle className="w-4 h-4 text-yellow-500" />
-              <span className="text-sm">Sync Status: Pending</span>
+              <span className="text-sm">{t('detail_hub.punch_clock.status.network_connection')}: {t('detail_hub.timecard.status_badges.clocked_in')}</span>
             </div>
           </div>
         </CardContent>
       </Card>
+        </TabsContent>
+
+        {/* TAB: Employees */}
+        <TabsContent value="employees">
+          <EmployeePortal />
+        </TabsContent>
+
+        {/* TAB: Timecards */}
+        <TabsContent value="timecards">
+          <TimecardSystem />
+        </TabsContent>
+
+        {/* TAB: Analytics */}
+        <TabsContent value="analytics">
+          <DetailHubAnalytics />
+        </TabsContent>
+
+        {/* TAB: Reports */}
+        <TabsContent value="reports">
+          <ReportsCenter />
+        </TabsContent>
+
+        {/* TAB: Invoices */}
+        <TabsContent value="invoices">
+          <InvoiceCenter />
+        </TabsContent>
+
+        {/* TAB: Kiosks */}
+        <TabsContent value="kiosks">
+          <KioskManager />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

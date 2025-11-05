@@ -66,8 +66,8 @@ const ReportsCenter = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Reports Center</h1>
-          <p className="text-muted-foreground">Analytics and performance insights</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t('detail_hub.reports.title')}</h1>
+          <p className="text-muted-foreground">{t('detail_hub.reports.subtitle')}</p>
         </div>
         <div className="flex gap-2">
           <Popover>
@@ -88,7 +88,7 @@ const ReportsCenter = () => {
           </Popover>
           <Button>
             <Download className="w-4 h-4 mr-2" />
-            Export Report
+            {t('detail_hub.common.export')}
           </Button>
         </div>
       </div>
@@ -132,7 +132,7 @@ const ReportsCenter = () => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Active Employees</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('detail_hub.dashboard.stats.active_employees')}</p>
                 <p className="text-2xl font-bold">{monthlyStats.totalEmployees}</p>
               </div>
               <Users className="w-8 h-8 text-orange-600" />

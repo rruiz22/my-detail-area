@@ -132,19 +132,21 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
     yPosition += 4;
   }
 
-  // Department(s)
+  // Department(s) - Always show
+  yPosition += 2;
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(colors.secondary);
+  doc.text('Department:', leftCol, yPosition);
+  yPosition += 4;
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor('#6B7280'); // Gray-500
   if (invoice.metadata?.departments && invoice.metadata.departments.length > 0) {
-    yPosition += 2;
-    doc.setFontSize(8);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(colors.secondary);
-    doc.text('Department:', leftCol, yPosition);
-    yPosition += 4;
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor('#6B7280'); // Gray-500
     const depts = invoice.metadata.departments.map((d: string) => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
     doc.text(depts, leftCol, yPosition);
+  } else {
+    doc.text('All Departments', leftCol, yPosition);
   }
 
   // RIGHT SIDE - Invoice number and details
@@ -331,14 +333,14 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       textColor: colors.headerText,
       fontStyle: 'bold',
       halign: 'center',
-      fontSize: 9,
-      cellPadding: 3.5,
-      overflow: 'linebreak',
+      fontSize: 8.5,
+      cellPadding: 3,
+      overflow: 'visible', // No wrap for headers
       minCellHeight: 8,
     },
     columnStyles: {
       0: { cellWidth: 13, halign: 'center' },                                      // Date
-      1: { cellWidth: 17, halign: 'center' },                                      // Order
+      1: { cellWidth: 17, halign: 'center', overflow: 'visible' },                 // Order - No wrap
       2: { cellWidth: 30, halign: 'left', overflow: 'linebreak', fontSize: 7.5 },  // PO/RO/Tag or Stock
       3: { cellWidth: 28, halign: 'left' },                                        // Vehicle
       4: { cellWidth: 26, halign: 'center', fontStyle: 'bold', overflow: 'hidden', fontSize: 7 }, // VIN
@@ -351,10 +353,19 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
     showHead: 'everyPage',
     margin: { left: 20, right: 20, bottom: 25 },
     didParseCell: (data) => {
-      // Reduce font size for PO/RO/Tag header (column 2) to prevent wrapping
-      if (data.section === 'head' && data.column.index === 2) {
-        data.cell.styles.fontSize = 7.5;
-        data.cell.styles.overflow = 'linebreak';
+      // Force no wrap for ALL headers
+      if (data.section === 'head') {
+        data.cell.styles.overflow = 'visible';
+        data.cell.styles.fontSize = 8;
+        // Special handling for PO/RO/Tag or Stock header
+        if (data.column.index === 2) {
+          data.cell.styles.fontSize = 7;
+        }
+      }
+
+      // Force no wrap for Order column (column 1)
+      if (data.section === 'body' && data.column.index === 1) {
+        data.cell.styles.overflow = 'visible';
       }
 
       // Style separator rows (rows with colSpan: 7) - styles already set in tableData

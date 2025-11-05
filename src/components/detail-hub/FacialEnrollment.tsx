@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Camera, CheckCircle, AlertCircle, RotateCcw, User, Loader2 } from "lucide-react";
+// Face detection utilities (optional enhancement)
+import { captureFrameWithFaceDetection, getQualityFeedbackMessage } from "@/utils/faceDetection";
 
 interface FacialEnrollmentProps {
   employeeId: string;
@@ -23,6 +25,10 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+
+  // Face quality detection (NEW - optional enhancement, doesn't affect existing flow)
+  const [useQualityCheck, setUseQualityCheck] = useState(false); // Default: OFF (preserves original behavior)
+  const [qualityFeedback, setQualityFeedback] = useState<string>(""); // Real-time quality feedback
 
   const startEnrollment = useCallback(async () => {
     try {
@@ -47,7 +53,7 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
 
     } catch (error) {
       console.error('Error starting enrollment:', error);
-      setErrorMessage('Unable to access camera. Please check permissions.');
+      setErrorMessage(t('detail_hub.facial_enrollment.messages.camera_error'));
       setEnrollmentStep('error');
     }
   }, [performEnrollmentCaptures]);
@@ -59,8 +65,33 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
     for (let i = 0; i < totalCaptures; i++) {
       await new Promise(resolve => setTimeout(resolve, 1000)); // Wait between captures
 
-      // Capture frame
-      const imageData = captureFrame();
+      // Capture frame (with optional quality check)
+      let imageData: string | null = null;
+
+      if (useQualityCheck && videoRef.current) {
+        // NEW: Use face detection quality check
+        try {
+          const capturedFrame = await captureFrameWithFaceDetection(videoRef.current, 0.85);
+
+          if (capturedFrame.detectionResult.detected && capturedFrame.detectionResult.qualityCheck.passed) {
+            imageData = capturedFrame.imageData;
+            setQualityFeedback(`✓ Good quality (${(capturedFrame.detectionResult.confidence * 100).toFixed(0)}%)`);
+          } else {
+            // Quality not good enough - provide feedback and retry
+            const feedback = getQualityFeedbackMessage(capturedFrame.detectionResult.qualityCheck);
+            setQualityFeedback(feedback);
+            i--; // Retry this capture
+            continue;
+          }
+        } catch (error) {
+          console.warn("Face detection failed, falling back to simple capture:", error);
+          imageData = captureFrame(); // Fallback to simple capture
+        }
+      } else {
+        // ORIGINAL: Simple frame capture (no quality check)
+        imageData = captureFrame();
+      }
+
       if (imageData) {
         captures.push(imageData);
         setCapturedImages([...captures]);
@@ -74,7 +105,7 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
 
     // Simulate AWS Rekognition enrollment
     await simulateEnrollment(captures);
-  }, [captureFrame, simulateEnrollment]);
+  }, [captureFrame, simulateEnrollment, useQualityCheck]);
 
   const captureFrame = useCallback((): string | null => {
     if (!videoRef.current || !canvasRef.current) return null;
@@ -119,7 +150,7 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
       
     } catch (error) {
       console.error('Enrollment failed:', error);
-      setErrorMessage('Enrollment failed. Please try again.');
+      setErrorMessage(t('detail_hub.facial_enrollment.messages.enrollment_failed'));
       setEnrollmentStep('error');
     }
   }, [employeeId, onComplete]);
@@ -149,15 +180,15 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
       <div className="text-center space-y-4">
         <User className="w-16 h-16 text-blue-600 mx-auto" />
         <div>
-          <h3 className="text-xl font-semibold">Facial Recognition Enrollment</h3>
-          <p className="text-muted-foreground">Setting up face ID for {employeeName}</p>
+          <h3 className="text-xl font-semibold">{t('detail_hub.facial_enrollment.subtitle')}</h3>
+          <p className="text-muted-foreground">{t('detail_hub.facial_enrollment.setting_up_for', { employeeName })}</p>
         </div>
       </div>
       
       <Alert>
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          Please follow these instructions for successful enrollment:
+          {t('detail_hub.facial_enrollment.instructions_title')}
         </AlertDescription>
       </Alert>
       
@@ -166,35 +197,56 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
             <span className="text-sm font-medium text-blue-600">1</span>
           </div>
-          <p>Position your face in the center of the camera</p>
+          <p>{t('detail_hub.facial_enrollment.step_1')}</p>
         </div>
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
             <span className="text-sm font-medium text-blue-600">2</span>
           </div>
-          <p>Look directly at the camera</p>
+          <p>{t('detail_hub.facial_enrollment.step_2')}</p>
         </div>
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
             <span className="text-sm font-medium text-blue-600">3</span>
           </div>
-          <p>Remain still during the capture process</p>
+          <p>{t('detail_hub.facial_enrollment.step_3')}</p>
         </div>
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
             <span className="text-sm font-medium text-blue-600">4</span>
           </div>
-          <p>Ensure good lighting on your face</p>
+          <p>{t('detail_hub.facial_enrollment.step_4')}</p>
         </div>
       </div>
       
+      {/* Optional: Enable Quality Check (Developer/Testing feature) */}
+      <div className="pt-4 border-t">
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <span className="text-sm font-medium">{t('detail_hub.facial_enrollment.quality.title')}</span>
+            <p className="text-xs text-muted-foreground">
+              {useQualityCheck
+                ? t('detail_hub.facial_enrollment.quality.enabled_description')
+                : t('detail_hub.facial_enrollment.quality.disabled_description')}
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setUseQualityCheck(!useQualityCheck)}
+          >
+            {useQualityCheck ? t('detail_hub.common.enabled') : t('detail_hub.common.disabled')}
+          </Button>
+        </div>
+      </div>
+
       <div className="flex justify-end space-x-2">
         <Button variant="outline" onClick={handleCancel}>
-          Cancel
+          {t('detail_hub.facial_enrollment.cancel')}
         </Button>
         <Button onClick={startEnrollment}>
           <Camera className="w-4 h-4 mr-2" />
-          Start Enrollment
+          {t('detail_hub.facial_enrollment.start_enrollment')}
         </Button>
       </div>
     </div>
@@ -203,8 +255,8 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
   const renderCapturing = () => (
     <div className="space-y-4">
       <div className="text-center">
-        <h3 className="text-xl font-semibold">Capturing Face Data</h3>
-        <p className="text-muted-foreground">Please remain still while we capture your face</p>
+        <h3 className="text-xl font-semibold">{t('detail_hub.facial_enrollment.steps.capturing')}</h3>
+        <p className="text-muted-foreground">{t('detail_hub.facial_enrollment.messages.remain_still')}</p>
       </div>
       
       <div className="relative">
@@ -221,10 +273,17 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
           <div className="w-48 h-48 border-2 border-blue-500 rounded-full animate-pulse" />
         </div>
         
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 space-y-2">
           <Badge className="bg-blue-600 text-white">
-            Capturing... {capturedImages.length}/5
+            {t('detail_hub.facial_enrollment.messages.capturing_progress', { current: capturedImages.length })}
           </Badge>
+          {useQualityCheck && qualityFeedback && (
+            <div className="text-center">
+              <Badge variant="outline" className="bg-white/90">
+                {qualityFeedback}
+              </Badge>
+            </div>
+          )}
         </div>
       </div>
       
@@ -233,7 +292,7 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
       <div className="flex justify-center">
         <Button variant="outline" onClick={resetEnrollment}>
           <RotateCcw className="w-4 h-4 mr-2" />
-          Restart
+          {t('detail_hub.facial_enrollment.restart')}
         </Button>
       </div>
     </div>
@@ -243,8 +302,8 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
     <div className="space-y-6 text-center">
       <Loader2 className="w-16 h-16 text-blue-600 mx-auto animate-spin" />
       <div>
-        <h3 className="text-xl font-semibold">Processing Face Data</h3>
-        <p className="text-muted-foreground">Creating your facial recognition profile...</p>
+        <h3 className="text-xl font-semibold">{t('detail_hub.facial_enrollment.steps.processing')}</h3>
+        <p className="text-muted-foreground">{t('detail_hub.facial_enrollment.messages.creating_profile')}</p>
       </div>
       <Progress value={progress} className="w-full" />
     </div>
@@ -254,9 +313,9 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
     <div className="space-y-6 text-center">
       <CheckCircle className="w-16 h-16 text-green-600 mx-auto" />
       <div>
-        <h3 className="text-xl font-semibold text-green-600">Enrollment Complete!</h3>
+        <h3 className="text-xl font-semibold text-green-600">{t('detail_hub.facial_enrollment.steps.complete')}</h3>
         <p className="text-muted-foreground">
-          {employeeName} can now use facial recognition for time tracking
+          {t('detail_hub.facial_enrollment.messages.success_message', { employeeName })}
         </p>
       </div>
       <Progress value={100} className="w-full" />
@@ -272,11 +331,11 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
       
       <div className="flex justify-center space-x-2">
         <Button variant="outline" onClick={handleCancel}>
-          Cancel
+          {t('detail_hub.facial_enrollment.cancel')}
         </Button>
         <Button onClick={resetEnrollment}>
           <RotateCcw className="w-4 h-4 mr-2" />
-          Try Again
+          {t('detail_hub.facial_enrollment.try_again')}
         </Button>
       </div>
     </div>
@@ -287,7 +346,7 @@ const FacialEnrollment = ({ employeeId, employeeName, onComplete, onCancel }: Fa
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Camera className="w-5 h-5" />
-          Face ID Enrollment
+          {t('detail_hub.facial_enrollment.title')}
         </CardTitle>
       </CardHeader>
       <CardContent>

@@ -1,0 +1,390 @@
+{
+  "detail_hub": {
+    "title": "Centro de Detalle",
+    "subtitle": "Panel de gestión de empleados y registro de tiempo",
+
+    "dashboard": {
+      "title": "Panel de Control de Detalle",
+      "stats": {
+        "active_employees": "Empleados Activos",
+        "todays_hours": "Horas de Hoy",
+        "pending_reviews": "Revisiones Pendientes",
+        "total_revenue": "Ingresos Totales"
+      },
+      "quick_actions": {
+        "title": "Acciones Rápidas",
+        "add_employee": "Agregar Empleado",
+        "time_clock": "Reloj Checador",
+        "view_reports": "Ver Reportes",
+        "manage_kiosks": "Gestionar Kioscos"
+      },
+      "recent_activity": "Actividad Reciente",
+      "view_all": "Ver Todo"
+    },
+
+    "punch_clock": {
+      "title": "Reloj Checador de Detalle",
+      "subtitle": "Kiosco de registro de tiempo para empleados",
+      "punch_in_out": "Entrada/Salida",
+      "face_recognition": "Reconocimiento Facial",
+      "manual_entry": "Entrada Manual",
+      "capture_photo_manually": "Capturar Foto Manualmente",
+      "photo_capture": "Captura de Foto",
+      "quick_actions": "Acciones Rápidas",
+      "start_break": "Iniciar Descanso",
+      "end_break": "Terminar Descanso",
+      "start_face_scan": "Iniciar Escaneo Facial",
+      "scanning": "Escaneando...",
+      "stop_scanning": "Detener Escaneo",
+      "punch": "Registrar",
+      "capture": "Capturar",
+      "cancel": "Cancelar",
+      "retake_photo": "Volver a Tomar Foto",
+
+      "status": {
+        "title": "Estado del Sistema",
+        "camera_status": "Estado de Cámara",
+        "face_recognition": "Reconocimiento Facial",
+        "network_connection": "Conexión de Red",
+        "online": "En Línea",
+        "offline": "Fuera de Línea",
+        "active": "Activo",
+        "connected": "Conectado",
+        "disconnected": "Desconectado",
+        "simulated": "Simulado",
+        "real": "Real",
+        "loading": "Cargando..."
+      },
+
+      "messages": {
+        "position_face": "Posicione su rostro frente a la cámara",
+        "detecting_face": "Detectando rostro...",
+        "face_detected": "¡Rostro detectado! Confianza: {{confidence}}%",
+        "no_face_detected": "No se detectó rostro - por favor posiciónese",
+        "preparing_camera": "Preparando cámara...",
+        "position_and_capture": "Posiciónese y haga clic en 'Capturar'",
+        "capturing_photo": "Capturando foto...",
+        "uploading": "Subiendo al almacenamiento...",
+        "photo_saved": "✓ ¡Foto guardada! El registro requiere aprobación del supervisor.",
+        "camera_denied": "Acceso a cámara denegado",
+        "photo_capture_failed": "Captura de foto falló",
+        "upload_failed": "Subida falló: {{error}}",
+        "time_entry_failed": "Registro falló: {{error}}",
+        "punch_recorded_mock": "✓ ¡Registro guardado! (Modo simulado)",
+        "punch_recorded_real": "✓ ¡Registro guardado! Esperando aprobación del supervisor.",
+        "for_manual_verification": "Para verificación manual si el reconocimiento facial no está disponible",
+        "simulated_mode": "Modo simulado (no se necesitan modelos)",
+        "loading_models": "Cargando modelos de detección facial...",
+        "ready_for_detection": "Listo para detección facial",
+        "failed_load_models": "Error al cargar modelos - usando modo simulado"
+      },
+
+      "toggles": {
+        "enable_real_face_detection": "Habilitar Detección Facial Real",
+        "use_real_database": "Usar Base de Datos Real",
+        "enabled": "Habilitado",
+        "disabled": "Deshabilitado",
+        "using_models": "Usando modelos face-api.js para detección real",
+        "using_simulated": "Usando modo simulado (temporizador de 3s)",
+        "saving_to_supabase": "Guardando en Supabase detail_hub_time_entries",
+        "using_mock_data": "Usando datos simulados (solo estado)"
+      },
+
+      "placeholders": {
+        "enter_employee_id": "Ingrese ID de Empleado (ej., EMP001)"
+      },
+
+      "recent_activity": "Actividad Reciente",
+      "last_action": "Última Acción",
+      "kiosk_settings": "Configuración del Kiosco"
+    },
+
+    "employees": {
+      "title": "Portal de Empleados",
+      "subtitle": "Gestionar personal de detalle y lavado de autos",
+      "add_employee": "Agregar Empleado",
+      "employee_list": "Lista de Empleados",
+      "search_employees": "Buscar empleados...",
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "suspended": "Suspendido",
+      "terminated": "Terminado",
+      "enroll_face_id": "Registrar ID Facial",
+      "edit": "Editar",
+      "view_timecard": "Ver Tarjeta de Tiempo",
+      "employee_details": "Detalles del Empleado",
+      "employee_number": "Número de Empleado",
+      "role": "Rol",
+      "department": "Departamento",
+      "hourly_rate": "Tarifa por Hora",
+      "hire_date": "Fecha de Contratación",
+      "status": "Estado",
+      "last_punch": "Último Registro",
+      "actions": "Acciones",
+
+      "roles": {
+        "detailer": "Detallista",
+        "car_wash": "Lavado de Autos",
+        "supervisor": "Supervisor",
+        "manager": "Gerente",
+        "technician": "Técnico"
+      },
+
+      "departments": {
+        "detail": "Detalle",
+        "car_wash": "Lavado de Autos",
+        "service": "Servicio",
+        "management": "Gerencia"
+      }
+    },
+
+    "timecard": {
+      "title": "Sistema de Tarjetas de Tiempo",
+      "subtitle": "Rastrear horas de empleados y gestionar nómina",
+      "daily_view": "Vista Diaria",
+      "weekly_summary": "Resumen Semanal",
+      "monthly_report": "Reporte Mensual",
+      "daily_timecards": "Tarjetas Diarias",
+      "export": "Exportar",
+      "filter": "Filtrar",
+      "pick_date": "Seleccionar fecha",
+
+      "stats": {
+        "total_hours": "Horas Totales",
+        "overtime_hours": "Horas Extra",
+        "active_employees": "Empleados Activos",
+        "total_payroll": "Nómina Total"
+      },
+
+      "table": {
+        "employee": "Empleado",
+        "clock_in": "Entrada",
+        "clock_out": "Salida",
+        "break": "Descanso",
+        "total_hours": "Horas Totales",
+        "overtime": "Tiempo Extra",
+        "pay": "Pago",
+        "status": "Estado",
+        "hours_abbr": "h"
+      },
+
+      "status_badges": {
+        "complete": "Completo",
+        "active": "Activo",
+        "clocked_in": "Registrado",
+        "late": "Tarde"
+      },
+
+      "photo_reviews": {
+        "title": "Registros con Foto Pendientes de Revisión",
+        "pending_count": "{{count}} Pendientes",
+        "no_pending": "No hay revisiones pendientes"
+      }
+    },
+
+    "photo_review": {
+      "title": "Verificación de Foto Requerida",
+      "pending_review": "Revisión Pendiente",
+      "employee": "Empleado",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "verify_identity": "Verifique la identidad del empleado antes de aprobar el registro",
+      "photo_punch": "Registro con Foto",
+      "captured": "✓ Capturado"
+    },
+
+    "facial_enrollment": {
+      "title": "Registro de ID Facial",
+      "subtitle": "Registro de Reconocimiento Facial",
+      "setting_up_for": "Configurando ID facial para {{employeeName}}",
+      "instructions_title": "Por favor siga estas instrucciones para un registro exitoso:",
+      "step_1": "Posicione su rostro en el centro de la cámara",
+      "step_2": "Mire directamente a la cámara",
+      "step_3": "Permanezca quieto durante el proceso de captura",
+      "step_4": "Asegúrese de tener buena iluminación en su rostro",
+      "start_enrollment": "Iniciar Registro",
+      "cancel": "Cancelar",
+      "restart": "Reiniciar",
+      "try_again": "Intentar de Nuevo",
+
+      "steps": {
+        "instructions": "Instrucciones",
+        "capturing": "Capturando Datos Faciales",
+        "processing": "Procesando Datos Faciales",
+        "complete": "¡Registro Completo!",
+        "error": "Error"
+      },
+
+      "messages": {
+        "remain_still": "Por favor permanezca quieto mientras capturamos su rostro",
+        "capturing_progress": "Capturando... {{current}}/5",
+        "creating_profile": "Creando su perfil de reconocimiento facial...",
+        "success_message": "{{employeeName}} ahora puede usar reconocimiento facial para registro de tiempo",
+        "camera_error": "No se puede acceder a la cámara. Por favor verifique los permisos.",
+        "enrollment_failed": "El registro falló. Por favor intente de nuevo."
+      },
+
+      "quality": {
+        "title": "Validación de Calidad",
+        "enabled_description": "Solo capturar imágenes faciales de alta calidad",
+        "disabled_description": "Capturar todos los cuadros (sin verificación de calidad)",
+        "good_quality": "✓ Buena calidad ({{confidence}}%)"
+      }
+    },
+
+    "kiosk_manager": {
+      "title": "Gestor de Kioscos",
+      "subtitle": "Configurar y monitorear estaciones de reloj checador",
+      "add_kiosk": "Agregar Kiosco",
+      "kiosk_list": "Lista de Kioscos",
+      "kiosk_details": "Detalles del Kiosco",
+      "kiosk_name": "Nombre del Kiosco",
+      "location": "Ubicación",
+      "kiosk_code": "Código del Kiosco",
+      "device_type": "Tipo de Dispositivo",
+      "camera_resolution": "Resolución de Cámara",
+      "has_lighting": "Tiene Iluminación",
+      "status": "Estado",
+      "last_heartbeat": "Última Señal",
+      "settings": "Configuración",
+      "edit": "Editar",
+      "delete": "Eliminar",
+
+      "status_values": {
+        "online": "En Línea",
+        "offline": "Fuera de Línea",
+        "maintenance": "Mantenimiento",
+        "error": "Error"
+      },
+
+      "device_types": {
+        "tablet": "Tableta",
+        "desktop": "Escritorio",
+        "mobile": "Móvil",
+        "dedicated_terminal": "Terminal Dedicada"
+      },
+
+      "features": {
+        "face_recognition_enabled": "Reconocimiento Facial Habilitado",
+        "photo_fallback_enabled": "Respaldo con Foto Habilitado",
+        "pin_fallback_enabled": "Respaldo con PIN Habilitado",
+        "require_supervisor_approval": "Requiere Aprobación del Supervisor"
+      }
+    },
+
+    "analytics": {
+      "title": "Análisis de Detalle",
+      "subtitle": "Métricas de rendimiento e información",
+      "labor_costs": "Costos Laborales",
+      "productivity": "Productividad",
+      "attendance": "Asistencia",
+      "overtime": "Tendencias de Tiempo Extra",
+      "hourly_breakdown": "Desglose por Hora",
+      "department_comparison": "Comparación por Departamento",
+      "weekly_hours": "Horas Semanales",
+      "efficiency_rating": "Calificación de Eficiencia"
+    },
+
+    "reports": {
+      "title": "Centro de Reportes",
+      "subtitle": "Generar y exportar reportes detallados",
+      "generate_report": "Generar Reporte",
+      "payroll_report": "Reporte de Nómina",
+      "attendance_report": "Reporte de Asistencia",
+      "productivity_report": "Reporte de Productividad",
+      "labor_cost_analysis": "Análisis de Costos Laborales",
+      "export_pdf": "Exportar PDF",
+      "export_excel": "Exportar Excel",
+      "date_range": "Rango de Fechas",
+      "select_report_type": "Seleccionar Tipo de Reporte"
+    },
+
+    "invoices": {
+      "title": "Centro de Facturación",
+      "subtitle": "Facturación y cobro a clientes",
+      "create_invoice": "Crear Factura",
+      "invoice_list": "Lista de Facturas",
+      "client_name": "Nombre del Cliente",
+      "description": "Descripción",
+      "amount": "Monto",
+      "due_date": "Fecha de Vencimiento",
+      "status": "Estado",
+      "actions": "Acciones",
+
+      "status_values": {
+        "draft": "Borrador",
+        "sent": "Enviado",
+        "paid": "Pagado",
+        "overdue": "Vencido",
+        "cancelled": "Cancelado"
+      }
+    },
+
+    "toasts": {
+      "employee_created": "Empleado Creado",
+      "employee_created_desc": "{{firstName}} {{lastName}} ha sido agregado exitosamente.",
+      "employee_updated": "Empleado Actualizado",
+      "employee_updated_desc": "La información del empleado ha sido actualizada exitosamente.",
+      "employee_deleted": "Empleado Eliminado",
+      "employee_deleted_desc": "El empleado ha sido eliminado del sistema.",
+
+      "clocked_in": "Entrada Registrada",
+      "clocked_in_desc": "Entrada registrada exitosamente a las {{time}}",
+      "clocked_out": "Salida Registrada",
+      "clocked_out_desc": "Salida registrada exitosamente. Horas totales: {{hours}}",
+      "already_clocked_in": "Ya Registrado",
+      "already_clocked_in_desc": "El empleado ya tiene entrada registrada",
+      "no_active_entry": "Sin Registro Activo",
+      "no_active_entry_desc": "No se encontró registro de tiempo activo",
+
+      "photo_punch_recorded": "Registro con Foto Guardado",
+      "photo_punch_desc": "Foto capturada. Esperando aprobación del supervisor.",
+      "punch_approved": "Registro Aprobado",
+      "punch_approved_desc": "El registro de tiempo ha sido verificado y aprobado.",
+      "punch_rejected": "Registro Rechazado",
+      "punch_rejected_desc": "El registro de tiempo ha sido rechazado y eliminado.",
+
+      "enrollment_complete": "Registro Completo",
+      "enrollment_complete_desc": "El reconocimiento facial ha sido configurado exitosamente.",
+      "enrollment_failed": "Registro Falló",
+
+      "error": "Error",
+      "success": "Éxito",
+      "clock_in_failed": "Error al Registrar Entrada",
+      "clock_out_failed": "Error al Registrar Salida"
+    },
+
+    "errors": {
+      "camera_access": "No se puede acceder a la cámara. Por favor verifique los permisos.",
+      "enrollment_failed": "El registro falló. Por favor intente de nuevo.",
+      "no_models": "Modelos de detección facial no cargados. Llame loadFaceDetectionModels() primero.",
+      "upload_failed": "La subida falló",
+      "invalid_format": "Formato de imagen inválido",
+      "file_too_large": "Archivo demasiado grande (~{{size}}MB). Máximo 5MB.",
+      "format_not_allowed": "Formato {{format}} no permitido. Use JPEG, PNG o WebP.",
+      "network_error": "Ocurrió un error de red",
+      "storage_error": "Error al guardar en almacenamiento"
+    },
+
+    "common": {
+      "loading": "Cargando...",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "view": "Ver",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "enabled": "Habilitado",
+      "disabled": "Deshabilitado",
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "yes": "Sí",
+      "no": "No",
+      "search": "Buscar...",
+      "filter": "Filtrar",
+      "export": "Exportar",
+      "settings": "Configuración"
+    }
+  }
+}

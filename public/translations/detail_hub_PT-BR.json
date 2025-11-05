@@ -1,0 +1,394 @@
+{
+  "detail_hub": {
+    "title": "Central de Detalhamento",
+    "subtitle": "Painel de gerenciamento de funcionários e registro de ponto",
+
+    "dashboard": {
+      "title": "Painel de Controle de Detalhamento",
+      "stats": {
+        "active_employees": "Funcionários Ativos",
+        "todays_hours": "Horas de Hoje",
+        "pending_reviews": "Revisões Pendentes",
+        "total_revenue": "Receita Total"
+      },
+      "quick_actions": {
+        "title": "Ações Rápidas",
+        "add_employee": "Adicionar Funcionário",
+        "time_clock": "Relógio de Ponto",
+        "view_reports": "Ver Relatórios",
+        "manage_kiosks": "Gerenciar Quiosques"
+      },
+      "recent_activity": "Atividade Recente",
+      "view_all": "Ver Tudo"
+    },
+
+    "punch_clock": {
+      "title": "Relógio de Ponto de Detalhamento",
+      "subtitle": "Quiosque de registro de ponto para funcionários",
+      "punch_in_out": "Entrada/Saída",
+      "face_recognition": "Reconhecimento Facial",
+      "manual_entry": "Entrada Manual",
+      "capture_photo_manually": "Capturar Foto Manualmente",
+      "photo_capture": "Captura de Foto",
+      "quick_actions": "Ações Rápidas",
+      "start_break": "Iniciar Intervalo",
+      "end_break": "Terminar Intervalo",
+      "start_face_scan": "Iniciar Escaneamento Facial",
+      "scanning": "Escaneando...",
+      "stop_scanning": "Parar Escaneamento",
+      "punch": "Registrar",
+      "capture": "Capturar",
+      "cancel": "Cancelar",
+      "retake_photo": "Tirar Foto Novamente",
+
+      "status": {
+        "title": "Status do Sistema",
+        "camera_status": "Status da Câmera",
+        "face_recognition": "Reconhecimento Facial",
+        "network_connection": "Conexão de Rede",
+        "online": "Online",
+        "offline": "Offline",
+        "active": "Ativo",
+        "connected": "Conectado",
+        "disconnected": "Desconectado",
+        "simulated": "Simulado",
+        "real": "Real",
+        "loading": "Carregando..."
+      },
+
+      "messages": {
+        "position_face": "Posicione seu rosto em frente à câmera",
+        "detecting_face": "Detectando rosto...",
+        "face_detected": "Rosto detectado! Confiança: {{confidence}}%",
+        "no_face_detected": "Nenhum rosto detectado - por favor posicione-se",
+        "preparing_camera": "Preparando câmera...",
+        "position_and_capture": "Posicione-se e clique em 'Capturar'",
+        "capturing_photo": "Capturando foto...",
+        "uploading": "Enviando para armazenamento...",
+        "photo_saved": "✓ Foto salva! O registro requer aprovação do supervisor.",
+        "camera_denied": "Acesso à câmera negado",
+        "photo_capture_failed": "Captura de foto falhou",
+        "upload_failed": "Upload falhou: {{error}}",
+        "time_entry_failed": "Registro falhou: {{error}}",
+        "punch_recorded_mock": "✓ Registro salvo! (Modo simulado)",
+        "punch_recorded_real": "✓ Registro salvo! Aguardando aprovação do supervisor.",
+        "for_manual_verification": "Para verificação manual se o reconhecimento facial não estiver disponível",
+        "simulated_mode": "Modo simulado (modelos não necessários)",
+        "loading_models": "Carregando modelos de detecção facial...",
+        "ready_for_detection": "Pronto para detecção facial",
+        "failed_load_models": "Erro ao carregar modelos - usando modo simulado"
+      },
+
+      "toggles": {
+        "enable_real_face_detection": "Habilitar Detecção Facial Real",
+        "use_real_database": "Usar Banco de Dados Real",
+        "enabled": "Habilitado",
+        "disabled": "Desabilitado",
+        "using_models": "Usando modelos face-api.js para detecção real",
+        "using_simulated": "Usando modo simulado (timer de 3s)",
+        "saving_to_supabase": "Salvando em Supabase detail_hub_time_entries",
+        "using_mock_data": "Usando dados simulados (apenas estado)"
+      },
+
+      "placeholders": {
+        "enter_employee_id": "Digite o ID do Funcionário (ex., EMP001)"
+      },
+
+      "recent_activity": "Atividade Recente",
+      "last_action": "Última Ação",
+      "kiosk_settings": "Configurações do Quiosque"
+    },
+
+    "employees": {
+      "title": "Portal de Funcionários",
+      "subtitle": "Gerenciar equipe de detalhamento e lavagem",
+      "add_employee": "Adicionar Funcionário",
+      "employee_list": "Lista de Funcionários",
+      "search_employees": "Buscar funcionários...",
+      "active": "Ativo",
+      "inactive": "Inativo",
+      "suspended": "Suspenso",
+      "terminated": "Desligado",
+      "enroll_face_id": "Registrar ID Facial",
+      "edit": "Editar",
+      "view_timecard": "Ver Cartão de Ponto",
+      "employee_details": "Detalhes do Funcionário",
+      "employee_number": "Número do Funcionário",
+      "role": "Função",
+      "department": "Departamento",
+      "hourly_rate": "Taxa por Hora",
+      "hire_date": "Data de Contratação",
+      "status": "Status",
+      "last_punch": "Último Registro",
+      "actions": "Ações",
+
+      "roles": {
+        "detailer": "Detalhador",
+        "car_wash": "Lavagem de Carros",
+        "supervisor": "Supervisor",
+        "manager": "Gerente",
+        "technician": "Técnico"
+      },
+
+      "departments": {
+        "detail": "Detalhamento",
+        "car_wash": "Lavagem",
+        "service": "Serviço",
+        "management": "Gerência"
+      }
+    },
+
+    "timecard": {
+      "title": "Sistema de Cartão de Ponto",
+      "subtitle": "Rastrear horas dos funcionários e gerenciar folha de pagamento",
+      "daily_view": "Visualização Diária",
+      "weekly_summary": "Resumo Semanal",
+      "monthly_report": "Relatório Mensal",
+      "daily_timecards": "Cartões Diários",
+      "export": "Exportar",
+      "filter": "Filtrar",
+      "pick_date": "Escolher data",
+      "switch_to_mock": "Mudar para Simulado",
+      "switch_to_real_db": "Mudar para BD Real",
+      "real_database": "Banco de Dados Real",
+      "mock_data": "Dados Simulados",
+
+      "stats": {
+        "total_hours": "Horas Totais",
+        "overtime_hours": "Horas Extras",
+        "active_employees": "Funcionários Ativos",
+        "total_payroll": "Folha de Pagamento Total"
+      },
+
+      "table": {
+        "employee": "Funcionário",
+        "clock_in": "Entrada",
+        "clock_out": "Saída",
+        "break": "Intervalo",
+        "total_hours": "Horas Totais",
+        "overtime": "Horas Extras",
+        "pay": "Pagamento",
+        "status": "Status",
+        "hours_abbr": "h"
+      },
+
+      "status_badges": {
+        "complete": "Completo",
+        "active": "Ativo",
+        "clocked_in": "Registrado",
+        "late": "Atrasado"
+      },
+
+      "photo_reviews": {
+        "title": "Registros com Foto Pendentes de Revisão",
+        "pending_count": "{{count}} Pendentes",
+        "no_pending": "Nenhuma revisão pendente"
+      }
+    },
+
+    "photo_review": {
+      "title": "Verificação de Foto Necessária",
+      "pending_review": "Revisão Pendente",
+      "employee": "Funcionário",
+      "approve": "Aprovar",
+      "reject": "Rejeitar",
+      "verify_identity": "Verifique a identidade do funcionário antes de aprovar o registro",
+      "photo_punch": "Registro com Foto",
+      "captured": "✓ Capturado"
+    },
+
+    "facial_enrollment": {
+      "title": "Registro de ID Facial",
+      "subtitle": "Registro de Reconhecimento Facial",
+      "setting_up_for": "Configurando ID facial para {{employeeName}}",
+      "instructions_title": "Por favor siga estas instruções para um registro bem-sucedido:",
+      "step_1": "Posicione seu rosto no centro da câmera",
+      "step_2": "Olhe diretamente para a câmera",
+      "step_3": "Permaneça imóvel durante o processo de captura",
+      "step_4": "Certifique-se de ter boa iluminação no seu rosto",
+      "start_enrollment": "Iniciar Registro",
+      "cancel": "Cancelar",
+      "restart": "Reiniciar",
+      "try_again": "Tentar Novamente",
+
+      "steps": {
+        "instructions": "Instruções",
+        "capturing": "Capturando Dados Faciais",
+        "processing": "Processando Dados Faciais",
+        "complete": "Registro Completo!",
+        "error": "Erro"
+      },
+
+      "messages": {
+        "remain_still": "Por favor permaneça imóvel enquanto capturamos seu rosto",
+        "capturing_progress": "Capturando... {{current}}/5",
+        "creating_profile": "Criando seu perfil de reconhecimento facial...",
+        "success_message": "{{employeeName}} agora pode usar reconhecimento facial para registro de ponto",
+        "camera_error": "Não foi possível acessar a câmera. Por favor verifique as permissões.",
+        "enrollment_failed": "O registro falhou. Por favor tente novamente."
+      },
+
+      "quality": {
+        "title": "Validação de Qualidade",
+        "enabled_description": "Capturar apenas imagens faciais de alta qualidade",
+        "disabled_description": "Capturar todos os quadros (sem verificação de qualidade)",
+        "good_quality": "✓ Boa qualidade ({{confidence}}%)"
+      }
+    },
+
+    "kiosk_manager": {
+      "title": "Gerenciador de Quiosques",
+      "subtitle": "Configurar e monitorar estações de relógio de ponto",
+      "add_kiosk": "Adicionar Quiosque",
+      "kiosk_list": "Lista de Quiosques",
+      "kiosk_details": "Detalhes do Quiosque",
+      "kiosk_name": "Nome do Quiosque",
+      "location": "Localização",
+      "kiosk_code": "Código do Quiosque",
+      "device_type": "Tipo de Dispositivo",
+      "camera_resolution": "Resolução da Câmera",
+      "has_lighting": "Tem Iluminação",
+      "status": "Status",
+      "last_heartbeat": "Último Sinal",
+      "settings": "Configurações",
+      "edit": "Editar",
+      "delete": "Excluir",
+
+      "status_values": {
+        "online": "Online",
+        "offline": "Offline",
+        "maintenance": "Manutenção",
+        "error": "Erro"
+      },
+
+      "device_types": {
+        "tablet": "Tablet",
+        "desktop": "Desktop",
+        "mobile": "Celular",
+        "dedicated_terminal": "Terminal Dedicado"
+      },
+
+      "features": {
+        "face_recognition_enabled": "Reconhecimento Facial Habilitado",
+        "photo_fallback_enabled": "Backup com Foto Habilitado",
+        "pin_fallback_enabled": "Backup com PIN Habilitado",
+        "require_supervisor_approval": "Requer Aprovação do Supervisor"
+      }
+    },
+
+    "analytics": {
+      "title": "Análise de Detalhamento",
+      "subtitle": "Métricas de desempenho e insights",
+      "labor_costs": "Custos Trabalhistas",
+      "productivity": "Produtividade",
+      "attendance": "Presença",
+      "overtime": "Tendências de Horas Extras",
+      "hourly_breakdown": "Detalhamento por Hora",
+      "department_comparison": "Comparação por Departamento",
+      "weekly_hours": "Horas Semanais",
+      "efficiency_rating": "Classificação de Eficiência"
+    },
+
+    "reports": {
+      "title": "Central de Relatórios",
+      "subtitle": "Gerar e exportar relatórios detalhados",
+      "generate_report": "Gerar Relatório",
+      "payroll_report": "Relatório de Folha de Pagamento",
+      "attendance_report": "Relatório de Presença",
+      "productivity_report": "Relatório de Produtividade",
+      "labor_cost_analysis": "Análise de Custos Trabalhistas",
+      "export_pdf": "Exportar PDF",
+      "export_excel": "Exportar Excel",
+      "date_range": "Intervalo de Datas",
+      "select_report_type": "Selecionar Tipo de Relatório"
+    },
+
+    "invoices": {
+      "title": "Central de Faturamento",
+      "subtitle": "Faturamento e cobrança de clientes",
+      "create_invoice": "Criar Fatura",
+      "invoice_list": "Lista de Faturas",
+      "client_name": "Nome do Cliente",
+      "description": "Descrição",
+      "amount": "Valor",
+      "due_date": "Data de Vencimento",
+      "status": "Status",
+      "actions": "Ações",
+
+      "status_values": {
+        "draft": "Rascunho",
+        "sent": "Enviado",
+        "paid": "Pago",
+        "overdue": "Vencido",
+        "cancelled": "Cancelado"
+      }
+    },
+
+    "toasts": {
+      "employee_created": "Funcionário Criado",
+      "employee_created_desc": "{{firstName}} {{lastName}} foi adicionado com sucesso.",
+      "employee_updated": "Funcionário Atualizado",
+      "employee_updated_desc": "As informações do funcionário foram atualizadas com sucesso.",
+      "employee_deleted": "Funcionário Excluído",
+      "employee_deleted_desc": "O funcionário foi removido do sistema.",
+
+      "clocked_in": "Entrada Registrada",
+      "clocked_in_desc": "Entrada registrada com sucesso às {{time}}",
+      "clocked_out": "Saída Registrada",
+      "clocked_out_desc": "Saída registrada com sucesso. Total de horas: {{hours}}",
+      "already_clocked_in": "Já Registrado",
+      "already_clocked_in_desc": "O funcionário já tem entrada registrada",
+      "no_active_entry": "Sem Registro Ativo",
+      "no_active_entry_desc": "Nenhum registro de ponto ativo encontrado",
+
+      "photo_punch_recorded": "Registro com Foto Salvo",
+      "photo_punch_desc": "Foto capturada. Aguardando aprovação do supervisor.",
+      "punch_approved": "Registro Aprovado",
+      "punch_approved_desc": "O registro de ponto foi verificado e aprovado.",
+      "punch_rejected": "Registro Rejeitado",
+      "punch_rejected_desc": "O registro de ponto foi rejeitado e removido.",
+
+      "enrollment_complete": "Registro Completo",
+      "enrollment_complete_desc": "O reconhecimento facial foi configurado com sucesso.",
+      "enrollment_failed": "Registro Falhou",
+
+      "error": "Erro",
+      "success": "Sucesso",
+      "clock_in_failed": "Erro ao Registrar Entrada",
+      "clock_out_failed": "Erro ao Registrar Saída"
+    },
+
+    "errors": {
+      "camera_access": "Não foi possível acessar a câmera. Por favor verifique as permissões.",
+      "enrollment_failed": "O registro falhou. Por favor tente novamente.",
+      "no_models": "Modelos de detecção facial não carregados. Chame loadFaceDetectionModels() primeiro.",
+      "upload_failed": "O upload falhou",
+      "invalid_format": "Formato de imagem inválido",
+      "file_too_large": "Arquivo muito grande (~{{size}}MB). Máximo 5MB.",
+      "format_not_allowed": "Formato {{format}} não permitido. Use JPEG, PNG ou WebP.",
+      "network_error": "Ocorreu um erro de rede",
+      "storage_error": "Erro ao salvar no armazenamento"
+    },
+
+    "common": {
+      "loading": "Carregando...",
+      "save": "Salvar",
+      "cancel": "Cancelar",
+      "delete": "Excluir",
+      "edit": "Editar",
+      "view": "Visualizar",
+      "approve": "Aprovar",
+      "reject": "Rejeitar",
+      "enabled": "Habilitado",
+      "disabled": "Desabilitado",
+      "active": "Ativo",
+      "inactive": "Inativo",
+      "yes": "Sim",
+      "no": "Não",
+      "search": "Buscar...",
+      "filter": "Filtrar",
+      "export": "Exportar",
+      "settings": "Configurações"
+    }
+  }
+}

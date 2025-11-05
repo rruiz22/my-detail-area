@@ -29,6 +29,17 @@ interface TimeEntry {
   overtime_hours: number;
   status: 'active' | 'complete';
   created_at: string;
+
+  // PHASE 5: Photo fallback fields (NEW - optional)
+  punch_in_method?: 'face' | 'pin' | 'manual' | 'photo_fallback';
+  punch_out_method?: 'face' | 'pin' | 'manual' | 'photo_fallback';
+  photo_in_url?: string; // Supabase Storage URL for clock in photo
+  photo_out_url?: string; // Supabase Storage URL for clock out photo
+  face_confidence_in?: number; // 0-100
+  face_confidence_out?: number; // 0-100
+  requires_manual_verification?: boolean; // True if photo fallback used
+  verified_by?: string; // User ID who verified
+  verified_at?: string; // Timestamp of verification
 }
 
 interface FaceRecognitionResult {
@@ -239,11 +250,18 @@ export const useDetailHubIntegration = () => {
   }, [employees, toast]);
 
   // Time Tracking (Mock)
-  const clockIn = useCallback(async (employeeId: string, method: 'face' | 'manual' = 'manual') => {
+  const clockIn = useCallback(async (
+    employeeId: string,
+    method: 'face' | 'pin' | 'manual' | 'photo_fallback' = 'manual',
+    options?: {
+      photoUrl?: string; // PHASE 5: Photo fallback URL
+      faceConfidence?: number; // Face detection confidence (0-100)
+    }
+  ) => {
     setLoading(true);
     try {
       // Check if employee already clocked in
-      const existingEntry = timeEntries.find(entry => 
+      const existingEntry = timeEntries.find(entry =>
         entry.employee_id === employeeId && entry.status === 'active'
       );
 
@@ -259,21 +277,34 @@ export const useDetailHubIntegration = () => {
         regular_hours: 0,
         overtime_hours: 0,
         total_hours: 0,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+
+        // PHASE 5: Photo fallback fields (NEW - optional)
+        punch_in_method: method,
+        photo_in_url: options?.photoUrl,
+        face_confidence_in: options?.faceConfidence,
+        requires_manual_verification: method === 'photo_fallback' || (options?.faceConfidence && options.faceConfidence < 80)
       };
 
       setTimeEntries(prev => [...prev, newEntry]);
 
+      // Different toast message for photo fallback
+      const toastMessage = method === 'photo_fallback'
+        ? `Photo captured. Awaiting supervisor approval.`
+        : `Successfully clocked in at ${new Date().toLocaleTimeString()}`;
+
       toast({
-        title: "Clocked In",
-        description: `Successfully clocked in at ${new Date().toLocaleTimeString()}`
+        title: method === 'photo_fallback' ? "Photo Punch Recorded" : "Clocked In",
+        description: toastMessage,
+        variant: method === 'photo_fallback' ? 'default' : 'default'
       });
 
       return { data: newEntry, error: null };
     } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       toast({
         title: "Clock In Failed",
-        description: error.message,
+        description: errorMessage,
         variant: "destructive"
       });
       return { data: null, error };
@@ -444,6 +475,73 @@ export const useDetailHubIntegration = () => {
     }
   }, [timeEntries, toast]);
 
+  // PHASE 5: Photo Review & Approval (NEW - for supervisor verification)
+  const approveTimeEntry = useCallback(async (timeEntryId: string) => {
+    setLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Update time entry: mark as verified
+      setTimeEntries(prev => prev.map(entry =>
+        entry.id === timeEntryId
+          ? {
+              ...entry,
+              requires_manual_verification: false,
+              verified_by: 'current-user-id', // TODO: Get from auth context
+              verified_at: new Date().toISOString()
+            }
+          : entry
+      ));
+
+      toast({
+        title: "Punch Approved",
+        description: "Time entry has been verified and approved."
+      });
+
+      return { success: true, error: null };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Approval failed';
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive"
+      });
+      return { success: false, error };
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
+
+  const rejectTimeEntry = useCallback(async (timeEntryId: string) => {
+    setLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Remove the rejected time entry
+      setTimeEntries(prev => prev.filter(entry => entry.id !== timeEntryId));
+
+      toast({
+        title: "Punch Rejected",
+        description: "Time entry has been rejected and removed.",
+        variant: "default"
+      });
+
+      return { success: true, error: null };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Rejection failed';
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive"
+      });
+      return { success: false, error };
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
+
   return {
     // State
     loading,
@@ -465,6 +563,10 @@ export const useDetailHubIntegration = () => {
     startBreak,
     endBreak,
     fetchTimeEntries,
+
+    // PHASE 5: Photo Review (NEW - for supervisor approval)
+    approveTimeEntry,
+    rejectTimeEntry,
 
     // Utilities
     generateEmployeeNumber

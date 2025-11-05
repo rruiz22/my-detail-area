@@ -79,11 +79,11 @@ const KioskManager = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Online":
-        return <Badge className="bg-green-100 text-green-800">Online</Badge>;
+        return <Badge className="bg-green-100 text-green-800">{t('detail_hub.kiosk_manager.status_values.online')}</Badge>;
       case "Offline":
-        return <Badge className="bg-red-100 text-red-800">Offline</Badge>;
+        return <Badge className="bg-red-100 text-red-800">{t('detail_hub.kiosk_manager.status_values.offline')}</Badge>;
       case "Warning":
-        return <Badge className="bg-yellow-100 text-yellow-800">Warning</Badge>;
+        return <Badge className="bg-yellow-100 text-yellow-800">{t('common.status.warning')}</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -111,33 +111,33 @@ const KioskManager = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Kiosk Manager</h1>
-          <p className="text-muted-foreground">Configure and monitor time clock kiosks</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t('detail_hub.kiosk_manager.title')}</h1>
+          <p className="text-muted-foreground">{t('detail_hub.kiosk_manager.subtitle')}</p>
         </div>
         <Dialog open={isAddingKiosk} onOpenChange={setIsAddingKiosk}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="w-4 h-4 mr-2" />
-              Add Kiosk
+              {t('detail_hub.kiosk_manager.add_kiosk')}
             </Button>
           </DialogTrigger>
           <DialogContent className="z-50 max-w-2xl max-h-[90vh] overflow-y-auto bg-background">
             <DialogHeader>
-              <DialogTitle>Add New Kiosk</DialogTitle>
+              <DialogTitle>{t('detail_hub.kiosk_manager.add_kiosk')}</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="kioskName">Kiosk Name</Label>
+                  <Label htmlFor="kioskName">{t('detail_hub.kiosk_manager.kiosk_name')}</Label>
                   <Input id="kioskName" placeholder="Main Entrance" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="kioskId">Kiosk ID</Label>
+                  <Label htmlFor="kioskId">{t('detail_hub.kiosk_manager.kiosk_code')}</Label>
                   <Input id="kioskId" placeholder="KIOSK-004" />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
+                <Label htmlFor="location">{t('detail_hub.kiosk_manager.location')}</Label>
                 <Input id="location" placeholder="Detail Department - Front Door" />
               </div>
               <div className="space-y-2">
@@ -156,7 +156,7 @@ const KioskManager = () => {
               </div>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="faceRecognition">Enable Face Recognition</Label>
+                  <Label htmlFor="faceRecognition">{t('detail_hub.kiosk_manager.features.face_recognition_enabled')}</Label>
                   <Switch id="faceRecognition" defaultChecked />
                 </div>
                 <div className="flex items-center justify-between">
@@ -171,10 +171,10 @@ const KioskManager = () => {
             </div>
             <div className="flex justify-end space-x-2">
               <Button variant="outline" onClick={() => setIsAddingKiosk(false)}>
-                Cancel
+                {t('detail_hub.common.cancel')}
               </Button>
               <Button onClick={() => setIsAddingKiosk(false)}>
-                Add Kiosk
+                {t('detail_hub.kiosk_manager.add_kiosk')}
               </Button>
             </div>
           </DialogContent>
@@ -198,7 +198,7 @@ const KioskManager = () => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Online</p>
+                <p className="text-sm font-medium text-muted-foreground">{t('detail_hub.kiosk_manager.status_values.online')}</p>
                 <p className="text-2xl font-bold text-green-600">{systemStats.onlineKiosks}</p>
               </div>
               <CheckCircle className="w-8 h-8 text-green-600" />
@@ -232,26 +232,26 @@ const KioskManager = () => {
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsTrigger value="settings">{t('detail_hub.common.settings')}</TabsTrigger>
           <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Kiosk Status</CardTitle>
+              <CardTitle>{t('detail_hub.kiosk_manager.status')}</CardTitle>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Kiosk</TableHead>
-                    <TableHead>Location</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead>{t('detail_hub.kiosk_manager.location')}</TableHead>
+                    <TableHead>{t('detail_hub.kiosk_manager.status')}</TableHead>
                     <TableHead>Camera</TableHead>
                     <TableHead>Today</TableHead>
                     <TableHead>Last Ping</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead>{t('common.action_buttons.add')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -316,7 +316,7 @@ const KioskManager = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="globalFaceRecognition">Global Face Recognition</Label>
+                  <Label htmlFor="globalFaceRecognition">{t('detail_hub.kiosk_manager.features.face_recognition_enabled')}</Label>
                   <Switch id="globalFaceRecognition" defaultChecked />
                 </div>
                 <div className="flex items-center justify-between">
@@ -350,7 +350,7 @@ const KioskManager = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="requirePhoto">Require Photo for Punches</Label>
+                  <Label htmlFor="requirePhoto">{t('detail_hub.kiosk_manager.features.require_supervisor_approval')}</Label>
                   <Switch id="requirePhoto" />
                 </div>
                 <div className="flex items-center justify-between">
