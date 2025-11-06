@@ -7,6 +7,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -25,7 +35,7 @@ import { useGetReady } from "@/hooks/useGetReady";
 import { useVehicleManagement } from "@/hooks/useVehicleManagement.tsx";
 import { useVinDecoding } from "@/hooks/useVinDecoding";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Zap } from "lucide-react";
+import { AlertTriangle, Loader2, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -85,6 +95,20 @@ export function VehicleFormModal({
   >({});
   const [loadingVehicle, setLoadingVehicle] = useState(false);
   const [vinDecoded, setVinDecoded] = useState(false);
+  const [duplicateVinWarning, setDuplicateVinWarning] = useState<{
+    show: boolean;
+    existingVehicles: Array<{
+      stock_number: string;
+      vehicle_year: number;
+      vehicle_make: string;
+      vehicle_model: string;
+      status: string;
+      get_ready_steps?: {
+        name: string;
+        color: string;
+      };
+    }>;
+  }>({ show: false, existingVehicles: [] });
 
   const isEditMode = !!vehicleId;
   const loading = isCreating || isUpdating;
@@ -153,6 +177,7 @@ export function VehicleFormModal({
       setFormData(initialFormData);
       setErrors({});
       setVinDecoded(false);
+      setDuplicateVinWarning({ show: false, existingVehicles: [] });
     }
   }, [open]);
 
@@ -194,7 +219,7 @@ export function VehicleFormModal({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent, forceCreate = false) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -209,11 +234,48 @@ export function VehicleFormModal({
       return;
     }
 
-    try {
-      // Clean and normalize input data
-      const cleanStockNumber = formData.stock_number.trim().toUpperCase().replace(/\s+/g, '');
-      const cleanVin = formData.vin.trim().toUpperCase().replace(/\s+/g, '');
+    // Clean and normalize input data
+    const cleanStockNumber = formData.stock_number.trim().toUpperCase().replace(/\s+/g, '');
+    const cleanVin = formData.vin.trim().toUpperCase().replace(/\s+/g, '');
 
+    // Check for duplicate VIN before creating (only for new vehicles, not edits)
+    if (!isEditMode && !forceCreate && cleanVin) {
+      try {
+        const { data: existingVehicles, error: checkError } = await supabase
+          .from('get_ready_vehicles')
+          .select(`
+            stock_number,
+            vehicle_year,
+            vehicle_make,
+            vehicle_model,
+            status,
+            get_ready_steps!get_ready_vehicles_step_id_fkey (
+              name,
+              color
+            )
+          `)
+          .eq('dealer_id', currentDealership.id)
+          .eq('vin', cleanVin)
+          .is('deleted_at', null);
+
+        if (checkError) {
+          console.error('Error checking for duplicate VIN:', checkError);
+        }
+
+        if (existingVehicles && existingVehicles.length > 0) {
+          // VIN already exists - show warning
+          setDuplicateVinWarning({
+            show: true,
+            existingVehicles: existingVehicles
+          });
+          return; // Stop here and wait for user confirmation
+        }
+      } catch (error) {
+        console.error('Error checking duplicate VIN:', error);
+      }
+    }
+
+    try {
       const vehicleData = {
         stock_number: cleanStockNumber,
         vin: cleanVin,
@@ -289,10 +351,75 @@ export function VehicleFormModal({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        preventOutsideClick={true}
-        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 overflow-hidden sm:max-w-2xl sm:h-auto sm:max-h-[98vh] sm:rounded-lg sm:border sm:mx-4">
+    <>
+      {/* Duplicate VIN Warning Dialog */}
+      <AlertDialog open={duplicateVinWarning.show} onOpenChange={(open) => {
+        if (!open) {
+          setDuplicateVinWarning({ show: false, existingVehicles: [] });
+        }
+      }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-amber-500" />
+              {t("get_ready.duplicate_vin.title")}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-4">
+              <p>{t("get_ready.duplicate_vin.description")}</p>
+
+              <div className="bg-muted p-4 rounded-lg space-y-2">
+                <p className="font-semibold text-sm text-foreground">
+                  {t("get_ready.duplicate_vin.existing_vehicles")}:
+                </p>
+                {duplicateVinWarning.existingVehicles.map((vehicle, index) => (
+                  <div key={index} className="text-xs bg-background p-2 rounded border">
+                    <div className="font-mono font-semibold text-foreground">
+                      {vehicle.stock_number}
+                    </div>
+                    <div className="text-muted-foreground">
+                      {vehicle.vehicle_year} {vehicle.vehicle_make} {vehicle.vehicle_model}
+                    </div>
+                    {vehicle.get_ready_steps && (
+                      <Badge
+                        className="mt-1"
+                        style={{
+                          backgroundColor: vehicle.get_ready_steps.color,
+                          color: '#fff'
+                        }}
+                      >
+                        {vehicle.get_ready_steps.name}
+                      </Badge>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <p className="text-sm font-medium text-foreground">
+                {t("get_ready.duplicate_vin.confirmation")}
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>
+              {t("common.action_buttons.cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                setDuplicateVinWarning({ show: false, existingVehicles: [] });
+                handleSubmit(e as any, true); // Force create
+              }}
+            >
+              {t("get_ready.duplicate_vin.confirm_add")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Main Vehicle Form Dialog */}
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent
+          preventOutsideClick={true}
+          className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 overflow-hidden sm:max-w-2xl sm:h-auto sm:max-h-[98vh] sm:rounded-lg sm:border sm:mx-4">
         <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-6 sm:px-8 py-3 sm:py-4 border-b border-border sm:rounded-t-lg">
           <DialogTitle className="text-base sm:text-lg font-semibold">
             {isEditMode
@@ -623,7 +750,8 @@ export function VehicleFormModal({
             </form>
           )}
         </ScrollArea>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

@@ -209,7 +209,12 @@ export function useApproveVehicle() {
 
       // Invalidate queries to refresh data
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals'] });
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
+      });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', variables.vehicleId] });
 
@@ -261,7 +266,12 @@ export function useRejectVehicle() {
 
       // Invalidate queries
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals'] });
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
+      });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', variables.vehicleId] });
 
@@ -311,7 +321,12 @@ export function useBulkApproveVehicles() {
       });
 
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals'] });
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
+      });
 
       // ✅ Invalidate approval count to update badge immediately
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
@@ -355,7 +370,12 @@ export function useRequestApproval() {
       });
 
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals'] });
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
+      });
 
       // ✅ Invalidate approval count to update badge immediately
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });

@@ -126,6 +126,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
   const [assignedUsers, setAssignedUsers] = useState<AssignedUser[]>([]);
   const [services, setServices] = useState([]);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [pendingServiceIds, setPendingServiceIds] = useState<string[]>([]); // Store service IDs until services are loaded
   const [loading, setLoading] = useState(false);
   const [vinDecoded, setVinDecoded] = useState(false);
   const [needsAutopopulate, setNeedsAutopopulate] = useState(false);
@@ -190,7 +191,14 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
           scheduledDate: order.scheduledDate || order.scheduled_date ? safeParseDate(order.scheduledDate || order.scheduled_date) || undefined : undefined,
           scheduledTime: order.scheduledTime || order.scheduled_time || ''
         });
-        setSelectedServices(order.services || []);
+        // Store service IDs in pending state - will be applied once services are loaded
+        // CRITICAL: order.services can be array of strings OR array of objects {id, name, price}
+        const servicesData = Array.isArray(order.services) ? order.services : [];
+        const serviceIds = servicesData.map(service =>
+          typeof service === 'string' ? service : service.id
+        );
+        setPendingServiceIds(serviceIds);
+        setSelectedServices([]); // Clear selected services until they can be validated
         // Do NOT set dealership here - let the useEffect handle it after dealerships load (prevents race condition)
         // setSelectedDealership(order.dealerId?.toString() || '');
       } else {
@@ -317,6 +325,25 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
       }
     }
   }, [needsAutopopulate, dealerships.length, order]);
+
+  // Apply pending service IDs once services are loaded (CRITICAL for edit mode)
+  useEffect(() => {
+    if (pendingServiceIds.length > 0 && services.length > 0 && !loading) {
+      // Validate that pending service IDs exist in loaded services
+      const validServiceIds = pendingServiceIds.filter(serviceId =>
+        services.some((service: any) => service.id === serviceId)
+      );
+
+      if (validServiceIds.length > 0) {
+        dev('✅ Service Modal: Applying pending service IDs:', validServiceIds);
+        setSelectedServices(validServiceIds);
+        setPendingServiceIds([]); // Clear pending state
+      } else {
+        warn('⚠️ Service Modal: No valid service IDs found in loaded services');
+        setPendingServiceIds([]); // Clear pending state even if no matches
+      }
+    }
+  }, [pendingServiceIds.length, services.length, loading]);
 
   const fetchDealerships = async () => {
     try {

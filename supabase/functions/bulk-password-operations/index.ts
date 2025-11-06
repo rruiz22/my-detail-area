@@ -104,28 +104,47 @@ const handler = async (req: Request): Promise<Response> => {
     let failCount = 0;
     const errors: any[] = [];
 
+    // Get dealership and admin details (once, outside loop for efficiency)
+    const { data: dealerProfile } = await supabase
+      .from('dealerships')
+      .select('name')
+      .eq('id', dealerId)
+      .single();
+
+    const { data: adminProfile } = await supabase
+      .from('profiles')
+      .select('first_name, last_name')
+      .eq('id', user.id)
+      .single();
+
     // Process each user
     for (const targetUser of targetUsers || []) {
       try {
         const resetToken = crypto.randomUUID();
-        
+        const tempPassword = operationType === 'bulk_temp_password' ?
+          Math.random().toString(36).slice(-8) : null;
+
+        const resetType = operationType === 'bulk_reset' ? 'email_reset' :
+                         operationType === 'bulk_temp_password' ? 'temp_password' : 'force_change';
+
         // Create individual password reset request
-        const { error: resetError } = await supabase
+        const { data: resetRequest, error: resetError } = await supabase
           .from('password_reset_requests')
           .insert({
             user_id: targetUser.user_id,
             admin_id: user.id,
             token: resetToken,
-            request_type: operationType === 'bulk_reset' ? 'email_reset' :
-                         operationType === 'bulk_temp_password' ? 'temp_password' : 'force_change',
+            request_type: resetType,
             force_change_on_login: operationType === 'bulk_force_change',
-            temp_password: operationType === 'bulk_temp_password' ? 
-              Math.random().toString(36).slice(-8) : null,
+            temp_password: tempPassword,
+            expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
             metadata: {
               bulk_operation_id: bulkOp.id,
               dealer_id: dealerId
             }
-          });
+          })
+          .select()
+          .single();
 
         if (resetError) {
           throw resetError;
@@ -144,6 +163,25 @@ const handler = async (req: Request): Promise<Response> => {
               dealer_id: dealerId
             }
           });
+
+        // Send password reset email for this user
+        try {
+          await supabase.functions.invoke('send-password-reset-email', {
+            body: {
+              resetRequestId: resetRequest.id,
+              userEmail: targetUser.profiles.email,
+              userName: `${targetUser.profiles.first_name} ${targetUser.profiles.last_name}`.trim() || targetUser.profiles.email,
+              resetType,
+              tempPassword: tempPassword || undefined,
+              dealershipName: dealerProfile?.name || 'Your Dealership',
+              adminName: `${adminProfile?.first_name} ${adminProfile?.last_name}`.trim() || 'Administrator'
+            }
+          });
+          console.log(`Email sent to ${targetUser.profiles.email}`);
+        } catch (emailError) {
+          console.error(`Failed to send email to ${targetUser.profiles.email}:`, emailError);
+          // Don't fail the bulk operation, continue
+        }
 
         successCount++;
 

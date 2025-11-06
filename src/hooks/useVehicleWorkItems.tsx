@@ -314,10 +314,12 @@ export function useCreateWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
 
-      // ✅ NEW: Invalidate vehicles query to refresh Approvals tab
-      // When work item has approval_required=true, trigger marks vehicle for approval
-      // This ensures Approvals tab shows the vehicle immediately
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
+      });
 
       toast({
         title: t('common.success'),
@@ -385,9 +387,12 @@ export function useUpdateWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
 
-      // ✅ NEW: Invalidate vehicles query to refresh Approvals tab
-      // Changing approval_required might affect vehicle approval status via trigger
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
+      });
 
       toast({
         description: t('get_ready.work_items.updated_successfully'),
@@ -445,8 +450,12 @@ export function useApproveWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
 
-      // ✅ Invalidate vehicles query to refresh Approvals page
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
+      });
 
       // ✅ Invalidate approval count to update badge immediately
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
@@ -508,8 +517,12 @@ export function useDeclineWorkItem() {
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
 
-      // ✅ Invalidate vehicles query to refresh Approvals page
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
+      });
 
       // ✅ Invalidate approval count to update badge immediately
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });

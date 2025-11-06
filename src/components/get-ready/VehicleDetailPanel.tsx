@@ -18,6 +18,7 @@ import { useVehicleStatus } from '@/hooks/useVehicleStatus';
 import { useCurrentStepVisit, useVehicleTimeToLine } from '@/hooks/useVehicleStepHistory';
 import { useWorkItems } from '@/hooks/useVehicleWorkItems';
 import { supabase } from '@/integrations/supabase/client';
+import { useQueryClient } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { formatTimeDuration } from '@/utils/timeFormatUtils';
 import {
@@ -54,6 +55,7 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
   const { t } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { steps } = useGetReady();
   const { selectedVehicleId, setSelectedVehicleId } = useGetReadyStore();
   const { data: vehicleDetail, isLoading } = useVehicleDetail(selectedVehicleId);
@@ -200,6 +202,9 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
 
       if (error) throw error;
 
+      // ✅ FIXED: Invalidate recon orders cache to update list immediately
+      await queryClient.invalidateQueries({ queryKey: ['orders', 'recon'] });
+
       toast({
         title: t('recon_orders.toast.create_success'),
         description: t('recon_orders.toast.create_success_description'),
@@ -236,8 +241,12 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
       vehicle_model: vehicleDetail.vehicle_model,
       stockNumber: vehicleDetail.stock_number,
       stock_number: vehicleDetail.stock_number,
+      // ✅ FIXED: Include dealership to maintain consistency with ReconOrderModal pattern
+      // This makes the dealership field read-only with "Auto-selected" badge
+      dealerId: currentDealership?.id,
+      dealer_id: currentDealership?.id,
     };
-  }, [vehicleDetail]);
+  }, [vehicleDetail, currentDealership]);
 
   if (!selectedVehicleId) {
     return (
@@ -618,6 +627,7 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
           onClose={() => setShowReconModal(false)}
           onSave={handleSaveReconOrder}
           order={preFillOrderData}
+          mode="create"
         />
       )}
     </div>

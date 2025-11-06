@@ -171,6 +171,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
   const [vinDecoded, setVinDecoded] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [pendingServiceIds, setPendingServiceIds] = useState<string[]>([]); // Store service IDs until services are loaded
 
   // Combine loading states
   const loading = dealershipsLoading || servicesLoading;
@@ -260,8 +261,14 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
         });
 
         // Set related data with proper fallbacks (only for edit mode)
+        // Store service IDs in pending state - will be applied once services are loaded
+        // CRITICAL: order.services can be array of strings OR array of objects {id, name, price}
         const servicesData = isEditMode && Array.isArray(order.services) ? order.services : [];
-        setSelectedServices(servicesData);
+        const serviceIds = servicesData.map(service =>
+          typeof service === 'string' ? service : service.id
+        );
+        setPendingServiceIds(serviceIds);
+        setSelectedServices([]); // Clear selected services until they can be validated
       } else if (!order && !editModeInitialized.current) {
         // Only reset form for new order when order is explicitly null/undefined AND not in edit mode
         editModeInitialized.current = false;
@@ -315,6 +322,25 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
 
     // Priority 3: No dealer selected, field will show "Auto-selected" label
   }, [order, order?.dealer_id, order?.dealerId, dealerships.length, selectedDealership, currentDealership]);
+
+  // Apply pending service IDs once services are loaded (CRITICAL for edit mode)
+  useEffect(() => {
+    if (pendingServiceIds.length > 0 && services.length > 0 && !servicesLoading) {
+      // Validate that pending service IDs exist in loaded services
+      const validServiceIds = pendingServiceIds.filter(serviceId =>
+        services.some((service: DealerService) => service.id === serviceId)
+      );
+
+      if (validServiceIds.length > 0) {
+        console.log('✅ Recon Modal: Applying pending service IDs:', validServiceIds);
+        setSelectedServices(validServiceIds);
+        setPendingServiceIds([]); // Clear pending state
+      } else {
+        console.warn('⚠️ Recon Modal: No valid service IDs found in loaded services');
+        setPendingServiceIds([]); // Clear pending state even if no matches
+      }
+    }
+  }, [pendingServiceIds.length, services.length, servicesLoading]);
 
   const handleDealershipChange = (dealershipId: string) => {
     setSelectedDealershipWithLog(dealershipId);
@@ -603,10 +629,10 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
       >
         <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border">
           <DialogTitle className="text-base sm:text-lg font-semibold">
-            {order ? t('recon.edit_recon_order') : t('recon.create_recon_order')}
+            {isEditing ? t('recon.edit_recon_order') : t('recon.create_recon_order')}
           </DialogTitle>
           <div id="recon-order-modal-description" className="text-xs sm:text-sm text-muted-foreground">
-            {order ? 'Update reconditioning order details and services' : 'Create a new reconditioning order for dealer inventory'}
+            {isEditing ? 'Update reconditioning order details and services' : 'Create a new reconditioning order for dealer inventory'}
           </div>
         </DialogHeader>
 
@@ -939,10 +965,10 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                 {submitting ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    {order ? t('orders.updating') : t('orders.creating')}
+                    {isEditing ? t('orders.updating') : t('orders.creating')}
                   </>
                 ) : (
-                  order ? t('common.action_buttons.update') : t('common.action_buttons.create')
+                  isEditing ? t('common.action_buttons.update') : t('common.action_buttons.create')
                 )}
               </Button>
             </div>

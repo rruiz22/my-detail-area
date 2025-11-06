@@ -396,6 +396,7 @@ function createEmailTemplate({
 }
 
 // Cached template constants for better performance - Pure Notion-style (Gray-based, no blue)
+// Enterprise minimalist design: No emojis, refined typography, subtle spacing
 const DEFAULT_HTML_TEMPLATE = `
 <!DOCTYPE html>
 <html lang="en">
@@ -421,37 +422,39 @@ const DEFAULT_HTML_TEMPLATE = `
             overflow: hidden;
         }
         .header {
-            background-color: #111827;
+            background-color: #ffffff;
             padding: 32px 24px;
             text-align: center;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 2px solid #e5e7eb;
         }
         .header h1 {
-            color: #ffffff;
-            font-size: 24px;
+            color: #111827;
+            font-size: 22px;
             font-weight: 600;
             letter-spacing: -0.01em;
         }
         .content {
-            padding: 32px 24px;
+            padding: 40px 32px;
         }
         .content h2 {
             font-size: 20px;
             font-weight: 600;
             color: #111827;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            line-height: 1.4;
         }
         .content p {
             margin-bottom: 16px;
             color: #6b7280;
             font-size: 15px;
+            line-height: 1.6;
         }
         .invitation-box {
             background-color: #f9fafb;
             border: 1px solid #e5e7eb;
             border-radius: 6px;
             padding: 24px;
-            margin: 24px 0;
+            margin: 32px 0;
             text-align: center;
         }
         .invitation-box h3 {
@@ -464,37 +467,40 @@ const DEFAULT_HTML_TEMPLATE = `
             margin: 0;
             color: #6b7280;
             font-size: 14px;
+            line-height: 1.5;
         }
         .cta-container {
             text-align: center;
-            margin: 32px 0;
+            margin: 36px 0;
         }
         .cta-button {
             display: inline-block;
-            background-color: #10b981;
-            color: #ffffff;
-            padding: 12px 24px;
+            background-color: transparent;
+            color: #2563eb;
+            border: 2px solid #10b981;
+            padding: 12px 28px;
             text-decoration: none;
             border-radius: 6px;
             font-weight: 500;
             font-size: 15px;
-            transition: background-color 0.2s;
+            transition: all 0.2s ease;
         }
         .cta-button:hover {
-            background-color: #059669;
+            background-color: #f0fdf4;
+            border-color: #059669;
         }
         .details-box {
             background-color: #f3f4f6;
             border: 1px solid #e5e7eb;
             border-radius: 6px;
-            padding: 20px;
-            margin: 24px 0;
+            padding: 24px;
+            margin: 32px 0;
         }
         .details-box h4 {
             font-size: 15px;
             font-weight: 600;
             color: #111827;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
         .details-box ol {
             margin-left: 20px;
@@ -502,35 +508,38 @@ const DEFAULT_HTML_TEMPLATE = `
             font-size: 14px;
         }
         .details-box li {
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            line-height: 1.5;
         }
         .alert-box {
             background-color: #fef3c7;
             border: 1px solid #f59e0b;
             border-radius: 6px;
-            padding: 16px;
-            margin: 24px 0;
+            padding: 16px 20px;
+            margin: 32px 0;
         }
         .alert-box p {
             margin: 0;
             color: #92400e;
             font-size: 14px;
+            line-height: 1.5;
         }
         .features-section h4 {
             font-size: 16px;
             font-weight: 600;
             color: #111827;
-            margin: 24px 0 12px 0;
+            margin: 32px 0 16px 0;
         }
         .features-section ul {
             list-style: none;
             padding: 0;
         }
         .features-section li {
-            padding: 8px 0;
+            padding: 10px 0;
             color: #6b7280;
             font-size: 14px;
             border-bottom: 1px solid #f3f4f6;
+            line-height: 1.5;
         }
         .features-section li:last-child {
             border-bottom: none;
@@ -540,23 +549,25 @@ const DEFAULT_HTML_TEMPLATE = `
             font-weight: 600;
         }
         .signature {
-            margin-top: 32px;
+            margin-top: 40px;
             padding-top: 24px;
             border-top: 1px solid #e5e7eb;
             color: #6b7280;
             font-size: 14px;
+            line-height: 1.6;
         }
         .footer {
             background-color: #f9fafb;
             padding: 24px;
             text-align: center;
             color: #9ca3af;
-            font-size: 13px;
+            font-size: 12px;
             border-top: 1px solid #e5e7eb;
         }
         .footer p {
-            margin: 8px 0;
+            margin: 6px 0;
             color: #9ca3af;
+            line-height: 1.5;
         }
         .footer a {
             color: #6b7280;
@@ -577,18 +588,18 @@ const DEFAULT_HTML_TEMPLATE = `
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚗 You're Invited to My Detail Area!</h1>
+            <h1>You're Invited to My Detail Area</h1>
         </div>
 
         <div class="content">
-            <h2>Welcome to {{dealership_name}}!</h2>
+            <h2>Welcome to {{dealership_name}}</h2>
 
-            <p>Hello there!</p>
+            <p>Hello there,</p>
 
             <p>{{inviter_name}} has invited you to join <strong>{{dealership_name}}</strong> on My Detail Area, our comprehensive dealership management platform.</p>
 
             <div class="invitation-box">
-                <h3>🎯 Your Role: {{role_name}}</h3>
+                <h3>Your Role: {{role_name}}</h3>
                 <p>You've been assigned the <strong>{{role_name}}</strong> role, which will give you access to the tools and features you need to excel in your position.</p>
             </div>
 
@@ -607,26 +618,26 @@ const DEFAULT_HTML_TEMPLATE = `
             </div>
 
             <div class="alert-box">
-                <p><strong>⏰ Important:</strong> This invitation expires on <strong>{{expiration_date}}</strong>. Please accept it before then!</p>
+                <p><strong>Important:</strong> This invitation expires on <strong>{{expiration_date}}</strong>. Please accept it before then.</p>
             </div>
 
             <div class="features-section">
                 <h4>About My Detail Area</h4>
-                <p style="margin-bottom: 12px;">My Detail Area is your all-in-one dealership management solution featuring:</p>
+                <p style="margin-bottom: 16px;">My Detail Area is your all-in-one dealership management solution featuring:</p>
                 <ul>
-                    <li>🛍️ <strong>Sales Orders</strong> - Manage vehicle sales with VIN decoding & QR codes</li>
-                    <li>🔧 <strong>Service Orders</strong> - Streamlined service department workflows</li>
-                    <li>✨ <strong>Recon Orders</strong> - Vehicle reconditioning process tracking</li>
-                    <li>🚿 <strong>Car Wash</strong> - Quick service order management</li>
-                    <li>📞 <strong>Contacts</strong> - Customer relationship management with vCard QR</li>
-                    <li>💬 <strong>Real-time Chat</strong> - Team communication and collaboration</li>
-                    <li>📊 <strong>Reports</strong> - Business intelligence and export tools</li>
+                    <li><strong>Sales Orders</strong> - Manage vehicle sales with VIN decoding and QR codes</li>
+                    <li><strong>Service Orders</strong> - Streamlined service department workflows</li>
+                    <li><strong>Recon Orders</strong> - Vehicle reconditioning process tracking</li>
+                    <li><strong>Car Wash</strong> - Quick service order management</li>
+                    <li><strong>Contacts</strong> - Customer relationship management with vCard QR</li>
+                    <li><strong>Real-time Chat</strong> - Team communication and collaboration</li>
+                    <li><strong>Reports</strong> - Business intelligence and export tools</li>
                 </ul>
             </div>
 
             <p>If you have any questions about your invitation or need assistance getting started, please don't hesitate to reach out to {{inviter_name}} at <a href="mailto:{{inviter_email}}">{{inviter_email}}</a>.</p>
 
-            <p>We're excited to have you join our team!</p>
+            <p>We're excited to have you join our team.</p>
 
             <div class="signature">
                 <p>Best regards,<br>
@@ -649,9 +660,9 @@ const DEFAULT_HTML_TEMPLATE = `
 </html>`;
 
 const DEFAULT_TEXT_TEMPLATE = `
-🚗 You're Invited to My Detail Area!
+You're Invited to My Detail Area
 
-Hello there!
+Hello there,
 
 {{inviter_name}} has invited you to join {{dealership_name}} on My Detail Area, our comprehensive dealership management platform.
 
@@ -667,11 +678,11 @@ WHAT'S NEXT?
 3. Complete your profile and start using the platform
 4. Explore your dashboard and familiarize yourself with your tools
 
-⏰ IMPORTANT: This invitation expires on {{expiration_date}}. Please accept it before then!
+IMPORTANT: This invitation expires on {{expiration_date}}. Please accept it before then.
 
 ABOUT MY DETAIL AREA:
 My Detail Area is your all-in-one dealership management solution featuring:
-• Sales Orders - Manage vehicle sales with VIN decoding & QR codes
+• Sales Orders - Manage vehicle sales with VIN decoding and QR codes
 • Service Orders - Streamlined service department workflows
 • Recon Orders - Vehicle reconditioning process tracking
 • Car Wash - Quick service order management
@@ -681,7 +692,7 @@ My Detail Area is your all-in-one dealership management solution featuring:
 
 If you have any questions about your invitation or need assistance getting started, please reach out to {{inviter_name}} at {{inviter_email}}.
 
-We're excited to have you join our team!
+We're excited to have you join our team.
 
 Best regards,
 The {{dealership_name}} Team

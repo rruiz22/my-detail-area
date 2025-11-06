@@ -49,6 +49,7 @@ export function DeletedVehiclesDialog({ open, onOpenChange }: DeletedVehiclesDia
   const { t, i18n } = useTranslation();
   const { currentDealership } = useAccessibleDealerships();
   const { user } = useAuth();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
   const [restoringId, setRestoringId] = useState<string | null>(null);
 
@@ -106,7 +107,12 @@ export function DeletedVehiclesDialog({ open, onOpenChange }: DeletedVehiclesDia
     onSuccess: () => {
       // Invalidate queries to refresh both deleted and active vehicles
       queryClient.invalidateQueries({ queryKey: ['deleted-vehicles'] });
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
+      });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
       toast({ description: t('get_ready.deleted_vehicles.restore_success') });
       setRestoringId(null);

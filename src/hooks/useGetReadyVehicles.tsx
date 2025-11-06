@@ -663,7 +663,8 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
       return lastPage.hasMore ? allPages.length : undefined;
     },
     enabled: !!dealerId,
-    staleTime: 1000 * 30,
-    refetchOnMount: 'always', // ✅ FIX: Always refetch when dealer changes from null to valid
+    staleTime: 1000 * 10, // ✅ OPTIMIZED: Reduced from 30s to 10s for faster updates
+    refetchOnMount: true, // ✅ Always refetch on mount to catch server changes
+    refetchOnWindowFocus: false, // Prevent unnecessary refetches on window focus
   });
 }
