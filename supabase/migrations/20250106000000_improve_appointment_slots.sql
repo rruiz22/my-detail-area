@@ -50,10 +50,10 @@ BEGIN
     order_date := get_ny_timezone_date(OLD.due_date);
     order_hour := get_ny_timezone_hour(OLD.due_date);
 
-    -- Release the appointment slot
+    -- Release the appointment slot (cast dealer_id to INTEGER)
     BEGIN
       SELECT release_appointment_slot(
-        OLD.dealer_id,
+        OLD.dealer_id::INTEGER,
         order_date,
         order_hour
       ) INTO release_success;
@@ -112,7 +112,7 @@ BEGIN
       old_hour := get_ny_timezone_hour(OLD.due_date);
 
       BEGIN
-        PERFORM release_appointment_slot(OLD.dealer_id, old_date, old_hour);
+        PERFORM release_appointment_slot(OLD.dealer_id::INTEGER, old_date, old_hour);
 
         RAISE NOTICE 'Released old slot for order %: date=%, hour=%',
           OLD.id, old_date, old_hour;
@@ -127,7 +127,7 @@ BEGIN
       new_date := get_ny_timezone_date(NEW.due_date);
       new_hour := get_ny_timezone_hour(NEW.due_date);
 
-      -- Check slot availability
+      -- Check slot availability (cast dealer_id to INTEGER)
       SELECT
         gs.is_available,
         gs.available_slots,
@@ -136,18 +136,18 @@ BEGIN
         slot_available,
         available_count,
         max_cap
-      FROM get_available_slots(NEW.dealer_id, new_date, new_hour) gs
+      FROM get_available_slots(NEW.dealer_id::INTEGER, new_date, new_hour) gs
       LIMIT 1;
 
       -- Validate availability (allow if no record exists - default capacity)
       IF COALESCE(slot_available, TRUE) = FALSE THEN
         RAISE EXCEPTION 'Appointment slot not available for % at %:00 (% / % slots used)',
-          new_date, new_hour, COALESCE(max_cap - available_count, 0), COALESCE(max_cap, 4);
+          new_date, new_hour, COALESCE(max_cap - available_count, 0), COALESCE(max_cap, 3);
       END IF;
 
-      -- Reserve the new slot
+      -- Reserve the new slot (cast dealer_id to INTEGER)
       BEGIN
-        PERFORM reserve_appointment_slot(NEW.dealer_id, new_date, new_hour);
+        PERFORM reserve_appointment_slot(NEW.dealer_id::INTEGER, new_date, new_hour);
 
         RAISE NOTICE 'Reserved new slot for order %: date=%, hour=%',
           NEW.id, new_date, new_hour;

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -49,7 +49,8 @@ export const PasswordActivityLog = ({ dealerId }: PasswordActivityLogProps) => {
   const [filterType, setFilterType] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
 
-  const fetchActivities = useCallback(async () => {
+  // Regular function instead of useCallback to avoid infinite loop
+  const fetchActivities = async () => {
     try {
       setLoading(true);
 
@@ -100,13 +101,15 @@ export const PasswordActivityLog = ({ dealerId }: PasswordActivityLogProps) => {
     } finally {
       setLoading(false);
     }
-  }, [dealerId, getBulkOperations, getPasswordResetRequests]);
+  };
 
+  // Only run when dealerId changes, not when fetchActivities reference changes
   useEffect(() => {
     if (dealerId) {
       fetchActivities();
     }
-  }, [dealerId, fetchActivities]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dealerId]); // Only depend on dealerId
 
   const filteredActivities = activities.filter(activity => {
     const matchesSearch = !searchTerm || 

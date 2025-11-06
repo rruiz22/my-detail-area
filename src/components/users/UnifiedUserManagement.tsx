@@ -63,19 +63,9 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
   const [isCustomRoleModalOpen, setIsCustomRoleModalOpen] = useState(false);
 
   // Data fetching functions
-  const fetchUsersWithRoles = useCallback(async () => {
+  const fetchUsersWithRoles = async () => {
     try {
       setIsLoading(true);
-
-      // First, let's check the current user context
-      const { data: { user: currentUser } } = await supabase.auth.getUser();
-      console.log('🔍 DEBUG: Current authenticated user:', currentUser);
-
-      // Let's also test a simple count query to see if RLS is limiting our access
-      const { data: profileCount, error: countError } = await supabase
-        .from('profiles')
-        .select('*', { count: 'exact', head: true });
-      console.log('🔍 DEBUG: Total profiles count (head request):', profileCount, countError);
 
       // Fetch users with their dealer memberships (using LEFT JOIN to include all users)
       const { data: profilesData, error: profilesError } = await supabase
@@ -89,14 +79,33 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
         `)
         .order('email');
 
-
       if (profilesError) throw profilesError;
 
-      // Fetch roles for each user
+      // Fetch roles for each user (including custom roles)
       const usersWithRoles = await Promise.all(
         (profilesData || []).map(async (profile) => {
-          const { data: rolesData } = await supabase
-            .rpc('get_user_roles', { user_uuid: profile.id });
+          // Get custom roles from user_custom_roles table
+          const { data: customRolesData } = await supabase
+            .from('user_custom_roles')
+            .select(`
+              role_id,
+              expires_at,
+              custom_roles (
+                id,
+                name,
+                display_name
+              )
+            `)
+            .eq('user_id', profile.id)
+            .eq('is_active', true);
+
+          // Transform custom roles to match UserRole interface
+          const roles: UserRole[] = (customRolesData || []).map((cr: any) => ({
+            role_id: cr.role_id,
+            role_name: cr.custom_roles?.name || 'Unknown',
+            display_name: cr.custom_roles?.display_name || cr.custom_roles?.name || 'Unknown',
+            expires_at: cr.expires_at
+          }));
 
           // Get the dealership_id from profile first, then from active membership
           const activeMembership = profile.dealer_memberships?.find((m: { is_active: boolean; dealer_id: number }) => m.is_active);
@@ -109,7 +118,7 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
             last_name: profile.last_name,
             user_type: profile.user_type,
             dealership_id: dealershipId,
-            roles: rolesData || [],
+            roles: roles,
           };
         })
       );
@@ -124,8 +133,8 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
         return 0;
       });
 
-
       setUsers(sortedUsers);
+      setFilteredUsers(sortedUsers); // Initialize filtered users immediately
     } catch (error: unknown) {
       console.error('Error fetching users:', error);
       const errorMessage = error instanceof Error ? error.message : 'Error al cargar usuarios';
@@ -137,7 +146,7 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
     } finally {
       setIsLoading(false);
     }
-  }, [t, toast]);
+  };
 
   const fetchDealerships = async () => {
     try {
@@ -185,11 +194,13 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
   useEffect(() => {
     fetchUsersWithRoles();
     fetchDealerships();
-  }, [fetchUsersWithRoles]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
 
   useEffect(() => {
     filterUsers();
-  }, [filterUsers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [users, searchQuery, selectedDealership]); // Only re-filter when these change
 
   const getInitials = (user: User) => {
     const name = getDisplayName(user);
@@ -257,14 +268,16 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
   return (
     <PermissionGuard module="users" permission="read">
       <Tabs defaultValue="users" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-2 mb-6">
           <TabsTrigger value="users" className="flex items-center gap-2">
             <UsersIcon className="h-4 w-4" />
-            <span>{t('admin.dealer_users', 'Dealer Users')}</span>
+            <span className="hidden sm:inline">{t('admin.dealer_users', 'Dealer Users')}</span>
+            <span className="sm:hidden">{t('common.users', 'Users')}</span>
           </TabsTrigger>
           <TabsTrigger value="password-management" className="flex items-center gap-2">
             <Shield className="h-4 w-4" />
-            <span>{t('password_management.title')}</span>
+            <span className="hidden sm:inline">{t('password_management.title')}</span>
+            <span className="sm:hidden">{t('common.password', 'Password')}</span>
           </TabsTrigger>
         </TabsList>
 
@@ -345,7 +358,7 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
                   <TableHead>{t('user_management.user')}</TableHead>
                   <TableHead>{t('dealerships.dealership')}</TableHead>
                   <TableHead>{t('user_management.roles')}</TableHead>
-                  <TableHead>{t('common.fields.status')}</TableHead>
+                  <TableHead>{t('common.status')}</TableHead>
                   <TableHead className="text-right">{t('common.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
