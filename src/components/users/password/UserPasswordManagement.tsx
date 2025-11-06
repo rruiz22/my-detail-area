@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield, Key, Users, Settings, Activity } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { usePermissions } from '@/hooks/usePermissions';
 import { PasswordSecurityDashboard } from './PasswordSecurityDashboard';
 import { PasswordResetActions } from './PasswordResetActions';
 import { BulkPasswordOperations } from './BulkPasswordOperations';
@@ -14,13 +15,19 @@ import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 export const UserPasswordManagement = () => {
   const { t } = useTranslation();
   const { dealerships } = useAccessibleDealerships();
+  const { hasModulePermission } = usePermissions();
   const [selectedDealerId, setSelectedDealerId] = useState<number | null>(null);
+
+  // Check permissions once to avoid re-renders
+  const canWrite = useMemo(() => hasModulePermission('users', 'write'), [hasModulePermission]);
+  const canAdmin = useMemo(() => hasModulePermission('users', 'admin'), [hasModulePermission]);
 
   useEffect(() => {
     if (dealerships.length > 0 && !selectedDealerId) {
       setSelectedDealerId(dealerships[0].id);
     }
-  }, [dealerships, selectedDealerId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dealerships.length]); // Only depend on length, not full array
 
   if (!selectedDealerId) {
     return (
@@ -51,36 +58,41 @@ export const UserPasswordManagement = () => {
 
       {/* Main Content */}
       <Tabs defaultValue="dashboard" className="w-full">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className={`grid w-full ${canAdmin ? 'grid-cols-5' : canWrite ? 'grid-cols-3' : 'grid-cols-2'}`}>
           <TabsTrigger value="dashboard" className="flex items-center gap-2">
             <Activity className="h-4 w-4" />
             <span className="hidden sm:inline">{t('password_management.tabs.dashboard')}</span>
+            <span className="sm:hidden">{t('common.dashboard', 'Dashboard')}</span>
           </TabsTrigger>
-          
-          <PermissionGuard module="users" permission="write">
+
+          {canWrite && (
             <TabsTrigger value="reset" className="flex items-center gap-2">
               <Key className="h-4 w-4" />
               <span className="hidden sm:inline">{t('password_management.tabs.reset')}</span>
+              <span className="sm:hidden">{t('common.reset', 'Reset')}</span>
             </TabsTrigger>
-          </PermissionGuard>
-          
-          <PermissionGuard module="users" permission="admin">
+          )}
+
+          {canAdmin && (
             <TabsTrigger value="bulk" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               <span className="hidden sm:inline">{t('password_management.tabs.bulk')}</span>
+              <span className="sm:hidden">{t('common.bulk', 'Bulk')}</span>
             </TabsTrigger>
-          </PermissionGuard>
-          
-          <PermissionGuard module="users" permission="admin">
+          )}
+
+          {canAdmin && (
             <TabsTrigger value="policies" className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
               <span className="hidden sm:inline">{t('password_management.tabs.policies')}</span>
+              <span className="sm:hidden">{t('common.policies', 'Policies')}</span>
             </TabsTrigger>
-          </PermissionGuard>
-          
+          )}
+
           <TabsTrigger value="activity" className="flex items-center gap-2">
             <Activity className="h-4 w-4" />
             <span className="hidden sm:inline">{t('password_management.tabs.activity')}</span>
+            <span className="sm:hidden">{t('common.activity', 'Activity')}</span>
           </TabsTrigger>
         </TabsList>
 

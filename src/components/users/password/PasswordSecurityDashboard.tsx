@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -34,7 +34,8 @@ export const PasswordSecurityDashboard = ({ dealerId }: PasswordSecurityDashboar
   });
   const [loading, setLoading] = useState(true);
 
-  const fetchDashboardData = useCallback(async () => {
+  // Regular function instead of useCallback to avoid infinite loop
+  const fetchDashboardData = async () => {
     try {
       setLoading(true);
 
@@ -72,13 +73,15 @@ export const PasswordSecurityDashboard = ({ dealerId }: PasswordSecurityDashboar
     } finally {
       setLoading(false);
     }
-  }, [dealerId, getPasswordResetRequests, getBulkOperations, passwordPolicy]);
+  };
 
+  // Only run when dealerId or passwordPolicy changes
   useEffect(() => {
     if (dealerId) {
       fetchDashboardData();
     }
-  }, [dealerId, fetchDashboardData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dealerId, passwordPolicy]);
 
   const getSecurityScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-600';

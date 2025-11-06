@@ -89,7 +89,7 @@ export function DueDateTimePicker({
 
       // Check slot capacity from database
       const slotCapacity = availableSlots.find(slot => slot.hour_slot === hour);
-      const availableCount = slotCapacity?.available_slots ?? 4; // Default capacity 4
+      const availableCount = slotCapacity?.available_slots ?? 3; // Default capacity 3
       const isSlotFull = enforceBusinessRules && availableCount <= 0;
 
       slots.push({
@@ -97,7 +97,7 @@ export function DueDateTimePicker({
         label: timeString,
         disabled: isSlotFull,
         availableSlots: availableCount,
-        maxCapacity: slotCapacity?.max_capacity ?? 4
+        maxCapacity: slotCapacity?.max_capacity ?? 3
       });
     }
 
