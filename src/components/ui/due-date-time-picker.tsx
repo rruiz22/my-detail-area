@@ -2,7 +2,7 @@ import React from 'react';
 import { format, addDays, setHours, setMinutes, isToday, addHours } from 'date-fns';
 import { CalendarIcon, ClockIcon, Users, AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { safeParseDate } from '@/utils/dateUtils';
+import { safeParseDate, toNewYorkTime, createNewYorkDateTime, getHourInTimezone } from '@/utils/dateUtils';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -44,30 +44,38 @@ export function DueDateTimePicker({
   const [availableSlots, setAvailableSlots] = React.useState<AppointmentSlot[]>([]);
 
   // Generate time slots based on business hours
+  // All time calculations use New York timezone for consistency
   const generateTimeSlots = (selectedDate?: Date) => {
     const slots = [];
-    const now = new Date();
-    const isSelectedToday = selectedDate && isToday(selectedDate);
-    const currentHour = now.getHours();
 
     if (!selectedDate) return slots;
 
-    const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    // Convert to NY timezone for consistent business hour calculations
+    const nyNow = toNewYorkTime(new Date());
+    const nySelectedDate = toNewYorkTime(selectedDate);
+    const isSelectedToday = isToday(nySelectedDate);
+    const currentHour = nyNow.getHours();
+
+    const dayOfWeek = nySelectedDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 
     const startHour = enforceBusinessRules ? 8 : 0;
     let endHour = enforceBusinessRules ? 18 : 23;
 
     if (enforceBusinessRules) {
+      // Sundays closed
       if (dayOfWeek === 0) {
         return slots;
-      } else if (dayOfWeek === 6) {
+      }
+      // Saturdays close at 5 PM
+      else if (dayOfWeek === 6) {
         endHour = 17;
       }
     }
 
     for (let hour = startHour; hour <= endHour; hour++) {
+      // Enforce minimum 1 hour preparation time for today's slots
       if (enforceBusinessRules && isSelectedToday) {
-        const currentMinutes = now.getMinutes();
+        const currentMinutes = nyNow.getMinutes();
         const minimumHour = Math.ceil(currentHour + currentMinutes / 60) + 1;
 
         if (hour < minimumHour) {
@@ -75,11 +83,13 @@ export function DueDateTimePicker({
         }
       }
 
-      const time = setMinutes(setHours(new Date(), hour), 0);
+      // Create time display in NY timezone
+      const time = createNewYorkDateTime(nySelectedDate, hour);
       const timeString = format(time, 'h:mm a');
 
+      // Check slot capacity from database
       const slotCapacity = availableSlots.find(slot => slot.hour_slot === hour);
-      const availableCount = slotCapacity?.available_slots ?? 3;
+      const availableCount = slotCapacity?.available_slots ?? 4; // Default capacity 4
       const isSlotFull = enforceBusinessRules && availableCount <= 0;
 
       slots.push({
@@ -87,7 +97,7 @@ export function DueDateTimePicker({
         label: timeString,
         disabled: isSlotFull,
         availableSlots: availableCount,
-        maxCapacity: slotCapacity?.max_capacity ?? 3
+        maxCapacity: slotCapacity?.max_capacity ?? 4
       });
     }
 
@@ -118,25 +128,28 @@ export function DueDateTimePicker({
     // Load capacity information for the selected date
     loadAvailableSlots(date);
 
+    // All date/time calculations in NY timezone
+    const nyDate = toNewYorkTime(date);
+    const nyNow = toNewYorkTime(new Date());
+
     if (value) {
-      // Keep existing time if available - value is already a Date object, no need to parse
-      const newDate = new Date(date);
-      newDate.setHours(value.getHours());
-      newDate.setMinutes(value.getMinutes());
-      onChange(newDate);
+      // Keep existing time if available - use NY timezone hour
+      const existingHour = getHourInTimezone(value);
+      const newDateTime = createNewYorkDateTime(nyDate, existingHour);
+      onChange(newDateTime);
     } else {
       // Set default time to 8 AM, or next available slot if today
-      const now = new Date();
-      const defaultHour = isToday(date) && now.getHours() >= 8
-        ? Math.max(8, now.getHours() + 1)
+      const isSelectedToday = isToday(nyDate);
+      const defaultHour = isSelectedToday && nyNow.getHours() >= 8
+        ? Math.max(8, nyNow.getHours() + 1)
         : 8;
 
       if (defaultHour >= 18) {
         // If no slots available today, move to tomorrow 8 AM
-        const tomorrow = addDays(date, 1);
-        onChange(setMinutes(setHours(tomorrow, 8), 0));
+        const tomorrow = addDays(nyDate, 1);
+        onChange(createNewYorkDateTime(tomorrow, 8));
       } else {
-        onChange(setMinutes(setHours(date, defaultHour), 0));
+        onChange(createNewYorkDateTime(nyDate, defaultHour));
       }
     }
 
@@ -148,9 +161,9 @@ export function DueDateTimePicker({
     if (!value || !hourString) return;
 
     const hour = parseInt(hourString);
-    // value is already a Date object, no need to parse again
-    const newDate = setMinutes(setHours(value, hour), 0);
-    onChange(newDate);
+    // Create new date/time in NY timezone
+    const newDateTime = createNewYorkDateTime(value, hour);
+    onChange(newDateTime);
   };
 
   const timeSlots = generateTimeSlots(value);

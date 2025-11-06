@@ -339,9 +339,11 @@
     "dueDateTooFar": "Agendamentos só podem ser feitos na próxima semana",
     "dueDateTooSoon": "Agendamentos requerem pelo menos 1 hora de tempo de preparação",
     "slotNotAvailable": "O horário selecionado ({{time}}) não está disponível",
+    "newSlotNotAvailable": "O novo horário do agendamento não está disponível. Por favor, escolha um horário diferente.",
     "failedToReserveSlot": "Falha ao reservar horário. Tente um horário diferente.",
     "capacityCheckFailed": "Não foi possível verificar a capacidade do agendamento. O pedido será criado mesmo assim.",
     "slotReservationWarning": "O horário do agendamento não pôde ser reservado automaticamente",
+    "slotReleasedOnDelete": "O horário do agendamento foi liberado",
     "vinRequired": "O VIN é obrigatório para identificação do veículo",
     "stockNumberRequired": "O número do estoque é obrigatório para rastreamento",
     "assignedToRequired": "Por favor atribua este pedido a um membro da equipe",
@@ -2768,7 +2770,8 @@
         "operations": "Operações",
         "communication": "Comunicação",
         "analytics": "Análises e Relatórios",
-        "administration": "Administração"
+        "administration": "Administração",
+        "tools": "Ferramentas e Utilitários"
       },
       "names": {
         "dashboard": "Painel",
@@ -2785,7 +2788,10 @@
         "dealerships": "Concessionárias",
         "users": "Usuários",
         "management": "Gerenciamento",
-        "productivity": "Produtividade"
+        "productivity": "Produtividade",
+        "detail_hub": "Detail Hub",
+        "vin_scanner": "Scanner VIN",
+        "nfc_tracking": "Rastreamento NFC"
       },
       "descriptions": {
         "main_dashboard": "Painel principal e visão geral",
@@ -2802,7 +2808,10 @@
         "manage_multiple_dealerships": "Gerenciamento de múltiplas concessionárias",
         "user_management": "Funções de usuário e permissões",
         "advanced_management_tools": "Ferramentas avançadas de gerenciamento",
-        "task_calendar_productivity_tools": "Gerenciamento de tarefas, calendário e ferramentas de produtividade"
+        "task_calendar_productivity_tools": "Gerenciamento de tarefas, calendário e ferramentas de produtividade",
+        "employee_portal_timecards": "Portal de funcionários, cartões de ponto e detail hub",
+        "advanced_vin_scanning_ocr_camera": "Digitalização avançada de VIN com OCR e câmera",
+        "vehicle_tracking_nfc_tags_workflows": "Rastreamento de veículos com tags NFC e fluxos de trabalho"
       }
     },
     "overview": {

@@ -12,8 +12,10 @@ import {
     Calendar,
     Car,
     MessageCircle,
+    Nfc,
     Package,
     RotateCcw,
+    ScanLine,
     Settings,
     Shield,
     ShoppingCart,
@@ -51,7 +53,10 @@ const moduleConfig: Record<AppModule, { name: string; description: string; icon:
   dealerships: { name: 'Dealerships', description: 'manage_multiple_dealerships', icon: Building2, category: 'Administration' },
   users: { name: 'Users', description: 'user_management', icon: Users, category: 'Administration' },
   management: { name: 'Management', description: 'advanced_management_tools', icon: Shield, category: 'Administration' },
-  productivity: { name: 'Productivity', description: 'task_calendar_productivity_tools', icon: Calendar, category: 'Operations' }
+  productivity: { name: 'Productivity', description: 'task_calendar_productivity_tools', icon: Calendar, category: 'Operations' },
+  detail_hub: { name: 'Detail Hub', description: 'employee_portal_timecards', icon: Users, category: 'Operations' },
+  vin_scanner: { name: 'VIN Scanner', description: 'advanced_vin_scanning_ocr_camera', icon: ScanLine, category: 'Tools' },
+  nfc_tracking: { name: 'NFC Tracking', description: 'vehicle_tracking_nfc_tags_workflows', icon: Nfc, category: 'Tools' }
 };
 
 export const DealerModules: React.FC<DealerModulesProps> = ({ dealerId }) => {

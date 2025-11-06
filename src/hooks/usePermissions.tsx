@@ -42,7 +42,9 @@ export type AppModule =
   | 'management'
   | 'productivity'
   | 'contacts'
-  | 'detail_hub';  // ✅ NEW: Separate module for Detail Hub (employee portal, timecards, invoices)
+  | 'detail_hub'
+  | 'vin_scanner'      // 🆕 NEW: Advanced VIN scanning with OCR and camera
+  | 'nfc_tracking';    // 🆕 NEW: Vehicle tracking with NFC tags and workflows
 
 /**
  * @deprecated Legacy permission levels - Use ModulePermissionKey instead
@@ -361,7 +363,6 @@ export const usePermissions = () => {
           dealership_id: profileData.dealership_id,
           is_system_admin: profileData.role === 'system_admin',
           is_supermanager: profileData.role === 'supermanager',  // UPDATED: Renamed from is_manager
-          bypass_custom_roles: profileData.bypass_custom_roles || false,  // @deprecated
           allowed_modules: profileData.allowed_modules || [],  // 🆕 NEW: Include allowed modules
           custom_roles: [],
           system_permissions: new Set(),
@@ -411,6 +412,7 @@ export const usePermissions = () => {
       const systemPermsData = permissionsData.system_permissions || [];
       const modulePermsData = permissionsData.module_permissions || [];
       const roleModuleAccessData = permissionsData.module_access || [];
+      const allowedModulesData = permissionsData.allowed_modules || []; // 🆕 Supermanager allowed modules
 
       // Build a map of which modules each role has access to
       // ✅ FIX: Now includes BOTH enabled and disabled modules (is_enabled field)
@@ -557,8 +559,7 @@ export const usePermissions = () => {
         dealership_id: profileData.dealership_id,
         is_system_admin: profileData.role === 'system_admin',
         is_supermanager: profileData.role === 'supermanager',  // UPDATED: Renamed from is_manager
-        bypass_custom_roles: profileData.bypass_custom_roles || false,  // @deprecated
-        allowed_modules: profileData.allowed_modules || [],  // 🆕 NEW: Include allowed modules from profileData
+        allowed_modules: allowedModulesData,  // 🆕 FIX: Use RPC batch result (not profileData)
         custom_roles: Array.from(rolesMap.values()),
         system_permissions: aggregatedSystemPerms,
         module_permissions: aggregatedModulePerms
