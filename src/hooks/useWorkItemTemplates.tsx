@@ -112,6 +112,7 @@ export function useAutoAssignTemplates() {
 export function useCreateWorkItemsFromTemplates() {
   const { currentDealership } = useAccessibleDealerships();
   const { t } = useTranslation();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -178,6 +179,7 @@ export function useCreateWorkItemsFromTemplates() {
  */
 export function useCreateTemplate() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
@@ -225,6 +227,7 @@ export function useCreateTemplate() {
  */
 export function useUpdateTemplate() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
@@ -276,6 +279,7 @@ export function useUpdateTemplate() {
  */
 export function useDeleteTemplate() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
@@ -309,6 +313,7 @@ export function useDeleteTemplate() {
  */
 export function useToggleTemplateAutoAssign() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
@@ -348,6 +353,7 @@ export function useToggleTemplateAutoAssign() {
  */
 export function useToggleTemplateActive() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
@@ -387,6 +393,7 @@ export function useToggleTemplateActive() {
  */
 export function useReorderTemplates() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
@@ -430,6 +437,7 @@ export function useReorderTemplates() {
  */
 export function useDuplicateTemplate() {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
@@ -491,6 +499,7 @@ export function useCreateWorkItemsFromSelectedTemplates() {
   const { currentDealership } = useAccessibleDealerships();
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation({

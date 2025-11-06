@@ -299,7 +299,19 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         // For assigned to, we have the name directly
         const assignedToName = order.assignedTo;
 
-        setSelectedServices(servicesData);
+        // ✅ FIX: Extract service IDs from service objects (selectedServices expects string[])
+        const serviceIds = servicesData.map(service => {
+          // Handle both service object structures
+          return typeof service === 'string' ? service : service.id || service.service_id;
+        }).filter(Boolean);
+
+        console.log('🔍 [OrderModal] Loading order services:', {
+          rawServicesData: servicesData,
+          extractedServiceIds: serviceIds,
+          orderDealerId: order.dealer_id || order.dealerId
+        });
+
+        setSelectedServices(serviceIds);
 
         // We'll set dealership after fetchDealerships() finds the ID
         // We'll set assignedTo after fetchDealerData() loads the users and finds the ID
@@ -422,6 +434,11 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       }
 
       if (servicesResult.data) {
+        console.log('🔍 [OrderModal] Loaded dealer services:', {
+          dealershipId,
+          servicesCount: servicesResult.data.length,
+          services: servicesResult.data.map(s => ({ id: s.id, name: s.name }))
+        });
         setServices(servicesResult.data);
       } else {
         setServices([]);
@@ -691,15 +708,37 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
       // Related data
       dealer_id: selectedDealership ? parseInt(selectedDealership) : null,
-      services: selectedServices.map(serviceId => {
-        const service = services.find((s: { id: string; price?: number; name?: string; description?: string }) => s.id === serviceId);
-        return {
-          id: serviceId,
-          name: service?.name || 'Unknown Service',
-          price: service?.price,
-          description: service?.description
-        };
-      }),
+      services: (() => {
+        // Debug: Log service matching
+        console.log('🔍 [OrderModal] Service mapping debug:', {
+          selectedServiceIds: selectedServices,
+          availableServices: services.map(s => ({ id: s.id, name: s.name })),
+          selectedServicesCount: selectedServices.length,
+          availableServicesCount: services.length
+        });
+
+        return selectedServices.map(serviceId => {
+          // Fix: Use type coercion for better ID matching
+          const service = services.find((s: { id: string; price?: number; name?: string; description?: string }) =>
+            String(s.id) === String(serviceId) || s.id === serviceId
+          );
+
+          if (!service) {
+            console.warn('⚠️ [OrderModal] Service not found:', {
+              searchingForId: serviceId,
+              idType: typeof serviceId,
+              availableServiceIds: services.map(s => ({ id: s.id, type: typeof s.id }))
+            });
+          }
+
+          return {
+            id: serviceId,
+            name: service?.name || 'Unknown Service',
+            price: service?.price,
+            description: service?.description
+          };
+        });
+      })(),
 
       // Financial data - CRITICAL for reports
       total_amount: canViewPrices ? selectedServices.reduce((total, serviceId) => {
@@ -814,6 +853,38 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       if (!isValid) {
         setSubmitting(false);
         return;
+      }
+
+      // Validate that all selected services exist in available services
+      if (selectedServices.length > 0) {
+        const missingServices = selectedServices.filter(serviceId => {
+          return !services.some(s => String(s.id) === String(serviceId) || s.id === serviceId);
+        });
+
+        if (missingServices.length > 0) {
+          console.error('❌ [OrderModal] Missing services:', {
+            missingServiceIds: missingServices,
+            selectedServices,
+            availableServices: services.map(s => s.id)
+          });
+          toast({
+            variant: 'destructive',
+            description: t('orders.servicesNotLoaded') || 'Services are still loading. Please wait a moment and try again.'
+          });
+          setSubmitting(false);
+          return;
+        }
+
+        // Additional check: Ensure services array is not empty when we have selections
+        if (services.length === 0) {
+          console.error('❌ [OrderModal] Services array is empty but we have selected services');
+          toast({
+            variant: 'destructive',
+            description: t('orders.servicesNotLoaded') || 'Services data is not available. Please refresh and try again.'
+          });
+          setSubmitting(false);
+          return;
+        }
       }
 
       // Reserve appointment slot before creating order when needed
@@ -1353,6 +1424,18 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                               const isSelected = selectedServices.includes(service.id);
                               const isDisabled = !isSelected && selectedServices.length >= 2;
 
+                              // Debug: Log first service to check matching
+                              if (services[0] === service && selectedServices.length > 0) {
+                                console.log('🔍 [OrderModal] Service selection check:', {
+                                  serviceId: service.id,
+                                  serviceName: service.name,
+                                  selectedServiceIds: selectedServices,
+                                  isSelected,
+                                  serviceIdType: typeof service.id,
+                                  selectedIdsType: selectedServices.map(id => typeof id)
+                                });
+                              }
+
                               return (
                                 <div key={service.id} className={`flex items-start justify-between p-3 border border-border rounded-lg transition-colors ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/10'}`}>
                                   <div className="flex items-start space-x-3 flex-1 min-h-[44px]">
@@ -1481,13 +1564,15 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
             onClick={handleSubmit}
             disabled={
               submitting ||
+              loading ||  // Disable while services are loading
               !selectedDealership ||
               !formData.customerName ||
               !formData.vehicleVin ||
               !formData.stockNumber ||
               !selectedAssignedTo ||
               (requiresDueDate && !formData.dueDate) ||
-              selectedServices.length === 0
+              selectedServices.length === 0 ||
+              (selectedDealership && services.length === 0)  // Disable if dealership selected but no services loaded
             }
             className="order-1 sm:order-2 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto min-h-[44px]"
           >

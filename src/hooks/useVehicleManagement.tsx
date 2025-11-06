@@ -130,15 +130,14 @@ export function useVehicleManagement() {
       return vehicle;
     },
     onSuccess: (newVehicle) => {
-      // Invalidate all vehicle-related queries to refresh the list
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
-      queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
-
-      // Force refetch to ensure fresh data
-      queryClient.refetchQueries({
-        queryKey: ['get-ready-vehicles', 'infinite'],
-        type: 'active'
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
       });
+      queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
 
       toast({
         title: t('common.success'),
@@ -217,17 +216,15 @@ export function useVehicleManagement() {
       return data;
     },
     onSuccess: (updatedVehicle, variables) => {
-      // Optimistic update: Update vehicle in cache immediately
-      queryClient.setQueryData(
-        ['get-ready-vehicles', 'list', currentDealership?.id],
-        (oldData: any[] | undefined) =>
-          oldData
-            ? oldData.map(vehicle => vehicle.id === variables.id ? updatedVehicle : vehicle)
-            : [updatedVehicle]
-      );
-
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
+      });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
+
       toast({
         title: t('common.success'),
         description: t('get_ready.vehicle_form.success.updated'),
@@ -278,15 +275,15 @@ export function useVehicleManagement() {
       return vehicleId;
     },
     onSuccess: (vehicleId) => {
-      // Optimistic update: Remove vehicle from cache immediately
-      queryClient.setQueryData(
-        ['get-ready-vehicles', 'list', currentDealership?.id],
-        (oldData: any[] | undefined) =>
-          oldData ? oldData.filter(vehicle => vehicle.id !== vehicleId) : []
-      );
-
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
+      });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
+
       toast({ description: t('get_ready.vehicle_form.success.deleted') });
     },
     onError: (error: Error) => {
@@ -359,17 +356,15 @@ export function useVehicleManagement() {
       return data;
     },
     onSuccess: (movedVehicle) => {
-      // Optimistic update: Update vehicle step in cache immediately
-      queryClient.setQueryData(
-        ['get-ready-vehicles', 'list', currentDealership?.id],
-        (oldData: any[] | undefined) =>
-          oldData
-            ? oldData.map(vehicle => vehicle.id === movedVehicle.id ? movedVehicle : vehicle)
-            : [movedVehicle]
-      );
-
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
+      });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
+
       toast({
         title: t('common.success'),
         description: t('get_ready.vehicle_form.success.moved'),
@@ -413,8 +408,15 @@ export function useVehicleManagement() {
       return data;
     },
     onSuccess: (result) => {
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
+      });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
+
       toast({ description: t('get_ready.approvals.success.approved') });
     },
     onError: (error: Error) => {
@@ -446,8 +448,15 @@ export function useVehicleManagement() {
       return data;
     },
     onSuccess: (result) => {
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
+      });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
+
       toast({ description: t('get_ready.approvals.success.rejected') });
     },
     onError: (error: Error) => {
@@ -474,8 +483,15 @@ export function useVehicleManagement() {
       return data;
     },
     onSuccess: (result) => {
-      queryClient.invalidateQueries({ queryKey: ['get-ready-vehicles'] });
+      // ✅ FIXED: Predicate-based invalidation to match infinite query keys
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicles' &&
+          query.queryKey[1] === 'infinite'
+      });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
+      queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
+
       toast({ description: t('get_ready.approvals.success.requested') });
     },
     onError: (error: Error) => {

@@ -10,6 +10,7 @@ import type {
     UserNotificationPreferences,
 } from '@/types/getReady';
 import { validateDealerId } from '@/utils/dealerValidation';
+import { logger } from '@/utils/logger';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -149,7 +150,9 @@ export function useGetReadyNotifications(
 
   const loadMore = useCallback(() => {
     if (!isLoadingMore && hasMore && enableInfiniteScroll) {
-      console.log('📄 [Notifications] Loading more notifications, page:', currentPage + 1);
+      logger.debug('loading-more-notifications', {
+        page: currentPage + 1
+      });
       setIsLoadingMore(true);
       setCurrentPage(prev => prev + 1);
 
@@ -176,7 +179,7 @@ export function useGetReadyNotifications(
       );
 
       if (error) {
-        console.error('Error fetching unread count:', error);
+        logger.error('fetch-unread-count-error', error);
         return 0;
       }
 
@@ -247,7 +250,7 @@ export function useGetReadyNotifications(
         .maybeSingle(); // Changed from .single() to .maybeSingle()
 
       if (error) {
-        console.error('Error fetching preferences:', error);
+        logger.error('fetch-preferences-error', error);
         return null;
       }
 
@@ -278,7 +281,7 @@ export function useGetReadyNotifications(
       queryClient.invalidateQueries({ queryKey: ['notificationSummary'] });
     },
     onError: (error) => {
-      console.error('Error marking notification as read:', error);
+      logger.error('mark-notification-read-error', error);
       toast({
         title: 'Error',
         description: 'Failed to mark notification as read',
@@ -319,7 +322,7 @@ export function useGetReadyNotifications(
       });
     },
     onError: (error) => {
-      console.error('Error marking all notifications as read:', error);
+      logger.error('mark-all-notifications-read-error', error);
       toast({
         title: 'Error',
         description: 'Failed to mark all notifications as read',
@@ -354,7 +357,7 @@ export function useGetReadyNotifications(
       });
     },
     onError: (error) => {
-      console.error('Error dismissing notification:', error);
+      logger.error('dismiss-notification-error', error);
       toast({
         title: 'Error',
         description: 'Failed to dismiss notification',
@@ -403,7 +406,7 @@ export function useGetReadyNotifications(
       });
     },
     onError: (error) => {
-      console.error('Error updating preferences:', error);
+      logger.error('update-preferences-error', error);
       toast({
         title: 'Error',
         description: 'Failed to update notification preferences',
@@ -420,12 +423,13 @@ export function useGetReadyNotifications(
     if (!enabled || !dealerId || !user?.id) return;
 
     let isMounted = true;
+    const channelName = `get_ready_notifications_${dealerId}_${user.id}`;
 
-    console.log('[useGetReadyNotifications] Setting up real-time subscription');
+    logger.debug('setup-realtime-subscription', { channelName });
 
     // Subscribe to notifications table changes
     const channel = supabase
-      .channel(`get_ready_notifications_${dealerId}_${user.id}`)
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
@@ -436,7 +440,9 @@ export function useGetReadyNotifications(
         },
         (payload) => {
           if (!isMounted) return;
-          console.log('[Real-time] New notification received:', payload);
+          logger.debug('realtime-notification-received', {
+            notificationId: (payload.new as GetReadyNotification).id
+          });
 
           // Check if notification is for this user (broadcast or specific user)
           const notification = payload.new as GetReadyNotification;
@@ -483,8 +489,8 @@ export function useGetReadyNotifications(
           filter: `dealer_id=eq.${dealerId}`,
         },
         () => {
-          console.log('[Real-time] Notification updated');
           if (!isMounted) return;
+          logger.debug('realtime-notification-updated');
           queryClient.invalidateQueries({
             queryKey: ['getReadyNotifications'],
           });
@@ -496,9 +502,10 @@ export function useGetReadyNotifications(
       .subscribe();
 
     return () => {
-      console.log('[useGetReadyNotifications] Cleaning up subscription');
       isMounted = false;
-      supabase.removeChannel(channel);
+      supabase.removeChannel(channel).then(() => {
+        logger.debug('cleanup-subscription', { channelName });
+      });
     };
   }, [enabled, dealerId, user?.id]);
 

@@ -2,6 +2,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { logger } from '@/utils/logger';
+import { workItemNeedsApproval } from '@/utils/approvalHelpers';
 import {
     Dialog,
     DialogContent,
@@ -52,6 +54,67 @@ import { useNavigate } from 'react-router-dom';
 type FilterType = 'all' | 'vehicles' | 'work_items' | 'critical';
 type SortBy = 'oldest' | 'newest' | 'priority' | 'cost';
 
+// Approval Queue Item Interfaces
+interface ApprovalQueueVehicleItem {
+  type: 'vehicle';
+  id: string;
+  vehicle: {
+    id: string;
+    stock_number: string;
+    vin: string;
+    vehicle_year?: number;
+    vehicle_make?: string;
+    vehicle_model?: string;
+    requires_approval: boolean;
+    approval_status: string;
+    approved_by?: string;
+    priority_score?: number;
+    intake_date: string;
+    escalation_level: number;
+    total_holding_cost?: number;
+    current_step_name?: string;
+    current_step_color?: string;
+    work_items?: Array<{
+      id: string;
+      title: string;
+      description?: string;
+      approval_required: boolean;
+      approval_status?: string;
+      priority?: number;
+      estimated_cost?: number;
+      created_at?: string;
+    }>;
+  };
+  priority: number;
+  created_at: string;
+  isCritical: boolean;
+}
+
+interface ApprovalQueueWorkItemItem {
+  type: 'work_item';
+  id: string;
+  workItem: {
+    id: string;
+    title: string;
+    description?: string;
+    approval_required: boolean;
+    approval_status?: string;
+    priority?: number;
+    estimated_cost?: number;
+    created_at?: string;
+    vehicle_id: string;
+    vehicle_stock_number: string;
+    vehicle_info: string;
+    vehicle_step?: string;
+    vehicle_step_color?: string;
+  };
+  priority: number;
+  created_at: string;
+  isCritical: boolean;
+}
+
+type ApprovalQueueItem = ApprovalQueueVehicleItem | ApprovalQueueWorkItemItem;
+
 export function GetReadyApprovalsTab() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -77,19 +140,15 @@ export function GetReadyApprovalsTab() {
 
   // Modal states
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [selectedItem, setSelectedItem] = useState<ApprovalQueueItem | null>(null);
   const [rejectReason, setRejectReason] = useState('');
   const [rejectNotes, setRejectNotes] = useState('');
 
-  // Extract work items needing approval
+  // Extract work items needing approval - using centralized approval logic
   const pendingWorkItems = useMemo(() => {
     return pendingVehicles.flatMap(vehicle =>
       (vehicle.work_items || [])
-        .filter(item =>
-          item.approval_required &&
-          item.approval_status !== 'declined' &&
-          item.approval_status !== 'approved'
-        )
+        .filter(workItemNeedsApproval)
         .map(item => ({
           ...item,
           vehicle_id: vehicle.id,
@@ -103,11 +162,12 @@ export function GetReadyApprovalsTab() {
 
   // Combined approval queue (vehicles + work items)
   const approvalQueue = useMemo(() => {
-    console.log(`\n🔄 [Approvals Tab] Building approval queue...`);
-    console.log(`   - Total pending vehicles: ${pendingVehicles.length}`);
-    console.log(`   - Filter type: ${filterType}`);
+    logger.debug('building-approval-queue', {
+      totalPendingVehicles: pendingVehicles.length,
+      filterType
+    });
 
-    const items: any[] = [];
+    const items: ApprovalQueueItem[] = [];
 
     // Add vehicles requiring approval
     // ✅ IMPROVED: Only add vehicles that have at least ONE work item actively needing approval
@@ -116,32 +176,30 @@ export function GetReadyApprovalsTab() {
         v => v.requires_approval === true && v.approval_status === 'pending' && !v.approved_by
       );
 
-      console.log(`📋 [Approvals Tab] Total vehicles with requires_approval=true: ${vehiclesWithRequiresApproval.length}`);
+      logger.debug('vehicles-with-requires-approval', {
+        count: vehiclesWithRequiresApproval.length
+      });
 
+      // Use centralized approval filtering
       const filteredVehicles = vehiclesWithRequiresApproval.filter(v => {
-        // Must have at least ONE work item that needs approval
-        // (approval_required=true AND approval_status NOT IN ('declined', 'approved'))
-        const workItemsNeedingApproval = (v.work_items || []).filter(
-          wi => wi.approval_required &&
-                wi.approval_status !== 'declined' &&
-                wi.approval_status !== 'approved'
-        );
-
+        const workItemsNeedingApproval = (v.work_items || []).filter(workItemNeedsApproval);
         const hasActiveWorkItemsNeedingApproval = workItemsNeedingApproval.length > 0;
 
         if (!hasActiveWorkItemsNeedingApproval) {
-          console.log(`⏭️ [Approvals Tab] Skipped vehicle: ${v.stock_number} - No active work items needing approval`);
-          (v.work_items || []).forEach(wi => {
-            if (wi.approval_required) {
-              console.log(`   └─ Work item: "${wi.title}" (approval_status: ${wi.approval_status})`);
-            }
+          logger.debug('vehicle-skipped-no-active-approvals', {
+            stockNumber: v.stock_number,
+            workItems: (v.work_items || [])
+              .filter(wi => wi.approval_required)
+              .map(wi => ({ title: wi.title, approvalStatus: wi.approval_status }))
           });
         }
 
         return hasActiveWorkItemsNeedingApproval;
       });
 
-      console.log(`✅ [Approvals Tab] Vehicles to display: ${filteredVehicles.length}`);
+      logger.debug('filtered-vehicles-to-display', {
+        count: filteredVehicles.length
+      });
 
       filteredVehicles.forEach(vehicle => {
         items.push({
@@ -275,7 +333,7 @@ export function GetReadyApprovalsTab() {
     });
   };
 
-  const handleReject = (item: any) => {
+  const handleReject = (item: ApprovalQueueItem) => {
     setSelectedItem(item);
     setRejectDialogOpen(true);
   };
@@ -644,7 +702,7 @@ export function GetReadyApprovalsTab() {
 // =====================================================
 
 interface ApprovalQueueCardProps {
-  item: any;
+  item: ApprovalQueueItem;
   selected: boolean;
   onToggleSelect: () => void;
   onApprove: () => void;

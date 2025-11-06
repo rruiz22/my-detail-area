@@ -8,6 +8,7 @@ import { useStockManagement } from '@/hooks/useStockManagement';
 import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StockAnalytics } from './StockAnalytics';
+import { StockAutoSyncConfig } from './StockAutoSyncConfig';
 import { StockCSVUploader } from './StockCSVUploader';
 import { StockDMSConfig } from './StockDMSConfig';
 import { StockInventoryTable } from './StockInventoryTable';
@@ -22,7 +23,8 @@ import {
     RefreshCw,
     Settings,
     TrendingUp,
-    Upload
+    Upload,
+    Zap
 } from 'lucide-react';
 
 export const StockDashboard: React.FC = () => {
@@ -248,7 +250,7 @@ export const StockDashboard: React.FC = () => {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="inventory" className="flex items-center space-x-2">
             <Package className="w-4 h-4" />
             <span>{t('stock.tabs.inventory')}</span>
@@ -256,6 +258,10 @@ export const StockDashboard: React.FC = () => {
           <TabsTrigger value="upload" className="flex items-center space-x-2">
             <Upload className="w-4 h-4" />
             <span>{t('stock.tabs.upload')}</span>
+          </TabsTrigger>
+          <TabsTrigger value="auto-sync" className="flex items-center space-x-2">
+            <Zap className="w-4 h-4" />
+            <span>{t('stock.tabs.auto_sync')}</span>
           </TabsTrigger>
           <TabsTrigger value="analytics" className="flex items-center space-x-2">
             <BarChart3 className="w-4 h-4" />
@@ -277,6 +283,10 @@ export const StockDashboard: React.FC = () => {
 
         <TabsContent value="upload" className="space-y-4">
           <StockCSVUploader dealerId={currentDealership?.id} />
+        </TabsContent>
+
+        <TabsContent value="auto-sync" className="space-y-4">
+          <StockAutoSyncConfig dealerId={currentDealership?.id} />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-4">

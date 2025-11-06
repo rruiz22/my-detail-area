@@ -82,17 +82,84 @@ const handler = async (req: Request): Promise<Response> => {
         }
       });
 
-    // If it's an email reset, we would typically send an email here
-    // For now, we'll return the reset token for testing
+    // Send password reset email
+    let emailSent = false;
+    if (resetType === 'email_reset' || resetType === 'temp_password' || resetType === 'force_change') {
+      try {
+        console.log('Sending password reset email...');
+
+        // Get user profile for email
+        const { data: userProfile, error: userError } = await supabase
+          .from('profiles')
+          .select('email, first_name, last_name')
+          .eq('id', userId)
+          .single();
+
+        if (userError) {
+          console.error('Error fetching user profile:', userError);
+          throw new Error('User profile not found');
+        }
+
+        // Get dealership details
+        const { data: dealerProfile, error: dealerError } = await supabase
+          .from('dealerships')
+          .select('name')
+          .eq('id', dealerId)
+          .single();
+
+        if (dealerError) {
+          console.error('Error fetching dealership:', dealerError);
+          throw new Error('Dealership not found');
+        }
+
+        // Get admin profile
+        const { data: adminProfile, error: adminError } = await supabase
+          .from('profiles')
+          .select('first_name, last_name')
+          .eq('id', user.id)
+          .single();
+
+        if (adminError) {
+          console.error('Error fetching admin profile:', adminError);
+          throw new Error('Admin profile not found');
+        }
+
+        // Call send-password-reset-email Edge Function
+        const { data: emailData, error: emailError } = await supabase.functions.invoke('send-password-reset-email', {
+          body: {
+            resetRequestId: resetRequest.id,
+            userEmail: userProfile.email,
+            userName: `${userProfile.first_name} ${userProfile.last_name}`.trim() || userProfile.email,
+            resetType,
+            tempPassword: tempPassword || undefined,
+            dealershipName: dealerProfile.name,
+            adminName: `${adminProfile.first_name} ${adminProfile.last_name}`.trim() || 'Administrator'
+          }
+        });
+
+        if (emailError) {
+          console.error('Failed to send reset email:', emailError);
+          // Don't fail the request, just log the error
+        } else {
+          console.log('Password reset email sent successfully:', emailData);
+          emailSent = true;
+        }
+      } catch (error) {
+        console.error('Error sending reset email:', error);
+        // Don't fail the request, continue with success response
+      }
+    }
+
     const response = {
       success: true,
       resetRequestId: resetRequest.id,
       resetToken: resetToken,
       expiresAt: resetRequest.expires_at,
-      message: resetType === 'email_reset' 
-        ? 'Password reset email will be sent to user'
+      emailSent,
+      message: resetType === 'email_reset'
+        ? 'Password reset email sent to user'
         : resetType === 'temp_password'
-        ? 'Temporary password generated'
+        ? 'Temporary password generated and sent to user'
         : 'User will be forced to change password on next login'
     };
 

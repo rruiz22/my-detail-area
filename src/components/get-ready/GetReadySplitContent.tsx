@@ -248,7 +248,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const handleExport = async (format: "csv" | "excel") => {
     if (allVehicles.length === 0) {
       toast({
-        description: "No vehicles to export",
+        description: t("get_ready.export.no_vehicles"),
         variant: "destructive",
       });
       return;
