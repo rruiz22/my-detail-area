@@ -2,6 +2,7 @@ import { DealerInvitationModal } from '@/components/dealerships/DealerInvitation
 import { ManageCustomRolesModal } from '@/components/permissions/ManageCustomRolesModal';
 import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { RoleAssignmentModal } from '@/components/permissions/RoleAssignmentModal';
+import { UserPasswordManagement } from '@/components/users/password/UserPasswordManagement';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -10,9 +11,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Activity, Building2, ExternalLink, Eye, Info, Search, Settings, UserPlus } from 'lucide-react';
+import { Activity, Building2, ExternalLink, Eye, Info, Search, Settings, Shield, UserPlus, Users as UsersIcon } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -254,33 +256,47 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
 
   return (
     <PermissionGuard module="users" permission="read">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div className="flex-1">
-            <CardTitle className="flex items-center gap-2">
-              {readOnly ? <Eye className="h-5 w-5" /> : <Settings className="h-5 w-5" />}
-              {readOnly ? t('user_management.overview_title') : t('user_management.title')}
-            </CardTitle>
-            {readOnly && (
-              <CardDescription className="mt-2">
-                {t('user_management.readonly_description')}
-              </CardDescription>
-            )}
-          </div>
-          {!readOnly && (
-            <PermissionGuard module="users" permission="write">
-              <Button
-                onClick={() => setIsInvitationModalOpen(true)}
-                className="flex items-center gap-2"
-              >
-                <UserPlus className="h-4 w-4" />
-                {t('users.invite_user')}
-              </Button>
-            </PermissionGuard>
-          )}
-        </CardHeader>
+      <Tabs defaultValue="users" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="users" className="flex items-center gap-2">
+            <UsersIcon className="h-4 w-4" />
+            <span>{t('admin.dealer_users', 'Dealer Users')}</span>
+          </TabsTrigger>
+          <TabsTrigger value="password-management" className="flex items-center gap-2">
+            <Shield className="h-4 w-4" />
+            <span>{t('password_management.title')}</span>
+          </TabsTrigger>
+        </TabsList>
 
-        <CardContent className="space-y-4">
+        {/* Users Tab Content */}
+        <TabsContent value="users">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div className="flex-1">
+                <CardTitle className="flex items-center gap-2">
+                  {readOnly ? <Eye className="h-5 w-5" /> : <Settings className="h-5 w-5" />}
+                  {readOnly ? t('user_management.overview_title') : t('user_management.title')}
+                </CardTitle>
+                {readOnly && (
+                  <CardDescription className="mt-2">
+                    {t('user_management.readonly_description')}
+                  </CardDescription>
+                )}
+              </div>
+              {!readOnly && (
+                <PermissionGuard module="users" permission="write">
+                  <Button
+                    onClick={() => setIsInvitationModalOpen(true)}
+                    className="flex items-center gap-2"
+                  >
+                    <UserPlus className="h-4 w-4" />
+                    {t('users.invite_user')}
+                  </Button>
+                </PermissionGuard>
+              )}
+            </CardHeader>
+
+            <CardContent className="space-y-4">
           {/* Read-Only Alert */}
           {readOnly && (
             <Alert className="bg-blue-50 border-blue-200 dark:bg-blue-950 dark:border-blue-800">
@@ -432,8 +448,15 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
           <div className="text-sm text-muted-foreground">
             {t('common.showing')} {filteredUsers.length} {t('common.of')} {users.length} {t('user_management.users').toLowerCase()}
           </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Password Management Tab Content */}
+        <TabsContent value="password-management">
+          <UserPasswordManagement />
+        </TabsContent>
+      </Tabs>
 
       {/* Modals */}
       <DealerInvitationModal

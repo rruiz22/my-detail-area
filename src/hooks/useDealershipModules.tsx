@@ -38,7 +38,8 @@ export const useDealershipModules = (
       const allModules: DealershipModule[] = [
         'dashboard', 'sales_orders', 'service_orders', 'recon_orders', 'car_wash',
         'stock', 'contacts', 'reports', 'users', 'productivity', 'chat',
-        'dealerships', 'get_ready', 'settings', 'management'
+        'dealerships', 'get_ready', 'settings', 'management', 'detail_hub',
+        'vin_scanner', 'nfc_tracking'  // 🆕 NEW: VIN Scanner and NFC Tracking modules
       ].map(module => ({
         module: module as AppModule,
         is_enabled: true,

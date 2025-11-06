@@ -21,7 +21,6 @@ interface SerializedPermissions {
   dealership_id: number | null;
   is_system_admin: boolean;
   is_supermanager: boolean;  // UPDATED: Renamed from is_manager for role system redesign
-  bypass_custom_roles?: boolean;  // @deprecated Use allowed_modules instead
   allowed_modules?: string[];  // 🆕 NEW: Global allowed modules for supermanagers
   system_permissions: SystemPermissionKey[];
   module_permissions: [AppModule, ModulePermissionKey[]][];
@@ -47,7 +46,6 @@ export function serializePermissions(user: EnhancedUserGranular): SerializedPerm
     dealership_id: user.dealership_id,
     is_system_admin: user.is_system_admin,
     is_supermanager: user.is_supermanager,  // UPDATED: Renamed from is_manager
-    bypass_custom_roles: user.bypass_custom_roles,  // @deprecated
     allowed_modules: user.allowed_modules,  // 🆕 NEW: Include allowed modules in cache
     system_permissions: Array.from(user.system_permissions),
     module_permissions: Array.from(user.module_permissions.entries()).map(
@@ -88,7 +86,6 @@ export function deserializePermissions(cached: SerializedPermissions): EnhancedU
       dealership_id: cached.dealership_id,
       is_system_admin: cached.is_system_admin,
       is_supermanager: cached.is_supermanager,  // UPDATED: Renamed from is_manager
-      bypass_custom_roles: cached.bypass_custom_roles,  // @deprecated
       allowed_modules: cached.allowed_modules,  // 🆕 NEW: Restore allowed modules from cache
       system_permissions: new Set(cached.system_permissions),
       module_permissions: new Map(

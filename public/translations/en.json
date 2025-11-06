@@ -362,9 +362,11 @@
     "dueDateTooFar": "Appointments can only be scheduled within the next week",
     "dueDateTooSoon": "Appointments require at least 1 hour preparation time",
     "slotNotAvailable": "The selected time slot ({{time}}) is not available",
+    "newSlotNotAvailable": "The new appointment time is not available. Please choose a different time.",
     "failedToReserveSlot": "Failed to reserve appointment slot. Please try a different time.",
     "capacityCheckFailed": "Could not verify appointment capacity. Order will be created anyway.",
     "slotReservationWarning": "Appointment slot could not be reserved automatically",
+    "slotReleasedOnDelete": "Appointment slot has been released",
     "vinRequired": "VIN is required for vehicle identification",
     "stockNumberRequired": "Stock number is required for tracking",
     "assignedToRequired": "Please assign this order to a team member",
@@ -3281,7 +3283,8 @@
         "operations": "Operations",
         "communication": "Communication",
         "analytics": "Analytics & Reports",
-        "administration": "Administration"
+        "administration": "Administration",
+        "tools": "Tools & Utilities"
       },
       "names": {
         "dashboard": "Dashboard",
@@ -3298,7 +3301,10 @@
         "dealerships": "Dealerships",
         "users": "Users",
         "management": "Management",
-        "productivity": "Productivity"
+        "productivity": "Productivity",
+        "detail_hub": "Detail Hub",
+        "vin_scanner": "VIN Scanner",
+        "nfc_tracking": "NFC Tracking"
       },
       "descriptions": {
         "main_dashboard": "Main dashboard and overview",
@@ -3315,7 +3321,10 @@
         "manage_multiple_dealerships": "Multi-dealership management",
         "user_management": "User roles and permissions",
         "advanced_management_tools": "Advanced management features",
-        "task_calendar_productivity_tools": "Task management, calendar and productivity tools"
+        "task_calendar_productivity_tools": "Task management, calendar and productivity tools",
+        "employee_portal_timecards": "Employee portal, timecards and detail hub",
+        "advanced_vin_scanning_ocr_camera": "Advanced VIN scanning with OCR and camera",
+        "vehicle_tracking_nfc_tags_workflows": "Vehicle tracking with NFC tags and workflows"
       }
     },
     "overview": {

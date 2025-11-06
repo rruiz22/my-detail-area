@@ -191,7 +191,7 @@ const AppRoutes = () => {
           <Route
             path="vin-scanner"
             element={
-              <PermissionGuard module="productivity" permission="view" checkDealerModule={true}>
+              <PermissionGuard module="vin_scanner" permission="view_vin_scanner" checkDealerModule={true}>
                 <VinScanner />
               </PermissionGuard>
             }
@@ -199,7 +199,7 @@ const AppRoutes = () => {
           <Route
             path="nfc-tracking"
             element={
-              <PermissionGuard module="productivity" permission="view" checkDealerModule={true}>
+              <PermissionGuard module="nfc_tracking" permission="view_nfc_dashboard" checkDealerModule={true}>
                 <NFCTracking />
               </PermissionGuard>
             }

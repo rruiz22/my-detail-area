@@ -1,5 +1,6 @@
 import { DealerInvitationModal } from '@/components/dealerships/DealerInvitationModal';
 import { ManageCustomRolesModal } from '@/components/permissions/ManageCustomRolesModal';
+import { UserPasswordManagement } from '@/components/users/password/UserPasswordManagement';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
     Dialog,
     DialogContent,
@@ -43,6 +45,7 @@ import {
     Edit,
     MoreHorizontal,
     Plus,
+    Shield,
     UserCheck,
     Users,
     UserX
@@ -366,8 +369,23 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
         </div>
       </div>
 
-      {/* Users Table */}
-      <Card>
+      {/* Tabs */}
+      <Tabs defaultValue="users" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="users" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            <span>{t('dealer.view.users.tab_users', 'Users')}</span>
+          </TabsTrigger>
+          <TabsTrigger value="password-management" className="flex items-center gap-2">
+            <Shield className="h-4 w-4" />
+            <span>{t('password_management.title')}</span>
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Users Tab Content */}
+        <TabsContent value="users" className="space-y-6">
+          {/* Users Table */}
+          <Card>
         <CardContent>
           <Table>
             <TableHeader>
@@ -487,6 +505,13 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
           </Table>
         </CardContent>
       </Card>
+        </TabsContent>
+
+        {/* Password Management Tab Content */}
+        <TabsContent value="password-management">
+          <UserPasswordManagement />
+        </TabsContent>
+      </Tabs>
 
       {/* Invitation Modal */}
       <DealerInvitationModal

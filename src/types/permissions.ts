@@ -127,7 +127,27 @@ export type ModulePermissionKey =
   | 'edit_dealerships'
   | 'delete_dealerships'
   | 'manage_dealership_modules'
-  | 'switch_dealerships';
+  | 'switch_dealerships'
+
+  // VIN Scanner (🆕 NEW)
+  | 'view_vin_scanner'
+  | 'use_camera_scanner'
+  | 'manual_vin_entry'
+  | 'batch_vin_processing'
+  | 'view_scan_history'
+  | 'export_scan_data'
+  | 'manage_scanner_settings'
+  | 'use_advanced_ocr'
+
+  // NFC Tracking (🆕 NEW)
+  | 'view_nfc_dashboard'
+  | 'read_nfc_tags'
+  | 'write_nfc_tags'
+  | 'manage_nfc_tags'
+  | 'view_vehicle_location'
+  | 'manage_workflows'
+  | 'view_nfc_heatmap'
+  | 'export_nfc_data';
 
 export interface ModulePermission {
   id: string;
@@ -180,9 +200,6 @@ export interface EnhancedUserGranular {
   dealership_id: number | null;
   is_system_admin: boolean;
   is_supermanager: boolean;  // NEW: Elevated access but limited (cannot manage platform settings or create system_admins)
-
-  /** @deprecated Use allowed_modules instead. Kept for backward compatibility only. */
-  bypass_custom_roles?: boolean;
 
   /** 🆕 NEW: Global allowed modules for supermanagers (applies to ALL dealers). Empty array or undefined = no access. */
   allowed_modules?: string[];

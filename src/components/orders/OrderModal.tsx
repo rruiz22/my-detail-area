@@ -22,7 +22,7 @@ import { usePermissions } from '@/hooks/usePermissions';
 import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { supabase } from '@/integrations/supabase/client';
-import { safeParseDate } from '@/utils/dateUtils';
+import { safeParseDate, getHourInTimezone } from '@/utils/dateUtils';
 import { canViewPricing } from '@/utils/permissions';
 import { AlertCircle, Check, ChevronsUpDown, Loader2, X, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
@@ -826,7 +826,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         const slot = await checkSlotAvailability(
           parseInt(selectedDealership),
           formData.dueDate,
-          formData.dueDate.getHours()
+          getHourInTimezone(formData.dueDate) // Use NY timezone hour
         );
 
         if (slot && !slot.is_available) {
@@ -836,6 +836,36 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       } catch (capacityError) {
         // Continue with order creation even if capacity check fails
         toast({ description: t('validation.capacityCheckFailed') });
+      }
+    }
+
+    // VALIDATION FOR EDITING: Check if due_date changed and new slot is available
+    if (isEditing && order?.due_date && formData.dueDate && selectedDealership) {
+      const oldDueDate = safeParseDate(order.due_date);
+      const newDueDate = formData.dueDate;
+
+      // Check if due_date actually changed
+      if (oldDueDate && newDueDate.getTime() !== oldDueDate.getTime()) {
+        try {
+          // Validate new slot availability before allowing update
+          const newSlot = await checkSlotAvailability(
+            parseInt(selectedDealership),
+            newDueDate,
+            getHourInTimezone(newDueDate) // Use NY timezone hour
+          );
+
+          if (newSlot && !newSlot.is_available) {
+            toast({
+              variant: 'destructive',
+              description: t('validation.newSlotNotAvailable')
+            });
+            return false;
+          }
+        } catch (capacityError) {
+          // Log warning but allow update
+          console.warn('Failed to validate new slot during edit:', capacityError);
+          toast({ description: t('validation.capacityCheckFailed') });
+        }
       }
     }
 
@@ -888,6 +918,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       }
 
       // Reserve appointment slot before creating order when needed
+      // NOTE: Slot management during EDIT is now handled by database trigger
+      // The trigger automatically releases old slot and reserves new slot
       const shouldReserveSlot = !isEditing && requiresDueDate && formData.dueDate && selectedDealership;
 
       if (shouldReserveSlot) {
@@ -895,7 +927,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           const slotReserved = await reserveSlot(
             parseInt(selectedDealership),
             formData.dueDate as Date,
-            (formData.dueDate as Date).getHours()
+            getHourInTimezone(formData.dueDate as Date) // Use NY timezone hour
           );
 
           if (!slotReserved) {

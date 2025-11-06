@@ -143,7 +143,7 @@ export function useUserProfileForPermissions() {
 
       const { data, error} = await supabase
         .from('profiles')
-        .select('id, email, role, user_type, dealership_id, first_name, last_name, bypass_custom_roles')
+        .select('id, email, role, user_type, dealership_id, first_name, last_name')
         .eq('id', user.id)
         .single();
 

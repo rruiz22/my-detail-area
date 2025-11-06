@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useTranslation } from 'react-i18next';
+import { getNewYorkDateString, getHourInTimezone } from '@/utils/dateUtils';
 
 interface AppointmentSlot {
   date_slot: string;
@@ -34,12 +35,14 @@ export function useAppointmentCapacity(): UseAppointmentCapacityReturn {
     setError(null);
 
     try {
-      const dateString = date.toISOString().split('T')[0]; // YYYY-MM-DD format
+      // Use New York timezone for consistent slot operations
+      const dateString = getNewYorkDateString(date); // YYYY-MM-DD in America/New_York
+      const hourInNY = getHourInTimezone(date);
 
       const { data, error: queryError } = await supabase.rpc('get_available_slots', {
         p_dealer_id: dealerId,
         p_date_slot: dateString,
-        p_hour_slot: hour
+        p_hour_slot: hourInNY
       });
 
       if (queryError) {
@@ -67,7 +70,8 @@ export function useAppointmentCapacity(): UseAppointmentCapacityReturn {
     setError(null);
 
     try {
-      const dateString = date.toISOString().split('T')[0];
+      // Use New York timezone for consistent slot operations
+      const dateString = getNewYorkDateString(date);
 
       const { data, error: queryError } = await supabase.rpc('get_available_slots', {
         p_dealer_id: dealerId,
@@ -101,12 +105,14 @@ export function useAppointmentCapacity(): UseAppointmentCapacityReturn {
     setError(null);
 
     try {
-      const dateString = date.toISOString().split('T')[0];
+      // Use New York timezone for consistent slot operations
+      const dateString = getNewYorkDateString(date);
+      const hourInNY = getHourInTimezone(date);
 
       const { data, error: reserveError } = await supabase.rpc('reserve_appointment_slot', {
         p_dealer_id: dealerId,
         p_date_slot: dateString,
-        p_hour_slot: hour
+        p_hour_slot: hourInNY
       });
 
       if (reserveError) {
@@ -135,12 +141,14 @@ export function useAppointmentCapacity(): UseAppointmentCapacityReturn {
     setError(null);
 
     try {
-      const dateString = date.toISOString().split('T')[0];
+      // Use New York timezone for consistent slot operations
+      const dateString = getNewYorkDateString(date);
+      const hourInNY = getHourInTimezone(date);
 
       const { data, error: releaseError } = await supabase.rpc('release_appointment_slot', {
         p_dealer_id: dealerId,
         p_date_slot: dateString,
-        p_hour_slot: hour
+        p_hour_slot: hourInNY
       });
 
       if (releaseError) {
