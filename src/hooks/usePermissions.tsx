@@ -48,6 +48,7 @@ export type AppModule =
  * @deprecated Legacy permission levels - Use ModulePermissionKey instead
  * Imported from usePermissions.legacy.ts for backward compatibility
  */
+import type { PermissionLevel } from './usePermissions.legacy';
 export type { PermissionLevel } from './usePermissions.legacy';
 
 /**
@@ -412,12 +413,14 @@ export const usePermissions = () => {
       const roleModuleAccessData = permissionsData.module_access || [];
 
       // Build a map of which modules each role has access to
-      const roleModuleAccessMap = new Map<string, Set<string>>();
+      // ✅ FIX: Now includes BOTH enabled and disabled modules (is_enabled field)
+      const roleModuleAccessMap = new Map<string, Map<string, boolean>>();
       roleModuleAccessData.forEach((item: any) => {
         if (!roleModuleAccessMap.has(item.role_id)) {
-          roleModuleAccessMap.set(item.role_id, new Set());
+          roleModuleAccessMap.set(item.role_id, new Map());
         }
-        roleModuleAccessMap.get(item.role_id)!.add(item.module);
+        // Store module with its enabled status
+        roleModuleAccessMap.get(item.role_id)!.set(item.module, item.is_enabled);
       });
 
       logger.secure.permission(`Loaded role module access for ${roleModuleAccessMap.size} roles`);
@@ -450,21 +453,40 @@ export const usePermissions = () => {
 
           // TRIPLE VERIFICATION LAYER:
           // 1. Dealership has module enabled (checked in PermissionGuard)
-          // 2. Role has module access enabled (checked HERE - NEW)
+          // 2. Role has module access enabled (checked HERE)
           // 3. Role has specific permission (added below)
 
-          // Verificar si el rol tiene ALGUNA configuración en role_module_access
-          // Si roleModuleAccessMap tiene al menos 1 entry para este rol, significa que hay config
-          const roleHasAnyModuleAccessConfig = roleModuleAccessMap.has(role.id);
+          // ✅ FIX: Differentiate between "no config" vs "explicitly disabled"
+          const roleModuleConfig = roleModuleAccessMap.get(role.id);
+          const roleHasAnyModuleAccessConfig = roleModuleConfig && roleModuleConfig.size > 0;
 
-          // Aplicar lógica basada en si existe configuración
-          const roleHasModuleAccess = roleHasAnyModuleAccessConfig
-            ? (roleModulesEnabled?.has(module) ?? false) // Filtro estricto: solo si está en enabled set
-            : false; // Sin configuración = DENEGAR (fail-closed policy)
+          // Check if this specific module is configured for this role
+          const moduleConfigValue = roleModuleConfig?.get(module);
+          const moduleIsExplicitlyConfigured = moduleConfigValue !== undefined;
+          const moduleIsEnabled = moduleConfigValue === true;
+
+          // Apply fail-closed logic based on configuration state
+          let roleHasModuleAccess = false;
+          if (!roleHasAnyModuleAccessConfig) {
+            // No configuration at all - DENY (fail-closed)
+            logger.dev(`[hasModuleAccess] ⚠️ No modules configured - DENYING ${module} (fail-closed security)`);
+            logger.dev(`   This should not happen - dealership may need module configuration`);
+            roleHasModuleAccess = false;
+          } else if (!moduleIsExplicitlyConfigured) {
+            // Has config for OTHER modules, but not THIS one - ALLOW (default allow for unconfigured)
+            // This handles new modules added to the system
+            logger.dev(`[hasModuleAccess] ℹ️ Module ${module} not explicitly configured for role ${role.role_name} - ALLOWING by default`);
+            roleHasModuleAccess = true;
+          } else {
+            // Explicitly configured - use the configured value
+            roleHasModuleAccess = moduleIsEnabled;
+            if (!moduleIsEnabled) {
+              logger.dev(`[hasModuleAccess] 🚫 Module ${module} explicitly DISABLED for role ${role.role_name}`);
+            }
+          }
 
           if (!roleHasModuleAccess) {
             // Role has module disabled - skip these permissions
-            logger.dev(`⚠️ Skipping ${module} permissions for role ${role.role_name} - module disabled for role`);
             return;
           }
 
