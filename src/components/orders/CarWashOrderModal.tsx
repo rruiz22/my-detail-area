@@ -617,7 +617,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                   ) : (
                     <>
                       <ScrollArea className="h-48 sm:h-64 border border-border rounded-lg p-3 bg-background">
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                           {services.length === 0 ? (
                             <div className="text-center text-muted-foreground py-8">
                               {t('orders.noServicesAvailable')}
@@ -628,41 +628,39 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                               const isDisabled = !isSelected && selectedServices.length >= 1;
 
                               return (
-                                <div key={service.id} className={`flex items-start justify-between p-3 border border-border rounded-lg transition-colors ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/10'}`}>
-                                  <div className="flex items-start space-x-3 flex-1 min-h-[44px]">
+                                <div key={service.id} className={`flex items-start justify-between p-2 border border-border rounded-lg transition-colors ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/10'}`}>
+                                  <div className="flex items-start space-x-2 flex-1">
                                     <Checkbox
                                       id={service.id}
                                       checked={isSelected}
                                       onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
-                                      className="mt-1 w-5 h-5"
+                                      className="mt-0.5 w-4 h-4"
                                       disabled={isDisabled}
                                     />
                                     <div className="flex-1 min-w-0">
                                       <Label
                                         htmlFor={service.id}
-                                        className="font-medium text-sm cursor-pointer block leading-relaxed"
+                                        className="font-medium text-sm cursor-pointer block leading-snug"
                                       >
                                         {service.name}
                                       </Label>
-                                      {service.duration && (
-                                        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                                          <span>{service.duration} {t('services.minutes')}</span>
-                                        </div>
-                                      )}
                                       {service.description && (
-                                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                                        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
                                           {service.description}
                                         </p>
                                       )}
+                                      {(service.duration || service.price) && (
+                                        <div className="flex items-center justify-between text-xs mt-0.5">
+                                          {service.duration && (
+                                            <span className="text-muted-foreground">{service.duration} {t('services.minutes')}</span>
+                                          )}
+                                          {service.price && (
+                                            <span className="font-semibold">${service.price.toFixed(2)}</span>
+                                          )}
+                                        </div>
+                                      )}
                                     </div>
                                   </div>
-                                  {service.price && (
-                                    <div className="text-right shrink-0 ml-3">
-                                      <span className="font-semibold text-sm">
-                                        ${service.price.toFixed(2)}
-                                      </span>
-                                    </div>
-                                  )}
                                 </div>
                               );
                             })

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { clearAllCachesAggressive } from '@/utils/cacheManagement';
 
 interface VersionInfo {
   version: string;
@@ -82,36 +83,8 @@ export function useAppVersion() {
   };
 
   const reloadApp = async () => {
-    try {
-      // 1. Limpiar Service Worker caches
-      if ('caches' in window) {
-        const names = await caches.keys();
-        await Promise.all(names.map(name => caches.delete(name)));
-        console.log('✅ Service Worker caches cleared');
-      }
-
-      // 2. Limpiar localStorage
-      localStorage.clear();
-      console.log('✅ localStorage cleared');
-
-      // 3. Limpiar sessionStorage
-      sessionStorage.clear();
-      console.log('✅ sessionStorage cleared');
-
-      // 4. Limpiar IndexedDB (Firebase, React Query persistence)
-      if ('indexedDB' in window) {
-        indexedDB.deleteDatabase('firebaseLocalStorageDb');
-        indexedDB.deleteDatabase('REACT_QUERY_OFFLINE_CACHE');
-        console.log('✅ IndexedDB cleared');
-      }
-
-      // 5. Hard reload desde el servidor
-      window.location.reload();
-    } catch (error) {
-      console.error('❌ Error clearing cache:', error);
-      // Recargar de todas formas
-      window.location.reload();
-    }
+    // Use unified cache management utility (aggressive mode for updates)
+    await clearAllCachesAggressive();
   };
 
   return {
