@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 849,
-  "totalStrings": 8519,
-  "hardcodedStrings": 2076,
-  "translatedStrings": 6443,
+  "scannedFiles": 853,
+  "totalStrings": 8473,
+  "hardcodedStrings": 2077,
+  "translatedStrings": 6396,
   "issues": {
     "critical": [
       {
@@ -7885,23 +7885,23 @@
           },
           {
             "text": "Urgent",
-            "line": 827,
-            "context": "826: <div className=\"flex items-center gap-2 w-full\">\n827: <span className=\"flex-1 capitalize\">Urgent</span>\n828: {vehicle.priority === 'urgent' && ("
+            "line": 829,
+            "context": "828: <div className=\"flex items-center gap-2 w-full\">\n829: <span className=\"flex-1 capitalize\">Urgent</span>\n830: {vehicle.priority === 'urgent' && ("
           },
           {
             "text": "High",
-            "line": 841,
-            "context": "840: <div className=\"flex items-center gap-2 w-full\">\n841: <span className=\"flex-1 capitalize\">High</span>\n842: {vehicle.priority === 'high' && ("
+            "line": 843,
+            "context": "842: <div className=\"flex items-center gap-2 w-full\">\n843: <span className=\"flex-1 capitalize\">High</span>\n844: {vehicle.priority === 'high' && ("
           },
           {
             "text": "Medium",
-            "line": 855,
-            "context": "854: <div className=\"flex items-center gap-2 w-full\">\n855: <span className=\"flex-1 capitalize\">Medium</span>\n856: {vehicle.priority === 'medium' && ("
+            "line": 857,
+            "context": "856: <div className=\"flex items-center gap-2 w-full\">\n857: <span className=\"flex-1 capitalize\">Medium</span>\n858: {vehicle.priority === 'medium' && ("
           },
           {
             "text": "Normal",
-            "line": 869,
-            "context": "868: <div className=\"flex items-center gap-2 w-full\">\n869: <span className=\"flex-1 capitalize\">Normal</span>\n870: {vehicle.priority === 'normal' && ("
+            "line": 871,
+            "context": "870: <div className=\"flex items-center gap-2 w-full\">\n871: <span className=\"flex-1 capitalize\">Normal</span>\n872: {vehicle.priority === 'normal' && ("
           }
         ],
         "translationCalls": [
@@ -8032,77 +8032,77 @@
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 732,
+            "line": 734,
             "exists": false
           },
           {
             "key": "get_ready.workflow.change_workflow",
-            "line": 736,
+            "line": 738,
             "exists": false
           },
           {
             "key": "get_ready.workflow.standard",
-            "line": 746,
+            "line": 748,
             "exists": true
           },
           {
             "key": "get_ready.workflow.express",
-            "line": 760,
+            "line": 762,
             "exists": true
           },
           {
             "key": "get_ready.workflow.priority",
-            "line": 774,
+            "line": 776,
             "exists": true
           },
           {
             "key": "get_ready.priority.change_priority",
-            "line": 817,
+            "line": 819,
             "exists": true
           },
           {
             "key": "get_ready.actions.view_details",
-            "line": 926,
+            "line": 928,
             "exists": true
           },
           {
             "key": "get_ready.actions.edit_vehicle",
-            "line": 938,
+            "line": 940,
             "exists": true
           },
           {
             "key": "get_ready.actions.delete_vehicle",
-            "line": 950,
+            "line": 952,
             "exists": true
           },
           {
             "key": "common.showing",
-            "line": 976,
+            "line": 978,
             "exists": true
           },
           {
             "key": "common.of",
-            "line": 976,
+            "line": 978,
             "exists": true
           },
           {
             "key": "get_ready.confirm_delete_title",
-            "line": 1044,
-            "exists": false
-          },
-          {
-            "key": "get_ready.confirm_delete",
-            "line": 1045,
-            "exists": false
-          },
-          {
-            "key": "common.delete",
             "line": 1046,
             "exists": false
           },
           {
-            "key": "common.cancel",
+            "key": "get_ready.confirm_delete",
             "line": 1047,
+            "exists": false
+          },
+          {
+            "key": "common.delete",
+            "line": 1048,
+            "exists": false
+          },
+          {
+            "key": "common.cancel",
+            "line": 1049,
             "exists": true
           }
         ],
@@ -8114,28 +8114,28 @@
           },
           {
             "key": "get_ready.workflow.${vehicle.workflow_type}",
-            "line": 732,
-            "context": "731: >\n732: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n733: </Button>"
+            "line": 734,
+            "context": "733: >\n734: {t(`get_ready.workflow.${vehicle.workflow_type}`)}\n735: </Button>"
           },
           {
             "key": "get_ready.workflow.change_workflow",
-            "line": 736,
-            "context": "735: <DropdownMenuContent align=\"center\">\n736: <DropdownMenuLabel>{t('get_ready.workflow.change_workflow')}</DropdownMenuLabel>\n737: <DropdownMenuSeparator />"
+            "line": 738,
+            "context": "737: <DropdownMenuContent align=\"center\">\n738: <DropdownMenuLabel>{t('get_ready.workflow.change_workflow')}</DropdownMenuLabel>\n739: <DropdownMenuSeparator />"
           },
           {
             "key": "get_ready.confirm_delete_title",
-            "line": 1044,
-            "context": "1043: onOpenChange={setDeleteDialogOpen}\n1044: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n1045: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}"
+            "line": 1046,
+            "context": "1045: onOpenChange={setDeleteDialogOpen}\n1046: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n1047: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}"
           },
           {
             "key": "get_ready.confirm_delete",
-            "line": 1045,
-            "context": "1044: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n1045: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n1046: confirmText={t('common.delete', 'Delete')}"
+            "line": 1047,
+            "context": "1046: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n1047: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n1048: confirmText={t('common.delete', 'Delete')}"
           },
           {
             "key": "common.delete",
-            "line": 1046,
-            "context": "1045: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n1046: confirmText={t('common.delete', 'Delete')}\n1047: cancelText={t('common.cancel', 'Cancel')}"
+            "line": 1048,
+            "context": "1047: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n1048: confirmText={t('common.delete', 'Delete')}\n1049: cancelText={t('common.cancel', 'Cancel')}"
           }
         ],
         "coverage": 78,
@@ -10155,207 +10155,207 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 42,
-            "context": "41: error: string | null;\n42: loadWorkflows: (dealerId?: number) => Promise<void>;\n43: createWorkflow: (workflowData: Partial<NFCWorkflow>) => Promise<void>;"
+            "line": 72,
+            "context": "71: error: string | null;\n72: loadWorkflows: (dealerId?: number) => Promise<void>;\n73: createWorkflow: (workflowData: Partial<NFCWorkflow>) => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 43,
-            "context": "42: loadWorkflows: (dealerId?: number) => Promise<void>;\n43: createWorkflow: (workflowData: Partial<NFCWorkflow>) => Promise<void>;\n44: updateWorkflow: (workflowId: string, updates: Partial<NFCWorkflow>) => Promise<void>;"
+            "line": 73,
+            "context": "72: loadWorkflows: (dealerId?: number) => Promise<void>;\n73: createWorkflow: (workflowData: Partial<NFCWorkflow>) => Promise<void>;\n74: updateWorkflow: (workflowId: string, updates: Partial<NFCWorkflow>) => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 44,
-            "context": "43: createWorkflow: (workflowData: Partial<NFCWorkflow>) => Promise<void>;\n44: updateWorkflow: (workflowId: string, updates: Partial<NFCWorkflow>) => Promise<void>;\n45: deleteWorkflow: (workflowId: string) => Promise<void>;"
+            "line": 74,
+            "context": "73: createWorkflow: (workflowData: Partial<NFCWorkflow>) => Promise<void>;\n74: updateWorkflow: (workflowId: string, updates: Partial<NFCWorkflow>) => Promise<void>;\n75: deleteWorkflow: (workflowId: string) => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 45,
-            "context": "44: updateWorkflow: (workflowId: string, updates: Partial<NFCWorkflow>) => Promise<void>;\n45: deleteWorkflow: (workflowId: string) => Promise<void>;\n46: toggleWorkflow: (workflowId: string, isActive: boolean) => Promise<void>;"
+            "line": 75,
+            "context": "74: updateWorkflow: (workflowId: string, updates: Partial<NFCWorkflow>) => Promise<void>;\n75: deleteWorkflow: (workflowId: string) => Promise<void>;\n76: toggleWorkflow: (workflowId: string, isActive: boolean) => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 46,
-            "context": "45: deleteWorkflow: (workflowId: string) => Promise<void>;\n46: toggleWorkflow: (workflowId: string, isActive: boolean) => Promise<void>;\n47: executeWorkflow: (workflowId: string, context?: any) => Promise<void>;"
+            "line": 76,
+            "context": "75: deleteWorkflow: (workflowId: string) => Promise<void>;\n76: toggleWorkflow: (workflowId: string, isActive: boolean) => Promise<void>;\n77: executeWorkflow: (workflowId: string, context?: WorkflowExecutionContext) => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 47,
-            "context": "46: toggleWorkflow: (workflowId: string, isActive: boolean) => Promise<void>;\n47: executeWorkflow: (workflowId: string, context?: any) => Promise<void>;\n48: }"
+            "line": 77,
+            "context": "76: toggleWorkflow: (workflowId: string, isActive: boolean) => Promise<void>;\n77: executeWorkflow: (workflowId: string, context?: WorkflowExecutionContext) => Promise<void>;\n78: }"
           }
         ],
         "translationCalls": [
           {
             "key": "nfc_tracking.workflows.errors.load_failed",
-            "line": 175,
+            "line": 205,
             "exists": false
           },
           {
             "key": "nfc_tracking.workflows.workflow_created",
-            "line": 207,
+            "line": 237,
             "exists": false
           },
           {
             "key": "nfc_tracking.workflows.workflow_created_desc",
-            "line": 208,
+            "line": 238,
             "exists": false
           },
           {
             "key": "nfc_tracking.workflows.errors.create_failed",
-            "line": 215,
+            "line": 245,
             "exists": false
           },
           {
             "key": "nfc_tracking.workflows.workflow_updated",
-            "line": 247,
+            "line": 277,
             "exists": false
           },
           {
             "key": "nfc_tracking.workflows.workflow_updated_desc",
-            "line": 248,
+            "line": 278,
             "exists": false
           },
           {
             "key": "nfc_tracking.workflows.errors.update_failed",
-            "line": 255,
+            "line": 285,
             "exists": false
           },
           {
             "key": "nfc_tracking.workflows.workflow_deleted",
-            "line": 274,
+            "line": 304,
             "exists": false
           },
           {
             "key": "nfc_tracking.workflows.workflow_deleted_desc",
-            "line": 275,
+            "line": 305,
             "exists": false
           },
           {
             "key": "nfc_tracking.workflows.errors.delete_failed",
-            "line": 282,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.workflows.workflow_enabled",
-            "line": 311,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.workflows.workflow_disabled",
-            "line": 311,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.workflows.status_changed",
             "line": 312,
             "exists": false
           },
           {
+            "key": "nfc_tracking.workflows.workflow_enabled",
+            "line": 341,
+            "exists": false
+          },
+          {
+            "key": "nfc_tracking.workflows.workflow_disabled",
+            "line": 341,
+            "exists": false
+          },
+          {
+            "key": "nfc_tracking.workflows.status_changed",
+            "line": 342,
+            "exists": false
+          },
+          {
             "key": "nfc_tracking.workflows.errors.toggle_failed",
-            "line": 319,
+            "line": 349,
             "exists": false
           },
           {
             "key": "nfc_tracking.workflows.workflow_executed",
-            "line": 366,
+            "line": 396,
             "exists": false
           },
           {
             "key": "nfc_tracking.workflows.workflow_executed_desc",
-            "line": 367,
+            "line": 397,
             "exists": false
           },
           {
             "key": "nfc_tracking.workflows.errors.execute_failed",
-            "line": 377,
+            "line": 407,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "nfc_tracking.workflows.errors.load_failed",
-            "line": 175,
-            "context": "174: variant: 'destructive',\n175: title: t('nfc_tracking.workflows.errors.load_failed'),\n176: description: message"
+            "line": 205,
+            "context": "204: variant: 'destructive',\n205: title: t('nfc_tracking.workflows.errors.load_failed'),\n206: description: message"
           },
           {
             "key": "nfc_tracking.workflows.workflow_created",
-            "line": 207,
-            "context": "206: toast({\n207: title: t('nfc_tracking.workflows.workflow_created'),\n208: description: t('nfc_tracking.workflows.workflow_created_desc', { name: newWorkflow.name })"
+            "line": 237,
+            "context": "236: toast({\n237: title: t('nfc_tracking.workflows.workflow_created'),\n238: description: t('nfc_tracking.workflows.workflow_created_desc', { name: newWorkflow.name })"
           },
           {
             "key": "nfc_tracking.workflows.workflow_created_desc",
-            "line": 208,
-            "context": "207: title: t('nfc_tracking.workflows.workflow_created'),\n208: description: t('nfc_tracking.workflows.workflow_created_desc', { name: newWorkflow.name })\n209: });"
+            "line": 238,
+            "context": "237: title: t('nfc_tracking.workflows.workflow_created'),\n238: description: t('nfc_tracking.workflows.workflow_created_desc', { name: newWorkflow.name })\n239: });"
           },
           {
             "key": "nfc_tracking.workflows.errors.create_failed",
-            "line": 215,
-            "context": "214: variant: 'destructive',\n215: title: t('nfc_tracking.workflows.errors.create_failed'),\n216: description: message"
+            "line": 245,
+            "context": "244: variant: 'destructive',\n245: title: t('nfc_tracking.workflows.errors.create_failed'),\n246: description: message"
           },
           {
             "key": "nfc_tracking.workflows.workflow_updated",
-            "line": 247,
-            "context": "246: toast({\n247: title: t('nfc_tracking.workflows.workflow_updated'),\n248: description: t('nfc_tracking.workflows.workflow_updated_desc', { name: newWorkflow.name })"
+            "line": 277,
+            "context": "276: toast({\n277: title: t('nfc_tracking.workflows.workflow_updated'),\n278: description: t('nfc_tracking.workflows.workflow_updated_desc', { name: newWorkflow.name })"
           },
           {
             "key": "nfc_tracking.workflows.workflow_updated_desc",
-            "line": 248,
-            "context": "247: title: t('nfc_tracking.workflows.workflow_updated'),\n248: description: t('nfc_tracking.workflows.workflow_updated_desc', { name: newWorkflow.name })\n249: });"
+            "line": 278,
+            "context": "277: title: t('nfc_tracking.workflows.workflow_updated'),\n278: description: t('nfc_tracking.workflows.workflow_updated_desc', { name: newWorkflow.name })\n279: });"
           },
           {
             "key": "nfc_tracking.workflows.errors.update_failed",
-            "line": 255,
-            "context": "254: variant: 'destructive',\n255: title: t('nfc_tracking.workflows.errors.update_failed'),\n256: description: message"
+            "line": 285,
+            "context": "284: variant: 'destructive',\n285: title: t('nfc_tracking.workflows.errors.update_failed'),\n286: description: message"
           },
           {
             "key": "nfc_tracking.workflows.workflow_deleted",
-            "line": 274,
-            "context": "273: toast({\n274: title: t('nfc_tracking.workflows.workflow_deleted'),\n275: description: t('nfc_tracking.workflows.workflow_deleted_desc')"
+            "line": 304,
+            "context": "303: toast({\n304: title: t('nfc_tracking.workflows.workflow_deleted'),\n305: description: t('nfc_tracking.workflows.workflow_deleted_desc')"
           },
           {
             "key": "nfc_tracking.workflows.workflow_deleted_desc",
-            "line": 275,
-            "context": "274: title: t('nfc_tracking.workflows.workflow_deleted'),\n275: description: t('nfc_tracking.workflows.workflow_deleted_desc')\n276: });"
+            "line": 305,
+            "context": "304: title: t('nfc_tracking.workflows.workflow_deleted'),\n305: description: t('nfc_tracking.workflows.workflow_deleted_desc')\n306: });"
           },
           {
             "key": "nfc_tracking.workflows.errors.delete_failed",
-            "line": 282,
-            "context": "281: variant: 'destructive',\n282: title: t('nfc_tracking.workflows.errors.delete_failed'),\n283: description: message"
+            "line": 312,
+            "context": "311: variant: 'destructive',\n312: title: t('nfc_tracking.workflows.errors.delete_failed'),\n313: description: message"
           },
           {
             "key": "nfc_tracking.workflows.workflow_enabled",
-            "line": 311,
-            "context": "310: toast({\n311: title: isActive ? t('nfc_tracking.workflows.workflow_enabled') : t('nfc_tracking.workflows.workflow_disabled'),\n312: description: t('nfc_tracking.workflows.status_changed', { name: newWorkflow.name })"
+            "line": 341,
+            "context": "340: toast({\n341: title: isActive ? t('nfc_tracking.workflows.workflow_enabled') : t('nfc_tracking.workflows.workflow_disabled'),\n342: description: t('nfc_tracking.workflows.status_changed', { name: newWorkflow.name })"
           },
           {
             "key": "nfc_tracking.workflows.workflow_disabled",
-            "line": 311,
-            "context": "310: toast({\n311: title: isActive ? t('nfc_tracking.workflows.workflow_enabled') : t('nfc_tracking.workflows.workflow_disabled'),\n312: description: t('nfc_tracking.workflows.status_changed', { name: newWorkflow.name })"
+            "line": 341,
+            "context": "340: toast({\n341: title: isActive ? t('nfc_tracking.workflows.workflow_enabled') : t('nfc_tracking.workflows.workflow_disabled'),\n342: description: t('nfc_tracking.workflows.status_changed', { name: newWorkflow.name })"
           },
           {
             "key": "nfc_tracking.workflows.status_changed",
-            "line": 312,
-            "context": "311: title: isActive ? t('nfc_tracking.workflows.workflow_enabled') : t('nfc_tracking.workflows.workflow_disabled'),\n312: description: t('nfc_tracking.workflows.status_changed', { name: newWorkflow.name })\n313: });"
+            "line": 342,
+            "context": "341: title: isActive ? t('nfc_tracking.workflows.workflow_enabled') : t('nfc_tracking.workflows.workflow_disabled'),\n342: description: t('nfc_tracking.workflows.status_changed', { name: newWorkflow.name })\n343: });"
           },
           {
             "key": "nfc_tracking.workflows.errors.toggle_failed",
-            "line": 319,
-            "context": "318: variant: 'destructive',\n319: title: t('nfc_tracking.workflows.errors.toggle_failed'),\n320: description: message"
+            "line": 349,
+            "context": "348: variant: 'destructive',\n349: title: t('nfc_tracking.workflows.errors.toggle_failed'),\n350: description: message"
           },
           {
             "key": "nfc_tracking.workflows.workflow_executed",
-            "line": 366,
-            "context": "365: toast({\n366: title: t('nfc_tracking.workflows.workflow_executed'),\n367: description: t('nfc_tracking.workflows.workflow_executed_desc', { name: workflow.name })"
+            "line": 396,
+            "context": "395: toast({\n396: title: t('nfc_tracking.workflows.workflow_executed'),\n397: description: t('nfc_tracking.workflows.workflow_executed_desc', { name: workflow.name })"
           },
           {
             "key": "nfc_tracking.workflows.workflow_executed_desc",
-            "line": 367,
-            "context": "366: title: t('nfc_tracking.workflows.workflow_executed'),\n367: description: t('nfc_tracking.workflows.workflow_executed_desc', { name: workflow.name })\n368: });"
+            "line": 397,
+            "context": "396: title: t('nfc_tracking.workflows.workflow_executed'),\n397: description: t('nfc_tracking.workflows.workflow_executed_desc', { name: workflow.name })\n398: });"
           },
           {
             "key": "nfc_tracking.workflows.errors.execute_failed",
-            "line": 377,
-            "context": "376: variant: 'destructive',\n377: title: t('nfc_tracking.workflows.errors.execute_failed'),\n378: description: message"
+            "line": 407,
+            "context": "406: variant: 'destructive',\n407: title: t('nfc_tracking.workflows.errors.execute_failed'),\n408: description: message"
           }
         ],
         "coverage": 74,
@@ -15531,99 +15531,68 @@
         "hardcodedStrings": [
           {
             "text": "Dashboard",
-            "line": 45,
-            "context": "44: <span className=\"hidden sm:inline\">{t('nfc_tracking.dashboard.title')}</span>\n45: <span className=\"sm:hidden\">Dashboard</span>\n46: </TabsTrigger>"
+            "line": 61,
+            "context": "60: <span className=\"hidden sm:inline\">{t('nfc_tracking.dashboard.title')}</span>\n61: <span className=\"sm:hidden\">Dashboard</span>\n62: </TabsTrigger>"
           },
           {
             "text": "Tags",
-            "line": 50,
-            "context": "49: <span className=\"hidden sm:inline\">{t('nfc_tracking.tag_manager.title')}</span>\n50: <span className=\"sm:hidden\">Tags</span>\n51: </TabsTrigger>"
+            "line": 66,
+            "context": "65: <span className=\"hidden sm:inline\">{t('nfc_tracking.tag_manager.title')}</span>\n66: <span className=\"sm:hidden\">Tags</span>\n67: </TabsTrigger>"
           },
           {
             "text": "Tracker",
-            "line": 55,
-            "context": "54: <span className=\"hidden sm:inline\">{t('nfc_tracking.vehicle_tracker.title')}</span>\n55: <span className=\"sm:hidden\">Tracker</span>\n56: </TabsTrigger>"
+            "line": 71,
+            "context": "70: <span className=\"hidden sm:inline\">{t('nfc_tracking.vehicle_tracker.title')}</span>\n71: <span className=\"sm:hidden\">Tracker</span>\n72: </TabsTrigger>"
           },
           {
             "text": "Heatmap",
-            "line": 60,
-            "context": "59: <span className=\"hidden sm:inline\">{t('nfc_tracking.location_heatmap.title')}</span>\n60: <span className=\"sm:hidden\">Heatmap</span>\n61: </TabsTrigger>"
+            "line": 76,
+            "context": "75: <span className=\"hidden sm:inline\">{t('nfc_tracking.location_heatmap.title')}</span>\n76: <span className=\"sm:hidden\">Heatmap</span>\n77: </TabsTrigger>"
           },
           {
             "text": "Workflows",
-            "line": 65,
-            "context": "64: <span className=\"hidden sm:inline\">{t('nfc_tracking.workflows.title')}</span>\n65: <span className=\"sm:hidden\">Workflows</span>\n66: </TabsTrigger>"
+            "line": 81,
+            "context": "80: <span className=\"hidden sm:inline\">{t('nfc_tracking.workflows.title')}</span>\n81: <span className=\"sm:hidden\">Workflows</span>\n82: </TabsTrigger>"
           }
         ],
         "translationCalls": [
           {
             "key": "nfc_tracking.title",
-            "line": 31,
+            "line": 47,
             "exists": true
           },
           {
             "key": "nfc_tracking.subtitle",
-            "line": 34,
-            "exists": false
+            "line": 50,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.title",
-            "line": 44,
-            "exists": false
+            "line": 60,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.title",
-            "line": 49,
-            "exists": false
+            "line": 65,
+            "exists": true
           },
           {
             "key": "nfc_tracking.vehicle_tracker.title",
-            "line": 54,
-            "exists": false
+            "line": 70,
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.title",
-            "line": 59,
-            "exists": false
+            "line": 75,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.title",
-            "line": 64,
-            "exists": false
+            "line": 80,
+            "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "nfc_tracking.subtitle",
-            "line": 34,
-            "context": "33: <p className=\"text-muted-foreground\">\n34: {t('nfc_tracking.subtitle')}\n35: </p>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.title",
-            "line": 44,
-            "context": "43: <Radio className=\"w-4 h-4\" />\n44: <span className=\"hidden sm:inline\">{t('nfc_tracking.dashboard.title')}</span>\n45: <span className=\"sm:hidden\">Dashboard</span>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.title",
-            "line": 49,
-            "context": "48: <Settings className=\"w-4 h-4\" />\n49: <span className=\"hidden sm:inline\">{t('nfc_tracking.tag_manager.title')}</span>\n50: <span className=\"sm:hidden\">Tags</span>"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.title",
-            "line": 54,
-            "context": "53: <Navigation className=\"w-4 h-4\" />\n54: <span className=\"hidden sm:inline\">{t('nfc_tracking.vehicle_tracker.title')}</span>\n55: <span className=\"sm:hidden\">Tracker</span>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.title",
-            "line": 59,
-            "context": "58: <TrendingUp className=\"w-4 h-4\" />\n59: <span className=\"hidden sm:inline\">{t('nfc_tracking.location_heatmap.title')}</span>\n60: <span className=\"sm:hidden\">Heatmap</span>"
-          },
-          {
-            "key": "nfc_tracking.workflows.title",
-            "line": 64,
-            "context": "63: <Activity className=\"w-4 h-4\" />\n64: <span className=\"hidden sm:inline\">{t('nfc_tracking.workflows.title')}</span>\n65: <span className=\"sm:hidden\">Workflows</span>"
-          }
-        ],
+        "missingKeys": [],
         "coverage": 58,
         "severity": "low"
       },
@@ -18575,12 +18544,12 @@
           {
             "key": "nfc.errors.not_supported",
             "line": 66,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.errors.permission_denied",
             "line": 74,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.errors.permission_failed",
@@ -18590,17 +18559,17 @@
           {
             "key": "nfc.errors.not_supported",
             "line": 89,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.errors.write_failed",
             "line": 132,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.errors.not_supported",
             "line": 140,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.errors.read_timeout",
@@ -18610,17 +18579,17 @@
           {
             "key": "nfc.errors.read_failed",
             "line": 162,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.errors.read_failed",
             "line": 201,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.errors.read_failed",
             "line": 219,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.errors.scan_failed",
@@ -18630,54 +18599,14 @@
         ],
         "missingKeys": [
           {
-            "key": "nfc.errors.not_supported",
-            "line": 66,
-            "context": "65: if (!isSupported) {\n66: setError(t('nfc.errors.not_supported'));\n67: return false;"
-          },
-          {
-            "key": "nfc.errors.permission_denied",
-            "line": 74,
-            "context": "73: if (result?.state === 'denied') {\n74: setError(t('nfc.errors.permission_denied'));\n75: return false;"
-          },
-          {
             "key": "nfc.errors.permission_failed",
             "line": 82,
             "context": "81: console.error('Permission request failed:', err);\n82: setError(t('nfc.errors.permission_failed'));\n83: return false;"
           },
           {
-            "key": "nfc.errors.not_supported",
-            "line": 89,
-            "context": "88: if (!isSupported) {\n89: setError(t('nfc.errors.not_supported'));\n90: return false;"
-          },
-          {
-            "key": "nfc.errors.write_failed",
-            "line": 132,
-            "context": "131: console.error('NFC write failed:', err);\n132: setError(err.message || t('nfc.errors.write_failed'));\n133: setIsWriting(false);"
-          },
-          {
-            "key": "nfc.errors.not_supported",
-            "line": 140,
-            "context": "139: if (!isSupported) {\n140: setError(t('nfc.errors.not_supported'));\n141: return null;"
-          },
-          {
             "key": "nfc.errors.read_timeout",
             "line": 156,
             "context": "155: setIsReading(false);\n156: reject(new Error(t('nfc.errors.read_timeout')));\n157: }, 10000); // 10 second timeout"
-          },
-          {
-            "key": "nfc.errors.read_failed",
-            "line": 162,
-            "context": "161: setIsReading(false);\n162: reject(new Error(t('nfc.errors.read_failed')));\n163: });"
-          },
-          {
-            "key": "nfc.errors.read_failed",
-            "line": 201,
-            "context": "200: console.error('NFC read failed:', err);\n201: setError(err.message || t('nfc.errors.read_failed'));\n202: setIsReading(false);"
-          },
-          {
-            "key": "nfc.errors.read_failed",
-            "line": 219,
-            "context": "218: ndef.addEventListener('readingerror', () => {\n219: setError(t('nfc.errors.read_failed'));\n220: setIsReading(false);"
           },
           {
             "key": "nfc.errors.scan_failed",
@@ -19852,116 +19781,6 @@
         ],
         "missingKeys": [],
         "coverage": 83,
-        "severity": "low"
-      },
-      {
-        "file": "src\\hooks\\useNFCManagement.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "nfc_tracking.errors.load_failed",
-            "line": 115,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.tag_created",
-            "line": 277,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.tag_created_desc",
-            "line": 278,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.errors.create_failed",
-            "line": 286,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.tag_updated",
-            "line": 336,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.tag_updated_desc",
-            "line": 337,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.errors.update_failed",
-            "line": 345,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.tag_deleted",
-            "line": 370,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.tag_deleted_desc",
-            "line": 371,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.errors.delete_failed",
-            "line": 377,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "nfc_tracking.errors.load_failed",
-            "line": 115,
-            "context": "114: toast({\n115: title: t('nfc_tracking.errors.load_failed'),\n116: description: message,"
-          },
-          {
-            "key": "nfc_tracking.tag_created",
-            "line": 277,
-            "context": "276: toast({\n277: title: t('nfc_tracking.tag_created'),\n278: description: t('nfc_tracking.tag_created_desc', { name: data.name })"
-          },
-          {
-            "key": "nfc_tracking.tag_created_desc",
-            "line": 278,
-            "context": "277: title: t('nfc_tracking.tag_created'),\n278: description: t('nfc_tracking.tag_created_desc', { name: data.name })\n279: });"
-          },
-          {
-            "key": "nfc_tracking.errors.create_failed",
-            "line": 286,
-            "context": "285: toast({\n286: title: t('nfc_tracking.errors.create_failed'),\n287: description: message,"
-          },
-          {
-            "key": "nfc_tracking.tag_updated",
-            "line": 336,
-            "context": "335: toast({\n336: title: t('nfc_tracking.tag_updated'),\n337: description: t('nfc_tracking.tag_updated_desc', { name: data.name })"
-          },
-          {
-            "key": "nfc_tracking.tag_updated_desc",
-            "line": 337,
-            "context": "336: title: t('nfc_tracking.tag_updated'),\n337: description: t('nfc_tracking.tag_updated_desc', { name: data.name })\n338: });"
-          },
-          {
-            "key": "nfc_tracking.errors.update_failed",
-            "line": 345,
-            "context": "344: toast({\n345: title: t('nfc_tracking.errors.update_failed'),\n346: description: message,"
-          },
-          {
-            "key": "nfc_tracking.tag_deleted",
-            "line": 370,
-            "context": "369: toast({\n370: title: t('nfc_tracking.tag_deleted'),\n371: description: t('nfc_tracking.tag_deleted_desc')"
-          },
-          {
-            "key": "nfc_tracking.tag_deleted_desc",
-            "line": 371,
-            "context": "370: title: t('nfc_tracking.tag_deleted'),\n371: description: t('nfc_tracking.tag_deleted_desc')\n372: });"
-          },
-          {
-            "key": "nfc_tracking.errors.delete_failed",
-            "line": 377,
-            "context": "376: toast({\n377: title: t('nfc_tracking.errors.delete_failed'),\n378: description: message,"
-          }
-        ],
-        "coverage": 100,
         "severity": "low"
       },
       {
@@ -22507,170 +22326,170 @@
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 142,
+            "line": 140,
             "exists": true
           },
           {
             "key": "user_management.no_dealership_assigned",
-            "line": 211,
+            "line": 209,
             "exists": true
           },
           {
             "key": "admin.dealer_users",
-            "line": 274,
+            "line": 272,
             "exists": true
           },
           {
             "key": "common.users",
-            "line": 275,
+            "line": 273,
             "exists": false
           },
           {
             "key": "password_management.title",
-            "line": 279,
+            "line": 277,
             "exists": true
           },
           {
             "key": "common.password",
-            "line": 280,
+            "line": 278,
             "exists": false
           },
           {
             "key": "user_management.overview_title",
-            "line": 291,
+            "line": 289,
             "exists": true
           },
           {
             "key": "user_management.title",
-            "line": 291,
+            "line": 289,
             "exists": true
           },
           {
             "key": "user_management.readonly_description",
-            "line": 295,
+            "line": 293,
             "exists": true
           },
           {
             "key": "users.invite_user",
-            "line": 306,
+            "line": 304,
             "exists": true
           },
           {
             "key": "user_management.readonly_alert",
-            "line": 318,
+            "line": 316,
             "exists": true
           },
           {
             "key": "user_management.readonly_alert_cta",
-            "line": 319,
+            "line": 317,
             "exists": true
           },
           {
             "key": "user_management.search_users",
-            "line": 329,
+            "line": 327,
             "exists": true
           },
           {
             "key": "dealerships.select_dealership",
-            "line": 340,
+            "line": 338,
             "exists": true
           },
           {
             "key": "common.all",
-            "line": 343,
+            "line": 341,
             "exists": true
           },
           {
             "key": "user_management.user",
-            "line": 358,
+            "line": 356,
             "exists": true
           },
           {
             "key": "dealerships.dealership",
-            "line": 359,
+            "line": 357,
             "exists": true
           },
           {
             "key": "user_management.roles",
-            "line": 360,
+            "line": 358,
             "exists": true
           },
           {
-            "key": "common.status",
-            "line": 361,
+            "key": "common.status_label",
+            "line": 359,
             "exists": true
           },
           {
             "key": "common.actions",
-            "line": 362,
+            "line": 360,
             "exists": true
           },
           {
             "key": "user_management.no_users_matching_filters",
-            "line": 371,
+            "line": 369,
             "exists": true
           },
           {
             "key": "user_management.no_users_found",
-            "line": 372,
+            "line": 370,
             "exists": true
           },
           {
             "key": "user_management.no_roles",
-            "line": 410,
+            "line": 408,
             "exists": true
           },
           {
             "key": "common.active",
-            "line": 418,
+            "line": 416,
             "exists": true
           },
           {
             "key": "user_management.incomplete_setup",
-            "line": 418,
+            "line": 416,
             "exists": true
           },
           {
             "key": "user_management.view_dealer",
-            "line": 432,
+            "line": 430,
             "exists": true
           },
           {
             "key": "user_management.no_dealer",
-            "line": 436,
+            "line": 434,
             "exists": true
           },
           {
             "key": "user_management.manage",
-            "line": 448,
+            "line": 446,
             "exists": true
           },
           {
             "key": "common.showing",
-            "line": 462,
+            "line": 460,
             "exists": true
           },
           {
             "key": "common.of",
-            "line": 462,
+            "line": 460,
             "exists": true
           },
           {
             "key": "user_management.users",
-            "line": 462,
+            "line": 460,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.users",
-            "line": 275,
-            "context": "274: <span className=\"hidden sm:inline\">{t('admin.dealer_users', 'Dealer Users')}</span>\n275: <span className=\"sm:hidden\">{t('common.users', 'Users')}</span>\n276: </TabsTrigger>"
+            "line": 273,
+            "context": "272: <span className=\"hidden sm:inline\">{t('admin.dealer_users', 'Dealer Users')}</span>\n273: <span className=\"sm:hidden\">{t('common.users', 'Users')}</span>\n274: </TabsTrigger>"
           },
           {
             "key": "common.password",
-            "line": 280,
-            "context": "279: <span className=\"hidden sm:inline\">{t('password_management.title')}</span>\n280: <span className=\"sm:hidden\">{t('common.password', 'Password')}</span>\n281: </TabsTrigger>"
+            "line": 278,
+            "context": "277: <span className=\"hidden sm:inline\">{t('password_management.title')}</span>\n278: <span className=\"sm:hidden\">{t('common.password', 'Password')}</span>\n279: </TabsTrigger>"
           }
         ],
         "coverage": 100,
@@ -23093,95 +22912,95 @@
         "translationCalls": [
           {
             "key": "common.no_dealerships_available",
-            "line": 37,
+            "line": 29,
             "exists": false
           },
           {
             "key": "password_management.title",
-            "line": 51,
+            "line": 45,
             "exists": true
           },
           {
             "key": "password_management.description",
-            "line": 54,
+            "line": 48,
             "exists": true
           },
           {
             "key": "password_management.tabs.dashboard",
-            "line": 64,
+            "line": 58,
             "exists": true
           },
           {
             "key": "common.dashboard",
-            "line": 65,
+            "line": 59,
             "exists": false
           },
           {
             "key": "password_management.tabs.reset",
-            "line": 71,
+            "line": 65,
             "exists": true
           },
           {
             "key": "common.reset",
-            "line": 72,
+            "line": 66,
             "exists": false
           },
           {
             "key": "password_management.tabs.bulk",
-            "line": 79,
+            "line": 73,
             "exists": true
           },
           {
             "key": "common.bulk",
-            "line": 80,
+            "line": 74,
             "exists": false
           },
           {
             "key": "password_management.tabs.policies",
-            "line": 87,
+            "line": 81,
             "exists": true
           },
           {
             "key": "common.policies",
-            "line": 88,
+            "line": 82,
             "exists": false
           },
           {
             "key": "password_management.tabs.activity",
-            "line": 94,
+            "line": 88,
             "exists": true
           },
           {
             "key": "common.activity",
-            "line": 95,
+            "line": 89,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.no_dealerships_available",
-            "line": 37,
-            "context": "36: <p className=\"text-muted-foreground text-center\">\n37: {t('common.no_dealerships_available')}\n38: </p>"
+            "line": 29,
+            "context": "28: <p className=\"text-muted-foreground text-center\">\n29: {t('common.no_dealerships_available')}\n30: </p>"
           },
           {
             "key": "common.dashboard",
-            "line": 65,
-            "context": "64: <span className=\"hidden sm:inline\">{t('password_management.tabs.dashboard')}</span>\n65: <span className=\"sm:hidden\">{t('common.dashboard', 'Dashboard')}</span>\n66: </TabsTrigger>"
+            "line": 59,
+            "context": "58: <span className=\"hidden sm:inline\">{t('password_management.tabs.dashboard')}</span>\n59: <span className=\"sm:hidden\">{t('common.dashboard', 'Dashboard')}</span>\n60: </TabsTrigger>"
           },
           {
             "key": "common.reset",
-            "line": 72,
-            "context": "71: <span className=\"hidden sm:inline\">{t('password_management.tabs.reset')}</span>\n72: <span className=\"sm:hidden\">{t('common.reset', 'Reset')}</span>\n73: </TabsTrigger>"
+            "line": 66,
+            "context": "65: <span className=\"hidden sm:inline\">{t('password_management.tabs.reset')}</span>\n66: <span className=\"sm:hidden\">{t('common.reset', 'Reset')}</span>\n67: </TabsTrigger>"
           },
           {
             "key": "common.bulk",
-            "line": 80,
-            "context": "79: <span className=\"hidden sm:inline\">{t('password_management.tabs.bulk')}</span>\n80: <span className=\"sm:hidden\">{t('common.bulk', 'Bulk')}</span>\n81: </TabsTrigger>"
+            "line": 74,
+            "context": "73: <span className=\"hidden sm:inline\">{t('password_management.tabs.bulk')}</span>\n74: <span className=\"sm:hidden\">{t('common.bulk', 'Bulk')}</span>\n75: </TabsTrigger>"
           },
           {
             "key": "common.policies",
-            "line": 88,
-            "context": "87: <span className=\"hidden sm:inline\">{t('password_management.tabs.policies')}</span>\n88: <span className=\"sm:hidden\">{t('common.policies', 'Policies')}</span>\n89: </TabsTrigger>"
+            "line": 82,
+            "context": "81: <span className=\"hidden sm:inline\">{t('password_management.tabs.policies')}</span>\n82: <span className=\"sm:hidden\">{t('common.policies', 'Policies')}</span>\n83: </TabsTrigger>"
           }
         ],
         "coverage": 100,
@@ -23193,90 +23012,90 @@
         "translationCalls": [
           {
             "key": "password_management.select_user",
-            "line": 115,
+            "line": 131,
             "exists": true
           },
           {
             "key": "password_management.search_user_desc",
-            "line": 118,
+            "line": 134,
             "exists": true
           },
           {
             "key": "password_management.search_users",
-            "line": 123,
+            "line": 139,
             "exists": true
           },
           {
             "key": "password_management.search_placeholder",
-            "line": 126,
+            "line": 142,
             "exists": true
           },
           {
             "key": "common.searching",
-            "line": 137,
+            "line": 153,
             "exists": false
           },
           {
             "key": "password_management.selected",
-            "line": 173,
+            "line": 189,
             "exists": true
           },
           {
             "key": "password_management.reset_options",
-            "line": 193,
+            "line": 209,
             "exists": true
           },
           {
             "key": "password_management.choose_reset_method",
-            "line": 196,
+            "line": 212,
             "exists": true
           },
           {
             "key": "password_management.reset_type",
-            "line": 202,
+            "line": 218,
             "exists": true
           },
           {
             "key": "password_management.email_reset",
-            "line": 211,
+            "line": 227,
             "exists": true
           },
           {
             "key": "password_management.temp_password",
-            "line": 217,
+            "line": 233,
             "exists": true
           },
           {
             "key": "password_management.force_change",
-            "line": 223,
+            "line": 239,
             "exists": true
           },
           {
             "key": "password_management.temporary_password",
-            "line": 234,
+            "line": 250,
             "exists": true
           },
           {
             "key": "password_management.enter_temp_password",
-            "line": 243,
+            "line": 259,
             "exists": true
           },
           {
             "key": "password_management.force_change_next_login",
-            "line": 287,
+            "line": 303,
             "exists": true
           },
           {
             "key": "password_management.reset_password",
-            "line": 302,
+            "line": 318,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.searching",
-            "line": 137,
-            "context": "136: <div className=\"text-sm text-muted-foreground\">\n137: {t('common.searching')}...\n138: </div>"
+            "line": 153,
+            "context": "152: <div className=\"text-sm text-muted-foreground\">\n153: {t('common.searching')}...\n154: </div>"
           }
         ],
         "coverage": 100,
@@ -23433,160 +23252,160 @@
         "translationCalls": [
           {
             "key": "common.completed",
-            "line": 115,
+            "line": 134,
             "exists": false
           },
           {
             "key": "common.processing",
-            "line": 117,
+            "line": 136,
             "exists": false
           },
           {
             "key": "common.failed",
-            "line": 119,
+            "line": 138,
             "exists": false
           },
           {
             "key": "common.pending",
-            "line": 121,
+            "line": 140,
             "exists": false
           },
           {
             "key": "password_management.bulk_configuration",
-            "line": 137,
-            "exists": true
-          },
-          {
-            "key": "password_management.bulk_configuration_desc",
-            "line": 140,
-            "exists": true
-          },
-          {
-            "key": "password_management.operation_type",
-            "line": 146,
-            "exists": true
-          },
-          {
-            "key": "password_management.bulk_email_reset",
-            "line": 153,
-            "exists": true
-          },
-          {
-            "key": "password_management.bulk_force_change",
             "line": 156,
             "exists": true
           },
           {
-            "key": "password_management.bulk_temp_password",
+            "key": "password_management.bulk_configuration_desc",
             "line": 159,
             "exists": true
           },
           {
+            "key": "password_management.operation_type",
+            "line": 165,
+            "exists": true
+          },
+          {
+            "key": "password_management.bulk_email_reset",
+            "line": 172,
+            "exists": true
+          },
+          {
+            "key": "password_management.bulk_force_change",
+            "line": 175,
+            "exists": true
+          },
+          {
+            "key": "password_management.bulk_temp_password",
+            "line": 178,
+            "exists": true
+          },
+          {
             "key": "password_management.select_users",
-            "line": 168,
+            "line": 187,
             "exists": true
           },
           {
             "key": "common.select_all",
-            "line": 177,
+            "line": 196,
             "exists": false
           },
           {
             "key": "common.select_none",
-            "line": 185,
+            "line": 204,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 192,
+            "line": 211,
             "exists": true
           },
           {
             "key": "password_management.selected_users",
-            "line": 224,
+            "line": 243,
             "exists": true
           },
           {
             "key": "password_management.bulk_warning_title",
-            "line": 236,
+            "line": 255,
             "exists": true
           },
           {
             "key": "password_management.bulk_warning_desc",
-            "line": 239,
+            "line": 258,
             "exists": true
           },
           {
             "key": "password_management.execute_operation",
-            "line": 260,
-            "exists": true
-          },
-          {
-            "key": "password_management.recent_operations",
-            "line": 270,
-            "exists": true
-          },
-          {
-            "key": "password_management.recent_operations_desc",
-            "line": 273,
-            "exists": true
-          },
-          {
-            "key": "password_management.no_operations",
             "line": 279,
             "exists": true
           },
           {
+            "key": "password_management.recent_operations",
+            "line": 289,
+            "exists": true
+          },
+          {
+            "key": "password_management.recent_operations_desc",
+            "line": 292,
+            "exists": true
+          },
+          {
+            "key": "password_management.no_operations",
+            "line": 298,
+            "exists": true
+          },
+          {
             "key": "password_management.${operation.operation_type}",
-            "line": 287,
+            "line": 306,
             "exists": false
           },
           {
             "key": "password_management.operation_details",
-            "line": 293,
+            "line": 312,
             "exists": true
           },
           {
             "key": "common.created_at",
-            "line": 308,
+            "line": 327,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.completed",
-            "line": 115,
-            "context": "114: case 'completed':\n115: return <Badge variant=\"default\" className=\"bg-green-100 text-green-800\"><CheckCircle className=\"h-3 w-3 mr-1\" />{t('common.completed')}</Badge>;\n116: case 'processing':"
+            "line": 134,
+            "context": "133: case 'completed':\n134: return <Badge variant=\"default\" className=\"bg-green-100 text-green-800\"><CheckCircle className=\"h-3 w-3 mr-1\" />{t('common.completed')}</Badge>;\n135: case 'processing':"
           },
           {
             "key": "common.processing",
-            "line": 117,
-            "context": "116: case 'processing':\n117: return <Badge variant=\"secondary\"><Clock className=\"h-3 w-3 mr-1\" />{t('common.processing')}</Badge>;\n118: case 'failed':"
+            "line": 136,
+            "context": "135: case 'processing':\n136: return <Badge variant=\"secondary\"><Clock className=\"h-3 w-3 mr-1\" />{t('common.processing')}</Badge>;\n137: case 'failed':"
           },
           {
             "key": "common.failed",
-            "line": 119,
-            "context": "118: case 'failed':\n119: return <Badge variant=\"destructive\"><XCircle className=\"h-3 w-3 mr-1\" />{t('common.failed')}</Badge>;\n120: default:"
+            "line": 138,
+            "context": "137: case 'failed':\n138: return <Badge variant=\"destructive\"><XCircle className=\"h-3 w-3 mr-1\" />{t('common.failed')}</Badge>;\n139: default:"
           },
           {
             "key": "common.pending",
-            "line": 121,
-            "context": "120: default:\n121: return <Badge variant=\"outline\"><Clock className=\"h-3 w-3 mr-1\" />{t('common.pending')}</Badge>;\n122: }"
+            "line": 140,
+            "context": "139: default:\n140: return <Badge variant=\"outline\"><Clock className=\"h-3 w-3 mr-1\" />{t('common.pending')}</Badge>;\n141: }"
           },
           {
             "key": "common.select_all",
-            "line": 177,
-            "context": "176: >\n177: {t('common.select_all')}\n178: </Button>"
+            "line": 196,
+            "context": "195: >\n196: {t('common.select_all')}\n197: </Button>"
           },
           {
             "key": "common.select_none",
-            "line": 185,
-            "context": "184: >\n185: {t('common.select_none')}\n186: </Button>"
+            "line": 204,
+            "context": "203: >\n204: {t('common.select_none')}\n205: </Button>"
           },
           {
             "key": "password_management.${operation.operation_type}",
-            "line": 287,
-            "context": "286: <div className=\"font-medium\">\n287: {t(`password_management.${operation.operation_type}`)}\n288: </div>"
+            "line": 306,
+            "context": "305: <div className=\"font-medium\">\n306: {t(`password_management.${operation.operation_type}`)}\n307: </div>"
           }
         ],
         "coverage": 100,
@@ -23843,13 +23662,13 @@
         "hardcodedStrings": [
           {
             "text": "Click any order to view details",
-            "line": 287,
-            "context": "286: <div className=\"flex items-center justify-center gap-1.5\">\n287: <Eye className=\"w-3.5 h-3.5\" />\n288: Click any order to view details"
+            "line": 306,
+            "context": "305: <div className=\"flex items-center justify-center gap-1.5\">\n306: <Eye className=\"w-3.5 h-3.5\" />\n307: Click any order to view details"
           },
           {
             "text": "Failed to load tooltip content",
-            "line": 300,
-            "context": "299: <div className=\"text-xs text-destructive flex items-center gap-1\">\n300: <AlertTriangle className=\"w-3 h-3\" />\n301: Failed to load tooltip content"
+            "line": 319,
+            "context": "318: <div className=\"text-xs text-destructive flex items-center gap-1\">\n319: <AlertTriangle className=\"w-3 h-3\" />\n320: Failed to load tooltip content"
           },
           {
             "text": "Invalid value",
@@ -44224,665 +44043,245 @@
         "translationCalls": [
           {
             "key": "nfc_tracking.workflows.title",
-            "line": 204,
-            "exists": false
+            "line": 214,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.subtitle",
-            "line": 206,
-            "exists": false
+            "line": 216,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.create_workflow",
-            "line": 214,
-            "exists": false
+            "line": 225,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.search_placeholder",
-            "line": 222,
-            "exists": false
+            "line": 234,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.active",
-            "line": 257,
-            "exists": false
+            "line": 269,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.inactive",
-            "line": 257,
-            "exists": false
+            "line": 269,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.triggers.${workflow.trigger_type}",
-            "line": 260,
+            "line": 272,
             "exists": false
           },
           {
             "key": "nfc_tracking.workflows.edit",
-            "line": 279,
-            "exists": false
+            "line": 292,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.disable",
-            "line": 285,
-            "exists": false
+            "line": 300,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.enable",
-            "line": 290,
-            "exists": false
+            "line": 305,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.delete",
-            "line": 299,
-            "exists": false
+            "line": 316,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.actions.${action.type}",
-            "line": 317,
+            "line": 335,
             "exists": false
           },
           {
             "key": "nfc_tracking.workflows.more_actions",
-            "line": 323,
-            "exists": false
+            "line": 341,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.executions",
-            "line": 332,
-            "exists": false
+            "line": 350,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.success_rate",
-            "line": 338,
-            "exists": false
+            "line": 356,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.last_run",
-            "line": 344,
-            "exists": false
+            "line": 362,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.no_results",
-            "line": 355,
-            "exists": false
+            "line": 373,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.no_workflows",
-            "line": 355,
-            "exists": false
+            "line": 373,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.edit_workflow",
-            "line": 372,
-            "exists": false
+            "line": 390,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.create_workflow",
-            "line": 372,
-            "exists": false
+            "line": 390,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.workflow_description",
-            "line": 375,
-            "exists": false
+            "line": 393,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.name",
-            "line": 383,
-            "exists": false
+            "line": 401,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.name_placeholder",
-            "line": 388,
-            "exists": false
+            "line": 406,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.description",
-            "line": 392,
-            "exists": false
+            "line": 410,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.description_placeholder",
-            "line": 397,
-            "exists": false
+            "line": 415,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.trigger_config",
-            "line": 404,
-            "exists": false
+            "line": 422,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.trigger_type",
-            "line": 406,
-            "exists": false
+            "line": 424,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.triggers.tag_scan",
-            "line": 415,
-            "exists": false
+            "line": 433,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.triggers.location_entry",
-            "line": 416,
-            "exists": false
+            "line": 434,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.triggers.time_based",
-            "line": 417,
-            "exists": false
+            "line": 435,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.triggers.status_change",
-            "line": 418,
-            "exists": false
+            "line": 436,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.actions",
-            "line": 427,
-            "exists": false
+            "line": 445,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.add_action",
-            "line": 430,
-            "exists": false
+            "line": 448,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.action",
-            "line": 438,
-            "exists": false
+            "line": 456,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.actions.send_email",
-            "line": 460,
-            "exists": false
+            "line": 478,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.actions.send_sms",
-            "line": 461,
-            "exists": false
+            "line": 479,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.actions.send_notification",
-            "line": 462,
-            "exists": false
+            "line": 480,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.actions.update_order_status",
-            "line": 463,
-            "exists": false
+            "line": 481,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.actions.create_task",
-            "line": 464,
-            "exists": false
+            "line": 482,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.actions.webhook",
-            "line": 465,
-            "exists": false
+            "line": 483,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.recipient",
-            "line": 473,
-            "exists": false
+            "line": 491,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.subject",
-            "line": 481,
-            "exists": false
+            "line": 499,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.message",
-            "line": 489,
-            "exists": false
+            "line": 507,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.cancel",
-            "line": 510,
-            "exists": false
+            "line": 528,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.save",
-            "line": 513,
-            "exists": false
+            "line": 531,
+            "exists": true
           },
           {
             "key": "nfc_tracking.workflows.create",
-            "line": 513,
-            "exists": false
+            "line": 531,
+            "exists": true
           }
         ],
         "missingKeys": [
-          {
-            "key": "nfc_tracking.workflows.title",
-            "line": 204,
-            "context": "203: <div>\n204: <h2 className=\"text-xl font-semibold\">{t('nfc_tracking.workflows.title')}</h2>\n205: <p className=\"text-muted-foreground\">"
-          },
-          {
-            "key": "nfc_tracking.workflows.subtitle",
-            "line": 206,
-            "context": "205: <p className=\"text-muted-foreground\">\n206: {t('nfc_tracking.workflows.subtitle')}\n207: </p>"
-          },
-          {
-            "key": "nfc_tracking.workflows.create_workflow",
-            "line": 214,
-            "context": "213: <Plus className=\"w-4 h-4\" />\n214: {t('nfc_tracking.workflows.create_workflow')}\n215: </Button>"
-          },
-          {
-            "key": "nfc_tracking.workflows.search_placeholder",
-            "line": 222,
-            "context": "221: <Input\n222: placeholder={t('nfc_tracking.workflows.search_placeholder')}\n223: value={searchQuery}"
-          },
-          {
-            "key": "nfc_tracking.workflows.active",
-            "line": 257,
-            "context": "256: <Badge className={getStatusColor(workflow.is_active)}>\n257: {workflow.is_active ? t('nfc_tracking.workflows.active') : t('nfc_tracking.workflows.inactive')}\n258: </Badge>"
-          },
-          {
-            "key": "nfc_tracking.workflows.inactive",
-            "line": 257,
-            "context": "256: <Badge className={getStatusColor(workflow.is_active)}>\n257: {workflow.is_active ? t('nfc_tracking.workflows.active') : t('nfc_tracking.workflows.inactive')}\n258: </Badge>"
-          },
           {
             "key": "nfc_tracking.workflows.triggers.${workflow.trigger_type}",
-            "line": 260,
-            "context": "259: <Badge variant=\"outline\">\n260: {t(`nfc_tracking.workflows.triggers.${workflow.trigger_type}`)}\n261: </Badge>"
-          },
-          {
-            "key": "nfc_tracking.workflows.edit",
-            "line": 279,
-            "context": "278: <Edit className=\"w-4 h-4 mr-2\" />\n279: {t('nfc_tracking.workflows.edit')}\n280: </DropdownMenuItem>"
-          },
-          {
-            "key": "nfc_tracking.workflows.disable",
-            "line": 285,
-            "context": "284: <Pause className=\"w-4 h-4 mr-2\" />\n285: {t('nfc_tracking.workflows.disable')}\n286: </>"
-          },
-          {
-            "key": "nfc_tracking.workflows.enable",
-            "line": 290,
-            "context": "289: <Play className=\"w-4 h-4 mr-2\" />\n290: {t('nfc_tracking.workflows.enable')}\n291: </>"
-          },
-          {
-            "key": "nfc_tracking.workflows.delete",
-            "line": 299,
-            "context": "298: <Trash2 className=\"w-4 h-4 mr-2\" />\n299: {t('nfc_tracking.workflows.delete')}\n300: </DropdownMenuItem>"
+            "line": 272,
+            "context": "271: <Badge variant=\"outline\">\n272: {t(`nfc_tracking.workflows.triggers.${workflow.trigger_type}`)}\n273: </Badge>"
           },
           {
             "key": "nfc_tracking.workflows.actions.${action.type}",
-            "line": 317,
-            "context": "316: <ActionIcon className=\"w-3 h-3\" />\n317: <span>{t(`nfc_tracking.workflows.actions.${action.type}`)}</span>\n318: </div>"
-          },
-          {
-            "key": "nfc_tracking.workflows.more_actions",
-            "line": 323,
-            "context": "322: <div className=\"px-2 py-1 bg-muted rounded-md text-xs\">\n323: +{workflow.actions.length - 3} {t('nfc_tracking.workflows.more_actions')}\n324: </div>"
-          },
-          {
-            "key": "nfc_tracking.workflows.executions",
-            "line": 332,
-            "context": "331: <p className=\"text-lg font-semibold\">{workflow.execution_count || 0}</p>\n332: <p className=\"text-xs text-muted-foreground\">{t('nfc_tracking.workflows.executions')}</p>\n333: </div>"
-          },
-          {
-            "key": "nfc_tracking.workflows.success_rate",
-            "line": 338,
-            "context": "337: </p>\n338: <p className=\"text-xs text-muted-foreground\">{t('nfc_tracking.workflows.success_rate')}</p>\n339: </div>"
-          },
-          {
-            "key": "nfc_tracking.workflows.last_run",
-            "line": 344,
-            "context": "343: </p>\n344: <p className=\"text-xs text-muted-foreground\">{t('nfc_tracking.workflows.last_run')}</p>\n345: </div>"
-          },
-          {
-            "key": "nfc_tracking.workflows.no_results",
-            "line": 355,
-            "context": "354: <div className=\"text-center py-8 text-muted-foreground\">\n355: {searchQuery ? t('nfc_tracking.workflows.no_results') : t('nfc_tracking.workflows.no_workflows')}\n356: </div>"
-          },
-          {
-            "key": "nfc_tracking.workflows.no_workflows",
-            "line": 355,
-            "context": "354: <div className=\"text-center py-8 text-muted-foreground\">\n355: {searchQuery ? t('nfc_tracking.workflows.no_results') : t('nfc_tracking.workflows.no_workflows')}\n356: </div>"
-          },
-          {
-            "key": "nfc_tracking.workflows.edit_workflow",
-            "line": 372,
-            "context": "371: <DialogTitle>\n372: {isEditDialogOpen ? t('nfc_tracking.workflows.edit_workflow') : t('nfc_tracking.workflows.create_workflow')}\n373: </DialogTitle>"
-          },
-          {
-            "key": "nfc_tracking.workflows.create_workflow",
-            "line": 372,
-            "context": "371: <DialogTitle>\n372: {isEditDialogOpen ? t('nfc_tracking.workflows.edit_workflow') : t('nfc_tracking.workflows.create_workflow')}\n373: </DialogTitle>"
-          },
-          {
-            "key": "nfc_tracking.workflows.workflow_description",
-            "line": 375,
-            "context": "374: <DialogDescription>\n375: {t('nfc_tracking.workflows.workflow_description')}\n376: </DialogDescription>"
-          },
-          {
-            "key": "nfc_tracking.workflows.name",
-            "line": 383,
-            "context": "382: <div className=\"grid gap-2\">\n383: <Label htmlFor=\"workflow-name\">{t('nfc_tracking.workflows.name')}</Label>\n384: <Input"
-          },
-          {
-            "key": "nfc_tracking.workflows.name_placeholder",
-            "line": 388,
-            "context": "387: onChange={(e) => setFormData({...formData, name: e.target.value})}\n388: placeholder={t('nfc_tracking.workflows.name_placeholder')}\n389: />"
-          },
-          {
-            "key": "nfc_tracking.workflows.description",
-            "line": 392,
-            "context": "391: <div className=\"grid gap-2\">\n392: <Label htmlFor=\"workflow-description\">{t('nfc_tracking.workflows.description')}</Label>\n393: <Textarea"
-          },
-          {
-            "key": "nfc_tracking.workflows.description_placeholder",
-            "line": 397,
-            "context": "396: onChange={(e) => setFormData({...formData, description: e.target.value})}\n397: placeholder={t('nfc_tracking.workflows.description_placeholder')}\n398: />"
-          },
-          {
-            "key": "nfc_tracking.workflows.trigger_config",
-            "line": 404,
-            "context": "403: <div className=\"space-y-4\">\n404: <h4 className=\"font-medium\">{t('nfc_tracking.workflows.trigger_config')}</h4>\n405: <div className=\"grid gap-2\">"
-          },
-          {
-            "key": "nfc_tracking.workflows.trigger_type",
-            "line": 406,
-            "context": "405: <div className=\"grid gap-2\">\n406: <Label htmlFor=\"trigger-type\">{t('nfc_tracking.workflows.trigger_type')}</Label>\n407: <Select"
-          },
-          {
-            "key": "nfc_tracking.workflows.triggers.tag_scan",
-            "line": 415,
-            "context": "414: <SelectContent>\n415: <SelectItem value=\"tag_scan\">{t('nfc_tracking.workflows.triggers.tag_scan')}</SelectItem>\n416: <SelectItem value=\"location_entry\">{t('nfc_tracking.workflows.triggers.location_entry')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.workflows.triggers.location_entry",
-            "line": 416,
-            "context": "415: <SelectItem value=\"tag_scan\">{t('nfc_tracking.workflows.triggers.tag_scan')}</SelectItem>\n416: <SelectItem value=\"location_entry\">{t('nfc_tracking.workflows.triggers.location_entry')}</SelectItem>\n417: <SelectItem value=\"time_based\">{t('nfc_tracking.workflows.triggers.time_based')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.workflows.triggers.time_based",
-            "line": 417,
-            "context": "416: <SelectItem value=\"location_entry\">{t('nfc_tracking.workflows.triggers.location_entry')}</SelectItem>\n417: <SelectItem value=\"time_based\">{t('nfc_tracking.workflows.triggers.time_based')}</SelectItem>\n418: <SelectItem value=\"status_change\">{t('nfc_tracking.workflows.triggers.status_change')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.workflows.triggers.status_change",
-            "line": 418,
-            "context": "417: <SelectItem value=\"time_based\">{t('nfc_tracking.workflows.triggers.time_based')}</SelectItem>\n418: <SelectItem value=\"status_change\">{t('nfc_tracking.workflows.triggers.status_change')}</SelectItem>\n419: </SelectContent>"
-          },
-          {
-            "key": "nfc_tracking.workflows.actions",
-            "line": 427,
-            "context": "426: <div className=\"flex justify-between items-center\">\n427: <h4 className=\"font-medium\">{t('nfc_tracking.workflows.actions')}</h4>\n428: <Button variant=\"outline\" size=\"sm\" onClick={addAction}>"
-          },
-          {
-            "key": "nfc_tracking.workflows.add_action",
-            "line": 430,
-            "context": "429: <Plus className=\"w-4 h-4 mr-2\" />\n430: {t('nfc_tracking.workflows.add_action')}\n431: </Button>"
-          },
-          {
-            "key": "nfc_tracking.workflows.action",
-            "line": 438,
-            "context": "437: <h5 className=\"font-medium text-sm\">\n438: {t('nfc_tracking.workflows.action')} {index + 1}\n439: </h5>"
-          },
-          {
-            "key": "nfc_tracking.workflows.actions.send_email",
-            "line": 460,
-            "context": "459: <SelectContent>\n460: <SelectItem value=\"send_email\">{t('nfc_tracking.workflows.actions.send_email')}</SelectItem>\n461: <SelectItem value=\"send_sms\">{t('nfc_tracking.workflows.actions.send_sms')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.workflows.actions.send_sms",
-            "line": 461,
-            "context": "460: <SelectItem value=\"send_email\">{t('nfc_tracking.workflows.actions.send_email')}</SelectItem>\n461: <SelectItem value=\"send_sms\">{t('nfc_tracking.workflows.actions.send_sms')}</SelectItem>\n462: <SelectItem value=\"send_notification\">{t('nfc_tracking.workflows.actions.send_notification')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.workflows.actions.send_notification",
-            "line": 462,
-            "context": "461: <SelectItem value=\"send_sms\">{t('nfc_tracking.workflows.actions.send_sms')}</SelectItem>\n462: <SelectItem value=\"send_notification\">{t('nfc_tracking.workflows.actions.send_notification')}</SelectItem>\n463: <SelectItem value=\"update_order_status\">{t('nfc_tracking.workflows.actions.update_order_status')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.workflows.actions.update_order_status",
-            "line": 463,
-            "context": "462: <SelectItem value=\"send_notification\">{t('nfc_tracking.workflows.actions.send_notification')}</SelectItem>\n463: <SelectItem value=\"update_order_status\">{t('nfc_tracking.workflows.actions.update_order_status')}</SelectItem>\n464: <SelectItem value=\"create_task\">{t('nfc_tracking.workflows.actions.create_task')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.workflows.actions.create_task",
-            "line": 464,
-            "context": "463: <SelectItem value=\"update_order_status\">{t('nfc_tracking.workflows.actions.update_order_status')}</SelectItem>\n464: <SelectItem value=\"create_task\">{t('nfc_tracking.workflows.actions.create_task')}</SelectItem>\n465: <SelectItem value=\"webhook\">{t('nfc_tracking.workflows.actions.webhook')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.workflows.actions.webhook",
-            "line": 465,
-            "context": "464: <SelectItem value=\"create_task\">{t('nfc_tracking.workflows.actions.create_task')}</SelectItem>\n465: <SelectItem value=\"webhook\">{t('nfc_tracking.workflows.actions.webhook')}</SelectItem>\n466: </SelectContent>"
-          },
-          {
-            "key": "nfc_tracking.workflows.recipient",
-            "line": 473,
-            "context": "472: <Input\n473: placeholder={t('nfc_tracking.workflows.recipient')}\n474: value={action.config.recipient || ''}"
-          },
-          {
-            "key": "nfc_tracking.workflows.subject",
-            "line": 481,
-            "context": "480: <Input\n481: placeholder={t('nfc_tracking.workflows.subject')}\n482: value={action.config.subject || ''}"
-          },
-          {
-            "key": "nfc_tracking.workflows.message",
-            "line": 489,
-            "context": "488: <Textarea\n489: placeholder={t('nfc_tracking.workflows.message')}\n490: value={action.config.message || ''}"
-          },
-          {
-            "key": "nfc_tracking.workflows.cancel",
-            "line": 510,
-            "context": "509: }}>\n510: {t('nfc_tracking.workflows.cancel')}\n511: </Button>"
-          },
-          {
-            "key": "nfc_tracking.workflows.save",
-            "line": 513,
-            "context": "512: <Button onClick={isEditDialogOpen ? handleUpdateWorkflow : handleCreateWorkflow}>\n513: {isEditDialogOpen ? t('nfc_tracking.workflows.save') : t('nfc_tracking.workflows.create')}\n514: </Button>"
-          },
-          {
-            "key": "nfc_tracking.workflows.create",
-            "line": 513,
-            "context": "512: <Button onClick={isEditDialogOpen ? handleUpdateWorkflow : handleCreateWorkflow}>\n513: {isEditDialogOpen ? t('nfc_tracking.workflows.save') : t('nfc_tracking.workflows.create')}\n514: </Button>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
-        "file": "src\\components\\nfc\\NFCVehicleTracker.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "nfc_tracking.vehicle_tracker.title",
-            "line": 140,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.subtitle",
-            "line": 142,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.search_placeholder",
-            "line": 149,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.tracked_vehicles",
-            "line": 163,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.progress",
-            "line": 196,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.last_update",
-            "line": 203,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.no_results",
-            "line": 215,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.no_vehicles",
-            "line": 215,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.current_status",
-            "line": 233,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.vehicle",
-            "line": 246,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.current_location",
-            "line": 252,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.current_stage",
-            "line": 262,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.estimated_completion",
-            "line": 270,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.overall_progress",
-            "line": 286,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.movement_history",
-            "line": 302,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.minutes",
-            "line": 341,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.current_location",
-            "line": 345,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.select_vehicle",
-            "line": 373,
-            "exists": false
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.select_vehicle_desc",
-            "line": 376,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "nfc_tracking.vehicle_tracker.title",
-            "line": 140,
-            "context": "139: <div>\n140: <h2 className=\"text-xl font-semibold\">{t('nfc_tracking.vehicle_tracker.title')}</h2>\n141: <p className=\"text-sm text-muted-foreground\">"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.subtitle",
-            "line": 142,
-            "context": "141: <p className=\"text-sm text-muted-foreground\">\n142: {t('nfc_tracking.vehicle_tracker.subtitle')}\n143: </p>"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.search_placeholder",
-            "line": 149,
-            "context": "148: <Input\n149: placeholder={t('nfc_tracking.vehicle_tracker.search_placeholder')}\n150: value={searchVin}"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.tracked_vehicles",
-            "line": 163,
-            "context": "162: <Car className=\"w-5 h-5 text-primary\" />\n163: {t('nfc_tracking.vehicle_tracker.tracked_vehicles')}\n164: </CardTitle>"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.progress",
-            "line": 196,
-            "context": "195: <div className=\"flex justify-between text-xs text-muted-foreground\">\n196: <span>{t('nfc_tracking.vehicle_tracker.progress')}</span>\n197: <span>{vehicle.progress_percentage}%</span>"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.last_update",
-            "line": 203,
-            "context": "202: <div className=\"mt-2 text-xs text-muted-foreground\">\n203: {t('nfc_tracking.vehicle_tracker.last_update')}: {formatDistanceToNow(new Date(vehicle.last_updated), {\n204: addSuffix: true,"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.no_results",
-            "line": 215,
-            "context": "214: <p className=\"text-sm\">\n215: {searchVin ? t('nfc_tracking.vehicle_tracker.no_results') : t('nfc_tracking.vehicle_tracker.no_vehicles')}\n216: </p>"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.no_vehicles",
-            "line": 215,
-            "context": "214: <p className=\"text-sm\">\n215: {searchVin ? t('nfc_tracking.vehicle_tracker.no_results') : t('nfc_tracking.vehicle_tracker.no_vehicles')}\n216: </p>"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.current_status",
-            "line": 233,
-            "context": "232: <Navigation className=\"w-5 h-5 text-primary\" />\n233: {t('nfc_tracking.vehicle_tracker.current_status')}\n234: </CardTitle>"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.vehicle",
-            "line": 246,
-            "context": "245: <div>\n246: <p className=\"text-sm font-medium\">{t('nfc_tracking.vehicle_tracker.vehicle')}</p>\n247: <p className=\"text-lg\">{vehicle.vehicle_info}</p>"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.current_location",
-            "line": 252,
-            "context": "251: <div>\n252: <p className=\"text-sm font-medium\">{t('nfc_tracking.vehicle_tracker.current_location')}</p>\n253: <div className=\"flex items-center gap-2\">"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.current_stage",
-            "line": 262,
-            "context": "261: <div>\n262: <p className=\"text-sm font-medium\">{t('nfc_tracking.vehicle_tracker.current_stage')}</p>\n263: <Badge className={getStatusColor(vehicle.status)}>"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.estimated_completion",
-            "line": 270,
-            "context": "269: <div>\n270: <p className=\"text-sm font-medium\">{t('nfc_tracking.vehicle_tracker.estimated_completion')}</p>\n271: <div className=\"flex items-center gap-2\">"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.overall_progress",
-            "line": 286,
-            "context": "285: <div className=\"flex justify-between text-sm mb-2\">\n286: <span>{t('nfc_tracking.vehicle_tracker.overall_progress')}</span>\n287: <span>{vehicle.progress_percentage}%</span>"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.movement_history",
-            "line": 302,
-            "context": "301: <History className=\"w-5 h-5 text-primary\" />\n302: {t('nfc_tracking.vehicle_tracker.movement_history')}\n303: </CardTitle>"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.minutes",
-            "line": 341,
-            "context": "340: <Clock className=\"w-3 h-3\" />\n341: <span>{entry.duration} {t('nfc_tracking.vehicle_tracker.minutes')}</span>\n342: </div>"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.current_location",
-            "line": 345,
-            "context": "344: <Badge variant=\"outline\" className=\"text-xs\">\n345: {t('nfc_tracking.vehicle_tracker.current_location')}\n346: </Badge>"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.select_vehicle",
-            "line": 373,
-            "context": "372: <h3 className=\"text-lg font-medium mb-2\">\n373: {t('nfc_tracking.vehicle_tracker.select_vehicle')}\n374: </h3>"
-          },
-          {
-            "key": "nfc_tracking.vehicle_tracker.select_vehicle_desc",
-            "line": 376,
-            "context": "375: <p className=\"text-muted-foreground\">\n376: {t('nfc_tracking.vehicle_tracker.select_vehicle_desc')}\n377: </p>"
+            "line": 335,
+            "context": "334: <ActionIcon className=\"w-3 h-3\" />\n335: <span>{t(`nfc_tracking.workflows.actions.${action.type}`)}</span>\n336: </div>"
           }
         ],
         "coverage": 100,
@@ -44955,12 +44354,12 @@
           {
             "key": "nfc.templates.title",
             "line": 190,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.templates.subtitle",
             "line": 197,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.templates.form.name",
@@ -45015,7 +44414,7 @@
           {
             "key": "nfc.templates.create_tag",
             "line": 303,
-            "exists": false
+            "exists": true
           }
         ],
         "missingKeys": [
@@ -45080,16 +44479,6 @@
             "context": "125: name: t('nfc.templates.time_tracking.name'),\n126: description: t('nfc.templates.time_tracking.description'),\n127: icon: <Clock className=\"h-5 w-5\" />,"
           },
           {
-            "key": "nfc.templates.title",
-            "line": 190,
-            "context": "189: <Settings className=\"h-5 w-5\" />\n190: {t('nfc.templates.title')}\n191: </DialogTitle>"
-          },
-          {
-            "key": "nfc.templates.subtitle",
-            "line": 197,
-            "context": "196: <p className=\"text-sm text-muted-foreground\">\n197: {t('nfc.templates.subtitle')}\n198: </p>"
-          },
-          {
             "key": "nfc.templates.form.name",
             "line": 245,
             "context": "244: <div>\n245: <Label htmlFor=\"template-name\">{t('nfc.templates.form.name')}</Label>\n246: <Input"
@@ -45133,11 +44522,6 @@
             "key": "common.back",
             "line": 296,
             "context": "295: >\n296: {t('common.back')}\n297: </Button>"
-          },
-          {
-            "key": "nfc.templates.create_tag",
-            "line": 303,
-            "context": "302: <Button onClick={handleCreateFromTemplate}>\n303: {t('nfc.templates.create_tag')}\n304: </Button>"
           }
         ],
         "coverage": 100,
@@ -45149,570 +44533,335 @@
         "translationCalls": [
           {
             "key": "nfc_tracking.tag_manager.tag_name",
-            "line": 193,
-            "exists": false
+            "line": 199,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.tag_name_placeholder",
-            "line": 198,
-            "exists": false
+            "line": 204,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.tag_uid",
-            "line": 203,
-            "exists": false
+            "line": 209,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.uid_placeholder",
-            "line": 209,
-            "exists": false
+            "line": 215,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.tag_type",
-            "line": 219,
-            "exists": false
+            "line": 225,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.vehicle_tag",
-            "line": 228,
-            "exists": false
+            "line": 234,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.location_tag",
-            "line": 229,
-            "exists": false
+            "line": 235,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.equipment_tag",
-            "line": 230,
-            "exists": false
+            "line": 236,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.process_tag",
-            "line": 231,
-            "exists": false
+            "line": 237,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.vehicle_vin",
-            "line": 238,
-            "exists": false
+            "line": 244,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.vin_placeholder",
-            "line": 243,
-            "exists": false
+            "line": 249,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.location_name",
-            "line": 250,
-            "exists": false
+            "line": 256,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.location_placeholder",
-            "line": 255,
-            "exists": false
+            "line": 261,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.description",
-            "line": 261,
-            "exists": false
+            "line": 267,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.description_placeholder",
-            "line": 266,
-            "exists": false
+            "line": 272,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.active_tag",
-            "line": 278,
-            "exists": false
+            "line": 284,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.permanent_tag",
-            "line": 287,
-            "exists": false
+            "line": 293,
+            "exists": true
+          },
+          {
+            "key": "nfc_tracking.errors.load_failed",
+            "line": 319,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.title",
-            "line": 312,
-            "exists": false
+            "line": 330,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.subtitle",
-            "line": 314,
-            "exists": false
+            "line": 332,
+            "exists": true
           },
           {
             "key": "nfc.templates.quick_create",
-            "line": 325,
-            "exists": false
+            "line": 344,
+            "exists": true
           },
           {
             "key": "nfc.reader.title",
-            "line": 333,
-            "exists": false
+            "line": 354,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.register_new",
-            "line": 337,
-            "exists": false
+            "line": 360,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.search_placeholder",
-            "line": 349,
-            "exists": false
+            "line": 373,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.filter_type",
-            "line": 358,
-            "exists": false
+            "line": 382,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.all_types",
-            "line": 361,
-            "exists": false
+            "line": 385,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.vehicle_tag",
-            "line": 362,
-            "exists": false
+            "line": 386,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.location_tag",
-            "line": 363,
-            "exists": false
+            "line": 387,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.equipment_tag",
-            "line": 364,
-            "exists": false
+            "line": 388,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.process_tag",
-            "line": 365,
-            "exists": false
+            "line": 389,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.filter_status",
-            "line": 371,
-            "exists": false
+            "line": 395,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.all_status",
-            "line": 374,
-            "exists": false
+            "line": 398,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.active_only",
-            "line": 375,
-            "exists": false
+            "line": 399,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.inactive_only",
-            "line": 376,
-            "exists": false
+            "line": 400,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.results",
-            "line": 382,
-            "exists": false
+            "line": 406,
+            "exists": true
           },
           {
             "key": "nfc.writer.write_to_physical",
-            "line": 418,
-            "exists": false
+            "line": 443,
+            "exists": true
           },
           {
             "key": "common.edit",
-            "line": 422,
+            "line": 449,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 429,
+            "line": 458,
             "exists": false
           },
           {
             "key": "nfc_tracking.tag_manager.active",
-            "line": 439,
-            "exists": false
+            "line": 469,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.inactive",
-            "line": 439,
-            "exists": false
+            "line": 469,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.permanent",
-            "line": 443,
-            "exists": false
+            "line": 473,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.vin",
-            "line": 453,
-            "exists": false
+            "line": 483,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.location",
-            "line": 460,
-            "exists": false
+            "line": 490,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.scans",
-            "line": 474,
-            "exists": false
+            "line": 504,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.never_scanned",
-            "line": 481,
-            "exists": false
+            "line": 511,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.no_results",
-            "line": 496,
-            "exists": false
+            "line": 526,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.no_tags",
-            "line": 497,
-            "exists": false
+            "line": 527,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.try_different_filters",
-            "line": 502,
-            "exists": false
+            "line": 532,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.create_first_tag",
-            "line": 503,
-            "exists": false
+            "line": 533,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.register_new",
-            "line": 509,
-            "exists": false
+            "line": 539,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.edit_tag",
-            "line": 522,
-            "exists": false
+            "line": 552,
+            "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 528,
+            "line": 558,
+            "exists": true
+          },
+          {
+            "key": "common.saving",
+            "line": 561,
             "exists": true
           },
           {
             "key": "common.save",
-            "line": 531,
+            "line": 561,
             "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.create_tag",
-            "line": 542,
-            "exists": false
-          },
-          {
-            "key": "common.cancel",
-            "line": 547,
+            "line": 572,
             "exists": true
           },
           {
+            "key": "common.cancel",
+            "line": 577,
+            "exists": true
+          },
+          {
+            "key": "common.creating",
+            "line": 580,
+            "exists": false
+          },
+          {
             "key": "common.create",
-            "line": 550,
+            "line": 580,
             "exists": false
           },
           {
             "key": "nfc_tracking.tag_manager.delete_title",
-            "line": 590,
-            "exists": false
+            "line": 619,
+            "exists": true
           },
           {
             "key": "nfc_tracking.tag_manager.confirm_delete",
-            "line": 591,
-            "exists": false
+            "line": 620,
+            "exists": true
           },
           {
             "key": "common.action_buttons.delete",
-            "line": 592,
+            "line": 621,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 593,
+            "line": 622,
             "exists": true
           }
         ],
         "missingKeys": [
           {
-            "key": "nfc_tracking.tag_manager.tag_name",
-            "line": 193,
-            "context": "192: <div>\n193: <Label htmlFor=\"name\">{t('nfc_tracking.tag_manager.tag_name')}</Label>\n194: <Input"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.tag_name_placeholder",
-            "line": 198,
-            "context": "197: onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}\n198: placeholder={t('nfc_tracking.tag_manager.tag_name_placeholder')}\n199: />"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.tag_uid",
-            "line": 203,
-            "context": "202: <div>\n203: <Label htmlFor=\"tag_uid\">{t('nfc_tracking.tag_manager.tag_uid')}</Label>\n204: <div className=\"flex gap-2\">"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.uid_placeholder",
-            "line": 209,
-            "context": "208: onChange={(e) => setFormData(prev => ({ ...prev, tag_uid: e.target.value }))}\n209: placeholder={t('nfc_tracking.tag_manager.uid_placeholder')}\n210: />"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.tag_type",
-            "line": 219,
-            "context": "218: <div>\n219: <Label htmlFor=\"tag_type\">{t('nfc_tracking.tag_manager.tag_type')}</Label>\n220: <Select"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.vehicle_tag",
-            "line": 228,
-            "context": "227: <SelectContent>\n228: <SelectItem value=\"vehicle\">{t('nfc_tracking.tag_manager.vehicle_tag')}</SelectItem>\n229: <SelectItem value=\"location\">{t('nfc_tracking.tag_manager.location_tag')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.location_tag",
-            "line": 229,
-            "context": "228: <SelectItem value=\"vehicle\">{t('nfc_tracking.tag_manager.vehicle_tag')}</SelectItem>\n229: <SelectItem value=\"location\">{t('nfc_tracking.tag_manager.location_tag')}</SelectItem>\n230: <SelectItem value=\"equipment\">{t('nfc_tracking.tag_manager.equipment_tag')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.equipment_tag",
-            "line": 230,
-            "context": "229: <SelectItem value=\"location\">{t('nfc_tracking.tag_manager.location_tag')}</SelectItem>\n230: <SelectItem value=\"equipment\">{t('nfc_tracking.tag_manager.equipment_tag')}</SelectItem>\n231: <SelectItem value=\"process\">{t('nfc_tracking.tag_manager.process_tag')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.process_tag",
-            "line": 231,
-            "context": "230: <SelectItem value=\"equipment\">{t('nfc_tracking.tag_manager.equipment_tag')}</SelectItem>\n231: <SelectItem value=\"process\">{t('nfc_tracking.tag_manager.process_tag')}</SelectItem>\n232: </SelectContent>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.vehicle_vin",
-            "line": 238,
-            "context": "237: <div>\n238: <Label htmlFor=\"vehicle_vin\">{t('nfc_tracking.tag_manager.vehicle_vin')}</Label>\n239: <Input"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.vin_placeholder",
-            "line": 243,
-            "context": "242: onChange={(e) => setFormData(prev => ({ ...prev, vehicle_vin: e.target.value }))}\n243: placeholder={t('nfc_tracking.tag_manager.vin_placeholder')}\n244: />"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.location_name",
-            "line": 250,
-            "context": "249: <div>\n250: <Label htmlFor=\"location_name\">{t('nfc_tracking.tag_manager.location_name')}</Label>\n251: <Input"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.location_placeholder",
-            "line": 255,
-            "context": "254: onChange={(e) => setFormData(prev => ({ ...prev, location_name: e.target.value }))}\n255: placeholder={t('nfc_tracking.tag_manager.location_placeholder')}\n256: />"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.description",
-            "line": 261,
-            "context": "260: <div>\n261: <Label htmlFor=\"description\">{t('nfc_tracking.tag_manager.description')}</Label>\n262: <Textarea"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.description_placeholder",
-            "line": 266,
-            "context": "265: onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}\n266: placeholder={t('nfc_tracking.tag_manager.description_placeholder')}\n267: rows={3}"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.active_tag",
-            "line": 278,
-            "context": "277: />\n278: <Label htmlFor=\"is_active\">{t('nfc_tracking.tag_manager.active_tag')}</Label>\n279: </div>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.permanent_tag",
-            "line": 287,
-            "context": "286: />\n287: <Label htmlFor=\"is_permanent\">{t('nfc_tracking.tag_manager.permanent_tag')}</Label>\n288: </div>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.title",
-            "line": 312,
-            "context": "311: <div>\n312: <h2 className=\"text-xl font-semibold\">{t('nfc_tracking.tag_manager.title')}</h2>\n313: <p className=\"text-sm text-muted-foreground\">"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.subtitle",
-            "line": 314,
-            "context": "313: <p className=\"text-sm text-muted-foreground\">\n314: {t('nfc_tracking.tag_manager.subtitle')}\n315: </p>"
-          },
-          {
-            "key": "nfc.templates.quick_create",
-            "line": 325,
-            "context": "324: <Settings className=\"h-4 w-4 mr-2\" />\n325: {t('nfc.templates.quick_create')}\n326: </Button>"
-          },
-          {
-            "key": "nfc.reader.title",
-            "line": 333,
-            "context": "332: <Eye className=\"h-4 w-4 mr-2\" />\n333: {t('nfc.reader.title')}\n334: </Button>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.register_new",
-            "line": 337,
-            "context": "336: <Plus className=\"w-4 h-4 mr-2\" />\n337: {t('nfc_tracking.tag_manager.register_new')}\n338: </Button>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.search_placeholder",
-            "line": 349,
-            "context": "348: <Input\n349: placeholder={t('nfc_tracking.tag_manager.search_placeholder')}\n350: value={searchTerm}"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.filter_type",
-            "line": 358,
-            "context": "357: <SelectTrigger>\n358: <SelectValue placeholder={t('nfc_tracking.tag_manager.filter_type')} />\n359: </SelectTrigger>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.all_types",
-            "line": 361,
-            "context": "360: <SelectContent>\n361: <SelectItem value=\"all\">{t('nfc_tracking.tag_manager.all_types')}</SelectItem>\n362: <SelectItem value=\"vehicle\">{t('nfc_tracking.tag_manager.vehicle_tag')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.vehicle_tag",
-            "line": 362,
-            "context": "361: <SelectItem value=\"all\">{t('nfc_tracking.tag_manager.all_types')}</SelectItem>\n362: <SelectItem value=\"vehicle\">{t('nfc_tracking.tag_manager.vehicle_tag')}</SelectItem>\n363: <SelectItem value=\"location\">{t('nfc_tracking.tag_manager.location_tag')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.location_tag",
-            "line": 363,
-            "context": "362: <SelectItem value=\"vehicle\">{t('nfc_tracking.tag_manager.vehicle_tag')}</SelectItem>\n363: <SelectItem value=\"location\">{t('nfc_tracking.tag_manager.location_tag')}</SelectItem>\n364: <SelectItem value=\"equipment\">{t('nfc_tracking.tag_manager.equipment_tag')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.equipment_tag",
-            "line": 364,
-            "context": "363: <SelectItem value=\"location\">{t('nfc_tracking.tag_manager.location_tag')}</SelectItem>\n364: <SelectItem value=\"equipment\">{t('nfc_tracking.tag_manager.equipment_tag')}</SelectItem>\n365: <SelectItem value=\"process\">{t('nfc_tracking.tag_manager.process_tag')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.process_tag",
-            "line": 365,
-            "context": "364: <SelectItem value=\"equipment\">{t('nfc_tracking.tag_manager.equipment_tag')}</SelectItem>\n365: <SelectItem value=\"process\">{t('nfc_tracking.tag_manager.process_tag')}</SelectItem>\n366: </SelectContent>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.filter_status",
-            "line": 371,
-            "context": "370: <SelectTrigger>\n371: <SelectValue placeholder={t('nfc_tracking.tag_manager.filter_status')} />\n372: </SelectTrigger>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.all_status",
-            "line": 374,
-            "context": "373: <SelectContent>\n374: <SelectItem value=\"all\">{t('nfc_tracking.tag_manager.all_status')}</SelectItem>\n375: <SelectItem value=\"active\">{t('nfc_tracking.tag_manager.active_only')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.active_only",
-            "line": 375,
-            "context": "374: <SelectItem value=\"all\">{t('nfc_tracking.tag_manager.all_status')}</SelectItem>\n375: <SelectItem value=\"active\">{t('nfc_tracking.tag_manager.active_only')}</SelectItem>\n376: <SelectItem value=\"inactive\">{t('nfc_tracking.tag_manager.inactive_only')}</SelectItem>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.inactive_only",
-            "line": 376,
-            "context": "375: <SelectItem value=\"active\">{t('nfc_tracking.tag_manager.active_only')}</SelectItem>\n376: <SelectItem value=\"inactive\">{t('nfc_tracking.tag_manager.inactive_only')}</SelectItem>\n377: </SelectContent>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.results",
-            "line": 382,
-            "context": "381: <Filter className=\"w-4 h-4\" />\n382: {filteredTags.length} {t('nfc_tracking.tag_manager.results')}\n383: </div>"
-          },
-          {
-            "key": "nfc.writer.write_to_physical",
-            "line": 418,
-            "context": "417: <Smartphone className=\"h-4 w-4 mr-2\" />\n418: {t('nfc.writer.write_to_physical')}\n419: </DropdownMenuItem>"
-          },
-          {
             "key": "common.edit",
-            "line": 422,
-            "context": "421: <Edit className=\"h-4 w-4 mr-2\" />\n422: {t('common.edit')}\n423: </DropdownMenuItem>"
+            "line": 449,
+            "context": "448: <Edit className=\"h-4 w-4 mr-2\" />\n449: {t('common.edit')}\n450: </DropdownMenuItem>"
           },
           {
             "key": "common.delete",
-            "line": 429,
-            "context": "428: <Trash2 className=\"h-4 w-4 mr-2\" />\n429: {t('common.delete')}\n430: </DropdownMenuItem>"
+            "line": 458,
+            "context": "457: <Trash2 className=\"h-4 w-4 mr-2\" />\n458: {t('common.delete')}\n459: </DropdownMenuItem>"
           },
           {
-            "key": "nfc_tracking.tag_manager.active",
-            "line": 439,
-            "context": "438: <Badge variant={tag.is_active ? \"default\" : \"secondary\"}>\n439: {tag.is_active ? t('nfc_tracking.tag_manager.active') : t('nfc_tracking.tag_manager.inactive')}\n440: </Badge>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.inactive",
-            "line": 439,
-            "context": "438: <Badge variant={tag.is_active ? \"default\" : \"secondary\"}>\n439: {tag.is_active ? t('nfc_tracking.tag_manager.active') : t('nfc_tracking.tag_manager.inactive')}\n440: </Badge>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.permanent",
-            "line": 443,
-            "context": "442: <Badge variant=\"outline\">\n443: {t('nfc_tracking.tag_manager.permanent')}\n444: </Badge>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.vin",
-            "line": 453,
-            "context": "452: <div className=\"text-sm\">\n453: <span className=\"text-muted-foreground\">{t('nfc_tracking.tag_manager.vin')}: </span>\n454: <code className=\"bg-muted px-1 rounded text-xs\">{tag.vehicle_vin}</code>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.location",
-            "line": 460,
-            "context": "459: <div className=\"text-sm\">\n460: <span className=\"text-muted-foreground\">{t('nfc_tracking.tag_manager.location')}: </span>\n461: {tag.location_name}"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.scans",
-            "line": 474,
-            "context": "473: <div className=\"flex justify-between items-center text-xs text-muted-foreground\">\n474: <span>{tag.scan_count} {t('nfc_tracking.tag_manager.scans')}</span>\n475: <span>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.never_scanned",
-            "line": 481,
-            "context": "480: })\n481: : t('nfc_tracking.tag_manager.never_scanned')\n482: }"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.no_results",
-            "line": 496,
-            "context": "495: {searchTerm || filterType !== 'all' || filterStatus !== 'all'\n496: ? t('nfc_tracking.tag_manager.no_results')\n497: : t('nfc_tracking.tag_manager.no_tags')"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.no_tags",
-            "line": 497,
-            "context": "496: ? t('nfc_tracking.tag_manager.no_results')\n497: : t('nfc_tracking.tag_manager.no_tags')\n498: }"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.try_different_filters",
-            "line": 502,
-            "context": "501: {searchTerm || filterType !== 'all' || filterStatus !== 'all'\n502: ? t('nfc_tracking.tag_manager.try_different_filters')\n503: : t('nfc_tracking.tag_manager.create_first_tag')"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.create_first_tag",
-            "line": 503,
-            "context": "502: ? t('nfc_tracking.tag_manager.try_different_filters')\n503: : t('nfc_tracking.tag_manager.create_first_tag')\n504: }"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.register_new",
-            "line": 509,
-            "context": "508: <Plus className=\"w-4 h-4 mr-2\" />\n509: {t('nfc_tracking.tag_manager.register_new')}\n510: </Button>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.edit_tag",
-            "line": 522,
-            "context": "521: <DialogTitle>\n522: {t('nfc_tracking.tag_manager.edit_tag')}: {editingTag.name}\n523: </DialogTitle>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.create_tag",
-            "line": 542,
-            "context": "541: <DialogHeader>\n542: <DialogTitle>{t('nfc_tracking.tag_manager.create_tag')}</DialogTitle>\n543: </DialogHeader>"
+            "key": "common.creating",
+            "line": 580,
+            "context": "579: <Button onClick={handleCreateTag} disabled={createTagMutation.isPending}>\n580: {createTagMutation.isPending ? t('common.creating') : t('common.create')}\n581: </Button>"
           },
           {
             "key": "common.create",
-            "line": 550,
-            "context": "549: <Button onClick={handleCreateTag} disabled={loading}>\n550: {t('common.create')}\n551: </Button>"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.delete_title",
-            "line": 590,
-            "context": "589: onOpenChange={setDeleteDialogOpen}\n590: title={t('nfc_tracking.tag_manager.delete_title', { defaultValue: 'Delete NFC Tag?' })}\n591: description={t('nfc_tracking.tag_manager.confirm_delete', { defaultValue: 'Are you sure you want to delete this NFC tag? This action cannot be undone.' })}"
-          },
-          {
-            "key": "nfc_tracking.tag_manager.confirm_delete",
-            "line": 591,
-            "context": "590: title={t('nfc_tracking.tag_manager.delete_title', { defaultValue: 'Delete NFC Tag?' })}\n591: description={t('nfc_tracking.tag_manager.confirm_delete', { defaultValue: 'Are you sure you want to delete this NFC tag? This action cannot be undone.' })}\n592: confirmText={t('common.action_buttons.delete')}"
+            "line": 580,
+            "context": "579: <Button onClick={handleCreateTag} disabled={createTagMutation.isPending}>\n580: {createTagMutation.isPending ? t('common.creating') : t('common.create')}\n581: </Button>"
           }
         ],
         "coverage": 100,
@@ -45723,490 +44872,139 @@
         "hardcodedStrings": [
           {
             "text": ", err);\n      setWriteStatus(",
-            "line": 70,
-            "context": "69: } catch (err: unknown) {\n70: console.error('Write error:', err);\n71: setWriteStatus('error');"
+            "line": 71,
+            "context": "70: } catch (err: unknown) {\n71: console.error('Write error:', err);\n72: setWriteStatus('error');"
           }
         ],
         "translationCalls": [
           {
             "key": "nfc.errors.permission_denied",
-            "line": 41,
-            "exists": false
+            "line": 42,
+            "exists": true
           },
           {
             "key": "nfc.errors.write_failed",
-            "line": 67,
-            "exists": false
+            "line": 68,
+            "exists": true
           },
           {
             "key": "nfc.errors.write_failed",
-            "line": 72,
-            "exists": false
+            "line": 73,
+            "exists": true
           },
           {
             "key": "nfc.writer.preparing",
-            "line": 101,
-            "exists": false
+            "line": 102,
+            "exists": true
           },
           {
             "key": "nfc.writer.writing",
-            "line": 103,
-            "exists": false
+            "line": 104,
+            "exists": true
           },
           {
             "key": "nfc.writer.success",
-            "line": 105,
-            "exists": false
+            "line": 106,
+            "exists": true
           },
           {
             "key": "nfc.writer.error",
-            "line": 107,
-            "exists": false
+            "line": 108,
+            "exists": true
           },
           {
             "key": "nfc.writer.ready",
-            "line": 109,
-            "exists": false
+            "line": 110,
+            "exists": true
           },
           {
             "key": "nfc.writer.instructions.preparing",
-            "line": 116,
-            "exists": false
+            "line": 117,
+            "exists": true
           },
           {
             "key": "nfc.writer.instructions.writing",
-            "line": 118,
-            "exists": false
+            "line": 119,
+            "exists": true
           },
           {
             "key": "nfc.writer.instructions.success",
-            "line": 120,
-            "exists": false
+            "line": 121,
+            "exists": true
           },
           {
             "key": "nfc.writer.instructions.error",
-            "line": 122,
-            "exists": false
+            "line": 123,
+            "exists": true
           },
           {
             "key": "nfc.writer.instructions.ready",
-            "line": 124,
-            "exists": false
-          },
-          {
-            "key": "nfc.writer.title",
-            "line": 135,
-            "exists": false
-          },
-          {
-            "key": "nfc.errors.not_supported",
-            "line": 142,
-            "exists": false
-          },
-          {
-            "key": "common.close",
-            "line": 148,
+            "line": 125,
             "exists": true
           },
           {
             "key": "nfc.writer.title",
-            "line": 162,
-            "exists": false
+            "line": 136,
+            "exists": true
           },
           {
-            "key": "nfc.tag_info.name",
-            "line": 171,
-            "exists": false
-          },
-          {
-            "key": "nfc.tag_info.type",
-            "line": 175,
-            "exists": false
-          },
-          {
-            "key": "nfc.tag_info.vin",
-            "line": 180,
-            "exists": false
-          },
-          {
-            "key": "nfc.tag_info.location",
-            "line": 186,
-            "exists": false
+            "key": "nfc.errors.not_supported",
+            "line": 143,
+            "exists": true
           },
           {
             "key": "common.close",
-            "line": 239,
+            "line": 149,
+            "exists": true
+          },
+          {
+            "key": "nfc.writer.title",
+            "line": 164,
+            "exists": true
+          },
+          {
+            "key": "nfc.tag_info.name",
+            "line": 173,
+            "exists": true
+          },
+          {
+            "key": "nfc.tag_info.type",
+            "line": 177,
+            "exists": true
+          },
+          {
+            "key": "nfc.tag_info.vin",
+            "line": 182,
+            "exists": true
+          },
+          {
+            "key": "nfc.tag_info.location",
+            "line": 188,
+            "exists": true
+          },
+          {
+            "key": "common.close",
+            "line": 241,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 239,
+            "line": 241,
             "exists": true
           },
           {
             "key": "nfc.writer.write_tag",
-            "line": 244,
-            "exists": false
+            "line": 246,
+            "exists": true
           },
           {
             "key": "nfc.writer.retry",
-            "line": 249,
-            "exists": false
+            "line": 251,
+            "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "nfc.errors.permission_denied",
-            "line": 41,
-            "context": "40: setWriteStatus('error');\n41: setWriteError(t('nfc.errors.permission_denied'));\n42: return;"
-          },
-          {
-            "key": "nfc.errors.write_failed",
-            "line": 67,
-            "context": "66: setWriteStatus('error');\n67: setWriteError(error || t('nfc.errors.write_failed'));\n68: }"
-          },
-          {
-            "key": "nfc.errors.write_failed",
-            "line": 72,
-            "context": "71: setWriteStatus('error');\n72: setWriteError(err instanceof Error ? err.message : t('nfc.errors.write_failed'));\n73: }"
-          },
-          {
-            "key": "nfc.writer.preparing",
-            "line": 101,
-            "context": "100: case 'preparing':\n101: return t('nfc.writer.preparing');\n102: case 'writing':"
-          },
-          {
-            "key": "nfc.writer.writing",
-            "line": 103,
-            "context": "102: case 'writing':\n103: return t('nfc.writer.writing');\n104: case 'success':"
-          },
-          {
-            "key": "nfc.writer.success",
-            "line": 105,
-            "context": "104: case 'success':\n105: return t('nfc.writer.success');\n106: case 'error':"
-          },
-          {
-            "key": "nfc.writer.error",
-            "line": 107,
-            "context": "106: case 'error':\n107: return t('nfc.writer.error');\n108: default:"
-          },
-          {
-            "key": "nfc.writer.ready",
-            "line": 109,
-            "context": "108: default:\n109: return t('nfc.writer.ready');\n110: }"
-          },
-          {
-            "key": "nfc.writer.instructions.preparing",
-            "line": 116,
-            "context": "115: case 'preparing':\n116: return t('nfc.writer.instructions.preparing');\n117: case 'writing':"
-          },
-          {
-            "key": "nfc.writer.instructions.writing",
-            "line": 118,
-            "context": "117: case 'writing':\n118: return t('nfc.writer.instructions.writing');\n119: case 'success':"
-          },
-          {
-            "key": "nfc.writer.instructions.success",
-            "line": 120,
-            "context": "119: case 'success':\n120: return t('nfc.writer.instructions.success');\n121: case 'error':"
-          },
-          {
-            "key": "nfc.writer.instructions.error",
-            "line": 122,
-            "context": "121: case 'error':\n122: return t('nfc.writer.instructions.error');\n123: default:"
-          },
-          {
-            "key": "nfc.writer.instructions.ready",
-            "line": 124,
-            "context": "123: default:\n124: return t('nfc.writer.instructions.ready');\n125: }"
-          },
-          {
-            "key": "nfc.writer.title",
-            "line": 135,
-            "context": "134: <Smartphone className=\"h-5 w-5\" />\n135: {t('nfc.writer.title')}\n136: </DialogTitle>"
-          },
-          {
-            "key": "nfc.errors.not_supported",
-            "line": 142,
-            "context": "141: <AlertDescription>\n142: {t('nfc.errors.not_supported')}\n143: </AlertDescription>"
-          },
-          {
-            "key": "nfc.writer.title",
-            "line": 162,
-            "context": "161: <Smartphone className=\"h-5 w-5\" />\n162: {t('nfc.writer.title')}\n163: </DialogTitle>"
-          },
-          {
-            "key": "nfc.tag_info.name",
-            "line": 171,
-            "context": "170: <div className=\"flex items-center justify-between\">\n171: <span className=\"text-sm text-muted-foreground\">{t('nfc.tag_info.name')}</span>\n172: <span className=\"font-medium\">{tag.name}</span>"
-          },
-          {
-            "key": "nfc.tag_info.type",
-            "line": 175,
-            "context": "174: <div className=\"flex items-center justify-between\">\n175: <span className=\"text-sm text-muted-foreground\">{t('nfc.tag_info.type')}</span>\n176: <Badge variant=\"secondary\">{tag.tag_type}</Badge>"
-          },
-          {
-            "key": "nfc.tag_info.vin",
-            "line": 180,
-            "context": "179: <div className=\"flex items-center justify-between\">\n180: <span className=\"text-sm text-muted-foreground\">{t('nfc.tag_info.vin')}</span>\n181: <span className=\"font-mono text-sm\">{tag.vehicle_vin}</span>"
-          },
-          {
-            "key": "nfc.tag_info.location",
-            "line": 186,
-            "context": "185: <div className=\"flex items-center justify-between\">\n186: <span className=\"text-sm text-muted-foreground\">{t('nfc.tag_info.location')}</span>\n187: <span className=\"text-sm\">{tag.location_name}</span>"
-          },
-          {
-            "key": "nfc.writer.write_tag",
-            "line": 244,
-            "context": "243: <Radio className=\"h-4 w-4 mr-2\" />\n244: {t('nfc.writer.write_tag')}\n245: </Button>"
-          },
-          {
-            "key": "nfc.writer.retry",
-            "line": 249,
-            "context": "248: <Button onClick={handleWrite} disabled={isWriting}>\n249: {t('nfc.writer.retry')}\n250: </Button>"
-          }
-        ],
+        "missingKeys": [],
         "coverage": 96,
-        "severity": "low"
-      },
-      {
-        "file": "src\\components\\nfc\\NFCPhysicalReader.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "nfc.reader.scanning",
-            "line": 105,
-            "exists": false
-          },
-          {
-            "key": "nfc.reader.success",
-            "line": 107,
-            "exists": false
-          },
-          {
-            "key": "nfc.reader.error",
-            "line": 109,
-            "exists": false
-          },
-          {
-            "key": "nfc.reader.ready",
-            "line": 111,
-            "exists": false
-          },
-          {
-            "key": "nfc.reader.instructions.scanning",
-            "line": 118,
-            "exists": false
-          },
-          {
-            "key": "nfc.reader.instructions.success",
-            "line": 120,
-            "exists": false
-          },
-          {
-            "key": "nfc.reader.instructions.error",
-            "line": 122,
-            "exists": false
-          },
-          {
-            "key": "nfc.reader.instructions.ready",
-            "line": 124,
-            "exists": false
-          },
-          {
-            "key": "nfc.reader.title",
-            "line": 135,
-            "exists": false
-          },
-          {
-            "key": "nfc.errors.not_supported",
-            "line": 142,
-            "exists": false
-          },
-          {
-            "key": "common.close",
-            "line": 148,
-            "exists": true
-          },
-          {
-            "key": "nfc.reader.title",
-            "line": 162,
-            "exists": false
-          },
-          {
-            "key": "nfc.reader.tag_data",
-            "line": 200,
-            "exists": false
-          },
-          {
-            "key": "nfc.tag_info.id",
-            "line": 205,
-            "exists": false
-          },
-          {
-            "key": "nfc.tag_info.name",
-            "line": 211,
-            "exists": false
-          },
-          {
-            "key": "nfc.tag_info.type",
-            "line": 218,
-            "exists": false
-          },
-          {
-            "key": "nfc.tag_info.vin",
-            "line": 225,
-            "exists": false
-          },
-          {
-            "key": "nfc.tag_info.location",
-            "line": 232,
-            "exists": false
-          },
-          {
-            "key": "nfc.tag_info.url",
-            "line": 239,
-            "exists": false
-          },
-          {
-            "key": "common.close",
-            "line": 260,
-            "exists": true
-          },
-          {
-            "key": "nfc.reader.start_scanning",
-            "line": 266,
-            "exists": false
-          },
-          {
-            "key": "nfc.reader.stop_scanning",
-            "line": 273,
-            "exists": false
-          },
-          {
-            "key": "nfc.reader.scan_another",
-            "line": 279,
-            "exists": false
-          },
-          {
-            "key": "nfc.reader.retry",
-            "line": 285,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "nfc.reader.scanning",
-            "line": 105,
-            "context": "104: case 'scanning':\n105: return t('nfc.reader.scanning');\n106: case 'success':"
-          },
-          {
-            "key": "nfc.reader.success",
-            "line": 107,
-            "context": "106: case 'success':\n107: return t('nfc.reader.success');\n108: case 'error':"
-          },
-          {
-            "key": "nfc.reader.error",
-            "line": 109,
-            "context": "108: case 'error':\n109: return t('nfc.reader.error');\n110: default:"
-          },
-          {
-            "key": "nfc.reader.ready",
-            "line": 111,
-            "context": "110: default:\n111: return t('nfc.reader.ready');\n112: }"
-          },
-          {
-            "key": "nfc.reader.instructions.scanning",
-            "line": 118,
-            "context": "117: case 'scanning':\n118: return t('nfc.reader.instructions.scanning');\n119: case 'success':"
-          },
-          {
-            "key": "nfc.reader.instructions.success",
-            "line": 120,
-            "context": "119: case 'success':\n120: return t('nfc.reader.instructions.success');\n121: case 'error':"
-          },
-          {
-            "key": "nfc.reader.instructions.error",
-            "line": 122,
-            "context": "121: case 'error':\n122: return t('nfc.reader.instructions.error');\n123: default:"
-          },
-          {
-            "key": "nfc.reader.instructions.ready",
-            "line": 124,
-            "context": "123: default:\n124: return t('nfc.reader.instructions.ready');\n125: }"
-          },
-          {
-            "key": "nfc.reader.title",
-            "line": 135,
-            "context": "134: <Eye className=\"h-5 w-5\" />\n135: {t('nfc.reader.title')}\n136: </DialogTitle>"
-          },
-          {
-            "key": "nfc.errors.not_supported",
-            "line": 142,
-            "context": "141: <AlertDescription>\n142: {t('nfc.errors.not_supported')}\n143: </AlertDescription>"
-          },
-          {
-            "key": "nfc.reader.title",
-            "line": 162,
-            "context": "161: <Eye className=\"h-5 w-5\" />\n162: {t('nfc.reader.title')}\n163: </DialogTitle>"
-          },
-          {
-            "key": "nfc.reader.tag_data",
-            "line": 200,
-            "context": "199: <CheckCircle className=\"h-4 w-4 text-success\" />\n200: {t('nfc.reader.tag_data')}\n201: </h4>"
-          },
-          {
-            "key": "nfc.tag_info.id",
-            "line": 205,
-            "context": "204: <div className=\"flex items-center justify-between\">\n205: <span className=\"text-sm text-muted-foreground\">{t('nfc.tag_info.id')}</span>\n206: <span className=\"font-mono text-xs\">{scannedData.tagId}</span>"
-          },
-          {
-            "key": "nfc.tag_info.name",
-            "line": 211,
-            "context": "210: <div className=\"flex items-center justify-between\">\n211: <span className=\"text-sm text-muted-foreground\">{t('nfc.tag_info.name')}</span>\n212: <span className=\"text-sm\">{scannedData.name}</span>"
-          },
-          {
-            "key": "nfc.tag_info.type",
-            "line": 218,
-            "context": "217: <div className=\"flex items-center justify-between\">\n218: <span className=\"text-sm text-muted-foreground\">{t('nfc.tag_info.type')}</span>\n219: <Badge variant=\"secondary\">{scannedData.type}</Badge>"
-          },
-          {
-            "key": "nfc.tag_info.vin",
-            "line": 225,
-            "context": "224: <div className=\"flex items-center justify-between\">\n225: <span className=\"text-sm text-muted-foreground\">{t('nfc.tag_info.vin')}</span>\n226: <span className=\"font-mono text-xs\">{scannedData.vehicleVin}</span>"
-          },
-          {
-            "key": "nfc.tag_info.location",
-            "line": 232,
-            "context": "231: <div className=\"flex items-center justify-between\">\n232: <span className=\"text-sm text-muted-foreground\">{t('nfc.tag_info.location')}</span>\n233: <span className=\"text-sm\">{scannedData.locationName}</span>"
-          },
-          {
-            "key": "nfc.tag_info.url",
-            "line": 239,
-            "context": "238: <div className=\"flex items-center justify-between\">\n239: <span className=\"text-sm text-muted-foreground\">{t('nfc.tag_info.url')}</span>\n240: <span className=\"text-xs text-primary truncate max-w-40\">{scannedData.url}</span>"
-          },
-          {
-            "key": "nfc.reader.start_scanning",
-            "line": 266,
-            "context": "265: <Eye className=\"h-4 w-4 mr-2\" />\n266: {t('nfc.reader.start_scanning')}\n267: </Button>"
-          },
-          {
-            "key": "nfc.reader.stop_scanning",
-            "line": 273,
-            "context": "272: <EyeOff className=\"h-4 w-4 mr-2\" />\n273: {t('nfc.reader.stop_scanning')}\n274: </Button>"
-          },
-          {
-            "key": "nfc.reader.scan_another",
-            "line": 279,
-            "context": "278: <Button onClick={handleStartScanning}>\n279: {t('nfc.reader.scan_another')}\n280: </Button>"
-          },
-          {
-            "key": "nfc.reader.retry",
-            "line": 285,
-            "context": "284: <Button onClick={handleStartScanning}>\n285: {t('nfc.reader.retry')}\n286: </Button>"
-          }
-        ],
-        "coverage": 100,
         "severity": "low"
       },
       {
@@ -46246,12 +45044,12 @@
           {
             "key": "nfc.reader.stop_scanning",
             "line": 136,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.reader.start_scanning",
             "line": 136,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.mobile.quick_write",
@@ -46266,17 +45064,17 @@
           {
             "key": "nfc.tag_info.name",
             "line": 163,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.tag_info.type",
             "line": 167,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.tag_info.vin",
             "line": 174,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc.mobile.select_tag_to_write",
@@ -46346,16 +45144,6 @@
             "context": "109: ? t('nfc.mobile.status.ready_desc')\n110: : t('nfc.mobile.status.unsupported_desc')\n111: }"
           },
           {
-            "key": "nfc.reader.stop_scanning",
-            "line": 136,
-            "context": "135: <span className=\"text-xs\">\n136: {isReading ? t('nfc.reader.stop_scanning') : t('nfc.reader.start_scanning')}\n137: </span>"
-          },
-          {
-            "key": "nfc.reader.start_scanning",
-            "line": 136,
-            "context": "135: <span className=\"text-xs\">\n136: {isReading ? t('nfc.reader.stop_scanning') : t('nfc.reader.start_scanning')}\n137: </span>"
-          },
-          {
             "key": "nfc.mobile.quick_write",
             "line": 148,
             "context": "147: <Edit3 className=\"h-6 w-6\" />\n148: <span className=\"text-xs\">{t('nfc.mobile.quick_write')}</span>\n149: </Button>"
@@ -46364,21 +45152,6 @@
             "key": "nfc.mobile.last_read",
             "line": 158,
             "context": "157: <Wifi className=\"h-4 w-4 text-success\" />\n158: {t('nfc.mobile.last_read')}\n159: </CardTitle>"
-          },
-          {
-            "key": "nfc.tag_info.name",
-            "line": 163,
-            "context": "162: <div className=\"flex justify-between\">\n163: <span className=\"text-sm text-muted-foreground\">{t('nfc.tag_info.name')}</span>\n164: <span className=\"text-sm font-medium\">{lastRead.name || 'Unknown'}</span>"
-          },
-          {
-            "key": "nfc.tag_info.type",
-            "line": 167,
-            "context": "166: <div className=\"flex justify-between\">\n167: <span className=\"text-sm text-muted-foreground\">{t('nfc.tag_info.type')}</span>\n168: <Badge variant=\"secondary\" className=\"text-xs\">"
-          },
-          {
-            "key": "nfc.tag_info.vin",
-            "line": 174,
-            "context": "173: <div className=\"flex justify-between\">\n174: <span className=\"text-sm text-muted-foreground\">{t('nfc.tag_info.vin')}</span>\n175: <span className=\"text-xs font-mono\">{lastRead.vehicleVin}</span>"
           },
           {
             "key": "nfc.mobile.select_tag_to_write",
@@ -46426,107 +45199,107 @@
           {
             "key": "nfc_tracking.location_heatmap.title",
             "line": 190,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.subtitle",
             "line": 192,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.total_locations",
             "line": 228,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.avg_efficiency",
             "line": 242,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.current_occupancy",
             "line": 258,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.peak_activity",
             "line": 275,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.activity_heatmap",
             "line": 292,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.visits",
             "line": 301,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.duration",
             "line": 308,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.efficiency",
             "line": 315,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.peak_hours",
             "line": 337,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.visits",
             "line": 344,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.avg_duration",
             "line": 361,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.efficiency",
             "line": 365,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.occupancy",
             "line": 369,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.efficiency",
             "line": 381,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.traffic_flow",
             "line": 398,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.transitions",
             "line": 414,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.avg_time",
             "line": 421,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.insights",
             "line": 437,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.peak_efficiency",
             "line": 444,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.quality_check_insight",
@@ -46536,7 +45309,7 @@
           {
             "key": "nfc_tracking.location_heatmap.bottleneck_detected",
             "line": 453,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.detail_bay_bottleneck",
@@ -46546,7 +45319,7 @@
           {
             "key": "nfc_tracking.location_heatmap.optimization_opportunity",
             "line": 462,
-            "exists": false
+            "exists": true
           },
           {
             "key": "nfc_tracking.location_heatmap.reception_optimization",
@@ -46556,129 +45329,14 @@
         ],
         "missingKeys": [
           {
-            "key": "nfc_tracking.location_heatmap.title",
-            "line": 190,
-            "context": "189: <div>\n190: <h2 className=\"text-xl font-semibold\">{t('nfc_tracking.location_heatmap.title')}</h2>\n191: <p className=\"text-sm text-muted-foreground\">"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.subtitle",
-            "line": 192,
-            "context": "191: <p className=\"text-sm text-muted-foreground\">\n192: {t('nfc_tracking.location_heatmap.subtitle')}\n193: </p>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.total_locations",
-            "line": 228,
-            "context": "227: <p className=\"text-sm font-medium text-muted-foreground\">\n228: {t('nfc_tracking.location_heatmap.total_locations')}\n229: </p>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.avg_efficiency",
-            "line": 242,
-            "context": "241: <p className=\"text-sm font-medium text-muted-foreground\">\n242: {t('nfc_tracking.location_heatmap.avg_efficiency')}\n243: </p>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.current_occupancy",
-            "line": 258,
-            "context": "257: <p className=\"text-sm font-medium text-muted-foreground\">\n258: {t('nfc_tracking.location_heatmap.current_occupancy')}\n259: </p>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.peak_activity",
-            "line": 275,
-            "context": "274: <p className=\"text-sm font-medium text-muted-foreground\">\n275: {t('nfc_tracking.location_heatmap.peak_activity')}\n276: </p>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.activity_heatmap",
-            "line": 292,
-            "context": "291: <Activity className=\"w-5 h-5 text-primary\" />\n292: {t('nfc_tracking.location_heatmap.activity_heatmap')}\n293: </CardTitle>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.visits",
-            "line": 301,
-            "context": "300: >\n301: {t('nfc_tracking.location_heatmap.visits')}\n302: </Button>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.duration",
-            "line": 308,
-            "context": "307: >\n308: {t('nfc_tracking.location_heatmap.duration')}\n309: </Button>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.efficiency",
-            "line": 315,
-            "context": "314: >\n315: {t('nfc_tracking.location_heatmap.efficiency')}\n316: </Button>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.peak_hours",
-            "line": 337,
-            "context": "336: <p className=\"text-xs text-muted-foreground\">\n337: {t('nfc_tracking.location_heatmap.peak_hours')}: {location.peak_hours}\n338: </p>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.visits",
-            "line": 344,
-            "context": "343: <Badge variant=\"outline\" className=\"mb-1\">\n344: {location.total_visits} {t('nfc_tracking.location_heatmap.visits')}\n345: </Badge>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.avg_duration",
-            "line": 361,
-            "context": "360: <div>\n361: <p className=\"text-muted-foreground\">{t('nfc_tracking.location_heatmap.avg_duration')}</p>\n362: <p className=\"font-medium\">{location.avg_duration}m</p>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.efficiency",
-            "line": 365,
-            "context": "364: <div>\n365: <p className=\"text-muted-foreground\">{t('nfc_tracking.location_heatmap.efficiency')}</p>\n366: <p className=\"font-medium\">{location.efficiency_score}%</p>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.occupancy",
-            "line": 369,
-            "context": "368: <div>\n369: <p className=\"text-muted-foreground\">{t('nfc_tracking.location_heatmap.occupancy')}</p>\n370: <p className={cn("
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.efficiency",
-            "line": 381,
-            "context": "380: <div className=\"flex justify-between text-xs mb-1\">\n381: <span>{t('nfc_tracking.location_heatmap.efficiency')}</span>\n382: <span>{location.efficiency_score}%</span>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.traffic_flow",
-            "line": 398,
-            "context": "397: <Navigation className=\"w-5 h-5 text-primary\" />\n398: {t('nfc_tracking.location_heatmap.traffic_flow')}\n399: </CardTitle>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.transitions",
-            "line": 414,
-            "context": "413: <Badge variant=\"secondary\">\n414: {flow.frequency} {t('nfc_tracking.location_heatmap.transitions')}\n415: </Badge>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.avg_time",
-            "line": 421,
-            "context": "420: <Clock className=\"w-3 h-3\" />\n421: <span>~{flow.avg_transition_time}m {t('nfc_tracking.location_heatmap.avg_time')}</span>\n422: </div>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.insights",
-            "line": 437,
-            "context": "436: <BarChart3 className=\"w-5 h-5 text-primary\" />\n437: {t('nfc_tracking.location_heatmap.insights')}\n438: </CardTitle>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.peak_efficiency",
-            "line": 444,
-            "context": "443: <h4 className=\"font-medium text-success mb-2\">\n444: {t('nfc_tracking.location_heatmap.peak_efficiency')}\n445: </h4>"
-          },
-          {
             "key": "nfc_tracking.location_heatmap.quality_check_insight",
             "line": 447,
             "context": "446: <p className=\"text-sm text-muted-foreground\">\n447: {t('nfc_tracking.location_heatmap.quality_check_insight')}\n448: </p>"
           },
           {
-            "key": "nfc_tracking.location_heatmap.bottleneck_detected",
-            "line": 453,
-            "context": "452: <h4 className=\"font-medium text-warning mb-2\">\n453: {t('nfc_tracking.location_heatmap.bottleneck_detected')}\n454: </h4>"
-          },
-          {
             "key": "nfc_tracking.location_heatmap.detail_bay_bottleneck",
             "line": 456,
             "context": "455: <p className=\"text-sm text-muted-foreground\">\n456: {t('nfc_tracking.location_heatmap.detail_bay_bottleneck')}\n457: </p>"
-          },
-          {
-            "key": "nfc_tracking.location_heatmap.optimization_opportunity",
-            "line": 462,
-            "context": "461: <h4 className=\"font-medium text-primary mb-2\">\n462: {t('nfc_tracking.location_heatmap.optimization_opportunity')}\n463: </h4>"
           },
           {
             "key": "nfc_tracking.location_heatmap.reception_optimization",
@@ -46984,256 +45642,146 @@
         "hardcodedStrings": [],
         "translationCalls": [
           {
+            "key": "nfc_tracking.errors.load_failed",
+            "line": 94,
+            "exists": true
+          },
+          {
             "key": "nfc_tracking.dashboard.active_tags",
-            "line": 115,
-            "exists": false
+            "line": 127,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.this_week",
-            "line": 120,
-            "exists": false
+            "line": 132,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.vehicles_tracked",
-            "line": 124,
-            "exists": false
+            "line": 136,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.this_week",
-            "line": 128,
-            "exists": false
+            "line": 140,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.locations",
-            "line": 132,
-            "exists": false
+            "line": 144,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.avg_stay_time",
-            "line": 139,
-            "exists": false
+            "line": 151,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.improvement",
-            "line": 143,
-            "exists": false
+            "line": 155,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.scan_activity",
-            "line": 153,
-            "exists": false
+            "line": 165,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.total_scans",
-            "line": 160,
-            "exists": false
+            "line": 172,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.unique_scans",
-            "line": 164,
-            "exists": false
+            "line": 176,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.scan_efficiency",
-            "line": 168,
-            "exists": false
+            "line": 180,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.scan_efficiency",
-            "line": 174,
-            "exists": false
+            "line": 186,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.recent_activity",
-            "line": 186,
-            "exists": false
+            "line": 198,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.tag_scanned",
-            "line": 197,
+            "line": 209,
             "exists": false
           },
           {
             "key": "nfc_tracking.dashboard.no_recent_activity",
-            "line": 212,
-            "exists": false
+            "line": 224,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.system_performance",
-            "line": 227,
-            "exists": false
+            "line": 239,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.tag_reliability",
-            "line": 233,
-            "exists": false
+            "line": 245,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.scan_success_rate",
-            "line": 239,
-            "exists": false
+            "line": 251,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.response_time",
-            "line": 245,
-            "exists": false
+            "line": 257,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.usage_insights",
-            "line": 257,
-            "exists": false
+            "line": 269,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.peak_hours",
-            "line": 264,
-            "exists": false
+            "line": 276,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.most_active_area",
-            "line": 272,
-            "exists": false
+            "line": 284,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.service_bay_2",
-            "line": 273,
+            "line": 285,
             "exists": false
           },
           {
             "key": "nfc_tracking.dashboard.avg_process_time",
-            "line": 280,
-            "exists": false
+            "line": 292,
+            "exists": true
           },
           {
             "key": "nfc_tracking.dashboard.per_vehicle",
-            "line": 281,
-            "exists": false
+            "line": 293,
+            "exists": true
           }
         ],
         "missingKeys": [
           {
-            "key": "nfc_tracking.dashboard.active_tags",
-            "line": 115,
-            "context": "114: <MetricCard\n115: title={t('nfc_tracking.dashboard.active_tags')}\n116: value={stats?.active_tags || 0}"
-          },
-          {
-            "key": "nfc_tracking.dashboard.this_week",
-            "line": 120,
-            "context": "119: progress={activeRate}\n120: trend={{ value: 12, label: t('nfc_tracking.dashboard.this_week') }}\n121: />"
-          },
-          {
-            "key": "nfc_tracking.dashboard.vehicles_tracked",
-            "line": 124,
-            "context": "123: <MetricCard\n124: title={t('nfc_tracking.dashboard.vehicles_tracked')}\n125: value={stats?.vehicles_tracked || 0}"
-          },
-          {
-            "key": "nfc_tracking.dashboard.this_week",
-            "line": 128,
-            "context": "127: color=\"text-success\"\n128: trend={{ value: 8, label: t('nfc_tracking.dashboard.this_week') }}\n129: />"
-          },
-          {
-            "key": "nfc_tracking.dashboard.locations",
-            "line": 132,
-            "context": "131: <MetricCard\n132: title={t('nfc_tracking.dashboard.locations')}\n133: value={stats?.locations_count || 0}"
-          },
-          {
-            "key": "nfc_tracking.dashboard.avg_stay_time",
-            "line": 139,
-            "context": "138: <MetricCard\n139: title={t('nfc_tracking.dashboard.avg_stay_time')}\n140: value={`${stats?.avg_stay_time || 0}m`}"
-          },
-          {
-            "key": "nfc_tracking.dashboard.improvement",
-            "line": 143,
-            "context": "142: color=\"text-secondary\"\n143: trend={{ value: -5, label: t('nfc_tracking.dashboard.improvement') }}\n144: />"
-          },
-          {
-            "key": "nfc_tracking.dashboard.scan_activity",
-            "line": 153,
-            "context": "152: <Activity className=\"w-5 h-5 text-primary\" />\n153: {t('nfc_tracking.dashboard.scan_activity')}\n154: </CardTitle>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.total_scans",
-            "line": 160,
-            "context": "159: <div className=\"text-2xl font-bold text-primary\">{stats?.total_scans || 0}</div>\n160: <p className=\"text-sm text-muted-foreground\">{t('nfc_tracking.dashboard.total_scans')}</p>\n161: </div>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.unique_scans",
-            "line": 164,
-            "context": "163: <div className=\"text-2xl font-bold text-success\">{stats?.unique_scans || 0}</div>\n164: <p className=\"text-sm text-muted-foreground\">{t('nfc_tracking.dashboard.unique_scans')}</p>\n165: </div>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.scan_efficiency",
-            "line": 168,
-            "context": "167: <div className=\"text-2xl font-bold text-warning\">{scanEfficiency.toFixed(1)}%</div>\n168: <p className=\"text-sm text-muted-foreground\">{t('nfc_tracking.dashboard.scan_efficiency')}</p>\n169: </div>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.scan_efficiency",
-            "line": 174,
-            "context": "173: <div className=\"flex justify-between text-sm\">\n174: <span>{t('nfc_tracking.dashboard.scan_efficiency')}</span>\n175: <span>{scanEfficiency.toFixed(1)}%</span>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.recent_activity",
-            "line": 186,
-            "context": "185: <Zap className=\"w-5 h-5 text-warning\" />\n186: {t('nfc_tracking.dashboard.recent_activity')}\n187: </CardTitle>"
-          },
-          {
             "key": "nfc_tracking.dashboard.tag_scanned",
-            "line": 197,
-            "context": "196: <p className=\"text-sm font-medium\">\n197: {t('nfc_tracking.dashboard.tag_scanned')}\n198: </p>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.no_recent_activity",
-            "line": 212,
-            "context": "211: <Activity className=\"w-8 h-8 mx-auto mb-2 opacity-50\" />\n212: <p className=\"text-sm\">{t('nfc_tracking.dashboard.no_recent_activity')}</p>\n213: </div>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.system_performance",
-            "line": 227,
-            "context": "226: <Target className=\"w-5 h-5 text-success\" />\n227: {t('nfc_tracking.dashboard.system_performance')}\n228: </CardTitle>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.tag_reliability",
-            "line": 233,
-            "context": "232: <div className=\"flex justify-between items-center\">\n233: <span className=\"text-sm\">{t('nfc_tracking.dashboard.tag_reliability')}</span>\n234: <span className=\"text-sm font-medium\">98.5%</span>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.scan_success_rate",
-            "line": 239,
-            "context": "238: <div className=\"flex justify-between items-center\">\n239: <span className=\"text-sm\">{t('nfc_tracking.dashboard.scan_success_rate')}</span>\n240: <span className=\"text-sm font-medium\">96.2%</span>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.response_time",
-            "line": 245,
-            "context": "244: <div className=\"flex justify-between items-center\">\n245: <span className=\"text-sm\">{t('nfc_tracking.dashboard.response_time')}</span>\n246: <span className=\"text-sm font-medium\">125ms</span>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.usage_insights",
-            "line": 257,
-            "context": "256: <Users className=\"w-5 h-5 text-secondary\" />\n257: {t('nfc_tracking.dashboard.usage_insights')}\n258: </CardTitle>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.peak_hours",
-            "line": 264,
-            "context": "263: <div>\n264: <p className=\"text-sm font-medium\">{t('nfc_tracking.dashboard.peak_hours')}</p>\n265: <p className=\"text-xs text-muted-foreground\">9:00 AM - 12:00 PM</p>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.most_active_area",
-            "line": 272,
-            "context": "271: <div>\n272: <p className=\"text-sm font-medium\">{t('nfc_tracking.dashboard.most_active_area')}</p>\n273: <p className=\"text-xs text-muted-foreground\">{t('nfc_tracking.dashboard.service_bay_2')}</p>"
+            "line": 209,
+            "context": "208: <p className=\"text-sm font-medium\">\n209: {t('nfc_tracking.dashboard.tag_scanned')}\n210: </p>"
           },
           {
             "key": "nfc_tracking.dashboard.service_bay_2",
-            "line": 273,
-            "context": "272: <p className=\"text-sm font-medium\">{t('nfc_tracking.dashboard.most_active_area')}</p>\n273: <p className=\"text-xs text-muted-foreground\">{t('nfc_tracking.dashboard.service_bay_2')}</p>\n274: </div>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.avg_process_time",
-            "line": 280,
-            "context": "279: <div>\n280: <p className=\"text-sm font-medium\">{t('nfc_tracking.dashboard.avg_process_time')}</p>\n281: <p className=\"text-xs text-muted-foreground\">{t('nfc_tracking.dashboard.per_vehicle')}</p>"
-          },
-          {
-            "key": "nfc_tracking.dashboard.per_vehicle",
-            "line": 281,
-            "context": "280: <p className=\"text-sm font-medium\">{t('nfc_tracking.dashboard.avg_process_time')}</p>\n281: <p className=\"text-xs text-muted-foreground\">{t('nfc_tracking.dashboard.per_vehicle')}</p>\n282: </div>"
+            "line": 285,
+            "context": "284: <p className=\"text-sm font-medium\">{t('nfc_tracking.dashboard.most_active_area')}</p>\n285: <p className=\"text-xs text-muted-foreground\">{t('nfc_tracking.dashboard.service_bay_2')}</p>\n286: </div>"
           }
         ],
         "coverage": 100,
@@ -49523,6 +48071,42 @@
           }
         ],
         "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\get-ready\\MultiUserSelect.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Select users...",
+            "line": 58,
+            "context": "57: onChange,\n58: placeholder = 'Select users...',\n59: disabled = false,"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "common.search_placeholder",
+            "line": 125,
+            "exists": false
+          },
+          {
+            "key": "common.no_results",
+            "line": 129,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "common.search_placeholder",
+            "line": 125,
+            "context": "124: <CommandInput\n125: placeholder={t('common.search_placeholder') || 'Search users...'}\n126: />"
+          },
+          {
+            "key": "common.no_results",
+            "line": 129,
+            "context": "128: <CommandEmpty>\n129: {t('common.no_results') || 'No users found'}\n130: </CommandEmpty>"
+          }
+        ],
+        "coverage": 67,
         "severity": "low"
       },
       {
@@ -59164,7 +57748,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "407 Component components need translation",
+      "description": "405 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\reports\\sections\\OperationalReports.tsx",
@@ -59426,6 +58010,7 @@
         "src\\components\\navigation\\Breadcrumbs.tsx",
         "src\\components\\management\\DealershipPerformanceTable.tsx",
         "src\\components\\get-ready\\VehicleActivityLog.tsx",
+        "src\\components\\get-ready\\MultiUserSelect.tsx",
         "src\\components\\get-ready\\approvals\\ApprovalHeader.tsx",
         "src\\components\\get-ready\\analytics\\BottleneckAnalysis.tsx",
         "src\\components\\detail-hub\\TimecardSystem.tsx",
@@ -59456,7 +58041,6 @@
         "src\\hooks\\useWorkItemTemplates.tsx",
         "src\\hooks\\useProfileMutations.tsx",
         "src\\hooks\\usePlatformSettings.ts",
-        "src\\hooks\\useNFCManagement.tsx",
         "src\\hooks\\useMaxAutoSync.ts",
         "src\\hooks\\useCommunications.tsx",
         "src\\components\\ProtectedLayout.tsx",
@@ -59535,9 +58119,7 @@
         "src\\components\\notifications\\analytics\\EngagementFunnel.tsx",
         "src\\components\\notifications\\analytics\\DeliveryTimelineChart.tsx",
         "src\\components\\notifications\\analytics\\ChannelPerformanceChart.tsx",
-        "src\\components\\nfc\\NFCVehicleTracker.tsx",
         "src\\components\\nfc\\NFCTagTemplates.tsx",
-        "src\\components\\nfc\\NFCPhysicalReader.tsx",
         "src\\components\\nfc\\NFCMobileDashboard.tsx",
         "src\\components\\nfc\\NFCLocationHeatmap.tsx",
         "src\\components\\nfc\\NFCGeolocationMap.tsx",
@@ -59574,15 +58156,15 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "204 hours"
+      "estimatedEffort": "203 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2385 translation keys are referenced but missing",
+      "description": "2152 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "120 hours"
+      "estimatedEffort": "108 hours"
     }
   ],
-  "coverage": 76
+  "coverage": 75
 }
