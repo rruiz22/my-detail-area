@@ -1,3 +1,12 @@
+interface OrderService {
+  id: string;
+  name: string;
+  price: number;
+  description?: string;
+  category?: string;
+  duration?: number;
+}
+
 interface Order {
   id: string;
   createdAt: string;
@@ -14,6 +23,8 @@ interface Order {
   vehicleYear?: number;
   vehicleMake?: string;
   vehicleModel?: string;
+  services?: OrderService[];
+  completionDate?: string;
 }
 
 interface DuplicateInfo {

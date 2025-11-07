@@ -198,6 +198,25 @@ export function DuplicateTooltip({
     }
   }, []);
 
+  const formatServices = useCallback((order: Order): string => {
+    try {
+      if (!order.services || !Array.isArray(order.services) || order.services.length === 0) {
+        return 'No services';
+      }
+
+      // Extract service names and join with comma
+      const serviceNames = order.services
+        .map(s => s.name || s.description)
+        .filter(Boolean)
+        .join(', ');
+
+      return serviceNames || 'No services';
+    } catch (error) {
+      logError('Service formatting error', { error, orderId: order.id });
+      return 'Unknown';
+    }
+  }, []);
+
   // Memoized tooltip content for performance
   const tooltipContent = useMemo(() => {
     try {
@@ -256,10 +275,10 @@ export function DuplicateTooltip({
                   <span>{formatDate(order.completionDate || order.dueDate || order.createdAt)}</span>
                 </div>
 
-                {/* Dealership */}
-                {order.dealershipName && (
+                {/* Services */}
+                {order.services && order.services.length > 0 && (
                   <div className="text-xs text-muted-foreground truncate flex-1 min-w-0">
-                    {order.dealershipName}
+                    {formatServices(order)}
                   </div>
                 )}
 
@@ -308,7 +327,7 @@ export function DuplicateTooltip({
         </div>
       );
     }
-  }, [displayOrders, remainingCount, fieldLabel, value, orders.length, tooltipError, debug, formatDate, getOrderNumber, getStatusColor, formatStatusText, handleOrderClick]);
+  }, [displayOrders, remainingCount, fieldLabel, value, orders.length, tooltipError, debug, formatDate, getOrderNumber, getStatusColor, formatStatusText, handleOrderClick, formatServices]);
 
   // Enhanced mobile touch handling - always defined
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
