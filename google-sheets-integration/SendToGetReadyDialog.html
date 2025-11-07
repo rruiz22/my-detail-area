@@ -401,53 +401,44 @@
       }
 
       /**
-       * Load workflow steps from Supabase
+       * Load workflow steps - HARDCODED FALLBACK
        */
       function loadSteps() {
-        google.script.run
-          .withSuccessHandler(function(stepData) {
-            steps = stepData;
-            const stepSelect = document.getElementById('step');
-            stepSelect.innerHTML = '';
+        console.log('Loading steps (hardcoded)...');
 
-            if (stepData.length === 0) {
-              stepSelect.innerHTML = '<option value="">No steps configured</option>';
-              stepSelect.disabled = true;
-              showError('No workflow steps found. Please configure steps in Get Ready first.');
-              return;
-            }
+        // Hardcoded steps for BMW of Sudbury - Update if your steps change
+        const stepsArray = [
+          { id: 'inspection', name: 'Dispatch', color: '#3B82F6', order_index: 1 },
+          { id: 'detailing', name: 'Detailing', color: '#10B981', order_index: 2 },
+          { id: '5_detail_done', name: 'Detail Done', color: '#F59E0B', order_index: 3 },
+          { id: 'mechanical', name: 'Mechanical', color: '#EF4444', order_index: 4 },
+          { id: 'body_work', name: 'Body Work', color: '#8B5CF6', order_index: 5 },
+          { id: 'ready', name: 'Front Line', color: '#10B981', order_index: 6 }
+        ];
 
-            // Add default option
-            stepSelect.innerHTML = '<option value="">-- Select initial step --</option>';
+        steps = stepsArray;
+        const stepSelect = document.getElementById('step');
+        stepSelect.innerHTML = '';
 
-            // Add steps
-            stepData.forEach(function(step) {
-              const option = document.createElement('option');
-              option.value = step.id;
-              option.textContent = step.name;
+        // Add default option
+        stepSelect.innerHTML = '<option value="">-- Select initial step --</option>';
 
-              // Add color indicator (optional - visual only)
-              if (step.color) {
-                option.style.fontWeight = '500';
-              }
+        // Add steps
+        stepsArray.forEach(function(step) {
+          const option = document.createElement('option');
+          option.value = step.id;
+          option.textContent = step.name;
+          option.style.fontWeight = '500';
 
-              stepSelect.appendChild(option);
-            });
+          stepSelect.appendChild(option);
+        });
 
-            // Auto-select first step if only one exists
-            if (stepData.length === 1) {
-              stepSelect.value = stepData[0].id;
-            } else if (stepData.length > 0) {
-              // Auto-select first step by default
-              stepSelect.value = stepData[0].id;
-            }
-          })
-          .withFailureHandler(function(error) {
-            console.error('Failed to load steps:', error);
-            document.getElementById('step').innerHTML = '<option value="">Error loading steps</option>';
-            showError('Failed to load workflow steps. Please try again.');
-          })
-          .getGetReadySteps();
+        // Auto-select first step by default
+        if (stepsArray.length > 0) {
+          stepSelect.value = stepsArray[0].id;
+        }
+
+        console.log('Steps dropdown populated with ' + stepsArray.length + ' steps (hardcoded)');
       }
 
       // ========================================

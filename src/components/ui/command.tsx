@@ -57,13 +57,59 @@ CommandInput.displayName = CommandPrimitive.Input.displayName;
 const CommandList = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive.List
-    ref={ref}
-    className={cn("max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  const listRef = React.useRef<HTMLDivElement>(null);
+
+  // Ensure wheel events work properly in portals and nested contexts
+  React.useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      const { scrollTop, scrollHeight, clientHeight } = list;
+      const canScrollUp = scrollTop > 0;
+      const canScrollDown = scrollTop < scrollHeight - clientHeight - 1; // -1 for rounding
+
+      // Only handle wheel if we can actually scroll in that direction
+      if ((e.deltaY < 0 && canScrollUp) || (e.deltaY > 0 && canScrollDown)) {
+        e.stopPropagation(); // Prevent parent scrolling
+        // Browser will handle the actual scroll since we have overflow-y-auto
+      } else {
+        // If we can't scroll, let the event propagate
+        e.preventDefault();
+      }
+    };
+
+    list.addEventListener('wheel', handleWheel, { passive: false });
+    return () => list.removeEventListener('wheel', handleWheel);
+  }, []);
+
+  return (
+    <CommandPrimitive.List
+      ref={(node) => {
+        // Handle both refs
+        listRef.current = node;
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          ref.current = node;
+        }
+      }}
+      className={cn(
+        "max-h-[300px] overflow-y-auto overflow-x-hidden overscroll-contain",
+        "[&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-gray-100",
+        "[&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full",
+        "hover:[&::-webkit-scrollbar-thumb]:bg-gray-400",
+        className
+      )}
+      style={{
+        WebkitOverflowScrolling: 'touch',
+        scrollBehavior: 'smooth'
+      } as React.CSSProperties}
+      {...props}
+    />
+  );
+});
 
 CommandList.displayName = CommandPrimitive.List.displayName;
 

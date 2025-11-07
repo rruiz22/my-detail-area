@@ -289,6 +289,14 @@
     "privacy": "Privacidade",
     "legal": "Legal"
   },
+  "cache": {
+    "clear_button": "Limpar Cache",
+    "clearing": "Limpando...",
+    "cleared_title": "Cache Limpo",
+    "cleared_desc": "Todos os caches foram limpos. Recarregando página...",
+    "error_clearing": "Falha ao limpar cache. Por favor, tente novamente.",
+    "info": "Limpe o cache se as alterações de função não forem refletidas imediatamente"
+  },
   "ui": {
     "headers": {
       "welcome": "Bem-vindo",

@@ -24,44 +24,21 @@
 // ========================================
 
 /**
- * Get configuration from Script Properties
- * Setup: Script Editor → Project Settings → Script Properties
+ * Get configuration - HARDCODED VERSION
  *
- * ALTERNATIVE: If Script Properties don't work, you can hardcode here temporarily
+ * ⚠️ IMPORTANT: Update these values for your setup
  */
 function getConfig() {
-  try {
-    const props = PropertiesService.getScriptProperties();
-
-    return {
-      SUPABASE_URL: props.getProperty('SUPABASE_URL'),
-      SUPABASE_ANON_KEY: props.getProperty('SUPABASE_ANON_KEY'),
-      DEALER_ID: props.getProperty('DEALER_ID'),
-      SHEET_NAME: props.getProperty('SHEET_NAME') || 'Sheet1',
-      AUTO_ADD_ENABLED: props.getProperty('AUTO_ADD_ENABLED') === 'true',
-      DEFAULT_PRIORITY: props.getProperty('DEFAULT_PRIORITY') || 'medium',
-      DEFAULT_WORKFLOW: props.getProperty('DEFAULT_WORKFLOW') || 'standard'
-    };
-  } catch (error) {
-    Logger.log('Error reading Script Properties: ' + error.message);
-    Logger.log('Using fallback configuration');
-
-    // ⚠️ FALLBACK CONFIGURATION (TEMPORARY)
-    // If Script Properties fail, uncomment and fill these values:
-    return {
-      SUPABASE_URL: 'https://swfnnrpzpkdypbrzmgnr.supabase.co',
-      SUPABASE_ANON_KEY: 'sb_publishable_habhWntJBZ_KKTqAGVGE0A_Rw741yhh',
-      DEALER_ID: '5',
-      SHEET_NAME: 'PRE-OWNED INVENTORY',
-      AUTO_ADD_ENABLED: false,
-      DEFAULT_PRIORITY: 'medium',
-      DEFAULT_WORKFLOW: 'standard'
-    };
-
-    // ⚠️ SECURITY NOTE:
-    // This hardcoded config should only be used temporarily for testing.
-    // Once working, move to Script Properties for better security.
-  }
+  // ✅ HARDCODED CONFIGURATION (No Script Properties needed)
+  return {
+    SUPABASE_URL: 'https://swfnnrpzpkdypbrzmgnr.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN3Zm5ucnB6cGtkeXBicnptZ25yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxODY5NjAsImV4cCI6MjA3Mjc2Mjk2MH0.HA7ujjknDa-97z-vC-vOZJm5rQ7PYXqn--rdiZoPXcY',
+    DEALER_ID: '5',
+    SHEET_NAME: 'PRE-OWNED INVENTORY2',
+    AUTO_ADD_ENABLED: false,
+    DEFAULT_PRIORITY: 'medium',
+    DEFAULT_WORKFLOW: 'standard'
+  };
 }
 
 /**
@@ -231,20 +208,15 @@ function getAllUnmarkedVehicles() {
  * @returns {Array} Array of step objects {id, name, color, order_index}
  */
 function getGetReadySteps() {
+  Logger.log('=== getGetReadySteps() called ===');
+
   try {
-    const config = validateConfig();
+    const config = getConfig();
+    Logger.log('Config loaded successfully');
+    Logger.log('Dealer ID: ' + config.DEALER_ID);
+    Logger.log('Supabase URL: ' + config.SUPABASE_URL);
 
-    // Use cache to reduce API calls (cache for 1 hour)
-    const cache = CacheService.getScriptCache();
-    const cacheKey = 'get_ready_steps_' + config.DEALER_ID;
-    const cached = cache.get(cacheKey);
-
-    if (cached) {
-      Logger.log('Returning cached steps');
-      return JSON.parse(cached);
-    }
-
-    const url = `${config.SUPABASE_URL}/rest/v1/get_ready_steps?dealer_id=eq.${config.DEALER_ID}&order=order_index.asc&select=id,name,color,order_index,is_active`;
+    const url = `${config.SUPABASE_URL}/rest/v1/get_ready_steps?dealer_id=eq.${config.DEALER_ID}&is_active=eq.true&order=order_index.asc&select=id,name,color,order_index`;
 
     const options = {
       'method': 'get',
@@ -256,32 +228,46 @@ function getGetReadySteps() {
       'muteHttpExceptions': true
     };
 
+    Logger.log('Fetching from URL: ' + url);
+
     const response = UrlFetchApp.fetch(url, options);
     const code = response.getResponseCode();
+    const responseText = response.getContentText();
+
+    Logger.log('HTTP Status: ' + code);
 
     if (code !== 200) {
-      throw new Error(`Supabase API error: ${code} - ${response.getContentText()}`);
+      Logger.log('ERROR Response: ' + responseText);
+      throw new Error(`API returned ${code}: ${responseText}`);
     }
 
-    const steps = JSON.parse(response.getContentText());
+    const steps = JSON.parse(responseText);
+    Logger.log('Parsed ' + steps.length + ' steps successfully');
 
-    // Filter only active steps
-    const activeSteps = steps.filter(step => step.is_active !== false);
+    // Ensure we return a valid array
+    if (!Array.isArray(steps)) {
+      Logger.log('WARNING: steps is not an array, converting...');
+      return [steps];
+    }
 
-    // Cache for 1 hour
-    cache.put(cacheKey, JSON.stringify(activeSteps), 3600);
+    // Return only active steps
+    const activeSteps = steps.filter(s => s.is_active !== false);
+    Logger.log('Returning ' + activeSteps.length + ' active steps');
 
-    Logger.log(`Fetched ${activeSteps.length} active steps from Supabase`);
     return activeSteps;
 
   } catch (error) {
-    Logger.log('Error fetching steps: ' + error.message);
+    Logger.log('EXCEPTION in getGetReadySteps: ' + error.message);
+    Logger.log('Stack: ' + error.stack);
 
-    // Return fallback steps if API fails
+    // Return actual steps as fallback (correct IDs from database)
     return [
-      { id: 'inspection', name: 'Inspection', color: '#3B82F6', order_index: 1 },
-      { id: 'mechanical', name: 'Mechanical', color: '#10B981', order_index: 2 },
-      { id: 'detailing', name: 'Detailing', color: '#F59E0B', order_index: 3 }
+      { id: 'inspection', name: 'Dispatch', color: '#3B82F6', order_index: 1 },
+      { id: 'detailing', name: 'Detailing', color: '#10B981', order_index: 2 },
+      { id: '5_detail_done', name: 'Detail Done', color: '#F59E0B', order_index: 3 },
+      { id: 'mechanical', name: 'Mechanical', color: '#EF4444', order_index: 4 },
+      { id: 'body_work', name: 'Body Work', color: '#8B5CF6', order_index: 5 },
+      { id: 'ready', name: 'Front Line', color: '#10B981', order_index: 6 }
     ];
   }
 }

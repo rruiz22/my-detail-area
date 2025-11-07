@@ -409,10 +409,10 @@ export default function ServiceOrders() {
               <div className="space-y-4">
                 {/* Responsive Table Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2">
-                  <h2 className="text-xl sm:text-2xl font-bold text-center sm:text-left">
+                  <h2 className="text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight">
                     {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'tomorrow' ? t('sales_orders.tabs.tomorrow') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}
                   </h2>
-                  <Badge variant="secondary" className="text-sm self-center sm:self-auto">
+                  <Badge variant="secondary" className="text-base sm:text-lg font-bold self-center sm:self-auto px-2 sm:px-3 py-1">
                     {orders.length}
                   </Badge>
                 </div>

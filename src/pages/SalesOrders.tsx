@@ -465,11 +465,11 @@ export default function SalesOrders() {
               {/* Responsive Table Header */}
               <div className="space-y-4">
                 {/* Title and Badge - Responsive */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2">
-                  <h2 className="text-xl sm:text-2xl font-bold text-center sm:text-left">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2 sm:gap-3">
+                  <h2 className="text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight">
                     {getFilterTitle(activeFilter)}
                   </h2>
-                  <Badge variant="secondary" className="text-sm self-center sm:self-auto">
+                  <Badge variant="secondary" className="text-base sm:text-lg font-bold self-center sm:self-auto px-2 sm:px-3 py-1">
                     {filteredOrders.length}
                   </Badge>
                 </div>

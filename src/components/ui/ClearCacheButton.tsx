@@ -9,7 +9,7 @@
 
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { forceInvalidateAllPermissionCache } from '@/utils/permissionSerialization';
+import { clearAllCachesSelective } from '@/utils/cacheManagement';
 import { useQueryClient } from '@tanstack/react-query';
 import { RefreshCw } from 'lucide-react';
 import React, { useState } from 'react';
@@ -25,13 +25,7 @@ export const ClearCacheButton: React.FC = () => {
     setIsClearing(true);
 
     try {
-      // Clear all caches
-      forceInvalidateAllPermissionCache();
-      localStorage.removeItem('user_profile_cache');
-
-      // Reset all queries
-      await queryClient.resetQueries();
-
+      // Show success toast before clearing
       toast({
         title: '✅ ' + t('cache.cleared_title', { defaultValue: 'Cache Cleared' }),
         description: t('cache.cleared_desc', {
@@ -40,10 +34,8 @@ export const ClearCacheButton: React.FC = () => {
         duration: 2000,
       });
 
-      // Reload after 1 second
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      // Use unified cache management utility (selective mode for manual clearing)
+      await clearAllCachesSelective(queryClient);
 
     } catch (error) {
       console.error('Error clearing cache:', error);
