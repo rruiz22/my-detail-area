@@ -1,5 +1,5 @@
 {
-  "scannedFiles": 853,
+  "scannedFiles": 854,
   "totalStrings": 8473,
   "hardcodedStrings": 2077,
   "translatedStrings": 6396,
@@ -38647,52 +38647,52 @@
           },
           {
             "key": "services.minutes",
-            "line": 853,
+            "line": 859,
             "exists": true
           },
           {
             "key": "orders.total",
-            "line": 882,
+            "line": 880,
             "exists": true
           },
           {
             "key": "orders.servicesSelected",
-            "line": 888,
+            "line": 886,
             "exists": true
           },
           {
             "key": "orders.notes",
-            "line": 897,
+            "line": 895,
             "exists": true
           },
           {
             "key": "orders.notes_instruction",
-            "line": 904,
+            "line": 902,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 952,
+            "line": 950,
             "exists": true
           },
           {
             "key": "orders.updating",
-            "line": 968,
+            "line": 966,
             "exists": true
           },
           {
             "key": "orders.creating",
-            "line": 968,
+            "line": 966,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 971,
+            "line": 969,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 971,
+            "line": 969,
             "exists": true
           }
         ],
@@ -39597,52 +39597,52 @@
           },
           {
             "key": "services.minutes",
-            "line": 1490,
+            "line": 1496,
             "exists": true
           },
           {
             "key": "orders.total",
-            "line": 1519,
+            "line": 1517,
             "exists": true
           },
           {
             "key": "orders.servicesSelected",
-            "line": 1525,
+            "line": 1523,
             "exists": true
           },
           {
             "key": "orders.notes",
-            "line": 1533,
+            "line": 1531,
             "exists": true
           },
           {
             "key": "orders.notes_placeholder",
-            "line": 1540,
+            "line": 1538,
             "exists": false
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1593,
+            "line": 1591,
             "exists": true
           },
           {
             "key": "orders.updating",
-            "line": 1614,
+            "line": 1612,
             "exists": true
           },
           {
             "key": "orders.creating",
-            "line": 1614,
+            "line": 1612,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 1617,
+            "line": 1615,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 1617,
+            "line": 1615,
             "exists": true
           }
         ],
@@ -39684,8 +39684,8 @@
           },
           {
             "key": "orders.notes_placeholder",
-            "line": 1540,
-            "context": "1539: className=\"border-input bg-background resize-none w-full\"\n1540: placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this sales order...')}\n1541: />"
+            "line": 1538,
+            "context": "1537: className=\"border-input bg-background resize-none w-full\"\n1538: placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this sales order...')}\n1539: />"
           }
         ],
         "coverage": 97,
@@ -41287,47 +41287,47 @@
           },
           {
             "key": "services.minutes",
-            "line": 649,
+            "line": 655,
             "exists": true
           },
           {
             "key": "validation.option_required",
-            "line": 674,
+            "line": 672,
             "exists": true
           },
           {
             "key": "orders.total",
-            "line": 685,
+            "line": 683,
             "exists": true
           },
           {
             "key": "orders.servicesSelected",
-            "line": 694,
+            "line": 692,
             "exists": true
           },
           {
             "key": "orders.notes",
-            "line": 702,
+            "line": 700,
             "exists": true
           },
           {
             "key": "car_wash_orders.notes_placeholder",
-            "line": 709,
+            "line": 707,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 777,
+            "line": 775,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 785,
+            "line": 783,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 785,
+            "line": 783,
             "exists": true
           }
         ],
