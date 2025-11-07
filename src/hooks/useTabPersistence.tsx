@@ -79,6 +79,11 @@ export const TAB_CONFIGS = {
     key: 'notification-center',
     defaultTab: 'chronological',
     validTabs: ['chronological', 'grouped']
+  },
+  nfc_tracking: {
+    key: 'nfc_tracking',
+    defaultTab: 'dashboard',
+    validTabs: ['dashboard', 'tags', 'tracker', 'heatmap', 'workflows']
   }
 } as const;
 

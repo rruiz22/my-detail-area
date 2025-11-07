@@ -301,10 +301,10 @@ export function useGetReadyNotifications(
       }
 
       const { data, error } = await supabase.rpc(
-        'mark_all_notifications_read',
+        'mark_all_get_ready_notifications_read',
         {
+          p_dealer_id: dealerId,
           p_user_id: user.id,
-          p_dealer_id: selectedDealerId,
         }
       );
 

@@ -43,6 +43,7 @@
     },
     "enabled": "Habilitado",
     "disabled": "Desabilitado",
+    "status_label": "Status",
     "actions": "Ações",
     "activity": "Atividade",
     "of": "de",
@@ -1676,7 +1677,195 @@
     "title": "Contatos"
   },
   "nfc_tracking": {
-    "title": "Rastreamento NFC"
+    "title": "Rastreamento NFC",
+    "subtitle": "Gerencie tags NFC e rastreie movimentos de veículos em tempo real",
+    "dashboard": {
+      "title": "Painel de Controle",
+      "active_tags": "Tags Ativas",
+      "vehicles_tracked": "Veículos Rastreados",
+      "recent_scans": "Leituras Recentes",
+      "scan_activity": "Atividade de Leitura",
+      "location_coverage": "Cobertura de Localização",
+      "workflow_triggers": "Acionamentos de Fluxo",
+      "total_tags": "Total de Tags",
+      "tags_in_use": "Tags em Uso",
+      "tags_available": "Tags Disponíveis",
+      "last_24_hours": "Últimas 24 horas",
+      "last_7_days": "Últimos 7 dias",
+      "last_30_days": "Últimos 30 dias",
+      "view_all": "Ver Todas",
+      "no_data": "Nenhum dado disponível",
+      "loading": "Carregando dados do painel...",
+      "error": "Erro ao carregar dados do painel",
+      "refresh": "Atualizar",
+      "export": "Exportar Dados"
+    },
+    "tag_manager": {
+      "title": "Gerenciador de Tags",
+      "subtitle": "Gerencie e configure tags NFC",
+      "register_new": "Registrar Nova Tag",
+      "search_placeholder": "Buscar tags por nome, tipo ou VIN...",
+      "filter_by_type": "Filtrar por Tipo",
+      "filter_by_status": "Filtrar por Status",
+      "all_types": "Todos os Tipos",
+      "all_statuses": "Todos os Status",
+      "active": "Ativa",
+      "inactive": "Inativa",
+      "assigned": "Atribuída",
+      "unassigned": "Não Atribuída",
+      "tag_details": "Detalhes da Tag",
+      "edit_tag": "Editar Tag",
+      "delete_tag": "Excluir Tag",
+      "write_to_tag": "Gravar em Tag Física",
+      "read_from_tag": "Ler Tag Física",
+      "assign_vehicle": "Atribuir Veículo",
+      "unassign_vehicle": "Desatribuir Veículo",
+      "set_location": "Definir Localização",
+      "view_history": "Ver Histórico",
+      "scan_history": "Histórico de Leituras",
+      "no_tags": "Nenhuma tag NFC registrada",
+      "no_tags_description": "Comece registrando sua primeira tag NFC para rastrear veículos e localizações.",
+      "create_first_tag": "Criar Primeira Tag",
+      "loading": "Carregando tags...",
+      "error": "Erro ao carregar tags",
+      "delete_confirmation": "Tem certeza de que deseja excluir esta tag NFC?",
+      "delete_warning": "Esta ação não pode ser desfeita.",
+      "deleted_successfully": "Tag excluída com sucesso",
+      "updated_successfully": "Tag atualizada com sucesso",
+      "created_successfully": "Tag criada com sucesso"
+    },
+    "vehicle_tracker": {
+      "title": "Rastreador de Veículos",
+      "subtitle": "Rastreie veículos equipados com NFC",
+      "vehicle_list": "Lista de Veículos",
+      "map_view": "Visualização em Mapa",
+      "last_seen": "Última Visualização",
+      "current_location": "Localização Atual",
+      "movement_history": "Histórico de Movimentos",
+      "scan_count": "Contagem de Leituras",
+      "first_scan": "Primeira Leitura",
+      "last_scan": "Última Leitura",
+      "no_vehicles": "Nenhum veículo rastreado",
+      "no_vehicles_description": "Os veículos aparecerão aqui assim que forem associados a tags NFC.",
+      "loading": "Carregando veículos...",
+      "error": "Erro ao carregar dados do veículo",
+      "view_details": "Ver Detalhes"
+    },
+    "location_heatmap": {
+      "title": "Mapa de Calor de Localizações",
+      "subtitle": "Visualize atividade de leitura de tags por localização",
+      "high_activity": "Alta Atividade",
+      "medium_activity": "Atividade Média",
+      "low_activity": "Baixa Atividade",
+      "no_activity": "Sem Atividade",
+      "scan_count": "Contagem de Leituras",
+      "unique_vehicles": "Veículos Únicos",
+      "peak_hours": "Horários de Pico",
+      "location_details": "Detalhes da Localização",
+      "no_data": "Nenhum dado de localização disponível",
+      "no_data_description": "Os dados de localização aparecerão conforme as tags forem lidas em diferentes locais.",
+      "loading": "Carregando dados de localização...",
+      "error": "Erro ao carregar mapa de calor",
+      "date_range": "Intervalo de Datas"
+    },
+    "workflows": {
+      "title": "Fluxos de Trabalho",
+      "subtitle": "Automatize ações com base em eventos de leitura de tags NFC",
+      "create_workflow": "Criar Fluxo de Trabalho",
+      "edit_workflow": "Editar Fluxo de Trabalho",
+      "delete_workflow": "Excluir Fluxo de Trabalho",
+      "workflow_name": "Nome do Fluxo de Trabalho",
+      "workflow_description": "Descrição do Fluxo de Trabalho",
+      "trigger_type": "Tipo de Acionamento",
+      "trigger_conditions": "Condições de Acionamento",
+      "actions": "Ações",
+      "add_action": "Adicionar Ação",
+      "remove_action": "Remover Ação",
+      "test_workflow": "Testar Fluxo de Trabalho",
+      "enable_workflow": "Ativar Fluxo de Trabalho",
+      "disable_workflow": "Desativar Fluxo de Trabalho",
+      "workflow_enabled": "Fluxo de Trabalho Ativado",
+      "workflow_disabled": "Fluxo de Trabalho Desativado",
+      "no_workflows": "Nenhum fluxo de trabalho configurado",
+      "no_workflows_description": "Crie fluxos de trabalho para automatizar ações quando as tags NFC forem lidas.",
+      "create_first_workflow": "Criar Primeiro Fluxo de Trabalho",
+      "loading": "Carregando fluxos de trabalho...",
+      "error": "Erro ao carregar fluxos de trabalho",
+      "created_successfully": "Fluxo de trabalho criado com sucesso",
+      "updated_successfully": "Fluxo de trabalho atualizado com sucesso",
+      "deleted_successfully": "Fluxo de trabalho excluído com sucesso",
+      "triggers": {
+        "tag_scan": "Leitura de Tag",
+        "location_entry": "Entrada em Localização",
+        "time_based": "Baseado em Tempo",
+        "status_change": "Mudança de Status"
+      },
+      "actions": {
+        "send_email": "Enviar E-mail",
+        "send_sms": "Enviar SMS",
+        "update_status": "Atualizar Status",
+        "create_task": "Criar Tarefa",
+        "webhook": "Webhook",
+        "notification": "Notificação"
+      }
+    }
+  },
+  "nfc": {
+    "writer": {
+      "title": "Gravador de Tag NFC",
+      "preparing": "Preparando...",
+      "writing": "Gravando em Tag...",
+      "success": "Gravação Bem-Sucedida!",
+      "error": "Erro de Gravação",
+      "ready": "Pronto para Gravar",
+      "write_tag": "Gravar Tag",
+      "retry": "Tentar Novamente",
+      "instructions": {
+        "ready": "Clique em 'Gravar Tag' e então aproxime a tag NFC física do seu dispositivo.",
+        "preparing": "Preparando tag para gravação...",
+        "writing": "Mantenha a tag próxima ao dispositivo até que a gravação seja concluída.",
+        "success": "Tag gravada com sucesso! Agora você pode usá-la para rastreamento.",
+        "error": "Falha ao gravar na tag. Verifique a conexão e tente novamente."
+      }
+    },
+    "reader": {
+      "title": "Leitor de Tag NFC",
+      "scanning": "Lendo Tag...",
+      "success": "Tag Lida com Sucesso!",
+      "error": "Erro de Leitura",
+      "ready": "Pronto para Ler",
+      "start_scanning": "Iniciar Leitura",
+      "stop_scanning": "Parar Leitura",
+      "scan_another": "Ler Outra Tag",
+      "retry": "Tentar Novamente",
+      "tag_data": "Dados da Tag",
+      "instructions": {
+        "ready": "Clique em 'Iniciar Leitura' e então aproxime uma tag NFC do seu dispositivo.",
+        "scanning": "Aproxime uma tag NFC do seu dispositivo...",
+        "success": "Tag lida com sucesso! Dados exibidos abaixo.",
+        "error": "Falha ao ler a tag. Verifique a conexão e tente novamente."
+      }
+    },
+    "tag_info": {
+      "id": "ID da Tag",
+      "name": "Nome",
+      "type": "Tipo",
+      "vin": "VIN",
+      "location": "Localização",
+      "url": "URL"
+    },
+    "templates": {
+      "quick_create": "Criação Rápida",
+      "vehicle_tag": "Tag de Veículo",
+      "location_tag": "Tag de Localização",
+      "generic_tag": "Tag Genérica"
+    },
+    "errors": {
+      "not_supported": "Tecnologia NFC não é suportada neste dispositivo ou navegador.",
+      "permission_denied": "Permissão NFC negada. Verifique as configurações do seu dispositivo.",
+      "read_failed": "Falha ao ler a tag NFC. Por favor, tente novamente.",
+      "write_failed": "Falha ao gravar na tag NFC. Por favor, tente novamente."
+    }
   },
   "users": {
     "admin": "Administrador",
@@ -3203,7 +3392,7 @@
     },
     "tabs": {
       "overview": "Visão Geral",
-      "details_view": "Vista de Detalhes",
+      "steps": "Etapas",
       "approvals": "Aprovações",
       "vendors": "Fornecedores",
       "reports": "Relatórios",
@@ -3936,6 +4125,24 @@
       "existing_vehicles": "Veículos existentes com este VIN",
       "confirmation": "Deseja adicionar este veículo com um novo número de estoque?",
       "confirm_add": "Sim, Adicionar Veículo"
+    },
+    "duplicate_stock": {
+      "title": "Número de Estoque Já Existe",
+      "description": "Este número de estoque já está em uso. Pode ser uma entrada duplicada.",
+      "existing_vehicles": "Veículos existentes com este número de estoque",
+      "confirmation": "Deseja criar este veículo mesmo assim?",
+      "confirm_add": "Sim, Criar Veículo"
+    },
+    "step_form": {
+      "fields": {
+        "assigned_users": "Usuários Atribuídos",
+        "assigned_users_description": "Selecione usuários que serão notificados quando os veículos entrarem nesta etapa"
+      },
+      "errors": {
+        "users_required": "Pelo menos um usuário deve ser atribuído"
+      },
+      "select_users_placeholder": "Selecionar usuários...",
+      "users_selected": "{{count}} usuário(s) selecionado(s)"
     },
     "export": {
       "no_vehicles": "Não há veículos para exportar"

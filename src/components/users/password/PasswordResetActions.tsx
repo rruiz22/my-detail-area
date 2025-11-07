@@ -49,19 +49,35 @@ export const PasswordResetActions = ({ dealerId }: PasswordResetActionsProps) =>
 
     try {
       setSearchLoading(true);
-      
+
+      // Search directly in profiles table with dealer_memberships filter
       const { data, error } = await supabase
-        .from('dealer_memberships')
+        .from('profiles')
         .select(`
-          user_id,
-          profiles!inner(id, email, first_name, last_name)
+          id,
+          email,
+          first_name,
+          last_name,
+          dealer_memberships!inner(dealer_id, is_active)
         `)
-        .eq('dealer_id', dealerId)
-        .eq('is_active', true)
-        .or(`profiles.email.ilike.%${query}%, profiles.first_name.ilike.%${query}%, profiles.last_name.ilike.%${query}%`);
+        .eq('dealer_memberships.dealer_id', dealerId)
+        .eq('dealer_memberships.is_active', true)
+        .or(`email.ilike.%${query}%,first_name.ilike.%${query}%,last_name.ilike.%${query}%`);
 
       if (error) throw error;
-      setSearchResults(data || []);
+
+      // Transform data to match expected format
+      const transformed = (data || []).map(profile => ({
+        user_id: profile.id,
+        profiles: {
+          id: profile.id,
+          email: profile.email,
+          first_name: profile.first_name,
+          last_name: profile.last_name
+        }
+      }));
+
+      setSearchResults(transformed);
 
     } catch (error) {
       console.error('Error searching users:', error);

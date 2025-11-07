@@ -548,7 +548,9 @@ export function GetReadyVehicleList({
                     onClick={() => handleViewDetails(vehicle.id)}
                     className={cn(
                       "cursor-pointer hover:bg-muted/50 transition-colors h-12",
-                      selectedVehicleId === vehicle.id && "bg-primary/10 border-l-4 border-l-primary"
+                      selectedVehicleId === vehicle.id && "bg-primary/10 border-l-4 border-l-primary",
+                      vehicle.progress > 0 && vehicle.progress < 100 && "bg-amber-100/70 dark:bg-amber-900/30 animate-pulse-soft",
+                      vehicle.progress === 100 && "bg-emerald-100/60 dark:bg-emerald-900/30"
                     )}
                   >
                 {/* Image - Click to open lightbox */}

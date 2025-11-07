@@ -10,11 +10,15 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useStepManagement } from '@/hooks/useStepManagement';
+import { useGetReadyUsers } from '@/hooks/useGetReadyUsers';
+import { useStepAssignments } from '@/hooks/useStepAssignments';
 import { GetReadyStep } from '@/types/getReady';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconPicker } from './IconPicker';
+import { MultiUserSelect } from './MultiUserSelect';
 
 interface StepFormModalProps {
   open: boolean;
@@ -37,6 +41,8 @@ const DEFAULT_COLORS = [
 export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: StepFormModalProps) {
   const { t } = useTranslation();
   const { createStep, updateStep, isCreating, isUpdating } = useStepManagement();
+  const { users, isLoading: isLoadingUsers } = useGetReadyUsers();
+  const { assignments, isLoading: isLoadingAssignments, replaceAssignmentsAsync } = useStepAssignments(step?.id);
 
   const [formData, setFormData] = useState({
     name: step?.name || '',
@@ -47,6 +53,7 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
     cost_per_day: step?.cost_per_day?.toString() || '0',
   });
 
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Update form data when step prop changes (for edit mode)
@@ -70,9 +77,17 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
         sla_hours: '24',
         cost_per_day: '0',
       });
+      setSelectedUserIds([]);
     }
     setErrors({});
   }, [step]);
+
+  // Separate effect to load assigned users (only when assignments are loaded)
+  useEffect(() => {
+    if (step && assignments.length > 0 && !isLoadingAssignments) {
+      setSelectedUserIds(assignments.map(a => a.user_id));
+    }
+  }, [step?.id, isLoadingAssignments]); // Only depend on step ID and loading state
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -85,11 +100,15 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
       newErrors.sla_hours = t('get_ready.setup.form.errors.sla_required');
     }
 
+    if (selectedUserIds.length === 0) {
+      newErrors.assigned_users = t('get_ready.step_form.errors.users_required') || 'At least one user must be assigned';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) return;
@@ -104,14 +123,35 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
       order_index: step?.order_index || nextOrderIndex,
     };
 
-    if (step) {
-      updateStep({ id: step.id, ...data });
-    } else {
-      createStep(data);
-    }
+    try {
+      let stepId: string;
 
-    onOpenChange(false);
-    resetForm();
+      if (step) {
+        // Update existing step
+        await updateStep({ id: step.id, ...data });
+        stepId = step.id;
+      } else {
+        // Create new step - need to get the ID from the created step
+        // Since createStep doesn't return the ID, we'll use the step name as ID
+        // Note: In your useStepManagement, you might want to modify createStep to return the created step
+        const createdStep = await createStep(data);
+        // For now, we'll construct the ID based on the name (this matches your DB structure)
+        stepId = formData.name.toLowerCase().replace(/\s+/g, '_');
+      }
+
+      // Update user assignments
+      await replaceAssignmentsAsync({
+        stepId: stepId,
+        userIds: selectedUserIds,
+        role: 'technician',
+      });
+
+      onOpenChange(false);
+      resetForm();
+    } catch (error) {
+      console.error('Error saving step and assignments:', error);
+      // Error toasts are handled by the mutations
+    }
   };
 
   const resetForm = () => {
@@ -123,6 +163,7 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
       sla_hours: '24',
       cost_per_day: '0',
     });
+    setSelectedUserIds([]);
     setErrors({});
   };
 
@@ -137,8 +178,8 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] p-0">
+        <DialogHeader className="px-6 pt-6 pb-2">
           <DialogTitle>
             {step ? t('get_ready.setup.form.title_edit') : t('get_ready.setup.form.title_create')}
           </DialogTitle>
@@ -147,8 +188,9 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit}>
-          <div className="space-y-4 py-4">
+        <ScrollArea className="max-h-[calc(90vh-180px)] px-6">
+          <form onSubmit={handleSubmit} id="step-form">
+            <div className="space-y-4 pb-4">
             {/* Name */}
             <div className="space-y-2">
               <Label htmlFor="name">
@@ -233,26 +275,57 @@ export function StepFormModal({ open, onOpenChange, step, nextOrderIndex }: Step
                 onChange={(e) => setFormData({ ...formData, cost_per_day: e.target.value })}
               />
             </div>
-          </div>
 
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleOpenChange(false)}
-              disabled={isLoading}
-            >
-              {t('common.action_buttons.cancel')}
-            </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading
-                ? t('common.status.loading')
-                : step
-                  ? t('common.action_buttons.update')
-                  : t('common.action_buttons.create')}
-            </Button>
-          </DialogFooter>
-        </form>
+            {/* Assigned Users - REQUIRED */}
+            <div className="space-y-2">
+              <Label>
+                {t('get_ready.step_form.fields.assigned_users') || 'Assigned Users'}
+                <span className="text-red-500 ml-1">*</span>
+              </Label>
+              <p className="text-xs text-muted-foreground mb-2">
+                {t('get_ready.step_form.fields.assigned_users_description') || 'Select users who will be notified when vehicles enter this step'}
+              </p>
+              <MultiUserSelect
+                users={users}
+                value={selectedUserIds}
+                onChange={setSelectedUserIds}
+                placeholder={t('get_ready.step_form.select_users_placeholder') || 'Select users...'}
+                disabled={isLoadingUsers || isLoading}
+              />
+              {errors.assigned_users && (
+                <p className="text-sm text-red-500">{errors.assigned_users}</p>
+              )}
+              {selectedUserIds.length > 0 && (
+                <p className="text-xs text-muted-foreground">
+                  {t('get_ready.step_form.users_selected', { count: selectedUserIds.length }) || `${selectedUserIds.length} user(s) selected`}
+                </p>
+              )}
+            </div>
+          </div>
+          </form>
+        </ScrollArea>
+
+        <DialogFooter className="px-6 py-4 border-t">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => handleOpenChange(false)}
+            disabled={isLoading}
+          >
+            {t('common.action_buttons.cancel')}
+          </Button>
+          <Button
+            type="submit"
+            form="step-form"
+            disabled={isLoading}
+          >
+            {isLoading
+              ? t('common.status.loading')
+              : step
+                ? t('common.action_buttons.update')
+                : t('common.action_buttons.create')}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

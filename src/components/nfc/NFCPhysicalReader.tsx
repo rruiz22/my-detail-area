@@ -5,12 +5,13 @@ import { Button } from '../ui/button';
 import { Alert, AlertDescription } from '../ui/alert';
 import { Badge } from '../ui/badge';
 import { Card, CardContent, CardHeader } from '../ui/card';
+import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { useWebNFC } from '../../hooks/useWebNFC';
-import { 
-  Smartphone, 
-  Wifi, 
-  CheckCircle, 
-  XCircle, 
+import {
+  Smartphone,
+  Wifi,
+  CheckCircle,
+  XCircle,
   Loader2,
   AlertTriangle,
   Radio,
@@ -154,14 +155,15 @@ export function NFCPhysicalReader({ isOpen, onClose, onTagRead }: NFCPhysicalRea
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Eye className="h-5 w-5" />
-            {t('nfc.reader.title')}
-          </DialogTitle>
-        </DialogHeader>
+    <PermissionGuard module="nfc_tracking" permission="read_nfc_tags">
+      <Dialog open={isOpen} onOpenChange={handleClose}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Eye className="h-5 w-5" />
+              {t('nfc.reader.title')}
+            </DialogTitle>
+          </DialogHeader>
 
         {/* Read Status */}
         <div className="text-center py-6">
@@ -288,5 +290,6 @@ export function NFCPhysicalReader({ isOpen, onClose, onTagRead }: NFCPhysicalRea
         </div>
       </DialogContent>
     </Dialog>
+    </PermissionGuard>
   );
 }

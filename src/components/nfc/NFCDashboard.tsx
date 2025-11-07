@@ -1,25 +1,26 @@
-import { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-  Radio, 
-  Car, 
-  MapPin, 
-  Clock, 
-  TrendingUp, 
+import {
+  Radio,
+  Car,
+  MapPin,
+  Clock,
+  TrendingUp,
   Activity,
   Zap,
   Users,
-  Target
+  Target,
+  AlertCircle
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useNFCManagement } from '@/hooks/useNFCManagement';
+import { useNFCStats } from '@/hooks/useNFCQueries';
 import { NFCGeolocationMap } from './NFCGeolocationMap';
 import { formatDistanceToNow } from 'date-fns';
 import { es, ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface NFCDashboardProps {
   className?: string;
@@ -27,7 +28,9 @@ interface NFCDashboardProps {
 
 export function NFCDashboard({ className }: NFCDashboardProps) {
   const { t, i18n } = useTranslation();
-  const { stats, loading, loadStats } = useNFCManagement();
+
+  // ✅ TanStack Query - automatic caching, refetching, and state management
+  const { data: stats, isLoading: loading, error } = useNFCStats();
 
   // Get locale for date-fns
   const getLocale = () => {
@@ -37,10 +40,6 @@ export function NFCDashboard({ className }: NFCDashboardProps) {
       default: return undefined;
     }
   };
-
-  useEffect(() => {
-    loadStats();
-  }, [loadStats]);
 
   const MetricCard = ({ 
     title, 
@@ -86,6 +85,19 @@ export function NFCDashboard({ className }: NFCDashboardProps) {
     </Card>
   );
 
+  // ✅ Error state with retry option
+  if (error) {
+    return (
+      <Alert variant="destructive" className={className}>
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          {t('nfc_tracking.errors.load_failed')}: {error instanceof Error ? error.message : 'Unknown error'}
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  // ✅ Loading state with skeletons
   if (loading && !stats) {
     return (
       <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6", className)}>
