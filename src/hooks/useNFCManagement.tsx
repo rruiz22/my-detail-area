@@ -2,6 +2,18 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+// import { CACHE_TIMES, GC_TIMES } from '@/constants/cacheConfig';
+
+/**
+ * NFC Management Hook
+ *
+ * @performance Cache Recommendations (for future TanStack Query migration):
+ * - Tags list: CACHE_TIMES.MEDIUM (5 min) - Standard data that changes moderately
+ * - NFC scans: CACHE_TIMES.SHORT (1 min) - Frequent updates, real-time tracking
+ * - NFC stats: CACHE_TIMES.SHORT (1 min) - Dashboard metrics
+ *
+ * @see {@link https://tanstack.com/query/latest/docs/react/guides/caching} TanStack Query Caching
+ */
 
 export interface NFCTag {
   id: string;

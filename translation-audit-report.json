@@ -1,8 +1,8 @@
 {
   "scannedFiles": 849,
-  "totalStrings": 8512,
+  "totalStrings": 8519,
   "hardcodedStrings": 2076,
-  "translatedStrings": 6436,
+  "translatedStrings": 6443,
   "issues": {
     "critical": [
       {
@@ -6154,152 +6154,152 @@
         "hardcodedStrings": [
           {
             "text": "Completed",
-            "line": 144,
-            "context": "143: case 'completed':\n144: return <Badge variant=\"default\" className=\"bg-green-100 text-green-800\">Completed</Badge>;\n145: case 'pending':"
+            "line": 147,
+            "context": "146: case 'completed':\n147: return <Badge variant=\"default\" className=\"bg-green-100 text-green-800\">Completed</Badge>;\n148: case 'pending':"
           },
           {
             "text": "Pending",
-            "line": 146,
-            "context": "145: case 'pending':\n146: return <Badge variant=\"secondary\">Pending</Badge>;\n147: case 'processing':"
+            "line": 149,
+            "context": "148: case 'pending':\n149: return <Badge variant=\"secondary\">Pending</Badge>;\n150: case 'processing':"
           },
           {
             "text": "Processing",
-            "line": 148,
-            "context": "147: case 'processing':\n148: return <Badge variant=\"secondary\">Processing</Badge>;\n149: case 'expired':"
+            "line": 151,
+            "context": "150: case 'processing':\n151: return <Badge variant=\"secondary\">Processing</Badge>;\n152: case 'expired':"
           },
           {
             "text": "Expired",
-            "line": 150,
-            "context": "149: case 'expired':\n150: return <Badge variant=\"outline\">Expired</Badge>;\n151: case 'cancelled':"
+            "line": 153,
+            "context": "152: case 'expired':\n153: return <Badge variant=\"outline\">Expired</Badge>;\n154: case 'cancelled':"
           },
           {
             "text": "Cancelled",
-            "line": 152,
-            "context": "151: case 'cancelled':\n152: return <Badge variant=\"outline\">Cancelled</Badge>;\n153: case 'failed':"
+            "line": 155,
+            "context": "154: case 'cancelled':\n155: return <Badge variant=\"outline\">Cancelled</Badge>;\n156: case 'failed':"
           },
           {
             "text": "Failed",
-            "line": 154,
-            "context": "153: case 'failed':\n154: return <Badge variant=\"destructive\">Failed</Badge>;\n155: default:"
+            "line": 157,
+            "context": "156: case 'failed':\n157: return <Badge variant=\"destructive\">Failed</Badge>;\n158: default:"
           },
           {
             "text": "Search",
-            "line": 200,
-            "context": "199: <div className=\"space-y-2\">\n200: <label className=\"text-sm font-medium\">Search</label>\n201: <div className=\"relative\">"
+            "line": 203,
+            "context": "202: <div className=\"space-y-2\">\n203: <label className=\"text-sm font-medium\">Search</label>\n204: <div className=\"relative\">"
           },
           {
             "text": "Type",
-            "line": 213,
-            "context": "212: <div className=\"space-y-2\">\n213: <label className=\"text-sm font-medium\">Type</label>\n214: <Select value={filterType} onValueChange={setFilterType}>"
+            "line": 216,
+            "context": "215: <div className=\"space-y-2\">\n216: <label className=\"text-sm font-medium\">Type</label>\n217: <Select value={filterType} onValueChange={setFilterType}>"
           },
           {
             "text": "All Types",
-            "line": 219,
-            "context": "218: <SelectContent>\n219: <SelectItem value=\"all\">All Types</SelectItem>\n220: <SelectItem value=\"password_reset\">Password Reset</SelectItem>"
+            "line": 222,
+            "context": "221: <SelectContent>\n222: <SelectItem value=\"all\">All Types</SelectItem>\n223: <SelectItem value=\"password_reset\">Password Reset</SelectItem>"
           },
           {
             "text": "Password Reset",
-            "line": 220,
-            "context": "219: <SelectItem value=\"all\">All Types</SelectItem>\n220: <SelectItem value=\"password_reset\">Password Reset</SelectItem>\n221: <SelectItem value=\"bulk_operation\">Bulk Operation</SelectItem>"
+            "line": 223,
+            "context": "222: <SelectItem value=\"all\">All Types</SelectItem>\n223: <SelectItem value=\"password_reset\">Password Reset</SelectItem>\n224: <SelectItem value=\"bulk_operation\">Bulk Operation</SelectItem>"
           },
           {
             "text": "Bulk Operation",
-            "line": 221,
-            "context": "220: <SelectItem value=\"password_reset\">Password Reset</SelectItem>\n221: <SelectItem value=\"bulk_operation\">Bulk Operation</SelectItem>\n222: </SelectContent>"
+            "line": 224,
+            "context": "223: <SelectItem value=\"password_reset\">Password Reset</SelectItem>\n224: <SelectItem value=\"bulk_operation\">Bulk Operation</SelectItem>\n225: </SelectContent>"
           },
           {
             "text": "Status",
-            "line": 227,
-            "context": "226: <div className=\"space-y-2\">\n227: <label className=\"text-sm font-medium\">Status</label>\n228: <Select value={filterStatus} onValueChange={setFilterStatus}>"
+            "line": 230,
+            "context": "229: <div className=\"space-y-2\">\n230: <label className=\"text-sm font-medium\">Status</label>\n231: <Select value={filterStatus} onValueChange={setFilterStatus}>"
           },
           {
             "text": "All Status",
-            "line": 233,
-            "context": "232: <SelectContent>\n233: <SelectItem value=\"all\">All Status</SelectItem>\n234: <SelectItem value=\"pending\">Pending</SelectItem>"
+            "line": 236,
+            "context": "235: <SelectContent>\n236: <SelectItem value=\"all\">All Status</SelectItem>\n237: <SelectItem value=\"pending\">Pending</SelectItem>"
           },
           {
             "text": "Pending",
-            "line": 234,
-            "context": "233: <SelectItem value=\"all\">All Status</SelectItem>\n234: <SelectItem value=\"pending\">Pending</SelectItem>\n235: <SelectItem value=\"completed\">Completed</SelectItem>"
+            "line": 237,
+            "context": "236: <SelectItem value=\"all\">All Status</SelectItem>\n237: <SelectItem value=\"pending\">Pending</SelectItem>\n238: <SelectItem value=\"completed\">Completed</SelectItem>"
           },
           {
             "text": "Completed",
-            "line": 235,
-            "context": "234: <SelectItem value=\"pending\">Pending</SelectItem>\n235: <SelectItem value=\"completed\">Completed</SelectItem>\n236: <SelectItem value=\"expired\">Expired</SelectItem>"
+            "line": 238,
+            "context": "237: <SelectItem value=\"pending\">Pending</SelectItem>\n238: <SelectItem value=\"completed\">Completed</SelectItem>\n239: <SelectItem value=\"expired\">Expired</SelectItem>"
           },
           {
             "text": "Expired",
-            "line": 236,
-            "context": "235: <SelectItem value=\"completed\">Completed</SelectItem>\n236: <SelectItem value=\"expired\">Expired</SelectItem>\n237: <SelectItem value=\"cancelled\">Cancelled</SelectItem>"
+            "line": 239,
+            "context": "238: <SelectItem value=\"completed\">Completed</SelectItem>\n239: <SelectItem value=\"expired\">Expired</SelectItem>\n240: <SelectItem value=\"cancelled\">Cancelled</SelectItem>"
           },
           {
             "text": "Cancelled",
-            "line": 237,
-            "context": "236: <SelectItem value=\"expired\">Expired</SelectItem>\n237: <SelectItem value=\"cancelled\">Cancelled</SelectItem>\n238: <SelectItem value=\"failed\">Failed</SelectItem>"
+            "line": 240,
+            "context": "239: <SelectItem value=\"expired\">Expired</SelectItem>\n240: <SelectItem value=\"cancelled\">Cancelled</SelectItem>\n241: <SelectItem value=\"failed\">Failed</SelectItem>"
           },
           {
             "text": "Failed",
-            "line": 238,
-            "context": "237: <SelectItem value=\"cancelled\">Cancelled</SelectItem>\n238: <SelectItem value=\"failed\">Failed</SelectItem>\n239: </SelectContent>"
+            "line": 241,
+            "context": "240: <SelectItem value=\"cancelled\">Cancelled</SelectItem>\n241: <SelectItem value=\"failed\">Failed</SelectItem>\n242: </SelectContent>"
           },
           {
             "text": "Search users or admins...",
-            "line": 204,
-            "context": "203: <Input\n204: placeholder=\"Search users or admins...\"\n205: value={searchTerm}"
+            "line": 207,
+            "context": "206: <Input\n207: placeholder=\"Search users or admins...\"\n208: value={searchTerm}"
           }
         ],
         "translationCalls": [
           {
             "key": "password_management.activity_filters",
-            "line": 194,
+            "line": 197,
             "exists": true
           },
           {
             "key": "password_management.activity_log",
-            "line": 261,
+            "line": 264,
             "exists": true
           },
           {
             "key": "common.items",
-            "line": 264,
+            "line": 267,
             "exists": false
           },
           {
             "key": "password_management.recent_password_activities",
-            "line": 268,
+            "line": 271,
             "exists": true
           },
           {
             "key": "password_management.no_activities",
-            "line": 288,
+            "line": 291,
             "exists": true
           },
           {
             "key": "password_management.${activity.subtype}",
-            "line": 300,
+            "line": 303,
             "exists": false
           },
           {
             "key": "password_management.${activity.subtype}",
-            "line": 301,
+            "line": 304,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.items",
-            "line": 264,
-            "context": "263: <Badge variant=\"outline\">\n264: {filteredActivities.length} {t('common.items')}\n265: </Badge>"
+            "line": 267,
+            "context": "266: <Badge variant=\"outline\">\n267: {filteredActivities.length} {t('common.items')}\n268: </Badge>"
           },
           {
             "key": "password_management.${activity.subtype}",
-            "line": 300,
-            "context": "299: {activity.type === 'password_reset'\n300: ? t(`password_management.${activity.subtype}`)\n301: : t(`password_management.${activity.subtype}`)"
+            "line": 303,
+            "context": "302: {activity.type === 'password_reset'\n303: ? t(`password_management.${activity.subtype}`)\n304: : t(`password_management.${activity.subtype}`)"
           },
           {
             "key": "password_management.${activity.subtype}",
-            "line": 301,
-            "context": "300: ? t(`password_management.${activity.subtype}`)\n301: : t(`password_management.${activity.subtype}`)\n302: }"
+            "line": 304,
+            "context": "303: ? t(`password_management.${activity.subtype}`)\n304: : t(`password_management.${activity.subtype}`)\n305: }"
           }
         ],
         "coverage": 27,
@@ -22507,155 +22507,170 @@
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 133,
+            "line": 142,
             "exists": true
           },
           {
             "key": "user_management.no_dealership_assigned",
-            "line": 200,
+            "line": 211,
             "exists": true
           },
           {
             "key": "admin.dealer_users",
-            "line": 263,
+            "line": 274,
             "exists": true
+          },
+          {
+            "key": "common.users",
+            "line": 275,
+            "exists": false
           },
           {
             "key": "password_management.title",
-            "line": 267,
+            "line": 279,
             "exists": true
           },
           {
+            "key": "common.password",
+            "line": 280,
+            "exists": false
+          },
+          {
             "key": "user_management.overview_title",
-            "line": 278,
+            "line": 291,
             "exists": true
           },
           {
             "key": "user_management.title",
-            "line": 278,
+            "line": 291,
             "exists": true
           },
           {
             "key": "user_management.readonly_description",
-            "line": 282,
+            "line": 295,
             "exists": true
           },
           {
             "key": "users.invite_user",
-            "line": 293,
-            "exists": true
-          },
-          {
-            "key": "user_management.readonly_alert",
-            "line": 305,
-            "exists": true
-          },
-          {
-            "key": "user_management.readonly_alert_cta",
             "line": 306,
             "exists": true
           },
           {
+            "key": "user_management.readonly_alert",
+            "line": 318,
+            "exists": true
+          },
+          {
+            "key": "user_management.readonly_alert_cta",
+            "line": 319,
+            "exists": true
+          },
+          {
             "key": "user_management.search_users",
-            "line": 316,
+            "line": 329,
             "exists": true
           },
           {
             "key": "dealerships.select_dealership",
-            "line": 327,
+            "line": 340,
             "exists": true
           },
           {
             "key": "common.all",
-            "line": 330,
+            "line": 343,
             "exists": true
           },
           {
             "key": "user_management.user",
-            "line": 345,
-            "exists": true
-          },
-          {
-            "key": "dealerships.dealership",
-            "line": 346,
-            "exists": true
-          },
-          {
-            "key": "user_management.roles",
-            "line": 347,
-            "exists": true
-          },
-          {
-            "key": "common.fields.status",
-            "line": 348,
-            "exists": false
-          },
-          {
-            "key": "common.actions",
-            "line": 349,
-            "exists": true
-          },
-          {
-            "key": "user_management.no_users_matching_filters",
             "line": 358,
             "exists": true
           },
           {
-            "key": "user_management.no_users_found",
+            "key": "dealerships.dealership",
             "line": 359,
             "exists": true
           },
           {
+            "key": "user_management.roles",
+            "line": 360,
+            "exists": true
+          },
+          {
+            "key": "common.status",
+            "line": 361,
+            "exists": true
+          },
+          {
+            "key": "common.actions",
+            "line": 362,
+            "exists": true
+          },
+          {
+            "key": "user_management.no_users_matching_filters",
+            "line": 371,
+            "exists": true
+          },
+          {
+            "key": "user_management.no_users_found",
+            "line": 372,
+            "exists": true
+          },
+          {
             "key": "user_management.no_roles",
-            "line": 397,
+            "line": 410,
             "exists": true
           },
           {
             "key": "common.active",
-            "line": 405,
+            "line": 418,
             "exists": true
           },
           {
             "key": "user_management.incomplete_setup",
-            "line": 405,
+            "line": 418,
             "exists": true
           },
           {
             "key": "user_management.view_dealer",
-            "line": 419,
+            "line": 432,
             "exists": true
           },
           {
             "key": "user_management.no_dealer",
-            "line": 423,
+            "line": 436,
             "exists": true
           },
           {
             "key": "user_management.manage",
-            "line": 435,
+            "line": 448,
             "exists": true
           },
           {
             "key": "common.showing",
-            "line": 449,
+            "line": 462,
             "exists": true
           },
           {
             "key": "common.of",
-            "line": 449,
+            "line": 462,
             "exists": true
           },
           {
             "key": "user_management.users",
-            "line": 449,
+            "line": 462,
             "exists": true
           }
         ],
         "missingKeys": [
           {
-            "key": "common.fields.status",
-            "line": 348,
-            "context": "347: <TableHead>{t('user_management.roles')}</TableHead>\n348: <TableHead>{t('common.fields.status')}</TableHead>\n349: <TableHead className=\"text-right\">{t('common.actions')}</TableHead>"
+            "key": "common.users",
+            "line": 275,
+            "context": "274: <span className=\"hidden sm:inline\">{t('admin.dealer_users', 'Dealer Users')}</span>\n275: <span className=\"sm:hidden\">{t('common.users', 'Users')}</span>\n276: </TabsTrigger>"
+          },
+          {
+            "key": "common.password",
+            "line": 280,
+            "context": "279: <span className=\"hidden sm:inline\">{t('password_management.title')}</span>\n280: <span className=\"sm:hidden\">{t('common.password', 'Password')}</span>\n281: </TabsTrigger>"
           }
         ],
         "coverage": 100,
@@ -23078,50 +23093,95 @@
         "translationCalls": [
           {
             "key": "common.no_dealerships_available",
-            "line": 30,
+            "line": 37,
             "exists": false
           },
           {
             "key": "password_management.title",
-            "line": 44,
+            "line": 51,
             "exists": true
           },
           {
             "key": "password_management.description",
-            "line": 47,
+            "line": 54,
             "exists": true
           },
           {
             "key": "password_management.tabs.dashboard",
-            "line": 57,
+            "line": 64,
             "exists": true
+          },
+          {
+            "key": "common.dashboard",
+            "line": 65,
+            "exists": false
           },
           {
             "key": "password_management.tabs.reset",
-            "line": 63,
+            "line": 71,
             "exists": true
+          },
+          {
+            "key": "common.reset",
+            "line": 72,
+            "exists": false
           },
           {
             "key": "password_management.tabs.bulk",
-            "line": 70,
+            "line": 79,
             "exists": true
+          },
+          {
+            "key": "common.bulk",
+            "line": 80,
+            "exists": false
           },
           {
             "key": "password_management.tabs.policies",
-            "line": 77,
+            "line": 87,
             "exists": true
           },
           {
+            "key": "common.policies",
+            "line": 88,
+            "exists": false
+          },
+          {
             "key": "password_management.tabs.activity",
-            "line": 83,
+            "line": 94,
+            "exists": true
+          },
+          {
+            "key": "common.activity",
+            "line": 95,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.no_dealerships_available",
-            "line": 30,
-            "context": "29: <p className=\"text-muted-foreground text-center\">\n30: {t('common.no_dealerships_available')}\n31: </p>"
+            "line": 37,
+            "context": "36: <p className=\"text-muted-foreground text-center\">\n37: {t('common.no_dealerships_available')}\n38: </p>"
+          },
+          {
+            "key": "common.dashboard",
+            "line": 65,
+            "context": "64: <span className=\"hidden sm:inline\">{t('password_management.tabs.dashboard')}</span>\n65: <span className=\"sm:hidden\">{t('common.dashboard', 'Dashboard')}</span>\n66: </TabsTrigger>"
+          },
+          {
+            "key": "common.reset",
+            "line": 72,
+            "context": "71: <span className=\"hidden sm:inline\">{t('password_management.tabs.reset')}</span>\n72: <span className=\"sm:hidden\">{t('common.reset', 'Reset')}</span>\n73: </TabsTrigger>"
+          },
+          {
+            "key": "common.bulk",
+            "line": 80,
+            "context": "79: <span className=\"hidden sm:inline\">{t('password_management.tabs.bulk')}</span>\n80: <span className=\"sm:hidden\">{t('common.bulk', 'Bulk')}</span>\n81: </TabsTrigger>"
+          },
+          {
+            "key": "common.policies",
+            "line": 88,
+            "context": "87: <span className=\"hidden sm:inline\">{t('password_management.tabs.policies')}</span>\n88: <span className=\"sm:hidden\">{t('common.policies', 'Policies')}</span>\n89: </TabsTrigger>"
           }
         ],
         "coverage": 100,
@@ -59519,9 +59579,9 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2380 translation keys are referenced but missing",
+      "description": "2385 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "119 hours"
+      "estimatedEffort": "120 hours"
     }
   ],
   "coverage": 76

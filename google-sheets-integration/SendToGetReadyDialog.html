@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Vehicle to Get Ready</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background: #f9fafb;
+        padding: 20px;
+        color: #111827;
+      }
+
+      .container {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+        max-width: 100%;
+      }
+
+      h2 {
+        font-size: 20px;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .subtitle {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 24px;
+      }
+
+      .vehicle-info {
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+        border: 1px solid #d1d5db;
+      }
+
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+      }
+
+      .info-row:last-child {
+        border-bottom: none;
+      }
+
+      .info-label {
+        font-weight: 500;
+        color: #6b7280;
+        font-size: 13px;
+      }
+
+      .info-value {
+        font-weight: 600;
+        color: #111827;
+        font-size: 14px;
+        font-family: 'Courier New', monospace;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
+      }
+
+      label .optional {
+        font-weight: 400;
+        color: #9ca3af;
+        font-size: 12px;
+      }
+
+      label .required {
+        color: #ef4444;
+      }
+
+      select, input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1.5px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        background: white;
+        transition: all 0.2s;
+        font-family: inherit;
+      }
+
+      select:hover, input:hover {
+        border-color: #9ca3af;
+      }
+
+      select:focus, input:focus {
+        outline: none;
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+      }
+
+      input::placeholder {
+        color: #9ca3af;
+      }
+
+      .help-text {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 6px;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 12px;
+        margin-top: 28px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      button {
+        flex: 1;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .btn-primary {
+        background: #10b981;
+        color: white;
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background: #059669;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(16, 185, 129, 0.25);
+      }
+
+      .btn-primary:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+      }
+
+      .btn-secondary {
+        background: #f3f4f6;
+        color: #374151;
+        border: 1.5px solid #d1d5db;
+      }
+
+      .btn-secondary:hover:not(:disabled) {
+        background: #e5e7eb;
+      }
+
+      .loading-overlay {
+        display: none;
+        text-align: center;
+        padding: 40px 20px;
+      }
+
+      .spinner {
+        border: 4px solid #f3f4f6;
+        border-top: 4px solid #10b981;
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 16px;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .loading-text {
+        font-size: 15px;
+        color: #6b7280;
+        font-weight: 500;
+      }
+
+      .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-top: 16px;
+        display: none;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .alert-error {
+        background: #fef2f2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+      }
+
+      .alert-success {
+        background: #f0fdf4;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+      }
+
+      .priority-badge {
+        display: inline-block;
+        margin-right: 8px;
+      }
+
+      select option {
+        padding: 10px;
+      }
+
+      /* Responsive */
+      @media (max-width: 500px) {
+        body {
+          padding: 12px;
+        }
+
+        .container {
+          padding: 16px;
+        }
+
+        .button-group {
+          flex-direction: column-reverse;
+        }
+
+        button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Main Form Container -->
+    <div class="container" id="formContainer">
+      <h2>
+        <span>🚗</span>
+        <span>Add Vehicle to Get Ready</span>
+      </h2>
+      <p class="subtitle">Review the vehicle information and confirm to add it to the workflow system.</p>
+
+      <!-- Vehicle Information Display -->
+      <div class="vehicle-info" id="vehicleInfo">
+        <div class="info-row">
+          <span class="info-label">Stock Number:</span>
+          <span class="info-value" id="stockNumber">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Year:</span>
+          <span class="info-value" id="year">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Make:</span>
+          <span class="info-value" id="make">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Model:</span>
+          <span class="info-value" id="model">-</span>
+        </div>
+      </div>
+
+      <!-- Input Form -->
+      <form id="vehicleForm">
+        <!-- VIN (Optional) -->
+        <div class="form-group">
+          <label for="vin">
+            VIN
+            <span class="optional">(Optional)</span>
+          </label>
+          <input
+            type="text"
+            id="vin"
+            placeholder="Enter 17-character VIN"
+            maxlength="17"
+            autocomplete="off"
+          >
+          <p class="help-text">Leave blank if VIN is not available yet</p>
+        </div>
+
+        <!-- Trim (Optional) -->
+        <div class="form-group">
+          <label for="trim">
+            Trim
+            <span class="optional">(Optional)</span>
+          </label>
+          <input
+            type="text"
+            id="trim"
+            placeholder="e.g., LX, Sport, Limited"
+            autocomplete="off"
+          >
+        </div>
+
+        <!-- Priority -->
+        <div class="form-group">
+          <label for="priority">
+            Priority
+            <span class="required">*</span>
+          </label>
+          <select id="priority" required>
+            <option value="low">🟢 Low - Standard processing</option>
+            <option value="medium" selected>🟡 Medium - Normal priority</option>
+            <option value="high">🟠 High - Expedite if possible</option>
+            <option value="urgent">🔴 Urgent - Immediate attention</option>
+          </select>
+        </div>
+
+        <!-- Initial Step -->
+        <div class="form-group">
+          <label for="step">
+            Initial Workflow Step
+            <span class="required">*</span>
+          </label>
+          <select id="step" required>
+            <option value="">Loading steps from Get Ready...</option>
+          </select>
+          <p class="help-text">Vehicle will start in this step of the workflow</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="button-group">
+          <button type="button" class="btn-secondary" onclick="closeDialog()">
+            ✕ Cancel
+          </button>
+          <button type="submit" class="btn-primary" id="submitBtn">
+            ✓ Add Vehicle
+          </button>
+        </div>
+      </form>
+
+      <!-- Error Alert -->
+      <div class="alert alert-error" id="errorMessage"></div>
+
+      <!-- Success Alert -->
+      <div class="alert alert-success" id="successMessage"></div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingContainer">
+      <div class="spinner"></div>
+      <p class="loading-text">Creating vehicle in Get Ready...</p>
+      <p class="help-text" style="margin-top: 8px;">This may take a few seconds</p>
+    </div>
+
+    <script>
+      // ========================================
+      // STATE MANAGEMENT
+      // ========================================
+      let vehicleData = {};
+      let steps = [];
+
+      // ========================================
+      // INITIALIZATION
+      // ========================================
+      window.onload = function() {
+        loadVehicleData();
+        loadSteps();
+      };
+
+      /**
+       * Load vehicle data from selected row
+       */
+      function loadVehicleData() {
+        google.script.run
+          .withSuccessHandler(function(data) {
+            vehicleData = data;
+            document.getElementById('stockNumber').textContent = data.stock_number || '-';
+            document.getElementById('year').textContent = data.vehicle_year || '-';
+            document.getElementById('make').textContent = data.vehicle_make || '-';
+            document.getElementById('model').textContent = data.vehicle_model || '-';
+          })
+          .withFailureHandler(function(error) {
+            showError(error.message || 'Failed to load vehicle data from sheet');
+            disableForm();
+          })
+          .getSelectedRowData();
+      }
+
+      /**
+       * Load workflow steps from Supabase
+       */
+      function loadSteps() {
+        google.script.run
+          .withSuccessHandler(function(stepData) {
+            steps = stepData;
+            const stepSelect = document.getElementById('step');
+            stepSelect.innerHTML = '';
+
+            if (stepData.length === 0) {
+              stepSelect.innerHTML = '<option value="">No steps configured</option>';
+              stepSelect.disabled = true;
+              showError('No workflow steps found. Please configure steps in Get Ready first.');
+              return;
+            }
+
+            // Add default option
+            stepSelect.innerHTML = '<option value="">-- Select initial step --</option>';
+
+            // Add steps
+            stepData.forEach(function(step) {
+              const option = document.createElement('option');
+              option.value = step.id;
+              option.textContent = step.name;
+
+              // Add color indicator (optional - visual only)
+              if (step.color) {
+                option.style.fontWeight = '500';
+              }
+
+              stepSelect.appendChild(option);
+            });
+
+            // Auto-select first step if only one exists
+            if (stepData.length === 1) {
+              stepSelect.value = stepData[0].id;
+            } else if (stepData.length > 0) {
+              // Auto-select first step by default
+              stepSelect.value = stepData[0].id;
+            }
+          })
+          .withFailureHandler(function(error) {
+            console.error('Failed to load steps:', error);
+            document.getElementById('step').innerHTML = '<option value="">Error loading steps</option>';
+            showError('Failed to load workflow steps. Please try again.');
+          })
+          .getGetReadySteps();
+      }
+
+      // ========================================
+      // FORM SUBMISSION
+      // ========================================
+      document.getElementById('vehicleForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Get form data
+        const formData = {
+          ...vehicleData,
+          vin: document.getElementById('vin').value.trim().toUpperCase(),
+          vehicle_trim: document.getElementById('trim').value.trim().toUpperCase(),
+          priority: document.getElementById('priority').value,
+          step_id: document.getElementById('step').value
+        };
+
+        // Validate step selected
+        if (!formData.step_id) {
+          showError('Please select an initial workflow step');
+          return;
+        }
+
+        // Show loading
+        showLoading();
+
+        // Create vehicle in Get Ready
+        google.script.run
+          .withSuccessHandler(function(result) {
+            hideLoading();
+
+            if (result.success) {
+              showSuccess(result.message);
+
+              // Close dialog after 2 seconds
+              setTimeout(function() {
+                closeDialog();
+              }, 2000);
+            } else {
+              showError(result.error || 'Failed to create vehicle');
+            }
+          })
+          .withFailureHandler(function(error) {
+            hideLoading();
+            showError(error.message || 'Unexpected error occurred. Please try again.');
+          })
+          .createVehicleInGetReady(formData);
+      });
+
+      // ========================================
+      // UI HELPERS
+      // ========================================
+
+      function showLoading() {
+        document.getElementById('formContainer').style.display = 'none';
+        document.getElementById('loadingContainer').style.display = 'block';
+      }
+
+      function hideLoading() {
+        document.getElementById('loadingContainer').style.display = 'none';
+        document.getElementById('formContainer').style.display = 'block';
+      }
+
+      function showError(message) {
+        const errorDiv = document.getElementById('errorMessage');
+        const successDiv = document.getElementById('successMessage');
+
+        successDiv.style.display = 'none';
+        errorDiv.textContent = '❌ ' + message;
+        errorDiv.style.display = 'block';
+
+        // Auto-hide after 8 seconds
+        setTimeout(function() {
+          errorDiv.style.display = 'none';
+        }, 8000);
+      }
+
+      function showSuccess(message) {
+        const errorDiv = document.getElementById('errorMessage');
+        const successDiv = document.getElementById('successMessage');
+
+        errorDiv.style.display = 'none';
+        successDiv.textContent = '✅ ' + message;
+        successDiv.style.display = 'block';
+      }
+
+      function disableForm() {
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.5';
+      }
+
+      function closeDialog() {
+        google.script.host.close();
+      }
+
+      // ========================================
+      // KEYBOARD SHORTCUTS
+      // ========================================
+      document.addEventListener('keydown', function(e) {
+        // ESC to close
+        if (e.key === 'Escape') {
+          closeDialog();
+        }
+
+        // Ctrl+Enter or Cmd+Enter to submit
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          document.getElementById('vehicleForm').dispatchEvent(new Event('submit'));
+        }
+      });
+    </script>
+  </body>
+</html>

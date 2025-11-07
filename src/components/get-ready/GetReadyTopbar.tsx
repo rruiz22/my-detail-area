@@ -28,7 +28,7 @@ interface TabConfig {
 
 const TABS: TabConfig[] = [
   { key: 'overview', icon: Grid3X3, path: '/get-ready/overview' },
-  { key: 'details_view', icon: Eye, path: '/get-ready/details' },
+  { key: 'steps', icon: Eye, path: '/get-ready/details' },
   { key: 'approvals', icon: UserCheck, path: '/get-ready/approvals' },
   { key: 'vendors', icon: Users, path: '/get-ready/vendors' },
   { key: 'reports', icon: BarChart3, path: '/get-ready/reports' },

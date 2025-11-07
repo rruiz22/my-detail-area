@@ -40,6 +40,93 @@ function getNotificationModule(orderType: string): 'sales_orders' | 'service_ord
   return mapping[orderType] || 'sales_orders';
 }
 
+/**
+ * Comprehensive cache invalidation after order mutations
+ * Ensures ALL related queries are refreshed silently in background
+ *
+ * @param queryClient - TanStack Query client instance
+ * @param dealerId - Current dealer context ID
+ * @param orderType - Type of order (sales, service, recon, carwash)
+ * @param options - Invalidation scope options
+ */
+async function invalidateOrderRelatedQueries(
+  queryClient: any,
+  dealerId: number,
+  orderType?: string,
+  options?: {
+    invalidateAnalytics?: boolean;
+    invalidateDashboard?: boolean;
+    invalidateUsers?: boolean;
+    invalidateFollowers?: boolean;
+    invalidateApprovals?: boolean;
+  }
+) {
+  const {
+    invalidateAnalytics = true,
+    invalidateDashboard = true,
+    invalidateUsers = false,
+    invalidateFollowers = false,
+    invalidateApprovals = false,
+  } = options || {};
+
+  // Batch all invalidations together for performance
+  const invalidations: Promise<void>[] = [];
+
+  // 1. CORE: Main orders query (already done via optimistic update, but invalidate for consistency)
+  invalidations.push(
+    queryClient.invalidateQueries({ queryKey: ['orders', 'all', dealerId] })
+  );
+
+  // 2. ANALYTICS: Business intelligence queries
+  if (invalidateAnalytics) {
+    invalidations.push(
+      queryClient.invalidateQueries({ queryKey: ['orders-analytics'] }),
+      queryClient.invalidateQueries({ queryKey: ['revenue-analytics'] }),
+      queryClient.invalidateQueries({ queryKey: ['department-revenue'] }),
+      queryClient.invalidateQueries({ queryKey: ['performance-trends'] })
+    );
+  }
+
+  // 3. DASHBOARD: Metrics and counters
+  if (invalidateDashboard) {
+    invalidations.push(
+      queryClient.invalidateQueries({ queryKey: ['dashboard-metrics'] })
+    );
+  }
+
+  // 4. USERS: Workload and assignment tracking (only when assignment changes)
+  if (invalidateUsers) {
+    invalidations.push(
+      queryClient.invalidateQueries({ queryKey: ['dealer-users', dealerId] })
+    );
+  }
+
+  // 5. FOLLOWERS: Calendar and followed orders (when order is followed/unfollowed)
+  if (invalidateFollowers) {
+    invalidations.push(
+      queryClient.invalidateQueries({ queryKey: ['followed-orders', dealerId] })
+    );
+  }
+
+  // 6. APPROVALS: Get Ready approval counts and activity
+  if (invalidateApprovals) {
+    invalidations.push(
+      queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count', dealerId] }),
+      queryClient.invalidateQueries({ queryKey: ['get-ready-activity', dealerId] }),
+      queryClient.invalidateQueries({ queryKey: ['get-ready-activity-stats', dealerId] })
+    );
+  }
+
+  // Execute all invalidations in parallel for maximum performance
+  await Promise.all(invalidations);
+
+  dev('✅ Batch cache invalidation completed', {
+    dealerId,
+    orderType,
+    invalidationCount: invalidations.length
+  });
+}
+
 // Enhanced database types
 type SupabaseOrderRow = Database['public']['Tables']['orders']['Row'];
 type SupabaseOrderInsert = Database['public']['Tables']['orders']['Insert'];
@@ -680,6 +767,19 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
   const createOrder = useCallback(async (orderData: OrderFormData) => {
     if (!user) return;
 
+    // ✅ SECURITY: Validate dealer context consistency
+    if (!selectedDealerId) {
+      throw new Error('No dealer context available. Please select a dealership.');
+    }
+    if (orderData.dealer_id && orderData.dealer_id !== selectedDealerId) {
+      warn('⚠️ Dealer context mismatch detected', {
+        orderDealerId: orderData.dealer_id,
+        selectedDealerId
+      });
+      // Override with selected dealer to prevent data leakage
+      orderData.dealer_id = selectedDealerId;
+    }
+
     setLoading(true);
 
     try {
@@ -830,9 +930,15 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         oldData ? [enrichedNewOrder, ...oldData] : [enrichedNewOrder]
       );
 
-      // Invalidate to ensure data consistency in background
-      // ✅ FIX: Include selectedDealerId in queryKey to match polling query
-      queryClient.invalidateQueries({ queryKey: ['orders', 'all', selectedDealerId] });
+      // 🚀 COMPREHENSIVE INVALIDATION: Silently refresh ALL related queries in background
+      // This ensures dashboard, analytics, and all dependent data updates automatically
+      await invalidateOrderRelatedQueries(queryClient, selectedDealerId, data.order_type, {
+        invalidateAnalytics: true,
+        invalidateDashboard: true,
+        invalidateUsers: false,
+        invalidateFollowers: false,
+        invalidateApprovals: false,
+      });
     } catch (error) {
       logError('Error in createOrder:', error);
       throw error;
@@ -843,6 +949,19 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
 
   const updateOrder = useCallback(async (orderId: string, orderData: Partial<OrderFormData>) => {
     if (!user) return;
+
+    // ✅ SECURITY: Validate dealer context consistency
+    if (!selectedDealerId) {
+      throw new Error('No dealer context available. Please select a dealership.');
+    }
+    if (orderData.dealer_id && orderData.dealer_id !== selectedDealerId) {
+      warn('⚠️ Dealer context mismatch detected in update', {
+        orderDealerId: orderData.dealer_id,
+        selectedDealerId
+      });
+      // Override with selected dealer to prevent data leakage
+      orderData.dealer_id = selectedDealerId;
+    }
 
     setLoading(true);
 
@@ -935,7 +1054,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       }
 
       // Get current order before updating (for tracking changes)
-      const currentOrders = queryClient.getQueryData<Order[]>(['orders', 'all']) || [];
+      // ✅ CRITICAL FIX: Include selectedDealerId to match cache key used in optimistic updates
+      const currentOrders = queryClient.getQueryData<Order[]>(['orders', 'all', selectedDealerId]) || [];
       const oldOrder = currentOrders.find(o => o.id === orderId);
       const oldStatus = oldOrder?.status;
 
@@ -1029,9 +1149,18 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       // Note: SMS notifications are handled in useStatusPermissions.tsx
       // This avoids duplicate SMS and ensures correct shortlink usage
 
-      // Invalidate to ensure data consistency in background
-      // ✅ FIX: Include selectedDealerId in queryKey to match polling query
-      queryClient.invalidateQueries({ queryKey: ['orders', 'all', selectedDealerId] });
+      // 🚀 COMPREHENSIVE INVALIDATION: Silently refresh ALL related queries in background
+      // Invalidate users if assignment changed, followers if followed/unfollowed
+      const assignmentChanged = orderData.assigned_group_id !== undefined && oldOrder?.assigned_group_id !== orderData.assigned_group_id;
+      const statusChanged = orderData.status !== undefined && oldStatus && oldStatus !== orderData.status;
+
+      await invalidateOrderRelatedQueries(queryClient, selectedDealerId, data.order_type, {
+        invalidateAnalytics: true,
+        invalidateDashboard: true,
+        invalidateUsers: assignmentChanged, // Only invalidate if assignment changed
+        invalidateFollowers: statusChanged, // Invalidate followers on status change (affects calendar)
+        invalidateApprovals: statusChanged && orderData.status === 'approved', // Invalidate approvals if approved
+      });
     } catch (error) {
       logError('Error in updateOrder:', error);
       throw error;
@@ -1064,9 +1193,15 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         oldData ? oldData.filter(order => order.id !== orderId) : []
       );
 
-      // Invalidate to ensure data consistency in background
-      // ✅ FIX: Include selectedDealerId in queryKey to match polling query
-      queryClient.invalidateQueries({ queryKey: ['orders', 'all', selectedDealerId] });
+      // 🚀 COMPREHENSIVE INVALIDATION: Silently refresh ALL related queries in background
+      // Deletion affects analytics, dashboard, user workload, and followers
+      await invalidateOrderRelatedQueries(queryClient, selectedDealerId, undefined, {
+        invalidateAnalytics: true,
+        invalidateDashboard: true,
+        invalidateUsers: true, // Deletion frees up assignee workload
+        invalidateFollowers: true, // Deletion removes from followed orders
+        invalidateApprovals: false,
+      });
     } catch (error) {
       logError('Error in deleteOrder:', error);
       throw error;

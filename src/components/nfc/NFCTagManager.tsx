@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -25,14 +25,18 @@ import {
   Activity,
   Smartphone,
   Eye,
-  MoreVertical
+  MoreVertical,
+  AlertCircle
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { NFCTag, useNFCManagement } from '@/hooks/useNFCManagement';
+import { PermissionGuard } from '@/components/permissions/PermissionGuard';
+import { NFCTag } from '@/hooks/useNFCManagement';
+import { useNFCTags, useCreateNFCTag, useUpdateNFCTag, useDeleteNFCTag } from '@/hooks/useNFCQueries';
 import { NFCPhysicalWriter } from './NFCPhysicalWriter';
 import { NFCPhysicalReader } from './NFCPhysicalReader';
 import { NFCTagTemplates } from './NFCTagTemplates';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { formatDistanceToNow } from 'date-fns';
 import { es, ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
@@ -54,14 +58,12 @@ interface TagFormData {
 
 export function NFCTagManager({ className }: NFCTagManagerProps) {
   const { t, i18n } = useTranslation();
-  const {
-    tags,
-    loading,
-    loadTags,
-    createTag,
-    updateTag,
-    deleteTag
-  } = useNFCManagement();
+
+  // ✅ TanStack Query - automatic caching and state management
+  const { data: tags = [], isLoading: loading, error } = useNFCTags();
+  const createTagMutation = useCreateNFCTag();
+  const updateTagMutation = useUpdateNFCTag();
+  const deleteTagMutation = useDeleteNFCTag();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
@@ -95,9 +97,7 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
     }
   };
 
-  useEffect(() => {
-    loadTags();
-  }, [loadTags]);
+  // ✅ No useEffect needed - TanStack Query handles data fetching automatically
 
   // Filter tags based on search and filters
   const filteredTags = tags.filter(tag => {
@@ -114,29 +114,35 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
   });
 
   const handleCreateTag = async () => {
-    try {
-      await createTag({
+    createTagMutation.mutate(
+      {
         ...formData,
-        dealer_id: 1 // This should come from auth context
-      });
-
-      setShowCreateDialog(false);
-      resetForm();
-    } catch (error) {
-      console.error('Failed to create tag:', error);
-    }
+        dealer_id: 1, // This should come from auth context
+      },
+      {
+        onSuccess: () => {
+          setShowCreateDialog(false);
+          resetForm();
+        },
+      }
+    );
   };
 
   const handleUpdateTag = async () => {
     if (!editingTag) return;
 
-    try {
-      await updateTag(editingTag.id, formData);
-      setEditingTag(null);
-      resetForm();
-    } catch (error) {
-      console.error('Failed to update tag:', error);
-    }
+    updateTagMutation.mutate(
+      {
+        id: editingTag.id,
+        ...formData,
+      },
+      {
+        onSuccess: () => {
+          setEditingTag(null);
+          resetForm();
+        },
+      }
+    );
   };
 
   const handleDeleteTag = (tagId: string) => {
@@ -146,12 +152,12 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
 
   const confirmDeleteTag = async () => {
     if (!tagToDelete) return;
-    try {
-      await deleteTag(tagToDelete);
-      setTagToDelete(null);
-    } catch (error) {
-      console.error('Failed to delete tag:', error);
-    }
+    deleteTagMutation.mutate(tagToDelete, {
+      onSuccess: () => {
+        setTagToDelete(null);
+        setDeleteDialogOpen(false);
+      },
+    });
   };
 
   const resetForm = () => {
@@ -304,6 +310,18 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
     return isActive ? 'text-success' : 'text-muted-foreground';
   };
 
+  // ✅ Error state
+  if (error) {
+    return (
+      <Alert variant="destructive" className={className}>
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          {t('nfc_tracking.errors.load_failed')}: {error instanceof Error ? error.message : 'Unknown error'}
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
   return (
     <div className={cn("space-y-6", className)}>
       {/* Header and Controls */}
@@ -316,26 +334,32 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            onClick={() => setIsTemplatesDialogOpen(true)}
-            className="mr-2"
-          >
-            <Settings className="h-4 w-4 mr-2" />
-            {t('nfc.templates.quick_create')}
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => setIsReaderDialogOpen(true)}
-            className="mr-2"
-          >
-            <Eye className="h-4 w-4 mr-2" />
-            {t('nfc.reader.title')}
-          </Button>
-          <Button onClick={() => setShowCreateDialog(true)}>
-            <Plus className="w-4 h-4 mr-2" />
-            {t('nfc_tracking.tag_manager.register_new')}
-          </Button>
+          <PermissionGuard module="nfc_tracking" permission="write_nfc_tags">
+            <Button
+              variant="outline"
+              onClick={() => setIsTemplatesDialogOpen(true)}
+              className="mr-2"
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              {t('nfc.templates.quick_create')}
+            </Button>
+          </PermissionGuard>
+          <PermissionGuard module="nfc_tracking" permission="read_nfc_tags">
+            <Button
+              variant="outline"
+              onClick={() => setIsReaderDialogOpen(true)}
+              className="mr-2"
+            >
+              <Eye className="h-4 w-4 mr-2" />
+              {t('nfc.reader.title')}
+            </Button>
+          </PermissionGuard>
+          <PermissionGuard module="nfc_tracking" permission="write_nfc_tags">
+            <Button onClick={() => setShowCreateDialog(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              {t('nfc_tracking.tag_manager.register_new')}
+            </Button>
+          </PermissionGuard>
         </div>
       </div>
 
@@ -410,24 +434,30 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => {
-                      setWritingTag(tag);
-                      setIsWriterDialogOpen(true);
-                    }}>
-                      <Smartphone className="h-4 w-4 mr-2" />
-                      {t('nfc.writer.write_to_physical')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setEditingTag(tag)}>
-                      <Edit className="h-4 w-4 mr-2" />
-                      {t('common.edit')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => handleDeleteTag(tag.id)}
-                      className="text-destructive"
-                    >
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      {t('common.delete')}
-                    </DropdownMenuItem>
+                    <PermissionGuard module="nfc_tracking" permission="write_nfc_tags" hideOnDeny>
+                      <DropdownMenuItem onClick={() => {
+                        setWritingTag(tag);
+                        setIsWriterDialogOpen(true);
+                      }}>
+                        <Smartphone className="h-4 w-4 mr-2" />
+                        {t('nfc.writer.write_to_physical')}
+                      </DropdownMenuItem>
+                    </PermissionGuard>
+                    <PermissionGuard module="nfc_tracking" permission="manage_nfc_tags" hideOnDeny>
+                      <DropdownMenuItem onClick={() => openEditDialog(tag)}>
+                        <Edit className="h-4 w-4 mr-2" />
+                        {t('common.edit')}
+                      </DropdownMenuItem>
+                    </PermissionGuard>
+                    <PermissionGuard module="nfc_tracking" permission="manage_nfc_tags" hideOnDeny>
+                      <DropdownMenuItem
+                        onClick={() => handleDeleteTag(tag.id)}
+                        className="text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        {t('common.delete')}
+                      </DropdownMenuItem>
+                    </PermissionGuard>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -527,8 +557,8 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
               <Button variant="outline" onClick={() => setEditingTag(null)}>
                 {t('common.cancel')}
               </Button>
-              <Button onClick={handleUpdateTag} disabled={loading}>
-                {t('common.save')}
+              <Button onClick={handleUpdateTag} disabled={updateTagMutation.isPending}>
+                {updateTagMutation.isPending ? t('common.saving') : t('common.save')}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -546,8 +576,8 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
             <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
               {t('common.cancel')}
             </Button>
-            <Button onClick={handleCreateTag} disabled={loading}>
-              {t('common.create')}
+            <Button onClick={handleCreateTag} disabled={createTagMutation.isPending}>
+              {createTagMutation.isPending ? t('common.creating') : t('common.create')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -578,8 +608,7 @@ export function NFCTagManager({ className }: NFCTagManagerProps) {
         isOpen={isTemplatesDialogOpen}
         onClose={() => setIsTemplatesDialogOpen(false)}
         onTemplateSelect={() => {
-          // Refresh tags after creating from template
-          loadTags();
+          // ✅ No need to manually refresh - TanStack Query auto-invalidates
         }}
       />
 

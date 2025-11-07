@@ -2,6 +2,17 @@ import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+// import { CACHE_TIMES, GC_TIMES } from '@/constants/cacheConfig';
+
+/**
+ * NFC Workflows Management Hook
+ *
+ * @performance Cache Recommendations (for future TanStack Query migration):
+ * - Workflows list: CACHE_TIMES.MEDIUM (5 min) - Semi-static configuration data
+ * - Workflow execution: No cache (mutations) - Immediate execution required
+ *
+ * @see {@link https://tanstack.com/query/latest/docs/react/guides/caching} TanStack Query Caching
+ */
 
 export interface NFCWorkflowAction {
   type: 'send_email' | 'send_sms' | 'send_notification' | 'update_order_status' | 'create_task' | 'webhook';
@@ -15,8 +26,27 @@ export interface NFCWorkflowAction {
     webhook_url?: string;
     webhook_method?: string;
     webhook_headers?: Record<string, string>;
-    webhook_payload?: Record<string, any>;
+    webhook_payload?: Record<string, unknown>;
   };
+}
+
+// Trigger condition types for different workflow triggers
+export interface TriggerConditions {
+  tag_type?: string;
+  location?: string;
+  time_range?: string;
+  status?: string;
+  [key: string]: string | undefined; // Allow additional dynamic properties
+}
+
+// Context data passed when executing a workflow
+export interface WorkflowExecutionContext {
+  tagId?: string;
+  vehicleVin?: string;
+  location?: string;
+  timestamp?: string;
+  userId?: string;
+  [key: string]: string | number | boolean | undefined; // Allow additional dynamic properties
 }
 
 export interface NFCWorkflow {
@@ -24,7 +54,7 @@ export interface NFCWorkflow {
   name: string;
   description?: string;
   trigger_type: 'tag_scan' | 'location_entry' | 'time_based' | 'status_change';
-  trigger_conditions?: any;
+  trigger_conditions?: TriggerConditions;
   actions: NFCWorkflowAction[];
   is_active: boolean;
   dealer_id?: number;
@@ -44,7 +74,7 @@ interface UseNFCWorkflowsReturn {
   updateWorkflow: (workflowId: string, updates: Partial<NFCWorkflow>) => Promise<void>;
   deleteWorkflow: (workflowId: string) => Promise<void>;
   toggleWorkflow: (workflowId: string, isActive: boolean) => Promise<void>;
-  executeWorkflow: (workflowId: string, context?: any) => Promise<void>;
+  executeWorkflow: (workflowId: string, context?: WorkflowExecutionContext) => Promise<void>;
 }
 
 export function useNFCWorkflows(): UseNFCWorkflowsReturn {

@@ -783,3 +783,32 @@ All colors MUST be HSL.
     left: -140px;
   }
 }
+
+/* ============================================
+   Soft Pulse Animation - Get Ready Vehicles
+   ============================================ */
+@keyframes pulse-soft {
+  0%, 100% {
+    background-color: rgb(254 243 199 / 0.7); /* amber-100/70 */
+  }
+  50% {
+    background-color: rgb(254 252 232 / 0.5); /* amber-50/50 - más suave */
+  }
+}
+
+@keyframes pulse-soft-dark {
+  0%, 100% {
+    background-color: rgb(120 53 15 / 0.3); /* amber-900/30 */
+  }
+  50% {
+    background-color: rgb(120 53 15 / 0.15); /* amber-900/15 - más suave */
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.dark .animate-pulse-soft {
+  animation: pulse-soft-dark 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

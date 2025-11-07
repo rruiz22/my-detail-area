@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -33,44 +33,63 @@ export const BulkPasswordOperations = ({ dealerId }: BulkPasswordOperationsProps
   const [recentOperations, setRecentOperations] = useState<Array<{ id: string; operation_type: string; created_at: string; user_count: number }>>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
 
-  const fetchUsers = useCallback(async () => {
+  // Regular functions instead of useCallback to avoid infinite loop
+  const fetchUsers = async () => {
     try {
       setLoadingUsers(true);
 
+      // Query profiles for all users in the dealership
       const { data, error } = await supabase
-        .from('dealer_memberships')
+        .from('profiles')
         .select(`
-          user_id,
-          profiles!inner(id, email, first_name, last_name)
+          id,
+          email,
+          first_name,
+          last_name,
+          dealer_memberships!inner(dealer_id, is_active)
         `)
-        .eq('dealer_id', dealerId)
-        .eq('is_active', true);
+        .eq('dealer_memberships.dealer_id', dealerId)
+        .eq('dealer_memberships.is_active', true);
 
       if (error) throw error;
-      setAvailableUsers(data || []);
+
+      // Transform to match expected format
+      const transformed = (data || []).map(profile => ({
+        user_id: profile.id,
+        profiles: {
+          id: profile.id,
+          email: profile.email,
+          first_name: profile.first_name,
+          last_name: profile.last_name
+        }
+      }));
+
+      setAvailableUsers(transformed);
 
     } catch (error) {
       console.error('Error fetching users:', error);
     } finally {
       setLoadingUsers(false);
     }
-  }, [dealerId]);
+  };
 
-  const fetchRecentOperations = useCallback(async () => {
+  const fetchRecentOperations = async () => {
     try {
       const operations = await getBulkOperations(dealerId);
       setRecentOperations(operations.slice(0, 5)); // Show last 5 operations
     } catch (error) {
       console.error('Error fetching operations:', error);
     }
-  }, [dealerId, getBulkOperations]);
+  };
 
+  // Only run when dealerId changes
   useEffect(() => {
     if (dealerId) {
       fetchUsers();
       fetchRecentOperations();
     }
-  }, [dealerId, fetchUsers, fetchRecentOperations]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dealerId]); // Only depend on dealerId
 
   const handleUserToggle = (userId: string, checked: boolean) => {
     if (checked) {

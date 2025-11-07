@@ -1,9 +1,9 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield, Key, Users, Settings, Activity } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { useDealershipContext } from '@/contexts/DealershipContext';
 import { usePermissions } from '@/hooks/usePermissions';
 import { PasswordSecurityDashboard } from './PasswordSecurityDashboard';
 import { PasswordResetActions } from './PasswordResetActions';
@@ -14,22 +14,14 @@ import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 
 export const UserPasswordManagement = () => {
   const { t } = useTranslation();
-  const { dealerships } = useAccessibleDealerships();
+  const { currentDealership } = useDealershipContext();
   const { hasModulePermission } = usePermissions();
-  const [selectedDealerId, setSelectedDealerId] = useState<number | null>(null);
 
   // Check permissions once to avoid re-renders
   const canWrite = useMemo(() => hasModulePermission('users', 'write'), [hasModulePermission]);
   const canAdmin = useMemo(() => hasModulePermission('users', 'admin'), [hasModulePermission]);
 
-  useEffect(() => {
-    if (dealerships.length > 0 && !selectedDealerId) {
-      setSelectedDealerId(dealerships[0].id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dealerships.length]); // Only depend on length, not full array
-
-  if (!selectedDealerId) {
+  if (!currentDealership) {
     return (
       <Card>
         <CardContent className="pt-6">
@@ -40,6 +32,8 @@ export const UserPasswordManagement = () => {
       </Card>
     );
   }
+
+  const selectedDealerId = currentDealership.id;
 
   return (
     <div className="space-y-6">

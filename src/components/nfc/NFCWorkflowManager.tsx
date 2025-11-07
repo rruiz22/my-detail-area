@@ -10,48 +10,58 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
-import { 
-  Plus, 
-  Search, 
-  MoreHorizontal, 
-  Edit, 
-  Trash2, 
-  Zap, 
-  Mail, 
-  MessageSquare, 
-  Bell, 
-  Calendar, 
-  Link, 
+import {
+  Plus,
+  Search,
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  Zap,
+  Mail,
+  MessageSquare,
+  Bell,
+  Calendar,
+  Link,
   Play,
   Pause,
   Settings,
   Activity,
   ArrowRight
 } from 'lucide-react';
-import { useNFCWorkflows, NFCWorkflow } from '@/hooks/useNFCWorkflows';
+import { PermissionGuard } from '@/components/permissions/PermissionGuard';
+import { useNFCWorkflows, NFCWorkflow, TriggerConditions, NFCWorkflowAction } from '@/hooks/useNFCWorkflows';
 
 interface NFCWorkflowManagerProps {
   className?: string;
 }
 
+// Form data interface for creating/editing workflows
+interface WorkflowFormData {
+  name: string;
+  description: string;
+  trigger_type: 'tag_scan' | 'location_entry' | 'time_based' | 'status_change';
+  trigger_conditions: TriggerConditions;
+  actions: NFCWorkflowAction[];
+}
+
 export function NFCWorkflowManager({ className }: NFCWorkflowManagerProps) {
   const { t } = useTranslation();
-  const { 
-    workflows, 
-    loading, 
-    createWorkflow, 
-    updateWorkflow, 
-    deleteWorkflow, 
+  const {
+    workflows,
+    loading,
+    createWorkflow,
+    updateWorkflow,
+    deleteWorkflow,
     toggleWorkflow,
-    loadWorkflows 
+    loadWorkflows
   } = useNFCWorkflows();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedWorkflow, setSelectedWorkflow] = useState<NFCWorkflow | null>(null);
-  
-  const [formData, setFormData] = useState<any>({
+
+  const [formData, setFormData] = useState<WorkflowFormData>({
     name: '',
     description: '',
     trigger_type: 'tag_scan',
@@ -168,7 +178,7 @@ export function NFCWorkflowManager({ className }: NFCWorkflowManagerProps) {
     });
   };
 
-  const updateAction = (index: number, updates: any) => {
+  const updateAction = (index: number, updates: Partial<NFCWorkflowAction>) => {
     const newActions = [...formData.actions];
     newActions[index] = { ...newActions[index], ...updates };
     setFormData({ ...formData, actions: newActions });
@@ -206,13 +216,15 @@ export function NFCWorkflowManager({ className }: NFCWorkflowManagerProps) {
               {t('nfc_tracking.workflows.subtitle')}
             </p>
           </div>
-          <Button 
-            onClick={() => setIsCreateDialogOpen(true)}
-            className="flex items-center gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            {t('nfc_tracking.workflows.create_workflow')}
-          </Button>
+          <PermissionGuard module="nfc_tracking" permission="manage_workflows">
+            <Button
+              onClick={() => setIsCreateDialogOpen(true)}
+              className="flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              {t('nfc_tracking.workflows.create_workflow')}
+            </Button>
+          </PermissionGuard>
         </div>
 
         {/* Search */}
@@ -247,8 +259,8 @@ export function NFCWorkflowManager({ className }: NFCWorkflowManagerProps) {
               <Card key={workflow.id} className="hover:shadow-lg transition-shadow">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center">
-                      <Zap className="w-5 h-5 text-primary-foreground" />
+                    <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                      <Zap className="w-5 h-5 text-primary" />
                     </div>
                     <div>
                       <CardTitle className="text-base">{workflow.name}</CardTitle>
@@ -274,30 +286,36 @@ export function NFCWorkflowManager({ className }: NFCWorkflowManagerProps) {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => openEditDialog(workflow)}>
-                          <Edit className="w-4 h-4 mr-2" />
-                          {t('nfc_tracking.workflows.edit')}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleToggleWorkflow(workflow)}>
-                          {workflow.is_active ? (
-                            <>
-                              <Pause className="w-4 h-4 mr-2" />
-                              {t('nfc_tracking.workflows.disable')}
-                            </>
-                          ) : (
-                            <>
-                              <Play className="w-4 h-4 mr-2" />
-                              {t('nfc_tracking.workflows.enable')}
-                            </>
-                          )}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          onClick={() => handleDeleteWorkflow(workflow)}
-                          className="text-destructive"
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" />
-                          {t('nfc_tracking.workflows.delete')}
-                        </DropdownMenuItem>
+                        <PermissionGuard module="nfc_tracking" permission="manage_workflows" hideOnDeny>
+                          <DropdownMenuItem onClick={() => openEditDialog(workflow)}>
+                            <Edit className="w-4 h-4 mr-2" />
+                            {t('nfc_tracking.workflows.edit')}
+                          </DropdownMenuItem>
+                        </PermissionGuard>
+                        <PermissionGuard module="nfc_tracking" permission="manage_workflows" hideOnDeny>
+                          <DropdownMenuItem onClick={() => handleToggleWorkflow(workflow)}>
+                            {workflow.is_active ? (
+                              <>
+                                <Pause className="w-4 h-4 mr-2" />
+                                {t('nfc_tracking.workflows.disable')}
+                              </>
+                            ) : (
+                              <>
+                                <Play className="w-4 h-4 mr-2" />
+                                {t('nfc_tracking.workflows.enable')}
+                              </>
+                            )}
+                          </DropdownMenuItem>
+                        </PermissionGuard>
+                        <PermissionGuard module="nfc_tracking" permission="manage_workflows" hideOnDeny>
+                          <DropdownMenuItem
+                            onClick={() => handleDeleteWorkflow(workflow)}
+                            className="text-destructive"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            {t('nfc_tracking.workflows.delete')}
+                          </DropdownMenuItem>
+                        </PermissionGuard>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>

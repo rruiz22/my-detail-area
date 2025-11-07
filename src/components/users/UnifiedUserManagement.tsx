@@ -84,15 +84,14 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
       // Fetch roles for each user (including custom roles)
       const usersWithRoles = await Promise.all(
         (profilesData || []).map(async (profile) => {
-          // Get custom roles from user_custom_roles table
+          // Get custom roles from user_custom_role_assignments table
           const { data: customRolesData } = await supabase
-            .from('user_custom_roles')
+            .from('user_custom_role_assignments')
             .select(`
-              role_id,
-              expires_at,
-              custom_roles (
+              custom_role_id,
+              dealer_custom_roles (
                 id,
-                name,
+                role_name,
                 display_name
               )
             `)
@@ -101,10 +100,9 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
 
           // Transform custom roles to match UserRole interface
           const roles: UserRole[] = (customRolesData || []).map((cr: any) => ({
-            role_id: cr.role_id,
-            role_name: cr.custom_roles?.name || 'Unknown',
-            display_name: cr.custom_roles?.display_name || cr.custom_roles?.name || 'Unknown',
-            expires_at: cr.expires_at
+            role_id: cr.custom_role_id,
+            role_name: cr.dealer_custom_roles?.role_name || 'Unknown',
+            display_name: cr.dealer_custom_roles?.display_name || cr.dealer_custom_roles?.role_name || 'Unknown'
           }));
 
           // Get the dealership_id from profile first, then from active membership
@@ -358,7 +356,7 @@ export const UnifiedUserManagement: React.FC<UnifiedUserManagementProps> = ({ re
                   <TableHead>{t('user_management.user')}</TableHead>
                   <TableHead>{t('dealerships.dealership')}</TableHead>
                   <TableHead>{t('user_management.roles')}</TableHead>
-                  <TableHead>{t('common.status')}</TableHead>
+                  <TableHead>{t('common.status_label')}</TableHead>
                   <TableHead className="text-right">{t('common.actions')}</TableHead>
                 </TableRow>
               </TableHeader>

@@ -1,30 +1,46 @@
+import { lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Radio, 
-  Settings, 
-  Navigation, 
+import {
+  Radio,
+  Settings,
+  Navigation,
   TrendingUp,
   Activity,
   Target,
-  Nfc
+  Nfc,
+  Loader2
 } from 'lucide-react';
-import { NFCDashboard } from '@/components/nfc/NFCDashboard';
-import { NFCTagManager } from '@/components/nfc/NFCTagManager';
-import { NFCVehicleTracker } from '@/components/nfc/NFCVehicleTracker';
-import { NFCLocationHeatmap } from '@/components/nfc/NFCLocationHeatmap';
-import { NFCWorkflowManager } from '@/components/nfc/NFCWorkflowManager';
+import { PermissionGuard } from '@/components/permissions/PermissionGuard';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useTabPersistence } from '@/hooks/useTabPersistence';
+
+// Lazy load components to prevent all tabs from mounting simultaneously
+const NFCDashboard = lazy(() => import('@/components/nfc/NFCDashboard').then(m => ({ default: m.NFCDashboard })));
+const NFCTagManager = lazy(() => import('@/components/nfc/NFCTagManager').then(m => ({ default: m.NFCTagManager })));
+const NFCVehicleTracker = lazy(() => import('@/components/nfc/NFCVehicleTracker').then(m => ({ default: m.NFCVehicleTracker })));
+const NFCLocationHeatmap = lazy(() => import('@/components/nfc/NFCLocationHeatmap').then(m => ({ default: m.NFCLocationHeatmap })));
+const NFCWorkflowManager = lazy(() => import('@/components/nfc/NFCWorkflowManager').then(m => ({ default: m.NFCWorkflowManager })));
+
+// Loading component for Suspense
+const TabLoadingFallback = () => (
+  <div className="flex items-center justify-center h-64">
+    <Loader2 className="w-8 h-8 animate-spin text-primary" />
+  </div>
+);
 
 export default function NFCTracking() {
   const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useTabPersistence('nfc_tracking', 'dashboard');
 
   return (
-    <div className="container mx-auto p-4 md:p-6 lg:p-8">
+    <PermissionGuard module="nfc_tracking" permission="view_nfc_dashboard">
+      <div className="container mx-auto p-4 md:p-6 lg:p-8">
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center">
-              <Nfc className="w-6 h-6 text-primary-foreground" />
+            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20">
+              <Nfc className="w-6 h-6 text-primary" />
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-foreground">
@@ -37,7 +53,7 @@ export default function NFCTracking() {
           </div>
         </div>
 
-        <Tabs defaultValue="dashboard" className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
             <TabsTrigger value="dashboard" className="flex items-center gap-2">
               <Radio className="w-4 h-4" />
@@ -66,26 +82,47 @@ export default function NFCTracking() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="dashboard" className="space-y-6">
-            <NFCDashboard />
+          <TabsContent value="dashboard" className="space-y-6" forceMount={activeTab === 'dashboard'}>
+            <ErrorBoundary fallback={<TabLoadingFallback />}>
+              <Suspense fallback={<TabLoadingFallback />}>
+                <NFCDashboard />
+              </Suspense>
+            </ErrorBoundary>
           </TabsContent>
 
-          <TabsContent value="tags" className="space-y-6">
-            <NFCTagManager />
+          <TabsContent value="tags" className="space-y-6" forceMount={activeTab === 'tags'}>
+            <ErrorBoundary fallback={<TabLoadingFallback />}>
+              <Suspense fallback={<TabLoadingFallback />}>
+                <NFCTagManager />
+              </Suspense>
+            </ErrorBoundary>
           </TabsContent>
 
-          <TabsContent value="tracker" className="space-y-6">
-            <NFCVehicleTracker />
+          <TabsContent value="tracker" className="space-y-6" forceMount={activeTab === 'tracker'}>
+            <ErrorBoundary fallback={<TabLoadingFallback />}>
+              <Suspense fallback={<TabLoadingFallback />}>
+                <NFCVehicleTracker />
+              </Suspense>
+            </ErrorBoundary>
           </TabsContent>
 
-          <TabsContent value="heatmap" className="space-y-6">
-            <NFCLocationHeatmap />
+          <TabsContent value="heatmap" className="space-y-6" forceMount={activeTab === 'heatmap'}>
+            <ErrorBoundary fallback={<TabLoadingFallback />}>
+              <Suspense fallback={<TabLoadingFallback />}>
+                <NFCLocationHeatmap />
+              </Suspense>
+            </ErrorBoundary>
           </TabsContent>
 
-          <TabsContent value="workflows" className="space-y-6">
-            <NFCWorkflowManager />
+          <TabsContent value="workflows" className="space-y-6" forceMount={activeTab === 'workflows'}>
+            <ErrorBoundary fallback={<TabLoadingFallback />}>
+              <Suspense fallback={<TabLoadingFallback />}>
+                <NFCWorkflowManager />
+              </Suspense>
+            </ErrorBoundary>
           </TabsContent>
         </Tabs>
-    </div>
+      </div>
+    </PermissionGuard>
   );
 }

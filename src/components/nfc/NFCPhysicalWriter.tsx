@@ -5,13 +5,14 @@ import { Button } from '../ui/button';
 import { Alert, AlertDescription } from '../ui/alert';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
+import { PermissionGuard } from '@/components/permissions/PermissionGuard';
 import { useWebNFC } from '../../hooks/useWebNFC';
 import { NFCTag } from '../../hooks/useNFCManagement';
-import { 
-  Smartphone, 
-  Wifi, 
-  CheckCircle, 
-  XCircle, 
+import {
+  Smartphone,
+  Wifi,
+  CheckCircle,
+  XCircle,
   Loader2,
   AlertTriangle,
   Radio
@@ -154,14 +155,15 @@ export function NFCPhysicalWriter({ isOpen, onClose, tag, onSuccess }: NFCPhysic
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Smartphone className="h-5 w-5" />
-            {t('nfc.writer.title')}
-          </DialogTitle>
-        </DialogHeader>
+    <PermissionGuard module="nfc_tracking" permission="write_nfc_tags">
+      <Dialog open={isOpen} onOpenChange={handleClose}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Smartphone className="h-5 w-5" />
+              {t('nfc.writer.title')}
+            </DialogTitle>
+          </DialogHeader>
 
         {/* Tag Information */}
         <Card>
@@ -252,5 +254,6 @@ export function NFCPhysicalWriter({ isOpen, onClose, tag, onSuccess }: NFCPhysic
         </div>
       </DialogContent>
     </Dialog>
+    </PermissionGuard>
   );
 }
