@@ -9,6 +9,7 @@ import { useManualRefresh } from '@/hooks/useManualRefresh';
 import { Order, useOrderManagement } from '@/hooks/useOrderManagement';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useSearchPersistence, useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
+import { useStatusPermissions } from '@/hooks/useStatusPermissions';
 import { dev, warn, error as logError } from '@/utils/logger';
 import { determineTabForOrder } from '@/utils/orderUtils';
 import { useQueryClient } from '@tanstack/react-query';
@@ -52,6 +53,9 @@ export default function SalesOrders() {
   const orderIdFromUrl = searchParams.get('order');
   const { hasModulePermission, enhancedUser } = usePermissions();
   const { selectedDealerId } = useDealerFilter(); // ✅ FIX: Get dealer filter for cache operations
+
+  // 🔍 DIAGNOSTIC: Log every render to track re-render behavior
+  dev('🔵 SalesOrders component is RENDERING', { selectedDealerId });
 
   // Accessibility: Live region for screen reader announcements
   const [liveRegionMessage, setLiveRegionMessage] = useState<string>('');
@@ -99,6 +103,9 @@ export default function SalesOrders() {
 
   // Check if user can create sales orders
   const canCreate = hasModulePermission('sales_orders', 'create_orders');
+
+  // Hook for status permissions and updates
+  const { canUpdateStatus, updateOrderStatus } = useStatusPermissions();
 
   // Real-time updates handle most data changes automatically
   // Only manual refresh needed for initial load and special cases
@@ -288,26 +295,58 @@ export default function SalesOrders() {
   }, [selectedOrder, updateOrder, createOrder, toast, t, queryClient, selectedDealerId]);
 
   const handleStatusChange = useCallback(async (orderId: string, newStatus: string) => {
-    try {
-      // Note: OrderDataTable already calls updateOrderStatus which handles:
-      // - DB update
-      // - Permission validation
-      // - SMS notifications
-      // - Push notifications
-      // This callback only emits events for UI consistency
-
-      // Dispatch event to notify other components (polling listens to this)
-      window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
-        detail: { orderId, newStatus, timestamp: Date.now() }
-      }));
-
-      // Show success toast
+    // Find the order
+    const order = allOrders.find(o => o.id === orderId);
+    if (!order) {
+      logError('Order not found for status change:', orderId);
       toast({
-        description: t('orders.status_updated_successfully'),
-        variant: 'default'
+        description: t('orders.order_not_found'),
+        variant: 'destructive'
       });
+      return;
+    }
 
-      // No refreshData() call - polling system handles update automatically
+    try {
+      // ✅ 1. Validate permissions before updating
+      const allowed = await canUpdateStatus(
+        order.dealer_id?.toString() || '',
+        order.status || '',
+        newStatus,
+        order.order_type
+      );
+
+      if (!allowed) {
+        toast({
+          description: t('errors.no_permission_status_change', 'You do not have permission to change this status'),
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      // ✅ 2. Update database (handles SMS, push notifications, etc.)
+      const success = await updateOrderStatus(
+        orderId,
+        newStatus,
+        order.dealer_id?.toString() || ''
+      );
+
+      if (success) {
+        // ✅ 3. Dispatch event for real-time updates
+        window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
+          detail: { orderId, newStatus, timestamp: Date.now() }
+        }));
+
+        // ✅ 4. Show success toast
+        toast({
+          description: t('orders.status_updated_successfully'),
+          variant: 'default'
+        });
+
+        // ✅ 5. Invalidate queries to refresh data
+        queryClient.invalidateQueries({ queryKey: ['orders', 'all', selectedDealerId] });
+      } else {
+        throw new Error('Status update failed');
+      }
     } catch (error) {
       logError('Status change failed:', error);
       toast({
@@ -318,7 +357,7 @@ export default function SalesOrders() {
       // Re-throw error so kanban can handle rollback if needed
       throw error;
     }
-  }, [toast, t]);
+  }, [allOrders, canUpdateStatus, updateOrderStatus, toast, t, queryClient, selectedDealerId]);
 
   const handleUpdate = useCallback(async (orderId: string, updates: Partial<Order>) => {
     try {

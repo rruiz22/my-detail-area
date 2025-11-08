@@ -50,5 +50,26 @@ writeFileSync(publicPath, JSON.stringify(versionInfo, null, 2));
 const srcPath = path.join(__dirname, '..', 'src', 'version.json');
 writeFileSync(srcPath, JSON.stringify(versionInfo, null, 2));
 
+// 🔴 CRITICAL FIX: Update APP_VERSION in i18n.ts to match package.json version
+// This ensures translation cache automatically invalidates on version bumps
+const i18nPath = path.join(__dirname, '..', 'src', 'lib', 'i18n.ts');
+try {
+  let i18nContent = readFileSync(i18nPath, 'utf8');
+
+  // Replace APP_VERSION constant with current version
+  const versionRegex = /const APP_VERSION = ['"][\d.]+['"];/;
+  const newVersionLine = `const APP_VERSION = '${packageJson.version}';`;
+
+  if (versionRegex.test(i18nContent)) {
+    i18nContent = i18nContent.replace(versionRegex, newVersionLine);
+    writeFileSync(i18nPath, i18nContent, 'utf8');
+    console.log(`✅ Updated APP_VERSION in i18n.ts to ${packageJson.version}`);
+  } else {
+    console.warn('⚠️ Could not find APP_VERSION in i18n.ts');
+  }
+} catch (error) {
+  console.error('❌ Failed to update i18n.ts:', error.message);
+}
+
 console.log('✅ Version file generated:');
 console.log(JSON.stringify(versionInfo, null, 2));

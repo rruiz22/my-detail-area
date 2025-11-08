@@ -40,10 +40,10 @@ interface Invitation {
   expires_at: string;
   accepted_at?: string;
   updated_at: string;
-  dealer?: {
+  dealerships?: {
     name: string;
   };
-  inviter?: {
+  profiles?: {
     email: string;
     first_name?: string;
     last_name?: string;
@@ -60,7 +60,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
   const { t } = useTranslation();
   const { toast } = useToast();
   const { user } = useAuth();
-  
+
   // State management
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -167,7 +167,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
   };
 
   // Get invitation status with enhanced logic
-  const getInvitationStatus = (invitation: Invitation) => {
+  const getInvitationStatus = (invitation: Invitation): InvitationStatus => {
     const now = new Date();
     const isExpired = isAfter(now, new Date(invitation.expires_at));
 
@@ -354,10 +354,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
       const status = getInvitationStatus(inv);
       return status === 'accepted';
     }).length;
-    const cancelled = invitations.filter(inv => {
-      const status = getInvitationStatus(inv);
-      return status === 'cancelled';
-    }).length;
+    const cancelled = 0; // Cancelled invitations are deleted from database
     const expired = invitations.filter(inv => {
       const status = getInvitationStatus(inv);
       return status === 'expired';
@@ -391,7 +388,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
   }
 
   return (
-    <PermissionGuard module="users" permission="write">
+    <PermissionGuard module="users" permission="edit">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -513,7 +510,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
                     ) : (
                       filteredInvitations.map((invitation) => {
                         const status = getInvitationStatus(invitation);
-                        
+
                         return (
                           <TableRow key={invitation.id}>
                             <TableCell>

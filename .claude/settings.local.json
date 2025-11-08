@@ -73,7 +73,8 @@
       "Bash(if exist \".vite\" rmdir /s /q \".vite\")",
       "Bash(if exist \"dist\" rmdir /s /q \"dist\")",
       "Bash(then echo \"✅ .env exists\")",
-      "Bash(else echo \"❌ No .env file\")"
+      "Bash(else echo \"❌ No .env file\")",
+      "Bash(then grep -i twilio .env)"
     ],
     "deny": [],
     "ask": []

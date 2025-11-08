@@ -6,11 +6,14 @@ import { waitForInitialTranslations } from '@/lib/i18n';
  * Hook to detect when i18next translations are fully loaded and ready
  * Prevents rendering components before translations are available
  *
- * @returns boolean indicating if translations are ready
+ * 🔴 CRITICAL FIX: Now returns error state to handle translation load failures gracefully
+ *
+ * @returns object with {ready: boolean, error: boolean}
  */
 export function useTranslationsReady() {
   const { i18n } = useTranslation();
   const [isReady, setIsReady] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -40,9 +43,9 @@ export function useTranslationsReady() {
           checkReady();
         }
       } catch (error) {
-        console.error('Error waiting for translations:', error);
+        console.error('❌ Error waiting for translations:', error);
         if (isMounted) {
-          setIsReady(true); // Proceed anyway to prevent infinite loading
+          setHasError(true); // Mark as error instead of proceeding
         }
       }
     };
@@ -59,11 +62,12 @@ export function useTranslationsReady() {
     i18n.on('languageChanged', handleLanguageChange);
     i18n.on('loaded', handleLanguageChange);
 
-    // Fallback timeout (max 5 seconds)
+    // 🔴 CRITICAL FIX: Timeout now triggers error instead of proceeding
+    // Better to show error message than render with translation keys
     const timeoutId = setTimeout(() => {
       if (isMounted && !checkReady()) {
-        console.warn('Translations not loaded after 5 seconds, proceeding anyway');
-        setIsReady(true); // Proceed anyway to prevent infinite loading
+        console.error('❌ Translations not loaded after 5 seconds - translation load failure');
+        setHasError(true); // Trigger error state instead of proceeding
       }
     }, 5000);
 
@@ -75,5 +79,5 @@ export function useTranslationsReady() {
     };
   }, [i18n]);
 
-  return isReady;
+  return { ready: isReady, error: hasError };
 }

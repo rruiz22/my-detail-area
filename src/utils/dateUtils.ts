@@ -208,3 +208,22 @@ export function createNewYorkDateTime(date: Date, hour: number): Date {
   nyDate.setHours(hour, 0, 0, 0);
   return nyDate;
 }
+
+/**
+ * Gets the current year based on a specific timezone
+ * Used for copyright notices and other year-sensitive displays
+ *
+ * @param timezone - IANA timezone (default: system timezone)
+ * @returns Current year (e.g., 2025)
+ *
+ * @example
+ * getCurrentYearInTimezone() // 2025 (in system timezone)
+ * getCurrentYearInTimezone('America/New_York') // 2025
+ * getCurrentYearInTimezone('Asia/Tokyo') // 2025
+ */
+export function getCurrentYearInTimezone(timezone?: string): number {
+  const tz = timezone || getSystemTimezone();
+  const now = new Date();
+  const zonedDate = toZonedTime(now, tz);
+  return zonedDate.getFullYear();
+}

@@ -89,6 +89,25 @@ export default defineConfig(({ mode }) => ({
         // Runtime caching rules for offline support
         runtimeCaching: [
           {
+            // 🔴 CRITICAL FIX: Cache translation JSON files with NetworkFirst
+            // ALWAYS tries network first (fresh translations)
+            // Falls back to cache only if network fails
+            // Short 5-minute cache expiration
+            urlPattern: /\/translations\/.*\.json$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'translations-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 5 // 5 minutes only - fresh translations
+              },
+              networkTimeoutSeconds: 3, // 3-second timeout prevents long waits
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          },
+          {
             // Cache API responses from Supabase
             urlPattern: ({ url }) => url.origin === 'https://swfnnrpzpkdypbrzmgnr.supabase.co',
             handler: 'NetworkFirst',
