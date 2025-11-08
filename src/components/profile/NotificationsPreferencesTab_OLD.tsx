@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,19 +26,12 @@ import { useProfileMutations } from '@/hooks/useProfileMutations';
 import { NotificationEventsTable, NotificationChannel } from '@/components/profile/NotificationEventsTable';
 import { getEventsForModule, getAllCategories } from '@/constants/notificationEvents';
 import { supabase } from '@/integrations/supabase/client';
-import { useEventBasedNotificationPreferences } from '@/hooks/useEventBasedNotificationPreferences';
-import { Info } from 'lucide-react';
-import { AlertTitle } from '@/components/ui/alert';
 
 export function NotificationsPreferencesTab() {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { toast } = useToast();
   const { preferences, isLoading: preferencesLoading } = useUserPreferences();
   const { loading, updatePreferences, updateSMSPreferences } = useProfileMutations();
-
-  // Get dealership ID for 3-level validation
-  const [dealerId, setDealerId] = useState<number | null>(null);
 
   const [formData, setFormData] = useState({
     notification_email: true,
@@ -57,17 +50,7 @@ export function NotificationsPreferencesTab() {
   // Granular event preferences state
   const [activeModule, setActiveModule] = useState('sales_orders');
   const [categoryFilter, setCategoryFilter] = useState('all');
-
-  // Integrate 3-level validation hook
-  const {
-    preferences: eventBasedPrefs,
-    allowedEvents,
-    loading: eventsLoading,
-    saving: eventsSaving,
-    toggleEventChannel,
-    savePreferences: saveEventPreferences,
-    isEventAllowedByRole,
-  } = useEventBasedNotificationPreferences(dealerId, activeModule);
+  const [eventPreferences, setEventPreferences] = useState<Record<string, Record<NotificationChannel, boolean>>>({});
 
   // Load preferences from database
   useEffect(() => {
@@ -88,36 +71,57 @@ export function NotificationsPreferencesTab() {
     }
   }, [preferences]);
 
-  // Fetch dealership ID for 3-level validation
+  // Load SMS event preferences for current module
   useEffect(() => {
     if (!user?.id) return;
 
-    const fetchDealerId = async () => {
+    const loadSMSPreferences = async () => {
       const { data: profile } = await supabase
         .from('profiles')
         .select('dealership_id')
         .eq('id', user.id)
         .single();
 
-      if (profile?.dealership_id) {
-        setDealerId(profile.dealership_id);
+      if (!profile?.dealership_id) return;
+
+      const { data: smsPrefs } = await supabase
+        .from('user_sms_notification_preferences')
+        .select('event_preferences, sms_enabled')
+        .eq('user_id', user.id)
+        .eq('dealer_id', profile.dealership_id)
+        .eq('module', activeModule)
+        .single();
+
+      if (smsPrefs && smsPrefs.event_preferences) {
+        // Convert DB format to UI format
+        const uiPreferences: Record<string, Record<NotificationChannel, boolean>> = {};
+
+        Object.entries(smsPrefs.event_preferences).forEach(([eventId, value]) => {
+          let smsEnabled = false;
+
+          if (typeof value === 'boolean') {
+            smsEnabled = value;
+          } else if (typeof value === 'object' && value !== null && 'enabled' in value) {
+            smsEnabled = (value as any).enabled;
+          }
+
+          if (smsEnabled) {
+            uiPreferences[eventId] = {
+              ...(eventPreferences[eventId] || {}),
+              sms: true
+            };
+          }
+        });
+
+        setEventPreferences(prev => ({
+          ...prev,
+          ...uiPreferences
+        }));
       }
     };
 
-    fetchDealerId();
-  }, [user?.id]);
-
-  // Derive eventPreferences from hook (replaces manual state)
-  const eventPreferences = useMemo(() => {
-    if (!eventBasedPrefs?.event_preferences) return {};
-
-    const prefs: Record<string, Record<NotificationChannel, boolean>> = {};
-    Object.entries(eventBasedPrefs.event_preferences).forEach(([eventId, channels]) => {
-      prefs[eventId] = channels;
-    });
-
-    return prefs;
-  }, [eventBasedPrefs]);
+    loadSMSPreferences();
+  }, [user?.id, activeModule]);
 
   const handleSwitchChange = (field: string, value: boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -128,18 +132,13 @@ export function NotificationsPreferencesTab() {
   };
 
   const handleEventToggle = (eventId: string, channel: NotificationChannel, value: boolean) => {
-    // Validate that event is allowed by user's Custom Role (Level 2)
-    if (!isEventAllowedByRole(eventId)) {
-      toast({
-        variant: 'destructive',
-        title: t('common.error'),
-        description: t('notifications.errors.event_not_allowed_by_role', 'This event is not enabled for your role. Contact your administrator.'),
-      });
-      return;
-    }
-
-    // Use hook method to toggle channel
-    toggleEventChannel(eventId, channel, value);
+    setEventPreferences(prev => ({
+      ...prev,
+      [eventId]: {
+        ...(prev[eventId] || {}),
+        [channel]: value,
+      }
+    }));
   };
 
   const handleSave = async () => {
@@ -149,7 +148,7 @@ export function NotificationsPreferencesTab() {
       console.warn('SMS notifications enabled but no phone number configured');
     }
 
-    // 1. Save general preferences (profiles table)
+    // ✅ FIX: Convert empty strings to null for TIME fields
     const sanitizedData = {
       ...formData,
       quiet_hours_start: formData.quiet_hours_start || null,
@@ -158,15 +157,25 @@ export function NotificationsPreferencesTab() {
 
     await updatePreferences(sanitizedData);
 
-    // 2. Save event-based notification preferences (user_sms_notification_preferences table)
-    // Uses 3-level validation architecture
-    await saveEventPreferences();
+    // ✅ NEW: Save SMS event preferences per module
+    if (formData.notification_sms && Object.keys(eventPreferences).length > 0) {
+      // Extract SMS preferences for the active module
+      const smsPreferencesForModule: Record<string, boolean> = {};
+
+      Object.entries(eventPreferences).forEach(([eventId, channels]) => {
+        if (channels.sms) {
+          smsPreferencesForModule[eventId] = true;
+        }
+      });
+
+      // Save SMS preferences for the active module
+      await updateSMSPreferences(activeModule, smsPreferencesForModule, formData.notification_sms);
+    }
   };
 
-  // Filter events: Only show events allowed by Custom Role (Level 2) and category filter
-  const filteredEvents = getEventsForModule(activeModule)
-    .filter(event => isEventAllowedByRole(event.id)) // ✅ LEVEL 2 VALIDATION
-    .filter(event => categoryFilter === 'all' || event.category === categoryFilter);
+  const filteredEvents = getEventsForModule(activeModule).filter(
+    event => categoryFilter === 'all' || event.category === categoryFilter
+  );
 
   const timezones = [
     { value: 'America/New_York', label: 'Eastern Time (ET)' },
@@ -304,17 +313,6 @@ export function NotificationsPreferencesTab() {
           </div>
         </CardContent>
       </Card>
-
-      {/* 3-Level Architecture Info Alert */}
-      <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-950/20">
-        <Info className="h-4 w-4 text-blue-600" />
-        <AlertTitle className="text-blue-900 dark:text-blue-100">
-          {t('notifications.level_3_title', 'Level 3: Your Personal Preferences')}
-        </AlertTitle>
-        <AlertDescription className="text-blue-800 dark:text-blue-200 text-sm">
-          {t('notifications.level_3_description', 'You can only enable notifications for events allowed by your Custom Role. You must also be a follower of orders to receive notifications.')}
-        </AlertDescription>
-      </Alert>
 
       {/* Notification Settings */}
       <Card>
@@ -562,9 +560,9 @@ export function NotificationsPreferencesTab() {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={loading || eventsSaving}>
+        <Button onClick={handleSave} disabled={loading}>
           <Save className="h-4 w-4 mr-2" />
-          {(loading || eventsSaving) ? t('common.saving') : t('common.save_changes')}
+          {loading ? t('common.saving') : t('common.save_changes')}
         </Button>
       </div>
     </div>

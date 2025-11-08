@@ -1,0 +1,54 @@
+🔍 STARTING COMPREHENSIVE TRANSLATION AUDIT
+==========================================
+📁 Scanning source files...
+📂 Found 689 TypeScript files
+🔑 Extracting translation keys...
+🎯 Found 4783 unique translation keys
+📚 Loading translation files...
+✅ EN: 5638 keys loaded
+✅ ES: 5455 keys loaded
+✅ PT: 5165 keys loaded
+
+🔍 ANALYZING COVERAGE...
+
+📊 COVERAGE REPORT
+==================
+⚠️ EN: 67.7% coverage (1547 missing)
+   - token
+   - token_hash
+   - code
+   - type
+   - mode
+   ... and 1542 more
+⚠️ ES: 65.0% coverage (1672 missing)
+   - token
+   - token_hash
+   - code
+   - type
+   - mode
+   ... and 1667 more
+⚠️ PT: 59.3% coverage (1945 missing)
+   - token
+   - token_hash
+   - code
+   - type
+   - mode
+   ... and 1940 more
+
+📄 FILES WITH MOST MISSING KEYS:
+⚠️  src\pages\Index.tsx: 75/75 keys missing
+⚠️  src\components\scanner\enhanced\VinScannerSettings.tsx: 49/55 keys missing
+⚠️  src\components\settings\notifications\NotificationTemplatesManager.tsx: 46/54 keys missing
+⚠️  src\components\settings\integrations\SlackIntegrationCard.tsx: 41/45 keys missing
+⚠️  src\components\nfc\NFCTagManager.tsx: 39/56 keys missing
+⚠️  src\components\profile\DataPrivacyTab.tsx: 37/40 keys missing
+⚠️  src\components\users\DirectUserCreationModal.tsx: 35/40 keys missing
+⚠️  src\components\users\UserAnalytics.tsx: 35/37 keys missing
+⚠️  src\components\users\UserAuditLog.tsx: 33/33 keys missing
+⚠️  src\components\dealer\DealerCategories.tsx: 32/34 keys missing
+
+🎯 SUMMARY
+==========
+Overall Translation Coverage: 59.3%
+Total Missing Keys: 1948
+Recommendation: Add missing translations to achieve 100% coverage

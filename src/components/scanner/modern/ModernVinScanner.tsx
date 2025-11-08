@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { useVinScanner } from '@/hooks/useVinScanner';
 import { cn } from '@/lib/utils';
 import { isValidVin } from '@/utils/vinValidation';
+import { vinAutoCorrection } from '@/utils/vinAutoCorrection';
 import { AlertCircle, Camera, CheckCircle2, RefreshCw, Target, Upload, X, Zap } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,41 +19,6 @@ interface ModernVinScannerProps {
 }
 
 type ScannerStatus = 'idle' | 'processing' | 'success' | 'no-vin' | 'error';
-
-const preprocessImageBlob = async (blob: Blob): Promise<Blob> => {
-  try {
-    const bitmap = await createImageBitmap(blob);
-    const canvas = document.createElement('canvas');
-    canvas.width = bitmap.width;
-    canvas.height = bitmap.height;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return blob;
-
-    ctx.drawImage(bitmap, 0, 0);
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
-
-    // Simple grayscale + contrast enhancement
-    const contrast = 35; // percentage
-    const factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
-
-    for (let i = 0; i < data.length; i += 4) {
-      const gray = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
-      const contrasted = factor * (gray - 128) + 128;
-      const clamped = Math.max(0, Math.min(255, contrasted));
-      data[i] = data[i + 1] = data[i + 2] = clamped;
-    }
-
-    ctx.putImageData(imageData, 0, 0);
-
-    return await new Promise<Blob>((resolve) => {
-      canvas.toBlob((processed) => resolve(processed ?? blob), 'image/png', 1);
-    });
-  } catch (error) {
-    console.warn('VIN preprocessing failed, using original image.', error);
-    return blob;
-  }
-};
 
 export function ModernVinScanner({
   open,
@@ -72,7 +38,7 @@ export function ModernVinScanner({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
-  const { scanVin, loading, error, lastScanResult } = useVinScanner();
+  const { scanVin, loading, progress, error, lastScanResult } = useVinScanner();
 
   useEffect(() => {
     if (lastScanResult?.confidence !== undefined) {
@@ -196,11 +162,36 @@ export function ModernVinScanner({
       setDetectedVin(validVin);
       setStatus('success');
       setStatusMessage(t('modern_vin_scanner.status_success', 'VIN detected.'));
-    } else {
-      setDetectedVin(null);
-      setStatus('error');
-      setStatusMessage(t('modern_vin_scanner.status_invalid', 'Scanned text is not a valid VIN. Please rescan.'));
+      return;
     }
+
+    // Try auto-correction if no valid VIN found
+    if (vins.length > 0) {
+      const correctionResult = vinAutoCorrection.correctVin(vins[0]);
+
+      if (correctionResult.isValid && correctionResult.corrections.length > 0) {
+        setDetectedVin(correctionResult.correctedVin);
+        setConfidence(Math.round(correctionResult.confidence * 100));
+        setStatus('success');
+        setStatusMessage(
+          t('modern_vin_scanner.status_auto_corrected', 'VIN auto-corrected ({{count}} corrections)',
+            { count: correctionResult.corrections.length })
+        );
+
+        console.log('[VIN Scanner] Auto-correction applied:', {
+          original: vins[0],
+          corrected: correctionResult.correctedVin,
+          corrections: correctionResult.corrections,
+          confidence: correctionResult.confidence
+        });
+        return;
+      }
+    }
+
+    // No valid VIN and auto-correction failed
+    setDetectedVin(null);
+    setStatus('error');
+    setStatusMessage(t('modern_vin_scanner.status_invalid', 'Scanned text is not a valid VIN. Please rescan.'));
   }, [t]);
 
   const runScan = useCallback(async (source: Blob | File, context: 'camera' | 'upload') => {
@@ -211,8 +202,8 @@ export function ModernVinScanner({
         : t('modern_vin_scanner.status_processing_upload', 'Processing uploaded file…')
     );
 
-    const prepared = await preprocessImageBlob(source);
-    const vins = await scanVin(prepared);
+    // Web Worker handles preprocessing automatically
+    const vins = await scanVin(source);
     processVinCandidates(vins);
   }, [processVinCandidates, scanVin, t]);
 
@@ -435,6 +426,17 @@ export function ModernVinScanner({
             <div className="text-center text-white space-y-3">
               <RefreshCw className="w-12 h-12 animate-spin mx-auto" />
               <p className="text-sm font-medium">{t('modern_vin_scanner.scanning_vin', 'Scanning VIN...')}</p>
+              {progress > 0 && progress < 100 && (
+                <div className="w-64 mx-auto">
+                  <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-primary transition-all duration-300"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <p className="text-xs text-white/70 mt-1">{Math.round(progress)}%</p>
+                </div>
+              )}
             </div>
           </div>
         )}

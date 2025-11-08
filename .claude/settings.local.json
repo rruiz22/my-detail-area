@@ -74,7 +74,10 @@
       "Bash(if exist \"dist\" rmdir /s /q \"dist\")",
       "Bash(then echo \"✅ .env exists\")",
       "Bash(else echo \"❌ No .env file\")",
-      "Bash(then grep -i twilio .env)"
+      "Bash(then grep -i twilio .env)",
+      "Bash(translation-audit-report.txt)",
+      "Bash(then echo \"✓ .env exists\")",
+      "Bash(else echo \"✗ No .env file\")"
     ],
     "deny": [],
     "ask": []

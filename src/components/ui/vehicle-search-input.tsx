@@ -152,22 +152,22 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
       </div>
 
       {isOpen && results.length > 0 && (
-        <Card className="absolute top-full left-0 w-full sm:w-[500px] md:w-[600px] lg:w-[700px] z-50 mt-1 shadow-lg border border-border">
+        <Card className="absolute top-full left-0 w-full sm:w-[360px] lg:w-[420px] z-50 mt-1 shadow-lg border border-border">
           <CardContent className="p-0">
-            <div className="max-h-[400px] overflow-y-auto">
+            <div className="max-h-[280px] overflow-y-auto">
               {results.map((result, index) => (
                 <div
                   key={`${result.source}-${result.data.vin || result.data.stockNumber || index}`}
-                  className={`p-3 sm:p-4 cursor-pointer hover:bg-accent/50 border-b border-border/50 last:border-b-0 transition-colors ${
+                  className={`p-2 cursor-pointer hover:bg-accent/50 border-b border-border/50 last:border-b-0 transition-colors ${
                     index === selectedIndex ? 'bg-accent' : ''
                   }`}
                   onClick={() => handleResultSelect(result)}
                 >
-                  <div className="flex items-start gap-3 sm:gap-4">
+                  <div className="flex items-center gap-2">
                     {/* Vehicle Thumbnail */}
                     {result.data.imageUrl ? (
                       <div
-                        className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-md overflow-hidden border-2 border-border bg-background cursor-pointer hover:ring-2 hover:ring-primary transition-all"
+                        className="flex-shrink-0 w-12 h-12 rounded-md overflow-hidden border border-border bg-background cursor-pointer hover:ring-2 hover:ring-primary transition-all"
                         onClick={(e) => {
                           e.stopPropagation();
                           setExpandedImage(result.data.imageUrl!);
@@ -182,7 +182,7 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
                             if (e.currentTarget.parentElement) {
                               e.currentTarget.parentElement.innerHTML = `
                                 <div class="w-full h-full flex items-center justify-center bg-muted">
-                                  <svg class="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <svg class="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                   </svg>
                                 </div>
@@ -192,69 +192,54 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
                         />
                       </div>
                     ) : (
-                      <div className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-md border-2 border-border bg-muted flex items-center justify-center">
-                        <ImageIcon className="w-8 h-8 text-muted-foreground" />
+                      <div className="flex-shrink-0 w-12 h-12 rounded-md border border-border bg-muted flex items-center justify-center">
+                        <ImageIcon className="w-5 h-5 text-muted-foreground" />
                       </div>
                     )}
 
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <div className="flex items-center gap-1.5 mb-0.5">
                         {getSourceIcon(result.source)}
-                        <span className="font-semibold text-foreground text-sm sm:text-base">
+                        <span className="font-semibold text-foreground text-xs truncate">
                           {result.preview?.title}
                         </span>
                         <Badge
                           variant={getConfidenceBadgeVariant(result.confidence)}
-                          className="text-[10px] sm:text-xs"
+                          className="text-[10px]"
                         >
                           {t(`stock.autopop.confidence.${result.confidence}`)}
                         </Badge>
                       </div>
 
-                      {result.preview?.subtitle && (
-                        <p className="text-xs sm:text-sm text-muted-foreground mb-2">
-                          {result.preview.subtitle}
-                        </p>
-                      )}
-
-                      {/* Stock Number and VIN - More prominent */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2 text-xs sm:text-sm">
-                        {result.data.stockNumber && (
-                          <div className="bg-muted/50 rounded px-2 py-1">
-                            <span className="text-muted-foreground">Stock:</span>{' '}
-                            <span className="font-mono font-semibold text-foreground">{result.data.stockNumber}</span>
-                          </div>
-                        )}
-                        {result.data.vin && (
-                          <div className="bg-muted/50 rounded px-2 py-1 sm:col-span-1">
-                            <span className="text-muted-foreground">VIN:</span>{' '}
-                            <span className="font-mono font-medium text-foreground text-[10px] sm:text-xs truncate block">{result.data.vin}</span>
-                          </div>
-                        )}
+                      {/* Stock/VIN compacto en una línea */}
+                      <div className="text-[10px] text-muted-foreground truncate">
+                        {result.data.stockNumber && `Stock: ${result.data.stockNumber}`}
+                        {result.data.stockNumber && result.data.vin && ' • '}
+                        {result.data.vin && `VIN: ...${result.data.vin.slice(-8)}`}
                       </div>
 
                       {result.preview?.badge && (
                         <Badge
                           variant={result.preview.badgeVariant || 'secondary'}
-                          className="text-xs mt-2"
+                          className="text-[10px] mt-1"
                         >
                           {result.preview.badge}
                         </Badge>
                       )}
                     </div>
-                  </div>
 
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="w-full mt-3 h-8 text-xs sm:text-sm hover:bg-primary/10"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleResultSelect(result);
-                    }}
-                  >
-                    {t('stock.autopop.useVehicle', 'Use this vehicle')}
-                  </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-7 px-2 text-xs flex-shrink-0 hover:bg-primary/10"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleResultSelect(result);
+                      }}
+                    >
+                      Use
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>

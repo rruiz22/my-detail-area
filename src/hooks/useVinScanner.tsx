@@ -1,10 +1,7 @@
-import {
-    isValidVin,
-    normalizeVin,
-    VIN_LENGTH
-} from '@/utils/vinValidation';
+import { isValidVin, normalizeVin, VIN_LENGTH } from '@/utils/vinValidation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { VinOcrMessage, VinOcrResponse } from '@/workers/vinOcrWorker';
 
 interface VinScanResult {
   vins: string[];
@@ -12,125 +9,244 @@ interface VinScanResult {
   processingTime?: number;
   bestVin?: string;
   hasValidVin?: boolean;
-  method?: 'worker' | 'main-thread'; // Track which method was used
+  method?: 'worker' | 'main-thread';
 }
 
 interface VinScanOptions {
   language?: string;
   enableLogging?: boolean;
   timeout?: number;
-  useWebWorker?: boolean; // Option to use Web Worker (default: true for better performance)
 }
 
 interface UseVinScannerReturn {
   scanVin: (imageFile: Blob | File | string, options?: VinScanOptions) => Promise<string[]>;
   loading: boolean;
+  progress: number;
   error: string | null;
   lastScanResult?: VinScanResult;
+  cancelScan: () => void;
 }
 
+/**
+ * VIN Scanner Hook - Uses Web Worker for non-blocking OCR
+ *
+ * Features:
+ * - ✅ Web Worker for non-blocking UI
+ * - ✅ Real-time progress tracking
+ * - ✅ Scan cancellation support
+ * - ✅ Timeout handling (30s default)
+ * - ✅ Centralized VIN validation
+ *
+ * @example
+ * const { scanVin, loading, progress } = useVinScanner();
+ * const vins = await scanVin(imageBlob, { enableLogging: true });
+ */
 export function useVinScanner(): UseVinScannerReturn {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [lastScanResult, setLastScanResult] = useState<VinScanResult>();
-  const tesseractWorkerRef = useRef<any | null>(null);
-  const workerLanguageRef = useRef<string>('eng');
 
-  // Fallback: Use Tesseract in main thread
-  const ensureTesseractWorker = useCallback(async (language: string, enableLogging?: boolean) => {
-    const Tesseract = await import('tesseract.js');
+  const workerRef = useRef<Worker | null>(null);
+  const currentTaskIdRef = useRef<string | null>(null);
+  const resolveRef = useRef<((value: string[]) => void) | null>(null);
+  const rejectRef = useRef<((reason?: any) => void) | null>(null);
 
-    if (!tesseractWorkerRef.current) {
-      const worker = await Tesseract.createWorker({ logger: enableLogging ? console.log : undefined });
-      await worker.loadLanguage(language);
-      await worker.initialize(language);
-      tesseractWorkerRef.current = worker;
-      workerLanguageRef.current = language;
-    } else if (workerLanguageRef.current !== language) {
-      await tesseractWorkerRef.current.loadLanguage(language);
-      await tesseractWorkerRef.current.initialize(language);
-      workerLanguageRef.current = language;
+  /**
+   * Initialize Web Worker on first use
+   */
+  const initializeWorker = useCallback(() => {
+    if (!workerRef.current) {
+      try {
+        workerRef.current = new Worker(
+          new URL('@/workers/vinOcrWorker.ts', import.meta.url),
+          { type: 'module' }
+        );
+
+        // Handle messages from worker
+        workerRef.current.onmessage = (event: MessageEvent<VinOcrResponse>) => {
+          const { type, payload } = event.data;
+
+          // Only process messages for current task
+          if (payload.taskId !== currentTaskIdRef.current) return;
+
+          switch (type) {
+            case 'SCAN_PROGRESS':
+              setProgress(payload.progress || 0);
+              break;
+
+            case 'SCAN_RESULT':
+              setLoading(false);
+              setProgress(100);
+              setError(null);
+
+              const vins = payload.vins || [];
+              const bestVin = vins.find(isValidVin) || vins[0];
+
+              setLastScanResult({
+                vins,
+                confidence: payload.confidence,
+                processingTime: payload.processingTime,
+                bestVin,
+                hasValidVin: vins.some(isValidVin),
+                method: 'worker'
+              });
+
+              if (resolveRef.current) {
+                resolveRef.current(vins);
+                resolveRef.current = null;
+              }
+              break;
+
+            case 'SCAN_ERROR':
+              setLoading(false);
+              setProgress(0);
+              const errorMsg = payload.error || 'Unknown OCR error';
+              setError(errorMsg);
+
+              if (rejectRef.current) {
+                rejectRef.current(new Error(errorMsg));
+                rejectRef.current = null;
+              }
+              break;
+          }
+        };
+
+        // Handle worker errors
+        workerRef.current.onerror = (error) => {
+          console.error('[VIN Scanner] Worker error:', error);
+          setError('Worker initialization failed');
+          setLoading(false);
+
+          if (rejectRef.current) {
+            rejectRef.current(new Error('Worker error: ' + error.message));
+            rejectRef.current = null;
+          }
+        };
+      } catch (err) {
+        console.error('[VIN Scanner] Failed to initialize worker:', err);
+        throw new Error('Failed to initialize VIN scanner worker');
+      }
     }
-
-    return tesseractWorkerRef.current;
   }, []);
 
-  // Main thread scanning (current method, kept as fallback)
-  const scanVinMainThread = useCallback(async (
-    imageFile: Blob | File | string,
-    options: VinScanOptions = {}
-  ): Promise<string[]> => {
-    const startTime = Date.now();
-    const language = options.language || 'eng';
+  /**
+   * Generate unique task ID
+   */
+  const generateTaskId = useCallback((): string => {
+    return `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }, []);
 
-    const worker = await ensureTesseractWorker(language, options.enableLogging);
-
-    const { data } = await worker.recognize(imageFile, language, {
-      logger: options.enableLogging ? console.log : undefined
+  /**
+   * Convert File/Blob to base64 for worker transmission
+   */
+  const convertToBase64 = useCallback((file: File | Blob): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error('Failed to convert image to base64'));
+      reader.readAsDataURL(file);
     });
+  }, []);
 
-    const rawMatches = data.text.match(/[A-HJ-NPR-Z0-9]{8,}/gi) || [];
-    const candidates = rawMatches
-      .map(normalizeVin)
-      .filter((vin) => vin.length === VIN_LENGTH)
-      .map((vin) => ({ vin, valid: isValidVin(vin) }));
-
-    const ordered = [
-      ...candidates.filter((candidate) => candidate.valid).map((candidate) => candidate.vin),
-      ...candidates.filter((candidate) => !candidate.valid).map((candidate) => candidate.vin)
-    ];
-
-    const unique = Array.from(new Set(ordered));
-    const bestVin = unique.find(isValidVin) || unique[0];
-
-    const processingTime = Date.now() - startTime;
-    setLastScanResult({
-      vins: unique,
-      confidence: data.confidence,
-      processingTime,
-      bestVin,
-      hasValidVin: unique.some(isValidVin),
-      method: 'main-thread'
-    });
-
-    return unique;
-  }, [ensureTesseractWorker]);
-
+  /**
+   * Main VIN scanning function
+   */
   const scanVin = useCallback(async (
     imageFile: Blob | File | string,
     options: VinScanOptions = {}
   ): Promise<string[]> => {
-    setLoading(true);
     setError(null);
+    setProgress(0);
+    setLoading(true);
 
-    const timeout = options.timeout || 30000; // 30 seconds default timeout
-    const useWebWorker = options.useWebWorker === true; // Explicitly enable with option
+    const timeout = options.timeout || 30000; // 30 seconds default
 
     try {
-      // Create timeout promise
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error('VIN scan timeout')), timeout);
-      });
+      // Initialize worker if needed
+      initializeWorker();
+
+      if (!workerRef.current) {
+        throw new Error('Failed to initialize OCR worker');
+      }
+
+      // Convert image to base64 if needed
+      let imageData: string;
+      if (typeof imageFile === 'string') {
+        imageData = imageFile;
+      } else {
+        imageData = await convertToBase64(imageFile);
+      }
+
+      // Generate task ID
+      const taskId = generateTaskId();
+      currentTaskIdRef.current = taskId;
 
       if (options.enableLogging) {
-        console.log(`[VIN Scanner] ✅ ACTIVE - Using ${useWebWorker ? '⚡ Web Worker (non-blocking)' : '🔄 Main Thread'} method`);
+        console.log(`[VIN Scanner] ⚡ Starting Web Worker scan (task: ${taskId})`);
       }
 
-      // Currently using main thread method
-      // Web Worker can be enabled by passing useWebWorker: true in options
-      const scanPromise = scanVinMainThread(imageFile, options);
-      const unique = await Promise.race([scanPromise, timeoutPromise]);
+      // Send scan request to worker
+      const message: VinOcrMessage = {
+        type: 'SCAN_VIN',
+        payload: {
+          imageData,
+          options: {
+            language: options.language || 'eng',
+            enableLogging: options.enableLogging || false,
+            psm: 8 // Single word mode for VINs
+          },
+          taskId
+        }
+      };
 
-      if (unique.length === 0) {
-        setError(t('vin_scanner_errors.no_vin_found', 'No VIN detected in the image.'));
-      } else if (!unique.some(isValidVin)) {
-        setError(t('modern_vin_scanner.status_invalid', 'Scanned text is not a valid VIN. Please rescan.'));
-      }
+      workerRef.current.postMessage(message);
 
-      return unique;
+      // Return promise that resolves when worker responds
+      return new Promise((resolve, reject) => {
+        resolveRef.current = resolve;
+        rejectRef.current = reject;
+
+        // Timeout handling
+        const timeoutId = setTimeout(() => {
+          setLoading(false);
+          setProgress(0);
+          setError(t('vin_scanner_errors.timeout', 'VIN scan took too long. Please try again.'));
+
+          if (rejectRef.current) {
+            rejectRef.current(new Error('VIN scan timeout'));
+            rejectRef.current = null;
+            resolveRef.current = null;
+          }
+        }, timeout);
+
+        // Clear timeout when resolved/rejected
+        const originalResolve = resolveRef.current;
+        const originalReject = rejectRef.current;
+
+        resolveRef.current = (value) => {
+          clearTimeout(timeoutId);
+          if (originalResolve) originalResolve(value);
+        };
+
+        rejectRef.current = (reason) => {
+          clearTimeout(timeoutId);
+          if (originalReject) originalReject(reason);
+        };
+      }).then((vins: string[]) => {
+        // Validate results
+        if (vins.length === 0) {
+          setError(t('vin_scanner_errors.no_vin_found', 'No VIN detected in the image.'));
+        } else if (!vins.some(isValidVin)) {
+          setError(t('modern_vin_scanner.status_invalid', 'Scanned text is not a valid VIN. Please rescan.'));
+        }
+
+        return vins;
+      });
+
     } catch (err) {
-      console.error('VIN scanning error:', err);
+      console.error('[VIN Scanner] Error:', err);
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
 
       if (errorMessage.includes('timeout')) {
@@ -143,13 +259,36 @@ export function useVinScanner(): UseVinScannerReturn {
     } finally {
       setLoading(false);
     }
-  }, [scanVinMainThread, t]);
+  }, [initializeWorker, convertToBase64, generateTaskId, t]);
 
+  /**
+   * Cancel current scan
+   */
+  const cancelScan = useCallback(() => {
+    if (workerRef.current && currentTaskIdRef.current) {
+      const message: VinOcrMessage = {
+        type: 'CANCEL_SCAN',
+        payload: { taskId: currentTaskIdRef.current }
+      };
+
+      workerRef.current.postMessage(message);
+    }
+
+    setLoading(false);
+    setProgress(0);
+    currentTaskIdRef.current = null;
+    resolveRef.current = null;
+    rejectRef.current = null;
+  }, []);
+
+  /**
+   * Cleanup worker on unmount
+   */
   useEffect(() => {
     return () => {
-      if (tesseractWorkerRef.current) {
-        tesseractWorkerRef.current.terminate?.();
-        tesseractWorkerRef.current = null;
+      if (workerRef.current) {
+        workerRef.current.terminate();
+        workerRef.current = null;
       }
     };
   }, []);
@@ -157,7 +296,9 @@ export function useVinScanner(): UseVinScannerReturn {
   return {
     scanVin,
     loading,
+    progress,
     error,
-    lastScanResult
+    lastScanResult,
+    cancelScan
   };
 }
