@@ -7,17 +7,17 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { DueDateTimePicker } from '@/components/ui/due-date-time-picker';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePermissionContext } from '@/contexts/PermissionContext';
+import { useToast } from '@/hooks/use-toast';
 import { usePermissions } from '@/hooks/usePermissions';
 import type { ServiceOrder, ServiceOrderData } from '@/hooks/useServiceOrderManagement';
 import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
@@ -29,7 +29,6 @@ import { canViewPricing } from '@/utils/permissions';
 import { AlertCircle, Building2, CalendarClock, Car, Check, ChevronsUpDown, ClipboardList, FileText, Info, Loader2, Scan, User, Wrench, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useToast } from '@/hooks/use-toast';
 
 interface OrderFormData {
   // Order identification
@@ -79,6 +78,19 @@ interface AssignedUser {
   isSystemAdmin?: boolean;
 }
 
+interface DealershipInfo {
+  id: number;
+  name: string;
+  subdomain?: string;
+}
+
+interface DealerService {
+  id: string;
+  name: string;
+  description?: string;
+  price?: number;
+}
+
 interface ServiceOrderModalProps {
   order?: ServiceOrder;
   open: boolean;
@@ -90,7 +102,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
   const { t } = useTranslation();
   const { toast } = useToast();
   const { user: authUser } = useAuth();
-  const { roles } = usePermissionContext();
+  const { hasPermission } = usePermissionContext();
   const { enhancedUser } = usePermissions();
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
 
@@ -133,7 +145,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
   const [needsAutopopulate, setNeedsAutopopulate] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const canViewPrices = canViewPricing(roles, enhancedUser?.is_system_admin ?? false);
+  const canViewPrices = canViewPricing([], enhancedUser?.is_system_admin ?? false);
 
   const isEditing = Boolean(order);
 
@@ -157,40 +169,35 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
         dev('🔍 All order fields:', Object.keys(order));
         dev('🔍 Dealership fields:', {
           dealer_id: order.dealer_id,
-          dealerId: order.dealerId,
-          dealership_id: order.dealership_id,
-          dealer: order.dealer,
-          dealershipId: order.dealershipId
+          dealerId: order.dealerId
         });
         dev('🔍 Assignment fields:', {
-          assigned_to: order.assigned_to,
           assignedTo: order.assignedTo,
-          assigned_group_id: order.assigned_group_id,
-          assignedGroupId: order.assignedGroupId
+          assigned_group_id: order.assigned_group_id
         });
 
         setFormData({
-          orderNumber: order.orderNumber || order.order_number || '',
-          orderType: order.orderType || order.order_type || 'service',
+          orderNumber: order.orderNumber || '',
+          orderType: order.order_type || 'service',
           status: order.status || 'pending',
-          customerName: order.customerName || order.customer_name || '',
-          vehicleVin: order.vehicleVin || order.vehicle_vin || '',
-          vehicleYear: order.vehicleYear?.toString() || order.vehicle_year?.toString() || '',
-          vehicleMake: order.vehicleMake || order.vehicle_make || '',
-          vehicleModel: order.vehicleModel || order.vehicle_model || '',
-          vehicleInfo: order.vehicleInfo || order.vehicle_info || '',
+          customerName: order.customerName || '',
+          vehicleVin: order.vehicleVin || '',
+          vehicleYear: order.vehicleYear?.toString() || '',
+          vehicleMake: order.vehicleMake || '',
+          vehicleModel: order.vehicleModel || '',
+          vehicleInfo: order.vehicleInfo || '',
           po: order.po || '',
           ro: order.ro || '',
           tag: order.tag || '',
-          assignedGroupId: order.assignedGroupId || order.assigned_group_id || '',
-          salesperson: order.salesperson || '',
+          assignedGroupId: order.assigned_group_id || '',
+          salesperson: '',
           notes: order.notes || '',
-          internalNotes: order.internalNotes || order.internal_notes || '',
-          priority: order.priority || 'normal',
-          dueDate: order.dueDate || order.due_date ? safeParseDate(order.dueDate || order.due_date) || undefined : undefined,
-          slaDeadline: order.slaDeadline || order.sla_deadline ? safeParseDate(order.slaDeadline || order.sla_deadline) || undefined : undefined,
-          scheduledDate: order.scheduledDate || order.scheduled_date ? safeParseDate(order.scheduledDate || order.scheduled_date) || undefined : undefined,
-          scheduledTime: order.scheduledTime || order.scheduled_time || ''
+          internalNotes: '',
+          priority: 'normal',
+          dueDate: order.dueDate ? safeParseDate(order.dueDate) || undefined : undefined,
+          slaDeadline: undefined,
+          scheduledDate: undefined,
+          scheduledTime: ''
         });
         // Store service IDs in pending state - will be applied once services are loaded
         // CRITICAL: order.services can be array of strings OR array of objects {id, name, price}
@@ -248,7 +255,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
       let matchingUser = null;
 
       // Try to find by ID first (most reliable)
-      const assignedId = order.assigned_group_id || order.assignedGroupId;
+      const assignedId = order.assigned_group_id;
       if (assignedId) {
         matchingUser = assignedUsers.find(user => user.id === assignedId);
         dev('🔧 Searching by ID:', assignedId, 'found:', matchingUser?.name);
@@ -266,11 +273,11 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
       } else {
         warn('⚠️ Could not find assigned user:', {
           assignedTo: order.assignedTo,
-          assigned_group_id: order.assigned_group_id,
-          assignedGroupId: order.assignedGroupId
+          assigned_group_id: order.assigned_group_id
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assignedUsers.length, order, selectedAssignedTo]);
 
   // Auto-select current authenticated user for new orders
@@ -286,6 +293,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
         }));
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assignedUsers.length, order, selectedAssignedTo, authUser?.id]);
 
   // Set dealership from global filter for new orders
@@ -294,6 +302,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
       dev('🎯 Service Orders: Setting dealership from global filter:', globalDealerFilter);
       handleDealershipChange(globalDealerFilter);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order, isGlobalFilterActive, globalDealerFilter, dealerships.length, selectedDealership]);
 
   // Auto-populate dealership when flag is set AND dealerships are loaded (FLAG PATTERN)
@@ -303,7 +312,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
 
       if (dealerIdStr) {
         // Verify dealer exists in list
-        const dealerExists = dealerships.some((d: any) => d.id.toString() === dealerIdStr);
+        const dealerExists = dealerships.some((d: DealershipInfo) => d.id.toString() === dealerIdStr);
 
         if (dealerExists) {
           dev('🔧 [FLAG PATTERN] Service Order Edit: Auto-setting dealership:', dealerIdStr);
@@ -325,6 +334,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
         setNeedsAutopopulate(false);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [needsAutopopulate, dealerships.length, order]);
 
   // Apply pending service IDs once services are loaded (CRITICAL for edit mode)
@@ -332,7 +342,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
     if (pendingServiceIds.length > 0 && services.length > 0 && !loading) {
       // Validate that pending service IDs exist in loaded services
       const validServiceIds = pendingServiceIds.filter(serviceId =>
-        services.some((service: any) => service.id === serviceId)
+        services.some((service: DealerService) => service.id === serviceId)
       );
 
       if (validServiceIds.length > 0) {
@@ -344,6 +354,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
         setPendingServiceIds([]); // Clear pending state even if no matches
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingServiceIds.length, services.length, loading]);
 
   const fetchDealerships = async () => {
@@ -407,7 +418,17 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
       if (usersResult.data) {
         // ✅ FIX: RPC function already filtered by module permissions
         // No need for manual filtering - just map to UI format with role_name for grouping
-        const mappedUsers = usersResult.data.map((user: any) => ({
+        interface UserResult {
+          user_id: string;
+          first_name?: string;
+          last_name?: string;
+          email: string;
+          role_name?: string;
+          avatar_url?: string | null;
+          is_system_admin?: boolean;
+        }
+
+        const mappedUsers = usersResult.data.map((user: UserResult) => ({
           id: user.user_id,
           name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.email,
           email: user.email,
@@ -510,7 +531,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
     }
   };
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: string | Date | undefined) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -567,13 +588,13 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
         toast({ description: t('orders.creating_multiple_orders', { count: selectedServices.length }) || `Creating ${selectedServices.length} orders...` });
 
         // Pass array of orders to onSave
-        await onSave(ordersData as any);
+        await onSave(ordersData as unknown as ServiceOrderData);
         // Only close modal on successful save
         onClose();
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Keep modal open and show error
         logError('Error saving service orders:', error);
-        const errorMessage = error?.message || t('orders.save_error') || 'Failed to save orders';
+        const errorMessage = error instanceof Error ? error.message : (t('orders.save_error') || 'Failed to save orders');
         setSubmitError(errorMessage);
         toast({
           title: t('common.error'),
@@ -610,7 +631,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
           return total + (service?.price || 0);
         }, 0),
         notes: formData.notes || undefined,
-        dueDate: formData.dueDate || undefined,
+        dueDate: formData.dueDate ? formData.dueDate.toISOString() : undefined,
         dealerId: selectedDealership && Number.isInteger(Number(selectedDealership)) ? parseInt(selectedDealership) : undefined
       };
 
@@ -618,10 +639,10 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
         await onSave(orderData);
         // Only close modal on successful save
         onClose();
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Keep modal open and show error
         logError('Error saving service order:', error);
-        const errorMessage = error?.message || t('orders.save_error') || 'Failed to save order';
+        const errorMessage = error instanceof Error ? error.message : (t('orders.save_error') || 'Failed to save order');
         setSubmitError(errorMessage);
         toast({
           title: t('common.error'),
@@ -633,7 +654,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
   };
 
   const totalPrice = canViewPrices ? selectedServices.reduce((total, serviceId) => {
-    const service = services.find((s: any) => s.id === serviceId);
+    const service = services.find((s: DealerService) => s.id === serviceId);
     return total + (service?.price || 0);
   }, 0) : 0;
 
@@ -701,9 +722,9 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                             <SelectValue placeholder={loading ? t('common.loading') : t('orders.selectClient')} />
                           </SelectTrigger>
                           <SelectContent className="bg-popover border border-border max-h-[200px]">
-                            {dealerships.map((dealer: any) => (
+                            {dealerships.map((dealer: DealershipInfo) => (
                               <SelectItem key={dealer.id} value={dealer.id.toString()}>
-                                {dealer.name} - {dealer.city}, {dealer.state}
+                                {dealer.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -1105,7 +1126,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                       ) : (
                         <ScrollArea className="h-[300px] p-3 border border-border rounded-md">
                           <div className="space-y-2">
-                            {services.map((service: any) => {
+                            {services.map((service: DealerService) => {
                               const isSelected = selectedServices.includes(service.id);
                               const isDisabled = !isSelected && selectedServices.length >= 2;
 

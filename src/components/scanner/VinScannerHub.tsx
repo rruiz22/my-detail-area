@@ -40,6 +40,7 @@ interface VinScannerHubProps {
 
 export function VinScannerHub({ className, onVinSelected }: VinScannerHubProps) {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const [scannerOpen, setScannerOpen] = useState(false);
   const [selectedVin, setSelectedVin] = useState('');
   const [activeTab, setActiveTab] = useState('scanner');

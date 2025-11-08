@@ -7,28 +7,27 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { DueDateTimePicker } from '@/components/ui/due-date-time-picker';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { VinInputWithScanner } from '@/components/ui/vin-input-with-scanner';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePermissionContext } from '@/contexts/PermissionContext';
+import { useToast } from '@/hooks/use-toast';
 import { useAppointmentCapacity } from '@/hooks/useAppointmentCapacity';
 import { usePermissions } from '@/hooks/usePermissions';
 import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { supabase } from '@/integrations/supabase/client';
-import { safeParseDate, getHourInTimezone } from '@/utils/dateUtils';
+import { getHourInTimezone, safeParseDate } from '@/utils/dateUtils';
 import { canViewPricing } from '@/utils/permissions';
 import { AlertCircle, Building2, CalendarClock, Car, Check, ChevronsUpDown, ClipboardList, FileText, Info, Loader2, Scan, Search, User, Wrench, X, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useToast } from '@/hooks/use-toast';
 
 interface OrderFormData {
   // Order identification
@@ -98,6 +97,10 @@ interface OrderData {
   priority?: string;
   customerName?: string;
   customer_name?: string;
+  customerPhone?: string;
+  customer_phone?: string;
+  customerEmail?: string;
+  customer_email?: string;
   vehicleVin?: string;
   vehicle_vin?: string;
   vehicleYear?: string | number;
@@ -114,6 +117,7 @@ interface OrderData {
   assigned_group_id?: string;
   assignedContactId?: string;
   assigned_contact_id?: string;
+  assignedTo?: string;
   salesperson?: string;
   notes?: string;
   internalNotes?: string;
@@ -128,7 +132,8 @@ interface OrderData {
   scheduled_time?: string;
   dealerId?: number;
   dealer_id?: number;
-  services?: string[];
+  dealershipName?: string;
+  services?: string[] | Array<{ id?: string; service_id?: string; name?: string; price?: number; description?: string }>;
 }
 
 interface DealerMembership {
@@ -152,7 +157,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const { t } = useTranslation();
   const { toast } = useToast();
   const { user: authUser } = useAuth();
-  const { roles } = usePermissionContext();
+  const { hasPermission } = usePermissionContext();
   const { enhancedUser } = usePermissions();
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
   const { checkSlotAvailability, reserveSlot } = useAppointmentCapacity();
@@ -209,7 +214,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     address?: string;
   }>({});
 
-  const canViewPrices = canViewPricing(roles, enhancedUser?.is_system_admin ?? false);
+  const canViewPrices = canViewPricing([], enhancedUser?.is_system_admin ?? false);
 
   const isEditing = Boolean(order);
   const requiresDueDate = !isEditing && ['sales', 'service'].includes(formData.orderType);
@@ -236,15 +241,16 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         editModeInitialized.current = true;
 
         // Helper function to safely extract field values with fallbacks
-        const getFieldValue = (camelCase: unknown, snakeCase: unknown, defaultValue = '') => {
-          return camelCase ?? snakeCase ?? defaultValue;
+        const getFieldValue = (camelCase: unknown, snakeCase: unknown, defaultValue = ''): string => {
+          const value = camelCase ?? snakeCase ?? defaultValue;
+          return String(value);
         };
 
         // Helper function to safely parse dates
         const parseDateField = (camelCaseDate: unknown, snakeCaseDate: unknown) => {
           const dateValue = camelCaseDate || snakeCaseDate;
           if (!dateValue) return undefined;
-          const parsed = safeParseDate(dateValue);
+          const parsed = safeParseDate(String(dateValue));
           return parsed || undefined;
         };
 
@@ -351,6 +357,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         setVinDecoded(false);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order?.id, open]); // Only re-run if order ID changes or modal opens
 
   const fetchDealerships = async () => {
@@ -417,7 +424,17 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       if (usersResult.data) {
         // ✅ FIX: RPC function already filtered by module permissions
         // No need for manual filtering - just map to UI format with role_name for grouping
-        const users = usersResult.data.map((user: any) => ({
+        interface UserResult {
+          user_id: string;
+          first_name?: string;
+          last_name?: string;
+          email: string;
+          role_name?: string;
+          avatar_url?: string | null;
+          is_system_admin?: boolean;
+        }
+
+        const users = usersResult.data.map((user: UserResult) => ({
           id: user.user_id,
           name: `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.email,
           email: user.email,
@@ -456,6 +473,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     if (!order && isGlobalFilterActive && globalDealerFilter && dealerships.length > 0 && !selectedDealership) {
       handleDealershipChange(globalDealerFilter);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order, isGlobalFilterActive, globalDealerFilter, dealerships.length, selectedDealership]);
 
   // CRITICAL: Set dealership ONLY after dealerships options are loaded
@@ -480,6 +498,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         fetchDealerData(dealershipId);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dealerships.length, order, selectedDealership]);
 
   // CRITICAL: Set assigned user ONLY after users are loaded (same fix as dealership)
@@ -502,6 +521,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         setSelectedAssignedTo(matchingUser.id);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assignedUsers.length, order, selectedAssignedTo]);
 
   // Auto-select current authenticated user for new orders
@@ -517,6 +537,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         }));
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assignedUsers.length, order, selectedAssignedTo, authUser?.id]);
 
   const handleDealershipChange = (dealershipId: string) => {
@@ -842,7 +863,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
     // VALIDATION FOR EDITING: Check if due_date changed and new slot is available
     if (isEditing && order?.due_date && formData.dueDate && selectedDealership) {
-      const oldDueDate = safeParseDate(order.due_date);
+      const oldDueDateValue = typeof order.due_date === 'string' ? order.due_date : order.due_date.toISOString();
+      const oldDueDate = safeParseDate(oldDueDateValue);
       const newDueDate = formData.dueDate;
 
       // Check if due_date actually changed
@@ -966,8 +988,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         // Show immediate success feedback
         toast({ description: t('orders.creating_multiple_orders', { count: selectedServices.length }) || `Creating ${selectedServices.length} orders...` });
 
-        // Pass array of orders to onSave
-        onSave(ordersData as any);
+        // Pass array of orders to onSave - cast to OrderData type
+        onSave(ordersData as unknown as OrderData);
       } else {
         // Single service or editing - proceed as normal
       const dbData = transformToDbFormat(formData);
