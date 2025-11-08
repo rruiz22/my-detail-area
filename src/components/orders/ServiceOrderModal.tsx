@@ -10,6 +10,7 @@ import { DueDateTimePicker } from '@/components/ui/due-date-time-picker';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
@@ -25,7 +26,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { safeParseDate } from '@/utils/dateUtils';
 import { dev, error as logError, warn } from '@/utils/logger';
 import { canViewPricing } from '@/utils/permissions';
-import { AlertCircle, Check, ChevronsUpDown, Loader2, Zap } from 'lucide-react';
+import { AlertCircle, Building2, CalendarClock, Car, Check, ChevronsUpDown, ClipboardList, FileText, Info, Loader2, Scan, User, Wrench, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
@@ -664,43 +665,55 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
 
               {/* Dealership & Customer Information */}
               <Card className="border-border">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">{t('sales_orders.dealership')} & {t('orders.clientInfo')}</CardTitle>
+                <CardHeader className="pb-3 bg-muted/30">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Building2 className="h-4 w-4 text-primary" />
+                    {t('sales_orders.dealership')} & {t('orders.clientInfo')}
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <Label htmlFor="dealership">
-                        {t('sales_orders.dealership')} <span className="text-red-500">*</span>
-                      </Label>
-                      {isDealerFieldReadOnly && (
-                        <Badge variant="secondary" className="text-xs">
-                          {t('dealerships.auto_selected')}
-                        </Badge>
-                      )}
+                <CardContent className="space-y-4">
+                  {/* Box 1: Dealership & Assignment */}
+                  <div className="relative p-4 bg-gradient-to-br from-indigo-50 to-indigo-50/30 rounded-lg border-2 border-indigo-200">
+                    <div className="absolute -top-3 left-3 px-2 bg-background">
+                      <Badge variant="outline" className="border-indigo-300 text-indigo-700 font-semibold flex items-center gap-1">
+                        <Building2 className="h-3 w-3" />
+                        {t('service_orders.dealership_assignment')}
+                      </Badge>
                     </div>
-                    <Select
-                      value={selectedDealership}
-                      onValueChange={handleDealershipChange}
-                      disabled={loading || isDealerFieldReadOnly}
-                    >
-                      <SelectTrigger className="border-input bg-background">
-                        <SelectValue placeholder={loading ? t('common.loading') : t('orders.selectClient')} />
-                      </SelectTrigger>
-                      <SelectContent className="bg-popover border border-border max-h-[200px]">
-                        {dealerships.map((dealer: any) => (
-                          <SelectItem key={dealer.id} value={dealer.id.toString()}>
-                            {dealer.name} - {dealer.city}, {dealer.state}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                    <div className="space-y-3 mt-2">
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <Label htmlFor="dealership">
+                            {t('sales_orders.dealership')} <span className="text-red-500">*</span>
+                          </Label>
+                          {isDealerFieldReadOnly && (
+                            <Badge variant="secondary" className="text-xs">
+                              {t('dealerships.auto_selected')}
+                            </Badge>
+                          )}
+                        </div>
+                        <Select
+                          value={selectedDealership}
+                          onValueChange={handleDealershipChange}
+                          disabled={loading || isDealerFieldReadOnly}
+                        >
+                          <SelectTrigger className="border-input bg-background">
+                            <SelectValue placeholder={loading ? t('common.loading') : t('orders.selectClient')} />
+                          </SelectTrigger>
+                          <SelectContent className="bg-popover border border-border max-h-[200px]">
+                            {dealerships.map((dealer: any) => (
+                              <SelectItem key={dealer.id} value={dealer.id.toString()}>
+                                {dealer.name} - {dealer.city}, {dealer.state}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                   <div>
-                     <Label htmlFor="assignedTo">
-                       {t('sales_orders.assigned_to')} <span className="text-red-500">*</span>
-                     </Label>
+                      <div>
+                        <Label htmlFor="assignedTo">
+                          {t('sales_orders.assigned_to')} <span className="text-red-500">*</span>
+                        </Label>
                      <Popover open={assignedToPopoverOpen} onOpenChange={setAssignedToPopoverOpen}>
                        <PopoverTrigger asChild>
                          <Button
@@ -837,58 +850,70 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                          </Command>
                        </PopoverContent>
                      </Popover>
-                   </div>
+                      </div>
+                    </div>
+                  </div>
 
-                  <Separator />
+                  {/* Box 2: Customer Details */}
+                  <div className="relative p-4 bg-gradient-to-br from-rose-50 to-rose-50/30 rounded-lg border-2 border-rose-200">
+                    <div className="absolute -top-3 left-3 px-2 bg-background">
+                      <Badge variant="outline" className="border-rose-300 text-rose-700 font-semibold flex items-center gap-1">
+                        <User className="h-3 w-3" />
+                        {t('service_orders.customer_details')}
+                      </Badge>
+                    </div>
+                    <div className="space-y-3 mt-2">
+                      <div>
+                        <Label htmlFor="customerName">
+                          {t('orders.customerName')} <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                          id="customerName"
+                          value={formData.customerName}
+                          onChange={(e) => handleInputChange('customerName', e.target.value)}
+                          className="border-input bg-background"
+                          required
+                        />
+                      </div>
 
-                   <div>
-                     <Label htmlFor="customerName">
-                       {t('orders.customerName')} <span className="text-red-500">*</span>
-                     </Label>
-                     <Input
-                       id="customerName"
-                       value={formData.customerName}
-                       onChange={(e) => handleInputChange('customerName', e.target.value)}
-                       className="border-input bg-background"
-                       required
-                     />
-                   </div>
+                      <div>
+                        <Label htmlFor="customerPhone">
+                          {t('forms.labels.phone')} <span className="text-muted-foreground text-xs">({t('common.optional')})</span>
+                        </Label>
+                        <Input
+                          id="customerPhone"
+                          type="tel"
+                          value={formData.customerPhone || ''}
+                          onChange={(e) => handleInputChange('customerPhone', e.target.value)}
+                          className="border-input bg-background"
+                          placeholder="(555) 123-4567"
+                        />
+                      </div>
 
-                   <div>
-                     <Label htmlFor="customerPhone">
-                       {t('forms.labels.phone')} <span className="text-muted-foreground text-xs">({t('common.optional')})</span>
-                     </Label>
-                     <Input
-                       id="customerPhone"
-                       type="tel"
-                       value={formData.customerPhone || ''}
-                       onChange={(e) => handleInputChange('customerPhone', e.target.value)}
-                       className="border-input bg-background"
-                       placeholder="(555) 123-4567"
-                     />
-                   </div>
-
-                   <div>
-                     <Label htmlFor="customerEmail">
-                       {t('forms.labels.email')} <span className="text-muted-foreground text-xs">({t('common.optional')})</span>
-                     </Label>
-                     <Input
-                       id="customerEmail"
-                       type="email"
-                       value={formData.customerEmail || ''}
-                       onChange={(e) => handleInputChange('customerEmail', e.target.value)}
-                       className="border-input bg-background"
-                       placeholder="customer@example.com"
-                     />
-                   </div>
+                      <div>
+                        <Label htmlFor="customerEmail">
+                          {t('forms.labels.email')} <span className="text-muted-foreground text-xs">({t('common.optional')})</span>
+                        </Label>
+                        <Input
+                          id="customerEmail"
+                          type="email"
+                          value={formData.customerEmail || ''}
+                          onChange={(e) => handleInputChange('customerEmail', e.target.value)}
+                          className="border-input bg-background"
+                          placeholder="customer@example.com"
+                        />
+                      </div>
+                    </div>
+                  </div>
 
                 </CardContent>
               </Card>
 
               {/* Vehicle Information with VIN Decoding */}
-              <Card className="border-border">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <Card className="border-border shadow-md">
+                <CardHeader className="pb-3 bg-emerald-50/30">
+                  <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                    <Car className="h-4 w-4 text-emerald-600" />
                     {t('orders.vehicleInfo')}
                     {vinDecoded && <Badge variant="secondary" className="bg-success text-success-foreground">
                       <Zap className="w-3 h-3 mr-1" />
@@ -896,222 +921,271 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                     </Badge>}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  {/* Service Order Specific Fields - PO, RO, TAG */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <Label htmlFor="po">
-                        {t('service_orders.po_number')} <span className="text-red-500">*</span>
-                      </Label>
-                      <Input
-                        id="po"
-                        value={formData.po}
-                        onChange={(e) => handleInputChange('po', e.target.value.toUpperCase())}
-                        className="border-input bg-background uppercase"
-                        placeholder="001"
-                        required
-                      />
+                <CardContent className="space-y-4">
+                  {/* Box 1: Order Identifiers (PO/RO/TAG) */}
+                  <div className="relative p-4 bg-gradient-to-br from-blue-50 to-blue-50/30 rounded-lg border-2 border-blue-200">
+                    <div className="absolute -top-3 left-3 px-2 bg-background">
+                      <Badge variant="outline" className="border-blue-300 text-blue-700 font-semibold">
+                        {t('service_orders.order_identifiers')}
+                      </Badge>
                     </div>
-
-                    <div>
-                      <Label htmlFor="ro">
-                        {t('service_orders.ro_number')} <span className="text-red-500">*</span>
-                      </Label>
-                      <Input
-                        id="ro"
-                        value={formData.ro}
-                        onChange={(e) => handleInputChange('ro', e.target.value.toUpperCase())}
-                        className="border-input bg-background uppercase"
-                        placeholder="001"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="tag">
-                        {t('service_orders.tag_number')} <span className="text-red-500">*</span>
-                      </Label>
-                      <Input
-                        id="tag"
-                        value={formData.tag}
-                        onChange={(e) => handleInputChange('tag', e.target.value.toUpperCase())}
-                        className="border-input bg-background uppercase"
-                        placeholder="001"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <Separator />
-
-                  <div>
-                    <Label htmlFor="vehicleVin" className="flex items-center gap-2">
-                      {t('orders.vin')} <span className="text-red-500">*</span>
-                      {vinLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-                    </Label>
-                    <VinInputWithScanner
-                      id="vehicleVin"
-                      name="vehicleVin"
-                      value={formData.vehicleVin}
-                      onChange={(e) => handleVinChange(e.target.value.toUpperCase())}
-                      onVinScanned={(vin) => handleVinChange(vin.toUpperCase())}
-                      className={selectedVehicle ? "border-input bg-muted/30 font-mono uppercase" : "border-input bg-background font-mono uppercase"}
-                      disabled={!!selectedVehicle}
-                    />
-                    {vinError && (
-                      <div className="flex items-center gap-1 text-sm text-destructive mt-1">
-                        <AlertCircle className="w-3 h-3" />
-                        {vinError}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
+                      <div>
+                        <Label htmlFor="po">
+                          {t('service_orders.po_number')} <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                          id="po"
+                          value={formData.po}
+                          onChange={(e) => handleInputChange('po', e.target.value.toUpperCase())}
+                          className="border-input bg-background uppercase"
+                          placeholder="001"
+                          required
+                        />
                       </div>
-                    )}
-                    {selectedVehicle && (
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}
-                      </p>
-                    )}
+
+                      <div>
+                        <Label htmlFor="ro">
+                          {t('service_orders.ro_number')} <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                          id="ro"
+                          value={formData.ro}
+                          onChange={(e) => handleInputChange('ro', e.target.value.toUpperCase())}
+                          className="border-input bg-background uppercase"
+                          placeholder="001"
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="tag">
+                          {t('service_orders.tag_number')} <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                          id="tag"
+                          value={formData.tag}
+                          onChange={(e) => handleInputChange('tag', e.target.value.toUpperCase())}
+                          className="border-input bg-background uppercase"
+                          placeholder="001"
+                          required
+                        />
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Consolidated Vehicle Info */}
-                  <div>
-                    <Label htmlFor="vehicleInfo">{t('sales_orders.vehicle')}</Label>
-                    <Input
-                      id="vehicleInfo"
-                      value={formData.vehicleInfo}
-                      onChange={(e) => handleInputChange('vehicleInfo', e.target.value)}
-                      className={selectedVehicle ? "border-input bg-muted/30" : "border-input bg-background"}
-                      placeholder="2025 Honda Accord EX-L"
-                      readOnly={!!selectedVehicle}
-                    />
-                    {selectedVehicle && (
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}
-                      </p>
-                    )}
+                  {/* Box 2: Vehicle Identification (VIN + Vehicle Info) */}
+                  <div className="relative p-4 bg-gradient-to-br from-purple-50 to-purple-50/30 rounded-lg border-2 border-purple-200">
+                    <div className="absolute -top-3 left-3 px-2 bg-background">
+                      <Badge variant="outline" className="border-purple-300 text-purple-700 font-semibold flex items-center gap-1">
+                        <Scan className="h-3 w-3" />
+                        {t('service_orders.vehicle_identification')}
+                      </Badge>
+                    </div>
+                    <div className="space-y-3 mt-2">
+                      <div>
+                        <Label htmlFor="vehicleVin" className="flex items-center gap-2">
+                          {t('orders.vin')} <span className="text-red-500">*</span>
+                          {vinLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                        </Label>
+                        <VinInputWithScanner
+                          id="vehicleVin"
+                          name="vehicleVin"
+                          value={formData.vehicleVin}
+                          onChange={(e) => handleVinChange(e.target.value.toUpperCase())}
+                          onVinScanned={(vin) => handleVinChange(vin.toUpperCase())}
+                          className={selectedVehicle ? "border-input bg-muted/30 font-mono uppercase" : "border-input bg-background font-mono uppercase"}
+                          disabled={!!selectedVehicle}
+                        />
+                        {vinError && (
+                          <div className="flex items-center gap-1 text-sm text-destructive mt-1">
+                            <AlertCircle className="w-3 h-3" />
+                            {vinError}
+                          </div>
+                        )}
+                        {selectedVehicle && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Consolidated Vehicle Info */}
+                      <div>
+                        <Label htmlFor="vehicleInfo">{t('sales_orders.vehicle')}</Label>
+                        <Input
+                          id="vehicleInfo"
+                          value={formData.vehicleInfo}
+                          onChange={(e) => handleInputChange('vehicleInfo', e.target.value)}
+                          className={selectedVehicle ? "border-input bg-muted/30" : "border-input bg-background"}
+                          placeholder=""
+                          readOnly={!!selectedVehicle}
+                        />
+                        {selectedVehicle && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </div>
 
-                  <Separator />
-
-                   {/* Due Date & Time Section */}
-                   <div className="space-y-4">
-                     <Label className="text-base font-medium">
-                       {t('due_date.title')} <span className="text-red-500">*</span>
-                     </Label>
-                     <div>
-                       <DueDateTimePicker
-                         value={formData.dueDate}
-                         onChange={(date) => handleInputChange('dueDate', date)}
-                         placeholder={t('due_date.date_placeholder')}
-                         enforceBusinessRules={!isEditing}
-                       />
-                     </div>
-                     <div className="text-xs text-muted-foreground">
-                       {t('due_date.validation.business_hours_only')}
-                     </div>
-                   </div>
+                  {/* Box 3: Schedule (Due Date & Time) */}
+                  <div className="relative p-4 bg-gradient-to-br from-amber-50 to-amber-50/30 rounded-lg border-2 border-amber-200">
+                    <div className="absolute -top-3 left-3 px-2 bg-background">
+                      <Badge variant="outline" className="border-amber-300 text-amber-700 font-semibold flex items-center gap-1">
+                        <CalendarClock className="h-3 w-3" />
+                        {t('due_date.title')}
+                      </Badge>
+                    </div>
+                    <div className="space-y-3 mt-2">
+                      <div>
+                        <DueDateTimePicker
+                          value={formData.dueDate}
+                          onChange={(date) => handleInputChange('dueDate', date)}
+                          placeholder={t('due_date.date_placeholder')}
+                          enforceBusinessRules={!isEditing}
+                        />
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {t('due_date.validation.business_hours_only')}
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
 
               {/* Services & Notes */}
               <Card className="border-border">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">{t('orders.servicesAndNotes')}</CardTitle>
+                <CardHeader className="pb-3 bg-muted/20">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <ClipboardList className="h-4 w-4 text-muted-foreground" />
+                    {t('orders.servicesAndNotes')}
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <Label className="text-sm font-medium">
-                        {t('orders.services')} <span className="text-red-500">*</span>
-                        {selectedDealership && services.length > 0 && (
-                          <span className="text-muted-foreground ml-1">
-                            ({services.length} {t('orders.available')})
-                          </span>
-                        )}
-                      </Label>
-                      <Badge variant={selectedServices.length >= 2 ? "default" : "secondary"} className="text-xs">
-                        {selectedServices.length}/2 {t('orders.selected')}
+                <CardContent className="space-y-4">
+                  {/* Box 3: Service Selection */}
+                  <div className="relative p-4 bg-gradient-to-br from-emerald-50 to-emerald-50/30 rounded-lg border-2 border-emerald-200">
+                    <div className="absolute -top-3 left-3 px-2 bg-background">
+                      <Badge variant="outline" className="border-emerald-300 text-emerald-700 font-semibold flex items-center gap-1">
+                        <Wrench className="h-3 w-3" />
+                        {t('service_orders.service_selection')}
                       </Badge>
                     </div>
-
-                    {/* Service limit info message */}
-                    {selectedServices.length >= 2 && (
-                      <div className="p-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800 mb-2">
-                        {t('orders.max_services_info', 'Maximum 2 services reached. Uncheck a service to select another.')}
+                    <div className="space-y-3 mt-2">
+                      <div className="flex items-center justify-between">
+                        <Label className="text-sm font-medium">
+                          {t('orders.services')} <span className="text-red-500">*</span>
+                          {selectedDealership && services.length > 0 && (
+                            <span className="text-muted-foreground ml-1">
+                              ({services.length} {t('orders.available')})
+                            </span>
+                          )}
+                        </Label>
+                        <Badge variant={selectedServices.length >= 2 ? "default" : "secondary"} className="text-xs">
+                          {selectedServices.length}/2 {t('orders.selected')}
+                        </Badge>
                       </div>
-                    )}
 
-                    {!selectedDealership ? (
-                      <div className="text-sm text-muted-foreground mt-2 p-3 bg-muted rounded-md">
-                        {t('orders.selectDealershipFirst')}
-                      </div>
-                    ) : services.length === 0 ? (
-                      <div className="text-sm text-muted-foreground mt-2 p-3 bg-muted rounded-md">
-                        {loading ? t('common.loading') : t('orders.noServicesAvailable')}
-                      </div>
-                    ) : (
-                      <ScrollArea className="h-[300px] mt-2 p-3 border border-border rounded-md">
-                        <div className="space-y-2">
-                          {services.map((service: any) => {
-                            const isSelected = selectedServices.includes(service.id);
-                            const isDisabled = !isSelected && selectedServices.length >= 2;
+                      {/* Service limit info message */}
+                      {selectedServices.length >= 2 && (
+                        <div className="p-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800">
+                          {t('orders.max_services_info', 'Maximum 2 services reached. Uncheck a service to select another.')}
+                        </div>
+                      )}
 
-                            return (
-                              <div key={service.id} className={`flex items-center space-x-3 p-2 rounded-md transition-colors ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/10'}`}>
-                                <Checkbox
-                                  id={service.id}
-                                  checked={isSelected}
-                                  onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
-                                  disabled={isDisabled}
-                                />
-                                <div className="flex-1 min-w-0">
-                                  <Label htmlFor={service.id} className="text-sm font-medium cursor-pointer">
-                                    {service.name}
-                                  </Label>
-                                  {service.description && (
-                                    <div className="text-xs text-muted-foreground mt-1">
-                                      {service.description}
+                      {!selectedDealership ? (
+                        <div className="text-sm text-muted-foreground p-3 bg-muted rounded-md">
+                          {t('orders.selectDealershipFirst')}
+                        </div>
+                      ) : services.length === 0 ? (
+                        <div className="text-sm text-muted-foreground p-3 bg-muted rounded-md">
+                          {loading ? t('common.loading') : t('orders.noServicesAvailable')}
+                        </div>
+                      ) : (
+                        <ScrollArea className="h-[300px] p-3 border border-border rounded-md">
+                          <div className="space-y-2">
+                            {services.map((service: any) => {
+                              const isSelected = selectedServices.includes(service.id);
+                              const isDisabled = !isSelected && selectedServices.length >= 2;
+
+                              return (
+                                <div key={service.id} className={`flex items-center space-x-3 p-2 rounded-md transition-colors ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/10'}`}>
+                                  <Checkbox
+                                    id={service.id}
+                                    checked={isSelected}
+                                    onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
+                                    disabled={isDisabled}
+                                  />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-1.5">
+                                      <Label htmlFor={service.id} className="text-sm font-medium cursor-pointer">
+                                        {service.name}
+                                      </Label>
+
+                                      {(service.description || (canViewPrices && service.price)) && (
+                                        <HoverCard openDelay={200} closeDelay={100}>
+                                          <HoverCardTrigger asChild>
+                                            <Info className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground cursor-help transition-colors" />
+                                          </HoverCardTrigger>
+                                          <HoverCardContent side="right" className="w-72 p-3">
+                                            {service.description && (
+                                              <p className="text-xs text-muted-foreground mb-2">
+                                                {service.description}
+                                              </p>
+                                            )}
+                                            {canViewPrices && service.price && (
+                                              <div className="flex items-center gap-1.5 text-xs">
+                                                <span className="font-medium">{t('services.price')}:</span>
+                                                <span className="font-semibold text-emerald-600">${service.price}</span>
+                                              </div>
+                                            )}
+                                          </HoverCardContent>
+                                        </HoverCard>
+                                      )}
                                     </div>
-                                  )}
-                                  <div className="flex items-center gap-2 mt-1">
-                                    <Badge variant="outline" className="text-xs">
-                                      {service.category_name}
-                                    </Badge>
-                                    {canViewPrices && service.price && (
-                                      <span className="text-xs font-medium text-emerald-600">
-                                        ${service.price}
-                                      </span>
-                                    )}
                                   </div>
                                 </div>
-                              </div>
-                            );
-                          })}
+                              );
+                            })}
+                          </div>
+                        </ScrollArea>
+                      )}
+
+                      {canViewPrices && selectedServices.length > 0 && (
+                        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-md">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm font-medium text-emerald-900">{t('orders.totalPrice')}</span>
+                            <span className="text-lg font-bold text-emerald-600">${totalPrice.toFixed(2)}</span>
+                          </div>
+                          <div className="text-xs text-emerald-700 mt-1">
+                            {selectedServices.length} {t('orders.servicesSelected')}
+                          </div>
                         </div>
-                      </ScrollArea>
-                    )}
+                      )}
+                    </div>
                   </div>
 
-                  {canViewPrices && selectedServices.length > 0 && (
-                    <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-md">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium text-emerald-900">{t('orders.totalPrice')}</span>
-                        <span className="text-lg font-bold text-emerald-600">${totalPrice.toFixed(2)}</span>
-                      </div>
-                      <div className="text-xs text-emerald-700 mt-1">
-                        {selectedServices.length} {t('orders.servicesSelected')}
+                  {/* Box 4: Additional Notes */}
+                  <div className="relative p-4 bg-gradient-to-br from-slate-50 to-slate-50/30 rounded-lg border-2 border-slate-200">
+                    <div className="absolute -top-3 left-3 px-2 bg-background">
+                      <Badge variant="outline" className="border-slate-300 text-slate-700 font-semibold flex items-center gap-1">
+                        <FileText className="h-3 w-3" />
+                        {t('service_orders.additional_notes')}
+                      </Badge>
+                    </div>
+                    <div className="space-y-3 mt-2">
+                      <div>
+                        <Textarea
+                          id="notes"
+                          value={formData.notes}
+                          onChange={(e) => handleInputChange('notes', e.target.value)}
+                          className="border-input bg-background resize-none"
+                          rows={4}
+                          placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this service order...')}
+                        />
                       </div>
                     </div>
-                  )}
-
-                  <div>
-                    <Label htmlFor="notes">{t('orders.notes')}</Label>
-                    <Textarea
-                      id="notes"
-                      value={formData.notes}
-                      onChange={(e) => handleInputChange('notes', e.target.value)}
-                      className="border-input bg-background resize-none"
-                      rows={4}
-                      placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this service order...')}
-                    />
                   </div>
                 </CardContent>
               </Card>

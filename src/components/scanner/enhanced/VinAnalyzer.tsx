@@ -125,13 +125,13 @@ export function VinAnalyzer({ vin, className }: VinAnalyzerProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Car className="w-5 h-5" />
-            VIN Analysis
+            {t('vin_analyzer.title')}
           </CardTitle>
-          <CardDescription>Enter a VIN to see detailed analysis</CardDescription>
+          <CardDescription>{t('vin_analyzer.enter_vin')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
-            No VIN provided for analysis
+            {t('vin_analyzer.no_data')}
           </div>
         </CardContent>
       </Card>
@@ -144,7 +144,7 @@ export function VinAnalyzer({ vin, className }: VinAnalyzerProps) {
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Car className="w-5 h-5" />
-            VIN Analysis
+            {t('vin_analyzer.title')}
           </div>
           <div className="flex items-center gap-2">
             {analysis.isValid ? (
@@ -153,19 +153,19 @@ export function VinAnalyzer({ vin, className }: VinAnalyzerProps) {
               <XCircle className="w-5 h-5 text-destructive" />
             )}
             <Badge variant={analysis.isValid ? "default" : "destructive"}>
-              {analysis.isValid ? 'Valid' : 'Invalid'}
+              {analysis.isValid ? t('vin_analyzer.status_valid') : t('vin_analyzer.status_invalid')}
             </Badge>
           </div>
         </CardTitle>
         <CardDescription>
-          Confidence: {Math.round(analysis.confidence * 100)}%
+          {t('vin_scanner_hub.confidence')}: {Math.round(analysis.confidence * 100)}%
         </CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-6">
         {/* VIN Display */}
         <div className="space-y-2">
-          <label className="text-sm font-medium">Vehicle Identification Number</label>
+          <label className="text-sm font-medium">{t('vin_analyzer.vin_input_label')}</label>
           <div className="font-mono text-lg p-3 bg-muted rounded-lg border">
             {analysis.vin}
           </div>
@@ -178,11 +178,11 @@ export function VinAnalyzer({ vin, className }: VinAnalyzerProps) {
           <div className="space-y-3">
             <div className="flex items-center gap-2 font-medium">
               <MapPin className="w-4 h-4" />
-              Manufacturer Info
+              {t('vin_analyzer.manufacturer_info')}
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">WMI (1-3):</span>
+                <span className="text-muted-foreground">{t('vin_analyzer.wmi_label')}</span>
                 <span className="font-mono">{analysis.wmi}</span>
               </div>
               <div className="flex justify-between">
@@ -199,7 +199,7 @@ export function VinAnalyzer({ vin, className }: VinAnalyzerProps) {
           <div className="space-y-3">
             <div className="flex items-center gap-2 font-medium">
               <Calendar className="w-4 h-4" />
-              Vehicle Details
+              {t('vin_analyzer.decoded_info')}
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
@@ -225,11 +225,11 @@ export function VinAnalyzer({ vin, className }: VinAnalyzerProps) {
           <div className="space-y-3">
             <div className="flex items-center gap-2 font-medium">
               <Shield className="w-4 h-4" />
-              Vehicle Descriptor
+              {t('vin_analyzer.vds_desc')}
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">VDS (4-9):</span>
+                <span className="text-muted-foreground">{t('vin_analyzer.vds_label')}</span>
                 <span className="font-mono">{analysis.vds}</span>
               </div>
             </div>
@@ -238,11 +238,11 @@ export function VinAnalyzer({ vin, className }: VinAnalyzerProps) {
           <div className="space-y-3">
             <div className="flex items-center gap-2 font-medium">
               <Hash className="w-4 h-4" />
-              Serial Number
+              {t('vin_analyzer.vis_desc')}
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Serial (12-17):</span>
+                <span className="text-muted-foreground">{t('vin_analyzer.vis_label')}</span>
                 <span className="font-mono">{analysis.serialNumber}</span>
               </div>
             </div>
@@ -256,7 +256,7 @@ export function VinAnalyzer({ vin, className }: VinAnalyzerProps) {
             <div className="flex items-center gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
               <AlertCircle className="w-4 h-4 text-destructive" />
               <div className="text-sm">
-                <div className="font-medium text-destructive">Invalid VIN Format</div>
+                <div className="font-medium text-destructive">{t('vin_analyzer.check_digit_invalid')}</div>
                 <div className="text-muted-foreground">
                   VIN must be exactly 17 characters and cannot contain I, O, or Q
                 </div>

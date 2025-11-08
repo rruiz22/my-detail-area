@@ -5,20 +5,12 @@ import { QrCode } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ModernVinScanner } from '@/components/scanner/modern/ModernVinScanner';
 import { cn } from '@/lib/utils';
+import { normalizeVin, VIN_LENGTH } from '@/utils/vinValidation';
 
 interface VinInputWithScannerProps extends React.ComponentProps<typeof Input> {
   onVinScanned?: (vin: string) => void;
   stickerMode?: boolean;
 }
-
-const VIN_LENGTH = 17;
-
-const normalizeVin = (raw: string) =>
-  raw
-    .replace(/[^a-z0-9]/gi, '')
-    .toUpperCase()
-    .replace(/[IOQ]/g, '')
-    .slice(0, VIN_LENGTH);
 
 export function VinInputWithScanner({
   onVinScanned,

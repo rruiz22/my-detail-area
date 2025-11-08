@@ -101,24 +101,11 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`🔍 [DEBUG] Trigger user ID: ${request.triggeredBy}`);
 
     // =========================================================================
-    // SPECIAL CASE: status_changed event - ONLY send SMS when status = "completed"
+    // 3-LEVEL VALIDATION ARCHITECTURE:
+    // Level 1: User must be FOLLOWER of the order
+    // Level 2: Custom ROLE must allow this event
+    // Level 3: USER must have channel enabled in preferences
     // =========================================================================
-    if (request.eventType === 'status_changed') {
-      if (request.eventData?.newStatus !== 'completed') {
-        console.log(`⚠️ [SMS Filter] Status changed to "${request.eventData?.newStatus}" - SMS only sent for "completed" status`);
-        return new Response(
-          JSON.stringify({
-            success: true,
-            sent: 0,
-            failed: 0,
-            recipients: 0,
-            message: `SMS notifications for status_changed only sent when status is "completed" (current: "${request.eventData?.newStatus}")`
-          }),
-          { headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-        );
-      }
-      console.log(`✅ [SMS Filter] Status changed to "completed" - proceeding with SMS notifications`);
-    }
 
     // 1. Check if this event is enabled in dealer_notification_rules (NEW SYSTEM)
     const isEventEnabled = await checkNotificationRules(
@@ -141,42 +128,17 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // 2. Get followers of this order who have SMS permission
-    const usersWithPermission = await getUsersWithSMSPermission(
+    // 2. Apply 3-level validation: Follower → Custom Role → User Preferences
+    console.log(`🔐 Starting 3-level validation for order ${request.orderId}`);
+    const eligibleUsers = await getUsersEligibleForNotification(
       request.dealerId,
       request.module,
-      request.orderId
-    );
-    console.log(`✅ Found ${usersWithPermission.length} followers with SMS permission for order ${request.orderId}`);
-    console.log(`🔍 [DEBUG] Users with permission:`, usersWithPermission.map(u => ({ id: u.id, name: u.name, phone: u.phone_number })));
-
-    if (usersWithPermission.length === 0) {
-      return new Response(
-        JSON.stringify({
-          success: true,
-          sent: 0,
-          failed: 0,
-          recipients: 0,
-          message: 'No users with SMS permission found'
-        }),
-        { headers: { 'Content-Type': 'application/json', ...corsHeaders } }
-      );
-    }
-
-    // 2. Filter users by their granular preferences
-    const eligibleUsers = await filterByPreferences(
-      usersWithPermission,
-      request.dealerId,
-      request.module,
+      request.orderId,
       request.eventType,
       request.eventData
     );
-    console.log(`📋 After preference filtering: ${eligibleUsers.length} users`);
-    console.log(`🔍 [DEBUG] Eligible users:`, eligibleUsers.map(u => ({ id: u.id, name: u.name })));
-    if (eligibleUsers.length < usersWithPermission.length) {
-      const filtered = usersWithPermission.filter(u => !eligibleUsers.find(e => e.id === u.id));
-      console.log(`❌ [DEBUG] Filtered by preferences:`, filtered.map(u => ({ id: u.id, name: u.name })));
-    }
+    console.log(`✅ 3-level validation complete: ${eligibleUsers.length} eligible users`);
+    console.log(`🔍 [DEBUG] Eligible users:`, eligibleUsers.map(u => ({ id: u.id, name: u.name, phone: u.phone_number })));
 
     if (eligibleUsers.length === 0) {
       return new Response(
@@ -184,14 +146,14 @@ const handler = async (req: Request): Promise<Response> => {
           success: true,
           sent: 0,
           failed: 0,
-          recipients: usersWithPermission.length,
-          message: 'No users match event preferences'
+          recipients: 0,
+          message: 'No eligible users after 3-level validation (follower + role + preferences)'
         }),
         { headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       );
     }
 
-    // 3. Check rate limits for each user
+    // 3. Check rate limits for each eligible user
     const usersAfterRateLimit = await checkRateLimits(eligibleUsers, request.dealerId, request.module);
     console.log(`⏱️ After rate limit check: ${usersAfterRateLimit.length} users`);
     console.log(`🔍 [DEBUG] Users after rate limit:`, usersAfterRateLimit.map(u => ({ id: u.id, name: u.name })));
@@ -325,18 +287,30 @@ async function checkNotificationRules(
   return isEnabled;
 }
 
-async function getUsersWithSMSPermission(
+/**
+ * NEW: 3-LEVEL VALIDATION ARCHITECTURE
+ * Gets users eligible for SMS notifications based on 3 levels:
+ * Level 1: User must be FOLLOWER of the order
+ * Level 2: User's Custom ROLE must allow this event
+ * Level 3: USER must have SMS enabled in preferences
+ */
+async function getUsersEligibleForNotification(
   dealerId: number,
   module: string,
-  orderId: string
+  orderId: string,
+  eventType: OrderSMSEvent,
+  eventData: any
 ): Promise<SMSRecipient[]> {
-  // Query followers of this specific order who have SMS permissions
-  // This combines 3 filters:
-  // 1. User is a follower of this order (entity_followers)
-  // 2. User has receive_sms_notifications permission in their role
-  // 3. User has phone number configured
 
-  const { data, error } = await supabase
+  console.log(`\n🔍 === STARTING 3-LEVEL VALIDATION ===`);
+  console.log(`Order: ${orderId}, Event: ${eventType}, Module: ${module}`);
+
+  // =========================================================================
+  // LEVEL 1: Get FOLLOWERS of this order
+  // =========================================================================
+  console.log(`\n1️⃣ LEVEL 1: Fetching FOLLOWERS of order ${orderId}...`);
+
+  const { data: followers, error: followersError } = await supabase
     .from('entity_followers')
     .select(`
       user_id,
@@ -353,13 +327,7 @@ async function getUsersWithSMSPermission(
           dealer_id,
           dealer_custom_roles!inner(
             id,
-            role_name,
-            role_module_permissions_new!inner(
-              module_permissions!inner(
-                module,
-                permission_key
-              )
-            )
+            role_name
           )
         )
       )
@@ -371,65 +339,110 @@ async function getUsersWithSMSPermission(
     .eq('dealer_id', dealerId)
     .eq('profiles.dealer_memberships.is_active', true)
     .eq('profiles.dealer_memberships.dealer_id', dealerId)
-    .eq('profiles.dealer_memberships.dealer_custom_roles.role_module_permissions_new.module_permissions.module', module)
-    .eq('profiles.dealer_memberships.dealer_custom_roles.role_module_permissions_new.module_permissions.permission_key', 'receive_sms_notifications')
     .not('profiles.phone_number', 'is', null);
 
-  if (error) {
-    console.error('Error fetching followers with SMS permission:', error);
-    console.error('Error details:', JSON.stringify(error));
+  if (followersError) {
+    console.error('❌ Error fetching followers:', followersError);
     return [];
   }
 
-  if (!data || data.length === 0) {
-    console.log(`No followers with SMS permission found for order ${orderId}`);
+  if (!followers || followers.length === 0) {
+    console.log(`⚠️ No followers found for order ${orderId}`);
     return [];
   }
 
-  const users = data.map((m: any) => ({
-    id: m.profiles.id,
-    name: `${m.profiles.first_name} ${m.profiles.last_name}`.trim(),
-    phone_number: m.profiles.phone_number,
-    role_name: m.profiles.dealer_memberships?.dealer_custom_roles?.role_name,
-    notification_level: m.notification_level
-  }));
+  console.log(`✅ LEVEL 1 PASSED: Found ${followers.length} followers`);
+  followers.forEach(f => {
+    console.log(`   - ${f.profiles.first_name} ${f.profiles.last_name} (${f.profiles.dealer_memberships.dealer_custom_roles.role_name})`);
+  });
 
-  console.log(`✅ Found ${users.length} followers with SMS permission:`, users.map(u => `${u.name} (${u.notification_level})`));
+  // =========================================================================
+  // LEVEL 2 & 3: Validate ROLE permissions and USER preferences
+  // =========================================================================
+  console.log(`\n2️⃣ 3️⃣ LEVEL 2 & 3: Validating ROLE permissions and USER preferences...`);
 
-  return users;
-}
+  const eligibleUsers: SMSRecipient[] = [];
 
-async function filterByPreferences(
-  users: SMSRecipient[],
-  dealerId: number,
-  module: string,
-  eventType: OrderSMSEvent,
-  eventData: any
-): Promise<SMSRecipient[]> {
-  const { data: preferences, error } = await supabase
-    .from('user_sms_notification_preferences')
-    .select('*')
-    .in('user_id', users.map(u => u.id))
-    .eq('dealer_id', dealerId)
-    .eq('module', module)
-    .eq('sms_enabled', true);
+  for (const follower of followers) {
+    const userId = follower.profiles.id;
+    const roleId = follower.profiles.dealer_memberships.custom_role_id;
+    const roleName = follower.profiles.dealer_memberships.dealer_custom_roles.role_name;
+    const userName = `${follower.profiles.first_name} ${follower.profiles.last_name}`;
 
-  if (error) {
-    console.error('Error fetching SMS preferences:', error);
-    return [];
-  }
+    console.log(`\n   Checking user: ${userName} (Role: ${roleName})`);
 
-  if (!preferences || preferences.length === 0) {
-    return []; // No preferences = no SMS
-  }
+    // LEVEL 2: Check if Custom Role allows this event
+    const { data: roleEventConfig, error: roleEventError } = await supabase
+      .from('role_notification_events')
+      .select('*')
+      .eq('role_id', roleId)
+      .eq('module', module)
+      .eq('event_type', eventType)
+      .eq('enabled', true)
+      .single();
 
-  return users.filter(user => {
-    const prefs = preferences.find((p: any) => p.user_id === user.id);
-    if (!prefs) return false;
+    if (roleEventError || !roleEventConfig) {
+      console.log(`   ❌ LEVEL 2 FAILED: Role "${roleName}" does NOT allow event "${eventType}"`);
+      continue;
+    }
 
-    // Check follower notification level
-    // If user only wants 'important' notifications, filter non-important events
-    if (user.notification_level === 'important') {
+    console.log(`   ✅ LEVEL 2 PASSED: Role "${roleName}" allows event "${eventType}"`);
+
+    // Validate event-specific config (e.g., status_changed → allowed_statuses)
+    if (eventType === 'status_changed') {
+      const allowedStatuses = roleEventConfig.event_config?.allowed_statuses || [];
+
+      if (allowedStatuses.length > 0 && !allowedStatuses.includes(eventData.newStatus)) {
+        console.log(`   ❌ Status "${eventData.newStatus}" not in role's allowed list: [${allowedStatuses.join(', ')}]`);
+        continue;
+      }
+
+      console.log(`   ✅ Status "${eventData.newStatus}" is allowed by role`);
+    }
+
+    // LEVEL 3: Check if USER has SMS enabled in preferences
+    console.log(`   3️⃣ LEVEL 3: Checking USER preferences...`);
+
+    const { data: userPrefs, error: userPrefsError } = await supabase
+      .from('user_sms_notification_preferences')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('dealer_id', dealerId)
+      .eq('module', module)
+      .single();
+
+    if (userPrefsError || !userPrefs) {
+      console.log(`   ⚠️ User has no notification preferences set`);
+      continue;
+    }
+
+    if (!userPrefs.sms_enabled) {
+      console.log(`   ❌ LEVEL 3 FAILED: User has SMS globally disabled`);
+      continue;
+    }
+
+    // Check event-specific SMS preference
+    const eventPref = userPrefs.event_preferences?.[eventType];
+
+    if (!eventPref) {
+      console.log(`   ❌ LEVEL 3 FAILED: User has no preference for event "${eventType}"`);
+      continue;
+    }
+
+    // Support multi-channel format: check SMS specifically
+    const smsEnabled = typeof eventPref === 'boolean'
+      ? eventPref
+      : (eventPref.sms === true || eventPref.enabled === true);
+
+    if (!smsEnabled) {
+      console.log(`   ❌ LEVEL 3 FAILED: User has SMS disabled for event "${eventType}"`);
+      continue;
+    }
+
+    console.log(`   ✅ LEVEL 3 PASSED: User has SMS enabled for event "${eventType}"`);
+
+    // Additional: Check notification_level from follower
+    if (follower.notification_level === 'important') {
       const importantEvents: OrderSMSEvent[] = [
         'order_assigned',
         'status_changed',
@@ -437,50 +450,44 @@ async function filterByPreferences(
         'overdue',
         'priority_changed'
       ];
+
       if (!importantEvents.includes(eventType)) {
-        console.log(`[Follower Filter] User ${user.name} has notification_level='important', skipping non-important event '${eventType}'`);
-        return false;
+        console.log(`   ⚠️ User has notification_level='important', skipping non-important event`);
+        continue;
       }
     }
 
-    const eventPrefs = prefs.event_preferences || {};
+    // User passed all 3 validations!
+    eligibleUsers.push({
+      id: userId,
+      name: userName,
+      phone_number: follower.profiles.phone_number,
+      role_name: roleName,
+      notification_level: follower.notification_level
+    });
 
-    // Check specific event preference
-    switch (eventType) {
-      case 'status_changed':
-        const statusPref = eventPrefs.status_changed;
-        if (!statusPref?.enabled) return false;
-        // Check if this specific status should trigger SMS
-        if (statusPref.statuses && Array.isArray(statusPref.statuses) && statusPref.statuses.length > 0) {
-          return statusPref.statuses.includes(eventData.newStatus);
-        }
-        return true;
+    console.log(`   ✅✅✅ USER ELIGIBLE: ${userName}`);
+  }
 
-      case 'field_updated':
-        const fieldPref = eventPrefs.field_updated;
-        if (!fieldPref?.enabled) return false;
-        // Check if this specific field should trigger SMS
-        if (fieldPref.fields && Array.isArray(fieldPref.fields) && fieldPref.fields.length > 0) {
-          return fieldPref.fields.includes(eventData.fieldName);
-        }
-        return false; // By default, don't SMS on field updates
+  console.log(`\n🎯 === VALIDATION COMPLETE ===`);
+  console.log(`Total eligible users: ${eligibleUsers.length} out of ${followers.length} followers`);
 
-      case 'due_date_approaching':
-        const duePref = eventPrefs.due_date_approaching;
-        return duePref?.enabled === true;
-
-      case 'order_assigned':
-        // Special case: only notify the user who was assigned
-        if (eventData.assignedToUserId && eventData.assignedToUserId !== user.id) {
-          return false;
-        }
-        return eventPrefs.order_assigned === true;
-
-      default:
-        return eventPrefs[eventType] === true;
-    }
-  });
+  return eligibleUsers;
 }
+
+// DEPRECATED: Old function kept for backward compatibility
+// Will be removed in future version
+// ========================================
+// LEGACY FUNCTIONS REMOVED (2025-11-08)
+// ========================================
+// The following functions have been removed and replaced by getUsersEligibleForNotification():
+// - getUsersWithSMSPermission() - Replaced by 3-level validation architecture
+// - filterByPreferences() - Now integrated into getUsersEligibleForNotification()
+//
+// New architecture implements:
+// Level 1: User must be FOLLOWER of the order (entity_followers)
+// Level 2: Custom Role must allow the event (role_notification_events)
+// Level 3: User must have SMS enabled in preferences (user_sms_notification_preferences)
 
 async function checkRateLimits(
   users: SMSRecipient[],

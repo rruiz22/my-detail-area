@@ -2,7 +2,6 @@ import { AppModule, usePermissions } from '@/hooks/usePermissions';
 import { supabase } from '@/integrations/supabase/client';
 import { useCallback } from 'react';
 import { pushNotificationHelper } from '@/services/pushNotificationHelper';
-import { orderSMSNotificationService, OrderModule } from '@/services/orderSMSNotificationService';
 import { sendStatusChangedSMS } from '@/services/smsNotificationHelper';
 import { dev, error as logError } from '@/utils/logger';
 import { useToast } from '@/hooks/use-toast';
@@ -173,8 +172,8 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
         const shortLink = currentOrder.short_link || `https://app.mydetailarea.com/${urlPath}/${orderId}`;
 
         // 📱 SMS NOTIFICATION: Send SMS to users based on their notification rules
-        // This respects user preferences and roles configured in the notification settings
-        console.log('📱 [SMS] Status changed - sending SMS notification based on user rules');
+        // This uses the new 3-level validation architecture (Follower → Custom Role → User Preferences)
+        console.log('📱 [SMS] Status changed - sending SMS notification using 3-level validation');
 
         void sendStatusChangedSMS({
           orderId: orderId,
@@ -188,59 +187,6 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
             vehicleInfo: vehicleInfo
           }
         });
-
-        // Legacy SMS for completed orders (backwards compatibility)
-        if (newStatus === 'completed') {
-          try {
-            const smsResult = await orderSMSNotificationService.notifyStatusChange(
-              orderId,
-              parseInt(dealerId),
-              module,
-              currentOrder.order_number,
-              newStatus,
-              oldStatus || '',
-              vehicleInfo,
-              shortLink,
-              enhancedUser.id,
-              currentOrder.stock_number || undefined,
-              currentOrder.tag || undefined
-            );
-            console.log('✅ [SMS Legacy] SMS notification result:', smsResult);
-
-            // Show toast based on results (with recipient names)
-            if (smsResult.sent > 0 && smsResult.failed === 0) {
-              const recipients = smsResult.recipientNames && smsResult.recipientNames.length > 0
-                ? ` to ${smsResult.recipientNames.join(', ')}`
-                : '';
-              toast({
-                title: '📱 SMS Notification Sent',
-                description: `SMS sent to ${smsResult.sent} user(s)${recipients}`,
-              });
-            } else if (smsResult.sent > 0 && smsResult.failed > 0) {
-              toast({
-                title: '⚠️ SMS Partially Sent',
-                description: `${smsResult.sent} sent, ${smsResult.failed} failed`,
-                variant: 'default'
-              });
-            } else if (smsResult.failed > 0) {
-              toast({
-                title: '❌ SMS Failed',
-                description: `Failed to send ${smsResult.failed} SMS notification(s)`,
-                variant: 'destructive'
-              });
-            }
-          } catch (smsError: any) {
-            console.error('❌ [SMS Legacy] Error sending notification:', smsError);
-            logError('⚠️ SMS notification error (non-critical):', smsError);
-            toast({
-              title: t('common.error'),
-              description: t('notifications.sms_error'),
-              variant: 'destructive'
-            });
-          }
-        } else {
-          console.log(`ℹ️ [SMS] Status changed to '${newStatus}' - SMS only sent for 'completed' status`);
-        }
       }
 
       return true;

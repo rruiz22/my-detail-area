@@ -2,7 +2,7 @@ import { VehicleAutoPopulationField } from '@/components/orders/VehicleAutoPopul
 import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -10,6 +10,7 @@ import { DueDateTimePicker } from '@/components/ui/due-date-time-picker';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
@@ -24,7 +25,7 @@ import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { supabase } from '@/integrations/supabase/client';
 import { safeParseDate, getHourInTimezone } from '@/utils/dateUtils';
 import { canViewPricing } from '@/utils/permissions';
-import { AlertCircle, Check, ChevronsUpDown, Loader2, X, Zap } from 'lucide-react';
+import { AlertCircle, Building2, CalendarClock, Car, Check, ChevronsUpDown, ClipboardList, FileText, Info, Loader2, Scan, Search, User, Wrench, X, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
@@ -1010,7 +1011,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
             {/* Quick Search / Selected Vehicle - Compact in header */}
             {!order && (
-              <div className="flex-shrink-0 w-[180px] sm:w-[280px]">
+              <div className="flex-shrink-0 w-[200px] sm:w-[320px]">
                 {selectedVehicle ? (
                   <div className="relative flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-md px-2 py-1.5 pr-8">
                     {selectedVehicle.data.imageUrl && (
@@ -1038,15 +1039,21 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                     </button>
                   </div>
                 ) : (
-                  <div className="w-full">
-                    <VehicleAutoPopulationField
-                      dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}
-                      onVehicleSelect={handleVehicleSelect}
-                      onVehicleClear={handleVehicleClear}
-                      selectedVehicle={selectedVehicle}
-                      label=""
-                      placeholder={t('stock.filters.search_placeholder', 'Search by stock, VIN, make or model')}
-                    />
+                  <div className="w-full space-y-1">
+                    <Label className="text-[10px] text-cyan-700 font-semibold flex items-center gap-1">
+                      <Search className="h-2.5 w-2.5" />
+                      {t('stock.autopop.quickSearch')}
+                    </Label>
+                    <div className="p-1.5 bg-cyan-50 rounded-md border border-cyan-200">
+                      <VehicleAutoPopulationField
+                        dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}
+                        onVehicleSelect={handleVehicleSelect}
+                        onVehicleClear={handleVehicleClear}
+                        selectedVehicle={selectedVehicle}
+                        label=""
+                        placeholder={t('stock.filters.search_placeholder', 'Search by stock, VIN, make or model')}
+                      />
+                    </div>
                   </div>
                 )}
               </div>
@@ -1062,12 +1069,23 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                 <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 lg:gap-4">
 
                   {/* Column 1: Dealership & Assignment Information */}
-                  <div className="space-y-3 min-w-0">
-                    <div className="border-b border-border pb-1.5 mb-2">
-                      <h3 className="text-sm font-medium text-foreground">
+                  <Card className="border-border">
+                    <CardHeader className="pb-3 bg-muted/30">
+                      <CardTitle className="flex items-center gap-2 text-base">
+                        <Building2 className="h-4 w-4 text-primary" />
                         {t('sales_orders.dealership')} & {t('sales_orders.assignment')}
-                      </h3>
-                    </div>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {/* Box 1: Dealership & Assignment */}
+                      <div className="relative p-4 bg-gradient-to-br from-indigo-50 to-indigo-50/30 rounded-lg border-2 border-indigo-200">
+                        <div className="absolute -top-3 left-3 px-2 bg-background">
+                          <Badge variant="outline" className="border-indigo-300 text-indigo-700 font-semibold flex items-center gap-1">
+                            <Building2 className="h-3 w-3" />
+                            {t('service_orders.dealership_assignment')}
+                          </Badge>
+                        </div>
+                        <div className="space-y-3 mt-2">
                   <div className="min-w-0">
                     <div className="flex items-center justify-between mb-2 gap-2">
                       <Label htmlFor="dealership" className="text-sm flex-shrink-0">
@@ -1237,13 +1255,19 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         </Command>
                       </PopoverContent>
                     </Popover>
-                  </div>
+                      </div>
+                        </div>
+                      </div>
 
-                  <Separator className="my-3" />
-
-                  {/* Customer Information Section */}
-                  <div className="space-y-3">
-                    <Label className="text-sm font-medium text-foreground">{t('orders.customer_information')}</Label>
+                      {/* Box 2: Customer Details */}
+                      <div className="relative p-4 bg-gradient-to-br from-rose-50 to-rose-50/30 rounded-lg border-2 border-rose-200">
+                        <div className="absolute -top-3 left-3 px-2 bg-background">
+                          <Badge variant="outline" className="border-rose-300 text-rose-700 font-semibold flex items-center gap-1">
+                            <User className="h-3 w-3" />
+                            {t('service_orders.customer_details')}
+                          </Badge>
+                        </div>
+                        <div className="space-y-3 mt-2">
 
                     <div className="min-w-0">
                       <Label htmlFor="customerName" className="text-sm">
@@ -1302,21 +1326,33 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                          </SelectContent>
                       </Select>
                     </div>
-                  </div>
-                  </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
 
                   {/* Column 2: Vehicle Information */}
-                  <div className="space-y-3 min-w-0">
-                    <div className="border-b border-border pb-1.5 mb-2">
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                        <h3 className="text-sm font-medium text-foreground">{t('orders.vehicleInfo')}</h3>
-                        {vinDecoded && <Badge variant="secondary" className="bg-success text-success-foreground self-start sm:self-auto text-xs">
+                  <Card className="border-border shadow-md">
+                    <CardHeader className="pb-3 bg-emerald-50/30">
+                      <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                        <Car className="h-4 w-4 text-emerald-600" />
+                        {t('orders.vehicleInfo')}
+                        {vinDecoded && <Badge variant="secondary" className="bg-success text-success-foreground text-xs">
                           <Zap className="w-3 h-3 mr-1" />
-                          <span className="truncate">{t('sales_orders.vin_decoded_successfully')}</span>
+                          {t('sales_orders.vin_decoded_successfully')}
                         </Badge>}
-                      </div>
-                    </div>
-
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {/* Box 1: Stock Number & VIN */}
+                      <div className="relative p-4 bg-gradient-to-br from-amber-50 to-amber-50/30 rounded-lg border-2 border-amber-200">
+                        <div className="absolute -top-3 left-3 px-2 bg-background">
+                          <Badge variant="outline" className="border-amber-300 text-amber-700 font-semibold flex items-center gap-1">
+                            <Scan className="h-3 w-3" />
+                            {t('service_orders.vehicle_identification')}
+                          </Badge>
+                        </div>
+                        <div className="space-y-3 mt-2">
                   <div className="min-w-0">
                     <Label htmlFor="stockNumber" className="text-sm">
                       {t('sales_orders.stock_number')} <span className="text-destructive">*</span>
@@ -1367,9 +1403,19 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}
                       </p>
                     )}
-                  </div>
+                      </div>
+                        </div>
+                      </div>
 
-                  {/* Consolidated Vehicle Info */}
+                      {/* Box 2: Vehicle Information */}
+                      <div className="relative p-4 bg-gradient-to-br from-emerald-50 to-emerald-50/30 rounded-lg border-2 border-emerald-200">
+                        <div className="absolute -top-3 left-3 px-2 bg-background">
+                          <Badge variant="outline" className="border-emerald-300 text-emerald-700 font-semibold flex items-center gap-1">
+                            <Car className="h-3 w-3" />
+                            {t('sales_orders.vehicle')}
+                          </Badge>
+                        </div>
+                        <div className="space-y-3 mt-2">
                   <div className="min-w-0">
                     <Label htmlFor="vehicleInfo" className="text-sm">
                       {t('sales_orders.vehicle')} <span className="text-destructive">*</span>
@@ -1379,7 +1425,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       value={formData.vehicleInfo}
                       onChange={(e) => handleInputChange('vehicleInfo', e.target.value)}
                       className={selectedVehicle ? "border-input bg-muted/30 w-full" : "border-input bg-background w-full"}
-                      placeholder="2025 BMW X6 (xDrive40i)"
+                      placeholder=""
                       readOnly={!!selectedVehicle}
                     />
                     {!formData.vehicleInfo && !selectedVehicle && (
@@ -1388,15 +1434,19 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       </div>
                     )}
                   </div>
+                        </div>
+                      </div>
 
-                  <Separator className="my-3" />
-
-                   {/* Due Date & Time Section */}
-                   <div className="space-y-3">
-                     <Label className="text-sm font-medium">
-                       {t('due_date.title')} {!isEditing && requiresDueDate && <span className="text-destructive">*</span>}
-                     </Label>
-                     <div>
+                      {/* Box 3: Schedule (Due Date & Time) */}
+                      <div className="relative p-4 bg-gradient-to-br from-blue-50 to-blue-50/30 rounded-lg border-2 border-blue-200">
+                        <div className="absolute -top-3 left-3 px-2 bg-background">
+                          <Badge variant="outline" className="border-blue-300 text-blue-700 font-semibold flex items-center gap-1">
+                            <CalendarClock className="h-3 w-3" />
+                            {t('due_date.title')}
+                          </Badge>
+                        </div>
+                        <div className="space-y-3 mt-2">
+                   <div>
                        <DueDateTimePicker
                          value={formData.dueDate}
                          onChange={(date) => handleInputChange('dueDate', date)}
@@ -1405,14 +1455,29 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                          enforceBusinessRules={!isEditing}
                        />
                      </div>
-                   </div>
-                  </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
 
                   {/* Column 3: Services & Notes */}
-                  <div className="space-y-3 col-span-1 lg:col-span-2 xl:col-span-1 min-w-0">
-                    <div className="border-b border-border pb-1.5 mb-2">
-                      <h3 className="text-sm font-medium text-foreground">{t('orders.servicesAndNotes')}</h3>
-                    </div>
+                  <Card className="border-border col-span-1 lg:col-span-2 xl:col-span-1">
+                    <CardHeader className="pb-3 bg-muted/20">
+                      <CardTitle className="flex items-center gap-2 text-base">
+                        <ClipboardList className="h-4 w-4 text-muted-foreground" />
+                        {t('orders.servicesAndNotes')}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {/* Box 1: Service Selection */}
+                      <div className="relative p-4 bg-gradient-to-br from-emerald-50 to-emerald-50/30 rounded-lg border-2 border-emerald-200">
+                        <div className="absolute -top-3 left-3 px-2 bg-background">
+                          <Badge variant="outline" className="border-emerald-300 text-emerald-700 font-semibold flex items-center gap-1">
+                            <Wrench className="h-3 w-3" />
+                            {t('service_orders.service_selection')}
+                          </Badge>
+                        </div>
+                        <div className="space-y-3 mt-2">
                   <div className="min-w-0">
                     <div className="flex items-center justify-between mb-2 gap-2">
                       <Label className="text-sm font-medium flex-1 min-w-0">
@@ -1452,53 +1517,51 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                               {t('orders.noServicesAvailable')}
                             </div>
                           ) : (
-                            services.map((service: { id: string; name: string; price?: number; description?: string; category?: string }) => {
+                            services.map((service: { id: string; name: string; price?: number; description?: string; category?: string; duration?: number }) => {
                               const isSelected = selectedServices.includes(service.id);
                               const isDisabled = !isSelected && selectedServices.length >= 2;
 
-                              // Debug: Log first service to check matching
-                              if (services[0] === service && selectedServices.length > 0) {
-                                console.log('🔍 [OrderModal] Service selection check:', {
-                                  serviceId: service.id,
-                                  serviceName: service.name,
-                                  selectedServiceIds: selectedServices,
-                                  isSelected,
-                                  serviceIdType: typeof service.id,
-                                  selectedIdsType: selectedServices.map(id => typeof id)
-                                });
-                              }
-
                               return (
-                                <div key={service.id} className={`flex items-start justify-between p-2 border border-border rounded-lg transition-colors ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/10'}`}>
-                                  <div className="flex items-start space-x-2 flex-1">
-                                    <Checkbox
-                                      id={service.id}
-                                      checked={isSelected}
-                                      onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
-                                      className="mt-0.5 w-4 h-4"
-                                      disabled={isDisabled}
-                                    />
-                                    <div className="flex-1 min-w-0">
-                                      <Label
-                                        htmlFor={service.id}
-                                        className="font-medium text-sm cursor-pointer block leading-snug"
-                                      >
+                                <div key={service.id} className={`flex items-center space-x-3 p-2 rounded-md transition-colors ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-accent/10'}`}>
+                                  <Checkbox
+                                    id={service.id}
+                                    checked={isSelected}
+                                    onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
+                                    disabled={isDisabled}
+                                  />
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-1.5">
+                                      <Label htmlFor={service.id} className="text-sm font-medium cursor-pointer">
                                         {service.name}
                                       </Label>
-                                      {service.description && (
-                                        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
-                                          {service.description}
-                                        </p>
-                                      )}
-                                      {(service.duration || (canViewPrices && service.price)) && (
-                                        <div className="flex items-center justify-between text-xs mt-0.5">
-                                          {service.duration && (
-                                            <span className="text-muted-foreground">{service.duration} {t('services.minutes')}</span>
-                                          )}
-                                          {canViewPrices && service.price && (
-                                            <span className="font-semibold">${service.price.toFixed(2)}</span>
-                                          )}
-                                        </div>
+
+                                      {(service.description || service.duration || (canViewPrices && service.price)) && (
+                                        <HoverCard openDelay={200} closeDelay={100}>
+                                          <HoverCardTrigger asChild>
+                                            <Info className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground cursor-help transition-colors" />
+                                          </HoverCardTrigger>
+                                          <HoverCardContent side="right" className="w-72 p-3">
+                                            {service.description && (
+                                              <p className="text-xs text-muted-foreground mb-2">
+                                                {service.description}
+                                              </p>
+                                            )}
+                                            <div className="flex items-center gap-3 text-xs">
+                                              {service.duration && (
+                                                <div className="flex items-center gap-1.5">
+                                                  <span className="font-medium">{t('services.duration_label')}:</span>
+                                                  <span className="text-muted-foreground">{service.duration} {t('services.minutes')}</span>
+                                                </div>
+                                              )}
+                                              {canViewPrices && service.price && (
+                                                <div className="flex items-center gap-1.5">
+                                                  <span className="font-medium">{t('services.price')}:</span>
+                                                  <span className="font-semibold text-emerald-600">${service.price.toFixed(2)}</span>
+                                                </div>
+                                              )}
+                                            </div>
+                                          </HoverCardContent>
+                                        </HoverCard>
                                       )}
                                     </div>
                                   </div>
@@ -1509,13 +1572,12 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         </div>
                       </ScrollArea>
                     )}
-                  </div>
 
                   {canViewPrices && selectedServices.length > 0 && (
-                    <div className="mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-lg">
+                    <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-md">
                       <div className="flex justify-between items-center">
-                        <span className="font-semibold text-sm text-emerald-900">{t('orders.total')}</span>
-                        <span className="font-bold text-lg text-emerald-600">
+                        <span className="text-sm font-medium text-emerald-900">{t('orders.total')}</span>
+                        <span className="text-lg font-bold text-emerald-600">
                           ${totalPrice.toFixed(2)}
                         </span>
                       </div>
@@ -1524,21 +1586,33 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       </div>
                     </div>
                   )}
+                  </div>
+                        </div>
+                      </div>
 
-                  <Separator className="my-3" />
-
+                      {/* Box 2: Additional Notes */}
+                      <div className="relative p-4 bg-gradient-to-br from-slate-50 to-slate-50/30 rounded-lg border-2 border-slate-200">
+                        <div className="absolute -top-3 left-3 px-2 bg-background">
+                          <Badge variant="outline" className="border-slate-300 text-slate-700 font-semibold flex items-center gap-1">
+                            <FileText className="h-3 w-3" />
+                            {t('service_orders.additional_notes')}
+                          </Badge>
+                        </div>
+                        <div className="space-y-3 mt-2">
                   <div className="min-w-0">
-                    <Label htmlFor="notes" className="text-sm font-medium">{t('orders.notes')}</Label>
                     <Textarea
                       id="notes"
                       value={formData.notes}
                       onChange={(e) => handleInputChange('notes', e.target.value)}
-                      rows={3}
+                      rows={4}
                       className="border-input bg-background resize-none w-full"
                       placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this sales order...')}
                     />
                   </div>
-                  </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               </CardContent>
             </Card>
