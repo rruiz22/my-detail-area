@@ -28,6 +28,10 @@
       // Polyfill for require in browser environment
       if (typeof require === 'undefined') {
         window.require = function(module) {
+          // Suppress warnings for known third-party widget dependencies
+          if (module === '@emotion/is-prop-valid') {
+            return {}; // Silent return for MDAChat widget
+          }
           console.warn(`require('${module}') called in browser - returning empty object`);
           return {};
         };
@@ -44,7 +48,7 @@
     </script>
     <script type="module" src="/src/main.tsx"></script>
 
-    <!-- BeChat Live Chat Widget -->
+    <!-- MDAChat Live Chat Widget -->
     <script>
       window.BeChatSettings = {
         widgetDomain: "https://dds.mydetailarea.com",

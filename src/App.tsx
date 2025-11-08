@@ -24,6 +24,7 @@ import { CACHE_TIMES, GC_TIMES } from "@/constants/cacheConfig";
 import AdminDashboard from "./pages/AdminDashboard";
 import Announcements from "./pages/Announcements";
 import Auth from "./pages/Auth";
+import MDAChatWidget from "./pages/MDAChatWidget";
 import CarWash from "./pages/CarWash";
 import Chat from "./pages/Chat";
 import Contacts from "./pages/Contacts";
@@ -281,6 +282,9 @@ const AppRoutes = () => {
           <Route path="debug/tooltips" element={<TooltipTester />} />
           <Route path="debug/duplicate-tooltips" element={<DuplicateTooltipTester />} />
         </Route>
+
+        {/* MDAChat Widget Routes */}
+        <Route path="/lc/widget" element={<MDAChatWidget />} />
 
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
