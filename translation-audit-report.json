@@ -1,5 +1,5 @@
 {
-  "scannedFiles": 855,
+  "scannedFiles": 856,
   "totalStrings": 8486,
   "hardcodedStrings": 2079,
   "translatedStrings": 6407,
@@ -14895,287 +14895,287 @@
         "hardcodedStrings": [
           {
             "text": ", error);\n      toast({\n        title: t(",
-            "line": 187,
-            "context": "186: } catch (error) {\n187: console.error('[RESET PASSWORD] Unexpected error:', error);\n188: toast({"
+            "line": 189,
+            "context": "188: } catch (error) {\n189: console.error('[RESET PASSWORD] Unexpected error:', error);\n190: toast({"
           }
         ],
         "translationCalls": [
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 102,
+            "line": 104,
             "exists": false
           },
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 114,
+            "line": 116,
             "exists": false
           },
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 119,
+            "line": 121,
             "exists": false
           },
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 126,
+            "line": 128,
             "exists": false
           },
           {
             "key": "auth.signup.password_weak_title",
-            "line": 144,
+            "line": 146,
             "exists": true
           },
           {
             "key": "auth.signup.password_requirements",
-            "line": 145,
+            "line": 147,
             "exists": true
           },
           {
             "key": "auth.reset_password.passwords_dont_match_title",
-            "line": 154,
+            "line": 156,
             "exists": false
           },
           {
             "key": "auth.reset_password.passwords_dont_match_description",
-            "line": 155,
+            "line": 157,
             "exists": false
           },
           {
             "key": "auth.reset_password.error_title",
-            "line": 169,
+            "line": 171,
             "exists": false
           },
           {
             "key": "auth.reset_password.success_title",
-            "line": 176,
+            "line": 178,
             "exists": false
           },
           {
             "key": "auth.reset_password.success_description",
-            "line": 177,
+            "line": 179,
             "exists": false
           },
           {
             "key": "auth.error_title",
-            "line": 189,
+            "line": 191,
             "exists": true
           },
           {
             "key": "auth.unexpected_error",
-            "line": 190,
+            "line": 192,
             "exists": true
           },
           {
             "key": "auth.app_title",
-            "line": 224,
+            "line": 226,
             "exists": true
           },
           {
             "key": "auth.app_subtitle",
-            "line": 228,
+            "line": 230,
             "exists": true
           },
           {
             "key": "auth.reset_password.title",
-            "line": 235,
+            "line": 237,
             "exists": false
           },
           {
             "key": "auth.reset_password.subtitle",
-            "line": 238,
+            "line": 240,
             "exists": false
           },
           {
             "key": "auth.reset_password.verifying",
-            "line": 247,
+            "line": 249,
             "exists": false
           },
           {
             "key": "auth.reset_password.request_new_link",
-            "line": 261,
+            "line": 263,
             "exists": false
           },
           {
             "key": "auth.reset_password.success_title",
-            "line": 272,
+            "line": 274,
             "exists": false
           },
           {
             "key": "auth.reset_password.redirecting",
-            "line": 275,
+            "line": 277,
             "exists": false
           },
           {
             "key": "auth.reset_password.new_password_label",
-            "line": 285,
+            "line": 287,
             "exists": false
           },
           {
             "key": "auth.reset_password.new_password_placeholder",
-            "line": 296,
+            "line": 298,
             "exists": false
           },
           {
             "key": "auth.signup.password_length",
-            "line": 309,
+            "line": 311,
             "exists": true
           },
           {
             "key": "auth.signup.password_uppercase",
-            "line": 313,
+            "line": 315,
             "exists": true
           },
           {
             "key": "auth.signup.password_lowercase",
-            "line": 317,
+            "line": 319,
             "exists": true
           },
           {
             "key": "auth.signup.password_number",
-            "line": 321,
+            "line": 323,
             "exists": true
           },
           {
             "key": "auth.reset_password.confirm_password_label",
-            "line": 333,
+            "line": 335,
             "exists": false
           },
           {
             "key": "auth.reset_password.confirm_password_placeholder",
-            "line": 344,
+            "line": 346,
             "exists": false
           },
           {
             "key": "auth.reset_password.passwords_dont_match_description",
-            "line": 348,
+            "line": 350,
             "exists": false
           },
           {
             "key": "auth.reset_password.updating",
-            "line": 362,
+            "line": 364,
             "exists": false
           },
           {
             "key": "auth.reset_password.update_password_button",
-            "line": 365,
+            "line": 367,
             "exists": false
           },
           {
             "key": "auth.footer_text",
-            "line": 375,
+            "line": 377,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 102,
-            "context": "101: });\n102: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n103: setTokenVerified(false); // Allow retry if verification fails"
+            "line": 104,
+            "context": "103: });\n104: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n105: setTokenVerified(false); // Allow retry if verification fails"
           },
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 114,
-            "context": "113: console.log('Response data:', data);\n114: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n115: setTokenVerified(false); // Allow retry if no session"
+            "line": 116,
+            "context": "115: console.log('Response data:', data);\n116: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n117: setTokenVerified(false); // Allow retry if no session"
           },
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 119,
-            "context": "118: console.error('❌ Unexpected error during token verification:', err);\n119: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n120: setTokenVerified(false); // Allow retry on unexpected error"
+            "line": 121,
+            "context": "120: console.error('❌ Unexpected error during token verification:', err);\n121: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n122: setTokenVerified(false); // Allow retry on unexpected error"
           },
           {
             "key": "auth.reset_password.invalid_session",
-            "line": 126,
-            "context": "125: console.log('Available URL params:', Array.from(searchParams.entries()));\n126: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n127: } else if (session) {"
+            "line": 128,
+            "context": "127: console.log('Available URL params:', Array.from(searchParams.entries()));\n128: setError(t('auth.reset_password.invalid_session', 'Invalid or expired reset link. Please request a new one.'));\n129: } else if (session) {"
           },
           {
             "key": "auth.reset_password.passwords_dont_match_title",
-            "line": 154,
-            "context": "153: toast({\n154: title: t('auth.reset_password.passwords_dont_match_title', 'Passwords Don\\'t Match'),\n155: description: t('auth.reset_password.passwords_dont_match_description', 'Please make sure both passwords are the same'),"
+            "line": 156,
+            "context": "155: toast({\n156: title: t('auth.reset_password.passwords_dont_match_title', 'Passwords Don\\'t Match'),\n157: description: t('auth.reset_password.passwords_dont_match_description', 'Please make sure both passwords are the same'),"
           },
           {
             "key": "auth.reset_password.passwords_dont_match_description",
-            "line": 155,
-            "context": "154: title: t('auth.reset_password.passwords_dont_match_title', 'Passwords Don\\'t Match'),\n155: description: t('auth.reset_password.passwords_dont_match_description', 'Please make sure both passwords are the same'),\n156: variant: \"destructive\","
+            "line": 157,
+            "context": "156: title: t('auth.reset_password.passwords_dont_match_title', 'Passwords Don\\'t Match'),\n157: description: t('auth.reset_password.passwords_dont_match_description', 'Please make sure both passwords are the same'),\n158: variant: \"destructive\","
           },
           {
             "key": "auth.reset_password.error_title",
-            "line": 169,
-            "context": "168: toast({\n169: title: t('auth.reset_password.error_title', 'Reset Failed'),\n170: description: updateError.message,"
+            "line": 171,
+            "context": "170: toast({\n171: title: t('auth.reset_password.error_title', 'Reset Failed'),\n172: description: updateError.message,"
           },
           {
             "key": "auth.reset_password.success_title",
-            "line": 176,
-            "context": "175: toast({\n176: title: t('auth.reset_password.success_title', 'Password Updated'),\n177: description: t('auth.reset_password.success_description', 'Your password has been successfully updated'),"
+            "line": 178,
+            "context": "177: toast({\n178: title: t('auth.reset_password.success_title', 'Password Updated'),\n179: description: t('auth.reset_password.success_description', 'Your password has been successfully updated'),"
           },
           {
             "key": "auth.reset_password.success_description",
-            "line": 177,
-            "context": "176: title: t('auth.reset_password.success_title', 'Password Updated'),\n177: description: t('auth.reset_password.success_description', 'Your password has been successfully updated'),\n178: variant: \"default\","
+            "line": 179,
+            "context": "178: title: t('auth.reset_password.success_title', 'Password Updated'),\n179: description: t('auth.reset_password.success_description', 'Your password has been successfully updated'),\n180: variant: \"default\","
           },
           {
             "key": "auth.reset_password.title",
-            "line": 235,
-            "context": "234: <CardTitle className=\"text-2xl font-semibold text-foreground mb-2\">\n235: {t('auth.reset_password.title', 'Create New Password')}\n236: </CardTitle>"
+            "line": 237,
+            "context": "236: <CardTitle className=\"text-2xl font-semibold text-foreground mb-2\">\n237: {t('auth.reset_password.title', 'Create New Password')}\n238: </CardTitle>"
           },
           {
             "key": "auth.reset_password.subtitle",
-            "line": 238,
-            "context": "237: <CardDescription className=\"text-base text-muted-foreground\">\n238: {t('auth.reset_password.subtitle', 'Enter your new password below')}\n239: </CardDescription>"
+            "line": 240,
+            "context": "239: <CardDescription className=\"text-base text-muted-foreground\">\n240: {t('auth.reset_password.subtitle', 'Enter your new password below')}\n241: </CardDescription>"
           },
           {
             "key": "auth.reset_password.verifying",
-            "line": 247,
-            "context": "246: <div className=\"w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin\" aria-hidden=\"true\" />\n247: <span className=\"text-muted-foreground\">{t('auth.reset_password.verifying', 'Verifying reset link...')}</span>\n248: </div>"
+            "line": 249,
+            "context": "248: <div className=\"w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin\" aria-hidden=\"true\" />\n249: <span className=\"text-muted-foreground\">{t('auth.reset_password.verifying', 'Verifying reset link...')}</span>\n250: </div>"
           },
           {
             "key": "auth.reset_password.request_new_link",
-            "line": 261,
-            "context": "260: >\n261: {t('auth.reset_password.request_new_link', 'Request New Reset Link')}\n262: </Button>"
+            "line": 263,
+            "context": "262: >\n263: {t('auth.reset_password.request_new_link', 'Request New Reset Link')}\n264: </Button>"
           },
           {
             "key": "auth.reset_password.success_title",
-            "line": 272,
-            "context": "271: <h3 className=\"text-lg font-semibold text-foreground\">\n272: {t('auth.reset_password.success_title', 'Password Updated!')}\n273: </h3>"
+            "line": 274,
+            "context": "273: <h3 className=\"text-lg font-semibold text-foreground\">\n274: {t('auth.reset_password.success_title', 'Password Updated!')}\n275: </h3>"
           },
           {
             "key": "auth.reset_password.redirecting",
-            "line": 275,
-            "context": "274: <p className=\"text-sm text-muted-foreground\">\n275: {t('auth.reset_password.redirecting', 'Redirecting to login...')}\n276: </p>"
+            "line": 277,
+            "context": "276: <p className=\"text-sm text-muted-foreground\">\n277: {t('auth.reset_password.redirecting', 'Redirecting to login...')}\n278: </p>"
           },
           {
             "key": "auth.reset_password.new_password_label",
-            "line": 285,
-            "context": "284: <Label htmlFor=\"password\" className=\"text-sm font-semibold text-foreground\">\n285: {t('auth.reset_password.new_password_label', 'New Password')}\n286: </Label>"
+            "line": 287,
+            "context": "286: <Label htmlFor=\"password\" className=\"text-sm font-semibold text-foreground\">\n287: {t('auth.reset_password.new_password_label', 'New Password')}\n288: </Label>"
           },
           {
             "key": "auth.reset_password.new_password_placeholder",
-            "line": 296,
-            "context": "295: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n296: placeholder={t('auth.reset_password.new_password_placeholder', 'Enter your new password')}\n297: autoFocus"
+            "line": 298,
+            "context": "297: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n298: placeholder={t('auth.reset_password.new_password_placeholder', 'Enter your new password')}\n299: autoFocus"
           },
           {
             "key": "auth.reset_password.confirm_password_label",
-            "line": 333,
-            "context": "332: <Label htmlFor=\"confirmPassword\" className=\"text-sm font-semibold text-foreground\">\n333: {t('auth.reset_password.confirm_password_label', 'Confirm Password')}\n334: </Label>"
+            "line": 335,
+            "context": "334: <Label htmlFor=\"confirmPassword\" className=\"text-sm font-semibold text-foreground\">\n335: {t('auth.reset_password.confirm_password_label', 'Confirm Password')}\n336: </Label>"
           },
           {
             "key": "auth.reset_password.confirm_password_placeholder",
-            "line": 344,
-            "context": "343: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n344: placeholder={t('auth.reset_password.confirm_password_placeholder', 'Confirm your new password')}\n345: />"
+            "line": 346,
+            "context": "345: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n346: placeholder={t('auth.reset_password.confirm_password_placeholder', 'Confirm your new password')}\n347: />"
           },
           {
             "key": "auth.reset_password.passwords_dont_match_description",
-            "line": 348,
-            "context": "347: <p className=\"text-xs text-red-500\">\n348: {t('auth.reset_password.passwords_dont_match_description', 'Passwords do not match')}\n349: </p>"
+            "line": 350,
+            "context": "349: <p className=\"text-xs text-red-500\">\n350: {t('auth.reset_password.passwords_dont_match_description', 'Passwords do not match')}\n351: </p>"
           },
           {
             "key": "auth.reset_password.updating",
-            "line": 362,
-            "context": "361: <div className=\"w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin\" aria-hidden=\"true\" />\n362: {t('auth.reset_password.updating', 'Updating...')}\n363: </div>"
+            "line": 364,
+            "context": "363: <div className=\"w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin\" aria-hidden=\"true\" />\n364: {t('auth.reset_password.updating', 'Updating...')}\n365: </div>"
           },
           {
             "key": "auth.reset_password.update_password_button",
-            "line": 365,
-            "context": "364: ) : (\n365: t('auth.reset_password.update_password_button', 'Update Password')\n366: )}"
+            "line": 367,
+            "context": "366: ) : (\n367: t('auth.reset_password.update_password_button', 'Update Password')\n368: )}"
           }
         ],
         "coverage": 97,
@@ -15562,18 +15562,18 @@
         "hardcodedStrings": [
           {
             "text": "Page Not Found",
-            "line": 18,
-            "context": "17: <h1 className=\"text-9xl font-bold text-primary/20\">404</h1>\n18: <h2 className=\"text-2xl font-semibold mb-4\">Page Not Found</h2>\n19: <p className=\"text-muted-foreground mb-8\">"
+            "line": 22,
+            "context": "21: <h1 className=\"text-9xl font-bold text-primary/20\">404</h1>\n22: <h2 className=\"text-2xl font-semibold mb-4\">Page Not Found</h2>\n23: <p className=\"text-muted-foreground mb-8\">"
           },
           {
             "text": "Go Back",
-            "line": 26,
-            "context": "25: <Button onClick={() => window.history.back()} variant=\"outline\">\n26: <ArrowLeft className=\"h-4 w-4 mr-2\" />\n27: Go Back"
+            "line": 30,
+            "context": "29: <Button onClick={() => window.history.back()} variant=\"outline\">\n30: <ArrowLeft className=\"h-4 w-4 mr-2\" />\n31: Go Back"
           },
           {
             "text": "Back to Dashboard",
-            "line": 31,
-            "context": "30: <Link to=\"/dashboard\">\n31: <Home className=\"h-4 w-4 mr-2\" />\n32: Back to Dashboard"
+            "line": 35,
+            "context": "34: <Link to=\"/dashboard\">\n35: <Home className=\"h-4 w-4 mr-2\" />\n36: Back to Dashboard"
           }
         ],
         "translationCalls": [],
@@ -16762,137 +16762,137 @@
         "hardcodedStrings": [
           {
             "text": ", error);\n      // Still show success to prevent email enumeration\n      setEmailSent(true);\n    } finally {\n      setLoading(false);\n    }\n  };\n\n  return (\n    <div className=",
-            "line": 70,
-            "context": "69: } catch (error) {\n70: console.error('[FORGOT PASSWORD] Unexpected error:', error);\n71: // Still show success to prevent email enumeration"
+            "line": 72,
+            "context": "71: } catch (error) {\n72: console.error('[FORGOT PASSWORD] Unexpected error:', error);\n73: // Still show success to prevent email enumeration"
           }
         ],
         "translationCalls": [
           {
             "key": "auth.invalid_email_title",
-            "line": 48,
+            "line": 50,
             "exists": true
           },
           {
             "key": "auth.invalid_email_description",
-            "line": 49,
+            "line": 51,
             "exists": true
           },
           {
             "key": "auth.app_title",
-            "line": 104,
+            "line": 106,
             "exists": true
           },
           {
             "key": "auth.app_subtitle",
-            "line": 108,
+            "line": 110,
             "exists": true
           },
           {
             "key": "auth.forgot_password.title",
-            "line": 115,
+            "line": 117,
             "exists": false
           },
           {
             "key": "auth.forgot_password.subtitle",
-            "line": 118,
+            "line": 120,
             "exists": false
           },
           {
             "key": "auth.forgot_password.email_sent_title",
-            "line": 130,
+            "line": 132,
             "exists": false
           },
           {
             "key": "auth.forgot_password.email_sent_description",
-            "line": 133,
+            "line": 135,
             "exists": false
           },
           {
             "key": "auth.forgot_password.check_spam",
-            "line": 136,
+            "line": 138,
             "exists": false
           },
           {
             "key": "auth.forgot_password.back_to_login",
-            "line": 145,
+            "line": 147,
             "exists": false
           },
           {
             "key": "auth.email_label",
-            "line": 153,
+            "line": 155,
             "exists": true
           },
           {
             "key": "auth.email_placeholder",
-            "line": 165,
+            "line": 167,
             "exists": true
           },
           {
             "key": "auth.forgot_password.sending",
-            "line": 179,
+            "line": 181,
             "exists": false
           },
           {
             "key": "auth.forgot_password.send_reset_link",
-            "line": 182,
+            "line": 184,
             "exists": false
           },
           {
             "key": "auth.forgot_password.back_to_login",
-            "line": 192,
+            "line": 194,
             "exists": false
           },
           {
             "key": "auth.footer_text",
-            "line": 202,
+            "line": 204,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "auth.forgot_password.title",
-            "line": 115,
-            "context": "114: <CardTitle className=\"text-2xl font-semibold text-foreground mb-2\">\n115: {t('auth.forgot_password.title', 'Reset Your Password')}\n116: </CardTitle>"
+            "line": 117,
+            "context": "116: <CardTitle className=\"text-2xl font-semibold text-foreground mb-2\">\n117: {t('auth.forgot_password.title', 'Reset Your Password')}\n118: </CardTitle>"
           },
           {
             "key": "auth.forgot_password.subtitle",
-            "line": 118,
-            "context": "117: <CardDescription className=\"text-base text-muted-foreground\">\n118: {t('auth.forgot_password.subtitle', 'Enter your email address and we\\'ll send you a link to reset your password')}\n119: </CardDescription>"
+            "line": 120,
+            "context": "119: <CardDescription className=\"text-base text-muted-foreground\">\n120: {t('auth.forgot_password.subtitle', 'Enter your email address and we\\'ll send you a link to reset your password')}\n121: </CardDescription>"
           },
           {
             "key": "auth.forgot_password.email_sent_title",
-            "line": 130,
-            "context": "129: <h3 className=\"text-lg font-semibold text-foreground\">\n130: {t('auth.forgot_password.email_sent_title', 'Check Your Email')}\n131: </h3>"
+            "line": 132,
+            "context": "131: <h3 className=\"text-lg font-semibold text-foreground\">\n132: {t('auth.forgot_password.email_sent_title', 'Check Your Email')}\n133: </h3>"
           },
           {
             "key": "auth.forgot_password.email_sent_description",
-            "line": 133,
-            "context": "132: <p className=\"text-sm text-muted-foreground\">\n133: {t('auth.forgot_password.email_sent_description', 'If an account exists with this email, you will receive a password reset link shortly.')}\n134: </p>"
+            "line": 135,
+            "context": "134: <p className=\"text-sm text-muted-foreground\">\n135: {t('auth.forgot_password.email_sent_description', 'If an account exists with this email, you will receive a password reset link shortly.')}\n136: </p>"
           },
           {
             "key": "auth.forgot_password.check_spam",
-            "line": 136,
-            "context": "135: <p className=\"text-xs text-muted-foreground pt-2\">\n136: {t('auth.forgot_password.check_spam', 'Don\\'t forget to check your spam folder.')}\n137: </p>"
+            "line": 138,
+            "context": "137: <p className=\"text-xs text-muted-foreground pt-2\">\n138: {t('auth.forgot_password.check_spam', 'Don\\'t forget to check your spam folder.')}\n139: </p>"
           },
           {
             "key": "auth.forgot_password.back_to_login",
-            "line": 145,
-            "context": "144: <ArrowLeft className=\"mr-2 h-4 w-4\" />\n145: {t('auth.forgot_password.back_to_login', 'Back to Login')}\n146: </Button>"
+            "line": 147,
+            "context": "146: <ArrowLeft className=\"mr-2 h-4 w-4\" />\n147: {t('auth.forgot_password.back_to_login', 'Back to Login')}\n148: </Button>"
           },
           {
             "key": "auth.forgot_password.sending",
-            "line": 179,
-            "context": "178: <div className=\"w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin\" aria-hidden=\"true\" />\n179: {t('auth.forgot_password.sending', 'Sending...')}\n180: </div>"
+            "line": 181,
+            "context": "180: <div className=\"w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin\" aria-hidden=\"true\" />\n181: {t('auth.forgot_password.sending', 'Sending...')}\n182: </div>"
           },
           {
             "key": "auth.forgot_password.send_reset_link",
-            "line": 182,
-            "context": "181: ) : (\n182: t('auth.forgot_password.send_reset_link', 'Send Reset Link')\n183: )}"
+            "line": 184,
+            "context": "183: ) : (\n184: t('auth.forgot_password.send_reset_link', 'Send Reset Link')\n185: )}"
           },
           {
             "key": "auth.forgot_password.back_to_login",
-            "line": 192,
-            "context": "191: <ArrowLeft className=\"h-4 w-4\" />\n192: {t('auth.forgot_password.back_to_login', 'Back to Login')}\n193: </Link>"
+            "line": 194,
+            "context": "193: <ArrowLeft className=\"h-4 w-4\" />\n194: {t('auth.forgot_password.back_to_login', 'Back to Login')}\n195: </Link>"
           }
         ],
         "coverage": 94,
@@ -17884,342 +17884,342 @@
         "hardcodedStrings": [
           {
             "text": ", error);\n      return true;\n    }\n  },\n\n  reset: (email: string): void => {\n    try {\n      const key = `auth_attempts_${email.toLowerCase()}`;\n      localStorage.removeItem(key);\n    } catch (error) {\n      console.warn(",
-            "line": 87,
-            "context": "86: // If localStorage fails, allow the attempt (fail open for UX)\n87: console.warn('[Rate Limiter] localStorage error:', error);\n88: return true;"
+            "line": 88,
+            "context": "87: // If localStorage fails, allow the attempt (fail open for UX)\n88: console.warn('[Rate Limiter] localStorage error:', error);\n89: return true;"
           }
         ],
         "translationCalls": [
           {
             "key": "auth.signup.invalid_token_error",
-            "line": 175,
+            "line": 177,
             "exists": true
           },
           {
             "key": "auth.unexpected_error",
-            "line": 182,
+            "line": 184,
             "exists": true
           },
           {
             "key": "auth.invalid_email_title",
-            "line": 206,
+            "line": 208,
             "exists": true
           },
           {
             "key": "auth.invalid_email_description",
-            "line": 207,
+            "line": 209,
             "exists": true
           },
           {
             "key": "auth.too_many_attempts_title",
-            "line": 216,
+            "line": 218,
             "exists": true
           },
           {
             "key": "auth.too_many_attempts_description",
-            "line": 217,
+            "line": 219,
             "exists": true
           },
           {
             "key": "auth.sign_in_error_title",
-            "line": 234,
+            "line": 236,
             "exists": true
           },
           {
             "key": "auth.invalid_credentials_generic",
-            "line": 235,
+            "line": 237,
             "exists": true
           },
           {
             "key": "auth.error_title",
-            "line": 244,
+            "line": 246,
             "exists": true
           },
           {
             "key": "auth.unexpected_error",
-            "line": 245,
+            "line": 247,
             "exists": true
           },
           {
             "key": "auth.invalid_email_title",
-            "line": 263,
+            "line": 265,
             "exists": true
           },
           {
             "key": "auth.invalid_email_description",
-            "line": 264,
+            "line": 266,
             "exists": true
           },
           {
             "key": "auth.signup.password_weak_title",
-            "line": 274,
+            "line": 276,
             "exists": true
           },
           {
             "key": "auth.signup.password_requirements",
-            "line": 275,
+            "line": 277,
             "exists": true
           },
           {
             "key": "auth.signup.required_fields_title",
-            "line": 284,
+            "line": 286,
             "exists": true
           },
           {
             "key": "auth.signup.required_fields_description",
-            "line": 285,
+            "line": 287,
             "exists": true
           },
           {
             "key": "auth.signup.email_mismatch_title",
-            "line": 294,
+            "line": 296,
             "exists": true
           },
           {
             "key": "auth.signup.email_mismatch_description",
-            "line": 295,
+            "line": 297,
             "exists": true
           },
           {
             "key": "auth.signup.error_title",
-            "line": 308,
+            "line": 310,
             "exists": true
           },
           {
             "key": "auth.signup.success_title",
-            "line": 318,
+            "line": 320,
             "exists": true
           },
           {
             "key": "auth.signup.check_email",
-            "line": 319,
+            "line": 321,
             "exists": true
           },
           {
             "key": "auth.error_title",
-            "line": 326,
+            "line": 328,
             "exists": true
           },
           {
             "key": "auth.unexpected_error",
-            "line": 327,
+            "line": 329,
             "exists": true
           },
           {
             "key": "auth.signup.invitation_accept_error",
-            "line": 357,
+            "line": 359,
             "exists": true
           },
           {
             "key": "auth.signup.success_title",
-            "line": 363,
+            "line": 365,
             "exists": true
           },
           {
             "key": "auth.signup.invitation_accepted",
-            "line": 364,
+            "line": 366,
             "exists": true
           },
           {
             "key": "auth.signup.success_title",
-            "line": 379,
+            "line": 381,
             "exists": true
           },
           {
             "key": "auth.signup.email_confirmation_pending_with_invitation",
-            "line": 380,
+            "line": 382,
             "exists": true
           },
           {
             "key": "auth.unexpected_error",
-            "line": 384,
-            "exists": true
-          },
-          {
-            "key": "auth.signup.invitation_accept_error",
             "line": 386,
             "exists": true
           },
           {
+            "key": "auth.signup.invitation_accept_error",
+            "line": 388,
+            "exists": true
+          },
+          {
             "key": "auth.skip_to_form",
-            "line": 400,
+            "line": 402,
             "exists": true
           },
           {
             "key": "auth.app_title",
-            "line": 430,
+            "line": 432,
             "exists": true
           },
           {
             "key": "auth.app_subtitle",
-            "line": 435,
+            "line": 437,
             "exists": true
           },
           {
             "key": "auth.signup.welcome_title",
-            "line": 442,
+            "line": 444,
             "exists": true
           },
           {
             "key": "auth.welcome_title",
-            "line": 442,
+            "line": 444,
             "exists": true
           },
           {
             "key": "auth.signup.welcome_subtitle",
-            "line": 445,
+            "line": 447,
             "exists": true
           },
           {
             "key": "auth.welcome_subtitle",
-            "line": 445,
+            "line": 447,
             "exists": true
           },
           {
             "key": "auth.signup.invitation_info",
-            "line": 452,
+            "line": 454,
             "exists": true
           },
           {
             "key": "auth.signup.as_role",
-            "line": 452,
+            "line": 454,
             "exists": true
           },
           {
             "key": "auth.signup.verifying_invitation",
-            "line": 472,
+            "line": 474,
             "exists": true
           },
           {
             "key": "auth.signup.first_name",
-            "line": 485,
+            "line": 487,
             "exists": true
           },
           {
             "key": "auth.signup.first_name_placeholder",
-            "line": 497,
+            "line": 499,
             "exists": true
           },
           {
             "key": "auth.signup.last_name",
-            "line": 502,
+            "line": 504,
             "exists": true
           },
           {
             "key": "auth.signup.last_name_placeholder",
-            "line": 514,
+            "line": 516,
             "exists": true
           },
           {
             "key": "auth.email_label",
-            "line": 523,
+            "line": 525,
             "exists": true
           },
           {
             "key": "auth.email_placeholder",
-            "line": 536,
+            "line": 538,
             "exists": true
           },
           {
             "key": "auth.invalid_email_description",
-            "line": 542,
+            "line": 544,
             "exists": true
           },
           {
             "key": "auth.password_label",
-            "line": 551,
+            "line": 553,
             "exists": true
           },
           {
             "key": "auth.signup.password_placeholder",
-            "line": 562,
+            "line": 564,
             "exists": true
           },
           {
             "key": "auth.password_placeholder",
-            "line": 562,
+            "line": 564,
             "exists": true
           },
           {
             "key": "auth.forgot_password_link",
-            "line": 572,
+            "line": 574,
             "exists": false
           },
           {
             "key": "auth.signup.password_length",
-            "line": 585,
+            "line": 587,
             "exists": true
           },
           {
             "key": "auth.signup.password_uppercase",
-            "line": 589,
+            "line": 591,
             "exists": true
           },
           {
             "key": "auth.signup.password_lowercase",
-            "line": 593,
+            "line": 595,
             "exists": true
           },
           {
             "key": "auth.signup.password_number",
-            "line": 597,
+            "line": 599,
             "exists": true
           },
           {
             "key": "auth.signup.creating_account",
-            "line": 616,
+            "line": 618,
             "exists": true
           },
           {
             "key": "auth.signing_in",
-            "line": 616,
+            "line": 618,
             "exists": true
           },
           {
             "key": "auth.signup.create_account_button",
-            "line": 619,
+            "line": 621,
             "exists": true
           },
           {
             "key": "auth.sign_in_button",
-            "line": 619,
+            "line": 621,
             "exists": true
           },
           {
             "key": "auth.signup.already_have_account",
-            "line": 627,
+            "line": 629,
             "exists": true
           },
           {
             "key": "auth.signup.sign_in_instead",
-            "line": 633,
+            "line": 635,
             "exists": true
           },
           {
             "key": "auth.signup.invitation_invalid",
-            "line": 645,
+            "line": 647,
             "exists": true
           },
           {
             "key": "auth.signup.go_to_signin",
-            "line": 651,
+            "line": 653,
             "exists": true
           },
           {
             "key": "auth.no_access_text",
-            "line": 658,
+            "line": 660,
             "exists": true
           },
           {
             "key": "auth.footer_text",
-            "line": 666,
+            "line": 668,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "auth.forgot_password_link",
-            "line": 572,
-            "context": "571: >\n572: {t('auth.forgot_password_link', 'Forgot password?')}\n573: </button>"
+            "line": 574,
+            "context": "573: >\n574: {t('auth.forgot_password_link', 'Forgot password?')}\n575: </button>"
           }
         ],
         "coverage": 98,
@@ -20816,60 +20816,60 @@
         "translationCalls": [
           {
             "key": "search.global_placeholder",
-            "line": 106,
+            "line": 108,
             "exists": true
           },
           {
             "key": "layout.mobile_menu",
-            "line": 120,
+            "line": 122,
             "exists": true
           },
           {
             "key": "layout.tools",
-            "line": 125,
+            "line": 127,
             "exists": true
           },
           {
             "key": "dealerships.dealership",
-            "line": 131,
+            "line": 133,
             "exists": true
           },
           {
             "key": "layout.preferences",
-            "line": 139,
+            "line": 141,
             "exists": true
           },
           {
             "key": "common.notifications",
-            "line": 151,
+            "line": 153,
             "exists": false
           },
           {
             "key": "layout.footer.copyright",
-            "line": 188,
+            "line": 190,
             "exists": true
           },
           {
             "key": "layout.footer.privacy_policy",
-            "line": 201,
+            "line": 203,
             "exists": true
           },
           {
             "key": "layout.footer.terms_of_service",
-            "line": 210,
+            "line": 212,
             "exists": true
           },
           {
             "key": "layout.footer.support",
-            "line": 219,
+            "line": 221,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.notifications",
-            "line": 151,
-            "context": "150: <label className=\"text-sm font-medium text-muted-foreground\">\n151: {t('common.notifications')}\n152: </label>"
+            "line": 153,
+            "context": "152: <label className=\"text-sm font-medium text-muted-foreground\">\n153: {t('common.notifications')}\n154: </label>"
           }
         ],
         "coverage": 100,
