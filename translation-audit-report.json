@@ -1,8 +1,8 @@
 {
   "scannedFiles": 854,
-  "totalStrings": 8473,
-  "hardcodedStrings": 2077,
-  "translatedStrings": 6396,
+  "totalStrings": 8486,
+  "hardcodedStrings": 2079,
+  "translatedStrings": 6407,
   "issues": {
     "critical": [
       {
@@ -3459,254 +3459,254 @@
         "hardcodedStrings": [
           {
             "text": "Performance Report",
-            "line": 410,
-            "context": "409: <CardHeader>\n410: <CardTitle className=\"text-base\">Performance Report</CardTitle>\n411: </CardHeader>"
+            "line": 437,
+            "context": "436: <CardHeader>\n437: <CardTitle className=\"text-base\">Performance Report</CardTitle>\n438: </CardHeader>"
           },
           {
             "text": "View overall workflow performance metrics and KPIs",
-            "line": 413,
-            "context": "412: <CardContent>\n413: <p className=\"text-sm text-muted-foreground mb-4\">\n414: View overall workflow performance metrics and KPIs"
+            "line": 440,
+            "context": "439: <CardContent>\n440: <p className=\"text-sm text-muted-foreground mb-4\">\n441: View overall workflow performance metrics and KPIs"
           },
           {
             "text": "Generate Report",
-            "line": 417,
-            "context": "416: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n417: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n418: Generate Report"
+            "line": 444,
+            "context": "443: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n444: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n445: Generate Report"
           },
           {
             "text": "Vehicle History",
-            "line": 425,
-            "context": "424: <CardHeader>\n425: <CardTitle className=\"text-base\">Vehicle History</CardTitle>\n426: </CardHeader>"
+            "line": 452,
+            "context": "451: <CardHeader>\n452: <CardTitle className=\"text-base\">Vehicle History</CardTitle>\n453: </CardHeader>"
           },
           {
             "text": "Export detailed vehicle movement and status history",
-            "line": 428,
-            "context": "427: <CardContent>\n428: <p className=\"text-sm text-muted-foreground mb-4\">\n429: Export detailed vehicle movement and status history"
+            "line": 455,
+            "context": "454: <CardContent>\n455: <p className=\"text-sm text-muted-foreground mb-4\">\n456: Export detailed vehicle movement and status history"
           },
           {
             "text": "Export Data",
-            "line": 432,
-            "context": "431: <Button className=\"w-full\" onClick={() => handleExport(\"csv\")}>\n432: <FileText className=\"h-4 w-4 mr-2\" />\n433: Export Data"
+            "line": 459,
+            "context": "458: <Button className=\"w-full\" onClick={() => handleExport(\"csv\")}>\n459: <FileText className=\"h-4 w-4 mr-2\" />\n460: Export Data"
           },
           {
             "text": "SLA Compliance",
-            "line": 440,
-            "context": "439: <CardHeader>\n440: <CardTitle className=\"text-base\">SLA Compliance</CardTitle>\n441: </CardHeader>"
+            "line": 467,
+            "context": "466: <CardHeader>\n467: <CardTitle className=\"text-base\">SLA Compliance</CardTitle>\n468: </CardHeader>"
           },
           {
             "text": "Review SLA compliance rates and identify bottlenecks",
-            "line": 443,
-            "context": "442: <CardContent>\n443: <p className=\"text-sm text-muted-foreground mb-4\">\n444: Review SLA compliance rates and identify bottlenecks"
+            "line": 470,
+            "context": "469: <CardContent>\n470: <p className=\"text-sm text-muted-foreground mb-4\">\n471: Review SLA compliance rates and identify bottlenecks"
           },
           {
             "text": "View Report",
-            "line": 447,
-            "context": "446: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n447: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n448: View Report"
+            "line": 474,
+            "context": "473: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n474: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n475: View Report"
           },
           {
             "text": "Recent Exports",
-            "line": 460,
-            "context": "459: <CardHeader>\n460: <CardTitle>Recent Exports</CardTitle>\n461: </CardHeader>"
+            "line": 487,
+            "context": "486: <CardHeader>\n487: <CardTitle>Recent Exports</CardTitle>\n488: </CardHeader>"
           },
           {
             "text": "Searching all steps",
-            "line": 714,
-            "context": "713: <Badge variant=\"outline\" className=\"bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/30 dark:text-amber-400\">\n714: <Search className=\"h-3 w-3 mr-1\" />\n715: Searching all steps"
+            "line": 773,
+            "context": "772: <Badge variant=\"outline\" className=\"bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/30 dark:text-amber-400\">\n773: <Search className=\"h-3 w-3 mr-1\" />\n774: Searching all steps"
           },
           {
             "text": "All Types",
-            "line": 726,
-            "context": "725: <SelectContent>\n726: <SelectItem value=\"all\">All Types</SelectItem>\n727: <SelectItem value=\"standard\">"
+            "line": 785,
+            "context": "784: <SelectContent>\n785: <SelectItem value=\"all\">All Types</SelectItem>\n786: <SelectItem value=\"standard\">"
           },
           {
             "text": "All Priorities",
-            "line": 745,
-            "context": "744: <SelectContent>\n745: <SelectItem value=\"all\">All Priorities</SelectItem>\n746: <SelectItem value=\"low\">Low</SelectItem>"
+            "line": 804,
+            "context": "803: <SelectContent>\n804: <SelectItem value=\"all\">All Priorities</SelectItem>\n805: <SelectItem value=\"low\">Low</SelectItem>"
           },
           {
             "text": "Normal",
-            "line": 747,
-            "context": "746: <SelectItem value=\"low\">Low</SelectItem>\n747: <SelectItem value=\"normal\">Normal</SelectItem>\n748: <SelectItem value=\"high\">High</SelectItem>"
+            "line": 806,
+            "context": "805: <SelectItem value=\"low\">Low</SelectItem>\n806: <SelectItem value=\"normal\">Normal</SelectItem>\n807: <SelectItem value=\"high\">High</SelectItem>"
           },
           {
             "text": "High",
-            "line": 748,
-            "context": "747: <SelectItem value=\"normal\">Normal</SelectItem>\n748: <SelectItem value=\"high\">High</SelectItem>\n749: <SelectItem value=\"urgent\">Urgent</SelectItem>"
+            "line": 807,
+            "context": "806: <SelectItem value=\"normal\">Normal</SelectItem>\n807: <SelectItem value=\"high\">High</SelectItem>\n808: <SelectItem value=\"urgent\">Urgent</SelectItem>"
           },
           {
             "text": "Urgent",
-            "line": 749,
-            "context": "748: <SelectItem value=\"high\">High</SelectItem>\n749: <SelectItem value=\"urgent\">Urgent</SelectItem>\n750: </SelectContent>"
+            "line": 808,
+            "context": "807: <SelectItem value=\"high\">High</SelectItem>\n808: <SelectItem value=\"urgent\">Urgent</SelectItem>\n809: </SelectContent>"
           },
           {
             "text": "Days in Step",
-            "line": 760,
-            "context": "759: <SelectContent>\n760: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n761: <SelectItem value=\"days_to_frontline\">"
+            "line": 819,
+            "context": "818: <SelectContent>\n819: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n820: <SelectItem value=\"days_to_frontline\">"
           },
           {
             "text": "Days to Finish",
-            "line": 761,
-            "context": "760: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n761: <SelectItem value=\"days_to_frontline\">\n762: Days to Finish"
+            "line": 820,
+            "context": "819: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n820: <SelectItem value=\"days_to_frontline\">\n821: Days to Finish"
           },
           {
             "text": "Priority Score",
-            "line": 764,
-            "context": "763: </SelectItem>\n764: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n765: <SelectItem value=\"sla_status\">SLA Status</SelectItem>"
+            "line": 823,
+            "context": "822: </SelectItem>\n823: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n824: <SelectItem value=\"sla_status\">SLA Status</SelectItem>"
           },
           {
             "text": "SLA Status",
-            "line": 765,
-            "context": "764: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n765: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n766: <SelectItem value=\"stock_number\">Stock Number</SelectItem>"
+            "line": 824,
+            "context": "823: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n824: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n825: <SelectItem value=\"stock_number\">Stock Number</SelectItem>"
           },
           {
             "text": "Stock Number",
-            "line": 766,
-            "context": "765: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n766: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n767: <SelectItem value=\"created_at\">Date Added</SelectItem>"
+            "line": 825,
+            "context": "824: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n825: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n826: <SelectItem value=\"created_at\">Date Added</SelectItem>"
           },
           {
             "text": "Date Added",
-            "line": 767,
-            "context": "766: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n767: <SelectItem value=\"created_at\">Date Added</SelectItem>\n768: </SelectContent>"
+            "line": 826,
+            "context": "825: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n826: <SelectItem value=\"created_at\">Date Added</SelectItem>\n827: </SelectContent>"
           },
           {
             "text": "Clear Filters",
-            "line": 789,
-            "context": "788: onClick={clearFilters}\n789: >\n790: Clear Filters"
+            "line": 848,
+            "context": "847: onClick={clearFilters}\n848: >\n849: Clear Filters"
           },
           {
             "text": "Workflow",
-            "line": 723,
-            "context": "722: <SelectTrigger className=\"w-32 h-9\">\n723: <SelectValue placeholder=\"Workflow\" />\n724: </SelectTrigger>"
+            "line": 782,
+            "context": "781: <SelectTrigger className=\"w-32 h-9\">\n782: <SelectValue placeholder=\"Workflow\" />\n783: </SelectTrigger>"
           },
           {
             "text": "Priority",
-            "line": 742,
-            "context": "741: <SelectTrigger className=\"w-32 h-9\">\n742: <SelectValue placeholder=\"Priority\" />\n743: </SelectTrigger>"
+            "line": 801,
+            "context": "800: <SelectTrigger className=\"w-32 h-9\">\n801: <SelectValue placeholder=\"Priority\" />\n802: </SelectTrigger>"
           },
           {
             "text": "Clear Filters\n            ",
-            "line": 784,
-            "context": "783: {hasActiveFilters && (\n784: <Button\n785: variant=\"ghost\""
+            "line": 843,
+            "context": "842: {hasActiveFilters && (\n843: <Button\n844: variant=\"ghost\""
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.vehicle_not_found",
-            "line": 195,
+            "line": 221,
             "exists": true
           },
           {
             "key": "common.data_refreshed",
-            "line": 234,
+            "line": 260,
             "exists": true
           },
           {
             "key": "common.refresh_failed",
-            "line": 240,
+            "line": 266,
             "exists": true
           },
           {
             "key": "get_ready.export.no_vehicles",
-            "line": 251,
+            "line": 277,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_deleted",
-            "line": 280,
+            "line": 306,
             "exists": true
           },
           {
             "key": "get_ready.delete_failed",
-            "line": 289,
+            "line": 315,
             "exists": true
           },
           {
             "key": "get_ready.reports.title",
-            "line": 398,
+            "line": 425,
             "exists": true
           },
           {
             "key": "get_ready.reports.subtitle",
-            "line": 401,
+            "line": 428,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.approved_title",
-            "line": 508,
+            "line": 567,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.no_approved",
-            "line": 514,
+            "line": 573,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.rejected_title",
-            "line": 548,
+            "line": 607,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.no_rejected",
-            "line": 554,
+            "line": 613,
             "exists": true
           },
           {
             "key": "get_ready.approvals.modal.rejection_reason",
-            "line": 577,
+            "line": 636,
             "exists": true
           },
           {
             "key": "get_ready.search_placeholder",
-            "line": 621,
+            "line": 680,
             "exists": true
           },
           {
             "key": "common.action_buttons.refresh",
-            "line": 648,
+            "line": 707,
             "exists": true
           },
           {
             "key": "common.action_buttons.exporting",
-            "line": 661,
+            "line": 720,
             "exists": true
           },
           {
             "key": "common.action_buttons.export",
-            "line": 662,
+            "line": 721,
             "exists": true
           },
           {
             "key": "common.action_buttons.export",
-            "line": 669,
-            "exists": true
-          },
-          {
-            "key": "common.action_buttons.export_csv",
-            "line": 674,
-            "exists": true
-          },
-          {
-            "key": "common.action_buttons.export_excel",
-            "line": 678,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.add_vehicle",
-            "line": 692,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.standard",
             "line": 728,
             "exists": true
           },
           {
+            "key": "common.action_buttons.export_csv",
+            "line": 733,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.export_excel",
+            "line": 737,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vehicle_form.add_vehicle",
+            "line": 751,
+            "exists": true
+          },
+          {
+            "key": "get_ready.workflow.standard",
+            "line": 787,
+            "exists": true
+          },
+          {
             "key": "get_ready.workflow.express",
-            "line": 731,
+            "line": 790,
             "exists": true
           },
           {
             "key": "get_ready.workflow.priority",
-            "line": 734,
+            "line": 793,
             "exists": true
           }
         ],
@@ -14416,235 +14416,250 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 121,
+            "line": 127,
             "exists": true
           },
           {
             "key": "errors.no_permission",
-            "line": 133,
+            "line": 139,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 134,
+            "line": 140,
             "exists": false
           },
           {
             "key": "errors.no_permission",
-            "line": 149,
+            "line": 155,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 150,
+            "line": 156,
             "exists": false
           },
           {
             "key": "orders.deleted_success",
-            "line": 184,
-            "exists": false
-          },
-          {
-            "key": "orders.delete_error",
             "line": 190,
             "exists": false
           },
           {
+            "key": "orders.delete_error",
+            "line": 196,
+            "exists": false
+          },
+          {
             "key": "orders.multiple_created_successfully",
-            "line": 215,
+            "line": 221,
             "exists": true
           },
           {
             "key": "orders.updated_successfully",
-            "line": 227,
+            "line": 233,
             "exists": true
           },
           {
             "key": "orders.created_successfully",
-            "line": 235,
+            "line": 241,
             "exists": true
           },
           {
             "key": "orders.save_failed",
-            "line": 245,
+            "line": 251,
             "exists": true
           },
           {
+            "key": "orders.order_not_found",
+            "line": 268,
+            "exists": true
+          },
+          {
+            "key": "errors.no_permission_status_change",
+            "line": 285,
+            "exists": false
+          },
+          {
             "key": "common.status.${newStatus}",
-            "line": 270,
+            "line": 304,
             "exists": false
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 272,
+            "line": 306,
             "exists": true
           },
           {
             "key": "orders.status_update_failed",
-            "line": 281,
+            "line": 321,
             "exists": false
           },
           {
             "key": "orders.field_updated_successfully",
-            "line": 300,
+            "line": 340,
             "exists": false
           },
           {
             "key": "orders.update_failed",
-            "line": 306,
+            "line": 346,
             "exists": false
           },
           {
             "key": "pages.service_orders",
-            "line": 341,
+            "line": 381,
             "exists": true
           },
           {
             "key": "accessibility.service_orders.refresh_button",
-            "line": 354,
+            "line": 394,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 358,
+            "line": 398,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 364,
+            "line": 404,
             "exists": false
           },
           {
             "key": "accessibility.service_orders.create_button",
-            "line": 365,
+            "line": 405,
             "exists": true
           },
           {
             "key": "common.new_order",
-            "line": 368,
+            "line": 408,
             "exists": true
           },
           {
             "key": "accessibility.service_orders.main_content",
-            "line": 400,
+            "line": 440,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 413,
+            "line": 453,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.tomorrow",
-            "line": 413,
+            "line": 453,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 413,
+            "line": 453,
             "exists": true
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 413,
+            "line": 453,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 413,
+            "line": 453,
             "exists": true
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 501,
+            "line": 541,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 503,
+            "line": 543,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 507,
+            "line": 547,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 512,
+            "line": 552,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "errors.no_permission",
-            "line": 133,
-            "context": "132: toast({\n133: title: t('errors.no_permission', 'No Permission'),\n134: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 139,
+            "context": "138: toast({\n139: title: t('errors.no_permission', 'No Permission'),\n140: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 134,
-            "context": "133: title: t('errors.no_permission', 'No Permission'),\n134: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n135: variant: 'destructive'"
+            "line": 140,
+            "context": "139: title: t('errors.no_permission', 'No Permission'),\n140: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n141: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 149,
-            "context": "148: toast({\n149: title: t('errors.no_permission', 'No Permission'),\n150: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 155,
+            "context": "154: toast({\n155: title: t('errors.no_permission', 'No Permission'),\n156: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 150,
-            "context": "149: title: t('errors.no_permission', 'No Permission'),\n150: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n151: variant: 'destructive'"
+            "line": 156,
+            "context": "155: title: t('errors.no_permission', 'No Permission'),\n156: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n157: variant: 'destructive'"
           },
           {
             "key": "orders.deleted_success",
-            "line": 184,
-            "context": "183: toast({\n184: title: t('orders.deleted_success', 'Order deleted successfully')\n185: });"
+            "line": 190,
+            "context": "189: toast({\n190: title: t('orders.deleted_success', 'Order deleted successfully')\n191: });"
           },
           {
             "key": "orders.delete_error",
-            "line": 190,
-            "context": "189: variant: 'destructive',\n190: title: t('orders.delete_error', 'Failed to delete order')\n191: });"
+            "line": 196,
+            "context": "195: variant: 'destructive',\n196: title: t('orders.delete_error', 'Failed to delete order')\n197: });"
+          },
+          {
+            "key": "errors.no_permission_status_change",
+            "line": 285,
+            "context": "284: toast({\n285: description: t('errors.no_permission_status_change', 'You do not have permission to change this status'),\n286: variant: 'destructive'"
           },
           {
             "key": "common.status.${newStatus}",
-            "line": 270,
-            "context": "269: // Show success toast\n270: const statusLabel = t(`common.status.${newStatus}`, newStatus);\n271: toast({"
+            "line": 304,
+            "context": "303: // ✅ 4. Show success toast\n304: const statusLabel = t(`common.status.${newStatus}`, newStatus);\n305: toast({"
           },
           {
             "key": "orders.status_update_failed",
-            "line": 281,
-            "context": "280: variant: 'destructive',\n281: description: t('orders.status_update_failed', 'Failed to update status')\n282: });"
+            "line": 321,
+            "context": "320: variant: 'destructive',\n321: description: t('orders.status_update_failed', 'Failed to update status')\n322: });"
           },
           {
             "key": "orders.field_updated_successfully",
-            "line": 300,
-            "context": "299: toast({\n300: description: t('orders.field_updated_successfully', 'Order updated successfully')\n301: });"
+            "line": 340,
+            "context": "339: toast({\n340: description: t('orders.field_updated_successfully', 'Order updated successfully')\n341: });"
           },
           {
             "key": "orders.update_failed",
-            "line": 306,
-            "context": "305: variant: 'destructive',\n306: description: t('orders.update_failed', 'Failed to update order')\n307: });"
+            "line": 346,
+            "context": "345: variant: 'destructive',\n346: description: t('orders.update_failed', 'Failed to update order')\n347: });"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 364,
-            "context": "363: disabled={!canCreate}\n364: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n365: aria-label={t('accessibility.service_orders.create_button', 'Create new service order')}"
+            "line": 404,
+            "context": "403: disabled={!canCreate}\n404: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n405: aria-label={t('accessibility.service_orders.create_button', 'Create new service order')}"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 501,
-            "context": "500: <AlertDialogHeader>\n501: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n502: <AlertDialogDescription>"
+            "line": 541,
+            "context": "540: <AlertDialogHeader>\n541: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n542: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 503,
-            "context": "502: <AlertDialogDescription>\n503: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n504: </AlertDialogDescription>"
+            "line": 543,
+            "context": "542: <AlertDialogDescription>\n543: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n544: </AlertDialogDescription>"
           },
           {
             "key": "common.delete",
-            "line": 512,
-            "context": "511: >\n512: {t('common.delete', 'Delete')}\n513: </AlertDialogAction>"
+            "line": 552,
+            "context": "551: >\n552: {t('common.delete', 'Delete')}\n553: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -14656,205 +14671,220 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 138,
+            "line": 145,
             "exists": true
           },
           {
             "key": "errors.no_permission",
-            "line": 150,
+            "line": 157,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 151,
+            "line": 158,
             "exists": false
           },
           {
             "key": "errors.no_permission",
-            "line": 166,
+            "line": 173,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 167,
+            "line": 174,
             "exists": false
           },
           {
             "key": "orders.deleted_success",
-            "line": 211,
+            "line": 218,
             "exists": false
           },
           {
             "key": "orders.delete_error",
-            "line": 217,
+            "line": 224,
             "exists": false
           },
           {
             "key": "orders.multiple_created_successfully",
-            "line": 242,
+            "line": 249,
             "exists": true
           },
           {
             "key": "orders.updated_successfully",
-            "line": 254,
+            "line": 261,
             "exists": true
           },
           {
             "key": "orders.created_successfully",
-            "line": 262,
+            "line": 269,
             "exists": true
           },
           {
             "key": "orders.save_failed",
-            "line": 279,
+            "line": 286,
             "exists": true
           },
           {
+            "key": "orders.order_not_found",
+            "line": 303,
+            "exists": true
+          },
+          {
+            "key": "errors.no_permission_status_change",
+            "line": 320,
+            "exists": false
+          },
+          {
             "key": "orders.status_updated_successfully",
-            "line": 306,
+            "line": 341,
             "exists": true
           },
           {
             "key": "orders.status_change_failed",
-            "line": 314,
+            "line": 353,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.dashboard",
-            "line": 354,
+            "line": 393,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 355,
+            "line": 394,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.tomorrow",
-            "line": 356,
+            "line": 395,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 357,
+            "line": 396,
             "exists": true
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 358,
+            "line": 397,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.week",
-            "line": 359,
+            "line": 398,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 360,
+            "line": 399,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.services",
-            "line": 361,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.tabs.deleted",
-            "line": 362,
-            "exists": true
-          },
-          {
-            "key": "pages.sales_orders",
             "line": 400,
             "exists": true
           },
           {
+            "key": "sales_orders.tabs.deleted",
+            "line": 401,
+            "exists": true
+          },
+          {
+            "key": "pages.sales_orders",
+            "line": 439,
+            "exists": true
+          },
+          {
             "key": "common.refresh",
-            "line": 415,
+            "line": 454,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 421,
+            "line": 460,
             "exists": false
           },
           {
             "key": "common.new_order",
-            "line": 424,
+            "line": 463,
             "exists": true
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 565,
+            "line": 604,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 567,
+            "line": 606,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 571,
+            "line": 610,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 576,
+            "line": 615,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "errors.no_permission",
-            "line": 150,
-            "context": "149: toast({\n150: title: t('errors.no_permission', 'No Permission'),\n151: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 157,
+            "context": "156: toast({\n157: title: t('errors.no_permission', 'No Permission'),\n158: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 151,
-            "context": "150: title: t('errors.no_permission', 'No Permission'),\n151: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n152: variant: 'destructive'"
+            "line": 158,
+            "context": "157: title: t('errors.no_permission', 'No Permission'),\n158: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n159: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 166,
-            "context": "165: toast({\n166: title: t('errors.no_permission', 'No Permission'),\n167: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 173,
+            "context": "172: toast({\n173: title: t('errors.no_permission', 'No Permission'),\n174: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 167,
-            "context": "166: title: t('errors.no_permission', 'No Permission'),\n167: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n168: variant: 'destructive'"
+            "line": 174,
+            "context": "173: title: t('errors.no_permission', 'No Permission'),\n174: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n175: variant: 'destructive'"
           },
           {
             "key": "orders.deleted_success",
-            "line": 211,
-            "context": "210: toast({\n211: title: t('orders.deleted_success', 'Order deleted successfully')\n212: });"
+            "line": 218,
+            "context": "217: toast({\n218: title: t('orders.deleted_success', 'Order deleted successfully')\n219: });"
           },
           {
             "key": "orders.delete_error",
-            "line": 217,
-            "context": "216: variant: 'destructive',\n217: title: t('orders.delete_error', 'Failed to delete order')\n218: });"
+            "line": 224,
+            "context": "223: variant: 'destructive',\n224: title: t('orders.delete_error', 'Failed to delete order')\n225: });"
+          },
+          {
+            "key": "errors.no_permission_status_change",
+            "line": 320,
+            "context": "319: toast({\n320: description: t('errors.no_permission_status_change', 'You do not have permission to change this status'),\n321: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 421,
-            "context": "420: disabled={!canCreate}\n421: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n422: >"
+            "line": 460,
+            "context": "459: disabled={!canCreate}\n460: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n461: >"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 565,
-            "context": "564: <AlertDialogHeader>\n565: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n566: <AlertDialogDescription>"
+            "line": 604,
+            "context": "603: <AlertDialogHeader>\n604: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n605: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 567,
-            "context": "566: <AlertDialogDescription>\n567: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n568: </AlertDialogDescription>"
+            "line": 606,
+            "context": "605: <AlertDialogDescription>\n606: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n607: </AlertDialogDescription>"
           },
           {
             "key": "common.delete",
-            "line": 576,
-            "context": "575: >\n576: {t('common.delete', 'Delete')}\n577: </AlertDialogAction>"
+            "line": 615,
+            "context": "614: >\n615: {t('common.delete', 'Delete')}\n616: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -15222,225 +15252,250 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 106,
+            "line": 110,
             "exists": true
           },
           {
             "key": "errors.no_permission",
-            "line": 201,
+            "line": 205,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 202,
+            "line": 206,
             "exists": false
           },
           {
             "key": "errors.no_permission",
-            "line": 217,
+            "line": 221,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 218,
+            "line": 222,
             "exists": false
           },
           {
             "key": "accessibility.recon_orders.order_deleted",
-            "line": 252,
+            "line": 256,
             "exists": true
           },
           {
             "key": "orders.deleted_success",
-            "line": 254,
+            "line": 258,
             "exists": false
           },
           {
             "key": "orders.delete_error",
-            "line": 260,
+            "line": 264,
             "exists": false
           },
           {
             "key": "orders.multiple_created_successfully",
-            "line": 294,
+            "line": 298,
             "exists": true
           },
           {
             "key": "accessibility.recon_orders.order_updated",
-            "line": 333,
+            "line": 337,
             "exists": true
           },
           {
             "key": "accessibility.recon_orders.order_created",
-            "line": 341,
+            "line": 345,
+            "exists": true
+          },
+          {
+            "key": "orders.order_not_found",
+            "line": 363,
+            "exists": true
+          },
+          {
+            "key": "errors.no_permission_status_change",
+            "line": 380,
+            "exists": false
+          },
+          {
+            "key": "orders.status_updated_successfully",
+            "line": 400,
+            "exists": true
+          },
+          {
+            "key": "orders.status_change_failed",
+            "line": 412,
             "exists": true
           },
           {
             "key": "recon_defaults.default_customer",
-            "line": 395,
+            "line": 445,
             "exists": true
           },
           {
             "key": "recon_defaults.default_customer",
-            "line": 396,
+            "line": 446,
             "exists": true
           },
           {
             "key": "recon_defaults.default_service",
-            "line": 438,
+            "line": 488,
             "exists": true
           },
           {
             "key": "recon_defaults.default_service",
-            "line": 439,
+            "line": 489,
             "exists": true
           },
           {
             "key": "common.general",
-            "line": 439,
+            "line": 489,
             "exists": false
           },
           {
             "key": "recon_defaults.default_advisor",
-            "line": 441,
+            "line": 491,
             "exists": true
           },
           {
             "key": "recon_defaults.default_department",
-            "line": 442,
+            "line": 492,
             "exists": true
           },
           {
             "key": "pages.recon_orders",
-            "line": 469,
+            "line": 519,
             "exists": true
           },
           {
             "key": "accessibility.recon_orders.refresh_button",
-            "line": 482,
+            "line": 532,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 486,
+            "line": 536,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 492,
+            "line": 542,
             "exists": false
           },
           {
             "key": "accessibility.recon_orders.create_button",
-            "line": 493,
+            "line": 543,
             "exists": true
           },
           {
             "key": "recon.new_recon_order",
-            "line": 496,
+            "line": 546,
             "exists": true
           },
           {
             "key": "accessibility.recon_orders.main_content",
-            "line": 517,
+            "line": 567,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 522,
+            "line": 572,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 522,
+            "line": 572,
             "exists": true
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 522,
+            "line": 572,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 522,
+            "line": 572,
             "exists": true
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 611,
+            "line": 661,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 613,
+            "line": 663,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 617,
+            "line": 667,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 622,
+            "line": 672,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "errors.no_permission",
-            "line": 201,
-            "context": "200: toast({\n201: title: t('errors.no_permission', 'No Permission'),\n202: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 205,
+            "context": "204: toast({\n205: title: t('errors.no_permission', 'No Permission'),\n206: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 202,
-            "context": "201: title: t('errors.no_permission', 'No Permission'),\n202: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n203: variant: 'destructive'"
+            "line": 206,
+            "context": "205: title: t('errors.no_permission', 'No Permission'),\n206: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n207: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 217,
-            "context": "216: toast({\n217: title: t('errors.no_permission', 'No Permission'),\n218: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 221,
+            "context": "220: toast({\n221: title: t('errors.no_permission', 'No Permission'),\n222: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 218,
-            "context": "217: title: t('errors.no_permission', 'No Permission'),\n218: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n219: variant: 'destructive'"
+            "line": 222,
+            "context": "221: title: t('errors.no_permission', 'No Permission'),\n222: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n223: variant: 'destructive'"
           },
           {
             "key": "orders.deleted_success",
-            "line": 254,
-            "context": "253: toast({\n254: title: t('orders.deleted_success', 'Order deleted successfully')\n255: });"
+            "line": 258,
+            "context": "257: toast({\n258: title: t('orders.deleted_success', 'Order deleted successfully')\n259: });"
           },
           {
             "key": "orders.delete_error",
-            "line": 260,
-            "context": "259: variant: 'destructive',\n260: title: t('orders.delete_error', 'Failed to delete order')\n261: });"
+            "line": 264,
+            "context": "263: variant: 'destructive',\n264: title: t('orders.delete_error', 'Failed to delete order')\n265: });"
+          },
+          {
+            "key": "errors.no_permission_status_change",
+            "line": 380,
+            "context": "379: toast({\n380: description: t('errors.no_permission_status_change', 'You do not have permission to change this status'),\n381: variant: 'destructive'"
           },
           {
             "key": "common.general",
-            "line": 439,
-            "context": "438: service: t('recon_defaults.default_service'),\n439: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,\n440: price: order.reconCost || 0,"
+            "line": 489,
+            "context": "488: service: t('recon_defaults.default_service'),\n489: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,\n490: price: order.reconCost || 0,"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 492,
-            "context": "491: disabled={!canCreate}\n492: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n493: aria-label={t('accessibility.recon_orders.create_button')}"
+            "line": 542,
+            "context": "541: disabled={!canCreate}\n542: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n543: aria-label={t('accessibility.recon_orders.create_button')}"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 611,
-            "context": "610: <AlertDialogHeader>\n611: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n612: <AlertDialogDescription>"
+            "line": 661,
+            "context": "660: <AlertDialogHeader>\n661: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n662: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 613,
-            "context": "612: <AlertDialogDescription>\n613: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n614: </AlertDialogDescription>"
+            "line": 663,
+            "context": "662: <AlertDialogDescription>\n663: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n664: </AlertDialogDescription>"
           },
           {
             "key": "common.delete",
-            "line": 622,
-            "context": "621: >\n622: {t('common.delete', 'Delete')}\n623: </AlertDialogAction>"
+            "line": 672,
+            "context": "671: >\n672: {t('common.delete', 'Delete')}\n673: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -17640,165 +17695,185 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 118,
+            "line": 122,
             "exists": true
           },
           {
             "key": "errors.no_permission",
-            "line": 213,
+            "line": 217,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 214,
+            "line": 218,
             "exists": false
           },
           {
             "key": "accessibility.car_wash_orders.order_deleted",
-            "line": 247,
+            "line": 251,
             "exists": true
           },
           {
             "key": "orders.deleted_success",
-            "line": 249,
+            "line": 253,
             "exists": false
           },
           {
             "key": "orders.delete_error",
-            "line": 255,
+            "line": 259,
             "exists": false
           },
           {
             "key": "accessibility.car_wash_orders.order_updated",
-            "line": 277,
+            "line": 281,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.order_created",
-            "line": 283,
+            "line": 287,
             "exists": true
           },
           {
+            "key": "orders.order_not_found",
+            "line": 304,
+            "exists": true
+          },
+          {
+            "key": "errors.no_permission_status_change",
+            "line": 321,
+            "exists": false
+          },
+          {
             "key": "orders.status_updated_successfully",
-            "line": 301,
+            "line": 340,
+            "exists": true
+          },
+          {
+            "key": "orders.status_change_failed",
+            "line": 352,
             "exists": true
           },
           {
             "key": "pages.car_wash",
-            "line": 350,
+            "line": 400,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.refresh_button",
-            "line": 363,
+            "line": 413,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 367,
+            "line": 417,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 373,
+            "line": 423,
             "exists": false
           },
           {
             "key": "accessibility.car_wash_orders.create_button",
-            "line": 374,
+            "line": 424,
             "exists": true
           },
           {
             "key": "car_wash_orders.quick_order",
-            "line": 377,
+            "line": 427,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.main_content",
-            "line": 396,
+            "line": 446,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 401,
+            "line": 451,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 401,
+            "line": 451,
             "exists": true
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 401,
+            "line": 451,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 401,
+            "line": 451,
             "exists": true
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 467,
+            "line": 517,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 469,
+            "line": 519,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 473,
+            "line": 523,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 478,
+            "line": 528,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "errors.no_permission",
-            "line": 213,
-            "context": "212: toast({\n213: title: t('errors.no_permission', 'No Permission'),\n214: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 217,
+            "context": "216: toast({\n217: title: t('errors.no_permission', 'No Permission'),\n218: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 214,
-            "context": "213: title: t('errors.no_permission', 'No Permission'),\n214: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n215: variant: 'destructive'"
+            "line": 218,
+            "context": "217: title: t('errors.no_permission', 'No Permission'),\n218: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n219: variant: 'destructive'"
           },
           {
             "key": "orders.deleted_success",
-            "line": 249,
-            "context": "248: toast({\n249: title: t('orders.deleted_success', 'Order deleted successfully')\n250: });"
+            "line": 253,
+            "context": "252: toast({\n253: title: t('orders.deleted_success', 'Order deleted successfully')\n254: });"
           },
           {
             "key": "orders.delete_error",
-            "line": 255,
-            "context": "254: variant: 'destructive',\n255: title: t('orders.delete_error', 'Failed to delete order')\n256: });"
+            "line": 259,
+            "context": "258: variant: 'destructive',\n259: title: t('orders.delete_error', 'Failed to delete order')\n260: });"
+          },
+          {
+            "key": "errors.no_permission_status_change",
+            "line": 321,
+            "context": "320: toast({\n321: description: t('errors.no_permission_status_change', 'You do not have permission to change this status'),\n322: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 373,
-            "context": "372: disabled={!canCreate}\n373: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n374: aria-label={t('accessibility.car_wash_orders.create_button')}"
+            "line": 423,
+            "context": "422: disabled={!canCreate}\n423: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n424: aria-label={t('accessibility.car_wash_orders.create_button')}"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 467,
-            "context": "466: <AlertDialogHeader>\n467: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n468: <AlertDialogDescription>"
+            "line": 517,
+            "context": "516: <AlertDialogHeader>\n517: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n518: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 469,
-            "context": "468: <AlertDialogDescription>\n469: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n470: </AlertDialogDescription>"
+            "line": 519,
+            "context": "518: <AlertDialogDescription>\n519: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n520: </AlertDialogDescription>"
           },
           {
             "key": "common.delete",
-            "line": 478,
-            "context": "477: >\n478: {t('common.delete', 'Delete')}\n479: </AlertDialogAction>"
+            "line": 528,
+            "context": "527: >\n528: {t('common.delete', 'Delete')}\n529: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -46638,22 +46713,41 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\loading\\AppLoadingBoundary.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Translation Loading Failed",
+            "line": 65,
+            "context": "64: <div className=\"space-y-2\">\n65: <h1 className=\"text-2xl font-bold text-foreground\">\n66: Translation Loading Failed"
+          },
+          {
+            "text": "Refresh Page",
+            "line": 78,
+            "context": "77: >\n78: <RefreshCw className=\"mr-2 h-5 w-5\" />\n79: Refresh Page"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\invitations\\InvitationManagement.tsx",
         "hardcodedStrings": [
           {
             "text": "Templates",
-            "line": 414,
-            "context": "413: >\n414: <Mail className=\"h-4 w-4\" />\n415: Templates"
+            "line": 411,
+            "context": "410: >\n411: <Mail className=\"h-4 w-4\" />\n412: Templates"
           },
           {
             "text": "Send Invitation",
-            "line": 421,
-            "context": "420: >\n421: <Send className=\"h-4 w-4\" />\n422: Send Invitation"
+            "line": 418,
+            "context": "417: >\n418: <Send className=\"h-4 w-4\" />\n419: Send Invitation"
           },
           {
             "text": "Expired",
-            "line": 566,
-            "context": "565: <div className=\"flex items-center gap-1 text-red-600\">\n566: <AlertCircle className=\"h-4 w-4\" />\n567: Expired"
+            "line": 563,
+            "context": "562: <div className=\"flex items-center gap-1 text-red-600\">\n563: <AlertCircle className=\"h-4 w-4\" />\n564: Expired"
           },
           {
             "text": ", error);\n        throw error;\n      }\n\n      setInvitations(data || []);\n\n      console.log(",
@@ -46744,170 +46838,170 @@
           },
           {
             "key": "invitations.dealer_invitations",
-            "line": 400,
+            "line": 397,
             "exists": true
           },
           {
             "key": "invitations.all_invitations",
-            "line": 400,
+            "line": 397,
             "exists": true
           },
           {
             "key": "invitations.manage_dealer_invitations_desc",
-            "line": 404,
+            "line": 401,
             "exists": true
           },
           {
             "key": "invitations.manage_invitations_desc",
-            "line": 405,
+            "line": 402,
             "exists": true
           },
           {
             "key": "invitations.stats.total",
-            "line": 433,
+            "line": 430,
             "exists": true
           },
           {
             "key": "invitations.stats.pending",
-            "line": 445,
+            "line": 442,
             "exists": true
           },
           {
             "key": "invitations.stats.accepted",
-            "line": 457,
+            "line": 454,
             "exists": true
           },
           {
             "key": "invitations.stats.expired",
-            "line": 469,
+            "line": 466,
             "exists": true
           },
           {
             "key": "invitations.table.invitee",
-            "line": 493,
+            "line": 490,
             "exists": true
           },
           {
             "key": "invitations.table.role",
-            "line": 494,
+            "line": 491,
             "exists": true
           },
           {
             "key": "invitations.table.dealership",
-            "line": 495,
+            "line": 492,
             "exists": true
           },
           {
             "key": "invitations.table.inviter",
-            "line": 496,
+            "line": 493,
             "exists": true
           },
           {
             "key": "invitations.table.status",
-            "line": 497,
+            "line": 494,
             "exists": true
           },
           {
             "key": "invitations.table.sent",
-            "line": 498,
+            "line": 495,
             "exists": true
           },
           {
             "key": "invitations.table.expires",
-            "line": 499,
+            "line": 496,
             "exists": true
           },
           {
             "key": "invitations.table.actions",
-            "line": 500,
+            "line": 497,
             "exists": true
           },
           {
             "key": "invitations.table.no_invitations",
-            "line": 509,
+            "line": 506,
             "exists": true
           },
           {
             "key": "roles.${invitation.role_name}",
-            "line": 532,
+            "line": 529,
             "exists": false
           },
           {
             "key": "invitations.cancel_invitation",
-            "line": 605,
+            "line": 602,
             "exists": true
           },
           {
             "key": "invitations.delete_invitation",
-            "line": 619,
+            "line": 616,
             "exists": true
           },
           {
             "key": "invitations.confirm_cancel",
-            "line": 657,
+            "line": 654,
             "exists": true
           },
           {
             "key": "invitations.confirm_cancel_desc",
-            "line": 658,
+            "line": 655,
             "exists": true
           },
           {
             "key": "common.yes",
-            "line": 659,
+            "line": 656,
             "exists": false
           },
           {
             "key": "common.no",
-            "line": 660,
+            "line": 657,
             "exists": false
           },
           {
             "key": "invitations.confirm_delete",
-            "line": 672,
+            "line": 669,
             "exists": true
           },
           {
             "key": "invitations.confirm_delete_desc",
-            "line": 673,
+            "line": 670,
             "exists": true
           },
           {
             "key": "common.yes",
-            "line": 674,
+            "line": 671,
             "exists": false
           },
           {
             "key": "common.no",
-            "line": 675,
+            "line": 672,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "roles.${invitation.role_name}",
-            "line": 532,
-            "context": "531: <TableCell>\n532: <Badge variant=\"outline\">{t(`roles.${invitation.role_name}`, formatRoleName(invitation.role_name))}</Badge>\n533: </TableCell>"
+            "line": 529,
+            "context": "528: <TableCell>\n529: <Badge variant=\"outline\">{t(`roles.${invitation.role_name}`, formatRoleName(invitation.role_name))}</Badge>\n530: </TableCell>"
           },
           {
             "key": "common.yes",
-            "line": 659,
-            "context": "658: description={t('invitations.confirm_cancel_desc')}\n659: confirmText={t('common.yes')}\n660: cancelText={t('common.no')}"
+            "line": 656,
+            "context": "655: description={t('invitations.confirm_cancel_desc')}\n656: confirmText={t('common.yes')}\n657: cancelText={t('common.no')}"
           },
           {
             "key": "common.no",
-            "line": 660,
-            "context": "659: confirmText={t('common.yes')}\n660: cancelText={t('common.no')}\n661: onConfirm={() => {"
+            "line": 657,
+            "context": "656: confirmText={t('common.yes')}\n657: cancelText={t('common.no')}\n658: onConfirm={() => {"
           },
           {
             "key": "common.yes",
-            "line": 674,
-            "context": "673: description={t('invitations.confirm_delete_desc')}\n674: confirmText={t('common.yes')}\n675: cancelText={t('common.no')}"
+            "line": 671,
+            "context": "670: description={t('invitations.confirm_delete_desc')}\n671: confirmText={t('common.yes')}\n672: cancelText={t('common.no')}"
           },
           {
             "key": "common.no",
-            "line": 675,
-            "context": "674: confirmText={t('common.yes')}\n675: cancelText={t('common.no')}\n676: onConfirm={() => {"
+            "line": 672,
+            "context": "671: confirmText={t('common.yes')}\n672: cancelText={t('common.no')}\n673: onConfirm={() => {"
           }
         ],
         "coverage": 90,
@@ -57748,7 +57842,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "405 Component components need translation",
+      "description": "406 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\reports\\sections\\OperationalReports.tsx",
@@ -57933,6 +58027,7 @@
         "src\\components\\notifications\\NotificationBell.tsx",
         "src\\components\\notifications\\analytics\\FailedDeliveriesTable.tsx",
         "src\\components\\loading\\SplashScreen.tsx",
+        "src\\components\\loading\\AppLoadingBoundary.tsx",
         "src\\components\\get-ready\\WorkItemsGroupedTable.tsx",
         "src\\components\\get-ready\\StockImageLightbox.tsx",
         "src\\components\\get-ready\\StepsList.tsx",
@@ -58161,10 +58256,10 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2152 translation keys are referenced but missing",
+      "description": "2156 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "108 hours"
     }
   ],
-  "coverage": 75
+  "coverage": 76
 }
