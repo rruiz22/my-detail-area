@@ -39,6 +39,22 @@ export interface ClearCacheOptions {
 }
 
 /**
+ * Unregister all Service Workers
+ * IMPORTANT: Must be called BEFORE clearing caches to prevent navigation errors
+ */
+async function unregisterServiceWorkers(): Promise<void> {
+  if ('serviceWorker' in navigator) {
+    try {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map(registration => registration.unregister()));
+      console.log('✅ Service Workers unregistered');
+    } catch (error) {
+      console.error('❌ Error unregistering service workers:', error);
+    }
+  }
+}
+
+/**
  * Clear Service Worker caches
  */
 async function clearServiceWorkerCaches(): Promise<void> {
@@ -126,6 +142,9 @@ export async function clearAllCaches(options: ClearCacheOptions = {}): Promise<v
   try {
     console.log(`🧹 Starting cache clearing (${mode} mode)...`);
 
+    // 🔴 CRITICAL FIX: Unregister service workers FIRST to prevent navigation errors
+    await unregisterServiceWorkers();
+
     if (mode === 'aggressive') {
       // Aggressive mode: Clear EVERYTHING (for system updates)
       await Promise.all([
@@ -150,19 +169,23 @@ export async function clearAllCaches(options: ClearCacheOptions = {}): Promise<v
 
     console.log('✅ Cache clearing completed');
 
-    // Reload page if requested
+    // 🔴 CRITICAL FIX: Navigate to root instead of reloading current page
+    // This prevents ERR_FAILED when service worker intercepts non-root routes
     if (reload) {
       setTimeout(() => {
-        window.location.reload();
+        // Navigate to root with tracking parameter
+        const param = mode === 'aggressive' ? 'updated=true' : 'cache_cleared=true';
+        window.location.href = `/?${param}`;
       }, reloadDelay);
     }
   } catch (error) {
     console.error('❌ Error during cache clearing:', error);
 
-    // Still reload if requested, even if there were errors
+    // Still navigate to root if requested, even if there were errors
     if (reload) {
       setTimeout(() => {
-        window.location.reload();
+        // Fallback: Always go to root
+        window.location.href = '/';
       }, reloadDelay);
     }
 
@@ -172,6 +195,7 @@ export async function clearAllCaches(options: ClearCacheOptions = {}): Promise<v
 
 /**
  * Quick helper for aggressive cache clearing (system updates)
+ * Navigates to / with ?updated=true parameter after clearing
  */
 export async function clearAllCachesAggressive(): Promise<void> {
   return clearAllCaches({ mode: 'aggressive', reload: true, reloadDelay: 0 });
@@ -179,6 +203,7 @@ export async function clearAllCachesAggressive(): Promise<void> {
 
 /**
  * Quick helper for selective cache clearing (manual clear)
+ * Navigates to / with ?cache_cleared=true parameter after clearing
  */
 export async function clearAllCachesSelective(queryClient: QueryClient): Promise<void> {
   return clearAllCaches({

@@ -29,7 +29,7 @@ export const ClearCacheButton: React.FC = () => {
       toast({
         title: '✅ ' + t('cache.cleared_title', { defaultValue: 'Cache Cleared' }),
         description: t('cache.cleared_desc', {
-          defaultValue: 'All caches cleared. Reloading page...'
+          defaultValue: 'All caches cleared. Redirecting to dashboard...'
         }),
         duration: 2000,
       });
