@@ -18,6 +18,7 @@ import { usePermissions } from '@/hooks/usePermissions';
 import type { ReconOrder, ReconOrderData } from "@/hooks/useReconOrderManagement";
 import { useReconOrderManagement } from '@/hooks/useReconOrderManagement';
 import { useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
+import { useStatusPermissions } from '@/hooks/useStatusPermissions';
 import { getSystemTimezone } from '@/utils/dateUtils';
 import { orderEvents } from '@/utils/eventBus';
 import logger from '@/utils/logger';
@@ -80,6 +81,9 @@ export default function ReconOrders() {
 
   // Check if user can create recon orders
   const canCreate = hasModulePermission('recon_orders', 'create_orders');
+
+  // Hook for status permissions and updates
+  const { canUpdateStatus, updateOrderStatus } = useStatusPermissions();
 
   // Reset week offset when changing to a different filter
   useEffect(() => {
@@ -351,20 +355,66 @@ export default function ReconOrders() {
   }, [selectedOrder, updateOrder, createOrder, refreshData, t, toast]);
 
   const handleStatusChange = useCallback(async (orderId: string, newStatus: string) => {
+    // Find the order
+    const order = allOrders.find(o => o.id === orderId);
+    if (!order) {
+      logger.error('[Recon] Order not found for status change:', orderId);
+      toast({
+        description: t('orders.order_not_found'),
+        variant: 'destructive'
+      });
+      return;
+    }
+
     try {
-      await updateOrder(orderId, { status: newStatus });
+      // ✅ 1. Validate permissions before updating
+      const allowed = await canUpdateStatus(
+        order.dealer_id?.toString() || '',
+        order.status || '',
+        newStatus,
+        order.order_type
+      );
 
-      // Emit typed events using EventBus
-      orderEvents.emit('orderStatusChanged', { orderId, newStatus, orderType: 'recon' });
-      orderEvents.emit('orderStatusUpdated', { orderId, newStatus, timestamp: Date.now() });
+      if (!allowed) {
+        toast({
+          description: t('errors.no_permission_status_change', 'You do not have permission to change this status'),
+          variant: 'destructive'
+        });
+        return;
+      }
 
-      // Event listener in hook will handle immediate refresh
+      // ✅ 2. Update database (handles SMS, push notifications, etc.)
+      const success = await updateOrderStatus(
+        orderId,
+        newStatus,
+        order.dealer_id?.toString() || ''
+      );
+
+      if (success) {
+        // ✅ 3. Emit events for real-time updates
+        orderEvents.emit('orderStatusChanged', { orderId, newStatus, orderType: 'recon' });
+        orderEvents.emit('orderStatusUpdated', { orderId, newStatus, timestamp: Date.now() });
+
+        // ✅ 4. Show success toast
+        toast({
+          description: t('orders.status_updated_successfully'),
+          variant: 'default'
+        });
+
+        // ✅ 5. Invalidate queries to refresh data
+        queryClient.invalidateQueries({ queryKey: ['recon-orders', 'all'] });
+      } else {
+        throw new Error('Status update failed');
+      }
     } catch (error) {
       logger.error('[Recon] Status change failed:', error);
-      // Event listener will handle refresh
+      toast({
+        description: t('orders.status_change_failed'),
+        variant: 'destructive'
+      });
       throw error;
     }
-  }, [updateOrder]);
+  }, [allOrders, canUpdateStatus, updateOrderStatus, toast, t, queryClient]);
 
   const handleUpdate = useCallback(async (orderId: string, updates: Partial<ReconOrder>) => {
     try {

@@ -27,6 +27,8 @@ import { usePermissions } from '@/hooks/usePermissions';
 import { useTranslationsReady } from '@/hooks/useTranslationsReady';
 import { ReactNode } from 'react';
 import { SplashScreen } from './SplashScreen';
+import { Button } from '@/components/ui/button';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 interface AppLoadingBoundaryProps {
   children: ReactNode;
@@ -47,7 +49,43 @@ interface AppLoadingBoundaryProps {
 export function AppLoadingBoundary({ children }: AppLoadingBoundaryProps) {
   const { user, loading: authLoading } = useAuth();
   const { enhancedUser, loading: permissionsLoading } = usePermissions();
-  const translationsReady = useTranslationsReady();
+  const { ready: translationsReady, error: translationsError } = useTranslationsReady();
+
+  // 🔴 CRITICAL FIX: Handle translation load errors
+  if (translationsError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <div className="max-w-md w-full space-y-6 text-center">
+          <div className="flex justify-center">
+            <div className="rounded-full bg-destructive/10 p-4">
+              <AlertTriangle className="h-12 w-12 text-destructive" />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold text-foreground">
+              Translation Loading Failed
+            </h1>
+            <p className="text-muted-foreground">
+              We couldn't load the application translations. This might be due to a network issue or cached content.
+            </p>
+          </div>
+          <div className="space-y-3">
+            <Button
+              onClick={() => window.location.reload()}
+              className="w-full"
+              size="lg"
+            >
+              <RefreshCw className="mr-2 h-5 w-5" />
+              Refresh Page
+            </Button>
+            <p className="text-xs text-muted-foreground">
+              If the problem persists, try clearing your browser cache (Ctrl+Shift+Delete)
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // ✅ CRITICAL: Determine what we're waiting for
   const isAuthenticating = authLoading;

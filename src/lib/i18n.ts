@@ -1,12 +1,23 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-// Translation cache version - increment this when translations are updated
-// This forces browsers to reload translation files
-const TRANSLATION_VERSION = `1.6.2-${Date.now()}`; // v1.6.2: Fixed notifications conflict - moved channel_matrix to settings root
+// 🔴 CRITICAL FIX: Use STATIC version from package.json instead of dynamic Date.now()
+// This allows proper cache validation and automatic invalidation on version bumps
+const APP_VERSION = '1.3.6'; // Updated automatically by prebuild script
+const TRANSLATION_VERSION = APP_VERSION; // Tied to app version for cache invalidation
 
-// ✅ PHASE 1.3: SessionStorage cache key for translations
-const TRANSLATION_CACHE_KEY = 'i18n_translations_cache_v6'; // v6: Fixed settings.notifications object conflict
+// ✅ Include app version in cache key - auto-invalidates on version change
+const TRANSLATION_CACHE_KEY = `i18n_translations_cache_${APP_VERSION}`;
+
+// Cache expiration time (1 hour)
+const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour
+
+// Interface for cached translations with metadata
+interface CachedTranslations {
+  translations: any;
+  timestamp: number;
+  version: string;
+}
 
 // Language resources will be loaded dynamically
 const resources = {};
@@ -25,7 +36,7 @@ i18n
 // Track if initial language is being loaded
 let initialLanguageLoading: Promise<any> | null = null;
 
-// ✅ PHASE 1.3: Load translation with sessionStorage cache for instant subsequent loads
+// ✅ Load translation with sessionStorage cache + expiration + version validation
 const loadLanguage = async (language: string) => {
   try {
     const cacheKey = `${TRANSLATION_CACHE_KEY}_${language}`;
@@ -34,12 +45,26 @@ const loadLanguage = async (language: string) => {
     const cached = sessionStorage.getItem(cacheKey);
     if (cached) {
       try {
-        const translations = JSON.parse(cached);
-        if (!i18n.hasResourceBundle(language, 'translation')) {
-          i18n.addResourceBundle(language, 'translation', translations);
+        const cachedData: CachedTranslations = JSON.parse(cached);
+
+        // 🔴 CRITICAL FIX: Validate cache expiration and version
+        const isExpired = Date.now() - cachedData.timestamp > CACHE_DURATION_MS;
+        const isWrongVersion = cachedData.version !== TRANSLATION_VERSION;
+
+        if (isExpired) {
+          console.warn(`⏰ Cache expired for ${language} (age: ${Math.round((Date.now() - cachedData.timestamp) / 60000)}min)`);
+          sessionStorage.removeItem(cacheKey);
+        } else if (isWrongVersion) {
+          console.warn(`🔄 Cache version mismatch for ${language} (cached: ${cachedData.version}, current: ${TRANSLATION_VERSION})`);
+          sessionStorage.removeItem(cacheKey);
+        } else {
+          // Cache is valid - use it!
+          if (!i18n.hasResourceBundle(language, 'translation')) {
+            i18n.addResourceBundle(language, 'translation', cachedData.translations);
+          }
+          console.log(`⚡ Translations loaded from cache for ${language} (v${cachedData.version})`);
+          return cachedData.translations;
         }
-        console.log(`⚡ Translations loaded from cache for ${language}`);
-        return translations;
       } catch (cacheError) {
         console.warn('Cache parse error, fetching fresh:', cacheError);
         sessionStorage.removeItem(cacheKey); // Clear corrupted cache
@@ -80,14 +105,20 @@ const loadLanguage = async (language: string) => {
       i18n.addResourceBundle(language, 'translation', translations);
     }
 
-    // ✅ Cache in sessionStorage for instant subsequent loads
+    // 🔴 CRITICAL FIX: Cache with metadata (timestamp + version) for validation
     try {
-      sessionStorage.setItem(cacheKey, JSON.stringify(translations));
+      const cacheData: CachedTranslations = {
+        translations,
+        timestamp: Date.now(),
+        version: TRANSLATION_VERSION
+      };
+      sessionStorage.setItem(cacheKey, JSON.stringify(cacheData));
+      console.log(`💾 Translations cached for ${language} (v${TRANSLATION_VERSION})`);
     } catch (storageError) {
       console.warn('Failed to cache translations (storage full?):', storageError);
     }
 
-    console.log(`✅ Translations loaded for ${language}`);
+    console.log(`✅ Translations loaded for ${language} (v${TRANSLATION_VERSION})`);
     return translations;
   } catch (error) {
     console.error(`Failed to load language ${language}:`, error);

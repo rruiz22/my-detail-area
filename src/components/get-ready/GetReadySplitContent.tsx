@@ -9,29 +9,29 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { useGetReady } from "@/hooks/useGetReady";
 import {
-    useGetReadyPriorityFilter,
-    useGetReadySearchQuery,
-    useGetReadySortPreferences,
-    useGetReadyWorkflowFilter,
+  useGetReadyPriorityFilter,
+  useGetReadySearchQuery,
+  useGetReadySortPreferences,
+  useGetReadyWorkflowFilter,
 } from "@/hooks/useGetReadyPersistence";
 import { useGetReadyStore } from "@/hooks/useGetReadyStore";
 import { useGetReadyVehiclesInfinite } from "@/hooks/useGetReadyVehicles";
@@ -43,15 +43,15 @@ import { GetReadySetup } from "@/pages/GetReadySetup";
 import { formatVehiclesForExport } from "@/utils/exportUtils";
 import { useQueryClient } from "@tanstack/react-query";
 import {
-    CheckCircle2,
-    ChevronDown,
-    Download,
-    FileSpreadsheet,
-    FileText,
-    Plus,
-    RefreshCw,
-    Search,
-    XCircle
+  CheckCircle2,
+  ChevronDown,
+  Download,
+  FileSpreadsheet,
+  FileText,
+  Plus,
+  RefreshCw,
+  Search,
+  XCircle
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -97,7 +97,16 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   // Vehicle form modal state
   const [vehicleFormOpen, setVehicleFormOpen] = useState(false);
   const [editingVehicleId, setEditingVehicleId] = useState<string | null>(null);
-  const [prefillData, setPrefillData] = useState<any>(null);
+  const [prefillData, setPrefillData] = useState<{
+    stock_number?: string;
+    vin?: string;
+    vehicle_year?: number;
+    vehicle_make?: string;
+    vehicle_model?: string;
+    vehicle_trim?: string;
+    vehicle_color?: string;
+    mileage?: number;
+  } | null>(null);
 
   // Ref to track processed vehicle IDs from URL to prevent infinite loops
   const processedVehicleIdRef = useRef<string | null>(null);
@@ -108,7 +117,19 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
 
   // Auto-open modal when prefillData is provided (e.g., from Stock page)
   useEffect(() => {
-    const state = location.state as { prefillData?: any; highlightId?: string } | null;
+    const state = location.state as {
+      prefillData?: {
+        stock_number?: string;
+        vin?: string;
+        vehicle_year?: number;
+        vehicle_make?: string;
+        vehicle_model?: string;
+        vehicle_trim?: string;
+        vehicle_color?: string;
+        mileage?: number;
+      };
+      highlightId?: string;
+    } | null;
 
     if (state?.prefillData && !prefillProcessedRef.current) {
       console.log('📝 [Get Ready] Detected prefillData from navigation:', state.prefillData);
@@ -153,8 +174,10 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     vehiclesData?.pages.flatMap((page) => page.vehicles) ?? [];
 
   // All vehicles without filters (for Approvals tab)
-  const allVehiclesUnfiltered =
-    allVehiclesData?.pages.flatMap((page) => page.vehicles) ?? [];
+  const allVehiclesUnfiltered = useMemo(
+    () => allVehiclesData?.pages.flatMap((page) => page.vehicles) ?? [],
+    [allVehiclesData?.pages]
+  );
 
   const { currentDealership } = useAccessibleDealerships();
 
@@ -175,7 +198,10 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
         processedVehicleIdRef.current = vehicleId;
 
         if (!error && data) {
-          console.log('✅ [Get Ready] Found vehicle:', data.stock_number, 'in step:', (data.get_ready_steps as any)?.name);
+          const stepName = data.get_ready_steps && typeof data.get_ready_steps === 'object' && 'name' in data.get_ready_steps
+            ? data.get_ready_steps.name
+            : 'unknown';
+          console.log('✅ [Get Ready] Found vehicle:', data.stock_number, 'in step:', stepName);
 
           navigate('/get-ready/details', { replace: true });
 
@@ -330,9 +356,10 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
       // ✅ CRITICAL: Must have at least ONE work item that needs approval
       // A work item needs approval if: approval_required=true AND approval_status NOT IN ('declined', 'approved')
       const workItemsNeedingApproval = (v.work_items || []).filter(
-        (wi: any) => wi.approval_required &&
-                     wi.approval_status !== 'declined' &&
-                     wi.approval_status !== 'approved'
+        (wi: { approval_required?: boolean; approval_status?: string }) =>
+          wi.approval_required &&
+          wi.approval_status !== 'declined' &&
+          wi.approval_status !== 'approved'
       );
 
       return workItemsNeedingApproval.length > 0;
@@ -377,11 +404,11 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     return <GetReadyOverview allVehicles={allVehiclesUnfiltered} className={className} />;
   }
 
-  // Setup Tab - System Configuration (access_setup permission required)
+  // Setup Tab - System Configuration (admin permission required)
   if (isSetupView) {
     return (
       <div className={cn("h-full overflow-auto", className)}>
-        <PermissionGuard module="get_ready" permission="access_setup" checkDealerModule={true}>
+        <PermissionGuard module="get_ready" permission="admin" checkDealerModule={true}>
           <GetReadySetup />
         </PermissionGuard>
       </div>
@@ -497,7 +524,39 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
 
           {/* Pending Approvals - Optimized Table View */}
           <PendingApprovalsTable
-            vehicles={pendingApprovalVehicles}
+            vehicles={pendingApprovalVehicles.map(v => ({
+              ...v,
+              work_items: (v.work_items || []).map((wi: {
+                id: string;
+                title: string;
+                description?: string;
+                work_type?: string;
+                estimated_cost?: number;
+                priority?: string;
+              }) => ({
+                id: wi.id,
+                title: wi.title,
+                description: wi.description,
+                work_type: wi.work_type || 'general',
+                estimated_cost: wi.estimated_cost,
+                priority: wi.priority
+              })),
+              pending_approval_work_items: (v.pending_approval_work_items || []).map((wi: {
+                id: string;
+                title: string;
+                description?: string;
+                work_type?: string;
+                estimated_cost?: number;
+                priority?: string;
+              }) => ({
+                id: wi.id,
+                title: wi.title,
+                description: wi.description,
+                work_type: wi.work_type || 'general',
+                estimated_cost: wi.estimated_cost,
+                priority: wi.priority
+              }))
+            }))}
             onSelectVehicle={setSelectedVehicleId}
           />
 
@@ -526,8 +585,8 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
                     >
                       <div className="flex-1">
                         <p className="text-sm font-medium">
-                          {vehicle.year || vehicle.vehicle_year} {vehicle.make || vehicle.vehicle_make}{" "}
-                          {vehicle.model || vehicle.vehicle_model}
+                          {vehicle.year} {vehicle.make}{" "}
+                          {vehicle.model}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           Stock: {vehicle.stock_number}
@@ -566,8 +625,8 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
                     >
                       <div className="flex-1 space-y-1">
                         <p className="text-sm font-medium">
-                          {vehicle.year || vehicle.vehicle_year} {vehicle.make || vehicle.vehicle_make}{" "}
-                          {vehicle.model || vehicle.vehicle_model}
+                          {vehicle.year} {vehicle.make}{" "}
+                          {vehicle.model}
                         </p>
                         <p className="text-xs text-muted-foreground">
                           Stock: {vehicle.stock_number}

@@ -6,6 +6,7 @@ import { useCarWashOrderManagement, type CarWashOrder, type CarWashOrderData } f
 import { useManualRefresh } from '@/hooks/useManualRefresh';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useTabPersistence } from '@/hooks/useTabPersistence';
+import { useStatusPermissions } from '@/hooks/useStatusPermissions';
 import { getSystemTimezone } from '@/utils/dateUtils';
 import { orderEvents } from '@/utils/eventBus';
 import logger from '@/utils/logger';
@@ -78,6 +79,9 @@ export default function CarWash() {
 
   // Check if user can create car wash orders
   const canCreate = hasModulePermission('car_wash', 'create_orders');
+
+  // Hook for status permissions and updates
+  const { canUpdateStatus, updateOrderStatus } = useStatusPermissions();
 
   // ⚡ PERF: Modal is now imported directly (not lazy) - no preload needed
 
@@ -292,19 +296,65 @@ export default function CarWash() {
   }, [selectedOrder, updateOrder, createOrder, refreshData, t]);
 
   const handleStatusChange = useCallback(async (orderId: string, newStatus: string) => {
-    // NOTE: OrderDataTable already handles the DB update via updateOrderStatus
-    // This callback is just for showing toast and dispatching events
-    logger.success('[CarWash] Status change callback:', { orderId, newStatus });
+    // Find the order
+    const order = allOrders.find(o => o.id === orderId);
+    if (!order) {
+      logger.error('[CarWash] Order not found for status change:', orderId);
+      toast({
+        description: t('orders.order_not_found'),
+        variant: 'destructive'
+      });
+      return;
+    }
 
-    // Show success toast
-    toast({
-      description: t('orders.status_updated_successfully'),
-      variant: 'default'
-    });
+    try {
+      // ✅ 1. Validate permissions before updating
+      const allowed = await canUpdateStatus(
+        order.dealer_id?.toString() || '',
+        order.status || '',
+        newStatus,
+        order.order_type
+      );
 
-    // Emit typed event using EventBus
-    orderEvents.emit('orderStatusUpdated', { orderId, newStatus, timestamp: Date.now() });
-  }, [t, toast]);
+      if (!allowed) {
+        toast({
+          description: t('errors.no_permission_status_change', 'You do not have permission to change this status'),
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      // ✅ 2. Update database (handles SMS, push notifications, etc.)
+      const success = await updateOrderStatus(
+        orderId,
+        newStatus,
+        order.dealer_id?.toString() || ''
+      );
+
+      if (success) {
+        // ✅ 3. Emit events for real-time updates
+        orderEvents.emit('orderStatusUpdated', { orderId, newStatus, timestamp: Date.now() });
+
+        // ✅ 4. Show success toast
+        toast({
+          description: t('orders.status_updated_successfully'),
+          variant: 'default'
+        });
+
+        // ✅ 5. Invalidate queries to refresh data
+        queryClient.invalidateQueries({ queryKey: ['orders', 'car_wash'] });
+      } else {
+        throw new Error('Status update failed');
+      }
+    } catch (error) {
+      logger.error('[CarWash] Status change failed:', error);
+      toast({
+        description: t('orders.status_change_failed'),
+        variant: 'destructive'
+      });
+      throw error;
+    }
+  }, [allOrders, canUpdateStatus, updateOrderStatus, t, toast, queryClient]);
 
   const handleUpdate = useCallback(async (orderId: string, updates: Partial<CarWashOrderData>) => {
     try {

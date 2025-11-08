@@ -33,15 +33,19 @@ export function useAppVersion() {
     }
   }, []);
 
-  // Verificar nueva versión cada 5 minutos
+  // 🔴 CRITICAL FIX: Check for updates IMMEDIATELY on load, then every 5 minutes
   useEffect(() => {
+    // Check immediately on mount
+    checkForUpdate();
+
+    // Then check every 5 minutes
     const checkInterval = setInterval(() => {
       checkForUpdate();
     }, 5 * 60 * 1000); // 5 minutos
 
     return () => clearInterval(checkInterval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentVersion]);
+  }, []);
 
   const fetchVersion = async (): Promise<VersionInfo | null> => {
     try {

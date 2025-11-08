@@ -9,6 +9,8 @@ import { usePermissions } from '@/hooks/usePermissions';
 import type { ServiceOrder, ServiceOrderData } from '@/hooks/useServiceOrderManagement';
 import { useServiceOrderManagement } from '@/hooks/useServiceOrderManagement';
 import { useSearchPersistence, useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
+import { useStatusPermissions } from '@/hooks/useStatusPermissions';
+import { useDealerFilter } from '@/contexts/DealerFilterContext';
 import { orderEvents } from '@/utils/eventBus';
 import { dev, warn } from '@/utils/logger';
 import { determineTabForOrder } from '@/utils/orderUtils';
@@ -49,6 +51,7 @@ export default function ServiceOrders() {
   const [searchParams, setSearchParams] = useSearchParams();
   const orderIdFromUrl = searchParams.get('order');
   const { hasModulePermission, enhancedUser } = usePermissions();
+  const { selectedDealerId } = useDealerFilter();
 
   // Accessibility: Live region for screen reader announcements
   const [liveRegionMessage, setLiveRegionMessage] = useState<string>('');
@@ -87,6 +90,9 @@ export default function ServiceOrders() {
 
   // Check if user can create service orders
   const canCreate = hasModulePermission('service_orders', 'create_orders');
+
+  // Hook for status permissions and updates
+  const { canUpdateStatus, updateOrderStatus } = useStatusPermissions();
 
   // Sync searchTerm with useServiceOrderManagement filters
   useEffect(() => {
@@ -254,35 +260,69 @@ export default function ServiceOrders() {
   }, [selectedOrder, updateOrder, createOrder, t, toast]);
 
   const handleStatusChange = useCallback(async (orderId: string, newStatus: string) => {
-    try {
-      // Note: OrderDataTable already calls updateOrderStatus which handles:
-      // - DB update
-      // - Permission validation
-      // - SMS notifications
-      // - Push notifications
-      // This callback only emits events for UI consistency
-
-      // Emit typed events using EventBus
-      orderEvents.emit('orderStatusChanged', { orderId, newStatus, orderType: 'service' });
-      orderEvents.emit('orderStatusUpdated', { orderId, newStatus, timestamp: Date.now() });
-
-      // Show success toast
-      const statusLabel = t(`common.status.${newStatus}`, newStatus);
+    // Find the order
+    const order = allOrders.find(o => o.id === orderId);
+    if (!order) {
+      console.error('Order not found for status change:', orderId);
       toast({
-        description: t('orders.status_updated_successfully', {
-          defaultValue: `Status updated to ${statusLabel}`,
-          status: statusLabel
-        })
+        description: t('orders.order_not_found'),
+        variant: 'destructive'
       });
+      return;
+    }
+
+    try {
+      // ✅ 1. Validate permissions before updating
+      const allowed = await canUpdateStatus(
+        order.dealer_id?.toString() || '',
+        order.status || '',
+        newStatus,
+        order.order_type
+      );
+
+      if (!allowed) {
+        toast({
+          description: t('errors.no_permission_status_change', 'You do not have permission to change this status'),
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      // ✅ 2. Update database (handles SMS, push notifications, etc.)
+      const success = await updateOrderStatus(
+        orderId,
+        newStatus,
+        order.dealer_id?.toString() || ''
+      );
+
+      if (success) {
+        // ✅ 3. Emit events for real-time updates
+        orderEvents.emit('orderStatusChanged', { orderId, newStatus, orderType: 'service' });
+        orderEvents.emit('orderStatusUpdated', { orderId, newStatus, timestamp: Date.now() });
+
+        // ✅ 4. Show success toast
+        const statusLabel = t(`common.status.${newStatus}`, newStatus);
+        toast({
+          description: t('orders.status_updated_successfully', {
+            defaultValue: `Status updated to ${statusLabel}`,
+            status: statusLabel
+          })
+        });
+
+        // ✅ 5. Invalidate queries to refresh data
+        queryClient.invalidateQueries({ queryKey: ['service-orders', 'all', selectedDealerId] });
+      } else {
+        throw new Error('Status update failed');
+      }
     } catch (error) {
-      console.error('Status change event emission failed:', error);
+      console.error('Status change failed:', error);
       toast({
         variant: 'destructive',
         description: t('orders.status_update_failed', 'Failed to update status')
       });
       throw error;
     }
-  }, [t, toast]);
+  }, [allOrders, canUpdateStatus, updateOrderStatus, t, toast, queryClient, selectedDealerId]);
 
   const handleUpdate = useCallback(async (orderId: string, updates: Partial<ServiceOrder>) => {
     try {
