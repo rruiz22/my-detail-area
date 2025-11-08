@@ -2835,7 +2835,7 @@
     "sign_in_button": "Iniciar Sesión",
     "signing_in": "Iniciando sesión...",
     "no_access_text": "¿No tienes acceso? Contacta al administrador de tu concesionario.",
-    "footer_text": "© 2024 My Detail Area. Plataforma de operaciones del concesionario.",
+    "footer_text": "© {{year}} My Detail Area. Plataforma de operaciones del concesionario.",
     "invalid_email_title": "Correo Inválido",
     "invalid_email_description": "Por favor, ingresa una dirección de correo válida.",
     "sign_in_error_title": "Error de Inicio de Sesión",

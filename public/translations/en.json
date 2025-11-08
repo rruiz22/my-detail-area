@@ -1154,7 +1154,7 @@
     "sign_in_button": "Sign In",
     "signing_in": "Signing in...",
     "no_access_text": "Don't have access? Contact your dealer administrator.",
-    "footer_text": "© 2024 My Detail Area. Dealership operations platform.",
+    "footer_text": "© {{year}} My Detail Area. Dealership operations platform.",
     "invalid_email_title": "Invalid Email",
     "invalid_email_description": "Please enter a valid email address.",
     "sign_in_error_title": "Sign In Error",

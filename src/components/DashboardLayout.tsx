@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { VersionDisplay } from "@/components/version/VersionDisplay";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
+import { useCurrentYear } from "@/hooks/useCurrentYear";
 import { Search } from "lucide-react";
 import { ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -26,9 +27,7 @@ function DashboardLayoutInner({ children, title }: DashboardLayoutProps) {
   const { currentDealership } = useAccessibleDealerships();
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
   const [termsModalOpen, setTermsModalOpen] = useState(false);
-
-  // Version and copyright
-  const currentYear = new Date().getFullYear();
+  const currentYear = useCurrentYear();
 
   return (
     <>

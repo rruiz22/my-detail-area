@@ -2626,7 +2626,7 @@
     "sign_in_button": "Entrar",
     "signing_in": "Entrando...",
     "no_access_text": "Não tem acesso? Entre em contato com o administrador da concessionária.",
-    "footer_text": "© 2024 My Detail Area. Plataforma de operações da concessionária.",
+    "footer_text": "© {{year}} My Detail Area. Plataforma de operações da concessionária.",
     "invalid_email_title": "Email Inválido",
     "invalid_email_description": "Por favor, digite um endereço de email válido.",
     "sign_in_error_title": "Erro de Login",
