@@ -12,6 +12,7 @@ const NETWORK_ERROR_PATTERNS = [
   'Failed to fetch',
   'ERR_INTERNET_DISCONNECTED',
   'ERR_NAME_NOT_RESOLVED',
+  'ERR_TIMED_OUT',
   'NetworkError',
   'fetch failed',
   'net::ERR_',
@@ -19,6 +20,8 @@ const NETWORK_ERROR_PATTERNS = [
   'Network request failed',
   'The network connection was lost',
   'A network error occurred',
+  'livechat-loader.js',
+  'support.mydetailarea.com',
 ];
 
 // Push notification non-critical patterns to suppress

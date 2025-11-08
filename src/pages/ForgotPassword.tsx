@@ -13,6 +13,7 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAuthBranding } from '@/hooks/useAuthBranding';
 import { getFormattedVersion } from '@/config/version';
+import { useCurrentYear } from '@/hooks/useCurrentYear';
 
 // Security utility functions
 const sanitizeInput = (input: string): string => {
@@ -37,6 +38,7 @@ export default function ForgotPassword() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { branding } = useAuthBranding();
+  const currentYear = useCurrentYear();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -199,7 +201,7 @@ export default function ForgotPassword() {
 
         {/* Footer */}
         <footer className="text-center mt-8 text-sm text-muted-foreground">
-          <p>{t('auth.footer_text', '© 2024 My Detail Area. Dealership operations platform.')} {getFormattedVersion()}</p>
+          <p>{t('auth.footer_text', { year: currentYear })} {getFormattedVersion()}</p>
         </footer>
       </main>
     </div>

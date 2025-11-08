@@ -7,6 +7,7 @@ import { VersionDisplay } from "@/components/version/VersionDisplay";
 import { UpdateBanner } from "@/components/version/UpdateBanner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
+import { useCurrentYear } from "@/hooks/useCurrentYear";
 import { Menu, Search } from "lucide-react";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -37,6 +38,7 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
   const timeoutRef = useRef<NodeJS.Timeout>();
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
   const [termsModalOpen, setTermsModalOpen] = useState(false);
+  const currentYear = useCurrentYear();
 
   // ✅ OPTIMIZATION: Simplified auto-collapse/expand sidebar for Get Ready module
   // Consolidates 3 redundant cases into 1 clean logic with proper cleanup
@@ -185,8 +187,8 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
           <footer className="border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/95 px-4 sm:px-6 py-2.5 sm:py-3">
             <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-2 sm:gap-3">
               <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-                <span className="hidden sm:inline">{t('layout.footer.copyright', { year: new Date().getFullYear() })}</span>
-                <span className="sm:hidden">© {new Date().getFullYear()}</span>
+                <span className="hidden sm:inline">{t('layout.footer.copyright', { year: currentYear })}</span>
+                <span className="sm:hidden">© {currentYear}</span>
                 <span className="hidden sm:inline">•</span>
                 <VersionDisplay showDetails={true} />
               </div>

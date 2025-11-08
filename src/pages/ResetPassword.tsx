@@ -13,6 +13,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAuthBranding } from '@/hooks/useAuthBranding';
 import { getFormattedVersion } from '@/config/version';
 import { supabase } from '@/integrations/supabase/client';
+import { useCurrentYear } from '@/hooks/useCurrentYear';
 
 // Password validation
 const validatePassword = (password: string) => {
@@ -43,6 +44,7 @@ export default function ResetPassword() {
   const navigate = useNavigate();
   const { branding } = useAuthBranding();
   const [searchParams] = useSearchParams();
+  const currentYear = useCurrentYear();
 
   // Check if user has a valid recovery session
   // Verify the OTP token from the URL (ONLY ONCE)
@@ -372,7 +374,7 @@ export default function ResetPassword() {
 
         {/* Footer */}
         <footer className="text-center mt-8 text-sm text-muted-foreground">
-          <p>{t('auth.footer_text', '© 2024 My Detail Area. Dealership operations platform.')} {getFormattedVersion()}</p>
+          <p>{t('auth.footer_text', { year: currentYear })} {getFormattedVersion()}</p>
         </footer>
       </main>
     </div>

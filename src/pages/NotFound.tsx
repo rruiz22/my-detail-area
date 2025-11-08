@@ -7,6 +7,10 @@ const NotFound = () => {
   const location = useLocation();
 
   useEffect(() => {
+    // Don't log 404 for widget routes (handled externally)
+    if (location.pathname.startsWith('/lc/')) {
+      return;
+    }
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);
   }, [location.pathname]);
 

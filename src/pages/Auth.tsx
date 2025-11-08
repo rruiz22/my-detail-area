@@ -15,6 +15,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { formatRoleName } from '@/utils/roleUtils';
 import { useAuthBranding } from '@/hooks/useAuthBranding';
 import { getFormattedVersion } from '@/config/version';
+import { useCurrentYear } from '@/hooks/useCurrentYear';
 
 // TypeScript interfaces
 interface InvitationData {
@@ -111,6 +112,7 @@ export default function Auth() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { branding } = useAuthBranding();
+  const currentYear = useCurrentYear();
 
   // Invitation and signup states
   const [isSignupMode, setIsSignupMode] = useState(false);
@@ -663,7 +665,7 @@ export default function Auth() {
 
         {/* Footer */}
         <footer className="text-center mt-8 text-sm text-muted-foreground">
-          <p>{t('auth.footer_text', '© 2024 My Detail Area. Dealership operations platform.')} {getFormattedVersion()}</p>
+          <p>{t('auth.footer_text', { year: currentYear })} {getFormattedVersion()}</p>
         </footer>
       </main>
     </div>
