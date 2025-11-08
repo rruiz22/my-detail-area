@@ -11,22 +11,53 @@ import { useDashboardData } from '@/hooks/useDashboardData';
 import { useNotifications } from "@/hooks/useNotifications";
 import { usePermissions } from '@/hooks/usePermissions';
 import { useSenderInfo } from '@/hooks/useSenderInfo';
+import { useToast } from '@/hooks/use-toast';
 import * as logger from '@/utils/logger';
 import { AlertTriangle, Clock, MessageCircle, Plus, Zap, Shield, User, Mail } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 
 export default function Dashboard() {
   logger.dev('🟢 Dashboard component is RENDERING');
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const notifications = useNotifications();
   const { data: dashboardData } = useDashboardData();
   const { hasPermission } = usePermissions();
   const { data: senderInfo } = useSenderInfo();
 
   const pendingCount = dashboardData?.overall.pendingOrders || 0;
+
+  // 🔴 CRITICAL FIX: Detect cache clear/update redirects and show confirmation toast
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get('cache_cleared') === 'true') {
+      toast({
+        title: '✅ ' + t('cache.cleared_title', { defaultValue: 'Cache Cleared' }),
+        description: t('cache.cleared_success', {
+          defaultValue: 'All caches have been cleared successfully.'
+        }),
+        duration: 3000,
+      });
+      // Clean URL parameters
+      window.history.replaceState({}, '', '/');
+    }
+
+    if (params.get('updated') === 'true') {
+      toast({
+        title: '✅ ' + t('system_update.success_title', { defaultValue: 'App Updated' }),
+        description: t('system_update.success_desc', {
+          defaultValue: 'The application has been updated successfully.'
+        }),
+        duration: 3000,
+      });
+      // Clean URL parameters
+      window.history.replaceState({}, '', '/');
+    }
+  }, [t, toast]);
 
   // Check if user has access to any order modules
   const hasAnyModuleAccess = useMemo(() => {
