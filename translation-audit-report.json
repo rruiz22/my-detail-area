@@ -1,8 +1,8 @@
 {
   "scannedFiles": 856,
-  "totalStrings": 8486,
+  "totalStrings": 8511,
   "hardcodedStrings": 2079,
-  "translatedStrings": 6407,
+  "translatedStrings": 6432,
   "issues": {
     "critical": [
       {
@@ -17309,6 +17309,156 @@
             "key": "dealerships.delete_description",
             "line": 485,
             "context": "484: title={t('dealerships.delete_title', { defaultValue: 'Delete Dealership?' })}\n485: description={t('dealerships.delete_description', { defaultValue: 'Are you sure you want to delete this dealership? This action cannot be undone.' })}\n486: confirmText={t('common.action_buttons.delete')}"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\pages\\Dashboard.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "cache.cleared_title",
+            "line": 39,
+            "exists": true
+          },
+          {
+            "key": "cache.cleared_success",
+            "line": 40,
+            "exists": false
+          },
+          {
+            "key": "system_update.success_title",
+            "line": 51,
+            "exists": false
+          },
+          {
+            "key": "system_update.success_desc",
+            "line": 52,
+            "exists": false
+          },
+          {
+            "key": "dashboard.hero.welcome_to",
+            "line": 84,
+            "exists": true
+          },
+          {
+            "key": "dashboard.hero.subtitle",
+            "line": 86,
+            "exists": true
+          },
+          {
+            "key": "dashboard.empty_state.no_access_title",
+            "line": 98,
+            "exists": true
+          },
+          {
+            "key": "dashboard.empty_state.no_access_message",
+            "line": 100,
+            "exists": true
+          },
+          {
+            "key": "dashboard.empty_state.contact_admin",
+            "line": 105,
+            "exists": true
+          },
+          {
+            "key": "dashboard.departments.sales",
+            "line": 108,
+            "exists": true
+          },
+          {
+            "key": "dashboard.empty_state.sales_module",
+            "line": 109,
+            "exists": true
+          },
+          {
+            "key": "dashboard.departments.service",
+            "line": 112,
+            "exists": true
+          },
+          {
+            "key": "dashboard.empty_state.service_module",
+            "line": 113,
+            "exists": true
+          },
+          {
+            "key": "dashboard.departments.recon",
+            "line": 116,
+            "exists": true
+          },
+          {
+            "key": "dashboard.empty_state.recon_module",
+            "line": 117,
+            "exists": true
+          },
+          {
+            "key": "dashboard.departments.car_wash",
+            "line": 120,
+            "exists": true
+          },
+          {
+            "key": "dashboard.empty_state.carwash_module",
+            "line": 121,
+            "exists": true
+          },
+          {
+            "key": "dashboard.empty_state.view_profile",
+            "line": 129,
+            "exists": true
+          },
+          {
+            "key": "dashboard.empty_state.contact_support",
+            "line": 133,
+            "exists": true
+          },
+          {
+            "key": "dashboard.hero.welcome_to",
+            "line": 155,
+            "exists": true
+          },
+          {
+            "key": "dashboard.hero.subtitle",
+            "line": 157,
+            "exists": true
+          },
+          {
+            "key": "dashboard.hero.new_order",
+            "line": 170,
+            "exists": true
+          },
+          {
+            "key": "dashboard.hero.view_pending",
+            "line": 182,
+            "exists": true
+          },
+          {
+            "key": "dashboard.hero.get_ready",
+            "line": 194,
+            "exists": true
+          },
+          {
+            "key": "dashboard.hero.team_chat",
+            "line": 206,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "cache.cleared_success",
+            "line": 40,
+            "context": "39: title: '✅ ' + t('cache.cleared_title', { defaultValue: 'Cache Cleared' }),\n40: description: t('cache.cleared_success', {\n41: defaultValue: 'All caches have been cleared successfully.'"
+          },
+          {
+            "key": "system_update.success_title",
+            "line": 51,
+            "context": "50: toast({\n51: title: '✅ ' + t('system_update.success_title', { defaultValue: 'App Updated' }),\n52: description: t('system_update.success_desc', {"
+          },
+          {
+            "key": "system_update.success_desc",
+            "line": 52,
+            "context": "51: title: '✅ ' + t('system_update.success_title', { defaultValue: 'App Updated' }),\n52: description: t('system_update.success_desc', {\n53: defaultValue: 'The application has been updated successfully.'"
           }
         ],
         "coverage": 100,
@@ -57842,7 +57992,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "406 Component components need translation",
+      "description": "407 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\reports\\sections\\OperationalReports.tsx",
@@ -58130,6 +58280,7 @@
         "src\\pages\\ReconOrders.tsx",
         "src\\pages\\Index.tsx",
         "src\\pages\\Dealerships.tsx",
+        "src\\pages\\Dashboard.tsx",
         "src\\pages\\Contacts.tsx",
         "src\\pages\\CarWash.tsx",
         "src\\pages\\Announcements.tsx",
@@ -58251,12 +58402,12 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "203 hours"
+      "estimatedEffort": "204 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2156 translation keys are referenced but missing",
+      "description": "2159 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "108 hours"
     }
