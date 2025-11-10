@@ -1518,7 +1518,44 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                         >
                           <TableCell className="text-center">
                             <div className="flex flex-col items-center">
-                              <span className="font-mono text-sm font-medium">{invoice.invoiceNumber}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono text-sm font-medium">{invoice.invoiceNumber}</span>
+
+                                {/* Notes Tooltip */}
+                                {invoice.invoiceNotes && invoice.invoiceNotes.trim() !== '' && (
+                                  <NotesTooltip
+                                    noteContent={invoice.invoiceNotes}
+                                    onViewClick={() => {
+                                      setSelectedInvoice(invoice);
+                                      setShowDetailsDialog(true);
+                                    }}
+                                  >
+                                    <span className="inline-flex items-center gap-0.5 cursor-pointer hover:bg-amber-50 px-1.5 py-0.5 rounded transition-colors">
+                                      <StickyNote className="w-3.5 h-3.5 text-amber-500" />
+                                    </span>
+                                  </NotesTooltip>
+                                )}
+
+                                {/* Comments Tooltip */}
+                                {invoice.commentsCount && invoice.commentsCount > 0 && (
+                                  <InvoiceCommentsTooltip
+                                    invoiceId={invoice.id}
+                                    count={invoice.commentsCount}
+                                    onViewAllClick={() => {
+                                      setSelectedInvoice(invoice);
+                                      setShowDetailsDialog(true);
+                                    }}
+                                  >
+                                    <span className="inline-flex items-center gap-0.5 cursor-pointer hover:bg-blue-50 px-1.5 py-0.5 rounded transition-colors">
+                                      <MessageSquare className="w-3.5 h-3.5 text-blue-500" />
+                                      <span className="text-[10px] font-semibold text-blue-600 min-w-[14px] text-center">
+                                        {invoice.commentsCount}
+                                      </span>
+                                    </span>
+                                  </InvoiceCommentsTooltip>
+                                )}
+                              </div>
+
                               {/* Department badges */}
                               {invoice.metadata?.departments && invoice.metadata.departments.length > 0 && (
                                 <div className="flex gap-1 mt-1 flex-wrap justify-center">
