@@ -1564,28 +1564,34 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                                     // Handle both formats: 'car_wash' and 'carwash'
                                     const normalizedDept = dept.toLowerCase().trim();
                                     let translatedDept = '';
+                                    let colorClasses = '';
 
                                     switch(normalizedDept) {
                                       case 'sales':
                                         translatedDept = t('services.departments.sales_dept');
+                                        colorClasses = 'bg-blue-100 text-blue-700 border-blue-200';
                                         break;
                                       case 'service':
                                         translatedDept = t('services.departments.service_dept');
+                                        colorClasses = 'bg-green-100 text-green-700 border-green-200';
                                         break;
                                       case 'recon':
                                         translatedDept = t('services.departments.recon_dept');
+                                        colorClasses = 'bg-orange-100 text-orange-700 border-orange-200';
                                         break;
                                       case 'car_wash':
                                       case 'carwash':
                                       case 'car wash':
                                         translatedDept = t('services.departments.carwash_dept');
+                                        colorClasses = 'bg-cyan-100 text-cyan-700 border-cyan-200';
                                         break;
                                       default:
                                         // If no match, show the original value capitalized
                                         translatedDept = dept.charAt(0).toUpperCase() + dept.slice(1);
+                                        colorClasses = 'bg-gray-100 text-gray-700 border-gray-200';
                                     }
                                     return (
-                                      <Badge key={dept} variant="outline" className="text-xs">
+                                      <Badge key={dept} variant="outline" className={`text-xs ${colorClasses}`}>
                                         {translatedDept}
                                       </Badge>
                                     );
