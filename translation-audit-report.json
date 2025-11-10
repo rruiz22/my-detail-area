@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 863,
-  "totalStrings": 8540,
-  "hardcodedStrings": 2038,
-  "translatedStrings": 6502,
+  "scannedFiles": 868,
+  "totalStrings": 8543,
+  "hardcodedStrings": 2039,
+  "translatedStrings": 6504,
   "issues": {
     "critical": [
       {
@@ -9113,277 +9113,277 @@
         "hardcodedStrings": [
           {
             "text": "United States",
-            "line": 355,
-            "context": "354: <SelectContent>\n355: <SelectItem value=\"US\">United States</SelectItem>\n356: <SelectItem value=\"CA\">Canada</SelectItem>"
+            "line": 356,
+            "context": "355: <SelectContent>\n356: <SelectItem value=\"US\">United States</SelectItem>\n357: <SelectItem value=\"CA\">Canada</SelectItem>"
           },
           {
             "text": "Canada",
-            "line": 356,
-            "context": "355: <SelectItem value=\"US\">United States</SelectItem>\n356: <SelectItem value=\"CA\">Canada</SelectItem>\n357: <SelectItem value=\"MX\">Mexico</SelectItem>"
+            "line": 357,
+            "context": "356: <SelectItem value=\"US\">United States</SelectItem>\n357: <SelectItem value=\"CA\">Canada</SelectItem>\n358: <SelectItem value=\"MX\">Mexico</SelectItem>"
           },
           {
             "text": "Mexico",
-            "line": 357,
-            "context": "356: <SelectItem value=\"CA\">Canada</SelectItem>\n357: <SelectItem value=\"MX\">Mexico</SelectItem>\n358: <SelectItem value=\"BR\">Brazil</SelectItem>"
+            "line": 358,
+            "context": "357: <SelectItem value=\"CA\">Canada</SelectItem>\n358: <SelectItem value=\"MX\">Mexico</SelectItem>\n359: <SelectItem value=\"BR\">Brazil</SelectItem>"
           },
           {
             "text": "Brazil",
-            "line": 358,
-            "context": "357: <SelectItem value=\"MX\">Mexico</SelectItem>\n358: <SelectItem value=\"BR\">Brazil</SelectItem>\n359: <SelectItem value=\"ES\">Spain</SelectItem>"
+            "line": 359,
+            "context": "358: <SelectItem value=\"MX\">Mexico</SelectItem>\n359: <SelectItem value=\"BR\">Brazil</SelectItem>\n360: <SelectItem value=\"ES\">Spain</SelectItem>"
           },
           {
             "text": "Spain",
-            "line": 359,
-            "context": "358: <SelectItem value=\"BR\">Brazil</SelectItem>\n359: <SelectItem value=\"ES\">Spain</SelectItem>\n360: </SelectContent>"
+            "line": 360,
+            "context": "359: <SelectItem value=\"BR\">Brazil</SelectItem>\n360: <SelectItem value=\"ES\">Spain</SelectItem>\n361: </SelectContent>"
           },
           {
             "text": "Enter dealership name",
-            "line": 193,
-            "context": "192: onChange={(e) => handleInputChange('name', e.target.value)}\n193: placeholder=\"Enter dealership name\"\n194: required"
+            "line": 194,
+            "context": "193: onChange={(e) => handleInputChange('name', e.target.value)}\n194: placeholder=\"Enter dealership name\"\n195: required"
           },
           {
             "text": "Enter tax number",
-            "line": 204,
-            "context": "203: onChange={(e) => handleInputChange('tax_number', e.target.value)}\n204: placeholder=\"Enter tax number\"\n205: />"
+            "line": 205,
+            "context": "204: onChange={(e) => handleInputChange('tax_number', e.target.value)}\n205: placeholder=\"Enter tax number\"\n206: />"
           },
           {
             "text": "Enter email address",
-            "line": 233,
-            "context": "232: onChange={(e) => handleInputChange('email', e.target.value)}\n233: placeholder=\"Enter email address\"\n234: type=\"email\""
+            "line": 234,
+            "context": "233: onChange={(e) => handleInputChange('email', e.target.value)}\n234: placeholder=\"Enter email address\"\n235: type=\"email\""
           },
           {
             "text": "Enter phone number",
-            "line": 245,
-            "context": "244: onChange={(e) => handleInputChange('phone', e.target.value)}\n245: placeholder=\"Enter phone number\"\n246: />"
+            "line": 246,
+            "context": "245: onChange={(e) => handleInputChange('phone', e.target.value)}\n246: placeholder=\"Enter phone number\"\n247: />"
           },
           {
             "text": "Enter street address",
-            "line": 311,
-            "context": "310: onChange={(e) => handleInputChange('address', e.target.value)}\n311: placeholder=\"Enter street address\"\n312: />"
+            "line": 312,
+            "context": "311: onChange={(e) => handleInputChange('address', e.target.value)}\n312: placeholder=\"Enter street address\"\n313: />"
           },
           {
             "text": "Enter city",
-            "line": 322,
-            "context": "321: onChange={(e) => handleInputChange('city', e.target.value)}\n322: placeholder=\"Enter city\"\n323: />"
+            "line": 323,
+            "context": "322: onChange={(e) => handleInputChange('city', e.target.value)}\n323: placeholder=\"Enter city\"\n324: />"
           },
           {
             "text": "Enter state",
-            "line": 332,
-            "context": "331: onChange={(e) => handleInputChange('state', e.target.value)}\n332: placeholder=\"Enter state\"\n333: />"
+            "line": 333,
+            "context": "332: onChange={(e) => handleInputChange('state', e.target.value)}\n333: placeholder=\"Enter state\"\n334: />"
           },
           {
             "text": "Enter ZIP code",
-            "line": 344,
-            "context": "343: onChange={(e) => handleInputChange('zip_code', e.target.value)}\n344: placeholder=\"Enter ZIP code\"\n345: />"
+            "line": 345,
+            "context": "344: onChange={(e) => handleInputChange('zip_code', e.target.value)}\n345: placeholder=\"Enter ZIP code\"\n346: />"
           },
           {
             "text": "Enter internal notes or comments",
-            "line": 423,
-            "context": "422: onChange={(e) => handleInputChange('notes', e.target.value)}\n423: placeholder=\"Enter internal notes or comments\"\n424: className=\"min-h-[100px]\""
+            "line": 424,
+            "context": "423: onChange={(e) => handleInputChange('notes', e.target.value)}\n424: placeholder=\"Enter internal notes or comments\"\n425: className=\"min-h-[100px]\""
           }
         ],
         "translationCalls": [
           {
             "key": "messages.required_field",
-            "line": 119,
+            "line": 120,
             "exists": false
           },
           {
             "key": "messages.saved",
-            "line": 133,
+            "line": 134,
             "exists": false
           },
           {
             "key": "messages.saved",
-            "line": 140,
+            "line": 141,
             "exists": false
           },
           {
             "key": "messages.error",
-            "line": 146,
+            "line": 147,
             "exists": true
           },
           {
             "key": "dealerships.edit",
-            "line": 174,
+            "line": 175,
             "exists": true
           },
           {
             "key": "dealerships.add_new",
-            "line": 174,
+            "line": 175,
             "exists": true
           },
           {
             "key": "dealerships.business_info",
-            "line": 185,
+            "line": 186,
             "exists": true
           },
           {
             "key": "dealerships.name",
-            "line": 188,
+            "line": 189,
             "exists": true
           },
           {
             "key": "dealerships.tax_number",
-            "line": 199,
+            "line": 200,
             "exists": true
           },
           {
             "key": "dealerships.website",
-            "line": 209,
+            "line": 210,
             "exists": true
           },
           {
             "key": "dealerships.contact_info",
-            "line": 225,
+            "line": 226,
             "exists": true
           },
           {
             "key": "dealerships.email",
-            "line": 228,
+            "line": 229,
             "exists": true
           },
           {
             "key": "dealerships.phone",
-            "line": 240,
+            "line": 241,
             "exists": true
           },
           {
             "key": "dealerships.subscription_settings",
-            "line": 255,
+            "line": 256,
             "exists": true
           },
           {
             "key": "dealerships.subscription_plan",
-            "line": 258,
+            "line": 259,
             "exists": true
           },
           {
             "key": "dealerships.basic_plan",
-            "line": 264,
-            "exists": true
-          },
-          {
-            "key": "dealerships.premium_plan",
             "line": 265,
             "exists": true
           },
           {
-            "key": "dealerships.enterprise_plan",
+            "key": "dealerships.premium_plan",
             "line": 266,
             "exists": true
           },
           {
+            "key": "dealerships.enterprise_plan",
+            "line": 267,
+            "exists": true
+          },
+          {
             "key": "dealerships.max_users",
-            "line": 272,
+            "line": 273,
             "exists": true
           },
           {
             "key": "dealerships.status",
-            "line": 283,
+            "line": 284,
             "exists": true
           },
           {
             "key": "dealerships.active",
-            "line": 289,
-            "exists": true
-          },
-          {
-            "key": "dealerships.inactive",
             "line": 290,
             "exists": true
           },
           {
-            "key": "dealerships.suspended",
+            "key": "dealerships.inactive",
             "line": 291,
             "exists": true
           },
           {
+            "key": "dealerships.suspended",
+            "line": 292,
+            "exists": true
+          },
+          {
             "key": "dealerships.address_info",
-            "line": 303,
+            "line": 304,
             "exists": true
           },
           {
             "key": "dealerships.address",
-            "line": 306,
+            "line": 307,
             "exists": true
           },
           {
             "key": "dealerships.city",
-            "line": 317,
+            "line": 318,
             "exists": true
           },
           {
             "key": "dealerships.state",
-            "line": 327,
+            "line": 328,
             "exists": true
           },
           {
             "key": "dealerships.zip",
-            "line": 339,
+            "line": 340,
             "exists": true
           },
           {
             "key": "dealerships.country",
-            "line": 349,
+            "line": 350,
             "exists": true
           },
           {
             "key": "dealerships.branding",
-            "line": 371,
+            "line": 372,
             "exists": true
           },
           {
             "key": "dealerships.logo",
-            "line": 375,
+            "line": 376,
             "exists": true
           },
           {
             "key": "dealerships.logo_upload_after_creation",
-            "line": 385,
+            "line": 386,
             "exists": true
           },
           {
             "key": "dealerships.primary_color",
-            "line": 394,
+            "line": 395,
             "exists": true
           },
           {
             "key": "dealerships.notes",
-            "line": 418,
+            "line": 419,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 432,
+            "line": 433,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 435,
+            "line": 436,
             "exists": true
           },
           {
             "key": "common.save",
-            "line": 435,
+            "line": 436,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "messages.required_field",
-            "line": 119,
-            "context": "118: if (!formData.name.trim() || !formData.email.trim()) {\n119: toast({ variant: 'destructive', description: t('messages.required_field') });\n120: return;"
+            "line": 120,
+            "context": "119: if (!formData.name.trim() || !formData.email.trim()) {\n120: toast({ variant: 'destructive', description: t('messages.required_field') });\n121: return;"
           },
           {
             "key": "messages.saved",
-            "line": 133,
-            "context": "132: if (error) throw error;\n133: toast({ description: t('messages.saved') });\n134: } else {"
+            "line": 134,
+            "context": "133: if (error) throw error;\n134: toast({ description: t('messages.saved') });\n135: } else {"
           },
           {
             "key": "messages.saved",
-            "line": 140,
-            "context": "139: if (error) throw error;\n140: toast({ description: t('messages.saved') });\n141: }"
+            "line": 141,
+            "context": "140: if (error) throw error;\n141: toast({ description: t('messages.saved') });\n142: }"
           }
         ],
         "coverage": 73,
@@ -13471,8 +13471,8 @@
         "hardcodedStrings": [
           {
             "text": "No image data provided",
-            "line": 127,
-            "context": "126: type: 'SCAN_ERROR',\n127: payload: { error: 'No image data provided', taskId }\n128: } as VinOcrResponse);"
+            "line": 149,
+            "context": "148: type: 'SCAN_ERROR',\n149: payload: { error: 'No image data provided', taskId }\n150: } as VinOcrResponse);"
           }
         ],
         "translationCalls": [],
@@ -18753,67 +18753,67 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 22,
-            "context": "21: interface UseVinScannerReturn {\n22: scanVin: (imageFile: Blob | File | string, options?: VinScanOptions) => Promise<string[]>;\n23: loading: boolean;"
+            "line": 50,
+            "context": "49: interface UseVinScannerReturn {\n50: scanVin: (imageFile: Blob | File | string, options?: VinScanOptions) => Promise<string[]>;\n51: loading: boolean;"
           },
           {
             "text": ", error);\n          setError(",
-            "line": 118,
-            "context": "117: workerRef.current.onerror = (error) => {\n118: console.error('[VIN Scanner] Worker error:', error);\n119: setError('Worker initialization failed');"
+            "line": 146,
+            "context": "145: workerRef.current.onerror = (error) => {\n146: console.error('[VIN Scanner] Worker error:', error);\n147: setError('Worker initialization failed');"
           },
           {
             "text": " + error.message));\n            rejectRef.current = null;\n          }\n        };\n      } catch (err) {\n        console.error(",
-            "line": 123,
-            "context": "122: if (rejectRef.current) {\n123: rejectRef.current(new Error('Worker error: ' + error.message));\n124: rejectRef.current = null;"
+            "line": 151,
+            "context": "150: if (rejectRef.current) {\n151: rejectRef.current(new Error('Worker error: ' + error.message));\n152: rejectRef.current = null;"
           }
         ],
         "translationCalls": [
           {
             "key": "vin_scanner_errors.timeout",
-            "line": 215,
+            "line": 243,
             "exists": false
           },
           {
             "key": "vin_scanner_errors.no_vin_found",
-            "line": 240,
+            "line": 268,
             "exists": false
           },
           {
             "key": "modern_vin_scanner.status_invalid",
-            "line": 242,
+            "line": 270,
             "exists": true
           },
           {
             "key": "vin_scanner_errors.timeout",
-            "line": 253,
+            "line": 281,
             "exists": false
           },
           {
             "key": "vin_scanner_errors.processing_error",
-            "line": 255,
+            "line": 283,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "vin_scanner_errors.timeout",
-            "line": 215,
-            "context": "214: setProgress(0);\n215: setError(t('vin_scanner_errors.timeout', 'VIN scan took too long. Please try again.'));\n216: "
+            "line": 243,
+            "context": "242: setProgress(0);\n243: setError(t('vin_scanner_errors.timeout', 'VIN scan took too long. Please try again.'));\n244: "
           },
           {
             "key": "vin_scanner_errors.no_vin_found",
-            "line": 240,
-            "context": "239: if (vins.length === 0) {\n240: setError(t('vin_scanner_errors.no_vin_found', 'No VIN detected in the image.'));\n241: } else if (!vins.some(isValidVin)) {"
+            "line": 268,
+            "context": "267: if (vins.length === 0) {\n268: setError(t('vin_scanner_errors.no_vin_found', 'No VIN detected in the image.'));\n269: } else if (!vins.some(isValidVin)) {"
           },
           {
             "key": "vin_scanner_errors.timeout",
-            "line": 253,
-            "context": "252: if (errorMessage.includes('timeout')) {\n253: setError(t('vin_scanner_errors.timeout', 'VIN scan took too long. Please try again.'));\n254: } else {"
+            "line": 281,
+            "context": "280: if (errorMessage.includes('timeout')) {\n281: setError(t('vin_scanner_errors.timeout', 'VIN scan took too long. Please try again.'));\n282: } else {"
           },
           {
             "key": "vin_scanner_errors.processing_error",
-            "line": 255,
-            "context": "254: } else {\n255: setError(t('vin_scanner_errors.processing_error', 'Unable to process VIN image.') + ': ' + errorMessage);\n256: }"
+            "line": 283,
+            "context": "282: } else {\n283: setError(t('vin_scanner_errors.processing_error', 'Unable to process VIN image.') + ': ' + errorMessage);\n284: }"
           }
         ],
         "coverage": 63,
@@ -18836,6 +18836,20 @@
             "text": ", err);\n      setError(",
             "line": 59,
             "context": "58: } catch (err) {\n59: console.error('VIN decoding error:', err);\n60: setError('Network error. Please try again.');"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\hooks\\useVinBarcodeScanner.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 31,
+            "context": "30: export interface UseVinBarcodeScannerReturn {\n31: scanVin: (imageFile: File | Blob, options?: ScanOptions) => Promise<string[]>;\n32: loading: boolean;"
           }
         ],
         "translationCalls": [],
@@ -29361,177 +29375,207 @@
         "hardcodedStrings": [
           {
             "text": ", err);\n      setStatus(",
-            "line": 132,
-            "context": "131: } catch (err) {\n132: console.error('💥 Camera access error:', err);\n133: setStatus('error');"
+            "line": 114,
+            "context": "113: } catch (err) {\n114: console.error('❌ Camera initialization error:', err);\n115: setStatus('error');"
           }
         ],
         "translationCalls": [
           {
-            "key": "modern_vin_scanner.status_ready",
-            "line": 126,
-            "exists": true
+            "key": "modern_vin_scanner.camera_error",
+            "line": 116,
+            "exists": false
           },
           {
-            "key": "modern_vin_scanner.camera_unavailable",
-            "line": 134,
-            "exists": true
-          },
-          {
-            "key": "modern_vin_scanner.status_no_vin",
-            "line": 155,
+            "key": "vin_scanner.barcode_not_detected",
+            "line": 141,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.status_success",
-            "line": 164,
+            "line": 151,
             "exists": true
           },
           {
-            "key": "modern_vin_scanner.status_auto_corrected",
-            "line": 177,
+            "key": "modern_vin_scanner.status_corrected",
+            "line": 157,
             "exists": false
           },
           {
-            "key": "modern_vin_scanner.status_invalid",
-            "line": 194,
-            "exists": true
+            "key": "modern_vin_scanner.vin_invalid",
+            "line": 161,
+            "exists": false
           },
           {
-            "key": "modern_vin_scanner.status_scanning",
-            "line": 201,
+            "key": "vin_scanner.scanning_barcode",
+            "line": 170,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.status_processing_upload",
-            "line": 202,
+            "line": 171,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.action_retry",
-            "line": 288,
+            "line": 257,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.dialog_title",
-            "line": 304,
+            "line": 273,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.sticker_hint",
-            "line": 308,
+            "line": 277,
             "exists": true
           },
           {
-            "key": "modern_vin_scanner.plate_hint",
-            "line": 309,
+            "key": "modern_vin_scanner.barcode_hint",
+            "line": 278,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.scan_camera",
-            "line": 324,
+            "line": 293,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.upload_image",
-            "line": 337,
+            "line": 306,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.tips_title",
-            "line": 345,
+            "line": 315,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.tip_lighting",
-            "line": 347,
+            "line": 318,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.tip_steady",
-            "line": 348,
+            "line": 319,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.tip_focus",
-            "line": 349,
-            "exists": true
-          },
-          {
-            "key": "modern_vin_scanner.tip_glare",
-            "line": 350,
+            "line": 320,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.initializing_camera",
-            "line": 402,
+            "line": 362,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.allow_camera_access",
-            "line": 403,
+            "line": 365,
             "exists": true
           },
           {
-            "key": "modern_vin_scanner.scanning_vin",
-            "line": 428,
+            "key": "vin_scanner.scanning_barcode",
+            "line": 392,
             "exists": true
+          },
+          {
+            "key": "modern_vin_scanner.align_vin_here",
+            "line": 413,
+            "exists": false
           },
           {
             "key": "common.back",
-            "line": 457,
+            "line": 432,
             "exists": false
           },
           {
             "key": "modern_vin_scanner.status_scanning",
-            "line": 474,
+            "line": 453,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.capture",
-            "line": 479,
+            "line": 460,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.status_success",
-            "line": 494,
+            "line": 479,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.confidence_label",
-            "line": 501,
+            "line": 490,
             "exists": true
           },
           {
+            "key": "modern_vin_scanner.scanned_with",
+            "line": 498,
+            "exists": false
+          },
+          {
             "key": "modern_vin_scanner.action_use_result",
-            "line": 508,
+            "line": 510,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.action_retry",
-            "line": 511,
+            "line": 514,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.dialog_title",
-            "line": 535,
+            "line": 539,
+            "exists": true
+          },
+          {
+            "key": "vin_scanner.engine_native",
+            "line": 543,
+            "exists": true
+          },
+          {
+            "key": "vin_scanner.engine_zxing",
+            "line": 545,
             "exists": true
           },
           {
             "key": "modern_vin_scanner.dialog_subtitle",
-            "line": 538,
+            "line": 550,
             "exists": true
           }
         ],
         "missingKeys": [
           {
-            "key": "modern_vin_scanner.status_auto_corrected",
-            "line": 177,
-            "context": "176: setStatusMessage(\n177: t('modern_vin_scanner.status_auto_corrected', 'VIN auto-corrected ({{count}} corrections)',\n178: { count: correctionResult.corrections.length })"
+            "key": "modern_vin_scanner.camera_error",
+            "line": 116,
+            "context": "115: setStatus('error');\n116: setStatusMessage(t('modern_vin_scanner.camera_error', 'Failed to access camera. Please check permissions.'));\n117: }"
+          },
+          {
+            "key": "modern_vin_scanner.status_corrected",
+            "line": 157,
+            "context": "156: setStatus('success');\n157: setStatusMessage(t('modern_vin_scanner.status_corrected', 'VIN detected (auto-corrected)'));\n158: } else {"
+          },
+          {
+            "key": "modern_vin_scanner.vin_invalid",
+            "line": 161,
+            "context": "160: setStatus('error');\n161: setStatusMessage(t('modern_vin_scanner.vin_invalid', 'Invalid VIN detected. Please verify manually.'));\n162: }"
+          },
+          {
+            "key": "modern_vin_scanner.align_vin_here",
+            "line": 413,
+            "context": "412: <div className=\"bg-black/70 backdrop-blur-sm text-white text-xs px-3 py-2 rounded-full\">\n413: {t('modern_vin_scanner.align_vin_here', 'Align barcode within the guide')}\n414: </div>"
           },
           {
             "key": "common.back",
-            "line": 457,
-            "context": "456: <X className=\"w-4 h-4 mr-2\" />\n457: {t('common.back', 'Back')}\n458: </Button>"
+            "line": 432,
+            "context": "431: <ChevronLeft className=\"w-4 h-4 mr-2\" />\n432: {t('common.back', 'Back')}\n433: </Button>"
+          },
+          {
+            "key": "modern_vin_scanner.scanned_with",
+            "line": 498,
+            "context": "497: <div className=\"flex items-center gap-1.5\">\n498: <span className=\"font-medium\">{t('modern_vin_scanner.scanned_with', 'Engine')}:</span>\n499: <Badge variant=\"outline\" className=\"text-xs\">"
           }
         ],
         "coverage": 97,
@@ -37774,207 +37818,207 @@
         "hardcodedStrings": [
           {
             "text": "Reply",
-            "line": 284,
-            "context": "283: >\n284: <Reply className=\"h-3.5 w-3.5 mr-1\" />\n285: Reply"
+            "line": 285,
+            "context": "284: >\n285: <Reply className=\"h-3.5 w-3.5 mr-1\" />\n286: Reply"
           },
           {
             "text": "Cancel",
-            "line": 347,
-            "context": "346: className=\"h-8 text-xs\"\n347: >\n348: Cancel"
+            "line": 348,
+            "context": "347: className=\"h-8 text-xs\"\n348: >\n349: Cancel"
           },
           {
             "text": "Reply",
-            "line": 367,
-            "context": "366: <div className=\"flex items-center gap-1.5 mb-1\">\n367: <Badge variant=\"secondary\" className=\"text-xs leading-none py-0.5 px-1.5 font-medium\">\n368: Reply"
+            "line": 368,
+            "context": "367: <div className=\"flex items-center gap-1.5 mb-1\">\n368: <Badge variant=\"secondary\" className=\"text-xs leading-none py-0.5 px-1.5 font-medium\">\n369: Reply"
           }
         ],
         "translationCalls": [
           {
             "key": "order_comments.comment_added",
-            "line": 116,
-            "exists": true
-          },
-          {
-            "key": "order_comments.note_added",
             "line": 117,
             "exists": true
           },
           {
-            "key": "order_comments.comment_failed",
-            "line": 124,
+            "key": "order_comments.note_added",
+            "line": 118,
             "exists": true
           },
           {
-            "key": "order_comments.note_failed",
+            "key": "order_comments.comment_failed",
             "line": 125,
             "exists": true
           },
           {
+            "key": "order_comments.note_failed",
+            "line": 126,
+            "exists": true
+          },
+          {
             "key": "order_comments.reply_added",
-            "line": 145,
+            "line": 146,
             "exists": true
           },
           {
             "key": "order_comments.reply_failed",
-            "line": 147,
+            "line": 148,
             "exists": true
           },
           {
             "key": "order_comments.comment_deleted",
-            "line": 173,
-            "exists": true
-          },
-          {
-            "key": "order_comments.note_deleted",
             "line": 174,
             "exists": true
           },
           {
+            "key": "order_comments.note_deleted",
+            "line": 175,
+            "exists": true
+          },
+          {
             "key": "order_comments.delete_failed",
-            "line": 178,
+            "line": 179,
             "exists": true
           },
           {
             "key": "order_comments.no_comments",
-            "line": 209,
-            "exists": true
-          },
-          {
-            "key": "order_comments.start_conversation",
             "line": 210,
             "exists": true
           },
           {
-            "key": "order_comments.no_internal_notes",
-            "line": 217,
+            "key": "order_comments.start_conversation",
+            "line": 211,
             "exists": true
           },
           {
-            "key": "order_comments.add_private_notes",
+            "key": "order_comments.no_internal_notes",
             "line": 218,
             "exists": true
           },
           {
+            "key": "order_comments.add_private_notes",
+            "line": 219,
+            "exists": true
+          },
+          {
             "key": "order_comments.detail_team",
-            "line": 252,
+            "line": 253,
             "exists": true
           },
           {
             "key": "order_comments.delete",
-            "line": 306,
+            "line": 307,
             "exists": true
           },
           {
             "key": "order_comments.reply_placeholder",
-            "line": 330,
+            "line": 331,
             "exists": true
           },
           {
             "key": "order_comments.title",
-            "line": 416,
+            "line": 417,
             "exists": true
           },
           {
             "key": "order_comments.comments",
-            "line": 425,
+            "line": 426,
             "exists": true
           },
           {
             "key": "order_comments.internal_notes",
-            "line": 435,
+            "line": 436,
             "exists": true
           },
           {
             "key": "order_comments.add_comment_placeholder",
-            "line": 456,
+            "line": 457,
             "exists": true
           },
           {
             "key": "order_comments.mention",
-            "line": 482,
+            "line": 483,
             "exists": true
           },
           {
             "key": "order_comments.loading_comments",
-            "line": 502,
+            "line": 503,
             "exists": true
           },
           {
             "key": "order_comments.comments_count",
-            "line": 514,
+            "line": 515,
             "exists": true
           },
           {
             "key": "order_comments.team_discussion",
-            "line": 518,
+            "line": 519,
             "exists": true
           },
           {
             "key": "order_comments.add_internal_placeholder",
-            "line": 536,
+            "line": 537,
             "exists": true
           },
           {
             "key": "order_comments.mention_team",
-            "line": 564,
+            "line": 565,
             "exists": true
           },
           {
             "key": "order_comments.loading_notes",
-            "line": 584,
+            "line": 585,
             "exists": true
           },
           {
             "key": "order_comments.internal_count",
-            "line": 596,
+            "line": 597,
             "exists": true
           },
           {
             "key": "order_comments.confidential",
-            "line": 600,
+            "line": 601,
             "exists": true
           },
           {
             "key": "order_comments.access_denied",
-            "line": 614,
+            "line": 615,
             "exists": true
           },
           {
             "key": "order_comments.detail_access_required",
-            "line": 616,
+            "line": 617,
             "exists": true
           },
           {
             "key": "order_comments.restricted_access",
-            "line": 620,
+            "line": 621,
             "exists": true
           },
           {
             "key": "order_comments.confirm_delete_title",
-            "line": 630,
-            "exists": true
-          },
-          {
-            "key": "order_comments.confirm_delete_description",
             "line": 631,
             "exists": true
           },
           {
-            "key": "order_comments.delete_confirm",
+            "key": "order_comments.confirm_delete_description",
             "line": 632,
+            "exists": true
+          },
+          {
+            "key": "order_comments.delete_confirm",
+            "line": 633,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 633,
+            "line": 634,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "order_comments.delete_confirm",
-            "line": 632,
-            "context": "631: description={t('order_comments.confirm_delete_description', 'Are you sure you want to delete this comment? This action cannot be undone.')}\n632: confirmText={t('order_comments.delete_confirm', 'Delete')}\n633: cancelText={t('common.cancel', 'Cancel')}"
+            "line": 633,
+            "context": "632: description={t('order_comments.confirm_delete_description', 'Are you sure you want to delete this comment? This action cannot be undone.')}\n633: confirmText={t('order_comments.delete_confirm', 'Delete')}\n634: cancelText={t('common.cancel', 'Cancel')}"
           }
         ],
         "coverage": 92,
@@ -57998,7 +58042,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "408 Component components need translation",
+      "description": "409 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\OperationalReports.tsx",
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
@@ -58213,6 +58257,7 @@
         "src\\lib\\sessionRecovery.ts",
         "src\\lib\\notification-analytics.ts",
         "src\\lib\\firebase.ts",
+        "src\\hooks\\useVinBarcodeScanner.tsx",
         "src\\hooks\\useSweetAlert.tsx",
         "src\\hooks\\useServerExport.tsx",
         "src\\hooks\\useSenderInfo.tsx",
@@ -58409,12 +58454,12 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "204 hours"
+      "estimatedEffort": "205 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2127 translation keys are referenced but missing",
+      "description": "2131 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "107 hours"
     }
