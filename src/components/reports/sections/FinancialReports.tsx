@@ -25,8 +25,10 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  Legend,
   BarChart,
   Bar,
+  Cell,
   Area,
   AreaChart
 } from 'recharts';
@@ -42,7 +44,7 @@ import { useToast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import ExcelJS from 'exceljs';
-import { getWeek, getYear } from 'date-fns';
+import { getWeek, getYear, subWeeks, startOfWeek, endOfWeek } from 'date-fns';
 
 interface FinancialReportsProps {
   filters: ReportsFilters;
@@ -63,6 +65,20 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
 
   const { data: revenueData, isLoading } = useRevenueAnalytics(filters, grouping);
   const { data: departmentData = [], isLoading: deptLoading } = useDepartmentRevenue(filters);
+
+  // Get data for the last 3 weeks for comparison
+  const now = new Date();
+  const week1End = endOfWeek(now);
+  const week1Start = startOfWeek(now);
+  const week2End = endOfWeek(subWeeks(now, 1));
+  const week2Start = startOfWeek(subWeeks(now, 1));
+  const week3End = endOfWeek(subWeeks(now, 2));
+  const week3Start = startOfWeek(subWeeks(now, 2));
+
+  const { data: week1Data = [] } = useDepartmentRevenue({ ...filters, startDate: week1Start, endDate: week1End });
+  const { data: week2Data = [] } = useDepartmentRevenue({ ...filters, startDate: week2Start, endDate: week2End });
+  const { data: week3Data = [] } = useDepartmentRevenue({ ...filters, startDate: week3Start, endDate: week3End });
+
   const { currentDealership } = useAccessibleDealerships();
   const { senderInfo } = useSenderInfo();
   const { user } = useAuth();
@@ -73,6 +89,46 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
 
   // Safe defaults for senderInfo
   const companyName = senderInfo?.company_name || 'Dealer Detail Service LLC';
+
+  // Department color mapping (consistent with dashboard and cards)
+  const getDepartmentColor = (departmentName: string): string => {
+    const normalized = departmentName.toLowerCase();
+    switch (normalized) {
+      case 'sales':
+        return '#3b82f6'; // blue-500
+      case 'service':
+        return '#22c55e'; // green-500
+      case 'recon':
+        return '#f97316'; // orange-500
+      case 'carwash':
+      case 'car wash':
+        return '#06b6d4'; // cyan-500
+      default:
+        return '#6b7280'; // gray-500
+    }
+  };
+
+  // Combine weekly data for comparison charts
+  const combineWeeklyData = () => {
+    const departments = ['Sales', 'Service', 'Recon', 'Carwash'];
+    return departments.map(deptName => {
+      const week1 = week1Data.find(d => d.name.toLowerCase() === deptName.toLowerCase()) || { revenue: 0, orders: 0 };
+      const week2 = week2Data.find(d => d.name.toLowerCase() === deptName.toLowerCase()) || { revenue: 0, orders: 0 };
+      const week3 = week3Data.find(d => d.name.toLowerCase() === deptName.toLowerCase()) || { revenue: 0, orders: 0 };
+
+      return {
+        name: deptName,
+        week1Revenue: week1.revenue,
+        week2Revenue: week2.revenue,
+        week3Revenue: week3.revenue,
+        week1Orders: week1.orders,
+        week2Orders: week2.orders,
+        week3Orders: week3.orders,
+      };
+    });
+  };
+
+  const weeklyComparisonData = combineWeeklyData();
 
   // Get user's full name
   const getUserFullName = () => {
@@ -962,7 +1018,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
               <CardHeader>
                 <CardTitle>Revenue by Department</CardTitle>
                 <CardDescription>
-                  Total revenue generated per department
+                  Total revenue generated per department (Last 3 weeks comparison)
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -970,9 +1026,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                   <div className="h-80 flex items-center justify-center">
                     <div className="text-muted-foreground">{t('common.loading')}</div>
                   </div>
-                ) : departmentData.length > 0 ? (
+                ) : weeklyComparisonData.length > 0 ? (
                   <ResponsiveContainer width="100%" height={320}>
-                    <BarChart data={departmentData}>
+                    <BarChart data={weeklyComparisonData}>
                       <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
                       <XAxis
                         dataKey="name"
@@ -994,11 +1050,13 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                           padding: '12px'
                         }}
                       />
-                      <Bar
-                        dataKey="revenue"
-                        fill="hsl(var(--primary))"
-                        radius={[8, 8, 0, 0]}
+                      <Legend
+                        wrapperStyle={{ fontSize: '12px' }}
+                        formatter={(value) => value.replace(/week(\d)Revenue/, 'Week $1')}
                       />
+                      <Bar dataKey="week1Revenue" fill="#10b981" name="This Week" radius={[8, 8, 0, 0]} />
+                      <Bar dataKey="week2Revenue" fill="#3b82f6" name="Last Week" radius={[8, 8, 0, 0]} />
+                      <Bar dataKey="week3Revenue" fill="#8b5cf6" name="2 Weeks Ago" radius={[8, 8, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 ) : (
@@ -1012,9 +1070,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
 
             <Card>
               <CardHeader>
-                <CardTitle>Average Order Value by Department</CardTitle>
+                <CardTitle>Order Count by Department</CardTitle>
                 <CardDescription>
-                  Compare average transaction values across departments
+                  Total number of orders per department (Last 3 weeks comparison)
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -1022,9 +1080,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                   <div className="h-80 flex items-center justify-center">
                     <div className="text-muted-foreground">{t('common.loading')}</div>
                   </div>
-                ) : departmentData.length > 0 ? (
+                ) : weeklyComparisonData.length > 0 ? (
                   <ResponsiveContainer width="100%" height={320}>
-                    <BarChart data={departmentData}>
+                    <BarChart data={weeklyComparisonData}>
                       <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
                       <XAxis
                         dataKey="name"
@@ -1034,10 +1092,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                       <YAxis
                         className="text-xs text-muted-foreground"
                         tick={{ fontSize: 12 }}
-                        tickFormatter={formatCompactCurrency}
                       />
                       <Tooltip
-                        formatter={(value: number) => [formatCurrency(value), 'Avg Order Value']}
+                        formatter={(value: number) => [value.toLocaleString(), 'Orders']}
                         labelStyle={{ color: 'hsl(var(--foreground))' }}
                         contentStyle={{
                           backgroundColor: 'hsl(var(--background))',
@@ -1046,11 +1103,13 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                           padding: '12px'
                         }}
                       />
-                      <Bar
-                        dataKey="avgOrderValue"
-                        fill="hsl(var(--chart-2))"
-                        radius={[8, 8, 0, 0]}
+                      <Legend
+                        wrapperStyle={{ fontSize: '12px' }}
+                        formatter={(value) => value.replace(/week(\d)Orders/, 'Week $1')}
                       />
+                      <Bar dataKey="week1Orders" fill="#10b981" name="This Week" radius={[8, 8, 0, 0]} />
+                      <Bar dataKey="week2Orders" fill="#3b82f6" name="Last Week" radius={[8, 8, 0, 0]} />
+                      <Bar dataKey="week3Orders" fill="#8b5cf6" name="2 Weeks Ago" radius={[8, 8, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 ) : (
