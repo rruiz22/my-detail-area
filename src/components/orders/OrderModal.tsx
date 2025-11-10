@@ -863,55 +863,55 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       }
     }
 
-    // Check appointment capacity if dealership and time are selected - only when validating due date
-    if (shouldValidateDueDate && selectedDealership && formData.dueDate) {
-      try {
-        const slot = await checkSlotAvailability(
-          parseInt(selectedDealership),
-          formData.dueDate,
-          getHourInTimezone(formData.dueDate) // Use NY timezone hour
-        );
+    // ⚠️ DISABLED: Appointment capacity check - causing issues
+    // if (shouldValidateDueDate && selectedDealership && formData.dueDate) {
+    //   try {
+    //     const slot = await checkSlotAvailability(
+    //       parseInt(selectedDealership),
+    //       formData.dueDate,
+    //       getHourInTimezone(formData.dueDate) // Use NY timezone hour
+    //     );
+    //
+    //     if (slot && !slot.is_available) {
+    //       toast({ variant: 'destructive', description: t('validation.slotNotAvailable') });
+    //       return false;
+    //     }
+    //   } catch (capacityError) {
+    //     // Continue with order creation even if capacity check fails
+    //     toast({ description: t('validation.capacityCheckFailed') });
+    //   }
+    // }
 
-        if (slot && !slot.is_available) {
-          toast({ variant: 'destructive', description: t('validation.slotNotAvailable') });
-          return false;
-        }
-      } catch (capacityError) {
-        // Continue with order creation even if capacity check fails
-        toast({ description: t('validation.capacityCheckFailed') });
-      }
-    }
-
-    // VALIDATION FOR EDITING: Check if due_date changed and new slot is available
-    if (isEditing && order?.due_date && formData.dueDate && selectedDealership) {
-      const oldDueDateValue = typeof order.due_date === 'string' ? order.due_date : order.due_date.toISOString();
-      const oldDueDate = safeParseDate(oldDueDateValue);
-      const newDueDate = formData.dueDate;
-
-      // Check if due_date actually changed
-      if (oldDueDate && newDueDate.getTime() !== oldDueDate.getTime()) {
-        try {
-          // Validate new slot availability before allowing update
-          const newSlot = await checkSlotAvailability(
-            parseInt(selectedDealership),
-            newDueDate,
-            getHourInTimezone(newDueDate) // Use NY timezone hour
-          );
-
-          if (newSlot && !newSlot.is_available) {
-            toast({
-              variant: 'destructive',
-              description: t('validation.newSlotNotAvailable')
-            });
-            return false;
-          }
-        } catch (capacityError) {
-          // Log warning but allow update
-          console.warn('Failed to validate new slot during edit:', capacityError);
-          toast({ description: t('validation.capacityCheckFailed') });
-        }
-      }
-    }
+    // ⚠️ DISABLED: VALIDATION FOR EDITING - slot availability check causing issues
+    // if (isEditing && order?.due_date && formData.dueDate && selectedDealership) {
+    //   const oldDueDateValue = typeof order.due_date === 'string' ? order.due_date : order.due_date.toISOString();
+    //   const oldDueDate = safeParseDate(oldDueDateValue);
+    //   const newDueDate = formData.dueDate;
+    //
+    //   // Check if due_date actually changed
+    //   if (oldDueDate && newDueDate.getTime() !== oldDueDate.getTime()) {
+    //     try {
+    //       // Validate new slot availability before allowing update
+    //       const newSlot = await checkSlotAvailability(
+    //         parseInt(selectedDealership),
+    //         newDueDate,
+    //         getHourInTimezone(newDueDate) // Use NY timezone hour
+    //       );
+    //
+    //       if (newSlot && !newSlot.is_available) {
+    //         toast({
+    //           variant: 'destructive',
+    //           description: t('validation.newSlotNotAvailable')
+    //         });
+    //         return false;
+    //       }
+    //     } catch (capacityError) {
+    //       // Log warning but allow update
+    //       console.warn('Failed to validate new slot during edit:', capacityError);
+    //       toast({ description: t('validation.capacityCheckFailed') });
+    //     }
+    //   }
+    // }
 
     return true;
   };

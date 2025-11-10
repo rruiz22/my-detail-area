@@ -144,6 +144,7 @@ export const useInvoices = (filters: InvoiceFilters) => {
         updatedAt: row.updated_at,
         paidAt: row.paid_at,
         cancelledAt: row.cancelled_at,
+        commentsCount: parseInt(row.comments_count || '0'),
         order: row.order_number ? {
           orderNumber: row.order_number || row.custom_order_number,
           orderType: row.order_type,

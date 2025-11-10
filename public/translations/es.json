@@ -5126,7 +5126,37 @@
       "delete_success": "Factura eliminada - los vehículos están ahora disponibles para facturación",
       "delete_error": "Error al eliminar factura",
       "cannot_delete_paid": "No se pueden eliminar facturas pagadas",
-      "deleting": "Eliminando..."
+      "deleting": "Eliminando...",
+      "tabs": {
+        "invoices_list": "Lista de Facturas",
+        "create_invoice": "Crear Factura",
+        "check_vehicle": "Verificar Vehículo"
+      },
+      "filters": {
+        "date_range": "Rango de Fechas",
+        "all_time": "Todo el Tiempo",
+        "today": "Hoy",
+        "this_week": "Esta Semana",
+        "last_week": "Semana Pasada",
+        "this_month": "Este Mes",
+        "last_month": "Mes Pasado",
+        "custom_range": "Rango Personalizado",
+        "from_date": "Desde",
+        "to_date": "Hasta",
+        "type": "Tipo",
+        "search": "Buscar"
+      },
+      "table": {
+        "invoice": "Factura",
+        "date_range": "Período",
+        "vehicles": "vehículos",
+        "vehicle": "vehículo"
+      },
+      "messages": {
+        "loading": "Cargando facturas...",
+        "view_manage": "Ver y gestionar todas las facturas",
+        "select_dealership": "Por favor selecciona un dealer para gestionar facturas"
+      }
     },
     "analytics": {
       "historicalTrends": "Tendencias Históricas",

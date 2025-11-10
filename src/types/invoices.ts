@@ -82,6 +82,9 @@ export interface Invoice {
   };
   items?: InvoiceItem[];
   payments?: Payment[];
+
+  // Comments count (from RPC query)
+  commentsCount?: number;
 }
 
 // =====================================================
