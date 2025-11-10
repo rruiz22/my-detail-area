@@ -1,7 +1,7 @@
 {
   "scannedFiles": 863,
-  "totalStrings": 8542,
-  "hardcodedStrings": 2040,
+  "totalStrings": 8540,
+  "hardcodedStrings": 2038,
   "translatedStrings": 6502,
   "issues": {
     "critical": [
@@ -1922,188 +1922,188 @@
           },
           {
             "text": "Filter Vehicles",
-            "line": 1674,
-            "context": "1673: <CardTitle className=\"flex items-center gap-2 text-lg\">\n1674: <Filter className=\"h-5 w-5\" />\n1675: Filter Vehicles"
+            "line": 1680,
+            "context": "1679: <CardTitle className=\"flex items-center gap-2 text-lg\">\n1680: <Filter className=\"h-5 w-5\" />\n1681: Filter Vehicles"
           },
           {
             "text": "Use filters to find the vehicles you want to invoice",
-            "line": 1677,
-            "context": "1676: </CardTitle>\n1677: <CardDescription>Use filters to find the vehicles you want to invoice</CardDescription>\n1678: </CardHeader>"
+            "line": 1683,
+            "context": "1682: </CardTitle>\n1683: <CardDescription>Use filters to find the vehicles you want to invoice</CardDescription>\n1684: </CardHeader>"
           },
           {
             "text": "Department",
-            "line": 1683,
-            "context": "1682: <div className=\"space-y-1.5\">\n1683: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1684: <Select value={orderType} onValueChange={setOrderType}>"
+            "line": 1689,
+            "context": "1688: <div className=\"space-y-1.5\">\n1689: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1690: <Select value={orderType} onValueChange={setOrderType}>"
           },
           {
             "text": "All Departments",
-            "line": 1689,
-            "context": "1688: <SelectContent>\n1689: <SelectItem value=\"all\">All Departments</SelectItem>\n1690: <SelectItem value=\"sales\">Sales</SelectItem>"
+            "line": 1695,
+            "context": "1694: <SelectContent>\n1695: <SelectItem value=\"all\">All Departments</SelectItem>\n1696: <SelectItem value=\"sales\">Sales</SelectItem>"
           },
           {
             "text": "Sales",
-            "line": 1690,
-            "context": "1689: <SelectItem value=\"all\">All Departments</SelectItem>\n1690: <SelectItem value=\"sales\">Sales</SelectItem>\n1691: <SelectItem value=\"service\">Service</SelectItem>"
+            "line": 1696,
+            "context": "1695: <SelectItem value=\"all\">All Departments</SelectItem>\n1696: <SelectItem value=\"sales\">Sales</SelectItem>\n1697: <SelectItem value=\"service\">Service</SelectItem>"
           },
           {
             "text": "Service",
-            "line": 1691,
-            "context": "1690: <SelectItem value=\"sales\">Sales</SelectItem>\n1691: <SelectItem value=\"service\">Service</SelectItem>\n1692: <SelectItem value=\"recon\">Recon</SelectItem>"
+            "line": 1697,
+            "context": "1696: <SelectItem value=\"sales\">Sales</SelectItem>\n1697: <SelectItem value=\"service\">Service</SelectItem>\n1698: <SelectItem value=\"recon\">Recon</SelectItem>"
           },
           {
             "text": "Recon",
-            "line": 1692,
-            "context": "1691: <SelectItem value=\"service\">Service</SelectItem>\n1692: <SelectItem value=\"recon\">Recon</SelectItem>\n1693: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
+            "line": 1698,
+            "context": "1697: <SelectItem value=\"service\">Service</SelectItem>\n1698: <SelectItem value=\"recon\">Recon</SelectItem>\n1699: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
           },
           {
             "text": "Car Wash",
-            "line": 1693,
-            "context": "1692: <SelectItem value=\"recon\">Recon</SelectItem>\n1693: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1694: </SelectContent>"
+            "line": 1699,
+            "context": "1698: <SelectItem value=\"recon\">Recon</SelectItem>\n1699: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1700: </SelectContent>"
           },
           {
             "text": "Status",
-            "line": 1699,
-            "context": "1698: <div className=\"space-y-1.5\">\n1699: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1700: <Select value={orderStatus} onValueChange={setOrderStatus}>"
+            "line": 1705,
+            "context": "1704: <div className=\"space-y-1.5\">\n1705: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1706: <Select value={orderStatus} onValueChange={setOrderStatus}>"
           },
           {
             "text": "Date Range",
-            "line": 1725,
-            "context": "1724: <div className=\"space-y-1.5\">\n1725: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1726: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
+            "line": 1731,
+            "context": "1730: <div className=\"space-y-1.5\">\n1731: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1732: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
           },
           {
             "text": "Today",
-            "line": 1731,
-            "context": "1730: <SelectContent>\n1731: <SelectItem value=\"today\">Today</SelectItem>\n1732: <SelectItem value=\"this_week\">This Week</SelectItem>"
+            "line": 1737,
+            "context": "1736: <SelectContent>\n1737: <SelectItem value=\"today\">Today</SelectItem>\n1738: <SelectItem value=\"this_week\">This Week</SelectItem>"
           },
           {
             "text": "This Week",
-            "line": 1732,
-            "context": "1731: <SelectItem value=\"today\">Today</SelectItem>\n1732: <SelectItem value=\"this_week\">This Week</SelectItem>\n1733: <SelectItem value=\"last_week\">Last Week</SelectItem>"
+            "line": 1738,
+            "context": "1737: <SelectItem value=\"today\">Today</SelectItem>\n1738: <SelectItem value=\"this_week\">This Week</SelectItem>\n1739: <SelectItem value=\"last_week\">Last Week</SelectItem>"
           },
           {
             "text": "Last Week",
-            "line": 1733,
-            "context": "1732: <SelectItem value=\"this_week\">This Week</SelectItem>\n1733: <SelectItem value=\"last_week\">Last Week</SelectItem>\n1734: <SelectItem value=\"this_month\">This Month</SelectItem>"
+            "line": 1739,
+            "context": "1738: <SelectItem value=\"this_week\">This Week</SelectItem>\n1739: <SelectItem value=\"last_week\">Last Week</SelectItem>\n1740: <SelectItem value=\"this_month\">This Month</SelectItem>"
           },
           {
             "text": "This Month",
-            "line": 1734,
-            "context": "1733: <SelectItem value=\"last_week\">Last Week</SelectItem>\n1734: <SelectItem value=\"this_month\">This Month</SelectItem>\n1735: <SelectItem value=\"last_month\">Last Month</SelectItem>"
+            "line": 1740,
+            "context": "1739: <SelectItem value=\"last_week\">Last Week</SelectItem>\n1740: <SelectItem value=\"this_month\">This Month</SelectItem>\n1741: <SelectItem value=\"last_month\">Last Month</SelectItem>"
           },
           {
             "text": "Last Month",
-            "line": 1735,
-            "context": "1734: <SelectItem value=\"this_month\">This Month</SelectItem>\n1735: <SelectItem value=\"last_month\">Last Month</SelectItem>\n1736: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>"
+            "line": 1741,
+            "context": "1740: <SelectItem value=\"this_month\">This Month</SelectItem>\n1741: <SelectItem value=\"last_month\">Last Month</SelectItem>\n1742: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>"
           },
           {
             "text": "Custom Range",
-            "line": 1737,
-            "context": "1736: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>\n1737: <SelectItem value=\"custom\">Custom Range</SelectItem>\n1738: </SelectContent>"
+            "line": 1743,
+            "context": "1742: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>\n1743: <SelectItem value=\"custom\">Custom Range</SelectItem>\n1744: </SelectContent>"
           },
           {
             "text": "Search",
-            "line": 1743,
-            "context": "1742: <div className=\"space-y-1.5\">\n1743: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1744: <div className=\"relative\">"
+            "line": 1749,
+            "context": "1748: <div className=\"space-y-1.5\">\n1749: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1750: <div className=\"relative\">"
           },
           {
             "text": "From Date",
-            "line": 1761,
-            "context": "1760: <div className=\"space-y-1.5\">\n1761: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1762: <Input"
+            "line": 1767,
+            "context": "1766: <div className=\"space-y-1.5\">\n1767: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1768: <Input"
           },
           {
             "text": "To Date",
-            "line": 1774,
-            "context": "1773: <div className=\"space-y-1.5\">\n1774: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1775: <Input"
+            "line": 1780,
+            "context": "1779: <div className=\"space-y-1.5\">\n1780: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1781: <Input"
           },
           {
             "text": "Showing orders from",
-            "line": 1793,
-            "context": "1792: <Calendar className=\"h-3.5 w-3.5\" />\n1793: <span>\n1794: Showing orders from <span className=\"font-medium text-foreground\">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className=\"font-medium text-foreground\">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>"
+            "line": 1799,
+            "context": "1798: <Calendar className=\"h-3.5 w-3.5\" />\n1799: <span>\n1800: Showing orders from <span className=\"font-medium text-foreground\">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className=\"font-medium text-foreground\">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>"
           },
           {
             "text": "Include Only Service",
-            "line": 1802,
-            "context": "1801: <div className=\"space-y-2\">\n1802: <Label>Include Only Service</Label>\n1803: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
+            "line": 1808,
+            "context": "1807: <div className=\"space-y-2\">\n1808: <Label>Include Only Service</Label>\n1809: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
           },
           {
             "text": "No services found for this dealer",
-            "line": 1812,
-            "context": "1811: {availableServices.length === 0 && !loadingServices && (\n1812: <SelectItem value=\"none\" disabled>\n1813: No services found for this dealer"
+            "line": 1818,
+            "context": "1817: {availableServices.length === 0 && !loadingServices && (\n1818: <SelectItem value=\"none\" disabled>\n1819: No services found for this dealer"
           },
           {
             "text": "Exclude Services",
-            "line": 1828,
-            "context": "1827: <div className=\"space-y-2\">\n1828: <Label>Exclude Services</Label>\n1829: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
+            "line": 1834,
+            "context": "1833: <div className=\"space-y-2\">\n1834: <Label>Exclude Services</Label>\n1835: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
           },
           {
             "text": "No services excluded",
-            "line": 1845,
-            "context": "1844: ) : (\n1845: <span className=\"text-sm text-muted-foreground\">No services excluded</span>\n1846: )}"
+            "line": 1851,
+            "context": "1850: ) : (\n1851: <span className=\"text-sm text-muted-foreground\">No services excluded</span>\n1852: )}"
           },
           {
             "text": "Available Orders",
-            "line": 1879,
-            "context": "1878: <div>\n1879: <CardTitle>Available Orders</CardTitle>\n1880: <CardDescription>"
+            "line": 1885,
+            "context": "1884: <div>\n1885: <CardTitle>Available Orders</CardTitle>\n1886: <CardDescription>"
           },
           {
             "text": "No orders found",
-            "line": 1902,
-            "context": "1901: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1902: <p className=\"text-muted-foreground\">No orders found</p>\n1903: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
+            "line": 1908,
+            "context": "1907: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1908: <p className=\"text-muted-foreground\">No orders found</p>\n1909: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
           },
           {
             "text": "Try adjusting your filters",
-            "line": 1903,
-            "context": "1902: <p className=\"text-muted-foreground\">No orders found</p>\n1903: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n1904: </div>"
+            "line": 1909,
+            "context": "1908: <p className=\"text-muted-foreground\">No orders found</p>\n1909: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n1910: </div>"
           },
           {
             "text": "Order Number",
-            "line": 1916,
-            "context": "1915: </TableHead>\n1916: <TableHead className=\"text-center font-bold\">Order Number</TableHead>\n1917: <TableHead className=\"text-center font-bold\">"
+            "line": 1922,
+            "context": "1921: </TableHead>\n1922: <TableHead className=\"text-center font-bold\">Order Number</TableHead>\n1923: <TableHead className=\"text-center font-bold\">"
           },
           {
             "text": "Vehicle",
-            "line": 1935,
-            "context": "1934: </TableHead>\n1935: <TableHead className=\"text-center font-bold\">Vehicle</TableHead>\n1936: <TableHead className=\"text-center font-bold\">VIN</TableHead>"
+            "line": 1941,
+            "context": "1940: </TableHead>\n1941: <TableHead className=\"text-center font-bold\">Vehicle</TableHead>\n1942: <TableHead className=\"text-center font-bold\">VIN</TableHead>"
           },
           {
             "text": "Services",
-            "line": 1937,
-            "context": "1936: <TableHead className=\"text-center font-bold\">VIN</TableHead>\n1937: <TableHead className=\"text-center font-bold\">Services</TableHead>\n1938: <TableHead className=\"text-center font-bold\">Dept</TableHead>"
+            "line": 1943,
+            "context": "1942: <TableHead className=\"text-center font-bold\">VIN</TableHead>\n1943: <TableHead className=\"text-center font-bold\">Services</TableHead>\n1944: <TableHead className=\"text-center font-bold\">Dept</TableHead>"
           },
           {
             "text": "Dept",
-            "line": 1938,
-            "context": "1937: <TableHead className=\"text-center font-bold\">Services</TableHead>\n1938: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n1939: <TableHead className=\"text-center font-bold\">Amount</TableHead>"
+            "line": 1944,
+            "context": "1943: <TableHead className=\"text-center font-bold\">Services</TableHead>\n1944: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n1945: <TableHead className=\"text-center font-bold\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 1939,
-            "context": "1938: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n1939: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n1940: </TableRow>"
+            "line": 1945,
+            "context": "1944: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n1945: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n1946: </TableRow>"
           },
           {
             "text": "Invoice Details",
-            "line": 2026,
-            "context": "2025: <CardTitle className=\"flex items-center gap-2\">\n2026: <FileText className=\"h-5 w-5\" />\n2027: Invoice Details"
+            "line": 2032,
+            "context": "2031: <CardTitle className=\"flex items-center gap-2\">\n2032: <FileText className=\"h-5 w-5\" />\n2033: Invoice Details"
           },
           {
             "text": "Selected Vehicles",
-            "line": 2080,
-            "context": "2079: <div>\n2080: <div className=\"text-sm text-muted-foreground mb-1\">Selected Vehicles</div>\n2081: <div className=\"text-3xl font-bold\">{selectedVehicleIds.size}</div>"
+            "line": 2086,
+            "context": "2085: <div>\n2086: <div className=\"text-sm text-muted-foreground mb-1\">Selected Vehicles</div>\n2087: <div className=\"text-3xl font-bold\">{selectedVehicleIds.size}</div>"
           },
           {
             "text": "Invoice Total",
-            "line": 2084,
-            "context": "2083: <div>\n2084: <div className=\"text-sm text-muted-foreground mb-1\">Invoice Total</div>\n2085: <div className=\"text-3xl font-bold text-gray-600\">"
+            "line": 2090,
+            "context": "2089: <div>\n2090: <div className=\"text-sm text-muted-foreground mb-1\">Invoice Total</div>\n2091: <div className=\"text-3xl font-bold text-gray-600\">"
           },
           {
             "text": "Cancel",
-            "line": 2116,
-            "context": "2115: }}\n2116: >\n2117: Cancel"
+            "line": 2122,
+            "context": "2121: }}\n2122: >\n2123: Cancel"
           },
           {
             "text": "Invoice Preview",
-            "line": 2189,
-            "context": "2188: <div className=\"flex items-center justify-between\">\n2189: <DialogTitle>Invoice Preview</DialogTitle>\n2190: <Button"
+            "line": 2195,
+            "context": "2194: <div className=\"flex items-center justify-between\">\n2195: <DialogTitle>Invoice Preview</DialogTitle>\n2196: <Button"
           },
           {
             "text": "Type",
@@ -2112,68 +2112,68 @@
           },
           {
             "text": "Add Payment",
-            "line": 1628,
-            "context": "1627: disabled={invoice.status === 'paid' || invoice.status === 'cancelled'}\n1628: title=\"Add Payment\"\n1629: >"
+            "line": 1634,
+            "context": "1633: disabled={invoice.status === 'paid' || invoice.status === 'cancelled'}\n1634: title=\"Add Payment\"\n1635: >"
           },
           {
             "text": "View Details",
-            "line": 1640,
-            "context": "1639: }}\n1640: title=\"View Details\"\n1641: >"
+            "line": 1646,
+            "context": "1645: }}\n1646: title=\"View Details\"\n1647: >"
           },
           {
             "text": "Delete Invoice",
-            "line": 1652,
-            "context": "1651: disabled={invoice.status === 'paid'}\n1652: title=\"Delete Invoice\"\n1653: >"
+            "line": 1658,
+            "context": "1657: disabled={invoice.status === 'paid'}\n1658: title=\"Delete Invoice\"\n1659: >"
           },
           {
             "text": "VIN, stock, customer...",
-            "line": 1748,
-            "context": "1747: id=\"search-filter-inline\"\n1748: placeholder=\"VIN, stock, customer...\"\n1749: value={searchTerm}"
+            "line": 1754,
+            "context": "1753: id=\"search-filter-inline\"\n1754: placeholder=\"VIN, stock, customer...\"\n1755: value={searchTerm}"
           },
           {
             "text": "Department",
-            "line": 1683,
-            "context": "1682: <div className=\"space-y-1.5\">\n1683: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1684: <Select value={orderType} onValueChange={setOrderType}>"
+            "line": 1689,
+            "context": "1688: <div className=\"space-y-1.5\">\n1689: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1690: <Select value={orderType} onValueChange={setOrderType}>"
           },
           {
             "text": "Status",
-            "line": 1699,
-            "context": "1698: <div className=\"space-y-1.5\">\n1699: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1700: <Select value={orderStatus} onValueChange={setOrderStatus}>"
+            "line": 1705,
+            "context": "1704: <div className=\"space-y-1.5\">\n1705: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1706: <Select value={orderStatus} onValueChange={setOrderStatus}>"
           },
           {
             "text": "Date Range",
-            "line": 1725,
-            "context": "1724: <div className=\"space-y-1.5\">\n1725: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1726: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
+            "line": 1731,
+            "context": "1730: <div className=\"space-y-1.5\">\n1731: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1732: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
           },
           {
             "text": "Search",
-            "line": 1743,
-            "context": "1742: <div className=\"space-y-1.5\">\n1743: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1744: <div className=\"relative\">"
+            "line": 1749,
+            "context": "1748: <div className=\"space-y-1.5\">\n1749: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1750: <div className=\"relative\">"
           },
           {
             "text": "From Date",
-            "line": 1761,
-            "context": "1760: <div className=\"space-y-1.5\">\n1761: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1762: <Input"
+            "line": 1767,
+            "context": "1766: <div className=\"space-y-1.5\">\n1767: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1768: <Input"
           },
           {
             "text": "To Date",
-            "line": 1774,
-            "context": "1773: <div className=\"space-y-1.5\">\n1774: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1775: <Input"
+            "line": 1780,
+            "context": "1779: <div className=\"space-y-1.5\">\n1780: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1781: <Input"
           },
           {
             "text": "Include Only Service",
-            "line": 1802,
-            "context": "1801: <div className=\"space-y-2\">\n1802: <Label>Include Only Service</Label>\n1803: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
+            "line": 1808,
+            "context": "1807: <div className=\"space-y-2\">\n1808: <Label>Include Only Service</Label>\n1809: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
           },
           {
             "text": "Exclude Services",
-            "line": 1828,
-            "context": "1827: <div className=\"space-y-2\">\n1828: <Label>Exclude Services</Label>\n1829: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
+            "line": 1834,
+            "context": "1833: <div className=\"space-y-2\">\n1834: <Label>Exclude Services</Label>\n1835: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
           },
           {
             "text": "Invoice Preview",
-            "line": 2189,
-            "context": "2188: <div className=\"flex items-center justify-between\">\n2189: <DialogTitle>Invoice Preview</DialogTitle>\n2190: <Button"
+            "line": 2195,
+            "context": "2194: <div className=\"flex items-center justify-between\">\n2195: <DialogTitle>Invoice Preview</DialogTitle>\n2196: <Button"
           }
         ],
         "translationCalls": [
@@ -2344,55 +2344,55 @@
           },
           {
             "key": "services.departments.sales_dept",
-            "line": 1570,
+            "line": 1571,
             "exists": true
           },
           {
             "key": "services.departments.service_dept",
-            "line": 1573,
+            "line": 1575,
             "exists": true
           },
           {
             "key": "services.departments.recon_dept",
-            "line": 1576,
+            "line": 1579,
             "exists": true
           },
           {
             "key": "services.departments.carwash_dept",
-            "line": 1581,
+            "line": 1585,
             "exists": true
           },
           {
             "key": "invoices.delete_title",
-            "line": 2214,
+            "line": 2220,
             "exists": false
           },
           {
             "key": "invoices.delete_description",
-            "line": 2215,
+            "line": 2221,
             "exists": false
           },
           {
             "key": "common.action_buttons.delete",
-            "line": 2216,
+            "line": 2222,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 2217,
+            "line": 2223,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "invoices.delete_title",
-            "line": 2214,
-            "context": "2213: onOpenChange={setDeleteDialogOpen}\n2214: title={t('invoices.delete_title')}\n2215: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}"
+            "line": 2220,
+            "context": "2219: onOpenChange={setDeleteDialogOpen}\n2220: title={t('invoices.delete_title')}\n2221: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}"
           },
           {
             "key": "invoices.delete_description",
-            "line": 2215,
-            "context": "2214: title={t('invoices.delete_title')}\n2215: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}\n2216: confirmText={t('common.action_buttons.delete')}"
+            "line": 2221,
+            "context": "2220: title={t('invoices.delete_title')}\n2221: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}\n2222: confirmText={t('common.action_buttons.delete')}"
           }
         ],
         "coverage": 38,
@@ -2403,209 +2403,199 @@
         "hardcodedStrings": [
           {
             "text": "Financial Performance Overview",
-            "line": 777,
-            "context": "776: <CardHeader className=\"pb-3\">\n777: <CardTitle className=\"text-xl\">Financial Performance Overview</CardTitle>\n778: <CardDescription className=\"mt-1\">"
+            "line": 833,
+            "context": "832: <CardHeader className=\"pb-3\">\n833: <CardTitle className=\"text-xl\">Financial Performance Overview</CardTitle>\n834: <CardDescription className=\"mt-1\">"
           },
           {
             "text": "Revenue insights and financial metrics",
-            "line": 778,
-            "context": "777: <CardTitle className=\"text-xl\">Financial Performance Overview</CardTitle>\n778: <CardDescription className=\"mt-1\">\n779: Revenue insights and financial metrics"
+            "line": 834,
+            "context": "833: <CardTitle className=\"text-xl\">Financial Performance Overview</CardTitle>\n834: <CardDescription className=\"mt-1\">\n835: Revenue insights and financial metrics"
           },
           {
             "text": "Total Revenue",
-            "line": 786,
-            "context": "785: <div className=\"flex items-center justify-between\">\n786: <span className=\"text-sm font-medium text-muted-foreground\">Total Revenue</span>\n787: <DollarSign className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 842,
+            "context": "841: <div className=\"flex items-center justify-between\">\n842: <span className=\"text-sm font-medium text-muted-foreground\">Total Revenue</span>\n843: <DollarSign className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Total Orders",
-            "line": 830,
-            "context": "829: <div className=\"flex items-center justify-between\">\n830: <span className=\"text-sm font-medium text-muted-foreground\">Total Orders</span>\n831: <Target className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 886,
+            "context": "885: <div className=\"flex items-center justify-between\">\n886: <span className=\"text-sm font-medium text-muted-foreground\">Total Orders</span>\n887: <Target className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Total by Departments",
-            "line": 880,
-            "context": "879: <div className=\"flex items-center justify-between\">\n880: <span className=\"text-sm font-medium text-indigo-700\">Total by Departments</span>\n881: <DollarSign className=\"h-4 w-4 text-indigo-600\" />"
+            "line": 936,
+            "context": "935: <div className=\"flex items-center justify-between\">\n936: <span className=\"text-sm font-medium text-indigo-700\">Total by Departments</span>\n937: <DollarSign className=\"h-4 w-4 text-indigo-600\" />"
           },
           {
             "text": "By Department",
-            "line": 895,
-            "context": "894: <TabsList className=\"grid w-full grid-cols-4\">\n895: <TabsTrigger value=\"departments\">By Department</TabsTrigger>\n896: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>"
+            "line": 951,
+            "context": "950: <TabsList className=\"grid w-full grid-cols-4\">\n951: <TabsTrigger value=\"departments\">By Department</TabsTrigger>\n952: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>"
           },
           {
             "text": "Revenue Trends",
-            "line": 896,
-            "context": "895: <TabsTrigger value=\"departments\">By Department</TabsTrigger>\n896: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>\n897: <TabsTrigger value=\"services\">Top Services</TabsTrigger>"
+            "line": 952,
+            "context": "951: <TabsTrigger value=\"departments\">By Department</TabsTrigger>\n952: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>\n953: <TabsTrigger value=\"services\">Top Services</TabsTrigger>"
           },
           {
             "text": "Top Services",
-            "line": 897,
-            "context": "896: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>\n897: <TabsTrigger value=\"services\">Top Services</TabsTrigger>\n898: <TabsTrigger value=\"analysis\">Detailed Analysis</TabsTrigger>"
+            "line": 953,
+            "context": "952: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>\n953: <TabsTrigger value=\"services\">Top Services</TabsTrigger>\n954: <TabsTrigger value=\"analysis\">Detailed Analysis</TabsTrigger>"
           },
           {
             "text": "Detailed Analysis",
-            "line": 898,
-            "context": "897: <TabsTrigger value=\"services\">Top Services</TabsTrigger>\n898: <TabsTrigger value=\"analysis\">Detailed Analysis</TabsTrigger>\n899: </TabsList>"
+            "line": 954,
+            "context": "953: <TabsTrigger value=\"services\">Top Services</TabsTrigger>\n954: <TabsTrigger value=\"analysis\">Detailed Analysis</TabsTrigger>\n955: </TabsList>"
           },
           {
             "text": "Revenue by Department",
-            "line": 963,
-            "context": "962: <CardHeader>\n963: <CardTitle>Revenue by Department</CardTitle>\n964: <CardDescription>"
-          },
-          {
-            "text": "Total revenue generated per department",
-            "line": 964,
-            "context": "963: <CardTitle>Revenue by Department</CardTitle>\n964: <CardDescription>\n965: Total revenue generated per department"
+            "line": 1019,
+            "context": "1018: <CardHeader>\n1019: <CardTitle>Revenue by Department</CardTitle>\n1020: <CardDescription>"
           },
           {
             "text": "No department data available",
-            "line": 1007,
-            "context": "1006: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1007: <p>No department data available</p>\n1008: </div>"
+            "line": 1065,
+            "context": "1064: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1065: <p>No department data available</p>\n1066: </div>"
           },
           {
-            "text": "Average Order Value by Department",
-            "line": 1015,
-            "context": "1014: <CardHeader>\n1015: <CardTitle>Average Order Value by Department</CardTitle>\n1016: <CardDescription>"
-          },
-          {
-            "text": "Compare average transaction values across departments",
-            "line": 1016,
-            "context": "1015: <CardTitle>Average Order Value by Department</CardTitle>\n1016: <CardDescription>\n1017: Compare average transaction values across departments"
+            "text": "Order Count by Department",
+            "line": 1073,
+            "context": "1072: <CardHeader>\n1073: <CardTitle>Order Count by Department</CardTitle>\n1074: <CardDescription>"
           },
           {
             "text": "No department data available",
-            "line": 1059,
-            "context": "1058: <Target className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1059: <p>No department data available</p>\n1060: </div>"
+            "line": 1118,
+            "context": "1117: <Target className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1118: <p>No department data available</p>\n1119: </div>"
           },
           {
             "text": "Department Performance Summary",
-            "line": 1069,
-            "context": "1068: <CardHeader className=\"bg-slate-50 border-b\">\n1069: <CardTitle>Department Performance Summary</CardTitle>\n1070: <CardDescription>"
+            "line": 1128,
+            "context": "1127: <CardHeader className=\"bg-slate-50 border-b\">\n1128: <CardTitle>Department Performance Summary</CardTitle>\n1129: <CardDescription>"
           },
           {
             "text": "Detailed metrics for each department",
-            "line": 1070,
-            "context": "1069: <CardTitle>Department Performance Summary</CardTitle>\n1070: <CardDescription>\n1071: Detailed metrics for each department"
+            "line": 1129,
+            "context": "1128: <CardTitle>Department Performance Summary</CardTitle>\n1129: <CardDescription>\n1130: Detailed metrics for each department"
           },
           {
             "text": "Department",
-            "line": 1084,
-            "context": "1083: <tr>\n1084: <th className=\"text-left px-6 py-4 text-sm font-bold text-slate-700\">Department</th>\n1085: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>"
+            "line": 1143,
+            "context": "1142: <tr>\n1143: <th className=\"text-left px-6 py-4 text-sm font-bold text-slate-700\">Department</th>\n1144: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>"
           },
           {
             "text": "Total Revenue",
-            "line": 1085,
-            "context": "1084: <th className=\"text-left px-6 py-4 text-sm font-bold text-slate-700\">Department</th>\n1085: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>\n1086: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>"
+            "line": 1144,
+            "context": "1143: <th className=\"text-left px-6 py-4 text-sm font-bold text-slate-700\">Department</th>\n1144: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>\n1145: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>"
           },
           {
             "text": "Orders",
-            "line": 1086,
-            "context": "1085: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>\n1086: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>\n1087: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>"
+            "line": 1145,
+            "context": "1144: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>\n1145: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>\n1146: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>"
           },
           {
             "text": "Avg Order Value",
-            "line": 1087,
-            "context": "1086: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>\n1087: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>\n1088: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Completion Rate</th>"
+            "line": 1146,
+            "context": "1145: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>\n1146: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>\n1147: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Completion Rate</th>"
           },
           {
             "text": "Completion Rate",
-            "line": 1088,
-            "context": "1087: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>\n1088: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Completion Rate</th>\n1089: </tr>"
+            "line": 1147,
+            "context": "1146: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>\n1147: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Completion Rate</th>\n1148: </tr>"
           },
           {
             "text": "No department data available",
-            "line": 1121,
-            "context": "1120: <BarChart3 className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1121: <p className=\"text-muted-foreground\">No department data available</p>\n1122: </div>"
+            "line": 1180,
+            "context": "1179: <BarChart3 className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1180: <p className=\"text-muted-foreground\">No department data available</p>\n1181: </div>"
           },
           {
             "text": "Revenue Performance Over Time",
-            "line": 1131,
-            "context": "1130: <CardHeader>\n1131: <CardTitle>Revenue Performance Over Time</CardTitle>\n1132: <CardDescription>"
+            "line": 1190,
+            "context": "1189: <CardHeader>\n1190: <CardTitle>Revenue Performance Over Time</CardTitle>\n1191: <CardDescription>"
           },
           {
             "text": "Monthly revenue trends with order volume correlation",
-            "line": 1132,
-            "context": "1131: <CardTitle>Revenue Performance Over Time</CardTitle>\n1132: <CardDescription>\n1133: Monthly revenue trends with order volume correlation"
+            "line": 1191,
+            "context": "1190: <CardTitle>Revenue Performance Over Time</CardTitle>\n1191: <CardDescription>\n1192: Monthly revenue trends with order volume correlation"
           },
           {
             "text": "No revenue data available",
-            "line": 1194,
-            "context": "1193: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1194: <p>No revenue data available</p>\n1195: </div>"
+            "line": 1253,
+            "context": "1252: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1253: <p>No revenue data available</p>\n1254: </div>"
           },
           {
             "text": "Top Revenue Generators",
-            "line": 1205,
-            "context": "1204: <CardHeader>\n1205: <CardTitle>Top Revenue Generators</CardTitle>\n1206: <CardDescription>"
+            "line": 1264,
+            "context": "1263: <CardHeader>\n1264: <CardTitle>Top Revenue Generators</CardTitle>\n1265: <CardDescription>"
           },
           {
             "text": "Services ranked by total revenue contribution",
-            "line": 1206,
-            "context": "1205: <CardTitle>Top Revenue Generators</CardTitle>\n1206: <CardDescription>\n1207: Services ranked by total revenue contribution"
+            "line": 1265,
+            "context": "1264: <CardTitle>Top Revenue Generators</CardTitle>\n1265: <CardDescription>\n1266: Services ranked by total revenue contribution"
           },
           {
             "text": "No service data available",
-            "line": 1250,
-            "context": "1249: <PieChart className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1250: <p>No service data available</p>\n1251: </div>"
+            "line": 1309,
+            "context": "1308: <PieChart className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1309: <p>No service data available</p>\n1310: </div>"
           },
           {
             "text": "Revenue Distribution",
-            "line": 1258,
-            "context": "1257: <CardHeader>\n1258: <CardTitle>Revenue Distribution</CardTitle>\n1259: <CardDescription>"
+            "line": 1317,
+            "context": "1316: <CardHeader>\n1317: <CardTitle>Revenue Distribution</CardTitle>\n1318: <CardDescription>"
           },
           {
             "text": "Detailed breakdown of service contributions",
-            "line": 1259,
-            "context": "1258: <CardTitle>Revenue Distribution</CardTitle>\n1259: <CardDescription>\n1260: Detailed breakdown of service contributions"
+            "line": 1318,
+            "context": "1317: <CardTitle>Revenue Distribution</CardTitle>\n1318: <CardDescription>\n1319: Detailed breakdown of service contributions"
           },
           {
             "text": "No service data available",
-            "line": 1307,
-            "context": "1306: <Award className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1307: <p>No service data available</p>\n1308: </div>"
+            "line": 1366,
+            "context": "1365: <Award className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1366: <p>No service data available</p>\n1367: </div>"
           },
           {
             "text": "Average Order Value Analysis",
-            "line": 1318,
-            "context": "1317: <CardHeader>\n1318: <CardTitle>Average Order Value Analysis</CardTitle>\n1319: <CardDescription>"
+            "line": 1377,
+            "context": "1376: <CardHeader>\n1377: <CardTitle>Average Order Value Analysis</CardTitle>\n1378: <CardDescription>"
           },
           {
             "text": "Track changes in transaction values over time",
-            "line": 1319,
-            "context": "1318: <CardTitle>Average Order Value Analysis</CardTitle>\n1319: <CardDescription>\n1320: Track changes in transaction values over time"
+            "line": 1378,
+            "context": "1377: <CardTitle>Average Order Value Analysis</CardTitle>\n1378: <CardDescription>\n1379: Track changes in transaction values over time"
           },
           {
             "text": "No analysis data available",
-            "line": 1357,
-            "context": "1356: <Target className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1357: <p>No analysis data available</p>\n1358: </div>"
+            "line": 1416,
+            "context": "1415: <Target className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1416: <p>No analysis data available</p>\n1417: </div>"
           }
         ],
         "translationCalls": [
           {
             "key": "common.loading",
-            "line": 971,
+            "line": 1027,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 1023,
+            "line": 1081,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 1077,
+            "line": 1136,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 1139,
+            "line": 1198,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 1213,
+            "line": 1272,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 1326,
+            "line": 1385,
             "exists": true
           }
         ],

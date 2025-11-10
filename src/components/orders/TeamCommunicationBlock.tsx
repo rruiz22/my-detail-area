@@ -40,6 +40,7 @@ interface TeamCommunicationBlockProps {
 export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const { toast } = useToast(); // FIX: Add missing toast hook
   const [activeTab, setActiveTab] = useState('comments');
   const [newMessage, setNewMessage] = useState('');
   const [currentMentions, setCurrentMentions] = useState<string[]>([]);
