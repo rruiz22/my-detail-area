@@ -12,6 +12,7 @@ interface RecalculateOrderTotalsProps {
 }
 
 export const RecalculateOrderTotals: React.FC<RecalculateOrderTotalsProps> = ({ dealerId, onRecalculated }) => {
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [isRecalculating, setIsRecalculating] = useState(false);
   const [progress, setProgress] = useState(0);

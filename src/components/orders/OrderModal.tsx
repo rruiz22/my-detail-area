@@ -734,7 +734,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         // Debug: Log service matching
         console.log('🔍 [OrderModal] Service mapping debug:', {
           selectedServiceIds: selectedServices,
-          availableServices: services.map(s => ({ id: s.id, name: s.name })),
+          availableServices: services.map(s => ({ id: s.id, name: s.name, price: s.price })),
           selectedServicesCount: selectedServices.length,
           availableServicesCount: services.length
         });
@@ -753,19 +753,40 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
             });
           }
 
+          // ✅ VALIDATION: Warn if service has no price
+          if (service && (service.price === null || service.price === undefined)) {
+            console.warn('⚠️ [OrderModal] Service has NULL price:', {
+              serviceId: serviceId,
+              serviceName: service.name,
+              price: service.price
+            });
+          }
+
           return {
             id: serviceId,
             name: service?.name || 'Unknown Service',
-            price: service?.price,
+            price: service?.price ?? 0,  // ✅ Default to 0 instead of undefined
             description: service?.description
           };
         });
       })(),
 
       // Financial data - CRITICAL for reports
+      // ✅ VALIDATION: Calculate total with proper NULL handling
       total_amount: canViewPrices ? selectedServices.reduce((total, serviceId) => {
         const service = services.find((s: { id: string; price?: number }) => s.id === serviceId);
-        return total + (service?.price || 0);
+        const servicePrice = service?.price ?? 0;  // ✅ Default to 0 instead of undefined
+
+        // ✅ VALIDATION: Log if we're adding a zero price
+        if (servicePrice === 0 && service) {
+          console.warn('⚠️ [OrderModal] Adding service with $0 price to total:', {
+            serviceId,
+            serviceName: service.name,
+            price: service.price
+          });
+        }
+
+        return total + servicePrice;
       }, 0) : 0,
 
       // Location data - for new orders only
