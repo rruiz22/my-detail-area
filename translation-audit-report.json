@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 860,
-  "totalStrings": 8537,
+  "scannedFiles": 861,
+  "totalStrings": 8539,
   "hardcodedStrings": 2074,
-  "translatedStrings": 6463,
+  "translatedStrings": 6465,
   "issues": {
     "critical": [
       {
@@ -23766,59 +23766,69 @@
         "hardcodedStrings": [
           {
             "text": "System Admin",
-            "line": 125,
-            "context": "124: <Badge variant=\"destructive\" className=\"text-xs px-2 py-1 flex-shrink-0\">\n125: <Shield className=\"w-3 h-3 mr-1\" />\n126: System Admin"
+            "line": 132,
+            "context": "131: <Badge variant=\"destructive\" className=\"text-xs px-2 py-1 flex-shrink-0\">\n132: <Shield className=\"w-3 h-3 mr-1\" />\n133: System Admin"
           },
           {
             "text": ", error);\n      setIsSigningOut(false);\n    }\n  };\n\n  const handleProfileClick = () => {\n    navigate(",
-            "line": 35,
-            "context": "34: } catch (error) {\n35: console.error('Sign out error:', error);\n36: setIsSigningOut(false);"
+            "line": 34,
+            "context": "33: } catch (error) {\n34: console.error('Sign out error:', error);\n35: setIsSigningOut(false);"
           }
         ],
         "translationCalls": [
           {
             "key": "roles.system_admin",
-            "line": 64,
+            "line": 71,
             "exists": true
           },
           {
             "key": "roles.dealer_admin",
-            "line": 65,
+            "line": 72,
             "exists": true
           },
           {
             "key": "roles.dealer_manager",
-            "line": 66,
+            "line": 73,
             "exists": true
           },
           {
             "key": "roles.user",
-            "line": 67,
+            "line": 74,
             "exists": true
           },
           {
             "key": "navigation.profile",
-            "line": 148,
+            "line": 155,
             "exists": true
           },
           {
             "key": "navigation.settings",
-            "line": 153,
+            "line": 160,
+            "exists": true
+          },
+          {
+            "key": "cache.manage_cache",
+            "line": 168,
+            "exists": true
+          },
+          {
+            "key": "cache.quick_clear",
+            "line": 174,
             "exists": true
           },
           {
             "key": "navigation.signing_out",
-            "line": 172,
+            "line": 186,
             "exists": true
           },
           {
             "key": "navigation.sign_out",
-            "line": 172,
+            "line": 186,
             "exists": true
           }
         ],
         "missingKeys": [],
-        "coverage": 80,
+        "coverage": 83,
         "severity": "low"
       },
       {
@@ -30779,23 +30789,23 @@
         "hardcodedStrings": [
           {
             "text": "Recalculate Totals",
-            "line": 153,
-            "context": "152: >\n153: <Calculator className=\"h-4 w-4 mr-2\" />\n154: Recalculate Totals"
+            "line": 154,
+            "context": "153: >\n154: <Calculator className=\"h-4 w-4 mr-2\" />\n155: Recalculate Totals"
           },
           {
             "text": "Recalculate Order Totals",
-            "line": 161,
-            "context": "160: <DialogTitle className=\"flex items-center gap-2\">\n161: <Calculator className=\"h-5 w-5\" />\n162: Recalculate Order Totals"
+            "line": 162,
+            "context": "161: <DialogTitle className=\"flex items-center gap-2\">\n162: <Calculator className=\"h-5 w-5\" />\n163: Recalculate Order Totals"
           },
           {
             "text": "Update all order totals based on current service prices",
-            "line": 164,
-            "context": "163: </DialogTitle>\n164: <DialogDescription>\n165: Update all order totals based on current service prices"
+            "line": 165,
+            "context": "164: </DialogTitle>\n165: <DialogDescription>\n166: Update all order totals based on current service prices"
           },
           {
             "text": "Start Recalculation",
-            "line": 185,
-            "context": "184: >\n185: <Calculator className=\"h-4 w-4 mr-2\" />\n186: Start Recalculation"
+            "line": 186,
+            "context": "185: >\n186: <Calculator className=\"h-4 w-4 mr-2\" />\n187: Start Recalculation"
           }
         ],
         "translationCalls": [],
@@ -38142,317 +38152,317 @@
           },
           {
             "key": "orders.save_error",
-            "line": 645,
+            "line": 666,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 648,
+            "line": 669,
             "exists": true
           },
           {
             "key": "orders.edit_service_order",
-            "line": 668,
+            "line": 689,
             "exists": true
           },
           {
             "key": "orders.create_service_order",
-            "line": 668,
+            "line": 689,
             "exists": true
           },
           {
             "key": "orders.edit_service_order",
-            "line": 671,
+            "line": 692,
             "exists": true
           },
           {
             "key": "orders.create_service_order",
-            "line": 671,
+            "line": 692,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 692,
+            "line": 713,
             "exists": true
           },
           {
             "key": "orders.clientInfo",
-            "line": 692,
+            "line": 713,
             "exists": true
           },
           {
             "key": "service_orders.dealership_assignment",
-            "line": 701,
+            "line": 722,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 708,
+            "line": 729,
             "exists": true
           },
           {
             "key": "dealerships.auto_selected",
-            "line": 712,
+            "line": 733,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 722,
+            "line": 743,
             "exists": true
           },
           {
             "key": "orders.selectClient",
-            "line": 722,
+            "line": 743,
             "exists": true
           },
           {
             "key": "sales_orders.assigned_to",
-            "line": 736,
+            "line": 757,
             "exists": true
           },
           {
             "key": "sales_orders.select_assignee",
-            "line": 751,
+            "line": 772,
             "exists": true
           },
           {
             "key": "sales_orders.select_dealership_first",
-            "line": 785,
+            "line": 806,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 787,
+            "line": 808,
             "exists": true
           },
           {
             "key": "sales_orders.select_assignee",
-            "line": 788,
+            "line": 809,
             "exists": true
           },
           {
             "key": "common.search_users",
-            "line": 798,
+            "line": 819,
             "exists": true
           },
           {
             "key": "common.no_users_found",
-            "line": 802,
+            "line": 823,
             "exists": true
           },
           {
             "key": "service_orders.customer_details",
-            "line": 883,
+            "line": 904,
             "exists": true
           },
           {
             "key": "orders.customerName",
-            "line": 889,
+            "line": 910,
             "exists": true
           },
           {
             "key": "forms.labels.phone",
-            "line": 902,
+            "line": 923,
             "exists": true
           },
           {
             "key": "common.optional",
-            "line": 902,
+            "line": 923,
             "exists": true
           },
           {
             "key": "forms.labels.email",
-            "line": 916,
+            "line": 937,
             "exists": true
           },
           {
             "key": "common.optional",
-            "line": 916,
+            "line": 937,
             "exists": true
           },
           {
             "key": "orders.vehicleInfo",
-            "line": 938,
+            "line": 959,
             "exists": true
           },
           {
             "key": "sales_orders.vin_decoded_successfully",
-            "line": 941,
+            "line": 962,
             "exists": true
           },
           {
             "key": "service_orders.order_identifiers",
-            "line": 950,
+            "line": 971,
             "exists": true
           },
           {
             "key": "service_orders.po_number",
-            "line": 956,
+            "line": 977,
             "exists": true
           },
           {
             "key": "service_orders.ro_number",
-            "line": 970,
+            "line": 991,
             "exists": true
           },
           {
             "key": "service_orders.tag_number",
-            "line": 984,
+            "line": 1005,
             "exists": true
           },
           {
             "key": "service_orders.vehicle_identification",
-            "line": 1003,
+            "line": 1024,
             "exists": true
           },
           {
             "key": "orders.vin",
-            "line": 1009,
+            "line": 1030,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 1029,
+            "line": 1050,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 1029,
+            "line": 1050,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 1029,
+            "line": 1050,
             "exists": true
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 1036,
+            "line": 1057,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 1047,
+            "line": 1068,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 1047,
+            "line": 1068,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 1047,
+            "line": 1068,
             "exists": true
           },
           {
             "key": "due_date.title",
-            "line": 1059,
+            "line": 1080,
             "exists": true
           },
           {
             "key": "due_date.date_placeholder",
-            "line": 1067,
+            "line": 1088,
             "exists": true
           },
           {
             "key": "due_date.validation.business_hours_only",
-            "line": 1072,
-            "exists": true
-          },
-          {
-            "key": "orders.servicesAndNotes",
-            "line": 1084,
-            "exists": true
-          },
-          {
-            "key": "service_orders.service_selection",
             "line": 1093,
             "exists": true
           },
           {
-            "key": "orders.services",
-            "line": 1099,
+            "key": "orders.servicesAndNotes",
+            "line": 1105,
             "exists": true
           },
           {
-            "key": "orders.available",
-            "line": 1102,
-            "exists": true
-          },
-          {
-            "key": "orders.selected",
-            "line": 1107,
-            "exists": true
-          },
-          {
-            "key": "orders.max_services_info",
+            "key": "service_orders.service_selection",
             "line": 1114,
             "exists": true
           },
           {
-            "key": "orders.selectDealershipFirst",
+            "key": "orders.services",
             "line": 1120,
             "exists": true
           },
           {
+            "key": "orders.available",
+            "line": 1123,
+            "exists": true
+          },
+          {
+            "key": "orders.selected",
+            "line": 1128,
+            "exists": true
+          },
+          {
+            "key": "orders.max_services_info",
+            "line": 1135,
+            "exists": true
+          },
+          {
+            "key": "orders.selectDealershipFirst",
+            "line": 1141,
+            "exists": true
+          },
+          {
             "key": "common.loading",
-            "line": 1124,
+            "line": 1145,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 1124,
+            "line": 1145,
             "exists": true
           },
           {
             "key": "services.price",
-            "line": 1160,
+            "line": 1181,
             "exists": true
           },
           {
             "key": "orders.totalPrice",
-            "line": 1179,
+            "line": 1200,
             "exists": false
           },
           {
             "key": "orders.servicesSelected",
-            "line": 1183,
+            "line": 1204,
             "exists": true
           },
           {
             "key": "service_orders.additional_notes",
-            "line": 1195,
+            "line": 1216,
             "exists": true
           },
           {
             "key": "orders.notes_placeholder",
-            "line": 1206,
+            "line": 1227,
             "exists": false
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1232,
+            "line": 1253,
             "exists": true
           },
           {
             "key": "orders.updating",
-            "line": 1253,
+            "line": 1274,
             "exists": true
           },
           {
             "key": "orders.creating",
-            "line": 1253,
+            "line": 1274,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 1256,
+            "line": 1277,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 1256,
+            "line": 1277,
             "exists": true
           }
         ],
@@ -38484,18 +38494,18 @@
           },
           {
             "key": "orders.save_error",
-            "line": 645,
-            "context": "644: logError('Error saving service order:', error);\n645: const errorMessage = error instanceof Error ? error.message : (t('orders.save_error') || 'Failed to save order');\n646: setSubmitError(errorMessage);"
+            "line": 666,
+            "context": "665: logError('Error saving service order:', error);\n666: const errorMessage = error instanceof Error ? error.message : (t('orders.save_error') || 'Failed to save order');\n667: setSubmitError(errorMessage);"
           },
           {
             "key": "orders.totalPrice",
-            "line": 1179,
-            "context": "1178: <div className=\"flex justify-between items-center\">\n1179: <span className=\"text-sm font-medium text-emerald-900\">{t('orders.totalPrice')}</span>\n1180: <span className=\"text-lg font-bold text-emerald-600\">${totalPrice.toFixed(2)}</span>"
+            "line": 1200,
+            "context": "1199: <div className=\"flex justify-between items-center\">\n1200: <span className=\"text-sm font-medium text-emerald-900\">{t('orders.totalPrice')}</span>\n1201: <span className=\"text-lg font-bold text-emerald-600\">${totalPrice.toFixed(2)}</span>"
           },
           {
             "key": "orders.notes_placeholder",
-            "line": 1206,
-            "context": "1205: rows={4}\n1206: placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this service order...')}\n1207: />"
+            "line": 1227,
+            "context": "1226: rows={4}\n1227: placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this service order...')}\n1228: />"
           }
         ],
         "coverage": 100,
@@ -39331,18 +39341,18 @@
         "hardcodedStrings": [
           {
             "text": "Vehicle",
-            "line": 1042,
-            "context": "1041: src={selectedVehicle.data.imageUrl}\n1042: alt=\"Vehicle\"\n1043: className=\"w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-blue-300\""
+            "line": 1063,
+            "context": "1062: src={selectedVehicle.data.imageUrl}\n1063: alt=\"Vehicle\"\n1064: className=\"w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-blue-300\""
           },
           {
             "text": "ST-001",
-            "line": 1387,
-            "context": "1386: className={selectedVehicle ? \"border-input bg-muted/30 uppercase w-full\" : \"border-input bg-background uppercase w-full\"}\n1387: placeholder=\"ST-001\"\n1388: readOnly={!!selectedVehicle}"
+            "line": 1408,
+            "context": "1407: className={selectedVehicle ? \"border-input bg-muted/30 uppercase w-full\" : \"border-input bg-background uppercase w-full\"}\n1408: placeholder=\"ST-001\"\n1409: readOnly={!!selectedVehicle}"
           },
           {
             "text": ", error);\n      toast({ variant: ",
-            "line": 1004,
-            "context": "1003: } catch (error) {\n1004: console.error('Submit error:', error);\n1005: toast({ variant: 'destructive', description: t('orders.creation_failed') });"
+            "line": 1025,
+            "context": "1024: } catch (error) {\n1025: console.error('Submit error:', error);\n1026: toast({ variant: 'destructive', description: t('orders.creation_failed') });"
           }
         ],
         "translationCalls": [
@@ -39373,452 +39383,452 @@
           },
           {
             "key": "validation.customerNameRequired",
-            "line": 783,
+            "line": 804,
             "exists": true
           },
           {
             "key": "validation.vinRequired",
-            "line": 789,
+            "line": 810,
             "exists": true
           },
           {
             "key": "validation.vinInvalidLength",
-            "line": 793,
+            "line": 814,
             "exists": true
           },
           {
             "key": "validation.dealershipRequired",
-            "line": 799,
+            "line": 820,
             "exists": true
           },
           {
             "key": "validation.stockNumberRequired",
-            "line": 805,
+            "line": 826,
             "exists": true
           },
           {
             "key": "validation.assignedToRequired",
-            "line": 811,
+            "line": 832,
             "exists": true
           },
           {
             "key": "validation.dueDateRequired",
-            "line": 822,
+            "line": 843,
             "exists": true
           },
           {
             "key": "validation.dueDateTooFar",
-            "line": 831,
+            "line": 852,
             "exists": true
           },
           {
             "key": "validation.dueDateTooSoon",
-            "line": 840,
+            "line": 861,
             "exists": true
           },
           {
             "key": "validation.slotNotAvailable",
-            "line": 855,
+            "line": 876,
             "exists": true
           },
           {
             "key": "validation.capacityCheckFailed",
-            "line": 860,
+            "line": 881,
             "exists": true
           },
           {
             "key": "validation.newSlotNotAvailable",
-            "line": 883,
+            "line": 904,
             "exists": true
           },
           {
             "key": "validation.capacityCheckFailed",
-            "line": 890,
+            "line": 911,
             "exists": true
           },
           {
             "key": "orders.servicesNotLoaded",
-            "line": 925,
+            "line": 946,
             "exists": false
           },
           {
             "key": "orders.servicesNotLoaded",
-            "line": 936,
+            "line": 957,
             "exists": false
           },
           {
             "key": "validation.failedToReserveSlot",
-            "line": 957,
+            "line": 978,
             "exists": true
           },
           {
             "key": "validation.slotReservationWarning",
-            "line": 962,
+            "line": 983,
             "exists": true
           },
           {
             "key": "orders.creating_multiple_orders",
-            "line": 989,
+            "line": 1010,
             "exists": true
           },
           {
             "key": "orders.creating_order",
-            "line": 998,
+            "line": 1019,
             "exists": true
           },
           {
             "key": "orders.creation_failed",
-            "line": 1005,
+            "line": 1026,
             "exists": true
           },
           {
             "key": "orders.edit",
-            "line": 1027,
+            "line": 1048,
             "exists": true
           },
           {
             "key": "orders.create",
-            "line": 1027,
+            "line": 1048,
             "exists": true
           },
           {
             "key": "orders.edit_order_description",
-            "line": 1030,
+            "line": 1051,
             "exists": false
           },
           {
             "key": "orders.create_order_description",
-            "line": 1030,
+            "line": 1051,
             "exists": false
           },
           {
             "key": "stock.autopop.fromInventory",
-            "line": 1050,
+            "line": 1071,
             "exists": false
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 1050,
+            "line": 1071,
             "exists": true
           },
           {
             "key": "common.clear",
-            "line": 1058,
+            "line": 1079,
             "exists": false
           },
           {
             "key": "stock.autopop.quickSearch",
-            "line": 1067,
+            "line": 1088,
             "exists": true
           },
           {
             "key": "stock.filters.search_placeholder",
-            "line": 1076,
+            "line": 1097,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 1098,
+            "line": 1119,
             "exists": true
           },
           {
             "key": "sales_orders.assignment",
-            "line": 1098,
+            "line": 1119,
             "exists": true
           },
           {
             "key": "service_orders.dealership_assignment",
-            "line": 1107,
+            "line": 1128,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 1114,
+            "line": 1135,
             "exists": true
           },
           {
             "key": "dealerships.auto_selected",
-            "line": 1118,
+            "line": 1139,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 1128,
+            "line": 1149,
             "exists": true
           },
           {
             "key": "sales_orders.select_dealership",
-            "line": 1128,
+            "line": 1149,
             "exists": true
           },
           {
             "key": "sales_orders.assigned_to",
-            "line": 1142,
+            "line": 1163,
             "exists": true
           },
           {
             "key": "sales_orders.select_assignee",
-            "line": 1157,
+            "line": 1178,
             "exists": true
           },
           {
             "key": "sales_orders.select_dealership_first",
-            "line": 1191,
+            "line": 1212,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 1193,
+            "line": 1214,
             "exists": true
           },
           {
             "key": "sales_orders.select_assignee",
-            "line": 1194,
+            "line": 1215,
             "exists": true
           },
           {
             "key": "common.search_users",
-            "line": 1204,
+            "line": 1225,
             "exists": true
           },
           {
             "key": "common.no_users_found",
-            "line": 1208,
+            "line": 1229,
             "exists": true
           },
           {
             "key": "service_orders.customer_details",
-            "line": 1289,
+            "line": 1310,
             "exists": true
           },
           {
             "key": "orders.customerName",
-            "line": 1296,
+            "line": 1317,
             "exists": true
           },
           {
             "key": "orders.customerNamePlaceholder",
-            "line": 1303,
+            "line": 1324,
             "exists": true
           },
           {
             "key": "forms.labels.phone",
-            "line": 1309,
+            "line": 1330,
             "exists": true
           },
           {
             "key": "common.optional",
-            "line": 1309,
+            "line": 1330,
             "exists": true
           },
           {
             "key": "forms.labels.email",
-            "line": 1323,
+            "line": 1344,
             "exists": true
           },
           {
             "key": "common.optional",
-            "line": 1323,
+            "line": 1344,
             "exists": true
           },
           {
             "key": "orders.priority",
-            "line": 1336,
+            "line": 1357,
             "exists": true
           },
           {
             "key": "orders.priority_normal",
-            "line": 1345,
+            "line": 1366,
             "exists": true
           },
           {
             "key": "orders.priority_high",
-            "line": 1346,
+            "line": 1367,
             "exists": true
           },
           {
             "key": "orders.priority_urgent",
-            "line": 1347,
+            "line": 1368,
             "exists": true
           },
           {
             "key": "orders.vehicleInfo",
-            "line": 1361,
+            "line": 1382,
             "exists": true
           },
           {
             "key": "sales_orders.vin_decoded_successfully",
-            "line": 1364,
+            "line": 1385,
             "exists": true
           },
           {
             "key": "service_orders.vehicle_identification",
-            "line": 1374,
+            "line": 1395,
             "exists": true
           },
           {
             "key": "sales_orders.stock_number",
-            "line": 1380,
+            "line": 1401,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 1392,
+            "line": 1413,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 1392,
+            "line": 1413,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 1392,
+            "line": 1413,
             "exists": true
           },
           {
             "key": "orders.vin",
-            "line": 1399,
+            "line": 1420,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 1425,
+            "line": 1446,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 1425,
+            "line": 1446,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 1425,
+            "line": 1446,
             "exists": true
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 1437,
+            "line": 1458,
             "exists": true
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 1443,
+            "line": 1464,
             "exists": true
           },
           {
             "key": "sales_orders.manual_vehicle_entry",
-            "line": 1455,
+            "line": 1476,
             "exists": true
           },
           {
             "key": "due_date.title",
-            "line": 1467,
+            "line": 1488,
             "exists": true
           },
           {
             "key": "due_date.date_placeholder",
-            "line": 1475,
+            "line": 1496,
             "exists": true
           },
           {
             "key": "orders.servicesAndNotes",
-            "line": 1490,
+            "line": 1511,
             "exists": true
           },
           {
             "key": "service_orders.service_selection",
-            "line": 1499,
+            "line": 1520,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 1506,
-            "exists": true
-          },
-          {
-            "key": "orders.available",
-            "line": 1509,
-            "exists": true
-          },
-          {
-            "key": "orders.max_services_info",
-            "line": 1521,
-            "exists": true
-          },
-          {
-            "key": "orders.selectDealershipFirst",
             "line": 1527,
             "exists": true
           },
           {
+            "key": "orders.available",
+            "line": 1530,
+            "exists": true
+          },
+          {
+            "key": "orders.max_services_info",
+            "line": 1542,
+            "exists": true
+          },
+          {
+            "key": "orders.selectDealershipFirst",
+            "line": 1548,
+            "exists": true
+          },
+          {
             "key": "common.loading",
-            "line": 1532,
+            "line": 1553,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 1539,
+            "line": 1560,
             "exists": true
           },
           {
             "key": "services.duration_label",
-            "line": 1574,
+            "line": 1595,
             "exists": true
           },
           {
             "key": "services.minutes",
-            "line": 1575,
+            "line": 1596,
             "exists": true
           },
           {
             "key": "services.price",
-            "line": 1580,
-            "exists": true
-          },
-          {
-            "key": "orders.total",
             "line": 1601,
             "exists": true
           },
           {
+            "key": "orders.total",
+            "line": 1622,
+            "exists": true
+          },
+          {
             "key": "orders.servicesSelected",
-            "line": 1607,
+            "line": 1628,
             "exists": true
           },
           {
             "key": "service_orders.additional_notes",
-            "line": 1620,
+            "line": 1641,
             "exists": true
           },
           {
             "key": "orders.notes_placeholder",
-            "line": 1631,
+            "line": 1652,
             "exists": false
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1687,
+            "line": 1708,
             "exists": true
           },
           {
             "key": "orders.updating",
-            "line": 1708,
+            "line": 1729,
             "exists": true
           },
           {
             "key": "orders.creating",
-            "line": 1708,
+            "line": 1729,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 1711,
+            "line": 1732,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 1711,
+            "line": 1732,
             "exists": true
           }
         ],
@@ -39830,38 +39840,38 @@
           },
           {
             "key": "orders.servicesNotLoaded",
-            "line": 925,
-            "context": "924: variant: 'destructive',\n925: description: t('orders.servicesNotLoaded') || 'Services are still loading. Please wait a moment and try again.'\n926: });"
+            "line": 946,
+            "context": "945: variant: 'destructive',\n946: description: t('orders.servicesNotLoaded') || 'Services are still loading. Please wait a moment and try again.'\n947: });"
           },
           {
             "key": "orders.servicesNotLoaded",
-            "line": 936,
-            "context": "935: variant: 'destructive',\n936: description: t('orders.servicesNotLoaded') || 'Services data is not available. Please refresh and try again.'\n937: });"
+            "line": 957,
+            "context": "956: variant: 'destructive',\n957: description: t('orders.servicesNotLoaded') || 'Services data is not available. Please refresh and try again.'\n958: });"
           },
           {
             "key": "orders.edit_order_description",
-            "line": 1030,
-            "context": "1029: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground truncate\">\n1030: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n1031: </div>"
+            "line": 1051,
+            "context": "1050: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground truncate\">\n1051: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n1052: </div>"
           },
           {
             "key": "orders.create_order_description",
-            "line": 1030,
-            "context": "1029: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground truncate\">\n1030: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n1031: </div>"
+            "line": 1051,
+            "context": "1050: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground truncate\">\n1051: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n1052: </div>"
           },
           {
             "key": "stock.autopop.fromInventory",
-            "line": 1050,
-            "context": "1049: <span className=\"truncate\">\n1050: {selectedVehicle.source === 'inventory' ? t('stock.autopop.fromInventory', 'From Inventory') : t('stock.autopop.vinDecoded', 'VIN Decoded')}\n1051: </span>"
+            "line": 1071,
+            "context": "1070: <span className=\"truncate\">\n1071: {selectedVehicle.source === 'inventory' ? t('stock.autopop.fromInventory', 'From Inventory') : t('stock.autopop.vinDecoded', 'VIN Decoded')}\n1072: </span>"
           },
           {
             "key": "common.clear",
-            "line": 1058,
-            "context": "1057: className=\"absolute right-1 top-1/2 -translate-y-1/2 p-1 hover:bg-blue-200 rounded-full transition-colors\"\n1058: aria-label={t('common.clear', 'Clear')}\n1059: >"
+            "line": 1079,
+            "context": "1078: className=\"absolute right-1 top-1/2 -translate-y-1/2 p-1 hover:bg-blue-200 rounded-full transition-colors\"\n1079: aria-label={t('common.clear', 'Clear')}\n1080: >"
           },
           {
             "key": "orders.notes_placeholder",
-            "line": 1631,
-            "context": "1630: className=\"border-input bg-background resize-none w-full\"\n1631: placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this sales order...')}\n1632: />"
+            "line": 1652,
+            "context": "1651: className=\"border-input bg-background resize-none w-full\"\n1652: placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this sales order...')}\n1653: />"
           }
         ],
         "coverage": 97,
