@@ -5319,7 +5319,37 @@
       "delete_success": "Invoice deleted - vehicles are now available for billing",
       "delete_error": "Failed to delete invoice",
       "cannot_delete_paid": "Cannot delete paid invoices",
-      "deleting": "Deleting..."
+      "deleting": "Deleting...",
+      "tabs": {
+        "invoices_list": "Invoices List",
+        "create_invoice": "Create Invoice",
+        "check_vehicle": "Check Vehicle"
+      },
+      "filters": {
+        "date_range": "Date Range",
+        "all_time": "All Time",
+        "today": "Today",
+        "this_week": "This Week",
+        "last_week": "Last Week",
+        "this_month": "This Month",
+        "last_month": "Last Month",
+        "custom_range": "Custom Range",
+        "from_date": "From Date",
+        "to_date": "To Date",
+        "type": "Type",
+        "search": "Search"
+      },
+      "table": {
+        "invoice": "Invoice",
+        "date_range": "Date Range",
+        "vehicles": "vehicles",
+        "vehicle": "vehicle"
+      },
+      "messages": {
+        "loading": "Loading invoices...",
+        "view_manage": "View and manage all invoices",
+        "select_dealership": "Please select a dealership to manage invoices"
+      }
     },
     "analytics": {
       "historicalTrends": "Historical Trends",

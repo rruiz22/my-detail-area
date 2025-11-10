@@ -33,6 +33,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { NotesTooltip } from '@/components/ui/notes-tooltip';
+import { InvoiceCommentsTooltip } from '@/components/ui/invoice-comments-tooltip';
 import { CreateInvoiceDialog } from '../invoices/CreateInvoiceDialog';
 import { InvoiceDetailsDialog } from '../invoices/InvoiceDetailsDialog';
 import { RecordPaymentDialog } from '../invoices/RecordPaymentDialog';
@@ -61,10 +63,12 @@ import {
   FileText,
   Filter,
   Mail,
+  MessageSquare,
   Plus,
   Printer,
   Receipt,
   Search,
+  StickyNote,
   Trash2,
   X
 } from 'lucide-react';
@@ -1239,7 +1243,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <AlertCircle className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-          <p className="text-muted-foreground">Please select a dealership to manage invoices</p>
+          <p className="text-muted-foreground">{t('reports.invoices.messages.select_dealership')}</p>
         </div>
       </div>
     );
@@ -1326,15 +1330,15 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="invoices">
             <FileText className="h-4 w-4 mr-2" />
-            Invoices List
+            {t('reports.invoices.tabs.invoices_list')}
           </TabsTrigger>
           <TabsTrigger value="create">
             <Plus className="h-4 w-4 mr-2" />
-            Create Invoice
+            {t('reports.invoices.tabs.create_invoice')}
           </TabsTrigger>
           <TabsTrigger value="search">
             <Search className="h-4 w-4 mr-2" />
-            Check Vehicle
+            {t('reports.invoices.tabs.check_vehicle')}
           </TabsTrigger>
         </TabsList>
 
@@ -1342,15 +1346,15 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
         <TabsContent value="invoices" className="space-y-4">
           <Card>
             <CardHeader className="border-b bg-gray-50/50">
-              <CardTitle>Invoices</CardTitle>
-              <CardDescription>View and manage all invoices</CardDescription>
+              <CardTitle>{t('reports.invoices.title')}</CardTitle>
+              <CardDescription>{t('reports.invoices.messages.view_manage')}</CardDescription>
 
               {/* Filters - Independent from global filters */}
               <div className="space-y-3 mt-4">
                 {/* First Row: Date Range, Search, Order Type, Status */}
                 <div className="flex gap-3">
                   <div className="space-y-1.5 w-[180px]">
-                    <Label className="text-xs font-medium">Date Range</Label>
+                    <Label className="text-xs font-medium">{t('reports.invoices.filters.date_range')}</Label>
                     <Select
                       value={invoiceDateRange}
                       onValueChange={handleInvoiceDateRangeChange}
@@ -1359,23 +1363,23 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All Time</SelectItem>
-                        <SelectItem value="today">Today</SelectItem>
-                        <SelectItem value="this_week">This Week</SelectItem>
-                        <SelectItem value="last_week">Last Week</SelectItem>
-                        <SelectItem value="this_month">This Month</SelectItem>
-                        <SelectItem value="last_month">Last Month</SelectItem>
-                        <SelectItem value="custom">Custom Range</SelectItem>
+                        <SelectItem value="all">{t('reports.invoices.filters.all_time')}</SelectItem>
+                        <SelectItem value="today">{t('reports.invoices.filters.today')}</SelectItem>
+                        <SelectItem value="this_week">{t('reports.invoices.filters.this_week')}</SelectItem>
+                        <SelectItem value="last_week">{t('reports.invoices.filters.last_week')}</SelectItem>
+                        <SelectItem value="this_month">{t('reports.invoices.filters.this_month')}</SelectItem>
+                        <SelectItem value="last_month">{t('reports.invoices.filters.last_month')}</SelectItem>
+                        <SelectItem value="custom">{t('reports.invoices.filters.custom_range')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="relative flex-1">
-                    <Label className="text-xs font-medium">Search</Label>
+                    <Label className="text-xs font-medium">{t('reports.invoices.filters.search')}</Label>
                     <div className="relative mt-1.5">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
-                        placeholder="Search invoices..."
+                        placeholder={t('reports.invoices.search_placeholder')}
                         value={invoiceFilters.searchTerm}
                         onChange={(e) => setInvoiceFilters(prev => ({ ...prev, searchTerm: e.target.value }))}
                         className="pl-10 h-10"
@@ -1384,7 +1388,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label className="text-xs font-medium">Type</Label>
+                    <Label className="text-xs font-medium">{t('reports.invoices.filters.type')}</Label>
                     <Select
                       value={invoiceFilters.orderType || 'all'}
                       onValueChange={(value) => setInvoiceFilters(prev => ({ ...prev, orderType: value as any }))}
@@ -1403,16 +1407,16 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label className="text-xs font-medium">Status</Label>
+                    <Label className="text-xs font-medium">{t('common.status_label')}</Label>
                     <Select
                       value={invoiceFilters.status || 'all'}
                       onValueChange={(value) => setInvoiceFilters(prev => ({ ...prev, status: value as any }))}
                     >
                       <SelectTrigger className="w-[150px] h-10">
-                        <SelectValue placeholder="Status" />
+                        <SelectValue placeholder={t('common.status_label')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All Status</SelectItem>
+                        <SelectItem value="all">{t('reports.invoices.all_status')}</SelectItem>
                         <SelectItem value="pending">Pending</SelectItem>
                         <SelectItem value="paid">Paid</SelectItem>
                         <SelectItem value="overdue">Overdue</SelectItem>
@@ -1426,7 +1430,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                 {invoiceDateRange === 'custom' && (
                   <div className="flex gap-3 pt-2 border-t">
                     <div className="space-y-1.5">
-                      <Label className="text-xs font-medium">From Date</Label>
+                      <Label className="text-xs font-medium">{t('reports.invoices.filters.from_date')}</Label>
                       <Input
                         type="date"
                         value={invoiceStartDate}
@@ -1435,7 +1439,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-xs font-medium">To Date</Label>
+                      <Label className="text-xs font-medium">{t('reports.invoices.filters.to_date')}</Label>
                       <Input
                         type="date"
                         value={invoiceEndDate}
@@ -1451,26 +1455,26 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
             <CardContent className="p-0">
               {loadingInvoices ? (
                 <div className="py-12 text-center text-muted-foreground">
-                  Loading invoices...
+                  {t('reports.invoices.messages.loading')}
                 </div>
               ) : invoices.length === 0 ? (
                 <div className="py-12 text-center">
                   <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">No invoices found</p>
+                  <p className="text-muted-foreground">{t('reports.invoices.no_invoices')}</p>
                 </div>
               ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="text-center font-bold">Invoice</TableHead>
-                      <TableHead className="text-center font-bold">Date Range</TableHead>
-                      <TableHead className="text-center font-bold">Issue Date</TableHead>
-                      <TableHead className="text-center font-bold">Due Date</TableHead>
-                      <TableHead className="text-center font-bold">Amount</TableHead>
-                      <TableHead className="text-center font-bold">Paid</TableHead>
-                      <TableHead className="text-center font-bold">Due</TableHead>
-                      <TableHead className="text-center font-bold">Status</TableHead>
-                      <TableHead className="text-center font-bold">Actions</TableHead>
+                      <TableHead className="text-center font-bold">{t('reports.invoices.table.invoice')}</TableHead>
+                      <TableHead className="text-center font-bold">{t('reports.invoices.table.date_range')}</TableHead>
+                      <TableHead className="text-center font-bold">{t('reports.invoices.issue_date')}</TableHead>
+                      <TableHead className="text-center font-bold">{t('reports.invoices.due_date')}</TableHead>
+                      <TableHead className="text-center font-bold">{t('reports.invoices.amount')}</TableHead>
+                      <TableHead className="text-center font-bold">{t('reports.invoices.paid')}</TableHead>
+                      <TableHead className="text-center font-bold">{t('reports.invoices.due')}</TableHead>
+                      <TableHead className="text-center font-bold">{t('common.status_label')}</TableHead>
+                      <TableHead className="text-center font-bold">{t('reports.invoices.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -1512,8 +1516,46 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                             setShowDetailsDialog(true);
                           }}
                         >
-                          <TableCell className="font-mono text-sm font-medium text-center">
-                            {invoice.invoiceNumber}
+                          <TableCell className="text-center">
+                            <div className="flex flex-col items-center">
+                              <span className="font-mono text-sm font-medium">{invoice.invoiceNumber}</span>
+                              {/* Department badges */}
+                              {invoice.metadata?.departments && invoice.metadata.departments.length > 0 && (
+                                <div className="flex gap-1 mt-1 flex-wrap justify-center">
+                                  {invoice.metadata.departments.map((dept: string) => {
+                                    // Map department values to translation keys
+                                    // Handle both formats: 'car_wash' and 'carwash'
+                                    const normalizedDept = dept.toLowerCase().trim();
+                                    let translatedDept = '';
+
+                                    switch(normalizedDept) {
+                                      case 'sales':
+                                        translatedDept = t('services.departments.sales_dept');
+                                        break;
+                                      case 'service':
+                                        translatedDept = t('services.departments.service_dept');
+                                        break;
+                                      case 'recon':
+                                        translatedDept = t('services.departments.recon_dept');
+                                        break;
+                                      case 'car_wash':
+                                      case 'carwash':
+                                      case 'car wash':
+                                        translatedDept = t('services.departments.carwash_dept');
+                                        break;
+                                      default:
+                                        // If no match, show the original value capitalized
+                                        translatedDept = dept.charAt(0).toUpperCase() + dept.slice(1);
+                                    }
+                                    return (
+                                      <Badge key={dept} variant="outline" className="text-xs">
+                                        {translatedDept}
+                                      </Badge>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
                           </TableCell>
                           <TableCell className="text-center">
                             <div className="flex flex-col items-center">

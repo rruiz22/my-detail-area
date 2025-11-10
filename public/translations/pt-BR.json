@@ -5154,7 +5154,37 @@
       "delete_success": "Fatura excluída - os veículos estão agora disponíveis para faturamento",
       "delete_error": "Falha ao excluir fatura",
       "cannot_delete_paid": "Não é possível excluir faturas pagas",
-      "deleting": "Excluindo..."
+      "deleting": "Excluindo...",
+      "tabs": {
+        "invoices_list": "Lista de Faturas",
+        "create_invoice": "Criar Fatura",
+        "check_vehicle": "Verificar Veículo"
+      },
+      "filters": {
+        "date_range": "Período",
+        "all_time": "Todo o Tempo",
+        "today": "Hoje",
+        "this_week": "Esta Semana",
+        "last_week": "Semana Passada",
+        "this_month": "Este Mês",
+        "last_month": "Mês Passado",
+        "custom_range": "Período Personalizado",
+        "from_date": "Data Inicial",
+        "to_date": "Data Final",
+        "type": "Tipo",
+        "search": "Buscar"
+      },
+      "table": {
+        "invoice": "Fatura",
+        "date_range": "Período",
+        "vehicles": "veículos",
+        "vehicle": "veículo"
+      },
+      "messages": {
+        "loading": "Carregando faturas...",
+        "view_manage": "Ver e gerenciar todas as faturas",
+        "select_dealership": "Por favor selecione um dealer para gerenciar faturas"
+      }
     }
   },
   "legal": {

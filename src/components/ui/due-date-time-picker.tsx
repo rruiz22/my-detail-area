@@ -87,10 +87,12 @@ export function DueDateTimePicker({
       const time = createNewYorkDateTime(nySelectedDate, hour);
       const timeString = format(time, 'h:mm a');
 
+      // ⚠️ DISABLED: Slot capacity check - causing issues
       // Check slot capacity from database
       const slotCapacity = availableSlots.find(slot => slot.hour_slot === hour);
       const availableCount = slotCapacity?.available_slots ?? 3; // Default capacity 3 (matches DB)
-      const isSlotFull = enforceBusinessRules && availableCount <= 0;
+      // const isSlotFull = enforceBusinessRules && availableCount <= 0;
+      const isSlotFull = false; // ⚠️ TEMPORARY: Always allow booking regardless of capacity
 
       slots.push({
         value: hour.toString(),
@@ -255,14 +257,15 @@ export function DueDateTimePicker({
                 >
                   <div className="flex items-center justify-between w-full">
                     <span>{slot.label}</span>
-                    {dealerId && enforceBusinessRules && (
+                    {/* ⚠️ DISABLED: Capacity badges hidden temporarily */}
+                    {/* {dealerId && enforceBusinessRules && (
                       <Badge
                         variant={slot.availableSlots > 0 ? "secondary" : "destructive"}
                         className="ml-2 text-xs"
                       >
                         {slot.availableSlots}/{slot.maxCapacity}
                       </Badge>
-                    )}
+                    )} */}
                   </div>
                 </SelectItem>
               ))
