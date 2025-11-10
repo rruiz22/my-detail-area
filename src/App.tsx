@@ -52,6 +52,7 @@ import Settings from "./pages/Settings";
 import Stock from "./pages/Stock";
 import VehicleDetailsPage from "./pages/VehicleDetailsPage";
 import VinScanner from "./pages/VinScanner";
+import ClearCache from "./pages/ClearCache";
 
     console.log('🚀 App starting up with improved navigation');
     console.log('📱 Current URL:', window.location.href);
@@ -231,6 +232,9 @@ const AppRoutes = () => {
             }
           />
           <Route path="profile" element={<Profile />} />
+
+          {/* Cache Management - Accessible to all authenticated users */}
+          <Route path="clearcache" element={<ClearCache />} />
 
           {/* System Administration */}
           <Route

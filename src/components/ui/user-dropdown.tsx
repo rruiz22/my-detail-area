@@ -1,7 +1,6 @@
 import { AvatarSystem, useAvatarPreferences } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ClearCacheButton } from '@/components/ui/ClearCacheButton';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,7 +12,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { usePermissions } from '@/hooks/usePermissions';
-import { Building2, LogOut, Settings, Shield, User } from 'lucide-react';
+import { Building2, LogOut, RefreshCw, Settings, Shield, User } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -43,6 +42,14 @@ export function UserDropdown() {
 
   const handleSettingsClick = () => {
     navigate('/management?tab=settings');
+  };
+
+  const handleClearCacheClick = () => {
+    navigate('/clearcache');
+  };
+
+  const handleQuickClearClick = () => {
+    navigate('/clearcache?auto=quick');
   };
 
   const getUserDisplayName = () => {
@@ -155,10 +162,17 @@ export function UserDropdown() {
 
         <DropdownMenuSeparator />
 
-        {/* Clear Cache Button (for when role changes don't reflect) */}
-        <div className="px-2 py-1.5">
-          <ClearCacheButton />
-        </div>
+        {/* Cache Management - Full Page */}
+        <DropdownMenuItem onClick={handleClearCacheClick} className="cursor-pointer">
+          <RefreshCw className="mr-2 h-4 w-4" />
+          <span>{t('cache.manage_cache', 'Manage Cache')}</span>
+        </DropdownMenuItem>
+
+        {/* Quick Clear - Auto Clear */}
+        <DropdownMenuItem onClick={handleQuickClearClick} className="cursor-pointer text-emerald-600 focus:text-emerald-600">
+          <RefreshCw className="mr-2 h-4 w-4" />
+          <span>{t('cache.quick_clear', 'Quick Clear')}</span>
+        </DropdownMenuItem>
 
         <DropdownMenuSeparator />
 

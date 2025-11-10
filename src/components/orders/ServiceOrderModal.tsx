@@ -619,16 +619,37 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
         assignedGroupId: selectedAssignedTo || undefined,
         services: selectedServices.map(serviceId => {
           const service = services.find(s => s.id === serviceId);
+
+          // ✅ VALIDATION: Warn if service has no price
+          if (service && (service.price === null || service.price === undefined)) {
+            console.warn('⚠️ [ServiceOrderModal] Service has NULL price:', {
+              serviceId: serviceId,
+              serviceName: service.name,
+              price: service.price
+            });
+          }
+
           return {
             id: serviceId,
             name: service?.name || 'Unknown Service',
-            price: service?.price,
+            price: service?.price ?? 0,  // ✅ Default to 0 instead of undefined
             description: service?.description
           };
         }),
         totalAmount: selectedServices.reduce((total, serviceId) => {
           const service = services.find(s => s.id === serviceId);
-          return total + (service?.price || 0);
+          const servicePrice = service?.price ?? 0;  // ✅ Default to 0 instead of undefined
+
+          // ✅ VALIDATION: Log if we're adding a zero price
+          if (servicePrice === 0 && service) {
+            console.warn('⚠️ [ServiceOrderModal] Adding service with $0 price to total:', {
+              serviceId,
+              serviceName: service.name,
+              price: service.price
+            });
+          }
+
+          return total + servicePrice;
         }, 0),
         notes: formData.notes || undefined,
         dueDate: formData.dueDate ? formData.dueDate.toISOString() : undefined,

@@ -195,11 +195,15 @@ export const useDepartmentRevenue = (filters: ReportsFilters) => {
       endOfDay.setHours(23, 59, 59, 999);
 
       // Build query with base filters
+      // CRITICAL: We need to fetch ALL orders that match the filters, not just the first 1000
+      // because we filter by date AFTER fetching. The SQL function filters by date in the query,
+      // but we can't do that efficiently with Supabase client due to complex date logic.
       let query = supabase
         .from('orders')
         .select('order_type, total_amount, status, created_at, completed_at, due_date, services')
         .eq('dealer_id', dealerId)
-        .neq('status', 'cancelled'); // Exclude cancelled orders to match get_revenue_analytics
+        .neq('status', 'cancelled') // Exclude cancelled orders to match get_revenue_analytics
+        .order('created_at', { ascending: false }); // Get most recent first
 
       // Apply orderType filter if not 'all'
       if (filters.orderType && filters.orderType !== 'all') {
@@ -211,12 +215,17 @@ export const useDepartmentRevenue = (filters: ReportsFilters) => {
         query = query.eq('status', filters.status);
       }
 
-      const { data: orders, error } = await query;
+      // Fetch ALL matching orders (Supabase default limit is 1000, we need more)
+      const { data: orders, error, count } = await query.limit(10000);
 
       if (error) throw error;
 
       console.log('🔍 useDepartmentRevenue - Total orders fetched:', orders?.length);
       console.log('🔍 useDepartmentRevenue - Service filter:', filters.serviceIds);
+      console.log('🔍 useDepartmentRevenue - Date range:', {
+        startDate: filters.startDate.toISOString(),
+        endDate: endOfDay.toISOString()
+      });
 
       // Filter orders using EXACT SAME logic as get_revenue_analytics SQL function:
       // - sales/service: COALESCE(due_date, created_at)
@@ -239,18 +248,27 @@ export const useDepartmentRevenue = (filters: ReportsFilters) => {
         // Check date range
         const inDateRange = reportDate >= filters.startDate && reportDate <= endOfDay;
 
-        // Check service filter (if provided) - MUST match Operational logic exactly
+        // Check service filter (if provided) - MUST match SQL logic exactly
         let matchesServiceFilter = true;
         if (filters.serviceIds && filters.serviceIds.length > 0) {
           const orderServices = order.services || [];
 
-          // Services can be stored as either array of IDs or array of objects with {id, name, price, type}
-          // Check both id and type fields to match Operational behavior
+          // Services can be stored as:
+          // 1. Strings (legacy): ["service-id-1", "service-id-2"]
+          // 2. Objects with 'id' field: [{"id": "service-id", "name": "...", "price": ...}]
+          // 3. Objects with 'type' field: [{"type": "service-id", "name": "...", "price": ...}]
+          // This matches the SQL EXISTS clause in get_revenue_analytics
           const hasMatchingService = orderServices.some((service: any) => {
-            const serviceId = typeof service === 'string' ? service : service?.id;
-            const serviceType = typeof service === 'object' ? service?.type : null;
-            return filters.serviceIds?.includes(serviceId) ||
-                   (serviceType && filters.serviceIds?.includes(serviceType));
+            // Handle string format (legacy)
+            if (typeof service === 'string') {
+              return filters.serviceIds?.includes(service);
+            }
+            // Handle object format - check BOTH 'id' and 'type' fields
+            if (typeof service === 'object' && service !== null) {
+              return filters.serviceIds?.includes(service.id) ||
+                     filters.serviceIds?.includes(service.type);
+            }
+            return false;
           });
           matchesServiceFilter = hasMatchingService;
         }
@@ -260,6 +278,7 @@ export const useDepartmentRevenue = (filters: ReportsFilters) => {
 
       console.log('🔍 useDepartmentRevenue - After filtering:', filteredOrders.length);
       console.log('🔍 useDepartmentRevenue - Total revenue:', filteredOrders.reduce((sum, o) => sum + (o.total_amount || 0), 0));
+      console.log('🔍 useDepartmentRevenue - Fix applied: Checking both service.id and service.type');
 
       // Group by department
       const departments: Record<string, { revenue: number; orders: number; completed: number }> = {
