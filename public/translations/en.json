@@ -1069,7 +1069,11 @@
     "ready_to_scan": "Ready to scan",
     "scanning": "Scanning...",
     "scan_now": "Scan Now",
-    "capture_failed": "Failed to capture image"
+    "capture_failed": "Failed to capture image",
+    "engine_native": "Native API",
+    "engine_zxing": "ZXing Scanner",
+    "barcode_not_detected": "No barcode detected. Ensure VIN barcode is visible and well-lit.",
+    "scanning_barcode": "Scanning barcode..."
   },
   "batch_vin": {
     "title": "Batch VIN Processing",
@@ -1389,7 +1393,8 @@
     "tip_focus": "Keep VIN plate in focus and centered",
     "tip_glare": "Avoid glare and reflections",
     "adjusting_focus": "Adjusting focus...",
-    "align_vin_sticker": "Align VIN sticker within the guide"
+    "align_vin_sticker": "Align VIN sticker within the guide",
+    "barcode_hint": "Position the VIN barcode within the camera frame for instant scanning"
   },
   "settings": {
     "title": "Settings",

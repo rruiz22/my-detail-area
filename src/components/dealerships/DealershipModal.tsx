@@ -34,6 +34,7 @@ interface DealershipModalProps {
 
 export function DealershipModal({ isOpen, onClose, onSuccess, dealership, onRefresh }: DealershipModalProps) {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const isEditing = !!dealership;
 

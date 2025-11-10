@@ -309,8 +309,8 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
                 );
               }
 
-              // Show toast notification
-              toast.loading('📲 Sending push notification to followers...', { id: 'push-notif' });
+              // Show toast notification (fixed: removed .loading() method that doesn't exist)
+              // toast.loading('📲 Sending push notification to followers...', { id: 'push-notif' });
 
               const result = await pushNotificationHelper.notifyNewComment(
                 orderId,

@@ -1124,7 +1124,11 @@
     "ready_to_scan": "Listo para escanear",
     "scanning": "Escaneando...",
     "scan_now": "Escanear Ahora",
-    "capture_failed": "Error al capturar imagen"
+    "capture_failed": "Error al capturar imagen",
+    "engine_native": "API Nativa",
+    "engine_zxing": "Escáner ZXing",
+    "barcode_not_detected": "No se detectó código de barras. Asegúrate de que el código de barras VIN esté visible y bien iluminado.",
+    "scanning_barcode": "Escaneando código de barras..."
   },
   "batch_vin": {
     "title": "Procesamiento de VIN por Lotes",
@@ -3738,7 +3742,8 @@
     "tip_focus": "Mantén la placa VIN enfocada y centrada",
     "tip_glare": "Evita reflejos y brillos",
     "adjusting_focus": "Ajustando enfoque...",
-    "align_vin_sticker": "Alinea la calcomanía VIN dentro de la guía"
+    "align_vin_sticker": "Alinea la calcomanía VIN dentro de la guía",
+    "barcode_hint": "Posiciona el código de barras VIN dentro del marco de la cámara para escaneo instantáneo"
   },
   "sweetalert": {
     "confirm_delete": "¿Eliminar Orden?",

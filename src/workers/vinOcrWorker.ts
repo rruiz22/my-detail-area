@@ -1,3 +1,25 @@
+/**
+ * @deprecated Legacy Tesseract.js OCR Worker - Scheduled for removal
+ *
+ * **MIGRATION NOTICE**: This worker has been replaced by:
+ * - `barcodeDetectionWorker.ts` - Native Barcode Detection API
+ * - `zxingBarcodeWorker.ts` - ZXing-JS fallback
+ *
+ * **Why deprecated**:
+ * - Slow performance (3-5 seconds vs 0.5-1.5 seconds)
+ * - Lower accuracy (60-70% vs 85-95%)
+ * - Large bundle size (~2MB Tesseract.js vs ~200KB ZXing-JS)
+ * - OCR not optimal for barcodes (designed for text recognition)
+ *
+ * **Replacement**: Use `BarcodeEngine` service with progressive enhancement
+ *
+ * **Scheduled for removal**: December 2025 (after 30-day production validation)
+ *
+ * @see barcodeDetectionWorker.ts
+ * @see zxingBarcodeWorker.ts
+ * @see BarcodeEngine
+ */
+
 import { createWorker } from 'tesseract.js';
 
 export interface VinOcrMessage {
