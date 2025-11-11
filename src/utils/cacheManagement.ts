@@ -46,10 +46,22 @@ async function unregisterServiceWorkers(): Promise<void> {
   if ('serviceWorker' in navigator) {
     try {
       const registrations = await navigator.serviceWorker.getRegistrations();
+
+      if (registrations.length === 0) {
+        console.log('ℹ️ No Service Workers to unregister');
+        return;
+      }
+
+      console.log(`🔄 Unregistering ${registrations.length} Service Worker(s)...`);
       await Promise.all(registrations.map(registration => registration.unregister()));
-      console.log('✅ Service Workers unregistered');
+
+      // Wait for active SW to fully deactivate
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      console.log('✅ Service Workers unregistered and deactivated');
     } catch (error) {
       console.error('❌ Error unregistering service workers:', error);
+      throw error; // Re-throw to prevent navigation with active SW
     }
   }
 }
@@ -172,11 +184,22 @@ export async function clearAllCaches(options: ClearCacheOptions = {}): Promise<v
     // 🔴 CRITICAL FIX: Navigate to root instead of reloading current page
     // This prevents ERR_FAILED when service worker intercepts non-root routes
     if (reload) {
+      // Increased delay to ensure SW is fully deactivated
+      const safeDelay = Math.max(reloadDelay, 1000);
+
       setTimeout(() => {
+        // Double-check no active SW before navigating
+        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+          console.warn('⚠️ Service Worker still active - forcing hard reload');
+          window.location.reload();
+          return;
+        }
+
         // Navigate to root with tracking parameter
         const param = mode === 'aggressive' ? 'updated=true' : 'cache_cleared=true';
+        console.log(`🔄 Navigating to /?${param}`);
         window.location.href = `/?${param}`;
-      }, reloadDelay);
+      }, safeDelay);
     }
   } catch (error) {
     console.error('❌ Error during cache clearing:', error);

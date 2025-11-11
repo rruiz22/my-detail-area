@@ -77,7 +77,8 @@
       "Bash(then grep -i twilio .env)",
       "Bash(translation-audit-report.txt)",
       "Bash(then echo \"✓ .env exists\")",
-      "Bash(else echo \"✗ No .env file\")"
+      "Bash(else echo \"✗ No .env file\")",
+      "Bash(del add-presence-en.js add-presence-en.cjs add-presence-es.cjs add-presence-pt.cjs)"
     ],
     "deny": [],
     "ask": []

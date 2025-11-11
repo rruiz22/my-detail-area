@@ -18,6 +18,7 @@ import { DealershipFilter } from "./filters/DealershipFilter";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Breadcrumbs } from "./navigation/Breadcrumbs";
 import { NotificationBell } from "./notifications/NotificationBell";
+import { OnlineUsersIndicator } from "./presence/OnlineUsersIndicator";
 import { GlobalSearch } from "./search/GlobalSearch";
 import { ThemeToggle } from "./ThemeToggle";
 import { UserDropdown } from "./ui/user-dropdown";
@@ -94,6 +95,7 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
               <DealershipFilter />
               <LanguageSwitcher />
               <ThemeToggle />
+              {currentDealership?.id && <OnlineUsersIndicator dealerId={currentDealership.id} />}
               {currentDealership?.id && <NotificationBell dealerId={currentDealership.id} />}
               <UserDropdown />
             </div>

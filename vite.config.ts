@@ -86,6 +86,15 @@ export default defineConfig(({ mode }) => ({
         // Generate service worker with Workbox for PWA offline support
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
 
+        // 🔴 CRITICAL FIX: Disable navigation preload to prevent redirect errors
+        // navigationPreload must be false to avoid "redirect mode is not follow" errors
+        navigationPreload: false,
+
+        // 🔴 CRITICAL FIX: Skip waiting and claim clients immediately
+        // This ensures the SW updates cleanly without holding onto old versions
+        skipWaiting: true,
+        clientsClaim: true,
+
         // Runtime caching rules for offline support
         runtimeCaching: [
           {
@@ -151,8 +160,7 @@ export default defineConfig(({ mode }) => ({
       // ✅ OPTIMIZATION: Disable SW in development to eliminate Workbox console spam
       devOptions: {
         enabled: false, // Disable SW in dev - only needed in production for PWA
-        type: 'module',
-        navigateFallback: 'index.html'
+        type: 'module'
       },
 
       // Include additional files in the PWA
