@@ -12,7 +12,7 @@
 // Core Types
 // =====================================================
 
-export type NotificationChannel = 'in_app' | 'email' | 'sms' | 'push';
+export type NotificationChannel = 'in_app' | 'email' | 'sms' | 'push' | 'slack';
 
 export type NotificationModule =
   | 'sales_orders'
@@ -45,6 +45,7 @@ export interface EventChannelConfig {
   email?: boolean;
   sms?: boolean;
   push?: boolean;
+  slack?: boolean;
 }
 
 /**
@@ -71,6 +72,7 @@ export interface DealerNotificationChannelDefaults {
   default_email: boolean;
   default_sms: boolean;
   default_push: boolean;
+  default_slack: boolean;
 
   // Metadata
   created_by: string | null;
@@ -96,6 +98,7 @@ export interface NotificationEventOption {
     email: boolean;
     sms: boolean;
     push: boolean;
+    slack: boolean;
   };
 }
 
@@ -113,31 +116,36 @@ export const DEFAULT_CHANNEL_CONFIG: EventChannelMatrix = {
     in_app: true,
     email: false,
     sms: false,   // User can enable if needed
-    push: true
+    push: true,
+    slack: false
   },
   status_changed: {
     in_app: true,
     email: false,
     sms: false,   // Currently enabled in code, but allowing opt-in
-    push: true
+    push: true,
+    slack: false
   },
   due_date_approaching: {
     in_app: true,
     email: true,   // Email reminder useful
     sms: false,
-    push: true
+    push: true,
+    slack: false
   },
   overdue: {
     in_app: true,
     email: true,
     sms: false,    // Can enable for urgent alerts
-    push: true
+    push: true,
+    slack: false
   },
   priority_changed: {
     in_app: true,
     email: false,
     sms: false,
-    push: true
+    push: true,
+    slack: false
   },
 
   // Informative events → In-App only (reduce noise)
@@ -145,31 +153,36 @@ export const DEFAULT_CHANNEL_CONFIG: EventChannelMatrix = {
     in_app: true,
     email: false,
     sms: false,
-    push: false
+    push: false,
+    slack: false
   },
   comment_added: {
     in_app: true,
     email: false,
     sms: false,
-    push: false
+    push: false,
+    slack: false
   },
   attachment_added: {
     in_app: true,
     email: false,
     sms: false,
-    push: false
+    push: false,
+    slack: false
   },
   follower_added: {
     in_app: true,
     email: false,
     sms: false,
-    push: false
+    push: false,
+    slack: false
   },
   field_updated: {
     in_app: false,  // Too noisy even for in-app
     email: false,
     sms: false,
-    push: false
+    push: false,
+    slack: false
   }
 };
 
@@ -183,35 +196,35 @@ export const NOTIFICATION_EVENT_OPTIONS: NotificationEventOption[] = [
     label: 'Order Assigned',
     description: 'When an order is assigned to you or a team member',
     category: 'orders',
-    defaultChannels: { in_app: true, email: false, sms: false, push: true }
+    defaultChannels: { in_app: true, email: false, sms: false, push: true, slack: false }
   },
   {
     event: 'status_changed',
     label: 'Status Changed',
     description: 'Order status updated (e.g., Pending → In Progress → Completed)',
     category: 'orders',
-    defaultChannels: { in_app: true, email: false, sms: false, push: true }
+    defaultChannels: { in_app: true, email: false, sms: false, push: true, slack: false }
   },
   {
     event: 'due_date_approaching',
     label: 'Due Date Reminder',
     description: 'Reminder sent 30 minutes before order due time',
     category: 'deadlines',
-    defaultChannels: { in_app: true, email: true, sms: false, push: true }
+    defaultChannels: { in_app: true, email: true, sms: false, push: true, slack: false }
   },
   {
     event: 'overdue',
     label: 'Overdue Alert',
     description: 'Critical alert when order becomes overdue',
     category: 'deadlines',
-    defaultChannels: { in_app: true, email: true, sms: false, push: true }
+    defaultChannels: { in_app: true, email: true, sms: false, push: true, slack: false }
   },
   {
     event: 'priority_changed',
     label: 'Priority Changed',
     description: 'Order priority escalated or changed',
     category: 'orders',
-    defaultChannels: { in_app: true, email: false, sms: false, push: true }
+    defaultChannels: { in_app: true, email: false, sms: false, push: true, slack: false }
   },
 
   // Informational
@@ -220,35 +233,35 @@ export const NOTIFICATION_EVENT_OPTIONS: NotificationEventOption[] = [
     label: 'Order Created',
     description: 'New order created notification',
     category: 'orders',
-    defaultChannels: { in_app: true, email: false, sms: false, push: false }
+    defaultChannels: { in_app: true, email: false, sms: false, push: false, slack: false }
   },
   {
     event: 'comment_added',
     label: 'Comment Added',
     description: 'Someone commented on an order you follow',
     category: 'team',
-    defaultChannels: { in_app: true, email: false, sms: false, push: false }
+    defaultChannels: { in_app: true, email: false, sms: false, push: false, slack: false }
   },
   {
     event: 'attachment_added',
     label: 'Attachment Added',
     description: 'File uploaded to an order',
     category: 'team',
-    defaultChannels: { in_app: true, email: false, sms: false, push: false }
+    defaultChannels: { in_app: true, email: false, sms: false, push: false, slack: false }
   },
   {
     event: 'follower_added',
     label: 'Follower Added',
     description: 'Someone started following an order',
     category: 'team',
-    defaultChannels: { in_app: true, email: false, sms: false, push: false }
+    defaultChannels: { in_app: true, email: false, sms: false, push: false, slack: false }
   },
   {
     event: 'field_updated',
     label: 'Field Updated',
     description: 'Order field modified (low priority)',
     category: 'system',
-    defaultChannels: { in_app: false, email: false, sms: false, push: false }
+    defaultChannels: { in_app: false, email: false, sms: false, push: false, slack: false }
   }
 ];
 
@@ -290,6 +303,8 @@ export function isChannelEnabledForEvent(
       return defaults.default_sms;
     case 'push':
       return defaults.default_push;
+    case 'slack':
+      return (defaults as any).default_slack || false;
     default:
       return true; // Unknown channel, allow by default
   }

@@ -1,7 +1,7 @@
 /**
  * Dealer Channel Matrix Component
  *
- * Enterprise UI for configuring notification channels (SMS, Email, Push, In-App)
+ * Enterprise UI for configuring notification channels (SMS, Email, Push, In-App, Slack)
  * per event type at the dealership level.
  *
  * Features:
@@ -48,7 +48,8 @@ import {
   Bell,
   Smartphone,
   AlertTriangle,
-  CheckCircle2
+  CheckCircle2,
+  Hash
 } from 'lucide-react';
 import {
   NOTIFICATION_EVENT_OPTIONS,
@@ -210,7 +211,8 @@ export function DealerChannelMatrix() {
     in_app: Bell,
     email: Mail,
     sms: Smartphone,
-    push: MessageSquare
+    push: MessageSquare,
+    slack: Hash
   };
 
   if (isLoading) {
@@ -298,6 +300,14 @@ export function DealerChannelMatrix() {
             <Button
               variant="outline"
               size="sm"
+              onClick={() => handleBulkChannelAction('slack', true)}
+            >
+              <Hash className="h-4 w-4 mr-2" />
+              {t('settings.channel_matrix.enable_all_slack')}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={handleReset}
             >
               <RotateCcw className="h-4 w-4 mr-2" />
@@ -321,29 +331,35 @@ export function DealerChannelMatrix() {
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-muted/50">
-                      <TableHead className="w-[40%]">Event</TableHead>
-                      <TableHead className="text-center w-[15%]">
+                      <TableHead className="w-[35%]">Event</TableHead>
+                      <TableHead className="text-center w-[13%]">
                         <div className="flex items-center justify-center gap-2">
                           <Bell className="h-4 w-4" />
                           In-App
                         </div>
                       </TableHead>
-                      <TableHead className="text-center w-[15%]">
+                      <TableHead className="text-center w-[13%]">
                         <div className="flex items-center justify-center gap-2">
                           <Mail className="h-4 w-4" />
                           Email
                         </div>
                       </TableHead>
-                      <TableHead className="text-center w-[15%]">
+                      <TableHead className="text-center w-[13%]">
                         <div className="flex items-center justify-center gap-2">
                           <Smartphone className="h-4 w-4" />
                           SMS
                         </div>
                       </TableHead>
-                      <TableHead className="text-center w-[15%]">
+                      <TableHead className="text-center w-[13%]">
                         <div className="flex items-center justify-center gap-2">
                           <MessageSquare className="h-4 w-4" />
                           Push
+                        </div>
+                      </TableHead>
+                      <TableHead className="text-center w-[13%]">
+                        <div className="flex items-center justify-center gap-2">
+                          <Hash className="h-4 w-4" />
+                          Slack
                         </div>
                       </TableHead>
                     </TableRow>
@@ -397,6 +413,14 @@ export function DealerChannelMatrix() {
                               onCheckedChange={() => handleToggle(option.event, 'push')}
                             />
                           </TableCell>
+
+                          {/* Slack Checkbox */}
+                          <TableCell className="text-center">
+                            <Checkbox
+                              checked={eventConfig.slack === true}
+                              onCheckedChange={() => handleToggle(option.event, 'slack')}
+                            />
+                          </TableCell>
                         </TableRow>
                       );
                     })}
@@ -413,7 +437,7 @@ export function DealerChannelMatrix() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                     <div className="space-y-1">
                       <div className="text-sm font-medium flex items-center gap-2">
                         <Bell className="h-4 w-4 text-muted-foreground" />
@@ -454,6 +478,17 @@ export function DealerChannelMatrix() {
                       </div>
                       <div className="text-2xl font-bold">
                         {Object.values(channelConfig).filter(c => c.push).length}
+                      </div>
+                      <div className="text-xs text-muted-foreground">{t('settings.channel_matrix.events_enabled')}</div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="text-sm font-medium flex items-center gap-2">
+                        <Hash className="h-4 w-4 text-muted-foreground" />
+                        Slack
+                      </div>
+                      <div className="text-2xl font-bold">
+                        {Object.values(channelConfig).filter(c => c.slack).length}
                       </div>
                       <div className="text-xs text-muted-foreground">{t('settings.channel_matrix.events_enabled')}</div>
                     </div>

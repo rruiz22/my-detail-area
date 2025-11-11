@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
@@ -13,7 +13,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   Building2,
   UserPlus,
@@ -43,27 +42,12 @@ export function InvitationAccept() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
-  const translationsReady = useTranslationsReady();
+  const { ready: translationsReady, error: translationsError } = useTranslationsReady();
 
   const [invitation, setInvitation] = useState<InvitationDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [accepting, setAccepting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showAuthOptions, setShowAuthOptions] = useState(false);
-
-  useEffect(() => {
-    // Wait for translations to be ready before fetching invitation details
-    if (!translationsReady) {
-      return;
-    }
-
-    if (token) {
-      fetchInvitationDetails();
-    } else {
-      setError(t('invitations.accept.invalid_invitation'));
-      setLoading(false);
-    }
-  }, [token, translationsReady]);
 
   const fetchInvitationDetails = useCallback(async () => {
     if (!token) {
@@ -148,6 +132,20 @@ export function InvitationAccept() {
       setLoading(false);
     }
   }, [token, t]);
+
+  useEffect(() => {
+    // Wait for translations to be ready before fetching invitation details
+    if (!translationsReady) {
+      return;
+    }
+
+    if (token) {
+      fetchInvitationDetails();
+    } else {
+      setError(t('invitations.accept.invalid_invitation'));
+      setLoading(false);
+    }
+  }, [token, translationsReady, fetchInvitationDetails, t]);
 
   const handleAcceptInvitation = async () => {
     if (!user) {
@@ -269,6 +267,31 @@ export function InvitationAccept() {
     }
     return t('invitations.accept.expires_in_days', { days: Math.ceil(diffInHours / 24) });
   };
+
+  // Show error if translations failed to load
+  if (translationsError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <XCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+            <CardTitle>Error Loading Translations</CardTitle>
+            <CardDescription>
+              Unable to load translations. Please refresh the page.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button
+              className="w-full"
+              onClick={() => window.location.reload()}
+            >
+              Refresh Page
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   // Show loading while translations are being loaded
   if (!translationsReady) {

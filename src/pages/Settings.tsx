@@ -3,6 +3,7 @@ import { NotificationPreferencesModal } from '@/components/notifications/Notific
 import { IntegrationSettings } from '@/components/settings/IntegrationSettings';
 import { NotificationSoundSettings } from '@/components/settings/NotificationSoundSettings';
 import { NotificationTemplatesManager, PushNotificationSettings } from '@/components/settings/notifications';
+import { DealerChannelMatrix } from '@/components/settings/notifications/DealerChannelMatrix';
 import { PlatformBrandingSettings } from '@/components/settings/platform/PlatformBrandingSettings';
 import { PlatformGeneralSettings } from '@/components/settings/platform/PlatformGeneralSettings';
 import { SecurityAuditLogViewer } from '@/components/settings/security/SecurityAuditLogViewer';
@@ -434,6 +435,12 @@ export default function Settings() {
                   {t('settings.templates')}
                 </TabsTrigger>
               )}
+              {perms.canManageTemplates && (
+                <TabsTrigger value="channels" className="flex items-center gap-2">
+                  <Bell className="h-4 w-4" />
+                  Channel Matrix
+                </TabsTrigger>
+              )}
             </TabsList>
 
             <TabsContent value="preferences" className="space-y-6">
@@ -512,6 +519,12 @@ export default function Settings() {
             {perms.canManageTemplates && (
               <TabsContent value="templates">
                 <NotificationTemplatesManager />
+              </TabsContent>
+            )}
+
+            {perms.canManageTemplates && (
+              <TabsContent value="channels">
+                <DealerChannelMatrix />
               </TabsContent>
             )}
           </Tabs>
