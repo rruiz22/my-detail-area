@@ -205,8 +205,8 @@ export function OnlineUsersList({
                   }
                 }}
               >
-                {/* Avatar with presence indicator */}
-                <div className="relative flex-shrink-0">
+                {/* Avatar without presence indicator */}
+                <div className="flex-shrink-0">
                   <AvatarSystem
                     name={fullName}
                     firstName={firstName}
@@ -215,13 +215,6 @@ export function OnlineUsersList({
                     seed={avatarSeed}
                     size={40}
                   />
-                  <div className="absolute -bottom-0.5 -right-0.5">
-                    <UserPresenceIndicator
-                      status={user.status}
-                      size="sm"
-                      showRing
-                    />
-                  </div>
                 </div>
 
                 {/* User info */}

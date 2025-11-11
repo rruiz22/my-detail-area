@@ -181,14 +181,11 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
   // Fetch all users presence in the dealer
   const fetchUsersPresence = useCallback(async () => {
     if (!activeDealerId) {
-      console.log('⏭️ [useUserPresence] Skipping fetch - no activeDealerId');
       return;
     }
 
     try {
-      console.log(`🔍 [useUserPresence] Fetching users for dealer ${activeDealerId}, excluding user: ${user?.id || 'none'}`);
-
-      // Query presence with profile data
+      // Query presence with profile data - fetch ALL users including current user
       const { data, error: fetchError } = await supabase
         .from('user_presence')
         .select(`
@@ -201,37 +198,33 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
             avatar_seed
           )
         `)
-        .eq('dealer_id', activeDealerId)
-        .neq('user_id', user?.id || '');
+        .eq('dealer_id', activeDealerId);
 
       if (fetchError) {
-        console.error('❌ [useUserPresence] Fetch error:', fetchError);
         throw fetchError;
       }
 
-      console.log(`📊 [useUserPresence] Raw data fetched:`, data?.length || 0, 'records');
+      // Process presence data - filter out current user
+      const processedPresence: UserPresence[] = data
+        ?.filter(presence => presence.user_id !== user?.id)
+        .map(presence => {
+          const profile = presence.profiles as any;
+          const firstName = profile?.first_name || '';
+          const lastName = profile?.last_name || '';
+          const fullName = `${firstName} ${lastName}`.trim() || profile?.email || 'Unknown User';
 
-      // Process presence data with profile information
-      const processedPresence: UserPresence[] = data?.map(presence => {
-        const profile = presence.profiles as any;
-        const firstName = profile?.first_name || '';
-        const lastName = profile?.last_name || '';
-        const fullName = `${firstName} ${lastName}`.trim() || profile?.email || 'Unknown User';
+          return {
+            ...presence,
+            profiles: profile,
+            user_name: fullName,
+            user_avatar: undefined,
+            is_online: ['online', 'busy'].includes(presence.status),
+            last_seen_formatted: formatLastSeen(presence.last_seen_at)
+          };
+        }) || [];
 
-        return {
-          ...presence,
-          profiles: profile, // Keep the nested profiles structure for components
-          user_name: fullName,
-          user_avatar: undefined,
-          is_online: ['online', 'busy'].includes(presence.status),
-          last_seen_formatted: formatLastSeen(presence.last_seen_at)
-        };
-      }) || [];
-
-      console.log(`✅ [useUserPresence] Processed ${processedPresence.length} users, online: ${processedPresence.filter(p => p.is_online).length}`);
       setUsersPresence(processedPresence);
     } catch (err) {
-      console.error('❌ [useUserPresence] Error fetching users presence:', err);
       setError(err instanceof Error ? err.message : t('user_presence.error_fetching_users'));
     }
   }, [activeDealerId, user?.id, t]);

@@ -38,14 +38,7 @@ export function OnlineUsersIndicator({
   // Permission guard: Only system_admin and supermanager can see this component
   const canView = enhancedUser?.is_system_admin || enhancedUser?.is_supermanager;
 
-  // Debug logging
-  React.useEffect(() => {
-    console.log(`🎯 [OnlineUsersIndicator] Props: dealerId=${dealerId}, canView=${canView}`);
-    console.log(`📋 [OnlineUsersIndicator] usersPresence:`, usersPresence.length, 'users', usersPresence);
-  }, [dealerId, canView, usersPresence]);
-
   if (!canView) {
-    console.log('⛔ [OnlineUsersIndicator] Access denied - user not admin/supermanager');
     return null;
   }
 
@@ -56,8 +49,6 @@ export function OnlineUsersIndicator({
   );
 
   const onlineCount = onlineUsers.length;
-
-  console.log(`👥 [OnlineUsersIndicator] Online users: ${onlineCount}/${usersPresence.length}`);
 
   // Detect mobile on mount
   React.useEffect(() => {
