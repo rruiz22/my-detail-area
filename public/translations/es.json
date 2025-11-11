@@ -1419,6 +1419,7 @@
       "enable_all_email": "Habilitar Todos Email",
       "enable_all_sms": "Habilitar Todos SMS",
       "enable_all_push": "Habilitar Todas Push",
+      "enable_all_slack": "Habilitar Todos Slack",
       "reset_defaults": "Restaurar Valores por Defecto",
       "unsaved_changes": "Cambios Sin Guardar",
       "saved_successfully": "Guardado",
@@ -1485,13 +1486,53 @@
     "reset_to_defaults": "Configuración restaurada a valores predeterminados",
     "config_imported": "Configuración importada exitosamente",
     "invalid_config_file": "Archivo de configuración inválido",
-    "cache_cleared": "Caché limpiado exitosamente",
-    "status": {
-      "pending": "Pendiente",
-      "in_progress": "En Progreso",
-      "completed": "Completado",
-      "cancelled": "Cancelado",
-      "on_hold": "En Espera"
+    "cache_cleared": "Caché limpiado exitosamente"
+  },
+  "integrations": {
+    "title": "Integraciones",
+    "description": "Conectar servicios externos y configurar integraciones",
+    "slack": {
+      "title": "Integración de Slack",
+      "description": "Enviar notificaciones de órdenes a canales de Slack",
+      "enable_notifications": "Habilitar Notificaciones de Slack",
+      "enable_description": "Enviar actualizaciones de órdenes a Slack",
+      "webhook_url": "URL del Webhook",
+      "webhook_help": "Obtén tu URL del webhook desde la configuración de webhooks entrantes de Slack.",
+      "learn_more": "Más información",
+      "channel": "Canal",
+      "channel_help": "Especifica un canal para sobrescribir el predeterminado (ej: #ordenes)",
+      "connected_title": "Slack Conectado",
+      "connected_description": "Tu espacio de trabajo de Slack está conectado y las notificaciones están habilitadas.",
+      "error_title": "Error de Conexión",
+      "error_description": "Error al conectar con Slack: {{reason}}",
+      "connect_error": "Error al conectar con Slack",
+      "enabled": "Habilitado",
+      "disabled": "Deshabilitado",
+      "disconnected": "Desconectado de Slack",
+      "workspace": "Espacio de Trabajo",
+      "bot_id": "ID del Bot",
+      "scopes": "Alcances",
+      "error_occurred": "Ocurrió un error",
+      "enable_integration": "Habilitar Integración",
+      "disconnect": "Desconectar",
+      "manage": "Administrar",
+      "not_connected": "No Conectado",
+      "connecting": "Conectando...",
+      "connect": "Conectar con Slack",
+      "benefits_title": "Lo que obtendrás",
+      "benefit_1": "Notificaciones de órdenes en tiempo real en tus canales de Slack",
+      "benefit_2": "Colaboración del equipo sobre actualizaciones de órdenes",
+      "benefit_3": "Acceso rápido a detalles de órdenes con un solo clic",
+      "disconnect_title": "¿Desconectar Slack?",
+      "disconnect_confirm": "¿Estás seguro de que deseas desconectar tu integración de Slack? Esta acción no se puede deshacer."
+    },
+    "webhook": {
+      "title": "Webhooks",
+      "description": "Configurar integraciones de webhook"
+    },
+    "api_keys": {
+      "title": "Claves API",
+      "description": "Administrar tus claves API"
     }
   },
   "layout": {

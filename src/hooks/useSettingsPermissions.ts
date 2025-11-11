@@ -41,6 +41,7 @@ export interface SettingsPermissions {
   // Notifications
   canViewNotifications: boolean;
   canEditNotificationTemplates: boolean; // manager+
+  canManageTemplates: boolean; // Alias for canEditNotificationTemplates
   canEditNotificationRules: boolean; // manager+
   canViewNotificationAnalytics: boolean;
 
@@ -94,6 +95,7 @@ export function useSettingsPermissions(): SettingsPermissions {
     // Notifications - manager+ can configure
     canViewNotifications: hasManagerialAccess,
     canEditNotificationTemplates: hasManagerialAccess,
+    canManageTemplates: hasManagerialAccess, // Alias for backwards compatibility
     canEditNotificationRules: hasManagerialAccess,
     canViewNotificationAnalytics: hasManagerialAccess,
 

@@ -3,6 +3,8 @@ import { usePermissions } from '@/hooks/usePermissions';
 import { supabase } from '@/integrations/supabase/client';
 import { pushNotificationHelper } from '@/services/pushNotificationHelper';
 import { createCommentNotification } from '@/utils/notificationHelper';
+import { extractMentions, resolveMentionsToUserIds, createMentionNotifications } from '@/utils/mentionUtils';
+import { slackNotificationService } from '@/services/slackNotificationService';
 import { useCallback, useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -259,6 +261,54 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
       const commentId = data.id;
       console.log(`✅ ${type} added successfully${parentId ? ' as reply' : ''} - ID: ${commentId}`);
 
+      // 🎯 PROCESS @MENTIONS (if any)
+      const mentions = extractMentions(text);
+      if (mentions.length > 0) {
+        console.log(`🔔 Detected ${mentions.length} mentions:`, mentions);
+
+        // Get order data for mention notifications
+        const { data: orderData } = await supabase
+          .from('orders')
+          .select('order_number, custom_order_number, dealer_id, order_type')
+          .eq('id', orderId)
+          .single();
+
+        if (orderData) {
+          // Resolve mentions to user IDs
+          const mentionedUserIds = await resolveMentionsToUserIds(mentions, orderData.dealer_id);
+
+          if (mentionedUserIds.length > 0) {
+            const userName = enhancedUser?.first_name
+              ? `${enhancedUser.first_name} ${enhancedUser.last_name || ''}`.trim()
+              : user.email || 'Someone';
+
+            const orderNumber = orderData.custom_order_number || orderData.order_number || orderId;
+
+            const getNotificationModule = (orderType: string): 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash' => {
+              const mapping: Record<string, 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash'> = {
+                'sales': 'sales_orders',
+                'service': 'service_orders',
+                'recon': 'recon_orders',
+                'carwash': 'car_wash'
+              };
+              return mapping[orderType] || 'sales_orders';
+            };
+
+            const notifModule = getNotificationModule(orderData.order_type || 'sales');
+
+            // Create mention notifications (fire-and-forget)
+            void createMentionNotifications(mentionedUserIds, {
+              orderId,
+              dealerId: orderData.dealer_id,
+              module: notifModule,
+              entityName: orderNumber,
+              mentionerName: userName,
+              commentPreview: text.trim().substring(0, 100)
+            }).catch(err => console.error('[OrderComments] Failed to create mention notifications:', err));
+          }
+        }
+      }
+
       // Refresh comments to get the new one with profile data
       await fetchComments();
 
@@ -332,6 +382,46 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
               } else if (result && result.sent > 0) {
                 toast({ description: `✅ Push notification sent to ${result.sent} device${result.sent > 1 ? 's' : ''}` });
               }
+
+              // 📤 SLACK NOTIFICATION: Comment Added
+              void slackNotificationService.isEnabled(
+                orderData.dealer_id,
+                notifModule,
+                'comment_added'
+              ).then(async (slackEnabled) => {
+                if (slackEnabled) {
+                  console.log('📤 Slack enabled for comment, sending notification...');
+
+                  // Get shortLink from QR data
+                  let shortLink: string | undefined = undefined;
+                  try {
+                    const { data: qrData } = await supabase
+                      .from('order_qr_codes')
+                      .select('short_link')
+                      .eq('order_id', orderId)
+                      .single();
+                    shortLink = qrData?.short_link || `${window.location.origin}/orders/${orderId}`;
+                  } catch (error) {
+                    console.warn('Failed to fetch short link:', error);
+                    shortLink = `${window.location.origin}/orders/${orderId}`;
+                  }
+
+                  await slackNotificationService.sendNotification({
+                    orderId,
+                    dealerId: orderData.dealer_id,
+                    module: notifModule,
+                    eventType: 'comment_added',
+                    eventData: {
+                      orderNumber: orderNumber,
+                      commenterName: userName,
+                      commentPreview: text.trim().substring(0, 100),
+                      shortLink: shortLink || `${window.location.origin}/orders/${orderId}`
+                    }
+                  });
+                }
+              }).catch((error) => {
+                console.error('❌ [Slack] Failed to send comment notification:', error);
+              });
             }
           })
           .catch((notifError) => {

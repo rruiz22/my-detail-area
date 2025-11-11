@@ -1653,6 +1653,7 @@
       "enable_all_email": "Enable All Email",
       "enable_all_sms": "Enable All SMS",
       "enable_all_push": "Enable All Push",
+      "enable_all_slack": "Enable All Slack",
       "reset_defaults": "Reset to Defaults",
       "unsaved_changes": "Unsaved Changes",
       "saved_successfully": "Saved",
@@ -1720,6 +1721,53 @@
     "config_imported": "Configuration imported successfully",
     "invalid_config_file": "Invalid configuration file",
     "cache_cleared": "Cache cleared successfully"
+  },
+  "integrations": {
+    "title": "Integrations",
+    "description": "Connect external services and configure integrations",
+    "slack": {
+      "title": "Slack Integration",
+      "description": "Send order notifications to Slack channels",
+      "enable_notifications": "Enable Slack Notifications",
+      "enable_description": "Send order updates to Slack",
+      "webhook_url": "Webhook URL",
+      "webhook_help": "Get your webhook URL from Slack's incoming webhooks settings.",
+      "learn_more": "Learn more",
+      "channel": "Channel",
+      "channel_help": "Specify a channel to override the default (e.g., #orders)",
+      "connected_title": "Slack Connected",
+      "connected_description": "Your Slack workspace is connected and notifications are enabled.",
+      "error_title": "Connection Error",
+      "error_description": "Failed to connect to Slack: {{reason}}",
+      "connect_error": "Failed to connect to Slack",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "disconnected": "Disconnected from Slack",
+      "workspace": "Workspace",
+      "bot_id": "Bot ID",
+      "scopes": "Scopes",
+      "error_occurred": "An error occurred",
+      "enable_integration": "Enable Integration",
+      "disconnect": "Disconnect",
+      "manage": "Manage",
+      "not_connected": "Not Connected",
+      "connecting": "Connecting...",
+      "connect": "Connect to Slack",
+      "benefits_title": "What you'll get",
+      "benefit_1": "Real-time order notifications in your Slack channels",
+      "benefit_2": "Team collaboration around order updates",
+      "benefit_3": "Quick access to order details with one click",
+      "disconnect_title": "Disconnect Slack?",
+      "disconnect_confirm": "Are you sure you want to disconnect your Slack integration? This action cannot be undone."
+    },
+    "webhook": {
+      "title": "Webhooks",
+      "description": "Configure webhook integrations"
+    },
+    "api_keys": {
+      "title": "API Keys",
+      "description": "Manage your API keys"
+    }
   },
   "layout": {
     "search_placeholder": "Search orders...",

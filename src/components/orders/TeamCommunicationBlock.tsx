@@ -1,6 +1,7 @@
 import { AttachmentsList } from '@/components/attachments/AttachmentsList';
 import { FileSelector } from '@/components/attachments/FileSelector';
 import { MentionInput } from '@/components/mentions/MentionInput';
+import { MentionText } from '@/components/mentions/MentionText';
 import { CommentReactions } from '@/components/reactions/CommentReactions';
 import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
@@ -8,30 +9,30 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import { useAttachments } from '@/hooks/useAttachments';
-import { useOrderComments } from '@/hooks/useOrderComments';
+import { useOrderComments, type OrderComment } from '@/hooks/useOrderComments';
 import {
-    AtSign,
-    Clock,
-    Eye,
-    Lock,
-    MessageSquare,
-    MoreHorizontal,
-    Reply,
-    Send,
-    Shield,
-    Trash2
+  AtSign,
+  Clock,
+  Eye,
+  Lock,
+  MessageSquare,
+  MoreHorizontal,
+  Reply,
+  Send,
+  Shield,
+  Trash2
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useToast } from '@/hooks/use-toast';
 
 interface TeamCommunicationBlockProps {
   orderId: string;
@@ -198,7 +199,7 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
     });
   };
 
-  const renderMessageList = (messages: Array<Record<string, unknown>>, type: 'comments' | 'internal') => {
+  const renderMessageList = (messages: OrderComment[], type: 'comments' | 'internal') => {
     if (messages.length === 0) {
       return (
         <div className="text-center py-8 px-4 rounded-xl bg-muted/40 border-2 border-dashed">
@@ -235,18 +236,18 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
             }`}>
               <div className="flex items-center gap-2 mb-1.5">
                 <AvatarSystem
-                  name={message.userName as string}
-                  firstName={message.userFirstName as string}
-                  lastName={message.userLastName as string}
-                  email={message.userEmail as string}
-                  seed={message.avatarSeed as number}
+                  name={message.userName}
+                  firstName={message.userFirstName}
+                  lastName={message.userLastName}
+                  email={message.userEmail}
+                  seed={message.avatarSeed?.toString()}
                   size={26}
                   className="ring-1 ring-primary/10"
                 />
                 <span className={`text-sm font-bold ${
                   type === 'internal' ? 'text-amber-900' : 'text-foreground'
                 }`}>
-                  {message.userName as string}
+                  {message.userName}
                 </span>
                 {type === 'internal' && (
                   <Badge variant="outline" className="text-xs leading-none py-0.5 px-1.5 font-medium border-amber-400 text-amber-800 bg-amber-50">
@@ -255,19 +256,24 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
                 )}
                 <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-muted/60 text-xs font-medium text-muted-foreground ml-auto">
                   <Clock className="h-3 w-3" />
-                  {formatTime(message.createdAt as string)}
+                  {formatTime(message.createdAt)}
                 </div>
               </div>
-              <p className={`text-sm font-medium whitespace-pre-wrap ${
-                type === 'internal' ? 'text-amber-900' : 'text-foreground'
-              }`}>
-                {message.commentText as string}
-              </p>
-
+              <MentionText
+                text={message.commentText as string}
+                className={`text-sm font-medium ${
+                  type === 'internal' ? 'text-amber-900' : 'text-foreground'
+                }`}
+                onMentionClick={(username) => {
+                  // TODO: Navigate to user profile or show user details
+                  console.log('Clicked mention:', username);
+                  toast({ description: `Profile view for @${username} (coming soon)` });
+                }}
+              />
               {/* Show attachments for this comment */}
               <AttachmentsList
                 orderId={orderId}
-                commentId={message.id as string}
+                commentId={message.id}
                 context={type === 'internal' ? 'internal_note' : 'public_comment'}
               />
 
@@ -275,41 +281,39 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
               <div className="flex items-center justify-between mt-2 pt-2 border-t border-border/40">
                 <CommentReactions commentId={message.id as string} />
 
-                <div className="flex items-center gap-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-2 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60"
-                    onClick={() => startReply(message.id as string)}
-                  >
-                    <Reply className="h-3.5 w-3.5 mr-1" />
-                    Reply
-                  </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 px-2 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                  onClick={() => startReply(message.id as string)}
+                >
+                  <Reply className="h-3.5 w-3.5 mr-1" />
+                  Reply
+                </Button>
 
-                  {/* Show More menu only if user is author */}
-                  {user?.id === message.userId && (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground hover:bg-muted/60"
-                        >
-                          <MoreHorizontal className="h-3.5 w-3.5" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem
-                          className="text-red-600 focus:text-red-600 focus:bg-red-50"
-                          onClick={() => openDeleteDialog(message.id as string)}
-                        >
-                          <Trash2 className="h-3.5 w-3.5 mr-2" />
-                          {t('order_comments.delete', 'Delete')}
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  )}
-                </div>
+                {/* Show More menu only if user is author */}
+                {user?.id === message.userId && (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                      >
+                        <MoreHorizontal className="h-3.5 w-3.5" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                        onClick={() => openDeleteDialog(message.id as string)}
+                      >
+                        <Trash2 className="h-3.5 w-3.5 mr-2" />
+                        {t('order_comments.delete', 'Delete')}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
               </div>
 
               {/* Reply input (shown when replying to this comment) */}
@@ -330,7 +334,6 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
                       }}
                       placeholder={t('order_comments.reply_placeholder', 'Write a reply...')}
                       className="flex-1 text-xs"
-                      disabled={loading || commentsLoading}
                     />
                     <Button
                       onClick={() => handleAddReply(message.id as string)}
@@ -354,45 +357,46 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
             </div>
 
             {/* Threaded Replies */}
-            {message.replies && (message.replies as Array<Record<string, unknown>>).length > 0 && (
+            {message.replies && message.replies.length > 0 && (
               <div className={`ml-6 space-y-1.5 border-l-2 pl-3 ${
                 type === 'internal' ? 'border-amber-300' : 'border-primary/40'
               }`}>
-                {(message.replies as Array<Record<string, unknown>>).map((reply) => (
+                {message.replies.map((reply) => (
                   <div key={reply.id as string} className={`p-2 rounded-lg shadow-sm border-l-2 ${
                     type === 'internal'
                       ? 'bg-gradient-to-br from-amber-50 to-amber-100/30 border-amber-300'
                       : 'bg-gradient-to-br from-muted/30 to-muted/50 border-primary/30'
                   }`}>
                     <div className="flex items-center gap-1.5 mb-1">
-                      <Badge variant="secondary" className="text-xs leading-none py-0.5 px-1.5 font-medium">
-                        Reply
-                      </Badge>
                       <AvatarSystem
-                        name={reply.userName as string}
-                        firstName={reply.userFirstName as string}
-                        lastName={reply.userLastName as string}
-                        email={reply.userEmail as string}
-                        seed={reply.avatarSeed as number}
+                        name={reply.userName}
+                        firstName={reply.userFirstName}
+                        lastName={reply.userLastName}
+                        email={reply.userEmail}
+                        seed={reply.avatarSeed?.toString()}
                         size={22}
                         className="ring-1 ring-primary/10"
                       />
                       <span className={`text-xs font-bold ${
                         type === 'internal' ? 'text-amber-800' : 'text-foreground'
                       }`}>
-                        {reply.userName as string}
+                        {reply.userName}
                       </span>
                       <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-muted/60 text-xs font-medium text-muted-foreground ml-auto">
                         <Clock className="h-3 w-3" />
-                        {formatTime(reply.createdAt as string)}
+                        {formatTime(reply.createdAt)}
                       </div>
                     </div>
-                    <p className={`text-xs font-medium whitespace-pre-wrap ${
-                      type === 'internal' ? 'text-amber-900' : 'text-foreground'
-                    }`}>
-                      {reply.commentText as string}
-                    </p>
-
+                    <MentionText
+                      text={reply.commentText as string}
+                      className={`text-xs font-medium ${
+                        type === 'internal' ? 'text-amber-900' : 'text-foreground'
+                      }`}
+                      onMentionClick={(username) => {
+                        console.log('Clicked mention in reply:', username);
+                        toast({ description: `Profile view for @${username} (coming soon)` });
+                      }}
+                    />
                     {/* Reply actions */}
                     <div className="flex items-center gap-2 mt-1.5 pt-1.5 border-t border-border/30">
                       <CommentReactions commentId={reply.id as string} />

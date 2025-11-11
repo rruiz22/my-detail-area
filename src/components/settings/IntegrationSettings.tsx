@@ -54,6 +54,12 @@ interface PushConfig {
   enabled: boolean;
 }
 
+interface SlackConfig {
+  url: string;
+  enabled: boolean;
+  channel?: string;
+}
+
 interface SecurityConfig {
   max_login_attempts: number;
   session_timeout_hours: number;
@@ -101,6 +107,12 @@ export const IntegrationSettings: React.FC = () => {
     enabled: false
   });
 
+  const [slackConfig, setSlackConfig] = useState<SlackConfig>({
+    url: '',
+    enabled: false,
+    channel: ''
+  });
+
   const [securityConfig, setSecurityConfig] = useState<SecurityConfig>({
     max_login_attempts: 5,
     session_timeout_hours: 24,
@@ -131,7 +143,7 @@ export const IntegrationSettings: React.FC = () => {
       const { data, error } = await supabase
         .from('system_settings')
         .select('setting_key, setting_value')
-        .in('setting_key', ['smtp_config', 'sms_config', 'push_config', 'security_config', 'feature_flags']);
+        .in('setting_key', ['smtp_config', 'sms_config', 'push_config', 'slack_webhook_url', 'security_config', 'feature_flags']);
 
       if (error) {
         console.error('❌ [LOAD CONFIG] Database error:', error);
@@ -165,6 +177,10 @@ export const IntegrationSettings: React.FC = () => {
           case 'push_config':
             console.log('🔔 [LOAD CONFIG] Setting Push config');
             setPushConfig(setting.setting_value as PushConfig);
+            break;
+          case 'slack_webhook_url':
+            console.log('💬 [LOAD CONFIG] Setting Slack config');
+            setSlackConfig(setting.setting_value as SlackConfig);
             break;
           case 'security_config':
             console.log('🔒 [LOAD CONFIG] Setting Security config');
@@ -463,11 +479,95 @@ export const IntegrationSettings: React.FC = () => {
             </TabsList>
 
             <TabsContent value="slack" className="mt-6">
-              {/* Temporarily disabled - dealer_integrations table not created yet */}
               <Card className="card-enhanced">
-                <CardContent className="py-8 text-center">
-                  <AlertCircle className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">Slack integration coming soon</p>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <MessageSquare className="w-5 h-5" />
+                      <CardTitle>{t('integrations.slack.title')}</CardTitle>
+                    </div>
+                    <Badge variant={slackConfig.enabled ? 'default' : 'secondary'}>
+                      {slackConfig.enabled ? t('common.enabled') : t('common.disabled')}
+                    </Badge>
+                  </div>
+                  <CardDescription>
+                    {t('integrations.slack.description')}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Enable/Disable Toggle */}
+                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex-1">
+                      <Label htmlFor="slack-enabled" className="text-base font-medium">
+                        {t('integrations.slack.enable_notifications')}
+                      </Label>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {t('integrations.slack.enable_description')}
+                      </p>
+                    </div>
+                    <Switch
+                      id="slack-enabled"
+                      checked={slackConfig.enabled}
+                      onCheckedChange={(checked) => setSlackConfig(prev => ({ ...prev, enabled: checked }))}
+                    />
+                  </div>
+
+                  {/* Webhook URL Input */}
+                  <div className="space-y-2">
+                    <Label htmlFor="slack-webhook" className="text-sm font-medium">
+                      {t('integrations.slack.webhook_url')}
+                    </Label>
+                    <Input
+                      id="slack-webhook"
+                      type="url"
+                      placeholder="https://hooks.slack.com/services/..."
+                      value={slackConfig.url}
+                      onChange={(e) => setSlackConfig(prev => ({ ...prev, url: e.target.value }))}
+                      disabled={!slackConfig.enabled}
+                      className="font-mono text-sm"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      {t('integrations.slack.webhook_help')}{' '}
+                      <a
+                        href="https://api.slack.com/messaging/webhooks"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:underline"
+                      >
+                        {t('integrations.slack.learn_more')}
+                      </a>
+                    </p>
+                  </div>
+
+                  {/* Channel Input (Optional) */}
+                  <div className="space-y-2">
+                    <Label htmlFor="slack-channel" className="text-sm font-medium">
+                      {t('integrations.slack.channel')} <span className="text-muted-foreground">(Optional)</span>
+                    </Label>
+                    <Input
+                      id="slack-channel"
+                      type="text"
+                      placeholder="#orders"
+                      value={slackConfig.channel || ''}
+                      onChange={(e) => setSlackConfig(prev => ({ ...prev, channel: e.target.value }))}
+                      disabled={!slackConfig.enabled}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      {t('integrations.slack.channel_help')}
+                    </p>
+                  </div>
+
+                  {/* Save Button */}
+                  <div className="flex gap-2 pt-4">
+                    <Button
+                      onClick={() => saveConfiguration('slack_webhook_url', slackConfig, 'slack')}
+                      disabled={!slackConfig.enabled || !slackConfig.url || saving}
+                      className="flex items-center gap-2"
+                    >
+                      <Save className="w-4 h-4" />
+                      {saving ? t('common.saving') : t('common.action_buttons.save')}
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>

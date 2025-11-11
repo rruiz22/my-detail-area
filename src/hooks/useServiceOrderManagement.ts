@@ -12,6 +12,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { enrichOrdersArray, createUserDisplayName, type EnrichmentLookups } from '@/services/orderEnrichment';
 import { createOrderNotification } from '@/utils/notificationHelper';
 import { sendOrderCreatedSMS } from '@/services/smsNotificationHelper';
+import { slackNotificationService } from '@/services/slackNotificationService';
 
 // Supabase type definitions
 type SupabaseOrder = Database['public']['Tables']['orders']['Row'];
@@ -557,6 +558,32 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
             dueDateTime: data.due_date,
             shortLink: shortLink || undefined
           }
+        });
+
+        // Send Slack notification (if enabled)
+        void slackNotificationService.isEnabled(
+          data.dealer_id,
+          'service_orders',
+          'order_created'
+        ).then(async (slackEnabled) => {
+          if (slackEnabled) {
+            console.log('📤 Slack enabled for service order, sending notification...');
+            await slackNotificationService.notifyOrderCreated({
+              orderId: data.id,
+              dealerId: data.dealer_id,
+              module: 'service_orders',
+              eventData: {
+                orderNumber: data.order_number || data.id,
+                tag: data.tag,
+                vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim(),
+                services: servicesText,
+                dueDateTime: data.due_date,
+                shortLink: shortLink || undefined
+              }
+            });
+          }
+        }).catch((error) => {
+          console.error('❌ [Slack] Failed to send service order creation notification:', error);
         });
       }
 

@@ -12,6 +12,7 @@ import type { Database } from '@/integrations/supabase/types';
 import { orderNumberService, OrderType } from '@/services/orderNumberService';
 import { pushNotificationHelper } from '@/services/pushNotificationHelper';
 import { sendOrderCreatedSMS } from '@/services/smsNotificationHelper';
+import { slackNotificationService } from '@/services/slackNotificationService';
 import { getSystemTimezone } from '@/utils/dateUtils';
 import { dev, error as logError, warn } from '@/utils/logger';
 import {
@@ -921,6 +922,62 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         }
       });
 
+      // Send Slack notification (if enabled)
+      void slackNotificationService.isEnabled(
+        data.dealer_id,
+        getNotificationModule(data.order_type || 'sales'),
+        'order_created'
+      ).then(async (slackEnabled) => {
+        if (slackEnabled) {
+          console.log('📤 Slack enabled, sending notification...');
+
+          // Get assigned user/group name
+          let assignedToName: string | undefined = undefined;
+          if (data.assigned_group_id) {
+            try {
+              const { data: groupData } = await supabase
+                .from('dealer_groups')
+                .select('name')
+                .eq('id', data.assigned_group_id)
+                .single();
+              assignedToName = groupData?.name || undefined;
+            } catch (error) {
+              console.warn('Failed to fetch group name:', error);
+            }
+          } else if (data.assigned_contact_id) {
+            try {
+              const { data: contactData } = await supabase
+                .from('dealership_contacts')
+                .select('first_name, last_name')
+                .eq('id', data.assigned_contact_id)
+                .single();
+              if (contactData) {
+                assignedToName = `${contactData.first_name || ''} ${contactData.last_name || ''}`.trim();
+              }
+            } catch (error) {
+              console.warn('Failed to fetch contact name:', error);
+            }
+          }
+
+          await slackNotificationService.notifyOrderCreated({
+            orderId: data.id,
+            dealerId: data.dealer_id,
+            module: getNotificationModule(data.order_type || 'sales'),
+            eventData: {
+              orderNumber: data.order_number || data.custom_order_number || data.id,
+              stockNumber: data.stock_number,
+              vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim(),
+              services: servicesText,
+              dueDateTime: data.due_date,
+              shortLink: shortLink || undefined,
+              assignedTo: assignedToName
+            }
+          });
+        }
+      }).catch((error) => {
+        console.error('❌ [Slack] Failed to send order creation notification:', error);
+      });
+
       // Enrich the new order with dealer info
       const enrichedNewOrder = await enrichOrderData(data);
 
@@ -1089,6 +1146,47 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         }).catch(err =>
           console.error('[OrderManagement] Failed to create status change notification:', err)
         );
+
+        // 📤 SLACK NOTIFICATION: Status Changed
+        void slackNotificationService.isEnabled(
+          data.dealer_id,
+          notifModule,
+          'status_changed'
+        ).then(async (slackEnabled) => {
+          if (slackEnabled) {
+            console.log('📤 Slack enabled for status change, sending notification...');
+
+            // Get shortLink from QR data
+            let shortLink: string | undefined = undefined;
+            try {
+              const { data: qrData } = await supabase
+                .from('order_qr_codes')
+                .select('short_link')
+                .eq('order_id', orderId)
+                .single();
+              shortLink = qrData?.short_link || `${window.location.origin}/orders/${orderId}`;
+            } catch (error) {
+              console.warn('Failed to fetch short link:', error);
+              shortLink = `${window.location.origin}/orders/${orderId}`;
+            }
+
+            await slackNotificationService.notifyStatusChange({
+              orderId: data.id,
+              dealerId: data.dealer_id,
+              module: notifModule,
+              eventData: {
+                orderNumber: data.order_number || data.custom_order_number || data.id,
+                stockNumber: data.stock_number,
+                vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim(),
+                status: orderData.status,
+                oldStatus: oldStatus,
+                shortLink: shortLink || `${window.location.origin}/orders/${orderId}`
+              }
+            });
+          }
+        }).catch((error) => {
+          console.error('❌ [Slack] Failed to send status change notification:', error);
+        });
       }
 
       // 🔔 NOTIFICATION: Assignment Changed (dynamic module based on order_type)

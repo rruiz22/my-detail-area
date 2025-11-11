@@ -1395,6 +1395,7 @@
       "enable_all_email": "Ativar Todos Email",
       "enable_all_sms": "Ativar Todos SMS",
       "enable_all_push": "Ativar Todas Push",
+      "enable_all_slack": "Ativar Todos Slack",
       "reset_defaults": "Restaurar Padrões",
       "unsaved_changes": "Alterações Não Salvas",
       "saved_successfully": "Salvo",
@@ -1461,13 +1462,53 @@
     "reset_to_defaults": "Configuração restaurada para padrões",
     "config_imported": "Configuração importada com sucesso",
     "invalid_config_file": "Arquivo de configuração inválido",
-    "cache_cleared": "Cache limpo com sucesso",
-    "status": {
-      "pending": "Pendente",
-      "in_progress": "Em Andamento",
-      "completed": "Concluído",
-      "cancelled": "Cancelado",
-      "on_hold": "Em Espera"
+    "cache_cleared": "Cache limpo com sucesso"
+  },
+  "integrations": {
+    "title": "Integrações",
+    "description": "Conectar serviços externos e configurar integrações",
+    "slack": {
+      "title": "Integração do Slack",
+      "description": "Enviar notificações de pedidos para canais do Slack",
+      "enable_notifications": "Ativar Notificações do Slack",
+      "enable_description": "Enviar atualizações de pedidos para o Slack",
+      "webhook_url": "URL do Webhook",
+      "webhook_help": "Obtenha sua URL do webhook nas configurações de webhooks recebidos do Slack.",
+      "learn_more": "Saiba mais",
+      "channel": "Canal",
+      "channel_help": "Especifique um canal para substituir o padrão (ex: #pedidos)",
+      "connected_title": "Slack Conectado",
+      "connected_description": "Seu espaço de trabalho do Slack está conectado e as notificações estão habilitadas.",
+      "error_title": "Erro de Conexão",
+      "error_description": "Falha ao conectar com o Slack: {{reason}}",
+      "connect_error": "Falha ao conectar com o Slack",
+      "enabled": "Habilitado",
+      "disabled": "Desabilitado",
+      "disconnected": "Desconectado do Slack",
+      "workspace": "Espaço de Trabalho",
+      "bot_id": "ID do Bot",
+      "scopes": "Escopos",
+      "error_occurred": "Ocorreu um erro",
+      "enable_integration": "Habilitar Integração",
+      "disconnect": "Desconectar",
+      "manage": "Gerenciar",
+      "not_connected": "Não Conectado",
+      "connecting": "Conectando...",
+      "connect": "Conectar ao Slack",
+      "benefits_title": "O que você vai obter",
+      "benefit_1": "Notificações de pedidos em tempo real em seus canais do Slack",
+      "benefit_2": "Colaboração da equipe sobre atualizações de pedidos",
+      "benefit_3": "Acesso rápido aos detalhes dos pedidos com um clique",
+      "disconnect_title": "Desconectar Slack?",
+      "disconnect_confirm": "Tem certeza de que deseja desconectar sua integração com o Slack? Esta ação não pode ser desfeita."
+    },
+    "webhook": {
+      "title": "Webhooks",
+      "description": "Configurar integrações de webhook"
+    },
+    "api_keys": {
+      "title": "Chaves API",
+      "description": "Gerenciar suas chaves API"
     }
   },
   "layout": {

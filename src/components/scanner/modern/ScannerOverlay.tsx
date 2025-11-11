@@ -19,27 +19,29 @@ export function ScannerOverlay({ isActive, confidence }: ScannerOverlayProps) {
 
   return (
     <div className="absolute inset-0 pointer-events-none">
-      {/* Dark overlay with central cutout */}
-      <div className="absolute inset-0 bg-black/60" />
-      
-      {/* Central scanning area */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <div 
+      {/* Lighter dark overlay with central cutout - improved visibility */}
+      <div className="absolute inset-0 bg-black/30" />
+
+      {/* Central scanning area with clearer cutout */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 sm:w-96 h-32 sm:h-40">
+        {/* Main scanning frame */}
+        <div
           className={cn(
-            "w-80 h-32 border-2 rounded-lg transition-all duration-300",
-            "bg-background/5 backdrop-blur-sm",
+            "w-full h-full border-4 rounded-xl transition-all duration-300",
+            "shadow-2xl",
             getOverlayColor()
           )}
           style={{
-            boxShadow: 'inset 0 0 0 2000px rgba(0,0,0,0.6)',
-            clipPath: 'polygon(0% 0%, 0% 100%, 40% 100%, 40% 40%, 60% 40%, 60% 100%, 100% 100%, 100% 0%)'
+            boxShadow: confidence > 0.8
+              ? '0 0 0 2000px rgba(0,0,0,0.3), 0 0 20px rgba(16, 185, 129, 0.6)'
+              : '0 0 0 2000px rgba(0,0,0,0.3)',
           }}
         />
-        
+
         {/* Instructions */}
-        <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 text-center">
-          <p className="text-white text-sm font-medium bg-black/40 px-4 py-2 rounded-full backdrop-blur-sm">
-            {confidence > 0.8 
+        <div className="absolute -bottom-12 sm:-bottom-16 left-1/2 transform -translate-x-1/2 text-center whitespace-nowrap">
+          <p className="text-white text-xs sm:text-sm font-medium bg-black/70 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full backdrop-blur-sm shadow-lg">
+            {confidence > 0.8
               ? t('modern_vin_scanner.ready_to_capture')
               : t('modern_vin_scanner.align_vin_sticker')
             }
@@ -47,40 +49,40 @@ export function ScannerOverlay({ isActive, confidence }: ScannerOverlayProps) {
         </div>
       </div>
 
-      {/* Scanning animation */}
+      {/* Scanning animation - more visible line */}
       {confidence < 0.8 && (
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="w-80 h-32 border-2 border-primary rounded-lg overflow-hidden">
-            <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent animate-scan-line" />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 sm:w-96 h-32 sm:h-40">
+          <div className="w-full h-full rounded-xl overflow-hidden">
+            <div className="w-full h-1 bg-gradient-to-r from-transparent via-primary/80 to-transparent animate-scan-line shadow-lg" style={{ filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.8))' }} />
           </div>
         </div>
       )}
 
-      {/* Corner indicators */}
+      {/* Enhanced corner indicators with better visibility */}
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <div className="relative w-80 h-32">
+        <div className="relative w-80 sm:w-96 h-32 sm:h-40">
           {/* Top-left corner */}
-          <div className="absolute -top-2 -left-2 w-6 h-6">
-            <div className={cn("w-full h-1 rounded-full transition-colors", getOverlayColor().split(' ')[0])} />
-            <div className={cn("w-1 h-full rounded-full transition-colors", getOverlayColor().split(' ')[0])} />
+          <div className="absolute -top-1 -left-1 w-8 h-8 sm:w-10 sm:h-10">
+            <div className={cn("absolute top-0 left-0 w-full h-1.5 rounded-full transition-colors shadow-lg", getOverlayColor().split(' ')[0])} />
+            <div className={cn("absolute top-0 left-0 w-1.5 h-full rounded-full transition-colors shadow-lg", getOverlayColor().split(' ')[0])} />
           </div>
-          
+
           {/* Top-right corner */}
-          <div className="absolute -top-2 -right-2 w-6 h-6">
-            <div className={cn("w-full h-1 rounded-full transition-colors", getOverlayColor().split(' ')[0])} />
-            <div className={cn("w-1 h-full rounded-full ml-auto transition-colors", getOverlayColor().split(' ')[0])} />
+          <div className="absolute -top-1 -right-1 w-8 h-8 sm:w-10 sm:h-10">
+            <div className={cn("absolute top-0 right-0 w-full h-1.5 rounded-full transition-colors shadow-lg", getOverlayColor().split(' ')[0])} />
+            <div className={cn("absolute top-0 right-0 w-1.5 h-full rounded-full transition-colors shadow-lg", getOverlayColor().split(' ')[0])} />
           </div>
-          
+
           {/* Bottom-left corner */}
-          <div className="absolute -bottom-2 -left-2 w-6 h-6">
-            <div className={cn("w-1 h-full rounded-full mt-auto transition-colors", getOverlayColor().split(' ')[0])} />
-            <div className={cn("w-full h-1 rounded-full mt-auto transition-colors", getOverlayColor().split(' ')[0])} />
+          <div className="absolute -bottom-1 -left-1 w-8 h-8 sm:w-10 sm:h-10">
+            <div className={cn("absolute bottom-0 left-0 w-1.5 h-full rounded-full transition-colors shadow-lg", getOverlayColor().split(' ')[0])} />
+            <div className={cn("absolute bottom-0 left-0 w-full h-1.5 rounded-full transition-colors shadow-lg", getOverlayColor().split(' ')[0])} />
           </div>
-          
+
           {/* Bottom-right corner */}
-          <div className="absolute -bottom-2 -right-2 w-6 h-6">
-            <div className={cn("w-1 h-full rounded-full ml-auto mt-auto transition-colors", getOverlayColor().split(' ')[0])} />
-            <div className={cn("w-full h-1 rounded-full mt-auto transition-colors", getOverlayColor().split(' ')[0])} />
+          <div className="absolute -bottom-1 -right-1 w-8 h-8 sm:w-10 sm:h-10">
+            <div className={cn("absolute bottom-0 right-0 w-1.5 h-full rounded-full transition-colors shadow-lg", getOverlayColor().split(' ')[0])} />
+            <div className={cn("absolute bottom-0 right-0 w-full h-1.5 rounded-full transition-colors shadow-lg", getOverlayColor().split(' ')[0])} />
           </div>
         </div>
       </div>
