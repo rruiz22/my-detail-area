@@ -36,6 +36,7 @@ interface ConversationListProps {
   onSelectConversation: (id: string) => void;
   dealerId: number;
   onCreateConversation?: (data: any) => Promise<ChatConversation | null>;
+  error?: string | null;
 }
 
 export const ConversationList: React.FC<ConversationListProps> = ({
@@ -44,7 +45,8 @@ export const ConversationList: React.FC<ConversationListProps> = ({
   selectedId,
   onSelectConversation,
   dealerId,
-  onCreateConversation
+  onCreateConversation,
+  error: hookError
 }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
@@ -271,11 +273,24 @@ export const ConversationList: React.FC<ConversationListProps> = ({
         setSelectedParticipants([]);
         setUserSearchQuery('');
         onSelectConversation(result.id);
+      } else if (hookError) {
+        // Creation failed - show error from hook
+        // Check if it's a permission error by looking at the error message
+        const isPermissionError = hookError.includes('permission') || hookError.includes('permiso') || hookError.includes('permissão');
+
+        toast({
+          variant: "destructive",
+          title: isPermissionError ? t('chat.permission_denied') : t('chat.error_creating_conversation'),
+          description: hookError
+        });
       }
     } catch (error) {
+      // Check if it's a permission error
+      const isPermissionError = error && typeof error === 'object' && 'code' in error && error.code === '42501';
+
       toast({
         variant: "destructive",
-        title: t('chat.error_creating_conversation'),
+        title: isPermissionError ? t('chat.permission_denied') : t('chat.error_creating_conversation'),
         description: error instanceof Error ? error.message : t('common.error')
       });
     }

@@ -1,7 +1,7 @@
 {
-  "scannedFiles": 874,
-  "totalStrings": 8569,
-  "hardcodedStrings": 2044,
+  "scannedFiles": 876,
+  "totalStrings": 8573,
+  "hardcodedStrings": 2048,
   "translatedStrings": 6525,
   "issues": {
     "critical": [
@@ -21155,6 +21155,35 @@
             "text": "Promise",
             "line": 30,
             "context": "29: resetPassword: (email: string) => Promise<{ error: Error | null }>;\n30: updatePassword: (newPassword: string) => Promise<{ error: Error | null }>;\n31: }"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\config\\supabaseOptimized.ts",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 39,
+            "context": "38: interface QueuedQuery<T> {\n39: fn: () => Promise<T>;\n40: resolve: (value: T) => void;"
+          },
+          {
+            "text": "Promise",
+            "line": 57,
+            "context": "56: */\n57: async execute<T>(fn: () => Promise<T>): Promise<T> {\n58: // If under limit, execute immediately"
+          },
+          {
+            "text": "Promise",
+            "line": 70,
+            "context": "69: \n70: private async executeQuery<T>(fn: () => Promise<T>): Promise<T> {\n71: this.activeQueries++;"
+          },
+          {
+            "text": "Promise",
+            "line": 183,
+            "context": "182: export const rateLimitedQuery = async <T>(\n183: queryFn: () => Promise<T>\n184: ): Promise<T> => {"
           }
         ],
         "translationCalls": [],
@@ -58020,7 +58049,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "411 Component components need translation",
+      "description": "412 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\OperationalReports.tsx",
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
@@ -58130,6 +58159,7 @@
         "src\\hooks\\useEntityFollowers.tsx",
         "src\\hooks\\useAttachments.ts",
         "src\\hooks\\useAppointmentCapacity.tsx",
+        "src\\config\\supabaseOptimized.ts",
         "src\\components\\NotificationProvider.tsx",
         "src\\components\\ui\\WeekNavigator.tsx",
         "src\\components\\ui\\duplicate-tooltip.tsx",

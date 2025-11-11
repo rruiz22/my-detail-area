@@ -922,47 +922,57 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         }
       });
 
+      // 🔍 Fetch assigned user/group name BEFORE Slack check (prevents blocking Slack)
+      let assignedToName: string | undefined = undefined;
+      if (data.assigned_group_id) {
+        try {
+          const { data: groupData } = await supabase
+            .from('dealer_groups')
+            .select('name')
+            .eq('id', data.assigned_group_id)
+            .single();
+          assignedToName = groupData?.name || undefined;
+        } catch (error) {
+          console.warn('⚠️ Failed to fetch group name:', error);
+        }
+      } else if (data.assigned_contact_id) {
+        try {
+          const { data: contactData } = await supabase
+            .from('dealership_contacts')
+            .select('first_name, last_name')
+            .eq('id', data.assigned_contact_id)
+            .single();
+          if (contactData) {
+            assignedToName = `${contactData.first_name || ''} ${contactData.last_name || ''}`.trim();
+          }
+        } catch (error) {
+          console.warn('⚠️ Failed to fetch contact name:', error);
+        }
+      }
+
       // Send Slack notification (if enabled)
+      const moduleForNotif = getNotificationModule(data.order_type || 'sales');
+      console.log('🔍 [DEBUG] Checking Slack for Sales order:', {
+        dealerId: data.dealer_id,
+        module: moduleForNotif,
+        orderType: data.order_type,
+        assignedTo: assignedToName
+      });
+
       void slackNotificationService.isEnabled(
         data.dealer_id,
-        getNotificationModule(data.order_type || 'sales'),
+        moduleForNotif,
         'order_created'
       ).then(async (slackEnabled) => {
+        console.log('🔍 [DEBUG] Slack enabled result:', slackEnabled);
+
         if (slackEnabled) {
           console.log('📤 Slack enabled, sending notification...');
-
-          // Get assigned user/group name
-          let assignedToName: string | undefined = undefined;
-          if (data.assigned_group_id) {
-            try {
-              const { data: groupData } = await supabase
-                .from('dealer_groups')
-                .select('name')
-                .eq('id', data.assigned_group_id)
-                .single();
-              assignedToName = groupData?.name || undefined;
-            } catch (error) {
-              console.warn('Failed to fetch group name:', error);
-            }
-          } else if (data.assigned_contact_id) {
-            try {
-              const { data: contactData } = await supabase
-                .from('dealership_contacts')
-                .select('first_name, last_name')
-                .eq('id', data.assigned_contact_id)
-                .single();
-              if (contactData) {
-                assignedToName = `${contactData.first_name || ''} ${contactData.last_name || ''}`.trim();
-              }
-            } catch (error) {
-              console.warn('Failed to fetch contact name:', error);
-            }
-          }
 
           await slackNotificationService.notifyOrderCreated({
             orderId: data.id,
             dealerId: data.dealer_id,
-            module: getNotificationModule(data.order_type || 'sales'),
+            module: moduleForNotif,
             eventData: {
               orderNumber: data.order_number || data.custom_order_number || data.id,
               stockNumber: data.stock_number,

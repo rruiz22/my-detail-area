@@ -1693,6 +1693,8 @@
     "conversation_created": "Conversa Criada",
     "conversation_created_desc": "{{name}} foi criada com sucesso",
     "error_creating_conversation": "Erro ao Criar Conversa",
+    "permission_denied": "Permissão Negada",
+    "chat_permission_required": "Você não tem permissão para criar conversas de chat. Entre em contato com seu administrador para conceder acesso ao módulo de chat.",
     "select_user": "Selecionar Usuário",
     "select_participants": "Selecionar Participantes",
     "selected_participants": "Participantes Selecionados",
