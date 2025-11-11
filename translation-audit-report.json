@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 871,
-  "totalStrings": 8561,
+  "scannedFiles": 873,
+  "totalStrings": 8567,
   "hardcodedStrings": 2042,
-  "translatedStrings": 6519,
+  "translatedStrings": 6525,
   "issues": {
     "critical": [
       {
@@ -19206,85 +19206,75 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 35,
-            "context": "34: // Actions for current user\n35: setStatus: (status: PresenceStatus) => Promise<void>;\n36: setCustomStatus: (message: string, emoji?: string) => Promise<void>;"
+            "line": 44,
+            "context": "43: // Actions for current user\n44: setStatus: (status: PresenceStatus) => Promise<void>;\n45: setCustomStatus: (message: string, emoji?: string) => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 36,
-            "context": "35: setStatus: (status: PresenceStatus) => Promise<void>;\n36: setCustomStatus: (message: string, emoji?: string) => Promise<void>;\n37: clearCustomStatus: () => Promise<void>;"
+            "line": 45,
+            "context": "44: setStatus: (status: PresenceStatus) => Promise<void>;\n45: setCustomStatus: (message: string, emoji?: string) => Promise<void>;\n46: clearCustomStatus: () => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 37,
-            "context": "36: setCustomStatus: (message: string, emoji?: string) => Promise<void>;\n37: clearCustomStatus: () => Promise<void>;\n38: setAutoAwayMinutes: (minutes: number) => Promise<void>;"
+            "line": 46,
+            "context": "45: setCustomStatus: (message: string, emoji?: string) => Promise<void>;\n46: clearCustomStatus: () => Promise<void>;\n47: setAutoAwayMinutes: (minutes: number) => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 38,
-            "context": "37: clearCustomStatus: () => Promise<void>;\n38: setAutoAwayMinutes: (minutes: number) => Promise<void>;\n39: "
+            "line": 47,
+            "context": "46: clearCustomStatus: () => Promise<void>;\n47: setAutoAwayMinutes: (minutes: number) => Promise<void>;\n48: "
           },
           {
             "text": ", err);\n      }\n    }, 30000); // Update every 30 seconds\n  }, [user?.id, activeDealerId]);\n\n  // Stop heartbeat\n  const stopHeartbeat = useCallback(() => {\n    if (heartbeatIntervalRef.current) {\n      clearInterval(heartbeatIntervalRef.current);\n      heartbeatIntervalRef.current = undefined;\n    }\n  }, []);\n\n  // Initialize user presence\n  const initializePresence = useCallback(async () => {\n    if (!user?.id || !activeDealerId) return;\n\n    try {\n      setError(null);\n\n      // Get or create user presence record\n      const { data: existingPresence, error: fetchError } = await supabase\n        .from(",
-            "line": 89,
-            "context": "88: } catch (err) {\n89: console.error('❌ Heartbeat error:', err);\n90: }"
+            "line": 98,
+            "context": "97: } catch (err) {\n98: console.error('❌ Heartbeat error:', err);\n99: }"
           }
         ],
         "translationCalls": [
           {
             "key": "user_presence.error_initializing",
-            "line": 168,
-            "exists": false
-          },
-          {
-            "key": "user_presence.default_user_name",
-            "line": 189,
+            "line": 177,
             "exists": false
           },
           {
             "key": "user_presence.error_fetching_users",
-            "line": 198,
+            "line": 228,
             "exists": false
           },
           {
             "key": "user_presence.error_setting_status",
-            "line": 222,
+            "line": 252,
             "exists": false
           },
           {
             "key": "user_presence.error_custom_status",
-            "line": 247,
+            "line": 277,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "user_presence.error_initializing",
-            "line": 168,
-            "context": "167: console.error('Error initializing presence:', err);\n168: setError(err instanceof Error ? err.message : t('user_presence.error_initializing'));\n169: }"
-          },
-          {
-            "key": "user_presence.default_user_name",
-            "line": 189,
-            "context": "188: ...presence,\n189: user_name: t('user_presence.default_user_name'),\n190: user_avatar: undefined,"
+            "line": 177,
+            "context": "176: console.error('Error initializing presence:', err);\n177: setError(err instanceof Error ? err.message : t('user_presence.error_initializing'));\n178: }"
           },
           {
             "key": "user_presence.error_fetching_users",
-            "line": 198,
-            "context": "197: console.error('Error fetching users presence:', err);\n198: setError(err instanceof Error ? err.message : t('user_presence.error_fetching_users'));\n199: }"
+            "line": 228,
+            "context": "227: } catch (err) {\n228: setError(err instanceof Error ? err.message : t('user_presence.error_fetching_users'));\n229: }"
           },
           {
             "key": "user_presence.error_setting_status",
-            "line": 222,
-            "context": "221: console.error('Error setting status:', err);\n222: setError(err instanceof Error ? err.message : t('user_presence.error_setting_status'));\n223: }"
+            "line": 252,
+            "context": "251: console.error('Error setting status:', err);\n252: setError(err instanceof Error ? err.message : t('user_presence.error_setting_status'));\n253: }"
           },
           {
             "key": "user_presence.error_custom_status",
-            "line": 247,
-            "context": "246: console.error('Error setting custom status:', err);\n247: setError(err instanceof Error ? err.message : t('user_presence.error_custom_status'));\n248: }"
+            "line": 277,
+            "context": "276: console.error('Error setting custom status:', err);\n277: setError(err instanceof Error ? err.message : t('user_presence.error_custom_status'));\n278: }"
           }
         ],
-        "coverage": 50,
+        "coverage": 44,
         "severity": "low"
       },
       {
@@ -21280,60 +21270,60 @@
         "translationCalls": [
           {
             "key": "search.global_placeholder",
-            "line": 108,
+            "line": 110,
             "exists": true
           },
           {
             "key": "layout.mobile_menu",
-            "line": 122,
+            "line": 124,
             "exists": true
           },
           {
             "key": "layout.tools",
-            "line": 127,
+            "line": 129,
             "exists": true
           },
           {
             "key": "dealerships.dealership",
-            "line": 133,
+            "line": 135,
             "exists": true
           },
           {
             "key": "layout.preferences",
-            "line": 141,
+            "line": 143,
             "exists": true
           },
           {
             "key": "common.notifications",
-            "line": 153,
+            "line": 155,
             "exists": false
           },
           {
             "key": "layout.footer.copyright",
-            "line": 190,
+            "line": 192,
             "exists": true
           },
           {
             "key": "layout.footer.privacy_policy",
-            "line": 203,
+            "line": 205,
             "exists": true
           },
           {
             "key": "layout.footer.terms_of_service",
-            "line": 212,
+            "line": 214,
             "exists": true
           },
           {
             "key": "layout.footer.support",
-            "line": 221,
+            "line": 223,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "common.notifications",
-            "line": 153,
-            "context": "152: <label className=\"text-sm font-medium text-muted-foreground\">\n153: {t('common.notifications')}\n154: </label>"
+            "line": 155,
+            "context": "154: <label className=\"text-sm font-medium text-muted-foreground\">\n155: {t('common.notifications')}\n156: </label>"
           }
         ],
         "coverage": 100,
@@ -36840,6 +36830,56 @@
             "key": "common.delete",
             "line": 472,
             "context": "471: >\n472: {t('common.delete')}\n473: </Button>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\presence\\OnlineUsersList.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "presence.just_now",
+            "line": 73,
+            "exists": true
+          },
+          {
+            "key": "presence.no_users_online",
+            "line": 152,
+            "exists": true
+          },
+          {
+            "key": "presence.search_users",
+            "line": 167,
+            "exists": true
+          },
+          {
+            "key": "presence.no_results",
+            "line": 181,
+            "exists": true
+          },
+          {
+            "key": "presence.mobile_user",
+            "line": 229,
+            "exists": true
+          },
+          {
+            "key": "presence.status_${user.status}",
+            "line": 275,
+            "exists": false
+          },
+          {
+            "key": "presence.start_chat",
+            "line": 286,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "presence.status_${user.status}",
+            "line": 275,
+            "context": "274: >\n275: {t(`presence.status_${user.status}`)}\n276: </Badge>"
           }
         ],
         "coverage": 100,
@@ -57961,7 +58001,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "409 Component components need translation",
+      "description": "410 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\OperationalReports.tsx",
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
@@ -58309,6 +58349,7 @@
         "src\\components\\productivity\\ProductivityTodos.tsx",
         "src\\components\\productivity\\ProductivityCalendar.tsx",
         "src\\components\\productivity\\ProductivityCalendar.OLD.tsx",
+        "src\\components\\presence\\OnlineUsersList.tsx",
         "src\\components\\permissions\\PermissionBoundary.tsx",
         "src\\components\\permissions\\GroupMembershipManagement.tsx",
         "src\\components\\orders\\SimpleNotesDisplay.tsx",

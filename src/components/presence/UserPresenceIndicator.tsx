@@ -24,9 +24,9 @@ export function UserPresenceIndicator({
   };
 
   const ringColors = {
-    online: 'ring-green-500/20 animate-pulse',
+    online: 'ring-green-500/20',
     away: 'ring-yellow-500/20',
-    busy: 'ring-red-500/20 animate-pulse',
+    busy: 'ring-red-500/20',
     offline: 'ring-gray-400/20'
   };
 
@@ -80,13 +80,6 @@ export function UserPresenceIndicator({
       ],
       statusColors[status],
       className
-    )}>
-      {status === 'online' && (
-        <div className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-75" />
-      )}
-      {status === 'busy' && (
-        <div className="absolute inset-0 rounded-full bg-red-400 animate-pulse" />
-      )}
-    </div>
+    )} />
   );
 }
