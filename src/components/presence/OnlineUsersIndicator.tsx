@@ -35,8 +35,9 @@ export function OnlineUsersIndicator({
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Permission guard: Only system_admin and supermanager can see this component
-  const canView = enhancedUser?.is_system_admin || enhancedUser?.is_supermanager;
+  // Permission guard: Any authenticated user with dealer membership can see this
+  // This allows all team members to see who's online and start chats
+  const canView = !!enhancedUser && !!dealerId;
 
   if (!canView) {
     return null;
