@@ -264,6 +264,23 @@ export const usePermissions = () => {
             label: profileData.email,
             metadata: { userId: profileData.id, role: profileData.role }
           });
+
+          // 🛡️ EMERGENCY BYPASS: System admins always have full access even if permission system fails
+          // This ensures admins can access the system to fix permission issues
+          if (profileData.role === 'system_admin') {
+            logger.secure.admin('🛡️ System admin emergency bypass activated - granting full access');
+            return {
+              id: profileData.id,
+              email: profileData.email,
+              dealership_id: profileData.dealership_id,
+              is_system_admin: true,
+              is_supermanager: false,
+              allowed_modules: [],
+              custom_roles: [],
+              system_permissions: new Set(['manage_all_settings', 'manage_users', 'manage_dealerships', 'view_audit_logs', 'manage_roles'] as SystemPermissionKey[]),
+              module_permissions: new Map() // System admins bypass module permission checks
+            };
+          }
         }
 
       // Fetch user's role assignments from BOTH tables (including for managers/system_admins to show role badges)
@@ -423,7 +440,18 @@ export const usePermissions = () => {
 
           if (membershipsError) {
             logger.error('❌ Error fetching memberships in fallback:', membershipsError);
-            throw membershipsError;
+            logger.error('⚠️ Fallback query failed - returning empty permissions for safety');
+            // Don't throw - return empty permissions to prevent complete system block
+            return {
+              id: profileData.id,
+              email: profileData.email,
+              dealership_id: profileData.dealership_id,
+              is_system_admin: profileData.role === 'system_admin',
+              is_supermanager: profileData.role === 'supermanager',
+              custom_roles: [],
+              system_permissions: new Set(),
+              module_permissions: new Map()
+            };
           }
 
           if (!memberships || memberships.length === 0) {
@@ -569,11 +597,17 @@ export const usePermissions = () => {
       }
 
       // Parse the batch result
-      const rolesFromBatch = permissionsData.roles || [];
-      const systemPermsData = permissionsData.system_permissions || [];
-      const modulePermsData = permissionsData.module_permissions || [];
-      const roleModuleAccessData = permissionsData.module_access || [];
-      const allowedModulesData = permissionsData.allowed_modules || []; // 🆕 Supermanager allowed modules
+      // 🛡️ CRITICAL FIX: RPC returns TABLE which Supabase wraps in array [row1, row2, ...]
+      // We need the first row, or default to empty object if no rows
+      const batchResult = (Array.isArray(permissionsData) && permissionsData.length > 0)
+        ? permissionsData[0]
+        : permissionsData || {};
+
+      const rolesFromBatch = batchResult.roles || [];
+      const systemPermsData = batchResult.system_permissions || [];
+      const modulePermsData = batchResult.module_permissions || [];
+      const roleModuleAccessData = batchResult.module_access || [];
+      const allowedModulesData = batchResult.allowed_modules || []; // 🆕 Supermanager allowed modules
 
       // Build a map of which modules each role has access to
       // ✅ FIX: Now includes BOTH enabled and disabled modules (is_enabled field)
@@ -731,9 +765,21 @@ export const usePermissions = () => {
 
       // Re-throw as PermissionError for better error categorization
       if (error instanceof Error) {
+        // Determine error source for better debugging
+        const errorSource = error.message.includes('get_user_permissions_batch')
+          ? 'rpc_function'
+          : error.message.includes('fallback')
+            ? 'fallback_query'
+            : 'permission_parse';
+
         throw new PermissionError(
-          'Failed to load user permissions',
-          { originalError: error.message, userId: user?.id }
+          `Failed to load user permissions (source: ${errorSource})`,
+          {
+            originalError: error.message,
+            userId: user?.id,
+            source: errorSource,
+            stack: error.stack
+          }
         );
       }
         throw error;
@@ -775,7 +821,24 @@ export const usePermissions = () => {
     // ✅ PHASE 2.2: Load from localStorage cache for instant initial render
     initialData: () => {
       if (!user?.id) return undefined;
-      return getCachedPermissions(user.id) || undefined;
+      const cached = getCachedPermissions(user.id);
+
+      // 🛡️ CRITICAL: Validate cached data structure
+      // If cache has invalid structure (no roles despite being non-admin), force refetch
+      if (cached && profileData) {
+        const isAdmin = profileData.role === 'system_admin';
+        const hasRoles = cached.custom_roles && cached.custom_roles.length > 0;
+        const hasModulePerms = cached.module_permissions && cached.module_permissions.size > 0;
+
+        // Non-admins should have roles OR module permissions
+        if (!isAdmin && !hasRoles && !hasModulePerms) {
+          logger.dev('⚠️ Cache has invalid structure (no roles/perms for non-admin), clearing and refetching');
+          clearPermissionsCache();
+          return undefined; // Force refetch
+        }
+      }
+
+      return cached || undefined;
     },
     // ✅ PERF FIX: Keep previous data while refetching
     placeholderData: (previousData) => previousData,
