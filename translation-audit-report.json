@@ -1,8 +1,8 @@
 {
   "scannedFiles": 876,
-  "totalStrings": 8573,
+  "totalStrings": 8578,
   "hardcodedStrings": 2048,
-  "translatedStrings": 6525,
+  "translatedStrings": 6530,
   "issues": {
     "critical": [
       {
@@ -2102,229 +2102,229 @@
         "hardcodedStrings": [
           {
             "text": "Invoice",
-            "line": 429,
-            "context": "428: <div class=\"sender-name\">${senderName}</div>\n429: <div class=\"doc-title\">Invoice</div>\n430: ${servicePeriod ? `"
+            "line": 460,
+            "context": "459: <div class=\"sender-name\">${senderName}</div>\n460: <div class=\"doc-title\">Invoice</div>\n461: ${servicePeriod ? `"
           },
           {
             "text": "Bill To",
-            "line": 441,
-            "context": "440: <div class=\"bill-to\">\n441: <h3>Bill To</h3>\n442: <div class=\"company\">${dealerName}</div>"
+            "line": 472,
+            "context": "471: <div class=\"bill-to\">\n472: <h3>Bill To</h3>\n473: <div class=\"company\">${dealerName}</div>"
           },
           {
             "text": "Invoice Date",
-            "line": 455,
-            "context": "454: <div class=\"detail-row\">\n455: <span class=\"label\">Invoice Date</span>\n456: <div class=\"value\">${formatDate(invoice.issueDate)}</div>"
+            "line": 486,
+            "context": "485: <div class=\"detail-row\">\n486: <span class=\"label\">Invoice Date</span>\n487: <div class=\"value\">${formatDate(invoice.issueDate)}</div>"
           },
           {
             "text": "Due Date",
-            "line": 459,
-            "context": "458: <div class=\"detail-row\">\n459: <span class=\"label\">Due Date</span>\n460: <div class=\"value\">${formatDate(invoice.dueDate)}</div>"
+            "line": 490,
+            "context": "489: <div class=\"detail-row\">\n490: <span class=\"label\">Due Date</span>\n491: <div class=\"value\">${formatDate(invoice.dueDate)}</div>"
           },
           {
             "text": "Invoice Number",
-            "line": 463,
-            "context": "462: <div class=\"detail-row\">\n463: <span class=\"label\">Invoice Number</span>\n464: <div class=\"value font-mono\">${invoice.invoiceNumber}</div>"
+            "line": 494,
+            "context": "493: <div class=\"detail-row\">\n494: <span class=\"label\">Invoice Number</span>\n495: <div class=\"value font-mono\">${invoice.invoiceNumber}</div>"
           },
           {
             "text": "Total Amount",
-            "line": 467,
-            "context": "466: <div class=\"detail-row\" style=\"margin-top: 12px;\">\n467: <span class=\"label\">Total Amount</span>\n468: <div class=\"value\" style=\"font-size: 14pt; font-weight: 700; color: #6B7280;\">${formatCurrency(invoice.totalAmount)}</div>"
+            "line": 498,
+            "context": "497: <div class=\"detail-row\" style=\"margin-top: 12px;\">\n498: <span class=\"label\">Total Amount</span>\n499: <div class=\"value\" style=\"font-size: 14pt; font-weight: 700; color: #6B7280;\">${formatCurrency(invoice.totalAmount)}</div>"
           },
           {
             "text": "Date",
-            "line": 480,
-            "context": "479: <tr>\n480: <th style=\"width: 8%;\">Date</th>\n481: <th style=\"width: 10%;\">Order</th>"
+            "line": 511,
+            "context": "510: <tr>\n511: <th style=\"width: 8%;\">Date</th>\n512: <th style=\"width: 10%;\">Order</th>"
           },
           {
             "text": "Order",
-            "line": 481,
-            "context": "480: <th style=\"width: 8%;\">Date</th>\n481: <th style=\"width: 10%;\">Order</th>\n482: <th style=\"width: 18%;\">PO | RO | Tag</th>"
+            "line": 512,
+            "context": "511: <th style=\"width: 8%;\">Date</th>\n512: <th style=\"width: 10%;\">Order</th>\n513: <th style=\"width: 18%;\">PO | RO | Tag</th>"
           },
           {
             "text": "Vehicle",
-            "line": 483,
-            "context": "482: <th style=\"width: 18%;\">PO | RO | Tag</th>\n483: <th style=\"width: 16%;\">Vehicle</th>\n484: <th style=\"width: 14%;\">VIN</th>"
+            "line": 514,
+            "context": "513: <th style=\"width: 18%;\">PO | RO | Tag</th>\n514: <th style=\"width: 16%;\">Vehicle</th>\n515: <th style=\"width: 14%;\">VIN</th>"
           },
           {
             "text": "Services",
-            "line": 485,
-            "context": "484: <th style=\"width: 14%;\">VIN</th>\n485: <th style=\"width: 22%;\" class=\"text-left\">Services</th>\n486: <th style=\"width: 12%;\">Amount</th>"
+            "line": 516,
+            "context": "515: <th style=\"width: 14%;\">VIN</th>\n516: <th style=\"width: 22%;\" class=\"text-left\">Services</th>\n517: <th style=\"width: 12%;\">Amount</th>"
           },
           {
             "text": "Amount",
-            "line": 486,
-            "context": "485: <th style=\"width: 22%;\" class=\"text-left\">Services</th>\n486: <th style=\"width: 12%;\">Amount</th>\n487: </tr>"
+            "line": 517,
+            "context": "516: <th style=\"width: 22%;\" class=\"text-left\">Services</th>\n517: <th style=\"width: 12%;\">Amount</th>\n518: </tr>"
           },
           {
             "text": "Loading Invoice",
-            "line": 667,
-            "context": "666: <DialogHeader>\n667: <DialogTitle>Loading Invoice</DialogTitle>\n668: <DialogDescription>"
+            "line": 698,
+            "context": "697: <DialogHeader>\n698: <DialogTitle>Loading Invoice</DialogTitle>\n699: <DialogDescription>"
           },
           {
             "text": "Invoice Not Found",
-            "line": 685,
-            "context": "684: <DialogHeader>\n685: <DialogTitle>Invoice Not Found</DialogTitle>\n686: <DialogDescription>"
+            "line": 716,
+            "context": "715: <DialogHeader>\n716: <DialogTitle>Invoice Not Found</DialogTitle>\n717: <DialogDescription>"
           },
           {
             "text": "Invoice not found",
-            "line": 691,
-            "context": "690: <div className=\"flex items-center justify-center py-12\">\n691: <p className=\"text-muted-foreground\">Invoice not found</p>\n692: </div>"
+            "line": 722,
+            "context": "721: <div className=\"flex items-center justify-center py-12\">\n722: <p className=\"text-muted-foreground\">Invoice not found</p>\n723: </div>"
           },
           {
             "text": "Download PDF",
-            "line": 782,
-            "context": "781: <DropdownMenuItem onClick={handleDownloadPDF}>\n782: <FileText className=\"h-4 w-4 mr-2\" />\n783: Download PDF"
+            "line": 813,
+            "context": "812: <DropdownMenuItem onClick={handleDownloadPDF}>\n813: <FileText className=\"h-4 w-4 mr-2\" />\n814: Download PDF"
           },
           {
             "text": "Download Excel",
-            "line": 786,
-            "context": "785: <DropdownMenuItem onClick={handleDownloadExcel}>\n786: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n787: Download Excel"
+            "line": 817,
+            "context": "816: <DropdownMenuItem onClick={handleDownloadExcel}>\n817: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n818: Download Excel"
           },
           {
             "text": "Total Amount",
-            "line": 855,
-            "context": "854: <div className=\"pt-2 border-t\">\n855: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Total Amount</span>\n856: <p className=\"text-2xl font-bold text-primary\">{formatCurrency(invoice.totalAmount)}</p>"
+            "line": 886,
+            "context": "885: <div className=\"pt-2 border-t\">\n886: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Total Amount</span>\n887: <p className=\"text-2xl font-bold text-primary\">{formatCurrency(invoice.totalAmount)}</p>"
           },
           {
             "text": "Amount Due",
-            "line": 860,
-            "context": "859: <div className=\"pt-2\">\n860: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Amount Due</span>\n861: <p className=\"text-xl font-bold text-amber-600\">{formatCurrency(invoice.amountDue)}</p>"
+            "line": 891,
+            "context": "890: <div className=\"pt-2\">\n891: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Amount Due</span>\n892: <p className=\"text-xl font-bold text-amber-600\">{formatCurrency(invoice.amountDue)}</p>"
           },
           {
             "text": "Vehicles",
-            "line": 885,
-            "context": "884: <div className=\"flex items-center justify-between mb-4\">\n885: <h3 className=\"font-bold text-lg text-gray-900\">\n886: Vehicles"
+            "line": 916,
+            "context": "915: <div className=\"flex items-center justify-between mb-4\">\n916: <h3 className=\"font-bold text-lg text-gray-900\">\n917: Vehicles"
           },
           {
             "text": "Date",
-            "line": 896,
-            "context": "895: <TableRow className=\"bg-gray-500 hover:bg-gray-500\">\n896: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n897: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>"
+            "line": 927,
+            "context": "926: <TableRow className=\"bg-gray-500 hover:bg-gray-500\">\n927: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n928: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>"
           },
           {
             "text": "Order",
-            "line": 897,
-            "context": "896: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n897: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>\n898: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>"
+            "line": 928,
+            "context": "927: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n928: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>\n929: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>"
           },
           {
             "text": "Vehicle",
-            "line": 899,
-            "context": "898: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>\n899: <TableHead className=\"font-bold text-center text-white\">Vehicle</TableHead>\n900: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>"
+            "line": 930,
+            "context": "929: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>\n930: <TableHead className=\"font-bold text-center text-white\">Vehicle</TableHead>\n931: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>"
           },
           {
             "text": "Services",
-            "line": 901,
-            "context": "900: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>\n901: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n902: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>"
+            "line": 932,
+            "context": "931: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>\n932: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n933: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 902,
-            "context": "901: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n902: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>\n903: </TableRow>"
+            "line": 933,
+            "context": "932: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n933: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>\n934: </TableRow>"
           },
           {
             "text": "No items found",
-            "line": 1006,
-            "context": "1005: <TableRow>\n1006: <TableCell colSpan={7} className=\"text-center py-8 text-muted-foreground\">\n1007: No items found"
+            "line": 1037,
+            "context": "1036: <TableRow>\n1037: <TableCell colSpan={7} className=\"text-center py-8 text-muted-foreground\">\n1038: No items found"
           },
           {
             "text": "Cancel",
-            "line": 1181,
-            "context": "1180: <AlertDialogFooter>\n1181: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1182: <AlertDialogAction"
+            "line": 1212,
+            "context": "1211: <AlertDialogFooter>\n1212: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1213: <AlertDialogAction"
           },
           {
             "text": "Service names from current dealer services",
-            "line": 1209,
-            "context": "1208: <ul className=\"list-disc list-inside ml-2 space-y-1 text-sm\">\n1209: <li>Service names from current dealer services</li>\n1210: <li>Order totals and prices</li>"
+            "line": 1240,
+            "context": "1239: <ul className=\"list-disc list-inside ml-2 space-y-1 text-sm\">\n1240: <li>Service names from current dealer services</li>\n1241: <li>Order totals and prices</li>"
           },
           {
             "text": "Order totals and prices",
-            "line": 1210,
-            "context": "1209: <li>Service names from current dealer services</li>\n1210: <li>Order totals and prices</li>\n1211: <li>Customer and vehicle information</li>"
+            "line": 1241,
+            "context": "1240: <li>Service names from current dealer services</li>\n1241: <li>Order totals and prices</li>\n1242: <li>Customer and vehicle information</li>"
           },
           {
             "text": "Customer and vehicle information",
-            "line": 1211,
-            "context": "1210: <li>Order totals and prices</li>\n1211: <li>Customer and vehicle information</li>\n1212: <li>Invoice totals and tax calculations</li>"
+            "line": 1242,
+            "context": "1241: <li>Order totals and prices</li>\n1242: <li>Customer and vehicle information</li>\n1243: <li>Invoice totals and tax calculations</li>"
           },
           {
             "text": "Invoice totals and tax calculations",
-            "line": 1212,
-            "context": "1211: <li>Customer and vehicle information</li>\n1212: <li>Invoice totals and tax calculations</li>\n1213: </ul>"
+            "line": 1243,
+            "context": "1242: <li>Customer and vehicle information</li>\n1243: <li>Invoice totals and tax calculations</li>\n1244: </ul>"
           },
           {
             "text": "Cancel",
-            "line": 1221,
-            "context": "1220: <AlertDialogFooter>\n1221: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1222: <AlertDialogAction"
+            "line": 1252,
+            "context": "1251: <AlertDialogFooter>\n1252: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1253: <AlertDialogAction"
           },
           {
             "text": "Loading Invoice",
-            "line": 667,
-            "context": "666: <DialogHeader>\n667: <DialogTitle>Loading Invoice</DialogTitle>\n668: <DialogDescription>"
+            "line": 698,
+            "context": "697: <DialogHeader>\n698: <DialogTitle>Loading Invoice</DialogTitle>\n699: <DialogDescription>"
           },
           {
             "text": "Invoice Not Found",
-            "line": 685,
-            "context": "684: <DialogHeader>\n685: <DialogTitle>Invoice Not Found</DialogTitle>\n686: <DialogDescription>"
+            "line": 716,
+            "context": "715: <DialogHeader>\n716: <DialogTitle>Invoice Not Found</DialogTitle>\n717: <DialogDescription>"
           }
         ],
         "translationCalls": [
           {
             "key": "reports.invoices.delete",
-            "line": 738,
+            "line": 769,
             "exists": true
           },
           {
             "key": "reports.invoices.send_email",
-            "line": 760,
+            "line": 791,
             "exists": true
           },
           {
             "key": "common.action_buttons.print",
-            "line": 768,
+            "line": 799,
             "exists": true
           },
           {
             "key": "common.action_buttons.download",
-            "line": 777,
+            "line": 808,
             "exists": true
           },
           {
             "key": "common.action_buttons.close",
-            "line": 797,
+            "line": 828,
             "exists": true
           },
           {
             "key": "reports.invoices.delete_confirm_title",
-            "line": 1134,
+            "line": 1165,
             "exists": true
           },
           {
             "key": "reports.invoices.delete_confirm_message",
-            "line": 1139,
+            "line": 1170,
             "exists": true
           },
           {
             "key": "reports.invoices.vehicles_available_again",
-            "line": 1142,
+            "line": 1173,
             "exists": true
           },
           {
             "key": "reports.invoices.has_payments_warning",
-            "line": 1146,
+            "line": 1177,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1153,
+            "line": 1184,
             "exists": true
           },
           {
             "key": "reports.invoices.deleting",
-            "line": 1164,
+            "line": 1195,
             "exists": true
           },
           {
             "key": "reports.invoices.delete_invoice",
-            "line": 1165,
+            "line": 1196,
             "exists": true
           }
         ],
@@ -20918,33 +20918,44 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 66,
-            "context": "65: // Actions\n66: createConversation: (data: CreateConversationData) => Promise<ChatConversation | null>;\n67: updateConversation: (id: string, updates: Partial<ChatConversation>) => Promise<boolean>;"
-          },
-          {
-            "text": "Promise",
             "line": 67,
-            "context": "66: createConversation: (data: CreateConversationData) => Promise<ChatConversation | null>;\n67: updateConversation: (id: string, updates: Partial<ChatConversation>) => Promise<boolean>;\n68: archiveConversation: (id: string) => Promise<boolean>;"
+            "context": "66: // Actions\n67: createConversation: (data: CreateConversationData) => Promise<ChatConversation | null>;\n68: updateConversation: (id: string, updates: Partial<ChatConversation>) => Promise<boolean>;"
           },
           {
             "text": "Promise",
             "line": 68,
-            "context": "67: updateConversation: (id: string, updates: Partial<ChatConversation>) => Promise<boolean>;\n68: archiveConversation: (id: string) => Promise<boolean>;\n69: deleteConversation: (id: string) => Promise<boolean>;"
+            "context": "67: createConversation: (data: CreateConversationData) => Promise<ChatConversation | null>;\n68: updateConversation: (id: string, updates: Partial<ChatConversation>) => Promise<boolean>;\n69: archiveConversation: (id: string) => Promise<boolean>;"
           },
           {
             "text": "Promise",
             "line": 69,
-            "context": "68: archiveConversation: (id: string) => Promise<boolean>;\n69: deleteConversation: (id: string) => Promise<boolean>;\n70: "
+            "context": "68: updateConversation: (id: string, updates: Partial<ChatConversation>) => Promise<boolean>;\n69: archiveConversation: (id: string) => Promise<boolean>;\n70: deleteConversation: (id: string) => Promise<boolean>;"
           },
           {
             "text": "Promise",
-            "line": 82,
-            "context": "81: // NEW: On-demand participant fetching from get_conversation_participants RPC\n82: getConversationParticipants: (conversationId: string) => Promise<ChatConversation['participants']>;\n83: }"
+            "line": 70,
+            "context": "69: archiveConversation: (id: string) => Promise<boolean>;\n70: deleteConversation: (id: string) => Promise<boolean>;\n71: "
+          },
+          {
+            "text": "Promise",
+            "line": 83,
+            "context": "82: // NEW: On-demand participant fetching from get_conversation_participants RPC\n83: getConversationParticipants: (conversationId: string) => Promise<ChatConversation['participants']>;\n84: }"
           }
         ],
-        "translationCalls": [],
+        "translationCalls": [
+          {
+            "key": "chat.chat_permission_required",
+            "line": 390,
+            "exists": true
+          },
+          {
+            "key": "chat.error_creating_conversation",
+            "line": 392,
+            "exists": true
+          }
+        ],
         "missingKeys": [],
-        "coverage": 0,
+        "coverage": 29,
         "severity": "low"
       },
       {
@@ -56102,253 +56113,268 @@
           {
             "text": "Promise",
             "line": 38,
-            "context": "37: dealerId: number;\n38: onCreateConversation?: (data: any) => Promise<ChatConversation | null>;\n39: }"
+            "context": "37: dealerId: number;\n38: onCreateConversation?: (data: any) => Promise<ChatConversation | null>;\n39: error?: string | null;"
           }
         ],
         "translationCalls": [
           {
             "key": "chat.unnamed_conversation",
-            "line": 85,
+            "line": 87,
             "exists": true
           },
           {
             "key": "chat.just_now",
-            "line": 101,
-            "exists": true
-          },
-          {
-            "key": "chat.minutes_ago",
-            "line": 102,
-            "exists": true
-          },
-          {
-            "key": "chat.hours_ago",
             "line": 103,
             "exists": true
           },
           {
-            "key": "chat.days_ago",
+            "key": "chat.minutes_ago",
             "line": 104,
             "exists": true
           },
           {
+            "key": "chat.hours_ago",
+            "line": 105,
+            "exists": true
+          },
+          {
+            "key": "chat.days_ago",
+            "line": 106,
+            "exists": true
+          },
+          {
             "key": "chat.no_team_members",
-            "line": 157,
+            "line": 159,
             "exists": true
           },
           {
             "key": "chat.no_team_members_desc",
-            "line": 158,
+            "line": 160,
             "exists": true
           },
           {
             "key": "chat.error_loading_users",
-            "line": 166,
+            "line": 168,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 167,
+            "line": 169,
             "exists": true
           },
           {
             "key": "chat.select_participants_required",
-            "line": 228,
+            "line": 230,
             "exists": true
           },
           {
             "key": "chat.please_select_at_least_one",
-            "line": 229,
+            "line": 231,
             "exists": true
           },
           {
             "key": "chat.direct_one_participant",
-            "line": 238,
+            "line": 240,
             "exists": true
           },
           {
             "key": "chat.direct_conversation_requires_one",
-            "line": 239,
+            "line": 241,
             "exists": true
           },
           {
             "key": "chat.conversation_name_required",
-            "line": 248,
+            "line": 250,
             "exists": true
           },
           {
             "key": "chat.please_enter_name",
-            "line": 249,
+            "line": 251,
             "exists": true
           },
           {
             "key": "chat.conversation_created",
-            "line": 265,
+            "line": 267,
             "exists": true
           },
           {
             "key": "chat.conversation_created_desc",
-            "line": 266,
+            "line": 268,
+            "exists": true
+          },
+          {
+            "key": "chat.permission_denied",
+            "line": 283,
             "exists": true
           },
           {
             "key": "chat.error_creating_conversation",
-            "line": 278,
+            "line": 283,
+            "exists": true
+          },
+          {
+            "key": "chat.permission_denied",
+            "line": 293,
+            "exists": true
+          },
+          {
+            "key": "chat.error_creating_conversation",
+            "line": 293,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 279,
+            "line": 294,
             "exists": true
           },
           {
             "key": "chat.search_conversations",
-            "line": 291,
+            "line": 306,
             "exists": true
           },
           {
             "key": "chat.all",
-            "line": 305,
+            "line": 320,
             "exists": true
           },
           {
             "key": "chat.direct",
-            "line": 314,
+            "line": 329,
             "exists": true
           },
           {
             "key": "chat.groups",
-            "line": 323,
-            "exists": true
-          },
-          {
-            "key": "chat.new_conversation",
-            "line": 331,
-            "exists": true
-          },
-          {
-            "key": "chat.create_new_conversation",
-            "line": 336,
-            "exists": true
-          },
-          {
-            "key": "chat.create_conversation_desc",
             "line": 338,
             "exists": true
           },
           {
-            "key": "chat.conversation_type",
+            "key": "chat.new_conversation",
             "line": 346,
             "exists": true
           },
           {
+            "key": "chat.create_new_conversation",
+            "line": 351,
+            "exists": true
+          },
+          {
+            "key": "chat.create_conversation_desc",
+            "line": 353,
+            "exists": true
+          },
+          {
+            "key": "chat.conversation_type",
+            "line": 361,
+            "exists": true
+          },
+          {
             "key": "chat.direct",
-            "line": 359,
+            "line": 374,
             "exists": true
           },
           {
             "key": "chat.group",
-            "line": 372,
+            "line": 387,
             "exists": true
           },
           {
             "key": "chat.conversation_name",
-            "line": 380,
+            "line": 395,
             "exists": true
           },
           {
             "key": "chat.enter_conversation_name",
-            "line": 382,
+            "line": 397,
             "exists": true
           },
           {
             "key": "chat.selected_participants",
-            "line": 393,
+            "line": 408,
             "exists": true
           },
           {
             "key": "chat.select_user",
-            "line": 420,
+            "line": 435,
             "exists": true
           },
           {
             "key": "chat.select_participants",
-            "line": 420,
+            "line": 435,
             "exists": true
           },
           {
             "key": "chat.search_team_members",
-            "line": 427,
+            "line": 442,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 438,
+            "line": 453,
             "exists": true
           },
           {
             "key": "chat.no_team_members",
-            "line": 446,
+            "line": 461,
             "exists": true
           },
           {
             "key": "chat.one_participant_selected",
-            "line": 501,
+            "line": 516,
             "exists": true
           },
           {
             "key": "chat.participants_selected_count",
-            "line": 503,
+            "line": 518,
             "exists": true
           },
           {
             "key": "chat.no_participants_selected",
-            "line": 506,
+            "line": 521,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 520,
+            "line": 535,
             "exists": true
           },
           {
             "key": "chat.create",
-            "line": 527,
+            "line": 542,
             "exists": true
           },
           {
             "key": "chat.no_conversations_found",
-            "line": 551,
+            "line": 566,
             "exists": true
           },
           {
             "key": "chat.no_conversations",
-            "line": 551,
+            "line": 566,
             "exists": true
           },
           {
             "key": "chat.start_conversation_hint",
-            "line": 554,
+            "line": 569,
             "exists": true
           },
           {
             "key": "chat.new_conversation",
-            "line": 557,
+            "line": 572,
             "exists": true
           },
           {
             "key": "chat.no_messages_yet",
-            "line": 659,
+            "line": 674,
             "exists": true
           },
           {
             "key": "chat.members",
-            "line": 666,
+            "line": 681,
             "exists": true
           },
           {
             "key": "chat.no_messages_yet",
-            "line": 707,
+            "line": 722,
             "exists": true
           }
         ],
@@ -56372,35 +56398,35 @@
           },
           {
             "key": "chat.select_conversation",
-            "line": 128,
+            "line": 129,
             "exists": true
           },
           {
             "key": "chat.select_conversation_desc",
-            "line": 131,
+            "line": 132,
             "exists": true
           },
           {
             "key": "chat.conversations",
-            "line": 148,
+            "line": 149,
             "exists": true
           },
           {
             "key": "chat.select_conversation",
-            "line": 198,
+            "line": 200,
             "exists": true
           },
           {
             "key": "common.back",
-            "line": 206,
+            "line": 208,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.back",
-            "line": 206,
-            "context": "205: <ArrowLeft className=\"h-4 w-4 mr-2\" />\n206: {t('common.back')}\n207: </Button>"
+            "line": 208,
+            "context": "207: <ArrowLeft className=\"h-4 w-4 mr-2\" />\n208: {t('common.back')}\n209: </Button>"
           }
         ],
         "coverage": 100,

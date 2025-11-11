@@ -29,7 +29,7 @@ interface SerializedPermissions {
   version: number;
 }
 
-const CACHE_VERSION = 5;  // 🆕 INCREMENTED: Force cache invalidation for allowed_modules feature
+const CACHE_VERSION = 6;  // 🆕 INCREMENTED: Force cache invalidation after RPC function recreation and fallback fixes
 const CACHE_KEY = 'permissions_cache_v1';
 const CACHE_TTL = 15 * 60 * 1000; // 15 minutes (increased from 5 to reduce re-fetches)
 
