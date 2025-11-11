@@ -1,7 +1,7 @@
 {
-  "scannedFiles": 873,
-  "totalStrings": 8567,
-  "hardcodedStrings": 2042,
+  "scannedFiles": 874,
+  "totalStrings": 8569,
+  "hardcodedStrings": 2044,
   "translatedStrings": 6525,
   "issues": {
     "critical": [
@@ -10132,6 +10132,87 @@
         "severity": "medium"
       },
       {
+        "file": "src\\hooks\\useUserPresence.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 45,
+            "context": "44: // Actions for current user\n45: setStatus: (status: PresenceStatus) => Promise<void>;\n46: setCustomStatus: (message: string, emoji?: string) => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 46,
+            "context": "45: setStatus: (status: PresenceStatus) => Promise<void>;\n46: setCustomStatus: (message: string, emoji?: string) => Promise<void>;\n47: clearCustomStatus: () => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 47,
+            "context": "46: setCustomStatus: (message: string, emoji?: string) => Promise<void>;\n47: clearCustomStatus: () => Promise<void>;\n48: setAutoAwayMinutes: (minutes: number) => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 48,
+            "context": "47: clearCustomStatus: () => Promise<void>;\n48: setAutoAwayMinutes: (minutes: number) => Promise<void>;\n49: "
+          },
+          {
+            "text": ", err);\n      }\n    }, 120000); // ✅ OPTIMIZED: Update every 120 seconds (was 30s) - 75% reduction\n  }, [user?.id, activeDealerId]);\n\n  // Stop heartbeat\n  const stopHeartbeat = useCallback(() => {\n    if (heartbeatIntervalRef.current) {\n      clearInterval(heartbeatIntervalRef.current);\n      heartbeatIntervalRef.current = undefined;\n    }\n  }, []);\n\n  // Initialize user presence\n  const initializePresence = useCallback(async () => {\n    if (!user?.id || !activeDealerId) return;\n\n    try {\n      setError(null);\n\n      // Get or create user presence record\n      const { data: existingPresence, error: fetchError } = await supabase\n        .from(",
+            "line": 99,
+            "context": "98: } catch (err) {\n99: console.error('❌ Heartbeat error:', err);\n100: }"
+          },
+          {
+            "text": ", err);\n        }\n      }, 5000), // Only update database every 5 seconds\n    [user?.id, activeDealerId]\n  );\n\n  // Update activity timestamp\n  const updateActivity = useCallback(() => {\n    lastActivityRef.current = new Date();\n\n    // ✅ OPTIMIZED: Debounced database update\n    debouncedUpdateActivityInDB();\n\n    // Clear existing away timeout\n    if (awayTimeoutRef.current) {\n      clearTimeout(awayTimeoutRef.current);\n    }\n\n    // Set new away timeout based on user",
+            "line": 344,
+            "context": "343: } catch (err) {\n344: console.error('❌ Activity update error:', err);\n345: }"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "user_presence.error_initializing",
+            "line": 178,
+            "exists": false
+          },
+          {
+            "key": "user_presence.error_fetching_users",
+            "line": 230,
+            "exists": false
+          },
+          {
+            "key": "user_presence.error_setting_status",
+            "line": 256,
+            "exists": false
+          },
+          {
+            "key": "user_presence.error_custom_status",
+            "line": 281,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "user_presence.error_initializing",
+            "line": 178,
+            "context": "177: console.error('Error initializing presence:', err);\n178: setError(err instanceof Error ? err.message : t('user_presence.error_initializing'));\n179: }"
+          },
+          {
+            "key": "user_presence.error_fetching_users",
+            "line": 230,
+            "context": "229: } catch (err) {\n230: setError(err instanceof Error ? err.message : t('user_presence.error_fetching_users'));\n231: }"
+          },
+          {
+            "key": "user_presence.error_setting_status",
+            "line": 256,
+            "context": "255: console.error('Error setting status:', err);\n256: setError(err instanceof Error ? err.message : t('user_presence.error_setting_status'));\n257: }"
+          },
+          {
+            "key": "user_presence.error_custom_status",
+            "line": 281,
+            "context": "280: console.error('Error setting custom status:', err);\n281: setError(err instanceof Error ? err.message : t('user_presence.error_custom_status'));\n282: }"
+          }
+        ],
+        "coverage": 40,
+        "severity": "medium"
+      },
+      {
         "file": "src\\hooks\\useSmartNotifications.tsx",
         "hardcodedStrings": [
           {
@@ -19202,82 +19283,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\hooks\\useUserPresence.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Promise",
-            "line": 44,
-            "context": "43: // Actions for current user\n44: setStatus: (status: PresenceStatus) => Promise<void>;\n45: setCustomStatus: (message: string, emoji?: string) => Promise<void>;"
-          },
-          {
-            "text": "Promise",
-            "line": 45,
-            "context": "44: setStatus: (status: PresenceStatus) => Promise<void>;\n45: setCustomStatus: (message: string, emoji?: string) => Promise<void>;\n46: clearCustomStatus: () => Promise<void>;"
-          },
-          {
-            "text": "Promise",
-            "line": 46,
-            "context": "45: setCustomStatus: (message: string, emoji?: string) => Promise<void>;\n46: clearCustomStatus: () => Promise<void>;\n47: setAutoAwayMinutes: (minutes: number) => Promise<void>;"
-          },
-          {
-            "text": "Promise",
-            "line": 47,
-            "context": "46: clearCustomStatus: () => Promise<void>;\n47: setAutoAwayMinutes: (minutes: number) => Promise<void>;\n48: "
-          },
-          {
-            "text": ", err);\n      }\n    }, 30000); // Update every 30 seconds\n  }, [user?.id, activeDealerId]);\n\n  // Stop heartbeat\n  const stopHeartbeat = useCallback(() => {\n    if (heartbeatIntervalRef.current) {\n      clearInterval(heartbeatIntervalRef.current);\n      heartbeatIntervalRef.current = undefined;\n    }\n  }, []);\n\n  // Initialize user presence\n  const initializePresence = useCallback(async () => {\n    if (!user?.id || !activeDealerId) return;\n\n    try {\n      setError(null);\n\n      // Get or create user presence record\n      const { data: existingPresence, error: fetchError } = await supabase\n        .from(",
-            "line": 98,
-            "context": "97: } catch (err) {\n98: console.error('❌ Heartbeat error:', err);\n99: }"
-          }
-        ],
-        "translationCalls": [
-          {
-            "key": "user_presence.error_initializing",
-            "line": 177,
-            "exists": false
-          },
-          {
-            "key": "user_presence.error_fetching_users",
-            "line": 228,
-            "exists": false
-          },
-          {
-            "key": "user_presence.error_setting_status",
-            "line": 252,
-            "exists": false
-          },
-          {
-            "key": "user_presence.error_custom_status",
-            "line": 277,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "user_presence.error_initializing",
-            "line": 177,
-            "context": "176: console.error('Error initializing presence:', err);\n177: setError(err instanceof Error ? err.message : t('user_presence.error_initializing'));\n178: }"
-          },
-          {
-            "key": "user_presence.error_fetching_users",
-            "line": 228,
-            "context": "227: } catch (err) {\n228: setError(err instanceof Error ? err.message : t('user_presence.error_fetching_users'));\n229: }"
-          },
-          {
-            "key": "user_presence.error_setting_status",
-            "line": 252,
-            "context": "251: console.error('Error setting status:', err);\n252: setError(err instanceof Error ? err.message : t('user_presence.error_setting_status'));\n253: }"
-          },
-          {
-            "key": "user_presence.error_custom_status",
-            "line": 277,
-            "context": "276: console.error('Error setting custom status:', err);\n277: setError(err instanceof Error ? err.message : t('user_presence.error_custom_status'));\n278: }"
-          }
-        ],
-        "coverage": 44,
-        "severity": "low"
-      },
-      {
         "file": "src\\hooks\\useTypingIndicators.tsx",
         "hardcodedStrings": [
           {
@@ -20045,6 +20050,20 @@
             "text": ", error);\n        setError(",
             "line": 95,
             "context": "94: workerRef.current.onerror = (error) => {\n95: console.error('VIN OCR Worker error:', error);\n96: setError('Worker initialization failed');"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\hooks\\useOptimizedPermissions.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 223,
+            "context": "222: invalidateCache: () => void;\n223: refetch: () => Promise<UseQueryResult<UserPermission[], Error>>;\n224: }"
           }
         ],
         "translationCalls": [],
@@ -58001,7 +58020,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "410 Component components need translation",
+      "description": "411 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\OperationalReports.tsx",
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
@@ -58077,6 +58096,7 @@
         "src\\lib\\cloudSync.ts",
         "src\\hooks\\useVehiclePhotos.ts",
         "src\\hooks\\useVehicleManagement.tsx",
+        "src\\hooks\\useUserPresence.tsx",
         "src\\hooks\\useNFCWorkflows.tsx",
         "src\\hooks\\useEnhancedNotifications.tsx",
         "src\\components\\CompletedDateInline.tsx",
@@ -58088,7 +58108,6 @@
         "src\\types\\notification-analytics.ts",
         "src\\services\\PUSH_NOTIFICATION_HOOK_EXAMPLE.ts",
         "src\\pages\\NFCTracking.tsx",
-        "src\\hooks\\useUserPresence.tsx",
         "src\\hooks\\useSmartPolling.ts",
         "src\\hooks\\useDealershipLogo.ts",
         "src\\hooks\\useChatConversations.tsx",
@@ -58221,6 +58240,7 @@
         "src\\hooks\\useServerExport.tsx",
         "src\\hooks\\useSenderInfo.tsx",
         "src\\hooks\\usePerformanceMonitor.ts",
+        "src\\hooks\\useOptimizedPermissions.tsx",
         "src\\hooks\\useNotificationSoundPreferences.tsx",
         "src\\hooks\\useManualRefresh.ts",
         "src\\hooks\\useGlobalSearch.ts",
@@ -58414,7 +58434,7 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "205 hours"
+      "estimatedEffort": "206 hours"
     },
     {
       "priority": "MEDIUM",
