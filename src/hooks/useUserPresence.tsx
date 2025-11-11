@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { debounce, throttle } from 'lodash';
 
 export type PresenceStatus = 'online' | 'away' | 'busy' | 'offline' | 'invisible';
 
@@ -97,7 +98,7 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
       } catch (err) {
         console.error('❌ Heartbeat error:', err);
       }
-    }, 30000); // Update every 30 seconds
+    }, 120000); // ✅ OPTIMIZED: Update every 120 seconds (was 30s) - 75% reduction
   }, [user?.id, activeDealerId]);
 
   // Stop heartbeat
@@ -178,56 +179,59 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
     }
   }, [user?.id, activeDealerId, startHeartbeat, t]);
 
-  // Fetch all users presence in the dealer
-  const fetchUsersPresence = useCallback(async () => {
-    if (!activeDealerId) {
-      return;
-    }
-
-    try {
-      // Query presence with profile data - fetch ALL users including current user
-      const { data, error: fetchError } = await supabase
-        .from('user_presence')
-        .select(`
-          *,
-          profiles (
-            id,
-            first_name,
-            last_name,
-            email,
-            avatar_seed
-          )
-        `)
-        .eq('dealer_id', activeDealerId);
-
-      if (fetchError) {
-        throw fetchError;
+  // ✅ OPTIMIZED: Throttled fetch to reduce query frequency
+  const fetchUsersPresence = useCallback(
+    throttle(async () => {
+      if (!activeDealerId) {
+        return;
       }
 
-      // Process presence data - filter out current user
-      const processedPresence: UserPresence[] = data
-        ?.filter(presence => presence.user_id !== user?.id)
-        .map(presence => {
-          const profile = presence.profiles as any;
-          const firstName = profile?.first_name || '';
-          const lastName = profile?.last_name || '';
-          const fullName = `${firstName} ${lastName}`.trim() || profile?.email || 'Unknown User';
+      try {
+        // Query presence with profile data - fetch ALL users including current user
+        const { data, error: fetchError } = await supabase
+          .from('user_presence')
+          .select(`
+            *,
+            profiles (
+              id,
+              first_name,
+              last_name,
+              email,
+              avatar_seed
+            )
+          `)
+          .eq('dealer_id', activeDealerId);
 
-          return {
-            ...presence,
-            profiles: profile,
-            user_name: fullName,
-            user_avatar: undefined,
-            is_online: ['online', 'busy'].includes(presence.status),
-            last_seen_formatted: formatLastSeen(presence.last_seen_at)
-          };
-        }) || [];
+        if (fetchError) {
+          throw fetchError;
+        }
 
-      setUsersPresence(processedPresence);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t('user_presence.error_fetching_users'));
-    }
-  }, [activeDealerId, user?.id, t]);
+        // Process presence data - filter out current user
+        const processedPresence: UserPresence[] = data
+          ?.filter(presence => presence.user_id !== user?.id)
+          .map(presence => {
+            const profile = presence.profiles as any;
+            const firstName = profile?.first_name || '';
+            const lastName = profile?.last_name || '';
+            const fullName = `${firstName} ${lastName}`.trim() || profile?.email || 'Unknown User';
+
+            return {
+              ...presence,
+              profiles: profile,
+              user_name: fullName,
+              user_avatar: undefined,
+              is_online: ['online', 'busy'].includes(presence.status),
+              last_seen_formatted: formatLastSeen(presence.last_seen_at)
+            };
+          }) || [];
+
+        setUsersPresence(processedPresence);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : t('user_presence.error_fetching_users'));
+      }
+    }, 10000), // Only re-fetch every 10 seconds
+    [activeDealerId, user?.id, t]
+  );
 
   // Set user status
   const setStatus = useCallback(async (status: PresenceStatus) => {
@@ -324,10 +328,32 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
     }
   }, [user?.id, activeDealerId]);
 
+  // ✅ OPTIMIZED: Debounced activity update to database
+  const debouncedUpdateActivityInDB = useMemo(
+    () =>
+      debounce(async () => {
+        if (!user?.id || !activeDealerId) return;
+
+        try {
+          await supabase
+            .from('user_presence')
+            .update({ last_activity_at: new Date().toISOString() })
+            .eq('user_id', user.id)
+            .eq('dealer_id', activeDealerId);
+        } catch (err) {
+          console.error('❌ Activity update error:', err);
+        }
+      }, 5000), // Only update database every 5 seconds
+    [user?.id, activeDealerId]
+  );
+
   // Update activity timestamp
   const updateActivity = useCallback(() => {
     lastActivityRef.current = new Date();
-    
+
+    // ✅ OPTIMIZED: Debounced database update
+    debouncedUpdateActivityInDB();
+
     // Clear existing away timeout
     if (awayTimeoutRef.current) {
       clearTimeout(awayTimeoutRef.current);
@@ -339,7 +365,7 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
         setStatus('away');
       }, myPresence.auto_away_minutes * 60 * 1000);
     }
-  }, [myPresence?.status, myPresence?.auto_away_minutes, setStatus]);
+  }, [myPresence?.status, myPresence?.auto_away_minutes, setStatus, debouncedUpdateActivityInDB]);
 
   // Utility functions
   const getUserPresence = useCallback((userId: string) => {
