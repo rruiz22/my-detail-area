@@ -1952,6 +1952,8 @@
     "conversation_created": "Conversation Created",
     "conversation_created_desc": "{{name}} has been created successfully",
     "error_creating_conversation": "Error Creating Conversation",
+    "permission_denied": "Permission Denied",
+    "chat_permission_required": "You do not have permission to create chat conversations. Please contact your administrator to grant you chat module access.",
     "select_user": "Select User",
     "select_participants": "Select Participants",
     "selected_participants": "Selected Participants",

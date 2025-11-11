@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { useTranslation } from 'react-i18next';
 
 export interface ChatConversation {
   id: string;
@@ -94,6 +95,7 @@ interface CreateConversationData {
 export const useChatConversations = (dealerId?: number): UseChatConversationsReturn => {
   const { user } = useAuth();
   const { dealerships } = useAccessibleDealerships();
+  const { t } = useTranslation();
 
   const [conversations, setConversations] = useState<ChatConversation[]>([]);
   const [loading, setLoading] = useState(true);
@@ -380,7 +382,16 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
       return conversation as ChatConversation;
     } catch (err) {
       console.error('Error creating conversation:', err);
-      setError(err instanceof Error ? err.message : 'Error creating conversation');
+
+      // Check if it's a permission error (RLS policy violation)
+      const isPermissionError = err && typeof err === 'object' && 'code' in err && err.code === '42501';
+
+      if (isPermissionError) {
+        setError(t('chat.chat_permission_required'));
+      } else {
+        setError(err instanceof Error ? err.message : t('chat.error_creating_conversation'));
+      }
+
       return null;
     }
   }, [user?.id]);

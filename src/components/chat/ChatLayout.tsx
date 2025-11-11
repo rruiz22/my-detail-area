@@ -31,7 +31,7 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({
     user_avatar_url?: string;
   }>>([]);
 
-  const { conversations, loading: conversationsLoading, createConversation, getConversationParticipants } = useChatConversations(dealerId);
+  const { conversations, loading: conversationsLoading, error: conversationError, createConversation, getConversationParticipants } = useChatConversations(dealerId);
   const messagesHook = useChatMessages(selectedConversationId || '');
 
   // Handle conversation selection for mobile
@@ -99,6 +99,7 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({
                 onSelectConversation={setSelectedConversationId}
                 dealerId={dealerId}
                 onCreateConversation={createConversation}
+                error={conversationError}
               />
             </div>
           </ResizablePanel>
@@ -156,6 +157,7 @@ export const ChatLayout: React.FC<ChatLayoutProps> = ({
               onSelectConversation={handleSelectConversation}
               dealerId={dealerId}
               onCreateConversation={createConversation}
+              error={conversationError}
             />
           </div>
         )}

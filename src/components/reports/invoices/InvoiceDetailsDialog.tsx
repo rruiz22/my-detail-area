@@ -387,37 +387,68 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               .footer {
                 display: block;
                 position: fixed;
-                bottom: 0.3in;
-                left: 0.5in;
-                right: 0.5in;
+                bottom: 2vh;
+                left: 5%;
+                right: 5%;
                 padding: 10px 0;
                 border-top: 1px solid #E5E7EB;
                 background: white;
                 font-size: 7pt;
                 color: #6B7280;
+                max-width: 100%;
               }
               .footer-content {
-                display: flex;
-                justify-content: space-between;
+                display: grid;
+                grid-template-columns: 1fr auto 1fr;
+                gap: 1rem;
                 align-items: flex-start;
               }
               .footer-left, .footer-center, .footer-right {
-                flex: 1;
+                min-width: 0;
               }
-              .footer-left { text-align: left; }
+              .footer-left {
+                text-align: left;
+              }
               .footer-center {
                 text-align: center;
                 font-weight: bold;
                 color: #111827;
               }
-              .footer-right { text-align: right; }
+              .footer-right {
+                text-align: right;
+              }
               .footer-left div, .footer-right div {
                 line-height: 1.4;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
               }
 
               /* Page counter - showing current page */
               .footer-center::after {
                 content: "Page " counter(page);
+              }
+
+              /* Responsive footer for small paper sizes */
+              @media print and (max-width: 7in) {
+                .footer {
+                  font-size: 6pt;
+                  padding: 5px 0;
+                  left: 3%;
+                  right: 3%;
+                }
+                .footer-content {
+                  grid-template-columns: 1fr;
+                  gap: 0.25rem;
+                  text-align: center;
+                }
+                .footer-left, .footer-right {
+                  text-align: center;
+                }
+                .footer-left div, .footer-right div {
+                  white-space: normal;
+                  overflow: visible;
+                }
               }
             }
           </style>

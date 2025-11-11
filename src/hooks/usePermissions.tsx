@@ -383,28 +383,189 @@ export const usePermissions = () => {
 
       // ✅ FIX #8: Use single RPC call instead of 3 separate queries (70% faster)
       // ✅ FIX #14: Consistent error handling with parseSupabaseError
+      // ✅ FIX: Function may not exist - gracefully fallback to empty permissions
       const { data: permissionsData, error: permissionsError } = await supabase
         .rpc('get_user_permissions_batch', {
           p_user_id: user.id
         });
 
       if (permissionsError) {
-        logger.dev('❌ Error fetching permissions batch:', permissionsError);
-        throw parseSupabaseError(permissionsError);
+        // If function doesn't exist (404), log warning and continue with empty permissions
+        if (permissionsError.code === 'PGRST202') {
+          logger.dev('⚠️ Permissions batch function not found, using fallback');
+        } else {
+          logger.dev('❌ Error fetching permissions batch:', permissionsError);
+          throw parseSupabaseError(permissionsError);
+        }
       }
 
       if (!permissionsData) {
-        console.warn('⚠️ No permissions data returned from RPC');
-        return {
-          id: profileData.id,
-          email: profileData.email,
-          dealership_id: profileData.dealership_id,
-          is_system_admin: profileData.role === 'system_admin',
-          is_supermanager: profileData.role === 'supermanager',  // UPDATED: Renamed from is_manager
-          custom_roles: [],
-          system_permissions: new Set(),
-          module_permissions: new Map()
-        };
+        console.warn('⚠️ No permissions data returned from RPC - using direct DB queries');
+
+        // 🆕 FALLBACK: Query permissions directly from database tables
+        try {
+          // 1. Get user's custom roles
+          const { data: memberships, error: membershipsError } = await supabase
+            .from('dealer_memberships')
+            .select(`
+              custom_role_id,
+              dealer_id,
+              dealer_custom_roles!inner(
+                id,
+                role_name,
+                display_name,
+                permissions
+              )
+            `)
+            .eq('user_id', user.id)
+            .eq('is_active', true)
+            .eq('dealer_custom_roles.is_active', true);
+
+          if (membershipsError) {
+            logger.error('❌ Error fetching memberships in fallback:', membershipsError);
+            throw membershipsError;
+          }
+
+          if (!memberships || memberships.length === 0) {
+            console.warn('⚠️ No active memberships found for user');
+            return {
+              id: profileData.id,
+              email: profileData.email,
+              dealership_id: profileData.dealership_id,
+              is_system_admin: profileData.role === 'system_admin',
+              is_supermanager: profileData.role === 'supermanager',
+              custom_roles: [],
+              system_permissions: new Set(),
+              module_permissions: new Map()
+            };
+          }
+
+          logger.dev(`✅ Found ${memberships.length} custom role(s) in fallback`);
+
+          // 2. For each role, get module access and permissions
+          const rolesMap = new Map<string, GranularCustomRole>();
+
+          for (const membership of memberships) {
+            const role = (membership as any).dealer_custom_roles;
+            if (!role) continue;
+
+            // Get module access for this role
+            const { data: moduleAccess, error: moduleAccessError } = await supabase
+              .from('role_module_access')
+              .select('module, is_enabled')
+              .eq('role_id', role.id);
+
+            if (moduleAccessError) {
+              logger.error(`❌ Error fetching module access for role ${role.id}:`, moduleAccessError);
+              continue;
+            }
+
+            // Get module permissions for this role
+            const { data: modulePerms, error: modulePermsError } = await supabase
+              .from('module_permissions')
+              .select('module, permission_key')
+              .in('module', (moduleAccess || []).filter((m: any) => m.is_enabled).map((m: any) => m.module));
+
+            if (modulePermsError) {
+              logger.error(`❌ Error fetching module permissions for role ${role.id}:`, modulePermsError);
+              continue;
+            }
+
+            // Get system permissions for this role
+            const { data: systemPerms, error: systemPermsError } = await supabase
+              .from('role_system_permissions')
+              .select(`
+                system_permissions!inner(
+                  permission_key
+                )
+              `)
+              .eq('role_id', role.id);
+
+            if (systemPermsError) {
+              logger.error(`❌ Error fetching system permissions for role ${role.id}:`, systemPermsError);
+            }
+
+            // Build module permissions map
+            const modulePermissionsMap = new Map<AppModule, Set<ModulePermissionKey>>();
+            const enabledModules = (moduleAccess || [])
+              .filter((m: any) => m.is_enabled)
+              .map((m: any) => m.module);
+
+            enabledModules.forEach((module: string) => {
+              const permsForModule = (modulePerms || [])
+                .filter((p: any) => p.module === module)
+                .map((p: any) => p.permission_key as ModulePermissionKey);
+
+              if (permsForModule.length > 0) {
+                modulePermissionsMap.set(module as AppModule, new Set(permsForModule));
+              }
+            });
+
+            // Build system permissions set
+            const systemPermissionsSet = new Set<SystemPermissionKey>(
+              (systemPerms || []).map((sp: any) => sp.system_permissions.permission_key as SystemPermissionKey)
+            );
+
+            // Create role object
+            const granularRole: GranularCustomRole = {
+              id: role.id,
+              role_name: role.role_name,
+              display_name: role.display_name,
+              dealer_id: membership.dealer_id,
+              role_type: 'dealer_custom_role',
+              system_permissions: systemPermissionsSet,
+              module_permissions: modulePermissionsMap,
+              granular_permissions: role.permissions || {}
+            };
+
+            rolesMap.set(role.id, granularRole);
+            logger.dev(`✅ Loaded role ${role.display_name} with ${modulePermissionsMap.size} modules and ${systemPermissionsSet.size} system perms`);
+          }
+
+          // 3. Aggregate permissions from all roles
+          const allSystemPermissions = new Set<SystemPermissionKey>();
+          const allModulePermissions = new Map<AppModule, Set<ModulePermissionKey>>();
+
+          rolesMap.forEach(role => {
+            // Merge system permissions
+            role.system_permissions.forEach(perm => allSystemPermissions.add(perm));
+
+            // Merge module permissions
+            role.module_permissions.forEach((perms, module) => {
+              if (!allModulePermissions.has(module)) {
+                allModulePermissions.set(module, new Set());
+              }
+              perms.forEach(perm => allModulePermissions.get(module)!.add(perm));
+            });
+          });
+
+          logger.dev(`✅ Fallback loaded: ${rolesMap.size} roles, ${allSystemPermissions.size} system perms, ${allModulePermissions.size} modules`);
+
+          return {
+            id: profileData.id,
+            email: profileData.email,
+            dealership_id: profileData.dealership_id,
+            is_system_admin: profileData.role === 'system_admin',
+            is_supermanager: profileData.role === 'supermanager',
+            custom_roles: Array.from(rolesMap.values()),
+            system_permissions: allSystemPermissions,
+            module_permissions: allModulePermissions
+          };
+
+        } catch (fallbackError) {
+          logger.error('❌ Error in fallback permission loading:', fallbackError);
+          // Return empty permissions as last resort
+          return {
+            id: profileData.id,
+            email: profileData.email,
+            dealership_id: profileData.dealership_id,
+            is_system_admin: profileData.role === 'system_admin',
+            is_supermanager: profileData.role === 'supermanager',
+            custom_roles: [],
+            system_permissions: new Set(),
+            module_permissions: new Map()
+          };
+        }
       }
 
       // Parse the batch result
