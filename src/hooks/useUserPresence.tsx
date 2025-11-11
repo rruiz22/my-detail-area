@@ -16,7 +16,16 @@ export interface UserPresence {
   last_activity_at: string;
   is_mobile: boolean;
   auto_away_minutes: number;
-  
+
+  // Profile data
+  profiles?: {
+    id?: string;
+    first_name: string | null;
+    last_name: string | null;
+    email: string | null;
+    avatar_seed?: string | null;
+  };
+
   // Computed fields
   user_name?: string;
   user_avatar?: string;
@@ -171,30 +180,58 @@ export const useUserPresence = (dealerId?: number): UseUserPresenceReturn => {
 
   // Fetch all users presence in the dealer
   const fetchUsersPresence = useCallback(async () => {
-    if (!activeDealerId) return;
+    if (!activeDealerId) {
+      console.log('⏭️ [useUserPresence] Skipping fetch - no activeDealerId');
+      return;
+    }
 
     try {
-      // Simplified presence data query for now
+      console.log(`🔍 [useUserPresence] Fetching users for dealer ${activeDealerId}, excluding user: ${user?.id || 'none'}`);
+
+      // Query presence with profile data
       const { data, error: fetchError } = await supabase
         .from('user_presence')
-        .select('*')
+        .select(`
+          *,
+          profiles (
+            id,
+            first_name,
+            last_name,
+            email,
+            avatar_seed
+          )
+        `)
         .eq('dealer_id', activeDealerId)
         .neq('user_id', user?.id || '');
 
-      if (fetchError) throw fetchError;
+      if (fetchError) {
+        console.error('❌ [useUserPresence] Fetch error:', fetchError);
+        throw fetchError;
+      }
 
-      // Simplified user presence data for now
-      const processedPresence: UserPresence[] = data?.map(presence => ({
-        ...presence,
-        user_name: t('user_presence.default_user_name'),
-        user_avatar: undefined,
-        is_online: ['online', 'busy'].includes(presence.status),
-        last_seen_formatted: formatLastSeen(presence.last_seen_at)
-      })) || [];
+      console.log(`📊 [useUserPresence] Raw data fetched:`, data?.length || 0, 'records');
 
+      // Process presence data with profile information
+      const processedPresence: UserPresence[] = data?.map(presence => {
+        const profile = presence.profiles as any;
+        const firstName = profile?.first_name || '';
+        const lastName = profile?.last_name || '';
+        const fullName = `${firstName} ${lastName}`.trim() || profile?.email || 'Unknown User';
+
+        return {
+          ...presence,
+          profiles: profile, // Keep the nested profiles structure for components
+          user_name: fullName,
+          user_avatar: undefined,
+          is_online: ['online', 'busy'].includes(presence.status),
+          last_seen_formatted: formatLastSeen(presence.last_seen_at)
+        };
+      }) || [];
+
+      console.log(`✅ [useUserPresence] Processed ${processedPresence.length} users, online: ${processedPresence.filter(p => p.is_online).length}`);
       setUsersPresence(processedPresence);
     } catch (err) {
-      console.error('Error fetching users presence:', err);
+      console.error('❌ [useUserPresence] Error fetching users presence:', err);
       setError(err instanceof Error ? err.message : t('user_presence.error_fetching_users'));
     }
   }, [activeDealerId, user?.id, t]);

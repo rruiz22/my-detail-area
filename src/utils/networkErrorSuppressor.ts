@@ -24,6 +24,15 @@ const NETWORK_ERROR_PATTERNS = [
   'support.mydetailarea.com',
 ];
 
+// Service Worker error patterns to suppress (non-critical)
+const SERVICE_WORKER_ERROR_PATTERNS = [
+  'redirect mode is not follow',
+  'The FetchEvent resulted in a network error',
+  'redirected response was used for a request',
+  'Service worker registration failed',
+  'Service Worker registration failed'
+];
+
 // Push notification non-critical patterns to suppress
 const PUSH_NOTIFICATION_INFO_PATTERNS = [
   'No active FCM tokens found',
@@ -45,6 +54,13 @@ const POLYFILL_WARNING_PATTERNS = [
 function isNetworkError(message: string): boolean {
   return NETWORK_ERROR_PATTERNS.some((pattern) =>
     message.includes(pattern)
+  );
+}
+
+// Check if message contains service worker error patterns
+function isServiceWorkerError(message: string): boolean {
+  return SERVICE_WORKER_ERROR_PATTERNS.some((pattern) =>
+    message.toLowerCase().includes(pattern.toLowerCase())
   );
 }
 
@@ -70,6 +86,13 @@ console.error = (...args: any[]) => {
   // Check message and stack for network error patterns
   if (isNetworkError(message) || isNetworkError(stack)) {
     // Silently ignore - user is likely offline or experiencing connectivity issues
+    return;
+  }
+
+  // Check for Service Worker redirect errors (non-critical during cache clearing)
+  if (isServiceWorkerError(message) || isServiceWorkerError(stack)) {
+    // Downgrade to warning - Service Worker is being updated
+    console.warn('⚠️ [Service Worker]', ...args);
     return;
   }
 
@@ -110,6 +133,11 @@ window.addEventListener('unhandledrejection', (event) => {
   if (isNetworkError(message)) {
     event.preventDefault(); // Prevent default error logging
   }
+
+  // Suppress Service Worker errors in unhandled rejections
+  if (isServiceWorkerError(message)) {
+    event.preventDefault(); // Prevent default error logging
+  }
 });
 
 // Global error handler for runtime errors
@@ -120,6 +148,11 @@ window.addEventListener('error', (event) => {
   if (isNetworkError(message)) {
     event.preventDefault(); // Prevent default error logging
   }
+
+  // Suppress Service Worker errors
+  if (isServiceWorkerError(message)) {
+    event.preventDefault(); // Prevent default error logging
+  }
 });
 
-console.log('🛡️ Console noise suppressor initialized - network errors and polyfill warnings will be silenced');
+console.log('🛡️ Console noise suppressor initialized - network errors, service worker redirects, and polyfill warnings will be silenced');

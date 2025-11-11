@@ -6146,5 +6146,22 @@
     "vis_desc": "Seção Identificadora do Veículo",
     "decoded_info": "Informações Decodificadas",
     "no_data": "Nenhum dado decodificado disponível"
+  },
+  "presence": {
+    "online_users": "Usuários Online",
+    "online_users_count": "{{count}} online",
+    "no_users_online": "Nenhum usuário online",
+    "view_all_users": "Ver todos os usuários",
+    "last_active": "Última atividade",
+    "status_online": "Online",
+    "status_away": "Ausente",
+    "status_busy": "Ocupado",
+    "status_offline": "Desconectado",
+    "mobile_user": "Móvel",
+    "desktop_user": "Desktop",
+    "search_users": "Buscar usuários...",
+    "no_results": "Nenhum usuário encontrado",
+    "just_now": "Agora mesmo",
+    "start_chat": "Iniciar chat"
   }
 }
