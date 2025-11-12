@@ -1,7 +1,7 @@
 {
   "scannedFiles": 877,
-  "totalStrings": 8567,
-  "hardcodedStrings": 2046,
+  "totalStrings": 8563,
+  "hardcodedStrings": 2042,
   "translatedStrings": 6521,
   "issues": {
     "critical": [
@@ -3202,165 +3202,145 @@
         "file": "src\\components\\get-ready\\GetReadyOverview.tsx",
         "hardcodedStrings": [
           {
-            "text": "Workflow Distribution",
-            "line": 275,
-            "context": "274: <div>\n275: <h3 className=\"text-lg font-semibold mb-4\">Workflow Distribution</h3>\n276: <div className=\"grid gap-4 md:grid-cols-3\">"
-          },
-          {
-            "text": "Standard",
-            "line": 281,
-            "context": "280: <CardTitle className=\"text-base flex items-center gap-2\">\n281: <Target className=\"h-5 w-5 text-blue-600\" />\n282: Standard"
-          },
-          {
-            "text": "Express",
-            "line": 306,
-            "context": "305: <CardTitle className=\"text-base flex items-center gap-2\">\n306: <Zap className=\"h-5 w-5 text-emerald-600\" />\n307: Express"
-          },
-          {
-            "text": "Priority",
-            "line": 331,
-            "context": "330: <CardTitle className=\"text-base flex items-center gap-2\">\n331: <Shield className=\"h-5 w-5 text-purple-600\" />\n332: Priority"
-          },
-          {
             "text": "Step Analysis",
-            "line": 360,
-            "context": "359: <CardTitle className=\"flex items-center gap-2\">\n360: <Layers className=\"h-5 w-5\" />\n361: Step Analysis"
+            "line": 258,
+            "context": "257: <CardTitle className=\"flex items-center gap-2\">\n258: <Layers className=\"h-5 w-5\" />\n259: Step Analysis"
           },
           {
             "text": "Vehicle distribution by workflow step",
-            "line": 363,
-            "context": "362: </CardTitle>\n363: <CardDescription>Vehicle distribution by workflow step</CardDescription>\n364: </CardHeader>"
+            "line": 261,
+            "context": "260: </CardTitle>\n261: <CardDescription>Vehicle distribution by workflow step</CardDescription>\n262: </CardHeader>"
           },
           {
             "text": "Priority Breakdown",
-            "line": 407,
-            "context": "406: <CardTitle className=\"flex items-center gap-2\">\n407: <Target className=\"h-5 w-5\" />\n408: Priority Breakdown"
+            "line": 305,
+            "context": "304: <CardTitle className=\"flex items-center gap-2\">\n305: <Target className=\"h-5 w-5\" />\n306: Priority Breakdown"
           },
           {
             "text": "Vehicle priority distribution",
-            "line": 410,
-            "context": "409: </CardTitle>\n410: <CardDescription>Vehicle priority distribution</CardDescription>\n411: </CardHeader>"
+            "line": 308,
+            "context": "307: </CardTitle>\n308: <CardDescription>Vehicle priority distribution</CardDescription>\n309: </CardHeader>"
           },
           {
             "text": "Work Items Summary",
-            "line": 456,
-            "context": "455: <CardTitle className=\"flex items-center gap-2\">\n456: <CheckCircle2 className=\"h-5 w-5\" />\n457: Work Items Summary"
+            "line": 354,
+            "context": "353: <CardTitle className=\"flex items-center gap-2\">\n354: <CheckCircle2 className=\"h-5 w-5\" />\n355: Work Items Summary"
           },
           {
             "text": "Aggregate work items across all vehicles",
-            "line": 459,
-            "context": "458: </CardTitle>\n459: <CardDescription>Aggregate work items across all vehicles</CardDescription>\n460: </CardHeader>"
+            "line": 357,
+            "context": "356: </CardTitle>\n357: <CardDescription>Aggregate work items across all vehicles</CardDescription>\n358: </CardHeader>"
           },
           {
             "text": "Pending",
-            "line": 465,
-            "context": "464: <div className=\"space-y-1\">\n465: <div className=\"text-xs text-muted-foreground\">Pending</div>\n466: <div className=\"text-2xl font-bold text-amber-600\">{workItemsTotal.pending}</div>"
+            "line": 363,
+            "context": "362: <div className=\"space-y-1\">\n363: <div className=\"text-xs text-muted-foreground\">Pending</div>\n364: <div className=\"text-2xl font-bold text-amber-600\">{workItemsTotal.pending}</div>"
           },
           {
             "text": "In Progress",
-            "line": 469,
-            "context": "468: <div className=\"space-y-1\">\n469: <div className=\"text-xs text-muted-foreground\">In Progress</div>\n470: <div className=\"text-2xl font-bold text-sky-600\">{workItemsTotal.in_progress}</div>"
+            "line": 367,
+            "context": "366: <div className=\"space-y-1\">\n367: <div className=\"text-xs text-muted-foreground\">In Progress</div>\n368: <div className=\"text-2xl font-bold text-sky-600\">{workItemsTotal.in_progress}</div>"
           },
           {
             "text": "Completed",
-            "line": 473,
-            "context": "472: <div className=\"space-y-1\">\n473: <div className=\"text-xs text-muted-foreground\">Completed</div>\n474: <div className=\"text-2xl font-bold text-emerald-600\">{workItemsTotal.completed}</div>"
+            "line": 371,
+            "context": "370: <div className=\"space-y-1\">\n371: <div className=\"text-xs text-muted-foreground\">Completed</div>\n372: <div className=\"text-2xl font-bold text-emerald-600\">{workItemsTotal.completed}</div>"
           },
           {
             "text": "Total Items",
-            "line": 477,
-            "context": "476: <div className=\"space-y-1\">\n477: <div className=\"text-xs text-muted-foreground\">Total Items</div>\n478: <div className=\"text-2xl font-bold\">{workItemsTotal.totalItems}</div>"
+            "line": 375,
+            "context": "374: <div className=\"space-y-1\">\n375: <div className=\"text-xs text-muted-foreground\">Total Items</div>\n376: <div className=\"text-2xl font-bold\">{workItemsTotal.totalItems}</div>"
           },
           {
             "text": "Completion Rate",
-            "line": 486,
-            "context": "485: <div className=\"flex items-center justify-between text-sm\">\n486: <span className=\"font-medium\">Completion Rate</span>\n487: <span className=\"text-muted-foreground\">{workItemsTotal.completionRate.toFixed(1)}%</span>"
+            "line": 384,
+            "context": "383: <div className=\"flex items-center justify-between text-sm\">\n384: <span className=\"font-medium\">Completion Rate</span>\n385: <span className=\"text-muted-foreground\">{workItemsTotal.completionRate.toFixed(1)}%</span>"
           },
           {
             "text": "Team Performance",
-            "line": 499,
-            "context": "498: <CardTitle className=\"flex items-center gap-2\">\n499: <Users className=\"h-5 w-5\" />\n500: Team Performance"
+            "line": 397,
+            "context": "396: <CardTitle className=\"flex items-center gap-2\">\n397: <Users className=\"h-5 w-5\" />\n398: Team Performance"
           },
           {
             "text": "Top performers by vehicle count",
-            "line": 502,
-            "context": "501: </CardTitle>\n502: <CardDescription>Top performers by vehicle count</CardDescription>\n503: </CardHeader>"
+            "line": 400,
+            "context": "399: </CardTitle>\n400: <CardDescription>Top performers by vehicle count</CardDescription>\n401: </CardHeader>"
           },
           {
             "text": "No team data available",
-            "line": 507,
-            "context": "506: {teamStats.length === 0 ? (\n507: <div className=\"text-sm text-muted-foreground text-center py-4\">\n508: No team data available"
+            "line": 405,
+            "context": "404: {teamStats.length === 0 ? (\n405: <div className=\"text-sm text-muted-foreground text-center py-4\">\n406: No team data available"
           },
           {
             "text": "Vehicles Added",
-            "line": 552,
-            "context": "551: <div className=\"text-2xl font-bold\">{recentActivity.vehiclesAdded}</div>\n552: <div className=\"text-xs text-muted-foreground\">Vehicles Added</div>\n553: </div>"
+            "line": 450,
+            "context": "449: <div className=\"text-2xl font-bold\">{recentActivity.vehiclesAdded}</div>\n450: <div className=\"text-xs text-muted-foreground\">Vehicles Added</div>\n451: </div>"
           },
           {
             "text": "Ready for Frontline",
-            "line": 559,
-            "context": "558: <div className=\"text-2xl font-bold\">{recentActivity.vehiclesCompleted}</div>\n559: <div className=\"text-xs text-muted-foreground\">Ready for Frontline</div>\n560: </div>"
+            "line": 457,
+            "context": "456: <div className=\"text-2xl font-bold\">{recentActivity.vehiclesCompleted}</div>\n457: <div className=\"text-xs text-muted-foreground\">Ready for Frontline</div>\n458: </div>"
           },
           {
             "text": "Total Active",
-            "line": 566,
-            "context": "565: <div className=\"text-2xl font-bold\">{recentActivity.totalActive}</div>\n566: <div className=\"text-xs text-muted-foreground\">Total Active</div>\n567: </div>"
+            "line": 464,
+            "context": "463: <div className=\"text-2xl font-bold\">{recentActivity.totalActive}</div>\n464: <div className=\"text-xs text-muted-foreground\">Total Active</div>\n465: </div>"
           },
           {
             "text": "Quick Access",
-            "line": 576,
-            "context": "575: <CardHeader>\n576: <CardTitle>Quick Access</CardTitle>\n577: <CardDescription>Jump to specific views with pre-applied filters</CardDescription>"
+            "line": 474,
+            "context": "473: <CardHeader>\n474: <CardTitle>Quick Access</CardTitle>\n475: <CardDescription>Jump to specific views with pre-applied filters</CardDescription>"
           },
           {
             "text": "SLA Risk",
-            "line": 589,
-            "context": "588: <AlertTriangle className=\"h-4 w-4 text-amber-600\" />\n589: <span className=\"text-sm font-medium\">SLA Risk</span>\n590: </div>"
+            "line": 487,
+            "context": "486: <AlertTriangle className=\"h-4 w-4 text-amber-600\" />\n487: <span className=\"text-sm font-medium\">SLA Risk</span>\n488: </div>"
           },
           {
             "text": "Pending Work",
-            "line": 606,
-            "context": "605: <FileText className=\"h-4 w-4\" />\n606: <span className=\"text-sm font-medium\">Pending Work</span>\n607: </div>"
+            "line": 504,
+            "context": "503: <FileText className=\"h-4 w-4\" />\n504: <span className=\"text-sm font-medium\">Pending Work</span>\n505: </div>"
           },
           {
             "text": "Urgent",
-            "line": 621,
-            "context": "620: <AlertTriangle className=\"h-4 w-4 text-red-600\" />\n621: <span className=\"text-sm font-medium\">Urgent</span>\n622: </div>"
+            "line": 519,
+            "context": "518: <AlertTriangle className=\"h-4 w-4 text-red-600\" />\n519: <span className=\"text-sm font-medium\">Urgent</span>\n520: </div>"
           },
           {
             "text": "View All Vehicles",
-            "line": 634,
-            "context": "633: <ArrowRight className=\"h-5 w-5\" />\n634: <span className=\"text-sm font-medium\">View All Vehicles</span>\n635: </Button>"
+            "line": 532,
+            "context": "531: <ArrowRight className=\"h-5 w-5\" />\n532: <span className=\"text-sm font-medium\">View All Vehicles</span>\n533: </Button>"
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.analytics.timeRange",
-            "line": 248,
+            "line": 225,
             "exists": true
           },
           {
             "key": "get_ready.analytics.last7Days",
-            "line": 253,
+            "line": 230,
             "exists": true
           },
           {
             "key": "get_ready.analytics.last30Days",
-            "line": 256,
+            "line": 233,
             "exists": true
           },
           {
             "key": "get_ready.analytics.last90Days",
-            "line": 259,
+            "line": 236,
             "exists": true
           },
           {
             "key": "get_ready.analytics.historicalAnalytics",
-            "line": 644,
+            "line": 542,
             "exists": true
           }
         ],
         "missingKeys": [],
-        "coverage": 16,
+        "coverage": 19,
         "severity": "critical"
       },
       {
@@ -57992,10 +57972,10 @@
         "src\\components\\chat\\ContextualChatLauncher.tsx",
         "src\\pages\\Settings.tsx",
         "src\\components\\get-ready\\GetReadySplitContent.tsx",
-        "src\\components\\get-ready\\GetReadyOverview.tsx",
         "src\\components\\orders\\OrderTasksSection.tsx",
         "src\\components\\detail-hub\\TimecardSystem.BACKUP.tsx",
         "src\\components\\get-ready\\GetReadyActivityFeed.tsx",
+        "src\\components\\get-ready\\GetReadyOverview.tsx",
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\settings\\IntegrationSettings.tsx",
         "src\\components\\get-ready\\GetReadyWorkflowActions.tsx",
