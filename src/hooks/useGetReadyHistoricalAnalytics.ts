@@ -490,40 +490,46 @@ export function useBottleneckDetection(timeRange: TimeRange = '30d', topN: numbe
       }
 
       // Combine historical analytics with current state
-      const scoredSteps = stepAnalytics.data.map(step => {
-        const currentData = currentState?.find(c => c.step_id === step.step_id);
-        const currentVehicles = currentData?.current_vehicle_count || 0;
-        const vehiclesOverSLA = currentData?.vehicles_over_sla || 0;
+      // Filter out "Front Line" step as it's the final step and shouldn't be considered a bottleneck
+      const scoredSteps = stepAnalytics.data
+        .filter(step => {
+          const stepName = step.step_name?.toLowerCase() || '';
+          return stepName !== 'front line' && stepName !== 'frontline';
+        })
+        .map(step => {
+          const currentData = currentState?.find(c => c.step_id === step.step_id);
+          const currentVehicles = currentData?.current_vehicle_count || 0;
+          const vehiclesOverSLA = currentData?.vehicles_over_sla || 0;
 
-        // IMPROVED BOTTLENECK FORMULA:
-        // Focus on what's slowing down the process to frontline RIGHT NOW
+          // IMPROVED BOTTLENECK FORMULA:
+          // Focus on what's slowing down the process to frontline RIGHT NOW
 
-        // 1. Current backlog (40%) - Most important: vehicles stuck NOW
-        const backlogScore = Math.min(100, (currentVehicles / 5) * 100); // Normalize to 5 vehicles
+          // 1. Current backlog (40%) - Most important: vehicles stuck NOW
+          const backlogScore = Math.min(100, (currentVehicles / 5) * 100); // Normalize to 5 vehicles
 
-        // 2. Average time in step (30%) - How slow is this step
-        const avgDays = step.avg_total_time / 24;
-        const timeScore = Math.min(100, (avgDays / 3) * 100); // Normalize to 3 days
+          // 2. Average time in step (30%) - How slow is this step
+          const avgDays = step.avg_total_time / 24;
+          const timeScore = Math.min(100, (avgDays / 3) * 100); // Normalize to 3 days
 
-        // 3. Revisit rate (20%) - Quality issues causing rework
-        const revisitScore = step.revisit_rate || 0;
+          // 3. Revisit rate (20%) - Quality issues causing rework
+          const revisitScore = step.revisit_rate || 0;
 
-        // 4. SLA violations (10%) - Vehicles at risk
-        const slaScore = currentVehicles > 0
-          ? (vehiclesOverSLA / currentVehicles) * 100
-          : 0;
+          // 4. SLA violations (10%) - Vehicles at risk
+          const slaScore = currentVehicles > 0
+            ? (vehiclesOverSLA / currentVehicles) * 100
+            : 0;
 
-        const totalScore = (backlogScore * 0.4) + (timeScore * 0.3) + (revisitScore * 0.2) + (slaScore * 0.1);
+          const totalScore = (backlogScore * 0.4) + (timeScore * 0.3) + (revisitScore * 0.2) + (slaScore * 0.1);
 
-        return {
-          ...step,
-          current_vehicle_count: currentVehicles,
-          vehicles_over_sla: vehiclesOverSLA,
-          avg_days_in_step: avgDays,
-          bottleneck_score: Math.round(totalScore * 10) / 10,
-          severity: totalScore > 60 ? 'critical' : totalScore > 35 ? 'high' : 'medium',
-        };
-      });
+          return {
+            ...step,
+            current_vehicle_count: currentVehicles,
+            vehicles_over_sla: vehiclesOverSLA,
+            avg_days_in_step: avgDays,
+            bottleneck_score: Math.round(totalScore * 10) / 10,
+            severity: totalScore > 60 ? 'critical' : totalScore > 35 ? 'high' : 'medium',
+          };
+        });
 
       // Sort by score and return top N
       return scoredSteps
