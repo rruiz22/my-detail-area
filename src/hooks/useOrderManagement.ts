@@ -1166,15 +1166,15 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
           if (slackEnabled) {
             console.log('📤 Slack enabled for status change, sending notification...');
 
-            // Get shortLink from QR data
+            // 🔴 FIX: Get shortLink from orders table (not order_qr_codes which doesn't exist)
             let shortLink: string | undefined = undefined;
             try {
-              const { data: qrData } = await supabase
-                .from('order_qr_codes')
+              const { data: orderShortLink } = await supabase
+                .from('orders')
                 .select('short_link')
-                .eq('order_id', orderId)
+                .eq('id', orderId)
                 .single();
-              shortLink = qrData?.short_link || `${window.location.origin}/orders/${orderId}`;
+              shortLink = orderShortLink?.short_link || `${window.location.origin}/orders/${orderId}`;
             } catch (error) {
               console.warn('Failed to fetch short link:', error);
               shortLink = `${window.location.origin}/orders/${orderId}`;

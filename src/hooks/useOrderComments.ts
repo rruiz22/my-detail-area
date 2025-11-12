@@ -1,5 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { usePermissions } from '@/hooks/usePermissions';
+import { useUserProfileForPermissions } from '@/hooks/useUserProfile';
 import { supabase } from '@/integrations/supabase/client';
 import { pushNotificationHelper } from '@/services/pushNotificationHelper';
 import { createCommentNotification } from '@/utils/notificationHelper';
@@ -49,6 +50,7 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
   const { user } = useAuth();
   const { toast } = useToast();
   const { enhancedUser } = usePermissions();
+  const { data: userProfile } = useUserProfileForPermissions(); // 🔴 FIX: Get full user profile with first_name/last_name
 
   // Check if user can access internal notes based on custom role permissions
   const canAccessInternal = (() => {
@@ -278,11 +280,13 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
           const mentionedUserIds = await resolveMentionsToUserIds(mentions, orderData.dealer_id);
 
           if (mentionedUserIds.length > 0) {
-            const userName = enhancedUser?.first_name
-              ? `${enhancedUser.first_name} ${enhancedUser.last_name || ''}`.trim()
+            // 🔴 FIX: Use userProfile (not enhancedUser) for first_name/last_name
+            const userName = userProfile?.first_name
+              ? `${userProfile.first_name} ${userProfile.last_name || ''}`.trim()
               : user.email || 'Someone';
 
-            const orderNumber = orderData.custom_order_number || orderData.order_number || orderId;
+            // 🔴 FIX: Use order_number FIRST (SA-/SV-/CW-/RC- prefixed) instead of custom_order_number (legacy)
+            const orderNumber = orderData.order_number || orderData.custom_order_number || orderId;
 
             const getNotificationModule = (orderType: string): 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash' => {
               const mapping: Record<string, 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash'> = {
@@ -314,8 +318,9 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
 
       // Send push notification to order followers (fire-and-forget, non-blocking)
       if (type === 'public') {
-        const userName = enhancedUser?.first_name
-          ? `${enhancedUser.first_name} ${enhancedUser.last_name || ''}`.trim()
+        // 🔴 FIX: Use userProfile (not enhancedUser) for first_name/last_name
+        const userName = userProfile?.first_name
+          ? `${userProfile.first_name} ${userProfile.last_name || ''}`.trim()
           : user.email || 'Someone';
 
         // Get order number for notification (fire-and-forget)
@@ -326,7 +331,8 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
           .single()
           .then(async ({ data: orderData }) => {
             if (orderData) {
-              const orderNumber = orderData.custom_order_number || orderData.order_number || orderId;
+              // 🔴 FIX: Use order_number FIRST (SA-/SV-/CW-/RC- prefixed) instead of custom_order_number (legacy)
+              const orderNumber = orderData.order_number || orderData.custom_order_number || orderId;
 
               // Map order_type to notification module
               const getNotificationModule = (orderType: string): 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash' => {

@@ -78,7 +78,9 @@
       "Bash(translation-audit-report.txt)",
       "Bash(then echo \"✓ .env exists\")",
       "Bash(else echo \"✗ No .env file\")",
-      "Bash(del add-presence-en.js add-presence-en.cjs add-presence-es.cjs add-presence-pt.cjs)"
+      "Bash(del add-presence-en.js add-presence-en.cjs add-presence-es.cjs add-presence-pt.cjs)",
+      "Bash(if not exist \"backups\\get-ready-optimization\" mkdir \"backups\\get-ready-optimization\")",
+      "Bash(if not exist \"backups\\get-ready-optimization\\phase-1\" mkdir \"backups\\get-ready-optimization\\phase-1\")"
     ],
     "deny": [],
     "ask": []
