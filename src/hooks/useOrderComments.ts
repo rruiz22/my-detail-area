@@ -392,15 +392,15 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
                 if (slackEnabled) {
                   console.log('📤 Slack enabled for comment, sending notification...');
 
-                  // Get shortLink from QR data
+                  // Get shortLink from order data (stored in orders.short_link column)
                   let shortLink: string | undefined = undefined;
                   try {
-                    const { data: qrData } = await supabase
-                      .from('order_qr_codes')
+                    const { data: orderShortLink } = await supabase
+                      .from('orders')
                       .select('short_link')
-                      .eq('order_id', orderId)
+                      .eq('id', orderId)
                       .single();
-                    shortLink = qrData?.short_link || `${window.location.origin}/orders/${orderId}`;
+                    shortLink = orderShortLink?.short_link || `${window.location.origin}/orders/${orderId}`;
                   } catch (error) {
                     console.warn('Failed to fetch short link:', error);
                     shortLink = `${window.location.origin}/orders/${orderId}`;
