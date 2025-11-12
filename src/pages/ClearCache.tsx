@@ -34,7 +34,7 @@ import {
   Package,
   FileText,
 } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -60,17 +60,54 @@ export default function ClearCache() {
     cacheStorages: 0,
   });
 
+  // 🔴 FIX #1: Guard to prevent multiple executions of auto-clear
+  const hasExecutedAutoRef = useRef(false);
+
+  // 🔴 FIX #4: Anti-loop detection with sessionStorage counter
+  useEffect(() => {
+    // Detect infinite loop by counting attempts
+    const loopCounter = sessionStorage.getItem('clearcache_attempts') || '0';
+    const attempts = parseInt(loopCounter, 10);
+
+    if (attempts > 3) {
+      console.error('🔴 LOOP DETECTED: Too many clear cache attempts (>3)');
+      sessionStorage.removeItem('clearcache_attempts');
+      // Force navigation to root without parameters
+      window.location.replace('/');
+      return;
+    }
+
+    sessionStorage.setItem('clearcache_attempts', String(attempts + 1));
+
+    // Reset counter after successful navigation (5 seconds)
+    const resetTimer = setTimeout(() => {
+      sessionStorage.removeItem('clearcache_attempts');
+    }, 5000);
+
+    return () => clearTimeout(resetTimer);
+  }, []);
+
   // Auto-clear on mount if ?auto=true query param is present
   useEffect(() => {
+    // 🔴 FIX #1: Guard to prevent multiple executions
+    if (hasExecutedAutoRef.current) {
+      console.log('⚠️ Auto-clear already executed, skipping');
+      return;
+    }
+
     const searchParams = new URLSearchParams(window.location.search);
     const autoMode = searchParams.get('auto');
 
-    if (autoMode === 'true' || autoMode === 'quick') {
-      // Auto-trigger quick clear
-      handleQuickClear();
-    } else if (autoMode === 'full') {
-      // Auto-trigger full clear
-      handleFullClear();
+    if (autoMode === 'true' || autoMode === 'quick' || autoMode === 'full') {
+      hasExecutedAutoRef.current = true; // Mark as executed
+
+      if (autoMode === 'full') {
+        // Auto-trigger full clear
+        handleFullClear();
+      } else {
+        // Auto-trigger quick clear
+        handleQuickClear();
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Run once on mount
@@ -117,27 +154,46 @@ export default function ClearCache() {
     setIsClearing(true);
 
     try {
-      toast({
-        title: t('cache.clearing_quick', 'Quick Clear in Progress'),
-        description: t('cache.clearing_quick_desc', 'Clearing permissions, profile, and queries...'),
-        duration: 2000,
-      });
+      // 🔴 FIX #5: Only show toasts if NOT in auto-clear mode
+      const searchParams = new URLSearchParams(window.location.search);
+      const isAuto = searchParams.get('auto');
+
+      if (!isAuto) {
+        toast({
+          title: t('cache.clearing_quick', 'Quick Clear in Progress'),
+          description: t('cache.clearing_quick_desc', 'Clearing permissions, profile, and queries...'),
+          duration: 2000,
+        });
+      }
 
       await clearAllCachesSelective(queryClient);
 
-      toast({
-        title: '✅ ' + t('cache.cleared_title', 'Cache Cleared'),
-        description: t('cache.cleared_desc', 'All caches cleared. Redirecting...'),
-        duration: 2000,
-      });
+      if (!isAuto) {
+        toast({
+          title: '✅ ' + t('cache.cleared_title', 'Cache Cleared'),
+          description: t('cache.cleared_desc', 'All caches cleared. Redirecting...'),
+          duration: 2000,
+        });
+      }
+
+      // clearAllCachesSelective() already redirects automatically
     } catch (error) {
       console.error('Error clearing cache:', error);
-      toast({
-        title: t('common.error'),
-        description: t('cache.error_clearing', 'Failed to clear cache. Please try again.'),
-        variant: 'destructive',
-      });
-      setIsClearing(false);
+
+      // Only show error if NOT auto-mode
+      const isAuto = new URLSearchParams(window.location.search).get('auto');
+      if (!isAuto) {
+        toast({
+          title: t('common.error'),
+          description: t('cache.error_clearing', 'Failed to clear cache. Please try again.'),
+          variant: 'destructive',
+        });
+      }
+
+      // 🔴 FIX #5: Redirect to root even on error to break potential loop
+      setTimeout(() => {
+        window.location.replace('/');
+      }, 500);
     }
   };
 
@@ -145,27 +201,46 @@ export default function ClearCache() {
     setIsClearing(true);
 
     try {
-      toast({
-        title: t('cache.clearing_full', 'Full Clear in Progress'),
-        description: t('cache.clearing_full_desc', 'Clearing ALL storage, service workers, and databases...'),
-        duration: 2000,
-      });
+      // 🔴 FIX #5: Only show toasts if NOT in auto-clear mode
+      const searchParams = new URLSearchParams(window.location.search);
+      const isAuto = searchParams.get('auto') === 'full';
+
+      if (!isAuto) {
+        toast({
+          title: t('cache.clearing_full', 'Full Clear in Progress'),
+          description: t('cache.clearing_full_desc', 'Clearing ALL storage, service workers, and databases...'),
+          duration: 2000,
+        });
+      }
 
       await clearAllCachesAggressive();
 
-      toast({
-        title: '✅ ' + t('cache.cleared_title', 'Cache Cleared'),
-        description: t('cache.cleared_desc', 'All caches cleared. Redirecting...'),
-        duration: 2000,
-      });
+      if (!isAuto) {
+        toast({
+          title: '✅ ' + t('cache.cleared_title', 'Cache Cleared'),
+          description: t('cache.cleared_desc', 'All caches cleared. Redirecting...'),
+          duration: 2000,
+        });
+      }
+
+      // clearAllCachesAggressive() already redirects automatically
     } catch (error) {
       console.error('Error clearing cache:', error);
-      toast({
-        title: t('common.error'),
-        description: t('cache.error_clearing', 'Failed to clear cache. Please try again.'),
-        variant: 'destructive',
-      });
-      setIsClearing(false);
+
+      // Only show error if NOT auto-mode
+      const isAuto = new URLSearchParams(window.location.search).get('auto') === 'full';
+      if (!isAuto) {
+        toast({
+          title: t('common.error'),
+          description: t('cache.error_clearing', 'Failed to clear cache. Please try again.'),
+          variant: 'destructive',
+        });
+      }
+
+      // 🔴 FIX #5: Redirect to root even on error to break potential loop
+      setTimeout(() => {
+        window.location.replace('/');
+      }, 500);
     }
   };
 
