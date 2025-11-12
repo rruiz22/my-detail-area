@@ -146,52 +146,7 @@ export function GetReadyDashboardWidget({ className }: GetReadyDashboardWidgetPr
         </Card>
       )}
 
-      {/* Performance Summary */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('get_ready.dashboard.performance_overview')}</CardTitle>
-          <CardDescription>
-            Key performance indicators and trends
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="space-y-2">
-              <div className="text-sm font-medium">
-                {t('get_ready.metrics.efficiency')}
-              </div>
-              <div className="text-2xl font-bold text-blue-600">
-                {Math.round(kpis.utilizationRate * 100)}%
-              </div>
-              <Progress value={kpis.utilizationRate * 100} className="h-2" />
-            </div>
-
-            <div className="space-y-2">
-              <div className="text-sm font-medium">
-                {t('get_ready.kpis.weekly_capacity')}
-              </div>
-              <div className="text-2xl font-bold text-green-600">
-                {kpis.weeklyCapacity}
-              </div>
-              <div className="text-xs text-muted-foreground">
-                vehicles/week capacity
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="text-sm font-medium">
-                Quality Score
-              </div>
-              <div className="text-2xl font-bold text-purple-600">
-                {Math.round(kpis.customerSatisfaction * 10) / 10}
-              </div>
-              <div className="text-xs text-muted-foreground">
-                customer satisfaction rating
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Performance Summary Card removed per user request */}
     </div>
   );
 }
