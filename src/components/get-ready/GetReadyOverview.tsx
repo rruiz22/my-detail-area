@@ -468,72 +468,7 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
         </CardContent>
       </Card>
 
-      {/* Quick Access to Details */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Access</CardTitle>
-          <CardDescription>Jump to specific views with pre-applied filters</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-            {stepStats.filter(s => s.atRisk > 0).length > 0 && (
-              <Button
-                variant="outline"
-                className="h-auto p-4 flex flex-col items-start gap-2 text-left border-amber-200 bg-amber-50 hover:bg-amber-100"
-                onClick={() => handleNavigateToDetails()}
-              >
-                <div className="flex items-center gap-2 w-full">
-                  <AlertTriangle className="h-4 w-4 text-amber-600" />
-                  <span className="text-sm font-medium">SLA Risk</span>
-                </div>
-                <div className="text-2xl font-bold text-amber-600">
-                  {stepStats.reduce((sum, s) => sum + s.atRisk, 0)}
-                </div>
-                <div className="text-xs text-muted-foreground">vehicles at risk</div>
-              </Button>
-            )}
-
-            {workItemsTotal.pending > 0 && (
-              <Button
-                variant="outline"
-                className="h-auto p-4 flex flex-col items-start gap-2 text-left"
-                onClick={() => handleNavigateToDetails()}
-              >
-                <div className="flex items-center gap-2 w-full">
-                  <FileText className="h-4 w-4" />
-                  <span className="text-sm font-medium">Pending Work</span>
-                </div>
-                <div className="text-2xl font-bold">{workItemsTotal.pending}</div>
-                <div className="text-xs text-muted-foreground">work items</div>
-              </Button>
-            )}
-
-            {priorityStats.urgent.count > 0 && (
-              <Button
-                variant="outline"
-                className="h-auto p-4 flex flex-col items-start gap-2 text-left border-red-200 bg-red-50 hover:bg-red-100"
-                onClick={() => handleNavigateToDetails()}
-              >
-                <div className="flex items-center gap-2 w-full">
-                  <AlertTriangle className="h-4 w-4 text-red-600" />
-                  <span className="text-sm font-medium">Urgent</span>
-                </div>
-                <div className="text-2xl font-bold text-red-600">{priorityStats.urgent.count}</div>
-                <div className="text-xs text-muted-foreground">vehicles</div>
-              </Button>
-            )}
-
-            <Button
-              variant="outline"
-              className="h-auto p-4 flex flex-col items-center justify-center gap-2"
-              onClick={() => handleNavigateToDetails()}
-            >
-              <ArrowRight className="h-5 w-5" />
-              <span className="text-sm font-medium">View All Vehicles</span>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Quick Access section removed per user request */}
 
       {/* Historical Analytics Section - RE-ENABLED with improved caching */}
       <div className="space-y-6">
