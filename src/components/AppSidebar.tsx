@@ -208,13 +208,7 @@ export function AppSidebar() {
         module: 'reports' as const,
         permission: 'view' as const
       },
-      {
-        title: t('navigation.settings'),
-        url: "/settings",
-        icon: Settings,
-        module: 'settings' as const,
-        permission: 'view' as const
-      },
+      // Settings removed - moved to systemAdminNavItems (admin/supermanager only)
       {
         title: t('profile.title'),
         url: "/profile",
@@ -236,9 +230,17 @@ export function AppSidebar() {
   // ✅ SECURITY FIX: System Admin items now use permission system instead of hardcoded role check
   const systemAdminNavItems = React.useMemo(() => {
     // ✅ Use permission system instead of hardcoded role check
+    // Settings is ONLY for system_admin and supermanager
     if (!hasSystemPermission('manage_all_settings')) return [];
 
     const baseItems = [
+      {
+        title: t('navigation.settings'),
+        url: "/settings",
+        icon: Settings,
+        module: null, // Settings bypasses module system - admin/supermanager only
+        permission: 'admin' as const
+      },
       {
         title: t('announcements.title', 'Announcements'),
         url: "/announcements",
@@ -263,10 +265,12 @@ export function AppSidebar() {
     ];
 
     // ✅ Apply same filtering as other sections for consistency
-    return baseItems.filter(item =>
-      hasPermission(item.module, item.permission) &&
-      (isAdmin || hasModuleAccess(item.module))
-    );
+    // Items with module: null (like Settings) are always shown if user has system permission
+    return baseItems.filter(item => {
+      if (!item.module) return true; // Settings and other admin-only items
+      return hasPermission(item.module, item.permission) &&
+        (isAdmin || hasModuleAccess(item.module));
+    });
   }, [hasSystemPermission, hasPermission, hasModuleAccess, isAdmin, t]);
   const currentPath = location.pathname;
   const collapsed = state === "collapsed";

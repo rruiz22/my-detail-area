@@ -218,7 +218,7 @@ const AppRoutes = () => {
           <Route
             path="settings"
             element={
-              <PermissionGuard module="settings" permission="view" checkDealerModule={true}>
+              <PermissionGuard requireSystemPermission="manage_all_settings">
                 <Settings />
               </PermissionGuard>
             }

@@ -624,7 +624,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
         preventOutsideClick={true}
-        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:h-auto sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:rounded-lg sm:border sm:mx-4"
+        className="max-w-7xl max-h-[90vh] p-0 flex flex-col rounded-lg overflow-hidden sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:border sm:mx-4"
         aria-describedby="recon-order-modal-description"
       >
         <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border">
@@ -636,7 +636,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
           </div>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 px-4 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
+        <ScrollArea className="flex-1 px-4 sm:px-6 overflow-y-auto">
           <form onSubmit={handleSubmit} className="py-3 space-y-3">
             {/* Error Alert */}
             {submitError && (
@@ -939,39 +939,40 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
               />
             </div>
 
-            {/* Action Buttons - Sticky on mobile for better accessibility */}
-            <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border py-2 sm:py-2.5 -mx-4 px-4 sm:-mx-6 sm:px-6 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onClose}
-                className="order-2 sm:order-1 border-border hover:bg-accent hover:text-accent-foreground w-full sm:w-auto min-h-[44px]"
-              >
-                {t('common.action_buttons.cancel')}
-              </Button>
-              <Button
-                type="submit"
-                disabled={
-                  submitting ||
-                  !selectedDealership ||
-                  !formData.vehicleVin ||
-                  !formData.stockNumber ||
-                  selectedServices.length === 0
-                }
-                className="order-1 sm:order-2 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto min-h-[44px]"
-              >
-                {submitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    {isEditing ? t('orders.updating') : t('orders.creating')}
-                  </>
-                ) : (
-                  isEditing ? t('common.action_buttons.update') : t('common.action_buttons.create')
-                )}
-              </Button>
-            </div>
           </form>
         </ScrollArea>
+
+        {/* Footer - Fixed at bottom of modal */}
+        <div className="flex-shrink-0 bg-background border-t border-border px-4 sm:px-6 py-4 sm:py-4 flex flex-row justify-end gap-2 sm:gap-3 z-10 sm:rounded-b-lg">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            className="w-1/2 sm:w-auto min-h-[44px]"
+          >
+            {t('common.action_buttons.cancel')}
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={
+              submitting ||
+              !selectedDealership ||
+              !formData.vehicleVin ||
+              !formData.stockNumber ||
+              selectedServices.length === 0
+            }
+            className="w-1/2 sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
+          >
+            {submitting ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                {isEditing ? t('orders.updating') : t('orders.creating')}
+              </>
+            ) : (
+              isEditing ? t('common.action_buttons.update') : t('common.action_buttons.create')
+            )}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

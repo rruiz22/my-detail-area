@@ -6471,5 +6471,18 @@
     "no_results": "No se encontraron usuarios",
     "just_now": "Justo ahora",
     "start_chat": "Iniciar chat"
+  },
+  "error_screens": {
+    "translation_loading_failed": {
+      "title": "Error al Cargar Traducciones",
+      "description": "No pudimos cargar las traducciones de la aplicación. Esto puede deberse a un problema de red o contenido en caché.",
+      "refresh_button": "Actualizar Página",
+      "clear_cache_button": "Limpiar Caché y Reiniciar",
+      "help_text": "Si actualizar no funciona, intenta limpiar el caché. Esto reiniciará todos los datos de la aplicación pero resolverá los problemas de carga."
+    },
+    "private_mode": {
+      "title": "Modo Privado/Incógnito Detectado",
+      "description": "Estás navegando en modo privado. Algunas funciones pueden estar limitadas. Para la mejor experiencia, por favor usa el modo de navegación normal."
+    }
   }
 }

@@ -683,8 +683,8 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
         preventOutsideClick={true}
-        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-7xl sm:h-auto sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:rounded-lg sm:border sm:mx-4" aria-describedby="service-order-modal-description">
-        <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border">
+        className="max-w-7xl max-h-[90vh] p-0 flex flex-col rounded-lg overflow-hidden sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:border sm:mx-4" aria-describedby="service-order-modal-description">
+        <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border sm:rounded-t-lg">
           <DialogTitle className="text-base sm:text-lg font-semibold">
             {order ? t('orders.edit_service_order') : t('orders.create_service_order')}
           </DialogTitle>
@@ -693,7 +693,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 px-4 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
+        <ScrollArea className="flex-1 px-4 sm:px-6 overflow-y-auto">
           <form onSubmit={handleSubmit} className="py-3 space-y-3">
             {/* Error Alert */}
             {submitError && (
@@ -907,14 +907,13 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                     <div className="space-y-3 mt-2">
                       <div>
                         <Label htmlFor="customerName">
-                          {t('orders.customerName')} <span className="text-red-500">*</span>
+                          {t('orders.customerName')} <span className="text-muted-foreground text-xs">({t('common.optional')})</span>
                         </Label>
                         <Input
                           id="customerName"
                           value={formData.customerName}
                           onChange={(e) => handleInputChange('customerName', e.target.value)}
                           className="border-input bg-background"
-                          required
                         />
                       </div>
 
@@ -974,7 +973,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
                       <div>
                         <Label htmlFor="po">
-                          {t('service_orders.po_number')} <span className="text-red-500">*</span>
+                          PO# <span className="text-red-500">*</span>
                         </Label>
                         <Input
                           id="po"
@@ -988,7 +987,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
 
                       <div>
                         <Label htmlFor="ro">
-                          {t('service_orders.ro_number')} <span className="text-red-500">*</span>
+                          RO# <span className="text-red-500">*</span>
                         </Label>
                         <Input
                           id="ro"
@@ -1002,7 +1001,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
 
                       <div>
                         <Label htmlFor="tag">
-                          {t('service_orders.tag_number')} <span className="text-red-500">*</span>
+                          TAG# <span className="text-red-500">*</span>
                         </Label>
                         <Input
                           id="tag"
@@ -1145,7 +1144,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                           {loading ? t('common.loading') : t('orders.noServicesAvailable')}
                         </div>
                       ) : (
-                        <ScrollArea className="h-[300px] p-3 border border-border rounded-md">
+                        <ScrollArea className="h-[300px] border border-emerald-200 rounded-lg p-3 bg-background">
                           <div className="space-y-2">
                             {services.map((service: DealerService) => {
                               const isSelected = selectedServices.includes(service.id);
@@ -1242,44 +1241,44 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
               <input type="hidden" name="scheduled_time" value={formData.scheduledTime || ''} />
             </div>
 
-            {/* Footer Actions - Sticky on mobile for better accessibility */}
-            <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border py-2 sm:py-2.5 -mx-4 px-4 sm:-mx-6 sm:px-6 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onClose}
-                className="order-2 sm:order-1 w-full sm:w-auto min-h-[44px]"
-              >
-                {t('common.action_buttons.cancel')}
-              </Button>
-              <Button
-                type="submit"
-                disabled={
-                  loading ||
-                  !formData.customerName ||
-                  !selectedDealership ||
-                  !selectedAssignedTo ||
-                  !formData.vehicleVin ||
-                  !formData.po ||
-                  !formData.ro ||
-                  !formData.tag ||
-                  !formData.dueDate ||
-                  selectedServices.length === 0
-                }
-                className="order-1 sm:order-2 w-full sm:w-auto min-h-[44px]"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    {order ? t('orders.updating') : t('orders.creating')}
-                  </>
-                ) : (
-                  order ? t('common.action_buttons.update') : t('common.action_buttons.create')
-                )}
-              </Button>
-            </div>
           </form>
         </ScrollArea>
+
+        {/* Footer - Fixed at bottom of modal */}
+        <div className="flex-shrink-0 bg-background border-t border-border px-4 sm:px-6 py-4 sm:py-4 flex flex-row justify-end gap-2 sm:gap-3 z-10 sm:rounded-b-lg">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            className="w-1/2 sm:w-auto min-h-[44px]"
+          >
+            {t('common.action_buttons.cancel')}
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={
+              loading ||
+              !selectedDealership ||
+              !selectedAssignedTo ||
+              !formData.vehicleVin ||
+              !formData.po ||
+              !formData.ro ||
+              !formData.tag ||
+              !formData.dueDate ||
+              selectedServices.length === 0
+            }
+            className="w-1/2 sm:w-auto min-h-[44px]"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                {order ? t('orders.updating') : t('orders.creating')}
+              </>
+            ) : (
+              order ? t('common.action_buttons.update') : t('common.action_buttons.create')
+            )}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

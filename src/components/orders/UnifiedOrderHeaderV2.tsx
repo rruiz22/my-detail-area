@@ -145,7 +145,7 @@ export function UnifiedOrderHeaderV2({
       {/* Compact Header - Single Bar */}
       <Card className="border-border shadow-sm">
         <CardContent className="p-3 sm:p-4">
-          <div className="flex flex-wrap items-center gap-x-6 sm:gap-x-8 gap-y-4">
+          <div className="grid grid-cols-1 sm:flex sm:flex-wrap sm:items-center gap-3 sm:gap-x-6 md:gap-x-8 sm:gap-y-4">
             {/* Order Number */}
             <div className="flex items-center gap-3">
               <Hash className="w-5 h-5 text-primary" />
