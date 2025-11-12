@@ -68,33 +68,6 @@ interface GetReadySplitContentProps {
   className?: string;
 }
 
-interface WorkItemType {
-  id: string;
-  title: string;
-  description?: string;
-  work_type?: string;
-  estimated_cost?: number;
-  priority?: string;
-  approval_required?: boolean;
-  approval_status?: string;
-}
-
-interface VehicleWithApproval {
-  id: string;
-  stock_number: string;
-  work_items?: WorkItemType[];
-  pending_approval_work_items?: WorkItemType[];
-  requires_approval?: boolean;
-  approval_status?: string;
-  approved_at?: string | null;
-  rejected_at?: string | null;
-  rejection_reason?: string | null;
-  year?: number;
-  make?: string;
-  model?: string;
-  [key: string]: unknown;
-}
-
 export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const { t } = useTranslation();
   const location = useLocation();
@@ -187,17 +160,22 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     isFetchingNextPage: isFetchingNextApprovalPage
   } = useGetReadyVehiclesInfinite({});
 
-  // PHASE 3 OPTIMIZATION: Removed auto-fetch ALL pages loop
-  // Now using server-side RPC function get_pending_approvals_count() for accurate counts
-  // This eliminates 10-20 queries per page load
+  // Auto-load ALL pages for accurate approval counting and display
+  // This ensures the Approvals page shows all vehicles needing approval, not just the first page
+  useEffect(() => {
+    if (hasNextApprovalPage && !isFetchingNextApprovalPage) {
+      console.log('📄 [Approvals] Auto-fetching next page for complete approval list');
+      fetchNextApprovalPage();
+    }
+  }, [hasNextApprovalPage, isFetchingNextApprovalPage, fetchNextApprovalPage]);
 
   // Flatten all vehicles from infinite query
   const allVehicles =
-    vehiclesData?.pages.flatMap((page) => (page as { vehicles: unknown[] }).vehicles) ?? [];
+    vehiclesData?.pages.flatMap((page) => page.vehicles) ?? [];
 
   // All vehicles without filters (for Approvals tab)
   const allVehiclesUnfiltered = useMemo(
-    () => allVehiclesData?.pages.flatMap((page) => (page as { vehicles: VehicleWithApproval[] }).vehicles) ?? [],
+    () => allVehiclesData?.pages.flatMap((page) => page.vehicles) ?? [],
     [allVehiclesData?.pages]
   );
 
@@ -555,7 +533,14 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
           <PendingApprovalsTable
             vehicles={pendingApprovalVehicles.map(v => ({
               ...v,
-              work_items: (v.work_items || []).map((wi) => ({
+              work_items: (v.work_items || []).map((wi: {
+                id: string;
+                title: string;
+                description?: string;
+                work_type?: string;
+                estimated_cost?: number;
+                priority?: string;
+              }) => ({
                 id: wi.id,
                 title: wi.title,
                 description: wi.description,
@@ -563,7 +548,14 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
                 estimated_cost: wi.estimated_cost,
                 priority: wi.priority
               })),
-              pending_approval_work_items: (v.pending_approval_work_items || []).map((wi) => ({
+              pending_approval_work_items: (v.pending_approval_work_items || []).map((wi: {
+                id: string;
+                title: string;
+                description?: string;
+                work_type?: string;
+                estimated_cost?: number;
+                priority?: string;
+              }) => ({
                 id: wi.id,
                 title: wi.title,
                 description: wi.description,

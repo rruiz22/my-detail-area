@@ -80,7 +80,12 @@
       "Bash(else echo \"✗ No .env file\")",
       "Bash(del add-presence-en.js add-presence-en.cjs add-presence-es.cjs add-presence-pt.cjs)",
       "Bash(if not exist \"backups\\get-ready-optimization\" mkdir \"backups\\get-ready-optimization\")",
-      "Bash(if not exist \"backups\\get-ready-optimization\\phase-1\" mkdir \"backups\\get-ready-optimization\\phase-1\")"
+      "Bash(if not exist \"backups\\get-ready-optimization\\phase-1\" mkdir \"backups\\get-ready-optimization\\phase-1\")",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(if [ -d \"supabase/migrations\" ])",
+      "Bash(then ls -la supabase/migrations)",
+      "Bash(else echo \"No migrations folder found\")"
     ],
     "deny": [],
     "ask": []
