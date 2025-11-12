@@ -1,8 +1,8 @@
 {
   "scannedFiles": 877,
-  "totalStrings": 8620,
-  "hardcodedStrings": 2049,
-  "translatedStrings": 6571,
+  "totalStrings": 8572,
+  "hardcodedStrings": 2048,
+  "translatedStrings": 6524,
   "issues": {
     "critical": [
       {
@@ -12999,61 +12999,6 @@
         ],
         "missingKeys": [],
         "coverage": 70,
-        "severity": "medium"
-      },
-      {
-        "file": "src\\components\\get-ready\\approvals\\PendingApprovalsTable.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Vehicle",
-            "line": 111,
-            "context": "110: <TableRow>\n111: <TableHead className=\"min-w-[220px] w-[20%] text-center\">Vehicle</TableHead>\n112: <TableHead className=\"min-w-[90px] w-[8%] text-center\">Workflow</TableHead>"
-          },
-          {
-            "text": "Workflow",
-            "line": 112,
-            "context": "111: <TableHead className=\"min-w-[220px] w-[20%] text-center\">Vehicle</TableHead>\n112: <TableHead className=\"min-w-[90px] w-[8%] text-center\">Workflow</TableHead>\n113: <TableHead className=\"min-w-[100px] w-[10%] text-center\">Current Step</TableHead>"
-          },
-          {
-            "text": "Current Step",
-            "line": 113,
-            "context": "112: <TableHead className=\"min-w-[90px] w-[8%] text-center\">Workflow</TableHead>\n113: <TableHead className=\"min-w-[100px] w-[10%] text-center\">Current Step</TableHead>\n114: <TableHead className=\"min-w-[70px] w-[8%] text-center\">Days</TableHead>"
-          },
-          {
-            "text": "Days",
-            "line": 114,
-            "context": "113: <TableHead className=\"min-w-[100px] w-[10%] text-center\">Current Step</TableHead>\n114: <TableHead className=\"min-w-[70px] w-[8%] text-center\">Days</TableHead>\n115: <TableHead className=\"min-w-[70px] w-[8%] text-center\">Work Items</TableHead>"
-          },
-          {
-            "text": "Work Items",
-            "line": 115,
-            "context": "114: <TableHead className=\"min-w-[70px] w-[8%] text-center\">Days</TableHead>\n115: <TableHead className=\"min-w-[70px] w-[8%] text-center\">Work Items</TableHead>\n116: <TableHead className=\"min-w-[200px] text-center\">Items Needing Approval</TableHead>"
-          },
-          {
-            "text": "Items Needing Approval",
-            "line": 116,
-            "context": "115: <TableHead className=\"min-w-[70px] w-[8%] text-center\">Work Items</TableHead>\n116: <TableHead className=\"min-w-[200px] text-center\">Items Needing Approval</TableHead>\n117: <TableHead className=\"min-w-[60px] w-[6%] text-center\"></TableHead>"
-          }
-        ],
-        "translationCalls": [
-          {
-            "key": "get_ready.approvals.queue.pending_title",
-            "line": 82,
-            "exists": true
-          },
-          {
-            "key": "get_ready.approvals.queue.no_pending",
-            "line": 90,
-            "exists": true
-          },
-          {
-            "key": "get_ready.approvals.queue.pending_title",
-            "line": 102,
-            "exists": true
-          }
-        ],
-        "missingKeys": [],
-        "coverage": 33,
         "severity": "medium"
       },
       {
@@ -47707,8 +47652,8 @@
           },
           {
             "text": "John Doe",
-            "line": 704,
-            "context": "703: }\n704: placeholder=\"John Doe\"\n705: />"
+            "line": 680,
+            "context": "679: }\n680: placeholder=\"John Doe\"\n681: />"
           }
         ],
         "translationCalls": [
@@ -47863,88 +47808,68 @@
             "exists": true
           },
           {
-            "key": "get_ready.vehicle_form.fields.workflow",
-            "line": 635,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.standard",
-            "line": 646,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.express",
-            "line": 649,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.priority",
-            "line": 652,
-            "exists": true
-          },
-          {
             "key": "get_ready.vehicle_form.fields.priority",
-            "line": 663,
+            "line": 639,
             "exists": true
           },
           {
             "key": "common.priority.low",
-            "line": 676,
+            "line": 652,
             "exists": true
           },
           {
             "key": "common.priority.normal",
-            "line": 679,
+            "line": 655,
             "exists": true
           },
           {
             "key": "common.priority.medium",
-            "line": 682,
+            "line": 658,
             "exists": true
           },
           {
             "key": "common.priority.high",
-            "line": 685,
+            "line": 661,
             "exists": true
           },
           {
             "key": "common.priority.urgent",
-            "line": 688,
+            "line": 664,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.fields.assigned_to",
-            "line": 696,
+            "line": 672,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.fields.notes",
-            "line": 712,
+            "line": 688,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.placeholders.notes",
-            "line": 718,
+            "line": 694,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 733,
+            "line": 709,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 742,
+            "line": 718,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 743,
+            "line": 719,
             "exists": true
           }
         ],
         "missingKeys": [],
-        "coverage": 94,
+        "coverage": 93,
         "severity": "low"
       },
       {
@@ -48618,231 +48543,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\get-ready\\GetReadyEnterpriseMetrics.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "get_ready.metrics.cost_per_vehicle",
-            "line": 341,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.cost_per_vehicle_tooltip",
-            "line": 348,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.per_vehicle",
-            "line": 361,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.first_pass_yield",
-            "line": 376,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.first_pass_yield_tooltip",
-            "line": 383,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.rework_rate",
-            "line": 416,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.rework_rate_tooltip",
-            "line": 423,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.incidents",
-            "line": 436,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.team_utilization",
-            "line": 451,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.team_utilization_tooltip",
-            "line": 458,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.cost_breakdown",
-            "line": 494,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.cost_by_              </CardDescription>\r\n            </CardHeader>\r\n            <CardContent className=",
-            "line": 497,
-            "exists": false
-          },
-          {
-            "key": "get_ready.workflow.standard",
-            "line": 503,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.express",
-            "line": 524,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.priority",
-            "line": 545,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.roi_comparison",
-            "line": 570,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.cost_vs_value_estimation",
-            "line": 573,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.total_cost",
-            "line": 579,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.est_savings",
-            "line": 585,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.roi",
-            "line": 594,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.based_on",
-            "line": 609,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.completed_vehicles",
-            "line": 609,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.quality_metrics",
-            "line": 620,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.quality_indicators",
-            "line": 621,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.fpy_trend",
-            "line": 627,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.rework_incidents",
-            "line": 636,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.declined_items",
-            "line": 637,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.quality_by_step",
-            "line": 650,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.efficiency_metrics",
-            "line": 674,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.operational_efficiency",
-            "line": 675,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.avg_days_per_step",
-            "line": 680,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.transition_time",
-            "line": 694,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.between_steps",
-            "line": 695,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.utilization_rate",
-            "line": 705,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.team_performance",
-            "line": 727,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.top_performers",
-            "line": 730,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.no_team_data",
-            "line": 736,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.team_member",
-            "line": 744,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.vehicles",
-            "line": 747,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.avg_t2l",
-            "line": 750,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.completion_rate",
-            "line": 753,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.quality_score",
-            "line": 756,
-            "exists": true
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "get_ready.metrics.cost_by_              </CardDescription>\r\n            </CardHeader>\r\n            <CardContent className=",
-            "line": 497,
-            "context": "496: <CardDescription>\n497: {t('get_ready.metrics.cost_by_              </CardDescription>\n498: </CardHeader>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
         "file": "src\\components\\get-ready\\GetReadyDashboardWidget.tsx",
         "hardcodedStrings": [
           {
@@ -49253,33 +48953,28 @@
             "exists": false
           },
           {
-            "key": "get_ready.table.workflow",
-            "line": 175,
-            "exists": false
-          },
-          {
             "key": "get_ready.deleted_vehicles.deleted_at",
-            "line": 176,
+            "line": 175,
             "exists": true
           },
           {
             "key": "common.actions",
-            "line": 177,
+            "line": 176,
             "exists": true
           },
           {
             "key": "get_ready.deleted_vehicles.restoring",
-            "line": 219,
+            "line": 214,
             "exists": true
           },
           {
             "key": "get_ready.deleted_vehicles.restore",
-            "line": 220,
+            "line": 215,
             "exists": true
           },
           {
             "key": "get_ready.deleted_vehicles.empty",
-            "line": 230,
+            "line": 225,
             "exists": true
           }
         ],
@@ -49292,12 +48987,7 @@
           {
             "key": "get_ready.table.vin",
             "line": 174,
-            "context": "173: <TableHead>{t('get_ready.table.vehicle_stock')}</TableHead>\n174: <TableHead>{t('get_ready.table.vin')}</TableHead>\n175: <TableHead>{t('get_ready.table.workflow')}</TableHead>"
-          },
-          {
-            "key": "get_ready.table.workflow",
-            "line": 175,
-            "context": "174: <TableHead>{t('get_ready.table.vin')}</TableHead>\n175: <TableHead>{t('get_ready.table.workflow')}</TableHead>\n176: <TableHead>{t('get_ready.deleted_vehicles.deleted_at')}</TableHead>"
+            "context": "173: <TableHead>{t('get_ready.table.vehicle_stock')}</TableHead>\n174: <TableHead>{t('get_ready.table.vin')}</TableHead>\n175: <TableHead>{t('get_ready.deleted_vehicles.deleted_at')}</TableHead>"
           }
         ],
         "coverage": 100,
@@ -51256,6 +50946,56 @@
         "translationCalls": [],
         "missingKeys": [],
         "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\get-ready\\approvals\\PendingApprovalsTable.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Vehicle",
+            "line": 111,
+            "context": "110: <TableRow>\n111: <TableHead className=\"min-w-[220px] w-[20%] text-center\">Vehicle</TableHead>\n112: <TableHead className=\"min-w-[100px] w-[10%] text-center\">Current Step</TableHead>"
+          },
+          {
+            "text": "Current Step",
+            "line": 112,
+            "context": "111: <TableHead className=\"min-w-[220px] w-[20%] text-center\">Vehicle</TableHead>\n112: <TableHead className=\"min-w-[100px] w-[10%] text-center\">Current Step</TableHead>\n113: <TableHead className=\"min-w-[70px] w-[8%] text-center\">Days</TableHead>"
+          },
+          {
+            "text": "Days",
+            "line": 113,
+            "context": "112: <TableHead className=\"min-w-[100px] w-[10%] text-center\">Current Step</TableHead>\n113: <TableHead className=\"min-w-[70px] w-[8%] text-center\">Days</TableHead>\n114: <TableHead className=\"min-w-[70px] w-[8%] text-center\">Work Items</TableHead>"
+          },
+          {
+            "text": "Work Items",
+            "line": 114,
+            "context": "113: <TableHead className=\"min-w-[70px] w-[8%] text-center\">Days</TableHead>\n114: <TableHead className=\"min-w-[70px] w-[8%] text-center\">Work Items</TableHead>\n115: <TableHead className=\"min-w-[200px] text-center\">Items Needing Approval</TableHead>"
+          },
+          {
+            "text": "Items Needing Approval",
+            "line": 115,
+            "context": "114: <TableHead className=\"min-w-[70px] w-[8%] text-center\">Work Items</TableHead>\n115: <TableHead className=\"min-w-[200px] text-center\">Items Needing Approval</TableHead>\n116: <TableHead className=\"min-w-[60px] w-[6%] text-center\"></TableHead>"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "get_ready.approvals.queue.pending_title",
+            "line": 82,
+            "exists": true
+          },
+          {
+            "key": "get_ready.approvals.queue.no_pending",
+            "line": 90,
+            "exists": true
+          },
+          {
+            "key": "get_ready.approvals.queue.pending_title",
+            "line": 102,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 38,
         "severity": "low"
       },
       {
@@ -58270,7 +58010,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "413 Component components need translation",
+      "description": "412 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\OperationalReports.tsx",
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
@@ -58353,7 +58093,6 @@
         "src\\components\\orders\\OrderFilters.tsx",
         "src\\components\\get-ready\\GetReadyExample.tsx",
         "src\\components\\get-ready\\notifications\\NotificationPanel.tsx",
-        "src\\components\\get-ready\\approvals\\PendingApprovalsTable.tsx",
         "src\\components\\detail-hub\\PunchClockKiosk.tsx",
         "src\\types\\notification-analytics.ts",
         "src\\services\\PUSH_NOTIFICATION_HOOK_EXAMPLE.ts",
@@ -58370,6 +58109,7 @@
         "src\\components\\orders\\ScheduleViewBlock.tsx",
         "src\\components\\invitations\\InvitationManagement.tsx",
         "src\\components\\get-ready\\GetReadyAlerts.tsx",
+        "src\\components\\get-ready\\approvals\\PendingApprovalsTable.tsx",
         "src\\components\\chat\\FloatingChatBubble.tsx",
         "src\\utils\\photoFallback.ts",
         "src\\utils\\__examples__\\statusTransitions.example.ts",
@@ -58660,7 +58400,6 @@
         "src\\components\\get-ready\\VehicleTable.tsx",
         "src\\components\\get-ready\\NoteReplies.tsx",
         "src\\components\\get-ready\\GetReadyTopbar.tsx",
-        "src\\components\\get-ready\\GetReadyEnterpriseMetrics.tsx",
         "src\\components\\get-ready\\GetReadyApprovalsTab.tsx",
         "src\\components\\get-ready\\DeletedVehiclesDialog.tsx",
         "src\\components\\get-ready\\vendors\\VendorList.tsx",
@@ -58686,12 +58425,12 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "207 hours"
+      "estimatedEffort": "206 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2092 translation keys are referenced but missing",
+      "description": "2090 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "105 hours"
     }
