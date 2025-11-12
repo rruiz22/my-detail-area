@@ -434,34 +434,33 @@ export default function SalesOrders() {
         </div>
 
         {/* Header Actions */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold">{t('pages.sales_orders')}</h1>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <LiveTimer
-              lastRefresh={managementLastRefresh}
-              isRefreshing={isRefreshing}
-            />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefresh}
-              disabled={isRefreshing}
-            >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-              {t('common.refresh')}
-            </Button>
-            <Button
-              size="sm"
-              onClick={handleCreateOrder}
-              disabled={!canCreate}
-              title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              {t('common.new_order')}
-            </Button>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <LiveTimer
+                lastRefresh={managementLastRefresh}
+                isRefreshing={isRefreshing}
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+              >
+                <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''} sm:mr-2`} />
+                <span className="hidden sm:inline">{t('common.refresh')}</span>
+              </Button>
+              <Button
+                size="sm"
+                onClick={handleCreateOrder}
+                disabled={!canCreate}
+                title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}
+              >
+                <Plus className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">{t('common.new_order')}</span>
+              </Button>
+            </div>
           </div>
         </div>
 

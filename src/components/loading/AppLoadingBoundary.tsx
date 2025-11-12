@@ -112,7 +112,15 @@ export function AppLoadingBoundary({ children }: AppLoadingBoundaryProps) {
 
             {/* 🔴 CRITICAL FIX: Direct access to clear cache without needing Ctrl+Del (mobile-friendly) */}
             <Button
-              onClick={() => window.location.href = '/clearcache?auto=full'}
+              onClick={() => {
+                // 🔴 FIX #2: Prevent circular redirect loop
+                if (window.location.pathname === '/clearcache') {
+                  console.warn('⚠️ Already on /clearcache, forcing hard reload to root instead');
+                  window.location.replace('/');
+                  return;
+                }
+                window.location.href = '/clearcache?auto=full';
+              }}
               variant="outline"
               className="w-full"
               size="lg"

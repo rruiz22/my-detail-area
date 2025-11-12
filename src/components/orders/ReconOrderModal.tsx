@@ -21,7 +21,7 @@ import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { type ModulePermissionKey } from '@/types/permissions';
 import { safeParseDate } from '@/utils/dateUtils';
-import { AlertCircle, Loader2, Zap } from 'lucide-react';
+import { AlertCircle, Building2, Car, FileText, Loader2, Wrench, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -653,9 +653,18 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
 
                   {/* Column 1: Dealership & Vehicle Info */}
                   <div className="space-y-3">
+                    {/* Box 1: Dealership */}
+                    <div className="relative p-4 bg-gradient-to-br from-indigo-50 to-indigo-50/30 rounded-lg border-2 border-indigo-200">
+                      <div className="absolute -top-3 left-3 px-2 bg-background">
+                        <Badge variant="outline" className="border-indigo-300 text-indigo-700 font-semibold flex items-center gap-1">
+                          <Building2 className="h-3 w-3" />
+                          {t('sales_orders.dealership')}
+                        </Badge>
+                      </div>
+                      <div className="space-y-3 mt-2">
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <Label htmlFor="dealership">{t('sales_orders.dealership')}</Label>
+                        <Label htmlFor="dealership" className="text-sm">{t('sales_orders.dealership')}</Label>
                         {isDealerFieldReadOnly && (
                           <Badge variant="secondary" className="text-xs">
                             {t('dealerships.auto_selected')}
@@ -679,6 +688,8 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                         </SelectContent>
                       </Select>
                     </div>
+                      </div>
+                    </div>
 
                     {/* Vehicle Search & Auto-Population */}
                     {!order && (
@@ -696,8 +707,17 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                       </>
                     )}
 
+                    {/* Box 2: Vehicle Information */}
+                    <div className="relative p-4 bg-gradient-to-br from-emerald-50 to-emerald-50/30 rounded-lg border-2 border-emerald-200">
+                      <div className="absolute -top-3 left-3 px-2 bg-background">
+                        <Badge variant="outline" className="border-emerald-300 text-emerald-700 font-semibold flex items-center gap-1">
+                          <Car className="h-3 w-3" />
+                          {t('orders.vehicleInfo')}
+                        </Badge>
+                      </div>
+                      <div className="space-y-3 mt-2">
                     <div>
-                      <Label htmlFor="stockNumber">{t('sales_orders.stock_number')}</Label>
+                      <Label htmlFor="stockNumber" className="text-sm">{t('sales_orders.stock_number')}</Label>
                       <Input
                         id="stockNumber"
                         value={formData.stockNumber}
@@ -714,7 +734,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                     </div>
 
                     <div>
-                      <Label htmlFor="vehicleVin" className="flex items-center gap-2">
+                      <Label htmlFor="vehicleVin" className="flex items-center gap-2 text-sm">
                         {t('orders.vin')}
                         {vinLoading && <Loader2 className="w-4 h-4 animate-spin" />}
                         {vinDecoded && (
@@ -753,7 +773,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                     </div>
 
                     <div>
-                      <Label htmlFor="vehicleInfo">{t('sales_orders.vehicle')}</Label>
+                      <Label htmlFor="vehicleInfo" className="text-sm">{t('sales_orders.vehicle')}</Label>
                       <Input
                         id="vehicleInfo"
                         value={formData.vehicleInfo}
@@ -768,13 +788,24 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                         </div>
                       )}
                     </div>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Column 2: Completion Date, Services & Notes */}
                   <div className="space-y-4">
+                    {/* Box 1: Completion Date & Services */}
+                    <div className="relative p-4 bg-gradient-to-br from-purple-50 to-purple-50/30 rounded-lg border-2 border-purple-200">
+                      <div className="absolute -top-3 left-3 px-2 bg-background">
+                        <Badge variant="outline" className="border-purple-300 text-purple-700 font-semibold flex items-center gap-1">
+                          <Wrench className="h-3 w-3" />
+                          {t('orders.services')}
+                        </Badge>
+                      </div>
+                      <div className="space-y-3 mt-2">
                     {/* Completion Date */}
                     <div>
-                      <Label htmlFor="completionDate">{t('recon.completion_date')}</Label>
+                      <Label htmlFor="completionDate" className="text-sm">{t('recon.completion_date')}</Label>
                       <CompletionDatePicker
                         value={formData.completedAt}
                         onChange={(date) => handleInputChange('completedAt', date)}
@@ -887,9 +918,18 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                       </div>
                     </div>
                   )}
+                      </div>
+                    </div>
 
-                  <Separator />
-
+                    {/* Box 2: Notes */}
+                    <div className="relative p-4 bg-gradient-to-br from-amber-50 to-amber-50/30 rounded-lg border-2 border-amber-200">
+                      <div className="absolute -top-3 left-3 px-2 bg-background">
+                        <Badge variant="outline" className="border-amber-300 text-amber-700 font-semibold flex items-center gap-1">
+                          <FileText className="h-3 w-3" />
+                          {t('orders.notes')}
+                        </Badge>
+                      </div>
+                      <div className="space-y-3 mt-2">
                   {/* Notes Section */}
                   <div>
                     <Label htmlFor="notes" className="text-sm font-medium">{t('orders.notes')}</Label>
@@ -904,6 +944,8 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                       disabled
                     />
                   </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardContent>

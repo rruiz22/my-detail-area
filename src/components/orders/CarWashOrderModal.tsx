@@ -16,7 +16,7 @@ import { useDealerServices, useDealerships } from '@/hooks/useDealerships';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { safeParseDate } from '@/utils/dateUtils';
 import { formatVehicleDisplay } from '@/utils/vehicleUtils';
-import { AlertCircle, Clock, Loader2, Zap } from 'lucide-react';
+import { AlertCircle, Building2, Car, Clock, FileText, Loader2, Wrench, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
@@ -394,8 +394,10 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
         preventOutsideClick={true}
-        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 sm:max-w-4xl sm:h-auto sm:max-h-[98vh] sm:w-[95vw] md:w-[90vw] lg:max-w-5xl lg:w-[85vw] xl:max-w-6xl sm:rounded-lg sm:border sm:mx-4" aria-describedby="carwash-order-modal-description">
-        <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border">
+        className="max-w-7xl max-h-[90vh] p-0 flex flex-col rounded-lg overflow-hidden sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:border sm:mx-4"
+        aria-describedby="carwash-order-modal-description"
+      >
+        <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-4 sm:px-6 py-2 sm:py-3 border-b border-border sm:rounded-t-lg">
           <DialogTitle className="text-base sm:text-lg font-semibold flex items-center gap-2">
             {order ? t('car_wash_orders.edit_order') : t('car_wash_orders.quick_car_wash_order')}
             {formData.isWaiter && (
@@ -410,7 +412,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
           </DialogDescription>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 px-4 sm:px-6 max-h-[calc(100vh-140px)] sm:max-h-[calc(98vh-120px)]">
+        <ScrollArea className="flex-1 px-4 sm:px-6 overflow-y-auto">
           <form onSubmit={handleSubmit} className="py-3 space-y-3">
             {/* Error Alert */}
             {submitError && (
@@ -427,9 +429,18 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
                   {/* Column 1 - Dealership & Vehicle Info */}
                   <div className="space-y-3 order-1">
+                    {/* Box 1: Dealership */}
+                    <div className="relative p-4 bg-gradient-to-br from-indigo-50 to-indigo-50/30 rounded-lg border-2 border-indigo-200">
+                      <div className="absolute -top-3 left-3 px-2 bg-background">
+                        <Badge variant="outline" className="border-indigo-300 text-indigo-700 font-semibold flex items-center gap-1">
+                          <Building2 className="h-3 w-3" />
+                          {t('car_wash_orders.dealership')}
+                        </Badge>
+                      </div>
+                      <div className="space-y-3 mt-2">
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <Label htmlFor="dealership">{t('car_wash_orders.dealership')}</Label>
+                    <Label htmlFor="dealership" className="text-sm">{t('car_wash_orders.dealership')}</Label>
                     {isDealerFieldReadOnly && (
                       <Badge variant="secondary" className="text-xs">
                         {t('dealerships.auto_selected')}
@@ -453,9 +464,20 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     </SelectContent>
                   </Select>
                 </div>
+                      </div>
+                    </div>
 
+                    {/* Box 2: Vehicle Information */}
+                    <div className="relative p-4 bg-gradient-to-br from-emerald-50 to-emerald-50/30 rounded-lg border-2 border-emerald-200">
+                      <div className="absolute -top-3 left-3 px-2 bg-background">
+                        <Badge variant="outline" className="border-emerald-300 text-emerald-700 font-semibold flex items-center gap-1">
+                          <Car className="h-3 w-3" />
+                          {t('orders.vehicleInfo')}
+                        </Badge>
+                      </div>
+                      <div className="space-y-3 mt-2">
                 <div>
-                  <Label htmlFor="vehicleVin" className="flex items-center gap-2">
+                  <Label htmlFor="vehicleVin" className="flex items-center gap-2 text-sm">
                     {t('orders.vin')}
                     {vinLoading && <Loader2 className="w-4 h-4 animate-spin" />}
                     {vinDecoded && (
@@ -488,7 +510,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
                 {/* Stock/Tag - Single Field */}
                 <div>
-                  <Label htmlFor="stockNumber">{t('car_wash_orders.stock_number')}</Label>
+                  <Label htmlFor="stockNumber" className="text-sm">{t('car_wash_orders.stock_number')}</Label>
                   <Input
                     id="stockNumber"
                     value={formData.stockNumber}
@@ -499,7 +521,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                 </div>
 
                 <div>
-                  <Label htmlFor="vehicleInfo">{t('car_wash_orders.vehicle_display')}</Label>
+                  <Label htmlFor="vehicleInfo" className="text-sm">{t('car_wash_orders.vehicle_display')}</Label>
                   <Input
                     id="vehicleInfo"
                     value={formData.vehicleInfo}
@@ -525,7 +547,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
                 {/* Service Date - Car Wash Specific */}
                 <div>
-                  <Label htmlFor="completionDate">{t('car_wash.service_date')}</Label>
+                  <Label htmlFor="completionDate" className="text-sm">{t('car_wash.service_date')}</Label>
                   <CompletionDatePicker
                     value={formData.completedAt}
                     onChange={(date) => handleInputChange('completedAt', date)}
@@ -537,19 +559,25 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     {t('car_wash.service_date_help')}
                   </div>
                 </div>
+                      </div>
+                    </div>
                   </div>
 
               {/* Column 2 - Services & Notes */}
               <div className="space-y-3 order-2">
-                <div className="border-b border-border pb-2 mb-3">
-                  <h3 className="text-sm sm:text-base font-medium text-foreground">
-                    {t('orders.servicesAndNotes')}
-                  </h3>
-                </div>
+                {/* Box 1: Status & Services */}
+                <div className="relative p-4 bg-gradient-to-br from-purple-50 to-purple-50/30 rounded-lg border-2 border-purple-200">
+                  <div className="absolute -top-3 left-3 px-2 bg-background">
+                    <Badge variant="outline" className="border-purple-300 text-purple-700 font-semibold flex items-center gap-1">
+                      <Wrench className="h-3 w-3" />
+                      {t('orders.services')}
+                    </Badge>
+                  </div>
+                  <div className="space-y-3 mt-2">
 
                 {/* Status Field */}
                 <div>
-                  <Label htmlFor="status">{t('orders.status')}</Label>
+                  <Label htmlFor="status" className="text-sm">{t('orders.status')}</Label>
                   <Select
                     value={formData.status}
                     onValueChange={(value) => handleInputChange('status', value)}
@@ -693,9 +721,18 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     </div>
                   </div>
                 )}
+                  </div>
+                </div>
 
-                <Separator />
-
+                {/* Box 2: Notes */}
+                <div className="relative p-4 bg-gradient-to-br from-amber-50 to-amber-50/30 rounded-lg border-2 border-amber-200">
+                  <div className="absolute -top-3 left-3 px-2 bg-background">
+                    <Badge variant="outline" className="border-amber-300 text-amber-700 font-semibold flex items-center gap-1">
+                      <FileText className="h-3 w-3" />
+                      {t('orders.notes')}
+                    </Badge>
+                  </div>
+                  <div className="space-y-3 mt-2">
                 <div>
                   <Label htmlFor="notes" className="text-sm font-medium">{t('orders.notes')}</Label>
                   <Textarea
@@ -709,6 +746,8 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                 </div>
                   </div>
                 </div>
+              </div>
+            </div>
               </CardContent>
             </Card>
 
@@ -764,27 +803,28 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
               />
             </div>
 
-            {/* Submit Buttons - Sticky on mobile for better accessibility */}
-            <div className="sticky bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border py-2 sm:py-2.5 -mx-4 px-4 sm:-mx-6 sm:px-6 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={onClose}
-                className="order-2 sm:order-1 w-full sm:w-auto min-h-[44px]"
-              >
-                {t('common.action_buttons.cancel')}
-              </Button>
-              <Button
-                type="submit"
-                disabled={loading || !selectedDealership || !formData.vehicleVin || selectedServices.length === 0}
-                className="order-1 sm:order-2 w-full sm:w-auto min-h-[44px]"
-              >
-                {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                {order ? t('common.action_buttons.update') : t('common.action_buttons.create')}
-              </Button>
-            </div>
           </form>
         </ScrollArea>
+
+        {/* Footer - Fixed at bottom of modal */}
+        <div className="flex-shrink-0 bg-background border-t border-border px-4 sm:px-6 py-4 sm:py-4 flex flex-row justify-end gap-2 sm:gap-3 z-10 sm:rounded-b-lg">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            className="w-1/2 sm:w-auto min-h-[44px]"
+          >
+            {t('common.action_buttons.cancel')}
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={loading || !selectedDealership || !formData.vehicleVin || selectedServices.length === 0}
+            className="w-1/2 sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
+          >
+            {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+            {order ? t('common.action_buttons.update') : t('common.action_buttons.create')}
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -184,8 +184,8 @@ export async function clearAllCaches(options: ClearCacheOptions = {}): Promise<v
     // 🔴 CRITICAL FIX: Navigate to root instead of reloading current page
     // This prevents ERR_FAILED when service worker intercepts non-root routes
     if (reload) {
-      // Increased delay to ensure SW is fully deactivated
-      const safeDelay = Math.max(reloadDelay, 1000);
+      // 🔴 FIX #3: Reduced delay from 1000ms to 500ms for faster UX
+      const safeDelay = Math.max(reloadDelay, 500);
 
       setTimeout(() => {
         // Double-check no active SW before navigating
@@ -196,9 +196,17 @@ export async function clearAllCaches(options: ClearCacheOptions = {}): Promise<v
         }
 
         // Navigate to root with tracking parameter
-        const param = mode === 'aggressive' ? 'updated=true' : 'cache_cleared=true';
+        const param = mode === 'aggressive' ? 'cache_cleared=1' : 'cache_cleared=1';
         console.log(`🔄 Navigating to /?${param}`);
-        window.location.href = `/?${param}`;
+
+        // 🔴 FIX #3: Use replace() instead of href to prevent back button loop
+        try {
+          window.location.replace(`/?${param}`);
+        } catch (e) {
+          // Fallback if replace fails
+          console.warn('replace() failed, using href fallback:', e);
+          window.location.href = `/?${param}`;
+        }
       }, safeDelay);
     }
   } catch (error) {
@@ -207,8 +215,12 @@ export async function clearAllCaches(options: ClearCacheOptions = {}): Promise<v
     // Still navigate to root if requested, even if there were errors
     if (reload) {
       setTimeout(() => {
-        // Fallback: Always go to root
-        window.location.href = '/';
+        // 🔴 FIX #3: Use replace() even in error case to prevent loops
+        try {
+          window.location.replace('/');
+        } catch (e) {
+          window.location.href = '/';
+        }
       }, reloadDelay);
     }
 

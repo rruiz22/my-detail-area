@@ -39,6 +39,7 @@ import {
     Building2,
     Calendar,
     Car,
+    Clock,
     Edit,
     Eye,
     MessageSquare,
@@ -388,7 +389,7 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                       {(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}
                     </label>
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-1">
                       <div className="text-sm font-semibold">
                         {(tabType === 'recon' || tabType === 'carwash') ? (
                           order.completedAt || order.completed_at ? (
@@ -408,6 +409,14 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                           </>
                         )}
                       </div>
+
+                      {/* Waiter indicator for CarWash orders */}
+                      {tabType === 'carwash' && order.isWaiter && (
+                        <span className="inline-flex items-center gap-0.5 bg-destructive/10 px-1.5 py-0.5 rounded" title={t('car_wash_orders.waiter_priority')}>
+                          <Clock className="w-3.5 h-3.5 text-destructive animate-pulse" />
+                          <span className="text-xs font-semibold text-destructive">Waiter</span>
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -653,27 +662,37 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
 
                     {/* Column 6: Due Date/Time or Completed Date - Dynamic based on order type */}
                     <TableCell className="py-1 text-center">
-                      <div className="flex flex-col items-center justify-center h-full">
+                      <div className="flex flex-col items-center justify-center h-full gap-1">
                         {(tabType === 'recon' || tabType === 'carwash') ? (
                           // For recon and carwash orders, show completed_at instead of due date
-                          order.completedAt || order.completed_at ? (
-                            <div className="text-sm font-medium text-foreground">
-                              <div className="flex items-center justify-center gap-1">
-                                <Calendar className="w-4 h-4 text-emerald-600" />
-                                <span>
-                                  {new Date(order.completedAt || order.completed_at).toLocaleDateString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    year: 'numeric'
-                                  })}
-                                </span>
+                          <>
+                            {order.completedAt || order.completed_at ? (
+                              <div className="text-sm font-medium text-foreground">
+                                <div className="flex items-center justify-center gap-1">
+                                  <Calendar className="w-4 h-4 text-emerald-600" />
+                                  <span>
+                                    {new Date(order.completedAt || order.completed_at).toLocaleDateString('en-US', {
+                                      month: 'short',
+                                      day: 'numeric',
+                                      year: 'numeric'
+                                    })}
+                                  </span>
+                                </div>
                               </div>
-                            </div>
-                          ) : (
-                            <div className="text-sm text-muted-foreground">
-                              {t('data_table.no_date_set')}
-                            </div>
-                          )
+                            ) : (
+                              <div className="text-sm text-muted-foreground">
+                                {t('data_table.no_date_set')}
+                              </div>
+                            )}
+
+                            {/* Waiter indicator for CarWash orders */}
+                            {tabType === 'carwash' && order.isWaiter && (
+                              <span className="inline-flex items-center gap-0.5 bg-destructive/10 px-1.5 py-0.5 rounded" title={t('car_wash_orders.waiter_priority')}>
+                                <Clock className="w-3.5 h-3.5 text-destructive animate-pulse" />
+                                <span className="text-xs font-semibold text-destructive">Waiter</span>
+                              </span>
+                            )}
+                          </>
                         ) : (
                           // For other orders (sales, service), use DueDateIndicator
                           <>
