@@ -100,6 +100,7 @@ export const useSmartPolling = <T>(options: UseSmartPollingOptions<T>) => {
 
 /**
  * Specialized hook for order list polling
+ * PHASE 2 OPTIMIZATION: Aligned staleTime with interval to prevent redundant fetches
  */
 export const useOrderPolling = <T>(
   queryKey: string[],
@@ -113,13 +114,14 @@ export const useOrderPolling = <T>(
     enabled,
     onlyWhenVisible: true,
     onlyWhenFocused: false,
-    staleTime: 30000, // 30 second stale time
-    refetchOnWindowFocus: true
+    staleTime: 60000, // OPTIMIZED: Match interval (60s) to prevent refetchOnWindowFocus from firing before next poll
+    refetchOnWindowFocus: false // OPTIMIZED: Disabled to prevent redundant fetches (polling handles freshness)
   });
 };
 
 /**
  * Specialized hook for order details polling (when modal is open)
+ * PHASE 2 OPTIMIZATION: Aligned staleTime with interval
  */
 export const useOrderDetailsPolling = <T>(
   queryKey: string[],
@@ -127,15 +129,16 @@ export const useOrderDetailsPolling = <T>(
   isModalOpen: boolean = false,
   options?: { interval?: number }
 ) => {
+  const interval = options?.interval ?? pollingConfig.orderDetails;
   return useSmartPolling({
     queryKey,
     queryFn,
-    interval: options?.interval ?? pollingConfig.orderDetails, // Default: 30 seconds, configurable via options
+    interval, // Default: 30 seconds, configurable via options
     enabled: isModalOpen,
     onlyWhenVisible: true,
     onlyWhenFocused: false,
-    staleTime: 15000, // 15 second stale time for details
-    refetchOnWindowFocus: true
+    staleTime: interval, // OPTIMIZED: Match interval to prevent premature staleness
+    refetchOnWindowFocus: false // OPTIMIZED: Disabled (polling handles freshness)
   });
 };
 
