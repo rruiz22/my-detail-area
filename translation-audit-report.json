@@ -1,8 +1,8 @@
 {
   "scannedFiles": 877,
-  "totalStrings": 8574,
-  "hardcodedStrings": 2048,
-  "translatedStrings": 6526,
+  "totalStrings": 8585,
+  "hardcodedStrings": 2050,
+  "translatedStrings": 6535,
   "issues": {
     "critical": [
       {
@@ -7462,6 +7462,292 @@
         "severity": "high"
       },
       {
+        "file": "src\\components\\orders\\OrderDataTable.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Vehicle",
+            "line": 328,
+            "context": "327: <div className=\"p-2 rounded\">\n328: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n329: <div className=\"text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis\">"
+          },
+          {
+            "text": "Waiter",
+            "line": 417,
+            "context": "416: <Clock className=\"w-3.5 h-3.5 text-destructive animate-pulse\" />\n417: <span className=\"text-xs font-semibold text-destructive\">Waiter</span>\n418: </span>"
+          },
+          {
+            "text": "Previous",
+            "line": 479,
+            "context": "478: disabled={currentPage === 1}\n479: >\n480: Previous"
+          },
+          {
+            "text": "Next",
+            "line": 490,
+            "context": "489: disabled={currentPage >= totalPages}\n490: >\n491: Next"
+          },
+          {
+            "text": "Order ID",
+            "line": 511,
+            "context": "510: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n511: <TableHead className=\"w-[140px] font-medium text-foreground text-center\">Order ID</TableHead>\n512: <TableHead className=\"font-medium text-foreground text-center\">"
+          },
+          {
+            "text": "Vehicle",
+            "line": 515,
+            "context": "514: </TableHead>\n515: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">Vehicle</TableHead>\n516: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>"
+          },
+          {
+            "text": "Status",
+            "line": 518,
+            "context": "517: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>\n518: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n519: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
+          },
+          {
+            "text": "Actions",
+            "line": 519,
+            "context": "518: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n519: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n520: </TableRow>"
+          },
+          {
+            "text": "Waiter",
+            "line": 692,
+            "context": "691: <Clock className=\"w-3.5 h-3.5 text-destructive animate-pulse\" />\n692: <span className=\"text-xs font-semibold text-destructive\">Waiter</span>\n693: </span>"
+          },
+          {
+            "text": "Previous",
+            "line": 839,
+            "context": "838: disabled={currentPage === 1}\n839: >\n840: Previous"
+          },
+          {
+            "text": "Next",
+            "line": 850,
+            "context": "849: disabled={currentPage >= totalPages}\n850: >\n851: Next"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "errors.no_permission_status_change",
+            "line": 135,
+            "exists": false
+          },
+          {
+            "key": "errors.status_update_failed",
+            "line": 166,
+            "exists": false
+          },
+          {
+            "key": "common.vin_copied",
+            "line": 176,
+            "exists": false
+          },
+          {
+            "key": "errors.copy_vin_failed",
+            "line": 182,
+            "exists": false
+          },
+          {
+            "key": "data_table.days_overdue",
+            "line": 198,
+            "exists": false
+          },
+          {
+            "key": "data_table.due_today",
+            "line": 200,
+            "exists": true
+          },
+          {
+            "key": "data_table.due_tomorrow",
+            "line": 202,
+            "exists": false
+          },
+          {
+            "key": "data_table.due_in_days",
+            "line": 204,
+            "exists": false
+          },
+          {
+            "key": "data_table.unknown_dealer",
+            "line": 300,
+            "exists": true
+          },
+          {
+            "key": "data_table.vin_not_provided",
+            "line": 351,
+            "exists": true
+          },
+          {
+            "key": "data_table.no_stock",
+            "line": 375,
+            "exists": true
+          },
+          {
+            "key": "recon.completion_date",
+            "line": 390,
+            "exists": true
+          },
+          {
+            "key": "data_table.no_date_set",
+            "line": 404,
+            "exists": true
+          },
+          {
+            "key": "car_wash_orders.waiter_priority",
+            "line": 415,
+            "exists": true
+          },
+          {
+            "key": "data_table.view",
+            "line": 432,
+            "exists": true
+          },
+          {
+            "key": "data_table.edit",
+            "line": 444,
+            "exists": true
+          },
+          {
+            "key": "data_table.delete",
+            "line": 457,
+            "exists": true
+          },
+          {
+            "key": "data_table.showing_range",
+            "line": 471,
+            "exists": true
+          },
+          {
+            "key": "data_table.page_of",
+            "line": 483,
+            "exists": true
+          },
+          {
+            "key": "data_table.orders_count",
+            "line": 502,
+            "exists": true
+          },
+          {
+            "key": "orders.services",
+            "line": 516,
+            "exists": true
+          },
+          {
+            "key": "recon.completion_date",
+            "line": 517,
+            "exists": true
+          },
+          {
+            "key": "data_table.unknown_dealer",
+            "line": 583,
+            "exists": true
+          },
+          {
+            "key": "data_table.no_stock",
+            "line": 606,
+            "exists": true
+          },
+          {
+            "key": "data_table.vin_not_provided",
+            "line": 644,
+            "exists": true
+          },
+          {
+            "key": "data_table.no_date_set",
+            "line": 684,
+            "exists": true
+          },
+          {
+            "key": "car_wash_orders.waiter_priority",
+            "line": 690,
+            "exists": true
+          },
+          {
+            "key": "data_table.no_time_set",
+            "line": 712,
+            "exists": true
+          },
+          {
+            "key": "data_table.view_details",
+            "line": 741,
+            "exists": true
+          },
+          {
+            "key": "data_table.edit_order",
+            "line": 753,
+            "exists": true
+          },
+          {
+            "key": "data_table.print_order",
+            "line": 764,
+            "exists": true
+          },
+          {
+            "key": "data_table.delete_order",
+            "line": 776,
+            "exists": true
+          },
+          {
+            "key": "data_table.no_orders_found",
+            "line": 792,
+            "exists": true
+          },
+          {
+            "key": "data_table.adjust_filters_or_create",
+            "line": 793,
+            "exists": true
+          },
+          {
+            "key": "data_table.showing_range",
+            "line": 808,
+            "exists": true
+          },
+          {
+            "key": "data_table.items_per_page",
+            "line": 811,
+            "exists": true
+          },
+          {
+            "key": "data_table.page_of",
+            "line": 843,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "errors.no_permission_status_change",
+            "line": 135,
+            "context": "134: variant: 'destructive',\n135: description: t('errors.no_permission_status_change', 'You do not have permission to change order status')\n136: });"
+          },
+          {
+            "key": "errors.status_update_failed",
+            "line": 166,
+            "context": "165: variant: 'destructive',\n166: description: t('errors.status_update_failed', 'Failed to update order status')\n167: });"
+          },
+          {
+            "key": "common.vin_copied",
+            "line": 176,
+            "context": "175: toast({\n176: description: t('common.vin_copied', 'VIN copied to clipboard')\n177: });"
+          },
+          {
+            "key": "errors.copy_vin_failed",
+            "line": 182,
+            "context": "181: variant: 'destructive',\n182: description: t('errors.copy_vin_failed', 'Failed to copy VIN')\n183: });"
+          },
+          {
+            "key": "data_table.days_overdue",
+            "line": 198,
+            "context": "197: if (diffDays < 0) {\n198: return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground whitespace-nowrap' };\n199: } else if (diffDays === 0) {"
+          },
+          {
+            "key": "data_table.due_tomorrow",
+            "line": 202,
+            "context": "201: } else if (diffDays === 1) {\n202: return { text: t('data_table.due_tomorrow'), variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };\n203: } else {"
+          },
+          {
+            "key": "data_table.due_in_days",
+            "line": 204,
+            "context": "203: } else {\n204: return { text: t('data_table.due_in_days', { days: diffDays }), variant: 'outline' as const, className: 'border-border text-foreground' };\n205: }"
+          }
+        ],
+        "coverage": 77,
+        "severity": "high"
+      },
+      {
         "file": "src\\components\\orders\\InstructionsBlock.tsx",
         "hardcodedStrings": [
           {
@@ -11982,272 +12268,6 @@
         "severity": "medium"
       },
       {
-        "file": "src\\components\\orders\\OrderDataTable.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Vehicle",
-            "line": 327,
-            "context": "326: <div className=\"p-2 rounded\">\n327: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n328: <div className=\"text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis\">"
-          },
-          {
-            "text": "Previous",
-            "line": 470,
-            "context": "469: disabled={currentPage === 1}\n470: >\n471: Previous"
-          },
-          {
-            "text": "Next",
-            "line": 481,
-            "context": "480: disabled={currentPage >= totalPages}\n481: >\n482: Next"
-          },
-          {
-            "text": "Order ID",
-            "line": 502,
-            "context": "501: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n502: <TableHead className=\"w-[140px] font-medium text-foreground text-center\">Order ID</TableHead>\n503: <TableHead className=\"font-medium text-foreground text-center\">"
-          },
-          {
-            "text": "Vehicle",
-            "line": 506,
-            "context": "505: </TableHead>\n506: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">Vehicle</TableHead>\n507: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>"
-          },
-          {
-            "text": "Status",
-            "line": 509,
-            "context": "508: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>\n509: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n510: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
-          },
-          {
-            "text": "Actions",
-            "line": 510,
-            "context": "509: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n510: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n511: </TableRow>"
-          },
-          {
-            "text": "Previous",
-            "line": 820,
-            "context": "819: disabled={currentPage === 1}\n820: >\n821: Previous"
-          },
-          {
-            "text": "Next",
-            "line": 831,
-            "context": "830: disabled={currentPage >= totalPages}\n831: >\n832: Next"
-          }
-        ],
-        "translationCalls": [
-          {
-            "key": "errors.no_permission_status_change",
-            "line": 134,
-            "exists": false
-          },
-          {
-            "key": "errors.status_update_failed",
-            "line": 165,
-            "exists": false
-          },
-          {
-            "key": "common.vin_copied",
-            "line": 175,
-            "exists": false
-          },
-          {
-            "key": "errors.copy_vin_failed",
-            "line": 181,
-            "exists": false
-          },
-          {
-            "key": "data_table.days_overdue",
-            "line": 197,
-            "exists": false
-          },
-          {
-            "key": "data_table.due_today",
-            "line": 199,
-            "exists": true
-          },
-          {
-            "key": "data_table.due_tomorrow",
-            "line": 201,
-            "exists": false
-          },
-          {
-            "key": "data_table.due_in_days",
-            "line": 203,
-            "exists": false
-          },
-          {
-            "key": "data_table.unknown_dealer",
-            "line": 299,
-            "exists": true
-          },
-          {
-            "key": "data_table.vin_not_provided",
-            "line": 350,
-            "exists": true
-          },
-          {
-            "key": "data_table.no_stock",
-            "line": 374,
-            "exists": true
-          },
-          {
-            "key": "recon.completion_date",
-            "line": 389,
-            "exists": true
-          },
-          {
-            "key": "data_table.no_date_set",
-            "line": 403,
-            "exists": true
-          },
-          {
-            "key": "data_table.view",
-            "line": 423,
-            "exists": true
-          },
-          {
-            "key": "data_table.edit",
-            "line": 435,
-            "exists": true
-          },
-          {
-            "key": "data_table.delete",
-            "line": 448,
-            "exists": true
-          },
-          {
-            "key": "data_table.showing_range",
-            "line": 462,
-            "exists": true
-          },
-          {
-            "key": "data_table.page_of",
-            "line": 474,
-            "exists": true
-          },
-          {
-            "key": "data_table.orders_count",
-            "line": 493,
-            "exists": true
-          },
-          {
-            "key": "orders.services",
-            "line": 507,
-            "exists": true
-          },
-          {
-            "key": "recon.completion_date",
-            "line": 508,
-            "exists": true
-          },
-          {
-            "key": "data_table.unknown_dealer",
-            "line": 574,
-            "exists": true
-          },
-          {
-            "key": "data_table.no_stock",
-            "line": 597,
-            "exists": true
-          },
-          {
-            "key": "data_table.vin_not_provided",
-            "line": 635,
-            "exists": true
-          },
-          {
-            "key": "data_table.no_date_set",
-            "line": 674,
-            "exists": true
-          },
-          {
-            "key": "data_table.no_time_set",
-            "line": 693,
-            "exists": true
-          },
-          {
-            "key": "data_table.view_details",
-            "line": 722,
-            "exists": true
-          },
-          {
-            "key": "data_table.edit_order",
-            "line": 734,
-            "exists": true
-          },
-          {
-            "key": "data_table.print_order",
-            "line": 745,
-            "exists": true
-          },
-          {
-            "key": "data_table.delete_order",
-            "line": 757,
-            "exists": true
-          },
-          {
-            "key": "data_table.no_orders_found",
-            "line": 773,
-            "exists": true
-          },
-          {
-            "key": "data_table.adjust_filters_or_create",
-            "line": 774,
-            "exists": true
-          },
-          {
-            "key": "data_table.showing_range",
-            "line": 789,
-            "exists": true
-          },
-          {
-            "key": "data_table.items_per_page",
-            "line": 792,
-            "exists": true
-          },
-          {
-            "key": "data_table.page_of",
-            "line": 824,
-            "exists": true
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "errors.no_permission_status_change",
-            "line": 134,
-            "context": "133: variant: 'destructive',\n134: description: t('errors.no_permission_status_change', 'You do not have permission to change order status')\n135: });"
-          },
-          {
-            "key": "errors.status_update_failed",
-            "line": 165,
-            "context": "164: variant: 'destructive',\n165: description: t('errors.status_update_failed', 'Failed to update order status')\n166: });"
-          },
-          {
-            "key": "common.vin_copied",
-            "line": 175,
-            "context": "174: toast({\n175: description: t('common.vin_copied', 'VIN copied to clipboard')\n176: });"
-          },
-          {
-            "key": "errors.copy_vin_failed",
-            "line": 181,
-            "context": "180: variant: 'destructive',\n181: description: t('errors.copy_vin_failed', 'Failed to copy VIN')\n182: });"
-          },
-          {
-            "key": "data_table.days_overdue",
-            "line": 197,
-            "context": "196: if (diffDays < 0) {\n197: return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground whitespace-nowrap' };\n198: } else if (diffDays === 0) {"
-          },
-          {
-            "key": "data_table.due_tomorrow",
-            "line": 201,
-            "context": "200: } else if (diffDays === 1) {\n201: return { text: t('data_table.due_tomorrow'), variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };\n202: } else {"
-          },
-          {
-            "key": "data_table.due_in_days",
-            "line": 203,
-            "context": "202: } else {\n203: return { text: t('data_table.due_in_days', { days: diffDays }), variant: 'outline' as const, className: 'border-border text-foreground' };\n204: }"
-          }
-        ],
-        "coverage": 80,
-        "severity": "medium"
-      },
-      {
         "file": "src\\components\\orders\\InteractiveTimeline.tsx",
         "hardcodedStrings": [
           {
@@ -14748,77 +14768,77 @@
           },
           {
             "key": "accessibility.service_orders.refresh_button",
-            "line": 394,
+            "line": 392,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 398,
+            "line": 396,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 404,
+            "line": 402,
             "exists": false
           },
           {
             "key": "accessibility.service_orders.create_button",
-            "line": 405,
+            "line": 403,
             "exists": true
           },
           {
             "key": "common.new_order",
-            "line": 408,
+            "line": 406,
             "exists": true
           },
           {
             "key": "accessibility.service_orders.main_content",
-            "line": 440,
+            "line": 439,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 453,
+            "line": 452,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.tomorrow",
-            "line": 453,
+            "line": 452,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 453,
+            "line": 452,
             "exists": true
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 453,
+            "line": 452,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 453,
+            "line": 452,
             "exists": true
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 541,
+            "line": 540,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 543,
+            "line": 542,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 547,
+            "line": 546,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 552,
+            "line": 551,
             "exists": false
           }
         ],
@@ -14880,23 +14900,23 @@
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 404,
-            "context": "403: disabled={!canCreate}\n404: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n405: aria-label={t('accessibility.service_orders.create_button', 'Create new service order')}"
+            "line": 402,
+            "context": "401: disabled={!canCreate}\n402: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n403: aria-label={t('accessibility.service_orders.create_button', 'Create new service order')}"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 541,
-            "context": "540: <AlertDialogHeader>\n541: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n542: <AlertDialogDescription>"
+            "line": 540,
+            "context": "539: <AlertDialogHeader>\n540: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n541: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 543,
-            "context": "542: <AlertDialogDescription>\n543: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n544: </AlertDialogDescription>"
+            "line": 542,
+            "context": "541: <AlertDialogDescription>\n542: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n543: </AlertDialogDescription>"
           },
           {
             "key": "common.delete",
-            "line": 552,
-            "context": "551: >\n552: {t('common.delete', 'Delete')}\n553: </AlertDialogAction>"
+            "line": 551,
+            "context": "550: >\n551: {t('common.delete', 'Delete')}\n552: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -15033,37 +15053,37 @@
           },
           {
             "key": "common.refresh",
-            "line": 454,
+            "line": 452,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 460,
+            "line": 458,
             "exists": false
           },
           {
             "key": "common.new_order",
-            "line": 463,
+            "line": 461,
             "exists": true
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 604,
+            "line": 603,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 606,
+            "line": 605,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 610,
+            "line": 609,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 615,
+            "line": 614,
             "exists": false
           }
         ],
@@ -15105,23 +15125,23 @@
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 460,
-            "context": "459: disabled={!canCreate}\n460: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n461: >"
+            "line": 458,
+            "context": "457: disabled={!canCreate}\n458: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n459: >"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 604,
-            "context": "603: <AlertDialogHeader>\n604: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n605: <AlertDialogDescription>"
+            "line": 603,
+            "context": "602: <AlertDialogHeader>\n603: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n604: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 606,
-            "context": "605: <AlertDialogDescription>\n606: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n607: </AlertDialogDescription>"
+            "line": 605,
+            "context": "604: <AlertDialogDescription>\n605: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n606: </AlertDialogDescription>"
           },
           {
             "key": "common.delete",
-            "line": 615,
-            "context": "614: >\n615: {t('common.delete', 'Delete')}\n616: </AlertDialogAction>"
+            "line": 614,
+            "context": "613: >\n614: {t('common.delete', 'Delete')}\n615: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -15604,72 +15624,72 @@
           },
           {
             "key": "accessibility.recon_orders.refresh_button",
-            "line": 532,
+            "line": 530,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 536,
+            "line": 534,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 542,
+            "line": 540,
             "exists": false
           },
           {
             "key": "accessibility.recon_orders.create_button",
-            "line": 543,
+            "line": 541,
             "exists": true
           },
           {
             "key": "recon.new_recon_order",
-            "line": 546,
+            "line": 544,
             "exists": true
           },
           {
             "key": "accessibility.recon_orders.main_content",
-            "line": 567,
+            "line": 566,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 572,
+            "line": 571,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 572,
+            "line": 571,
             "exists": true
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 572,
+            "line": 571,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 572,
+            "line": 571,
             "exists": true
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 661,
+            "line": 660,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 663,
+            "line": 662,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 667,
+            "line": 666,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 672,
+            "line": 671,
             "exists": false
           }
         ],
@@ -15716,23 +15736,23 @@
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 542,
-            "context": "541: disabled={!canCreate}\n542: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n543: aria-label={t('accessibility.recon_orders.create_button')}"
+            "line": 540,
+            "context": "539: disabled={!canCreate}\n540: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n541: aria-label={t('accessibility.recon_orders.create_button')}"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 661,
-            "context": "660: <AlertDialogHeader>\n661: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n662: <AlertDialogDescription>"
+            "line": 660,
+            "context": "659: <AlertDialogHeader>\n660: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n661: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 663,
-            "context": "662: <AlertDialogDescription>\n663: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n664: </AlertDialogDescription>"
+            "line": 662,
+            "context": "661: <AlertDialogDescription>\n662: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n663: </AlertDialogDescription>"
           },
           {
             "key": "common.delete",
-            "line": 672,
-            "context": "671: >\n672: {t('common.delete', 'Delete')}\n673: </AlertDialogAction>"
+            "line": 671,
+            "context": "670: >\n671: {t('common.delete', 'Delete')}\n672: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -18157,72 +18177,72 @@
           },
           {
             "key": "accessibility.car_wash_orders.refresh_button",
-            "line": 413,
+            "line": 411,
             "exists": true
           },
           {
             "key": "common.refresh",
-            "line": 417,
+            "line": 415,
             "exists": true
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 423,
+            "line": 421,
             "exists": false
           },
           {
             "key": "accessibility.car_wash_orders.create_button",
-            "line": 424,
+            "line": 422,
             "exists": true
           },
           {
             "key": "car_wash_orders.quick_order",
-            "line": 427,
+            "line": 425,
             "exists": true
           },
           {
             "key": "accessibility.car_wash_orders.main_content",
-            "line": 446,
+            "line": 445,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 451,
+            "line": 450,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 451,
+            "line": 450,
             "exists": true
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 451,
+            "line": 450,
             "exists": true
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 451,
+            "line": 450,
             "exists": true
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 517,
+            "line": 516,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 519,
+            "line": 518,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 523,
+            "line": 522,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 528,
+            "line": 527,
             "exists": false
           }
         ],
@@ -18254,23 +18274,23 @@
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 423,
-            "context": "422: disabled={!canCreate}\n423: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n424: aria-label={t('accessibility.car_wash_orders.create_button')}"
+            "line": 421,
+            "context": "420: disabled={!canCreate}\n421: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n422: aria-label={t('accessibility.car_wash_orders.create_button')}"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 517,
-            "context": "516: <AlertDialogHeader>\n517: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n518: <AlertDialogDescription>"
+            "line": 516,
+            "context": "515: <AlertDialogHeader>\n516: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n517: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 519,
-            "context": "518: <AlertDialogDescription>\n519: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n520: </AlertDialogDescription>"
+            "line": 518,
+            "context": "517: <AlertDialogDescription>\n518: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n519: </AlertDialogDescription>"
           },
           {
             "key": "common.delete",
-            "line": 528,
-            "context": "527: >\n528: {t('common.delete', 'Delete')}\n529: </AlertDialogAction>"
+            "line": 527,
+            "context": "526: >\n527: {t('common.delete', 'Delete')}\n528: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -38628,8 +38648,8 @@
         "hardcodedStrings": [
           {
             "text": "ST-001",
-            "line": 706,
-            "context": "705: className={selectedVehicle ? \"border-input bg-muted/30\" : \"border-input bg-background\"}\n706: placeholder=\"ST-001\"\n707: readOnly={!!selectedVehicle}"
+            "line": 726,
+            "context": "725: className={selectedVehicle ? \"border-input bg-muted/30\" : \"border-input bg-background\"}\n726: placeholder=\"ST-001\"\n727: readOnly={!!selectedVehicle}"
           },
           {
             "text": ", error);\n      const errorMessage = error?.message || t(",
@@ -38710,187 +38730,207 @@
           },
           {
             "key": "sales_orders.dealership",
-            "line": 658,
-            "exists": true
-          },
-          {
-            "key": "dealerships.auto_selected",
             "line": 661,
             "exists": true
           },
           {
+            "key": "sales_orders.dealership",
+            "line": 667,
+            "exists": true
+          },
+          {
+            "key": "dealerships.auto_selected",
+            "line": 670,
+            "exists": true
+          },
+          {
             "key": "common.loading",
-            "line": 671,
+            "line": 680,
             "exists": true
           },
           {
             "key": "sales_orders.select_dealership",
-            "line": 671,
+            "line": 680,
             "exists": true
           },
           {
             "key": "stock.autopop.searchVehicle",
-            "line": 691,
+            "line": 702,
             "exists": true
           },
           {
             "key": "stock.filters.search_placeholder",
-            "line": 692,
+            "line": 703,
+            "exists": true
+          },
+          {
+            "key": "orders.vehicleInfo",
+            "line": 715,
             "exists": true
           },
           {
             "key": "sales_orders.stock_number",
-            "line": 700,
+            "line": 720,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 711,
+            "line": 731,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 711,
+            "line": 731,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 711,
+            "line": 731,
             "exists": true
           },
           {
             "key": "orders.vin",
-            "line": 718,
+            "line": 738,
             "exists": true
           },
           {
             "key": "sales_orders.vin_decoded_successfully",
-            "line": 723,
+            "line": 743,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 750,
+            "line": 770,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 750,
+            "line": 770,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 750,
+            "line": 770,
             "exists": true
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 756,
+            "line": 776,
             "exists": true
           },
           {
             "key": "sales_orders.manual_vehicle_entry",
-            "line": 767,
-            "exists": true
-          },
-          {
-            "key": "recon.completion_date",
-            "line": 777,
-            "exists": true
-          },
-          {
-            "key": "recon.select_completion_date",
-            "line": 781,
-            "exists": true
-          },
-          {
-            "key": "recon.completion_date_help",
-            "line": 786,
+            "line": 787,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 794,
-            "exists": true
-          },
-          {
-            "key": "orders.available",
-            "line": 797,
-            "exists": true
-          },
-          {
-            "key": "orders.selected",
             "line": 802,
             "exists": true
           },
           {
+            "key": "recon.completion_date",
+            "line": 808,
+            "exists": true
+          },
+          {
+            "key": "recon.select_completion_date",
+            "line": 812,
+            "exists": true
+          },
+          {
+            "key": "recon.completion_date_help",
+            "line": 817,
+            "exists": true
+          },
+          {
+            "key": "orders.services",
+            "line": 825,
+            "exists": true
+          },
+          {
+            "key": "orders.available",
+            "line": 828,
+            "exists": true
+          },
+          {
+            "key": "orders.selected",
+            "line": 833,
+            "exists": true
+          },
+          {
             "key": "orders.max_services_info",
-            "line": 809,
+            "line": 840,
             "exists": true
           },
           {
             "key": "orders.selectDealershipFirst",
-            "line": 815,
+            "line": 846,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 820,
+            "line": 851,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 827,
+            "line": 858,
             "exists": true
           },
           {
             "key": "services.minutes",
-            "line": 859,
+            "line": 890,
             "exists": true
           },
           {
             "key": "orders.total",
-            "line": 880,
+            "line": 911,
             "exists": true
           },
           {
             "key": "orders.servicesSelected",
-            "line": 886,
+            "line": 917,
             "exists": true
           },
           {
             "key": "orders.notes",
-            "line": 895,
+            "line": 929,
+            "exists": true
+          },
+          {
+            "key": "orders.notes",
+            "line": 935,
             "exists": true
           },
           {
             "key": "orders.notes_instruction",
-            "line": 902,
+            "line": 942,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 953,
+            "line": 995,
             "exists": true
           },
           {
             "key": "orders.updating",
-            "line": 969,
+            "line": 1011,
             "exists": true
           },
           {
             "key": "orders.creating",
-            "line": 969,
+            "line": 1011,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 972,
+            "line": 1014,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 972,
+            "line": 1014,
             "exists": true
           }
         ],
@@ -41353,8 +41393,8 @@
         "hardcodedStrings": [
           {
             "text": "ST-001",
-            "line": 497,
-            "context": "496: className=\"border-input bg-background uppercase\"\n497: placeholder=\"ST-001\"\n498: />"
+            "line": 519,
+            "context": "518: className=\"border-input bg-background uppercase\"\n519: placeholder=\"ST-001\"\n520: />"
           },
           {
             "text": ", error);\n      const errorMessage = error?.message || ",
@@ -41375,197 +41415,212 @@
           },
           {
             "key": "car_wash_orders.edit_order",
-            "line": 400,
+            "line": 402,
             "exists": true
           },
           {
             "key": "car_wash_orders.quick_car_wash_order",
-            "line": 400,
+            "line": 402,
             "exists": true
           },
           {
             "key": "car_wash_orders.waiter_priority",
-            "line": 404,
+            "line": 406,
             "exists": true
           },
           {
             "key": "car_wash_orders.dealership",
-            "line": 432,
+            "line": 437,
+            "exists": true
+          },
+          {
+            "key": "car_wash_orders.dealership",
+            "line": 443,
             "exists": true
           },
           {
             "key": "dealerships.auto_selected",
-            "line": 435,
+            "line": 446,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 445,
+            "line": 456,
             "exists": true
           },
           {
             "key": "car_wash_orders.select_dealership",
-            "line": 445,
+            "line": 456,
+            "exists": true
+          },
+          {
+            "key": "orders.vehicleInfo",
+            "line": 475,
             "exists": true
           },
           {
             "key": "orders.vin",
-            "line": 459,
+            "line": 481,
             "exists": true
           },
           {
             "key": "car_wash_orders.decoded",
-            "line": 464,
+            "line": 486,
             "exists": true
           },
           {
             "key": "car_wash_orders.stock_number",
-            "line": 491,
+            "line": 513,
             "exists": true
           },
           {
             "key": "car_wash_orders.vehicle_display",
-            "line": 502,
+            "line": 524,
             "exists": true
           },
           {
             "key": "car_wash_orders.auto_populated",
-            "line": 521,
+            "line": 543,
             "exists": true
           },
           {
             "key": "car_wash.service_date",
-            "line": 528,
+            "line": 550,
             "exists": true
           },
           {
             "key": "car_wash.select_service_date",
-            "line": 532,
+            "line": 554,
             "exists": true
           },
           {
             "key": "car_wash.service_date_help",
-            "line": 537,
-            "exists": true
-          },
-          {
-            "key": "orders.servicesAndNotes",
-            "line": 546,
-            "exists": true
-          },
-          {
-            "key": "orders.status",
-            "line": 552,
-            "exists": true
-          },
-          {
-            "key": "common.status.pending",
-            "line": 561,
-            "exists": true
-          },
-          {
-            "key": "common.status.in_progress",
-            "line": 562,
-            "exists": true
-          },
-          {
-            "key": "common.status.completed",
-            "line": 563,
-            "exists": true
-          },
-          {
-            "key": "common.status.cancelled",
-            "line": 564,
-            "exists": true
-          },
-          {
-            "key": "car_wash_orders.waiter_priority",
-            "line": 580,
+            "line": 559,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 588,
+            "line": 573,
             "exists": true
           },
           {
-            "key": "orders.available",
+            "key": "orders.status",
+            "line": 580,
+            "exists": true
+          },
+          {
+            "key": "common.status.pending",
+            "line": 589,
+            "exists": true
+          },
+          {
+            "key": "common.status.in_progress",
+            "line": 590,
+            "exists": true
+          },
+          {
+            "key": "common.status.completed",
+            "line": 591,
+            "exists": true
+          },
+          {
+            "key": "common.status.cancelled",
             "line": 592,
             "exists": true
           },
           {
+            "key": "car_wash_orders.waiter_priority",
+            "line": 608,
+            "exists": true
+          },
+          {
+            "key": "orders.services",
+            "line": 616,
+            "exists": true
+          },
+          {
+            "key": "orders.available",
+            "line": 620,
+            "exists": true
+          },
+          {
             "key": "orders.selected",
-            "line": 597,
+            "line": 625,
             "exists": true
           },
           {
             "key": "car_wash_orders.one_service_limit",
-            "line": 604,
+            "line": 632,
             "exists": true
           },
           {
             "key": "orders.selectDealershipFirst",
-            "line": 610,
+            "line": 638,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 615,
+            "line": 643,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 623,
+            "line": 651,
             "exists": true
           },
           {
             "key": "services.minutes",
-            "line": 655,
-            "exists": true
-          },
-          {
-            "key": "validation.option_required",
-            "line": 672,
-            "exists": true
-          },
-          {
-            "key": "orders.total",
             "line": 683,
             "exists": true
           },
           {
-            "key": "orders.servicesSelected",
-            "line": 692,
-            "exists": true
-          },
-          {
-            "key": "orders.notes",
+            "key": "validation.option_required",
             "line": 700,
             "exists": true
           },
           {
+            "key": "orders.total",
+            "line": 711,
+            "exists": true
+          },
+          {
+            "key": "orders.servicesSelected",
+            "line": 720,
+            "exists": true
+          },
+          {
+            "key": "orders.notes",
+            "line": 732,
+            "exists": true
+          },
+          {
+            "key": "orders.notes",
+            "line": 737,
+            "exists": true
+          },
+          {
             "key": "car_wash_orders.notes_placeholder",
-            "line": 707,
+            "line": 744,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 775,
+            "line": 817,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 783,
+            "line": 825,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 783,
+            "line": 825,
             "exists": true
           }
         ],
         "missingKeys": [],
-        "coverage": 95,
+        "coverage": 96,
         "severity": "low"
       },
       {
@@ -58093,11 +58148,11 @@
         "src\\components\\debug\\DuplicateTooltipTester.tsx",
         "src\\components\\reports\\invoices\\InvoiceEmailLog.tsx",
         "src\\components\\reports\\invoices\\InvoiceComments.tsx",
+        "src\\components\\orders\\OrderDataTable.tsx",
         "src\\components\\get-ready\\GetReadyVehicleList.tsx",
         "src\\components\\get-ready\\approvals\\ApprovalHistoryTable.tsx",
         "src\\components\\followers\\UniversalFollowButton.tsx",
         "src\\components\\users\\UserDashboard.tsx",
-        "src\\components\\orders\\OrderDataTable.tsx",
         "src\\components\\dev\\OrderNumberMigrationTool.tsx",
         "src\\components\\debug\\CacheDebugger.tsx",
         "src\\test\\components\\Button.test.tsx",
