@@ -236,25 +236,32 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const handleRefresh = async () => {
     setIsManualRefreshing(true);
     try {
-      // Invalidate ALL Get Ready queries for complete refresh
+      // Targeted refresh: only invalidate visible data (vehicle list, steps, KPIs)
+      // Detail panel, notes, work items, media, and activity log are only invalidated if panel is open
       await queryClient.invalidateQueries({
-        predicate: (query) => {
-          const key = query.queryKey[0] as string;
-          return [
-            'get-ready-vehicles',      // Vehicle list
-            'get-ready-vehicle-detail', // Detail panel
-            'vehicle-notes',           // Notes tab
-            'note-replies',           // Note replies
-            'vehicle-work-items',     // Work items tab
-            'vehicle-media',          // Media tab
-            'vehicle-activity-log',   // Timeline tab
-            'get-ready-steps',        // Sidebar steps
-            'get-ready-kpis',         // Sidebar KPIs
-          ].includes(key);
-        }
+        queryKey: ['get-ready-vehicles', 'infinite'],
+        exact: false
       });
 
-      console.log('✅ [Refresh] All Get Ready queries invalidated');
+      await queryClient.invalidateQueries({
+        queryKey: ['get-ready-steps'],
+        exact: false
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: ['get-ready-kpis'],
+        exact: false
+      });
+
+      // Only invalidate detail panel if a vehicle is selected
+      if (selectedVehicleId) {
+        await queryClient.invalidateQueries({
+          queryKey: ['get-ready-vehicle-detail', selectedVehicleId],
+          exact: false
+        });
+      }
+
+      console.log('✅ [Refresh] Get Ready core queries invalidated (targeted scope)');
 
       toast({
         description: t("common.data_refreshed") || "Data refreshed successfully",

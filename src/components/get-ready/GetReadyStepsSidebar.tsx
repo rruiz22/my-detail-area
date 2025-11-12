@@ -28,30 +28,8 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
   const steps = getReadySteps;
   const isLoading = getReadyLoading;
 
-  // 🔍 DIAGNOSTIC LOGGING - Remove after debugging
-  React.useEffect(() => {
-    if (kpis) {
-      console.log('📊 [Sidebar KPIs]:', {
-        avgT2L: kpis.avgT2L,
-        slaCompliance: kpis.slaCompliance,
-        dailyThroughput: kpis.dailyThroughput,
-        weeklyCapacity: kpis.weeklyCapacity,
-        totalHoldingCosts: kpis.totalHoldingCosts
-      });
-    }
-    console.log('🚨 [Sidebar Alerts]:', {
-      bottleneck: bottleneckAlerts.length,
-      sla: slaAlerts.length,
-      total: bottleneckAlerts.length + slaAlerts.length
-    });
-    console.log('📍 [Sidebar Steps]:', {
-      count: steps.length,
-      steps: steps.map(s => ({ id: s.id, name: s.name, vehicles: s.vehicle_count }))
-    });
-  }, [kpis, bottleneckAlerts, slaAlerts, steps]);
-
   const getStepIcon = (iconName: string) => {
-    const iconMap: Record<string, any> = {
+    const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
       'search': Search,
       'wrench': Wrench,
       'hammer': Hammer,

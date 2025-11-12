@@ -25,7 +25,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useTranslationsReady } from '@/hooks/useTranslationsReady';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState, useMemo } from 'react';
 import { SplashScreen } from './SplashScreen';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw, Info } from 'lucide-react';
@@ -62,6 +62,42 @@ export function AppLoadingBoundary({ children }: AppLoadingBoundaryProps) {
       setPrivateModeChecked(true);
     });
   }, []);
+
+  // ✅ OPTIMIZED: Memoize loading conditions to prevent unnecessary recalculations
+  // MUST be called before any conditional returns (React Hooks rules)
+  const loadingState = useMemo(() => {
+    const isAuthenticating = authLoading;
+    const isLoadingTranslations = !translationsReady;
+    const isLoadingPermissions = user && (permissionsLoading || !enhancedUser);
+
+    const showSplashScreen = isAuthenticating || isLoadingTranslations || isLoadingPermissions;
+
+    let loadingMessage = 'Loading...';
+    if (isAuthenticating) {
+      loadingMessage = 'Authenticating...';
+    } else if (isLoadingTranslations) {
+      loadingMessage = 'Loading translations...';
+    } else if (isLoadingPermissions) {
+      loadingMessage = 'Loading permissions...';
+    }
+
+    return {
+      showSplashScreen,
+      loadingMessage,
+      isAuthenticating,
+      isLoadingTranslations,
+      isLoadingPermissions
+    };
+  }, [authLoading, translationsReady, user, permissionsLoading, enhancedUser]);
+
+  // Reduced logging - only when state changes
+  useEffect(() => {
+    if (import.meta.env.DEV && loadingState.showSplashScreen) {
+      console.log(`⏳ [AppLoadingBoundary] ${loadingState.loadingMessage}`);
+    } else if (import.meta.env.DEV && !loadingState.showSplashScreen) {
+      console.log('✅ [AppLoadingBoundary] All systems ready, rendering app');
+    }
+  }, [loadingState.showSplashScreen, loadingState.loadingMessage]);
 
   // 🔴 CRITICAL FIX: Handle translation load errors
   if (translationsError) {
@@ -137,51 +173,10 @@ export function AppLoadingBoundary({ children }: AppLoadingBoundaryProps) {
     );
   }
 
-  // ✅ CRITICAL: Determine what we're waiting for
-  const isAuthenticating = authLoading;
-  const isLoadingTranslations = !translationsReady;
-  const isLoadingPermissions = user && (permissionsLoading || !enhancedUser);
-
-  // Debug logging (dev only)
-  if (import.meta.env.DEV) {
-    console.log('🔍 [AppLoadingBoundary] State:', {
-      authLoading,
-      hasUser: !!user,
-      permissionsLoading,
-      hasEnhancedUser: !!enhancedUser,
-      translationsReady,
-      isAuthenticating,
-      isLoadingTranslations,
-      isLoadingPermissions,
-      timestamp: new Date().toISOString()
-    });
-  }
-
-  // Determine loading message based on what's blocking
-  let loadingMessage = 'Loading...';
-
-  if (isAuthenticating) {
-    loadingMessage = 'Authenticating...';
-  } else if (isLoadingTranslations) {
-    loadingMessage = 'Loading translations...';
-  } else if (isLoadingPermissions) {
-    loadingMessage = 'Loading permissions...';
-  }
-
-  // Show splash screen if ANY critical system is not ready
-  const showSplashScreen = isAuthenticating || isLoadingTranslations || isLoadingPermissions;
-
-  if (showSplashScreen) {
-    if (import.meta.env.DEV) {
-      console.log(`⏳ [AppLoadingBoundary] Showing splash: ${loadingMessage}`);
-    }
-    return <SplashScreen message={loadingMessage} showProgress={true} />;
+  if (loadingState.showSplashScreen) {
+    return <SplashScreen message={loadingState.loadingMessage} showProgress={true} />;
   }
 
   // ✅ ALL SYSTEMS READY - Render app
-  if (import.meta.env.DEV) {
-    console.log('✅ [AppLoadingBoundary] All systems ready, rendering app');
-  }
-
   return <>{children}</>;
 }

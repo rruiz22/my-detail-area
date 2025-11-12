@@ -36,43 +36,27 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
   const { currentDealership } = useAccessibleDealerships();
   const { open, setOpen } = useSidebar();
   const previousPathRef = useRef<string>('');
-  const timeoutRef = useRef<NodeJS.Timeout>();
   const [privacyModalOpen, setPrivacyModalOpen] = useState(false);
   const [termsModalOpen, setTermsModalOpen] = useState(false);
   const currentYear = useCurrentYear();
 
-  // ✅ OPTIMIZATION: Simplified auto-collapse/expand sidebar for Get Ready module
-  // Consolidates 3 redundant cases into 1 clean logic with proper cleanup
+  // ✅ OPTIMIZATION: Auto-collapse/expand sidebar for Get Ready module
+  // Immediate state update without setTimeout for better performance
   useEffect(() => {
     const isGetReadyModule = location.pathname.startsWith('/get-ready');
     const wasGetReadyModule = previousPathRef.current.startsWith('/get-ready');
 
     // Only act if module state changed (entering or leaving Get Ready)
     if (isGetReadyModule !== wasGetReadyModule) {
-      // ✅ Cancel any pending timeout to prevent accumulation
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-
       const targetState = !isGetReadyModule;
       logger.dev(`🔧 [PROTECTED LAYOUT] ${isGetReadyModule ? 'Entering' : 'Leaving'} Get Ready - ${targetState ? 'Opening' : 'Collapsing'} sidebar`);
 
-      timeoutRef.current = setTimeout(() => {
-        setOpen(targetState);
-      }, 100);
+      // Immediate update - CSS transition handles animation smoothly
+      setOpen(targetState);
     }
 
     previousPathRef.current = location.pathname;
   }, [location.pathname, setOpen]);
-
-  // ✅ Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
 
   return (
     <div className="min-h-screen flex w-full bg-background">
