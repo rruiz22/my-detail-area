@@ -144,6 +144,36 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
       .sort((a, b) => b.count - a.count);
   }, [allVehicles, steps, historicalStepAnalytics]);
 
+  // Calculate overall step average for all steps combined
+  // This uses historicalStepAnalytics which is already filtered by timeRange (7d, 30d, 90d)
+  const overallStepAverage = useMemo(() => {
+    if (!historicalStepAnalytics || historicalStepAnalytics.length === 0) {
+      return { avgDays: 0, totalSteps: 0, totalVehicles: 0, totalTransitions: 0 };
+    }
+
+    // Calculate weighted average across all steps based on historical data
+    // Use total_transitions as the weight since it represents actual step activity in the time period
+    let totalTimeWeighted = 0;
+    let totalTransitions = 0;
+
+    historicalStepAnalytics.forEach(step => {
+      const transitions = step.total_transitions || 0;
+      const avgTimeHours = step.avg_total_time || 0;
+
+      totalTimeWeighted += (avgTimeHours / 24) * transitions; // Convert hours to days
+      totalTransitions += transitions;
+    });
+
+    const avgDays = totalTransitions > 0 ? totalTimeWeighted / totalTransitions : 0;
+
+    return {
+      avgDays,
+      totalSteps: historicalStepAnalytics.length,
+      totalVehicles: allVehicles.length,
+      totalTransitions
+    };
+  }, [historicalStepAnalytics, allVehicles]);
+
   // Calculate team performance
   const teamStats = useMemo(() => {
     const teamMap = new Map();
@@ -251,49 +281,81 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
 
       {/* Step Analysis & Priority Breakdown */}
       <div className="grid gap-6 md:grid-cols-2">
-        {/* Step Analysis */}
+        {/* Step Analysis - Overall Average */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Layers className="h-5 w-5" />
               Step Analysis
             </CardTitle>
-            <CardDescription>Vehicle distribution by workflow step</CardDescription>
+            <CardDescription>Average time across all workflow steps</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {stepStats.slice(0, 6).map((stat, index) => (
-                <div
-                  key={stat.step_id}
-                  className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
-                  onClick={() => handleNavigateToDetails(stat.step_id)}
-                >
-                  <div className="flex items-center gap-3 flex-1">
-                    <div
-                      className="w-3 h-3 rounded-full flex-shrink-0"
-                      style={{ backgroundColor: stat.step?.color || '#6B7280' }}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium text-sm">{stat.step_name}</div>
-                      <div className="text-xs text-muted-foreground">
-                        Avg: {stat.avgDays.toFixed(1)}d
-                        {stat.atRisk > 0 && (
-                          <span className="text-amber-600 ml-2">• {stat.atRisk} at risk</span>
-                        )}
-                        {stat.revisitRate > 10 && (
-                          <span className="text-blue-600 ml-2">• {stat.revisitRate.toFixed(0)}% revisit</span>
-                        )}
-                      </div>
+            <div className="space-y-6">
+              {/* Overall Average Display */}
+              <div className="flex items-center justify-between p-4 rounded-lg bg-indigo-50 border border-indigo-200">
+                <div className="flex items-center gap-4 flex-1">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100">
+                    <Clock className="h-6 w-6 text-indigo-600" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                      Average Time Per Step
+                    </div>
+                    <div className="text-3xl font-bold text-indigo-600 mt-1">
+                      {overallStepAverage.avgDays.toFixed(1)}
+                      <span className="text-lg text-muted-foreground ml-1">days</span>
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      Based on {timeRange === '7d' ? 'last 7 days' : timeRange === '30d' ? 'last 30 days' : 'last 90 days'}
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Badge variant="outline">{stat.count}</Badge>
-                    {stat.atRisk > 0 && (
-                      <AlertTriangle className="h-4 w-4 text-amber-500" />
-                    )}
-                  </div>
                 </div>
-              ))}
+                <div className="text-right space-y-1">
+                  <div className="text-sm text-muted-foreground">{overallStepAverage.totalSteps} Steps</div>
+                  <div className="text-sm text-muted-foreground">{overallStepAverage.totalVehicles} Vehicles</div>
+                </div>
+              </div>
+
+              {/* Top Steps Summary */}
+              <div className="space-y-2">
+                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                  Top Steps by Volume
+                </div>
+                <div className="space-y-2">
+                  {stepStats.slice(0, 3).map((stat) => (
+                    <div
+                      key={stat.step_id}
+                      className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+                      onClick={() => handleNavigateToDetails(stat.step_id)}
+                    >
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <div
+                          className="w-2 h-2 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: stat.step?.color || '#6B7280' }}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-sm truncate">{stat.step_name}</div>
+                          <div className="text-xs text-muted-foreground">
+                            Avg: {stat.avgDays.toFixed(1)}d
+                          </div>
+                        </div>
+                      </div>
+                      <Badge variant="outline" className="ml-2">{stat.count}</Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* View All Button */}
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => navigate('/get-ready/details')}
+              >
+                View All Steps
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
             </div>
           </CardContent>
         </Card>
