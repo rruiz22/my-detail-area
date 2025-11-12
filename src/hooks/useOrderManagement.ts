@@ -976,6 +976,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
             eventData: {
               orderNumber: data.order_number || data.custom_order_number || data.id,
               stockNumber: data.stock_number,
+              vinNumber: data.vin_number,
               vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim(),
               services: servicesText,
               dueDateTime: data.due_date,
@@ -1180,6 +1181,34 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
               shortLink = `${window.location.origin}/orders/${orderId}`;
             }
 
+            // 🔍 Fetch assigned user/group name for status change notification
+            let assignedToName: string | undefined = undefined;
+            if (data.assigned_group_id) {
+              try {
+                const { data: groupData } = await supabase
+                  .from('dealer_groups')
+                  .select('name')
+                  .eq('id', data.assigned_group_id)
+                  .single();
+                assignedToName = groupData?.name || undefined;
+              } catch (error) {
+                console.warn('⚠️ Failed to fetch group name for status change:', error);
+              }
+            } else if (data.assigned_contact_id) {
+              try {
+                const { data: contactData } = await supabase
+                  .from('dealership_contacts')
+                  .select('first_name, last_name')
+                  .eq('id', data.assigned_contact_id)
+                  .single();
+                if (contactData) {
+                  assignedToName = `${contactData.first_name || ''} ${contactData.last_name || ''}`.trim();
+                }
+              } catch (error) {
+                console.warn('⚠️ Failed to fetch contact name for status change:', error);
+              }
+            }
+
             await slackNotificationService.notifyStatusChange({
               orderId: data.id,
               dealerId: data.dealer_id,
@@ -1187,10 +1216,12 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
               eventData: {
                 orderNumber: data.order_number || data.custom_order_number || data.id,
                 stockNumber: data.stock_number,
+                vinNumber: data.vin_number,
                 vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim(),
                 status: orderData.status,
                 oldStatus: oldStatus,
-                shortLink: shortLink || `${window.location.origin}/orders/${orderId}`
+                shortLink: shortLink || `${window.location.origin}/orders/${orderId}`,
+                assignedTo: assignedToName
               }
             });
           }

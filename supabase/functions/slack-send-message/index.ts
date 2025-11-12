@@ -13,19 +13,29 @@ const corsHeaders = {
 };
 
 /**
- * Format ISO datetime to human-readable format
- * Example: "2025-11-17T13:00:00+00:00" → "Nov 17, 1pm"
+ * Format ISO datetime to human-readable format in New York timezone
+ * Example: "2025-11-17T13:00:00+00:00" → "Nov 17, 1pm ET"
  */
 function formatDueDate(isoString: string): string {
   try {
     const date = new Date(isoString);
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const month = months[date.getMonth()];
-    const day = date.getDate();
-    const hours = date.getHours();
-    const ampm = hours >= 12 ? 'pm' : 'am';
-    const displayHour = hours % 12 || 12;
-    return `${month} ${day}, ${displayHour}${ampm}`;
+
+    // Convert to New York timezone (America/New_York)
+    const nyFormatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      hour12: true
+    });
+
+    const parts = nyFormatter.formatToParts(date);
+    const month = parts.find(p => p.type === 'month')?.value || '';
+    const day = parts.find(p => p.type === 'day')?.value || '';
+    const hour = parts.find(p => p.type === 'hour')?.value || '';
+    const dayPeriod = parts.find(p => p.type === 'dayPeriod')?.value.toLowerCase() || '';
+
+    return `${month} ${day}, ${hour}${dayPeriod} ET`;
   } catch (error) {
     console.warn('Failed to format date:', error);
     return isoString; // Fallback to original if parsing fails
@@ -40,6 +50,7 @@ interface SlackNotificationRequest {
     orderNumber?: string;
     stockNumber?: string;
     tag?: string;
+    vinNumber?: string;
     vehicleInfo?: string;
     services?: string;
     dueDateTime?: string;
@@ -122,8 +133,9 @@ serve(async (req) => {
       // Format due date if available
       const formattedDate = eventData.dueDateTime ? formatDueDate(eventData.dueDateTime) : null;
 
-      // Build details string with formatted date and assigned user
+      // Build details string with VIN, formatted date, and assigned user
       const details = [
+        eventData.vinNumber ? `VIN: ${eventData.vinNumber}` : null,
         eventData.vehicleInfo,
         eventData.services,
         formattedDate,
@@ -135,7 +147,15 @@ serve(async (req) => {
     } else if (eventType === 'status_changed') {
       const oldStatusFormatted = eventData.oldStatus?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Unknown';
       const newStatusFormatted = eventData.status?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Unknown';
-      messageText = `📊 Order ${orderIdentifier} status: "${oldStatusFormatted}" → "${newStatusFormatted}". View: ${eventData.shortLink}`;
+
+      // Build details string with VIN and assigned user
+      const details = [
+        eventData.vinNumber ? `VIN: ${eventData.vinNumber}` : null,
+        eventData.vehicleInfo,
+        eventData.assignedTo ? `Assigned: ${eventData.assignedTo}` : null
+      ].filter(Boolean).join(' - ');
+
+      messageText = `📊 Order ${orderIdentifier} status: "${oldStatusFormatted}" → "${newStatusFormatted}"${details ? ` - ${details}` : ''}. View: ${eventData.shortLink}`;
     } else if (eventType === 'comment_added') {
       const commenterName = eventData.commenterName || 'Someone';
       const preview = eventData.commentPreview ? `: "${eventData.commentPreview}"` : '';
@@ -160,8 +180,8 @@ serve(async (req) => {
               type: 'button',
               text: {
                 type: 'plain_text',
-                text: '=A View Order',
-                emoji: true
+                text: 'View Order',
+                emoji: false
               },
               url: eventData.shortLink,
               style: 'primary'
