@@ -467,7 +467,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-7xl max-h-[90vh] p-0 flex flex-col"
+        className="max-w-7xl max-h-[90vh] p-0 flex flex-col rounded-lg overflow-hidden"
         hideCloseButton
       >
         <DialogTitle className="sr-only">
@@ -564,66 +564,66 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
 
         {/* Footer with Actions - Sticky at bottom of modal */}
         <footer className="flex-none border-t bg-gradient-to-br from-background to-muted/20 p-3 sm:p-4 z-10">
-            <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-2">
-              {/* Left: Destructive Actions */}
-              <div className="flex gap-2 w-full sm:w-auto">
+            <div className="flex flex-row items-center gap-2">
+              {/* Left: Icon buttons - 70% */}
+              <div className="flex gap-2 flex-1">
+                {/* Delete Button */}
                 {canDeleteOrder && (
                   <Button
                     variant="ghost"
+                    size="icon"
                     onClick={handleDelete}
-                    className="flex-1 sm:flex-none h-11 sm:h-9 px-4 sm:px-3 gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 border border-red-200 hover:border-red-300 transition-all"
+                    className="h-11 w-11 sm:h-9 sm:w-auto sm:px-3 sm:gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 border border-red-200 hover:border-red-300 transition-all"
                   >
-                    <Trash2 className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
-                    <span className="text-sm font-medium">{t('orders.delete_order')}</span>
+                    <Trash2 className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
+                    <span className="hidden sm:inline text-sm font-medium">{t('orders.delete_order')}</span>
                   </Button>
                 )}
-              </div>
 
-              {/* Right: Primary Actions */}
-              <div className="flex flex-wrap gap-2 w-full sm:w-auto justify-end">
-                {/* Edit Button - Secondary action */}
+                {/* Edit Button */}
                 {canEditOrder && (
                   <Button
                     variant="outline"
+                    size="icon"
                     onClick={handleEdit}
-                    className="flex-1 sm:flex-none h-11 sm:h-9 px-4 sm:px-3 gap-2 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 transition-all"
+                    className="h-11 w-11 sm:h-9 sm:w-auto sm:px-3 sm:gap-2 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 transition-all"
                   >
-                    <Edit2 className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
-                    <span className="text-sm font-medium">{t('orders.edit')}</span>
+                    <Edit2 className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
+                    <span className="hidden sm:inline text-sm font-medium">{t('orders.edit')}</span>
                   </Button>
                 )}
 
-                {/* Copy/Share Button - Secondary action */}
+                {/* Share Button */}
                 <Button
                   variant="outline"
+                  size="icon"
                   onClick={handleShare}
                   disabled={!qrProps.shortLink}
-                  className="flex-1 sm:flex-none h-11 sm:h-9 px-4 sm:px-3 gap-2 hover:bg-green-50 hover:text-green-700 hover:border-green-300 transition-all disabled:opacity-50"
+                  className="h-11 w-11 sm:h-9 sm:w-auto sm:px-3 sm:gap-2 hover:bg-green-50 hover:text-green-700 hover:border-green-300 transition-all disabled:opacity-50"
                 >
-                  <Copy className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
-                  <span className="text-sm font-medium hidden md:inline">{t('orders.share_order')}</span>
-                  <span className="text-sm font-medium md:hidden">{t('common.share', { defaultValue: 'Share' })}</span>
+                  <Copy className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
+                  <span className="hidden sm:inline text-sm font-medium">{t('orders.share_order')}</span>
                 </Button>
 
-                {/* Print Button - Secondary action */}
+                {/* Print Button */}
                 <Button
                   variant="outline"
+                  size="icon"
                   onClick={() => previewPrint(mapToPrintOrderData(orderData))}
-                  className="flex-1 sm:flex-none h-11 sm:h-9 px-4 sm:px-3 gap-2 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300 transition-all"
+                  className="h-11 w-11 sm:h-9 sm:w-auto sm:px-3 sm:gap-2 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300 transition-all"
                 >
-                  <Printer className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
-                  <span className="text-sm font-medium hidden md:inline">{t('orders.print')}</span>
-                  <span className="text-sm font-medium md:hidden">{t('common.print', { defaultValue: 'Print' })}</span>
-                </Button>
-
-                {/* Close Button - Primary action with gradient */}
-                <Button
-                  onClick={onClose}
-                  className="w-full sm:w-auto h-11 sm:h-9 px-6 gap-2 min-w-[100px] sm:min-w-[120px] bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 shadow-sm hover:shadow-md transition-all font-semibold"
-                >
-                  <span className="text-sm">{t('common.action_buttons.close')}</span>
+                  <Printer className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
+                  <span className="hidden sm:inline text-sm font-medium">{t('orders.print')}</span>
                 </Button>
               </div>
+
+              {/* Right: Close Button - 30% */}
+              <Button
+                onClick={onClose}
+                className="w-[30%] sm:w-auto h-11 sm:h-9 px-4 sm:px-6 gap-2 sm:min-w-[120px] bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 shadow-sm hover:shadow-md transition-all font-semibold"
+              >
+                <span className="text-sm">{t('common.action_buttons.close')}</span>
+              </Button>
             </div>
           </footer>
       </DialogContent>

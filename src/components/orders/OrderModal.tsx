@@ -800,10 +800,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
   const validateForm = async (): Promise<boolean> => {
     // Validate required fields with immediate toast feedback
-    if (!formData.customerName.trim()) {
-      toast({ variant: 'destructive', description: t('validation.customerNameRequired') });
-      return false;
-    }
+    // Customer name is now optional - removed validation
 
     // Validate VIN (always required)
     if (!formData.vehicleVin.trim()) {
@@ -1038,10 +1035,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
         preventOutsideClick={true}
-        className="w-screen h-screen max-w-none max-h-none p-0 m-0 rounded-none border-0 flex flex-col sm:max-w-7xl sm:h-auto sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:rounded-lg sm:border sm:mx-4"
+        className="max-w-7xl max-h-[90vh] p-0 flex flex-col rounded-lg overflow-hidden sm:max-h-[98vh] sm:w-[90vw] md:w-[85vw] lg:w-[90vw] sm:border sm:mx-4"
         aria-describedby="order-modal-description"
       >
-        <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-3 sm:px-6 py-2 sm:py-3 border-b border-border">
+        <DialogHeader className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm px-3 sm:px-6 py-2 sm:py-3 border-b border-border sm:rounded-t-lg">
           <div className="flex items-center justify-between gap-2">
             <div className="flex-1 min-w-0">
               <DialogTitle className="text-base sm:text-lg font-semibold truncate">
@@ -1104,8 +1101,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           </div>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 px-3 sm:px-6 max-h-[calc(100vh-200px)] sm:max-h-[calc(98vh-180px)]">
-          <form onSubmit={handleSubmit} className="py-2 sm:py-3 space-y-2 sm:space-y-3">
+        <ScrollArea className="flex-1 px-3 sm:px-6 overflow-y-auto">
+          <form onSubmit={handleSubmit} className="py-4 sm:py-3 pb-6 space-y-2 sm:space-y-3">
             {/* Single Responsive Container */}
             <Card className="border-border">
               <CardContent className="p-2 sm:p-4">
@@ -1314,7 +1311,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
                     <div className="min-w-0">
                       <Label htmlFor="customerName" className="text-sm">
-                        {t('orders.customerName')} <span className="text-destructive">*</span>
+                        {t('orders.customerName')} <span className="text-muted-foreground text-xs">({t('common.optional')})</span>
                       </Label>
                       <Input
                         id="customerName"
@@ -1698,12 +1695,12 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         </ScrollArea>
 
         {/* Footer - Fixed at bottom of modal */}
-        <div className="flex-shrink-0 bg-background border-t border-border px-3 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 z-10">
+        <div className="flex-shrink-0 bg-background border-t border-border px-3 sm:px-6 py-4 sm:py-4 flex flex-row justify-end gap-2 sm:gap-3 z-10 sm:rounded-b-lg">
           <Button
             type="button"
             variant="outline"
             onClick={onClose}
-            className="order-2 sm:order-1 w-full sm:w-auto min-h-[44px]"
+            className="w-1/2 sm:w-auto min-h-[44px]"
           >
             {t('common.action_buttons.cancel')}
           </Button>
@@ -1713,7 +1710,6 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
               submitting ||
               loading ||  // Disable while services are loading
               !selectedDealership ||
-              !formData.customerName ||
               !formData.vehicleVin ||
               !formData.stockNumber ||
               !selectedAssignedTo ||
@@ -1721,7 +1717,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
               selectedServices.length === 0 ||
               (selectedDealership && services.length === 0)  // Disable if dealership selected but no services loaded
             }
-            className="order-1 sm:order-2 bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto min-h-[44px]"
+            className="w-1/2 sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
           >
             {submitting ? (
               <>

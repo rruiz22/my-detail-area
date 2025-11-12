@@ -110,7 +110,7 @@ export default defineConfig(({ mode }) => ({
                 maxEntries: 10,
                 maxAgeSeconds: 60 * 5 // 5 minutes only - fresh translations
               },
-              networkTimeoutSeconds: 3, // 3-second timeout prevents long waits
+              networkTimeoutSeconds: 10, // 🔴 CRITICAL FIX: Increased to 10s for mobile (3G/4G) + large files (270KB+)
               cacheableResponse: {
                 statuses: [0, 200]
               }

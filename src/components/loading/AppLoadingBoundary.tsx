@@ -25,10 +25,11 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useTranslationsReady } from '@/hooks/useTranslationsReady';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { SplashScreen } from './SplashScreen';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Info } from 'lucide-react';
+import { detectPrivateMode, getPrivateModeMessage } from '@/utils/detectPrivateMode';
 
 interface AppLoadingBoundaryProps {
   children: ReactNode;
@@ -51,8 +52,21 @@ export function AppLoadingBoundary({ children }: AppLoadingBoundaryProps) {
   const { enhancedUser, loading: permissionsLoading } = usePermissions();
   const { ready: translationsReady, error: translationsError } = useTranslationsReady();
 
+  // 🔴 CRITICAL FIX: Detect private/incognito mode
+  const [isPrivateMode, setIsPrivateMode] = useState(false);
+  const [privateModeChecked, setPrivateModeChecked] = useState(false);
+
+  useEffect(() => {
+    detectPrivateMode().then((detected) => {
+      setIsPrivateMode(detected);
+      setPrivateModeChecked(true);
+    });
+  }, []);
+
   // 🔴 CRITICAL FIX: Handle translation load errors
   if (translationsError) {
+    const privateModeMsg = getPrivateModeMessage('en'); // Default to English for error screen
+
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <div className="max-w-md w-full space-y-6 text-center">
@@ -69,6 +83,23 @@ export function AppLoadingBoundary({ children }: AppLoadingBoundaryProps) {
               We couldn't load the application translations. This might be due to a network issue or cached content.
             </p>
           </div>
+
+          {/* 🔴 CRITICAL FIX: Show private mode warning if detected */}
+          {privateModeChecked && isPrivateMode && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-left">
+              <div className="flex items-start gap-3">
+                <Info className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div className="space-y-1">
+                  <h3 className="font-semibold text-amber-900 text-sm">
+                    {privateModeMsg.title}
+                  </h3>
+                  <p className="text-xs text-amber-800">
+                    {privateModeMsg.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
           <div className="space-y-3">
             <Button
               onClick={() => window.location.reload()}
@@ -78,8 +109,19 @@ export function AppLoadingBoundary({ children }: AppLoadingBoundaryProps) {
               <RefreshCw className="mr-2 h-5 w-5" />
               Refresh Page
             </Button>
+
+            {/* 🔴 CRITICAL FIX: Direct access to clear cache without needing Ctrl+Del (mobile-friendly) */}
+            <Button
+              onClick={() => window.location.href = '/clearcache?auto=full'}
+              variant="outline"
+              className="w-full"
+              size="lg"
+            >
+              Clear Cache & Reset
+            </Button>
+
             <p className="text-xs text-muted-foreground">
-              If the problem persists, try clearing your browser cache (Ctrl+Shift+Delete)
+              If refreshing doesn't work, try clearing cache. This will reset all app data but fix loading issues.
             </p>
           </div>
         </div>
