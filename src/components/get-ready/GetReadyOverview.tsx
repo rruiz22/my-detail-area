@@ -5,7 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useGetReady } from '@/hooks/useGetReady';
-import { TimeRange } from '@/hooks/useGetReadyHistoricalAnalytics';
+import { TimeRange, useStepRevisitAnalytics } from '@/hooks/useGetReadyHistoricalAnalytics';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { cn } from '@/lib/utils';
 import {
@@ -51,6 +51,9 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
   useEffect(() => {
     localStorage.setItem('getReady.overview.timeRange', timeRange);
   }, [timeRange]);
+
+  // Fetch historical step analytics for accurate average days calculation
+  const { data: historicalStepAnalytics } = useStepRevisitAnalytics(timeRange);
 
   // Calculate workflow distribution
   const workflowStats = useMemo(() => {
@@ -124,8 +127,9 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
     return { ...total, totalItems, completionRate };
   }, [allVehicles]);
 
-  // Calculate step analysis
+  // Calculate step analysis with historical averages
   const stepStats = useMemo(() => {
+    // First, get current vehicle counts and at-risk counts
     const stepMap = new Map();
 
     allVehicles.forEach(v => {
@@ -134,27 +138,34 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
           step_id: v.step_id,
           step_name: v.step_name,
           count: 0,
-          totalDays: 0,
           atRisk: 0,
         });
       }
 
       const stats = stepMap.get(v.step_id);
       stats.count++;
-      stats.totalDays += parseFloat(v.days_in_step) || 0;
       if (v.sla_status === 'warning' || v.sla_status === 'critical' || v.sla_status === 'red') {
         stats.atRisk++;
       }
     });
 
+    // Merge with historical analytics for accurate average days
     return Array.from(stepMap.values())
-      .map(s => ({
-        ...s,
-        avgDays: s.count > 0 ? s.totalDays / s.count : 0,
-        step: steps.find(step => step.id === s.step_id)
-      }))
+      .map(s => {
+        const historicalData = historicalStepAnalytics?.find(h => h.step_id === s.step_id);
+        const avgDays = historicalData
+          ? historicalData.avg_total_time / 24  // Convert hours to days
+          : 0; // Fallback if no historical data
+
+        return {
+          ...s,
+          avgDays,
+          revisitRate: historicalData?.revisit_rate || 0,
+          step: steps.find(step => step.id === s.step_id)
+        };
+      })
       .sort((a, b) => b.count - a.count);
-  }, [allVehicles, steps]);
+  }, [allVehicles, steps, historicalStepAnalytics]);
 
   // Calculate team performance
   const teamStats = useMemo(() => {
@@ -370,6 +381,9 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
                         Avg: {stat.avgDays.toFixed(1)}d
                         {stat.atRisk > 0 && (
                           <span className="text-amber-600 ml-2">• {stat.atRisk} at risk</span>
+                        )}
+                        {stat.revisitRate > 10 && (
+                          <span className="text-blue-600 ml-2">• {stat.revisitRate.toFixed(0)}% revisit</span>
                         )}
                       </div>
                     </div>
