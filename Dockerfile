@@ -1,5 +1,7 @@
-# Use Node.js 18 LTS as base image
-FROM node:18-alpine
+# ============================================
+# Stage 1: Build the application
+# ============================================
+FROM node:18-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -8,8 +10,9 @@ WORKDIR /app
 COPY package*.json ./
 COPY .npmrc ./
 
-# Clean install with optional dependencies for rollup
-RUN npm ci --include=optional --legacy-peer-deps
+# Install dependencies (with timeout protection)
+RUN npm ci --include=optional --legacy-peer-deps --no-audit --no-fund --prefer-offline || \
+    npm ci --include=optional --legacy-peer-deps --no-audit --no-fund
 
 # Copy source code
 COPY . .
@@ -17,11 +20,20 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Copy serve.json to dist directory (serve -c looks for config relative to served directory)
-COPY serve.json ./dist/
+# ============================================
+# Stage 2: Production image
+# ============================================
+FROM node:18-alpine
 
-# Install a simple static file server
+# Install serve globally
 RUN npm install -g serve
+
+# Set working directory
+WORKDIR /app
+
+# Copy built files from builder stage
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/serve.json ./dist/
 
 # Set default port
 ENV PORT=3000
