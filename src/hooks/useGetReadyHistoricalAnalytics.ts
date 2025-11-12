@@ -48,7 +48,6 @@ export interface StepPerformanceTrend {
 }
 
 export interface WorkflowEfficiency {
-  workflow_type: 'standard' | 'express' | 'priority';
   vehicle_count: number;
   avg_t2l: number;
   previous_avg_t2l: number;
@@ -352,85 +351,12 @@ export function useStepPerformanceTrends(timeRange: TimeRange = '30d') {
 // =====================================================
 // HOOK 5: Workflow Efficiency Trends
 // =====================================================
+// ❌ DISABLED: workflow_type column removed - this hook is no longer applicable
+// If needed in the future, could be refactored to use priority levels instead
 
-export function useWorkflowEfficiencyTrends(timeRange: TimeRange = '30d') {
-  const { currentDealership } = useAccessibleDealerships();
-  const dealerId = currentDealership?.id;
-  const daysBack = getTimeRangeDays(timeRange);
-
-  return useQuery<WorkflowEfficiency[]>({
-    queryKey: ['get-ready-workflow-efficiency', dealerId, daysBack],
-    queryFn: async () => {
-      if (!dealerId) throw new Error('No dealer selected');
-
-      const currentDate = new Date();
-      const currentStartDate = new Date();
-      currentStartDate.setDate(currentStartDate.getDate() - Math.floor(daysBack / 2));
-
-      const previousStartDate = new Date();
-      previousStartDate.setDate(previousStartDate.getDate() - daysBack);
-
-      // Get current period data
-      const { data: currentVehicles, error: currentError } = await supabase
-        .from('get_ready_vehicles')
-        .select('workflow_type, actual_t2l, status')
-        .eq('dealer_id', dealerId)
-        .gte('created_at', currentStartDate.toISOString())
-        .is('deleted_at', null);
-
-      if (currentError) throw currentError;
-
-      // Get previous period data
-      const { data: previousVehicles, error: previousError } = await supabase
-        .from('get_ready_vehicles')
-        .select('workflow_type, actual_t2l, status')
-        .eq('dealer_id', dealerId)
-        .gte('created_at', previousStartDate.toISOString())
-        .lt('created_at', currentStartDate.toISOString())
-        .is('deleted_at', null);
-
-      if (previousError) throw previousError;
-
-      // Calculate efficiency by workflow type
-      const workflowTypes = ['standard', 'express', 'priority'] as const;
-      const efficiency: WorkflowEfficiency[] = workflowTypes.map(type => {
-        // Current period stats
-        const currentFiltered = (currentVehicles || []).filter(v => v.workflow_type === type);
-        const currentAvgT2L = currentFiltered.length > 0
-          ? currentFiltered.reduce((sum, v) => sum + (v.actual_t2l || 0), 0) / currentFiltered.length
-          : 0;
-        const currentCompleted = currentFiltered.filter(v => v.status === 'completed').length;
-        const currentSuccessRate = currentFiltered.length > 0
-          ? (currentCompleted / currentFiltered.length) * 100
-          : 0;
-
-        // Previous period stats
-        const previousFiltered = (previousVehicles || []).filter(v => v.workflow_type === type);
-        const previousAvgT2L = previousFiltered.length > 0
-          ? previousFiltered.reduce((sum, v) => sum + (v.actual_t2l || 0), 0) / previousFiltered.length
-          : currentAvgT2L;
-
-        const percentChange = previousAvgT2L > 0
-          ? ((currentAvgT2L - previousAvgT2L) / previousAvgT2L) * 100
-          : 0;
-
-        return {
-          workflow_type: type,
-          vehicle_count: currentFiltered.length,
-          avg_t2l: Math.round(currentAvgT2L * 10) / 10,
-          previous_avg_t2l: Math.round(previousAvgT2L * 10) / 10,
-          success_rate: Math.round(currentSuccessRate * 10) / 10,
-          trend: calculateTrend(currentAvgT2L, previousAvgT2L),
-          percent_change: Math.round(percentChange * 10) / 10,
-        };
-      });
-
-      return efficiency;
-    },
-    enabled: !!dealerId,
-    staleTime: 5 * 60 * 1000,
-  });
-}
+/* export function useWorkflowEfficiencyTrends(timeRange: TimeRange = '30d') {
+  // ... commented out - workflow_type no longer exists
+} */
 
 // =====================================================
 // HOOK 6: Period-over-Period Comparison

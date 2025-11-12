@@ -3777,8 +3777,10 @@
       "priority": "Prioridade",
       "click_to_view": "Clique em uma linha para ver detalhes do veículo",
       "vehicle_stock": "Veículo e Estoque",
+      "current_step": "Etapa Atual",
       "step_workflow": "Etapa e Fluxo",
       "progress": "Progresso",
+      "progress_time": "Progresso e Tempo",
       "unassigned": "Não atribuído",
       "no_work_items": "Sem itens de trabalho"
     },

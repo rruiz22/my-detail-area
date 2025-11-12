@@ -4016,8 +4016,10 @@
       "priority": "Prioridad",
       "click_to_view": "Haz clic en una fila para ver detalles del vehículo",
       "vehicle_stock": "Vehículo y Stock",
+      "current_step": "Paso Actual",
       "step_workflow": "Paso y Flujo",
       "progress": "Progreso",
+      "progress_time": "Progreso y Tiempo",
       "unassigned": "Sin asignar",
       "no_work_items": "Sin elementos de trabajo"
     },

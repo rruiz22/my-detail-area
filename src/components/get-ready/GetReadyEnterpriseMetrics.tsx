@@ -124,29 +124,21 @@ export function GetReadyEnterpriseMetrics({ className, allVehicles, timeRange = 
   // =====================================================
 
   const financialBreakdown = useMemo(() => {
-    const breakdown = {
-      standard: { count: 0, totalCost: 0, avgCost: 0 },
-      express: { count: 0, totalCost: 0, avgCost: 0 },
-      priority: { count: 0, totalCost: 0, avgCost: 0 }
-    };
+    // Calculate total costs for all vehicles (workflow_type removed)
+    let totalCost = 0;
+    let count = 0;
 
     filteredVehicles.forEach(v => {
-      const workflow = v.workflow_type || 'standard';
       const cost = parseFloat(v.total_holding_costs || v.holding_cost) || 0;
-
-      if (breakdown[workflow as keyof typeof breakdown]) {
-        breakdown[workflow as keyof typeof breakdown].count++;
-        breakdown[workflow as keyof typeof breakdown].totalCost += cost;
-      }
+      totalCost += cost;
+      count++;
     });
 
-    // Calculate averages
-    Object.keys(breakdown).forEach(key => {
-      const workflow = breakdown[key as keyof typeof breakdown];
-      workflow.avgCost = workflow.count > 0 ? workflow.totalCost / workflow.count : 0;
-    });
+    const avgCost = count > 0 ? totalCost / count : 0;
 
-    return breakdown;
+    return {
+      total: { count, totalCost, avgCost }
+    };
   }, [filteredVehicles]);
 
   // ROI Estimation (simplified)
@@ -487,82 +479,7 @@ export function GetReadyEnterpriseMetrics({ className, allVehicles, timeRange = 
 
         {/* FINANCIAL PERFORMANCE SECTION */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Cost Breakdown */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-gray-600" />
-                {t('get_ready.metrics.cost_breakdown')}
-              </CardTitle>
-              <CardDescription>
-                {t('get_ready.metrics.cost_by_workflow_type')}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Standard */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">{t('get_ready.workflow.standard')}</span>
-                  <span className="text-gray-600">
-                    ${financialBreakdown.standard.avgCost.toFixed(0)} avg
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Progress
-                    value={financialBreakdown.standard.count > 0 ?
-                      (financialBreakdown.standard.count / filteredVehicles.length) * 100 : 0}
-                    className="h-2 flex-1"
-                    indicatorClassName="bg-indigo-500"
-                  />
-                  <Badge variant="outline" className="text-xs">
-                    {financialBreakdown.standard.count}
-                  </Badge>
-                </div>
-              </div>
-
-              {/* Express */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">{t('get_ready.workflow.express')}</span>
-                  <span className="text-gray-600">
-                    ${financialBreakdown.express.avgCost.toFixed(0)} avg
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Progress
-                    value={financialBreakdown.express.count > 0 ?
-                      (financialBreakdown.express.count / filteredVehicles.length) * 100 : 0}
-                    className="h-2 flex-1"
-                    indicatorClassName="bg-emerald-500"
-                  />
-                  <Badge variant="outline" className="text-xs">
-                    {financialBreakdown.express.count}
-                  </Badge>
-                </div>
-              </div>
-
-              {/* Priority */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">{t('get_ready.workflow.priority')}</span>
-                  <span className="text-gray-600">
-                    ${financialBreakdown.priority.avgCost.toFixed(0)} avg
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Progress
-                    value={financialBreakdown.priority.count > 0 ?
-                      (financialBreakdown.priority.count / filteredVehicles.length) * 100 : 0}
-                    className="h-2 flex-1"
-                    indicatorClassName="bg-amber-500"
-                  />
-                  <Badge variant="outline" className="text-xs">
-                    {financialBreakdown.priority.count}
-                  </Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Cost Breakdown Card removed - workflow_type no longer exists */}
 
           {/* ROI Comparison */}
           <Card>

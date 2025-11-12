@@ -35,7 +35,6 @@ interface PendingVehicle {
   vehicle_trim?: string;
   vin?: string;
   short_vin?: string;
-  workflow_type?: string;
   days_in_step?: string;
   step_name?: string;
   intake_date?: string;
@@ -110,7 +109,6 @@ export function PendingApprovalsTable({ vehicles, onSelectVehicle }: PendingAppr
             <TableHeader>
               <TableRow>
                 <TableHead className="min-w-[220px] w-[20%] text-center">Vehicle</TableHead>
-                <TableHead className="min-w-[90px] w-[8%] text-center">Workflow</TableHead>
                 <TableHead className="min-w-[100px] w-[10%] text-center">Current Step</TableHead>
                 <TableHead className="min-w-[70px] w-[8%] text-center">Days</TableHead>
                 <TableHead className="min-w-[70px] w-[8%] text-center">Work Items</TableHead>
@@ -165,15 +163,6 @@ export function PendingApprovalsTable({ vehicles, onSelectVehicle }: PendingAppr
                             )}
                           </div>
                         )}
-                      </div>
-                    </TableCell>
-
-                    {/* Workflow Type */}
-                    <TableCell className="text-center">
-                      <div className="flex justify-center">
-                        <Badge variant="outline" className="text-xs">
-                          {vehicle.workflow_type?.toUpperCase() || 'STANDARD'}
-                        </Badge>
                       </div>
                     </TableCell>
 

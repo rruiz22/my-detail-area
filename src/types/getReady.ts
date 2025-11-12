@@ -56,7 +56,6 @@ export interface GetReadyVehicle {
   holding_cost_daily: number;
   total_holding_cost: number;
   priority_score: number;
-  workflow_path: 'standard' | 'express' | 'priority';
   sla_hours_remaining: number;
   is_bottlenecked: boolean;
   escalation_level: 0 | 1 | 2 | 3;
@@ -144,7 +143,6 @@ export interface SLAAlert {
   created_at: string;
 }
 
-export type WorkflowPath = 'standard' | 'express' | 'priority';
 export type SLAStatus = 'green' | 'yellow' | 'red';
 export type AlertSeverity = 'low' | 'medium' | 'high' | 'critical';
 
@@ -225,7 +223,6 @@ export interface ApprovalHistory {
   notes?: string | null;
   reason?: string | null;
   vehicle_step_id?: string | null;
-  vehicle_workflow_type?: string | null;
   vehicle_priority?: string | null;
   created_at: string;
 }
@@ -536,7 +533,6 @@ export interface VehicleDatabaseResponse {
   vehicle_trim: string | null;
   step_id: string;
   dealer_id: number;
-  workflow_type: WorkflowPath;
   priority: string;
   intake_date: string;
   sla_status: SLAStatus;

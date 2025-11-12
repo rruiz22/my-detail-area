@@ -47,7 +47,6 @@ interface VehicleFormData {
   model: string;
   trim: string;
   step_id: string;
-  workflow_type: "standard" | "express" | "priority";
   priority: "low" | "normal" | "medium" | "high" | "urgent";
   assigned_to: string;
   notes: string;
@@ -69,7 +68,7 @@ const initialFormData: VehicleFormData = {
   model: "",
   trim: "",
   step_id: "inspection",
-  workflow_type: "standard",
+
   priority: "normal",
   assigned_to: "",
   notes: "",
@@ -151,7 +150,7 @@ export function VehicleFormModal({
             model: vehicle.vehicle_model || "",
             trim: vehicle.vehicle_trim || "",
             step_id: vehicle.step_id || "inspection",
-            workflow_type: vehicle.workflow_type || "standard",
+
             priority: vehicle.priority || "normal",
             assigned_to: vehicle.assigned_to || "",
             notes: vehicle.notes || "",
@@ -284,7 +283,7 @@ export function VehicleFormModal({
         vehicle_model: formData.model.trim().toUpperCase(),
         vehicle_trim: formData.trim.trim().toUpperCase() || undefined,
         step_id: formData.step_id,
-        workflow_type: formData.workflow_type,
+
         priority: formData.priority,
         assigned_to: formData.assigned_to.trim() || undefined,
         notes: formData.notes.trim() || undefined,
@@ -628,33 +627,6 @@ export function VehicleFormModal({
                             {step.name}
                           </SelectItem>
                         ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="workflow_type">
-                    {t("get_ready.vehicle_form.fields.workflow")}
-                  </Label>
-                  <Select
-                    value={formData.workflow_type}
-                    onValueChange={(value) =>
-                      updateFormData("workflow_type", value as "standard" | "express" | "priority")
-                    }
-                  >
-                    <SelectTrigger id="workflow_type">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="standard">
-                        {t("get_ready.workflow.standard")}
-                      </SelectItem>
-                      <SelectItem value="express">
-                        {t("get_ready.workflow.express")}
-                      </SelectItem>
-                      <SelectItem value="priority">
-                        {t("get_ready.workflow.priority")}
-                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

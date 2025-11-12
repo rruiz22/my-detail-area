@@ -95,7 +95,6 @@ export function formatVehiclesForExport(vehicles: any[]) {
       'Model': vehicle.model || '',
       'Trim': vehicle.trim || '',
       'Step': vehicle.step_name || '',
-      'Workflow': vehicle.workflow_type || '',
       'Priority': vehicle.priority || '',
       'Status': vehicle.status || '',
       'In Process': vehicle.t2l || '',
