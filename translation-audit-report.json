@@ -1,8 +1,8 @@
 {
   "scannedFiles": 877,
-  "totalStrings": 8572,
-  "hardcodedStrings": 2048,
-  "translatedStrings": 6524,
+  "totalStrings": 8567,
+  "hardcodedStrings": 2046,
+  "translatedStrings": 6521,
   "issues": {
     "critical": [
       {
@@ -48549,16 +48549,6 @@
             "text": "Issues requiring immediate attention",
             "line": 139,
             "context": "138: </CardTitle>\n139: <CardDescription>\n140: Issues requiring immediate attention"
-          },
-          {
-            "text": "Key performance indicators and trends",
-            "line": 153,
-            "context": "152: <CardTitle>{t('get_ready.dashboard.performance_overview')}</CardTitle>\n153: <CardDescription>\n154: Key performance indicators and trends"
-          },
-          {
-            "text": "Quality Score",
-            "line": 182,
-            "context": "181: <div className=\"space-y-2\">\n182: <div className=\"text-sm font-medium\">\n183: Quality Score"
           }
         ],
         "translationCalls": [
@@ -48586,31 +48576,10 @@
             "key": "get_ready.dashboard.title",
             "line": 137,
             "exists": true
-          },
-          {
-            "key": "get_ready.dashboard.performance_overview",
-            "line": 152,
-            "exists": true
-          },
-          {
-            "key": "get_ready.metrics.efficiency",
-            "line": 161,
-            "exists": false
-          },
-          {
-            "key": "get_ready.kpis.weekly_capacity",
-            "line": 171,
-            "exists": true
           }
         ],
-        "missingKeys": [
-          {
-            "key": "get_ready.metrics.efficiency",
-            "line": 161,
-            "context": "160: <div className=\"text-sm font-medium\">\n161: {t('get_ready.metrics.efficiency')}\n162: </div>"
-          }
-        ],
-        "coverage": 73,
+        "missingKeys": [],
+        "coverage": 83,
         "severity": "low"
       },
       {
@@ -58163,7 +58132,6 @@
         "src\\components\\management\\SystemBrandingEditor.tsx",
         "src\\components\\management\\OrderNumberMigration.tsx",
         "src\\components\\get-ready\\GetReadyStepsSidebar.tsx",
-        "src\\components\\get-ready\\GetReadyDashboardWidget.tsx",
         "src\\components\\detail-hub\\EmployeePortal.NO_CRUD.tsx",
         "src\\components\\debug\\TooltipTester.tsx",
         "src\\utils\\vinValidation.ts",
@@ -58278,6 +58246,7 @@
         "src\\components\\management\\DealershipPerformanceTable.tsx",
         "src\\components\\get-ready\\VehicleActivityLog.tsx",
         "src\\components\\get-ready\\MultiUserSelect.tsx",
+        "src\\components\\get-ready\\GetReadyDashboardWidget.tsx",
         "src\\components\\get-ready\\approvals\\ApprovalHeader.tsx",
         "src\\components\\get-ready\\analytics\\BottleneckAnalysis.tsx",
         "src\\components\\detail-hub\\TimecardSystem.tsx",
@@ -58430,7 +58399,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2090 translation keys are referenced but missing",
+      "description": "2089 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "105 hours"
     }
