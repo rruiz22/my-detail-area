@@ -560,6 +560,34 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
           }
         });
 
+        // 🔍 Fetch assigned user/group name for Slack notification
+        let assignedToName: string | undefined = undefined;
+        if (data.assigned_group_id) {
+          try {
+            const { data: groupData } = await supabase
+              .from('dealer_groups')
+              .select('name')
+              .eq('id', data.assigned_group_id)
+              .single();
+            assignedToName = groupData?.name || undefined;
+          } catch (error) {
+            console.warn('⚠️ Failed to fetch group name for service order:', error);
+          }
+        } else if (data.assigned_contact_id) {
+          try {
+            const { data: contactData } = await supabase
+              .from('dealership_contacts')
+              .select('first_name, last_name')
+              .eq('id', data.assigned_contact_id)
+              .single();
+            if (contactData) {
+              assignedToName = `${contactData.first_name || ''} ${contactData.last_name || ''}`.trim();
+            }
+          } catch (error) {
+            console.warn('⚠️ Failed to fetch contact name for service order:', error);
+          }
+        }
+
         // Send Slack notification (if enabled)
         void slackNotificationService.isEnabled(
           data.dealer_id,
@@ -575,10 +603,12 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
               eventData: {
                 orderNumber: data.order_number || data.id,
                 tag: data.tag,
+                vinNumber: data.vin_number,
                 vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim(),
                 services: servicesText,
                 dueDateTime: data.due_date,
-                shortLink: shortLink || undefined
+                shortLink: shortLink || undefined,
+                assignedTo: assignedToName
               }
             });
           }

@@ -16,6 +16,7 @@ export interface SlackNotificationOptions {
     orderNumber?: string;
     stockNumber?: string;
     tag?: string;
+    vinNumber?: string;
     vehicleInfo?: string;
     services?: string;
     dueDateTime?: string;

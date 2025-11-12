@@ -13978,8 +13978,8 @@
         "hardcodedStrings": [
           {
             "text": ", error);\n    return null;\n  }\n}\n\n/**\n * Save permissions to localStorage cache\n *\n * @param user - Enhanced user with permissions to cache\n */\nexport function cachePermissions(user: EnhancedUserGranular): void {\n  try {\n    const serialized = serializePermissions(user);\n    localStorage.setItem(CACHE_KEY, JSON.stringify(serialized));\n    console.log(`✅ Permissions cached for user ${user.email}`);\n  } catch (error) {\n    // Don",
-            "line": 97,
-            "context": "96: } catch (error) {\n97: console.error('❌ Permission deserialization error:', error);\n98: return null;"
+            "line": 115,
+            "context": "114: } catch (error) {\n115: console.error('❌ Permission deserialization error:', error);\n116: return null;"
           }
         ],
         "translationCalls": [],
@@ -19456,23 +19456,23 @@
           },
           {
             "text": "Promise",
-            "line": 106,
-            "context": "105: queryKey: string[],\n106: queryFn: () => Promise<T>,\n107: enabled: boolean = true"
+            "line": 107,
+            "context": "106: queryKey: string[],\n107: queryFn: () => Promise<T>,\n108: enabled: boolean = true"
           },
           {
             "text": "Promise",
-            "line": 126,
-            "context": "125: queryKey: string[],\n126: queryFn: () => Promise<T>,\n127: isModalOpen: boolean = false,"
+            "line": 128,
+            "context": "127: queryKey: string[],\n128: queryFn: () => Promise<T>,\n129: isModalOpen: boolean = false,"
           },
           {
             "text": "Promise",
-            "line": 147,
-            "context": "146: queryKey: string[],\n147: queryFn: () => Promise<T>,\n148: enabled: boolean = true"
+            "line": 150,
+            "context": "149: queryKey: string[],\n150: queryFn: () => Promise<T>,\n151: enabled: boolean = true"
           },
           {
             "text": "Promise",
-            "line": 167,
-            "context": "166: queryKey: string[],\n167: queryFn: () => Promise<T>,\n168: enabled: boolean = true"
+            "line": 170,
+            "context": "169: queryKey: string[],\n170: queryFn: () => Promise<T>,\n171: enabled: boolean = true"
           }
         ],
         "translationCalls": [],
