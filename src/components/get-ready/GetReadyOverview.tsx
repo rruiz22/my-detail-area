@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { useGetReady } from '@/hooks/useGetReady';
 import { TimeRange, useStepRevisitAnalytics } from '@/hooks/useGetReadyHistoricalAnalytics';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
@@ -25,6 +26,7 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Cell } from 'recharts';
 import { GetReadyAlerts } from './GetReadyAlerts';
 import { GetReadyDashboardWidget } from './GetReadyDashboardWidget';
 import { GetReadyEnterpriseMetrics } from './GetReadyEnterpriseMetrics';
@@ -174,6 +176,31 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
     };
   }, [historicalStepAnalytics, allVehicles]);
 
+  // Prepare chart data for top 5 steps by avg time
+  const stepChartData = useMemo(() => {
+    if (!stepStats || stepStats.length === 0) {
+      return [];
+    }
+
+    // Sort by avgDays (descending) and take top 5
+    return stepStats
+      .filter(s => {
+        // Strict validation: must have valid avgDays and step name
+        return s.avgDays > 0 &&
+               !isNaN(s.avgDays) &&
+               isFinite(s.avgDays) &&
+               s.step_name;
+      })
+      .sort((a, b) => b.avgDays - a.avgDays)
+      .slice(0, 5)
+      .map(stat => ({
+        name: stat.step_name,
+        avgDays: parseFloat(stat.avgDays.toFixed(1)),
+        color: stat.step?.color || '#6B7280',
+        count: stat.count
+      }));
+  }, [stepStats]);
+
   // Calculate team performance
   const teamStats = useMemo(() => {
     const teamMap = new Map();
@@ -268,6 +295,75 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
               </TabsList>
             </Tabs>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Average Time by Step Chart */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Clock className="h-5 w-5" />
+            Average Time by Step
+          </CardTitle>
+          <CardDescription>
+            Top 5 steps with longest average processing time ({timeRange === '7d' ? 'last 7 days' : timeRange === '30d' ? 'last 30 days' : 'last 90 days'})
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {stepChartData.length === 0 ? (
+            <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+              <div className="text-center">
+                <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p className="text-sm">No step data available for the selected time range</p>
+              </div>
+            </div>
+          ) : (
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={stepChartData}
+                  layout="horizontal"
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis
+                    type="number"
+                    domain={[0, 'dataMax + 1']}
+                    label={{ value: 'Days', position: 'insideBottom', offset: -5 }}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="name"
+                    width={100}
+                    tick={{ fontSize: 12 }}
+                  />
+                  <ChartTooltip
+                    content={({ active, payload }) => {
+                      if (!active || !payload || !payload.length) return null;
+                      const data = payload[0].payload;
+                      return (
+                        <div className="rounded-lg border bg-background p-3 shadow-lg">
+                          <div className="font-semibold text-sm mb-1">{data.name}</div>
+                          <div className="text-xs text-muted-foreground space-y-1">
+                            <div>Average: <span className="font-semibold text-foreground">{data.avgDays} days</span></div>
+                            <div>Vehicles: <span className="font-semibold text-foreground">{data.count}</span></div>
+                          </div>
+                        </div>
+                      );
+                    }}
+                  />
+                  <Bar
+                    dataKey="avgDays"
+                    radius={[0, 4, 4, 0]}
+                  >
+                    {stepChartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
         </CardContent>
       </Card>
 
