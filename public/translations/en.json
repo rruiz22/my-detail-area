@@ -502,6 +502,7 @@
       "title": "Team Performance",
       "subtitle": "Activity in your accessible modules",
       "user": "User",
+      "total_orders": "Total Orders",
       "completed_7d": "Completed (7d)",
       "in_progress": "In Progress",
       "active_in": "Active in",
@@ -5477,7 +5478,10 @@
       "viewDetails": "View Details",
       "summaryTitle": "Action Required",
       "criticalBottlenecksFound": "Critical bottlenecks detected. Immediate action recommended to prevent workflow disruption.",
-      "bottlenecksNeedAttention": "Multiple bottlenecks identified. Review recommended actions to improve workflow efficiency."
+      "bottlenecksNeedAttention": "Multiple bottlenecks identified. Review recommended actions to improve workflow efficiency.",
+      "validatingChartData": "Validating chart data...",
+      "noStepDataAvailable": "No step data available for the selected time range",
+      "average": "Average"
     }
   },
   "stock": {

@@ -9,12 +9,14 @@ export interface TeamMemberPerformance {
   email: string;
   completed_7d: number;
   in_progress: number;
+  total_orders: number;
   active_modules: string[];
 }
 
 /**
  * Hook to fetch team performance data filtered by allowed order types
- * Shows activity only for modules the current user has permission to view
+ * Shows activity for users who created orders in accessible modules
+ * Displays users with most orders created
  */
 export function useTeamPerformance(allowedOrderTypes?: string[]) {
   const { user } = useAuth();
@@ -37,19 +39,9 @@ export function useTeamPerformance(allowedOrderTypes?: string[]) {
         // Build query with optional order_type filter
         let query = supabase
           .from('orders')
-          .select(`
-            assigned_to,
-            status,
-            order_type,
-            created_at,
-            profiles!orders_assigned_to_fkey (
-              id,
-              first_name,
-              last_name,
-              email
-            )
-          `)
-          .gte('created_at', sevenDaysAgo.toISOString());
+          .select('created_by, status, order_type, created_at')
+          .gte('created_at', sevenDaysAgo.toISOString())
+          .not('created_by', 'is', null);
 
         // Filter by allowed order types if provided
         if (allowedOrderTypes && allowedOrderTypes.length > 0) {
@@ -65,14 +57,33 @@ export function useTeamPerformance(allowedOrderTypes?: string[]) {
 
         if (!orders || orders.length === 0) return [];
 
+        // Get unique user IDs
+        const userIds = [...new Set(orders.map(o => o.created_by).filter(Boolean))];
+
+        // Fetch profiles for all users
+        const { data: profiles, error: profileError } = await supabase
+          .from('profiles')
+          .select('id, first_name, last_name, email')
+          .in('id', userIds);
+
+        if (profileError) {
+          console.error('Error fetching profiles:', profileError);
+          throw profileError;
+        }
+
+        // Create profile map for quick lookup
+        const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+
         // Group by user
         const userMap = new Map<string, TeamMemberPerformance>();
 
         orders.forEach((order: any) => {
-          const userId = order.assigned_to;
-          if (!userId || !order.profiles) return;
+          const userId = order.created_by;
+          if (!userId) return;
 
-          const profile = order.profiles;
+          const profile = profileMap.get(userId);
+          if (!profile) return;
+
           const userName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Unknown User';
 
           if (!userMap.has(userId)) {
@@ -82,11 +93,13 @@ export function useTeamPerformance(allowedOrderTypes?: string[]) {
               email: profile.email || '',
               completed_7d: 0,
               in_progress: 0,
+              total_orders: 0,
               active_modules: []
             });
           }
 
           const userStats = userMap.get(userId)!;
+          userStats.total_orders++;
 
           // Count completed in last 7 days
           if (order.status === 'completed') {
@@ -104,9 +117,9 @@ export function useTeamPerformance(allowedOrderTypes?: string[]) {
           }
         });
 
-        // Convert map to array and sort by completed orders
+        // Convert map to array and sort by total orders (top performers)
         const teamPerformance = Array.from(userMap.values())
-          .sort((a, b) => b.completed_7d - a.completed_7d);
+          .sort((a, b) => b.total_orders - a.total_orders);
 
         return teamPerformance;
 

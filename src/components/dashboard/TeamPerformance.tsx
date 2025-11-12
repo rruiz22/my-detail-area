@@ -132,6 +132,15 @@ export function TeamPerformance() {
 
                     {/* Stats grid */}
                     <div className="grid grid-cols-3 gap-3 mt-2">
+                      {/* Total Orders */}
+                      <div className="flex items-center gap-1.5">
+                        <TrendingUp className="w-3.5 h-3.5 text-indigo-600 flex-shrink-0" />
+                        <div>
+                          <p className="text-xs text-muted-foreground">{t('dashboard.team_performance.total_orders')}</p>
+                          <p className="text-sm font-semibold">{member.total_orders}</p>
+                        </div>
+                      </div>
+
                       {/* Completed 7d */}
                       <div className="flex items-center gap-1.5">
                         <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
@@ -147,15 +156,6 @@ export function TeamPerformance() {
                         <div>
                           <p className="text-xs text-muted-foreground">{t('dashboard.team_performance.in_progress')}</p>
                           <p className="text-sm font-semibold">{member.in_progress}</p>
-                        </div>
-                      </div>
-
-                      {/* Active modules */}
-                      <div className="flex items-center gap-1.5">
-                        <TrendingUp className="w-3.5 h-3.5 text-indigo-600 flex-shrink-0" />
-                        <div>
-                          <p className="text-xs text-muted-foreground">{t('dashboard.team_performance.active_in')}</p>
-                          <p className="text-sm font-semibold">{member.active_modules.length} {t('dashboard.team_performance.modules')}</p>
                         </div>
                       </div>
                     </div>

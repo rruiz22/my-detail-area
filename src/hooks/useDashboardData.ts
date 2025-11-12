@@ -70,7 +70,7 @@ export function useDashboardData(allowedOrderTypes?: string[]) {
         // Build query with optional order_type filter for permission-based filtering
         let query = supabase
           .from('orders')
-          .select('order_type, status, created_at, updated_at');
+          .select('order_type, status, created_at, updated_at, dealer_id');
           // total_amount removed - no financial calculations needed
 
         // If allowedOrderTypes provided, filter query to only those types (permission filtering)
@@ -90,7 +90,7 @@ export function useDashboardData(allowedOrderTypes?: string[]) {
         // Apply dealer filter (after RLS has already filtered by security)
         const filteredOrders = selectedDealer === 'all'
           ? ordersList
-          : ordersList.filter(o => o.dealer_id === selectedDealer);
+          : ordersList.filter((o: any) => o.dealer_id === selectedDealer);
 
         // Calculate overall metrics
         const thirtyDaysAgo = new Date();
