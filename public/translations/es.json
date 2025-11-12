@@ -491,6 +491,7 @@
       "title": "Rendimiento del Equipo",
       "subtitle": "Actividad en tus módulos accesibles",
       "user": "Usuario",
+      "total_orders": "Órdenes Totales",
       "completed_7d": "Completados (7d)",
       "in_progress": "En Progreso",
       "active_in": "Activo en",
@@ -5277,7 +5278,10 @@
       "viewDetails": "Ver Detalles",
       "summaryTitle": "Acción Requerida",
       "criticalBottlenecksFound": "Cuellos de botella críticos detectados. Se recomienda acción inmediata para prevenir interrupción del flujo de trabajo.",
-      "bottlenecksNeedAttention": "Múltiples cuellos de botella identificados. Revise las acciones recomendadas para mejorar la eficiencia del flujo de trabajo."
+      "bottlenecksNeedAttention": "Múltiples cuellos de botella identificados. Revise las acciones recomendadas para mejorar la eficiencia del flujo de trabajo.",
+      "validatingChartData": "Validando datos del gráfico...",
+      "noStepDataAvailable": "No hay datos de pasos disponibles para el rango de tiempo seleccionado",
+      "average": "Promedio"
     }
   },
   "stock": {

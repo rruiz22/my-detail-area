@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { useGetReady } from '@/hooks/useGetReady';
 import { TimeRange, useStepRevisitAnalytics } from '@/hooks/useGetReadyHistoricalAnalytics';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
@@ -26,11 +25,11 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Cell } from 'recharts';
 import { GetReadyAlerts } from './GetReadyAlerts';
 import { GetReadyDashboardWidget } from './GetReadyDashboardWidget';
 import { GetReadyEnterpriseMetrics } from './GetReadyEnterpriseMetrics';
 import { BottleneckAnalysis, StepPerformanceMatrix, TimeSeriesCharts } from './analytics';
+import { SafeBarChart } from './analytics/SafeBarChart';
 
 interface GetReadyOverviewProps {
   className?: string;
@@ -321,7 +320,7 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
       </Card>
 
       {/* Average Time by Step Chart */}
-      <Card key={`chart-${stepChartData.length}-${stepChartData[0]?.name || 'empty'}`}>
+      <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Clock className="h-5 w-5" />
@@ -332,104 +331,7 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {(() => {
-            // CRITICAL: Pre-validate ALL data before ANY chart rendering
-            // This prevents Recharts class component from receiving invalid props
-
-            // First check: Do we have the source data?
-            if (!historicalStepAnalytics || historicalStepAnalytics.length === 0 ||
-                !stepStats || stepStats.length === 0) {
-              return (
-                <div className="flex items-center justify-center h-[300px] text-muted-foreground">
-                  <div className="text-center">
-                    <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p className="text-sm">Loading step data...</p>
-                  </div>
-                </div>
-              );
-            }
-
-            // Second check: Do we have valid chart data (not empty)?
-            if (!stepChartData || stepChartData.length === 0) {
-              return (
-                <div className="flex items-center justify-center h-[300px] text-muted-foreground">
-                  <div className="text-center">
-                    <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p className="text-sm">No step data available for the selected time range</p>
-                  </div>
-                </div>
-              );
-            }
-
-            // Third check: Are ALL chart values valid numbers?
-            const hasInvalidValues = stepChartData.some(item =>
-              typeof item.avgDays !== 'number' ||
-              isNaN(item.avgDays) ||
-              !isFinite(item.avgDays) ||
-              item.avgDays <= 0
-            );
-
-            if (hasInvalidValues) {
-              console.warn('⚠️ Invalid chart data detected:', stepChartData);
-              return (
-                <div className="flex items-center justify-center h-[300px] text-muted-foreground">
-                  <div className="text-center">
-                    <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p className="text-sm">Invalid chart data detected</p>
-                  </div>
-                </div>
-              );
-            }
-
-            // Only render chart if ALL validations pass
-            return (
-              <div className="h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={stepChartData}
-                    layout="horizontal"
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis
-                      type="number"
-                      domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.1)]}
-                      label={{ value: 'Days', position: 'insideBottom', offset: -5 }}
-                    />
-                    <YAxis
-                      type="category"
-                      dataKey="name"
-                      width={100}
-                      tick={{ fontSize: 12 }}
-                    />
-                    <ChartTooltip
-                      content={({ active, payload }) => {
-                        if (!active || !payload || !payload.length) return null;
-                        const data = payload[0].payload;
-                        return (
-                          <div className="rounded-lg border bg-background p-3 shadow-lg">
-                            <div className="font-semibold text-sm mb-1">{data.name}</div>
-                            <div className="text-xs text-muted-foreground space-y-1">
-                              <div>Average: <span className="font-semibold text-foreground">{data.avgDays} days</span></div>
-                              <div>Vehicles: <span className="font-semibold text-foreground">{data.count}</span></div>
-                            </div>
-                          </div>
-                        );
-                      }}
-                    />
-                    <Bar
-                      dataKey="avgDays"
-                      radius={[0, 4, 4, 0]}
-                    >
-                      {stepChartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            );
-          })()}
+          <SafeBarChart data={stepChartData} timeRange={timeRange} />
         </CardContent>
       </Card>
 

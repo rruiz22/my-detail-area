@@ -487,6 +487,7 @@
       "title": "Desempenho da Equipe",
       "subtitle": "Atividade nos seus módulos acessíveis",
       "user": "Usuário",
+      "total_orders": "Pedidos Totais",
       "completed_7d": "Concluídos (7d)",
       "in_progress": "Em Andamento",
       "active_in": "Ativo em",
@@ -4693,6 +4694,9 @@
       "bottlenecksNeedAttention": "Gargalos detectados que precisam de atenção",
       "noBottlenecksDetected": "Nenhum Gargalo Detectado",
       "workflowRunningSmoothly": "Fluxo de trabalho funcionando perfeitamente",
+      "validatingChartData": "Validando dados do gráfico...",
+      "noStepDataAvailable": "Nenhum dado de etapas disponível para o período selecionado",
+      "average": "Média",
       "severity": {
         "critical": "Crítico",
         "high": "Alto",
