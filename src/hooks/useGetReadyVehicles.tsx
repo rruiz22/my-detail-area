@@ -163,11 +163,59 @@ function calculateDaysInStep(intakeDate: string): string {
 export function useVehicleDetail(vehicleId: string | null) {
   const { currentDealership } = useAccessibleDealerships();
   const dealerId = validateDealershipObject(currentDealership);
+  const queryClient = useQueryClient();
 
   return useQuery<VehicleDetail | null>({
     queryKey: ['get-ready-vehicle-detail', vehicleId, currentDealership?.id],
     queryFn: async () => {
       if (!vehicleId || !dealerId) return null;
+
+      // PHASE 2 OPTIMIZATION: Try to get vehicle from infinite query cache first
+      interface InfiniteQueryPage {
+        vehicles: ReconVehicle[];
+        hasMore: boolean;
+      }
+      interface InfiniteQueryData {
+        pages: InfiniteQueryPage[];
+        pageParams: unknown[];
+      }
+      const infiniteQueryData = queryClient.getQueryData<InfiniteQueryData>(['get-ready-vehicles', 'infinite', dealerId]);
+      if (infiniteQueryData?.pages) {
+        const cachedVehicle = infiniteQueryData.pages
+          .flatMap((page) => page.vehicles || [])
+          .find((v) => v.id === vehicleId);
+
+        if (cachedVehicle) {
+          // Vehicle found in cache, transform and return
+          console.log('⚡ [Vehicle Detail] Using cached data from infinite query');
+          return {
+            id: cachedVehicle.id,
+            stock_number: cachedVehicle.stock_number,
+            vin: cachedVehicle.vin,
+            short_vin: cachedVehicle.short_vin,
+            vehicle_year: cachedVehicle.vehicle_year,
+            vehicle_make: cachedVehicle.vehicle_make,
+            vehicle_model: cachedVehicle.vehicle_model,
+            vehicle_trim: cachedVehicle.vehicle_trim || '',
+            mileage: 0,
+            color: '',
+            priority: cachedVehicle.priority,
+            status: cachedVehicle.status,
+            step_name: cachedVehicle.step_name || 'Unknown',
+            step_color: cachedVehicle.step_color || '#6B7280',
+            days_in_inventory: cachedVehicle.days_in_step || '0',
+            estimated_completion: cachedVehicle.estimated_completion_date || '',
+            notes: cachedVehicle.notes || '',
+            location: '',
+            technician: cachedVehicle.assigned_to || '',
+            work_orders: [],
+            current_step: cachedVehicle.current_step
+          } as VehicleDetail;
+        }
+      }
+
+      // Fallback: Fetch from database if not in cache
+      console.log('🔄 [Vehicle Detail] Cache miss, fetching from database');
 
       const { data, error } = await supabase
         .from('get_ready_vehicles')
@@ -222,7 +270,8 @@ export function useVehicleDetail(vehicleId: string | null) {
       };
     },
     enabled: !!vehicleId && !!dealerId,
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: CACHE_TIMES.MEDIUM, // PHASE 2 OPTIMIZATION: Use shared cache time (5 min) since we're using cached data
+    gcTime: GC_TIMES.MEDIUM,
   });
 }
 

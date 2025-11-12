@@ -24,14 +24,15 @@ interface SerializedPermissions {
   allowed_modules?: string[];  // 🆕 NEW: Global allowed modules for supermanagers
   system_permissions: SystemPermissionKey[];
   module_permissions: [AppModule, ModulePermissionKey[]][];
-  custom_roles: any[];
+  custom_roles: unknown[];
   cached_at: number;
   version: number;
 }
 
 const CACHE_VERSION = 6;  // 🆕 INCREMENTED: Force cache invalidation after RPC function recreation and fallback fixes
 const CACHE_KEY = 'permissions_cache_v1';
-const CACHE_TTL = 15 * 60 * 1000; // 15 minutes (increased from 5 to reduce re-fetches)
+const CACHE_TTL = 30 * 60 * 1000; // 30 minutes (PHASE 2 OPTIMIZATION: doubled from 15min to reduce refetches)
+const CACHE_STALE_THRESHOLD = 0.8; // Pre-expiration refresh at 80% TTL (24 minutes)
 
 /**
  * Serialize permissions from Map/Set to arrays for JSON storage
@@ -55,6 +56,23 @@ export function serializePermissions(user: EnhancedUserGranular): SerializedPerm
     cached_at: Date.now(),
     version: CACHE_VERSION
   };
+}
+
+/**
+ * Check if cached permissions are stale and should trigger background refresh
+ * Stale = valid but approaching expiration (80% of TTL)
+ *
+ * @param cached - Cached permissions object
+ * @returns true if stale (valid but should refresh in background)
+ */
+export function isCacheStale(cached: SerializedPermissions): boolean {
+  try {
+    const age = Date.now() - cached.cached_at;
+    const staleAge = CACHE_TTL * CACHE_STALE_THRESHOLD;
+    return age >= staleAge && age < CACHE_TTL;
+  } catch {
+    return false;
+  }
 }
 
 /**
