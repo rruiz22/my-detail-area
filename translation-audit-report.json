@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 877,
-  "totalStrings": 8560,
-  "hardcodedStrings": 2043,
-  "translatedStrings": 6517,
+  "scannedFiles": 878,
+  "totalStrings": 8564,
+  "hardcodedStrings": 2041,
+  "translatedStrings": 6523,
   "issues": {
     "critical": [
       {
@@ -3203,149 +3203,139 @@
         "hardcodedStrings": [
           {
             "text": "Average Time by Step",
-            "line": 327,
-            "context": "326: <CardTitle className=\"flex items-center gap-2\">\n327: <Clock className=\"h-5 w-5\" />\n328: Average Time by Step"
-          },
-          {
-            "text": "No step data available for the selected time range",
-            "line": 358,
-            "context": "357: <Clock className=\"h-12 w-12 mx-auto mb-4 opacity-50\" />\n358: <p className=\"text-sm\">No step data available for the selected time range</p>\n359: </div>"
-          },
-          {
-            "text": "Invalid chart data detected",
-            "line": 378,
-            "context": "377: <Clock className=\"h-12 w-12 mx-auto mb-4 opacity-50\" />\n378: <p className=\"text-sm\">Invalid chart data detected</p>\n379: </div>"
+            "line": 326,
+            "context": "325: <CardTitle className=\"flex items-center gap-2\">\n326: <Clock className=\"h-5 w-5\" />\n327: Average Time by Step"
           },
           {
             "text": "Step Analysis",
-            "line": 450,
-            "context": "449: <CardTitle className=\"flex items-center gap-2\">\n450: <Layers className=\"h-5 w-5\" />\n451: Step Analysis"
+            "line": 352,
+            "context": "351: <CardTitle className=\"flex items-center gap-2\">\n352: <Layers className=\"h-5 w-5\" />\n353: Step Analysis"
           },
           {
             "text": "Average time across all workflow steps",
-            "line": 453,
-            "context": "452: </CardTitle>\n453: <CardDescription>Average time across all workflow steps</CardDescription>\n454: </CardHeader>"
+            "line": 355,
+            "context": "354: </CardTitle>\n355: <CardDescription>Average time across all workflow steps</CardDescription>\n356: </CardHeader>"
           },
           {
             "text": "Average Time Per Step",
-            "line": 464,
-            "context": "463: <div className=\"flex-1\">\n464: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">\n465: Average Time Per Step"
+            "line": 366,
+            "context": "365: <div className=\"flex-1\">\n366: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">\n367: Average Time Per Step"
           },
           {
             "text": "Top Steps by Volume",
-            "line": 484,
-            "context": "483: <div className=\"space-y-2\">\n484: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">\n485: Top Steps by Volume"
+            "line": 386,
+            "context": "385: <div className=\"space-y-2\">\n386: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">\n387: Top Steps by Volume"
           },
           {
             "text": "View All Steps",
-            "line": 517,
-            "context": "516: onClick={() => navigate('/get-ready/details')}\n517: >\n518: View All Steps"
+            "line": 419,
+            "context": "418: onClick={() => navigate('/get-ready/details')}\n419: >\n420: View All Steps"
           },
           {
             "text": "Priority Breakdown",
-            "line": 529,
-            "context": "528: <CardTitle className=\"flex items-center gap-2\">\n529: <Target className=\"h-5 w-5\" />\n530: Priority Breakdown"
+            "line": 431,
+            "context": "430: <CardTitle className=\"flex items-center gap-2\">\n431: <Target className=\"h-5 w-5\" />\n432: Priority Breakdown"
           },
           {
             "text": "Vehicle priority distribution",
-            "line": 532,
-            "context": "531: </CardTitle>\n532: <CardDescription>Vehicle priority distribution</CardDescription>\n533: </CardHeader>"
+            "line": 434,
+            "context": "433: </CardTitle>\n434: <CardDescription>Vehicle priority distribution</CardDescription>\n435: </CardHeader>"
           },
           {
             "text": "Work Items Summary",
-            "line": 578,
-            "context": "577: <CardTitle className=\"flex items-center gap-2\">\n578: <CheckCircle2 className=\"h-5 w-5\" />\n579: Work Items Summary"
+            "line": 480,
+            "context": "479: <CardTitle className=\"flex items-center gap-2\">\n480: <CheckCircle2 className=\"h-5 w-5\" />\n481: Work Items Summary"
           },
           {
             "text": "Aggregate work items across all vehicles",
-            "line": 581,
-            "context": "580: </CardTitle>\n581: <CardDescription>Aggregate work items across all vehicles</CardDescription>\n582: </CardHeader>"
+            "line": 483,
+            "context": "482: </CardTitle>\n483: <CardDescription>Aggregate work items across all vehicles</CardDescription>\n484: </CardHeader>"
           },
           {
             "text": "Pending",
-            "line": 587,
-            "context": "586: <div className=\"space-y-1\">\n587: <div className=\"text-xs text-muted-foreground\">Pending</div>\n588: <div className=\"text-2xl font-bold text-amber-600\">{workItemsTotal.pending}</div>"
+            "line": 489,
+            "context": "488: <div className=\"space-y-1\">\n489: <div className=\"text-xs text-muted-foreground\">Pending</div>\n490: <div className=\"text-2xl font-bold text-amber-600\">{workItemsTotal.pending}</div>"
           },
           {
             "text": "In Progress",
-            "line": 591,
-            "context": "590: <div className=\"space-y-1\">\n591: <div className=\"text-xs text-muted-foreground\">In Progress</div>\n592: <div className=\"text-2xl font-bold text-sky-600\">{workItemsTotal.in_progress}</div>"
+            "line": 493,
+            "context": "492: <div className=\"space-y-1\">\n493: <div className=\"text-xs text-muted-foreground\">In Progress</div>\n494: <div className=\"text-2xl font-bold text-sky-600\">{workItemsTotal.in_progress}</div>"
           },
           {
             "text": "Completed",
-            "line": 595,
-            "context": "594: <div className=\"space-y-1\">\n595: <div className=\"text-xs text-muted-foreground\">Completed</div>\n596: <div className=\"text-2xl font-bold text-emerald-600\">{workItemsTotal.completed}</div>"
+            "line": 497,
+            "context": "496: <div className=\"space-y-1\">\n497: <div className=\"text-xs text-muted-foreground\">Completed</div>\n498: <div className=\"text-2xl font-bold text-emerald-600\">{workItemsTotal.completed}</div>"
           },
           {
             "text": "Total Items",
-            "line": 599,
-            "context": "598: <div className=\"space-y-1\">\n599: <div className=\"text-xs text-muted-foreground\">Total Items</div>\n600: <div className=\"text-2xl font-bold\">{workItemsTotal.totalItems}</div>"
+            "line": 501,
+            "context": "500: <div className=\"space-y-1\">\n501: <div className=\"text-xs text-muted-foreground\">Total Items</div>\n502: <div className=\"text-2xl font-bold\">{workItemsTotal.totalItems}</div>"
           },
           {
             "text": "Completion Rate",
-            "line": 608,
-            "context": "607: <div className=\"flex items-center justify-between text-sm\">\n608: <span className=\"font-medium\">Completion Rate</span>\n609: <span className=\"text-muted-foreground\">{workItemsTotal.completionRate.toFixed(1)}%</span>"
+            "line": 510,
+            "context": "509: <div className=\"flex items-center justify-between text-sm\">\n510: <span className=\"font-medium\">Completion Rate</span>\n511: <span className=\"text-muted-foreground\">{workItemsTotal.completionRate.toFixed(1)}%</span>"
           },
           {
             "text": "Team Performance",
-            "line": 621,
-            "context": "620: <CardTitle className=\"flex items-center gap-2\">\n621: <Users className=\"h-5 w-5\" />\n622: Team Performance"
+            "line": 523,
+            "context": "522: <CardTitle className=\"flex items-center gap-2\">\n523: <Users className=\"h-5 w-5\" />\n524: Team Performance"
           },
           {
             "text": "Top performers by vehicle count",
-            "line": 624,
-            "context": "623: </CardTitle>\n624: <CardDescription>Top performers by vehicle count</CardDescription>\n625: </CardHeader>"
+            "line": 526,
+            "context": "525: </CardTitle>\n526: <CardDescription>Top performers by vehicle count</CardDescription>\n527: </CardHeader>"
           },
           {
             "text": "No team data available",
-            "line": 629,
-            "context": "628: {teamStats.length === 0 ? (\n629: <div className=\"text-sm text-muted-foreground text-center py-4\">\n630: No team data available"
+            "line": 531,
+            "context": "530: {teamStats.length === 0 ? (\n531: <div className=\"text-sm text-muted-foreground text-center py-4\">\n532: No team data available"
           },
           {
             "text": "Vehicles Added",
-            "line": 674,
-            "context": "673: <div className=\"text-2xl font-bold\">{recentActivity.vehiclesAdded}</div>\n674: <div className=\"text-xs text-muted-foreground\">Vehicles Added</div>\n675: </div>"
+            "line": 576,
+            "context": "575: <div className=\"text-2xl font-bold\">{recentActivity.vehiclesAdded}</div>\n576: <div className=\"text-xs text-muted-foreground\">Vehicles Added</div>\n577: </div>"
           },
           {
             "text": "Ready for Frontline",
-            "line": 681,
-            "context": "680: <div className=\"text-2xl font-bold\">{recentActivity.vehiclesCompleted}</div>\n681: <div className=\"text-xs text-muted-foreground\">Ready for Frontline</div>\n682: </div>"
+            "line": 583,
+            "context": "582: <div className=\"text-2xl font-bold\">{recentActivity.vehiclesCompleted}</div>\n583: <div className=\"text-xs text-muted-foreground\">Ready for Frontline</div>\n584: </div>"
           },
           {
             "text": "Total Active",
-            "line": 688,
-            "context": "687: <div className=\"text-2xl font-bold\">{recentActivity.totalActive}</div>\n688: <div className=\"text-xs text-muted-foreground\">Total Active</div>\n689: </div>"
+            "line": 590,
+            "context": "589: <div className=\"text-2xl font-bold\">{recentActivity.totalActive}</div>\n590: <div className=\"text-xs text-muted-foreground\">Total Active</div>\n591: </div>"
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.analytics.timeRange",
-            "line": 304,
+            "line": 303,
             "exists": true
           },
           {
             "key": "get_ready.analytics.last7Days",
-            "line": 309,
+            "line": 308,
             "exists": true
           },
           {
             "key": "get_ready.analytics.last30Days",
-            "line": 312,
+            "line": 311,
             "exists": true
           },
           {
             "key": "get_ready.analytics.last90Days",
-            "line": 315,
+            "line": 314,
             "exists": true
           },
           {
             "key": "get_ready.analytics.historicalAnalytics",
-            "line": 701,
+            "line": 603,
             "exists": true
           }
         ],
         "missingKeys": [],
-        "coverage": 18,
+        "coverage": 19,
         "severity": "critical"
       },
       {
@@ -17467,125 +17457,125 @@
         "translationCalls": [
           {
             "key": "cache.cleared_title",
-            "line": 33,
+            "line": 31,
             "exists": true
           },
           {
             "key": "cache.cleared_success",
-            "line": 34,
+            "line": 32,
             "exists": false
           },
           {
             "key": "system_update.success_title",
-            "line": 45,
+            "line": 43,
             "exists": false
           },
           {
             "key": "system_update.success_desc",
-            "line": 46,
+            "line": 44,
             "exists": false
           },
           {
             "key": "dashboard.hero.welcome_to",
+            "line": 76,
+            "exists": true
+          },
+          {
+            "key": "dashboard.hero.subtitle",
             "line": 78,
             "exists": true
           },
           {
-            "key": "dashboard.hero.subtitle",
-            "line": 80,
-            "exists": true
-          },
-          {
             "key": "dashboard.empty_state.no_access_title",
-            "line": 92,
+            "line": 90,
             "exists": true
           },
           {
             "key": "dashboard.empty_state.no_access_message",
-            "line": 94,
+            "line": 92,
             "exists": true
           },
           {
             "key": "dashboard.empty_state.contact_admin",
-            "line": 99,
+            "line": 97,
             "exists": true
           },
           {
             "key": "dashboard.departments.sales",
-            "line": 102,
+            "line": 100,
             "exists": true
           },
           {
             "key": "dashboard.empty_state.sales_module",
-            "line": 103,
+            "line": 101,
             "exists": true
           },
           {
             "key": "dashboard.departments.service",
-            "line": 106,
+            "line": 104,
             "exists": true
           },
           {
             "key": "dashboard.empty_state.service_module",
-            "line": 107,
+            "line": 105,
             "exists": true
           },
           {
             "key": "dashboard.departments.recon",
-            "line": 110,
+            "line": 108,
             "exists": true
           },
           {
             "key": "dashboard.empty_state.recon_module",
-            "line": 111,
+            "line": 109,
             "exists": true
           },
           {
             "key": "dashboard.departments.car_wash",
-            "line": 114,
+            "line": 112,
             "exists": true
           },
           {
             "key": "dashboard.empty_state.carwash_module",
-            "line": 115,
+            "line": 113,
             "exists": true
           },
           {
             "key": "dashboard.empty_state.view_profile",
-            "line": 123,
+            "line": 121,
             "exists": true
           },
           {
             "key": "dashboard.empty_state.contact_support",
-            "line": 127,
+            "line": 125,
             "exists": true
           },
           {
             "key": "dashboard.hero.welcome_to",
-            "line": 149,
+            "line": 147,
             "exists": true
           },
           {
             "key": "dashboard.hero.subtitle",
-            "line": 151,
+            "line": 149,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "cache.cleared_success",
-            "line": 34,
-            "context": "33: title: '✅ ' + t('cache.cleared_title', { defaultValue: 'Cache Cleared' }),\n34: description: t('cache.cleared_success', {\n35: defaultValue: 'All caches have been cleared successfully.'"
+            "line": 32,
+            "context": "31: title: '✅ ' + t('cache.cleared_title', { defaultValue: 'Cache Cleared' }),\n32: description: t('cache.cleared_success', {\n33: defaultValue: 'All caches have been cleared successfully.'"
           },
           {
             "key": "system_update.success_title",
-            "line": 45,
-            "context": "44: toast({\n45: title: '✅ ' + t('system_update.success_title', { defaultValue: 'App Updated' }),\n46: description: t('system_update.success_desc', {"
+            "line": 43,
+            "context": "42: toast({\n43: title: '✅ ' + t('system_update.success_title', { defaultValue: 'App Updated' }),\n44: description: t('system_update.success_desc', {"
           },
           {
             "key": "system_update.success_desc",
-            "line": 46,
-            "context": "45: title: '✅ ' + t('system_update.success_title', { defaultValue: 'App Updated' }),\n46: description: t('system_update.success_desc', {\n47: defaultValue: 'The application has been updated successfully.'"
+            "line": 44,
+            "context": "43: title: '✅ ' + t('system_update.success_title', { defaultValue: 'App Updated' }),\n44: description: t('system_update.success_desc', {\n45: defaultValue: 'The application has been updated successfully.'"
           }
         ],
         "coverage": 100,
@@ -50958,6 +50948,61 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\get-ready\\analytics\\SafeBarChart.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "get_ready.analytics.validatingChartData",
+            "line": 82,
+            "exists": false
+          },
+          {
+            "key": "get_ready.analytics.noStepDataAvailable",
+            "line": 83,
+            "exists": false
+          },
+          {
+            "key": "get_ready.analytics.days",
+            "line": 122,
+            "exists": true
+          },
+          {
+            "key": "get_ready.analytics.average",
+            "line": 138,
+            "exists": false
+          },
+          {
+            "key": "get_ready.analytics.days",
+            "line": 138,
+            "exists": true
+          },
+          {
+            "key": "get_ready.analytics.vehicles",
+            "line": 139,
+            "exists": true
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "get_ready.analytics.validatingChartData",
+            "line": 82,
+            "context": "81: {data && data.length > 0\n82: ? t('get_ready.analytics.validatingChartData')\n83: : t('get_ready.analytics.noStepDataAvailable')}"
+          },
+          {
+            "key": "get_ready.analytics.noStepDataAvailable",
+            "line": 83,
+            "context": "82: ? t('get_ready.analytics.validatingChartData')\n83: : t('get_ready.analytics.noStepDataAvailable')}\n84: </p>"
+          },
+          {
+            "key": "get_ready.analytics.average",
+            "line": 138,
+            "context": "137: <div className=\"text-xs text-muted-foreground space-y-1\">\n138: <div>{t('get_ready.analytics.average')}: <span className=\"font-semibold text-foreground\">{itemData.avgDays} {t('get_ready.analytics.days')}</span></div>\n139: <div>{t('get_ready.analytics.vehicles')}: <span className=\"font-semibold text-foreground\">{itemData.count}</span></div>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\get-ready\\analytics\\BottleneckAnalysis.tsx",
         "hardcodedStrings": [
           {
@@ -57944,7 +57989,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "412 Component components need translation",
+      "description": "413 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\OperationalReports.tsx",
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
@@ -57959,8 +58004,8 @@
         "src\\components\\get-ready\\GetReadySplitContent.tsx",
         "src\\components\\orders\\OrderTasksSection.tsx",
         "src\\components\\detail-hub\\TimecardSystem.BACKUP.tsx",
-        "src\\components\\get-ready\\GetReadyOverview.tsx",
         "src\\components\\get-ready\\GetReadyActivityFeed.tsx",
+        "src\\components\\get-ready\\GetReadyOverview.tsx",
         "src\\components\\detail-hub\\InvoiceCenter.tsx",
         "src\\components\\settings\\IntegrationSettings.tsx",
         "src\\components\\get-ready\\GetReadyWorkflowActions.tsx",
@@ -58340,6 +58385,7 @@
         "src\\components\\get-ready\\tabs\\VehicleWorkItemsTab.tsx",
         "src\\components\\get-ready\\tabs\\VehicleVendorsTab.tsx",
         "src\\components\\get-ready\\tabs\\VehicleNotesTab.tsx",
+        "src\\components\\get-ready\\analytics\\SafeBarChart.tsx",
         "src\\components\\filters\\DealershipFilter.tsx",
         "src\\components\\dealerships\\DealershipStatsCard.tsx",
         "src\\components\\dealer\\DealerUsers.tsx",
@@ -58359,12 +58405,12 @@
         "src\\components\\analytics\\CommunicationAnalyticsDashboard.tsx",
         "src\\components\\admin\\DealershipManagement.tsx"
       ],
-      "estimatedEffort": "206 hours"
+      "estimatedEffort": "207 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2089 translation keys are referenced but missing",
+      "description": "2092 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "105 hours"
     }
