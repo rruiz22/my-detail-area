@@ -628,3 +628,67 @@ function calculateTrendIndicator(
     currentValue: Math.round(current * 100) / 100,
   };
 }
+
+// ============================================================================
+// PHASE 3 OPTIMIZATION: RPC Function Hooks
+// ============================================================================
+
+/**
+ * Hook for server-side approval count
+ * Replaces client-side auto-fetch loop
+ * Uses RPC: get_pending_approvals_count(dealer_id)
+ */
+export function useApprovalCount() {
+  const { currentDealership } = useAccessibleDealerships();
+  const dealerId = validateDealershipObject(currentDealership);
+
+  return useOrderPolling(
+    ['approval-count', currentDealership?.id],
+    async () => {
+      if (!dealerId) return { total_pending: 0, by_priority: {} };
+
+      const { data, error } = await supabase.rpc('get_pending_approvals_count', {
+        p_dealer_id: dealerId
+      });
+
+      if (error) {
+        console.error('Error fetching approval count:', error);
+        throw error;
+      }
+
+      return data?.[0] || { total_pending: 0, by_priority: {} };
+    },
+    !!dealerId
+  );
+}
+
+/**
+ * Hook for server-side approval vehicles with pagination
+ * Replaces O(n×m) client-side filtering
+ * Uses RPC: get_approval_vehicles(dealer_id, limit, offset)
+ */
+export function useApprovalVehicles(limit: number = 50, offset: number = 0) {
+  const { currentDealership } = useAccessibleDealerships();
+  const dealerId = validateDealershipObject(currentDealership);
+
+  return useOrderPolling(
+    ['approval-vehicles', currentDealership?.id, limit, offset],
+    async () => {
+      if (!dealerId) return [];
+
+      const { data, error } = await supabase.rpc('get_approval_vehicles', {
+        p_dealer_id: dealerId,
+        p_limit: limit,
+        p_offset: offset
+      });
+
+      if (error) {
+        console.error('Error fetching approval vehicles:', error);
+        throw error;
+      }
+
+      return data || [];
+    },
+    !!dealerId
+  );
+}
