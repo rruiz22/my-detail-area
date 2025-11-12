@@ -55,30 +55,7 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
   // Fetch historical step analytics for accurate average days calculation
   const { data: historicalStepAnalytics } = useStepRevisitAnalytics(timeRange);
 
-  // Calculate workflow distribution
-  const workflowStats = useMemo(() => {
-    const stats = {
-      standard: { count: 0, avgT2L: 0, totalT2L: 0 },
-      express: { count: 0, avgT2L: 0, totalT2L: 0 },
-      priority: { count: 0, avgT2L: 0, totalT2L: 0 },
-    };
-
-    allVehicles.forEach(v => {
-      if (stats[v.workflow_type as keyof typeof stats]) {
-        stats[v.workflow_type as keyof typeof stats].count++;
-        const t2l = parseFloat(v.t2l) || 0;
-        stats[v.workflow_type as keyof typeof stats].totalT2L += t2l;
-      }
-    });
-
-    // Calculate averages
-    Object.keys(stats).forEach(key => {
-      const workflow = stats[key as keyof typeof stats];
-      workflow.avgT2L = workflow.count > 0 ? workflow.totalT2L / workflow.count : 0;
-    });
-
-    return stats;
-  }, [allVehicles]);
+  // Workflow distribution calculation removed - workflow_type no longer exists
 
   // Calculate priority breakdown
   const priorityStats = useMemo(() => {
@@ -270,86 +247,7 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
       {/* Enterprise Metrics Dashboard */}
       <GetReadyEnterpriseMetrics allVehicles={allVehicles} timeRange={timeRange} />
 
-      {/* Workflow Distribution */}
-      <div>
-        <h3 className="text-lg font-semibold mb-4">Workflow Distribution</h3>
-        <div className="grid gap-4 md:grid-cols-3">
-          {/* Standard Workflow */}
-          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleNavigateToDetails()}>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Target className="h-5 w-5 text-blue-600" />
-                Standard
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="flex items-baseline gap-2">
-                <div className="text-3xl font-bold">{workflowStats.standard.count}</div>
-                <div className="text-sm text-muted-foreground">
-                  ({totalVehicles > 0 ? Math.round((workflowStats.standard.count / totalVehicles) * 100) : 0}%)
-                </div>
-              </div>
-              <div className="text-xs text-muted-foreground">
-                Avg T2L: {workflowStats.standard.avgT2L.toFixed(1)}d
-              </div>
-              <Progress
-                value={totalVehicles > 0 ? (workflowStats.standard.count / totalVehicles) * 100 : 0}
-                className="h-2"
-              />
-            </CardContent>
-          </Card>
-
-          {/* Express Workflow */}
-          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleNavigateToDetails()}>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Zap className="h-5 w-5 text-emerald-600" />
-                Express
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="flex items-baseline gap-2">
-                <div className="text-3xl font-bold">{workflowStats.express.count}</div>
-                <div className="text-sm text-muted-foreground">
-                  ({totalVehicles > 0 ? Math.round((workflowStats.express.count / totalVehicles) * 100) : 0}%)
-                </div>
-              </div>
-              <div className="text-xs text-muted-foreground">
-                Avg T2L: {workflowStats.express.avgT2L.toFixed(1)}d
-              </div>
-              <Progress
-                value={totalVehicles > 0 ? (workflowStats.express.count / totalVehicles) * 100 : 0}
-                className="h-2"
-              />
-            </CardContent>
-          </Card>
-
-          {/* Priority Workflow */}
-          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleNavigateToDetails()}>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Shield className="h-5 w-5 text-purple-600" />
-                Priority
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="flex items-baseline gap-2">
-                <div className="text-3xl font-bold">{workflowStats.priority.count}</div>
-                <div className="text-sm text-muted-foreground">
-                  ({totalVehicles > 0 ? Math.round((workflowStats.priority.count / totalVehicles) * 100) : 0}%)
-                </div>
-              </div>
-              <div className="text-xs text-muted-foreground">
-                Avg T2L: {workflowStats.priority.avgT2L.toFixed(1)}d
-              </div>
-              <Progress
-                value={totalVehicles > 0 ? (workflowStats.priority.count / totalVehicles) * 100 : 0}
-                className="h-2"
-              />
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      {/* Workflow Distribution section removed - workflow_type no longer exists */}
 
       {/* Step Analysis & Priority Breakdown */}
       <div className="grid gap-6 md:grid-cols-2">
