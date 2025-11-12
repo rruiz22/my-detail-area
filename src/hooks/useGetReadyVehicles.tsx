@@ -327,7 +327,6 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
           vehicle_model,
           vehicle_trim,
           step_id,
-          workflow_type,
           priority,
           status,
           assigned_to,
@@ -365,11 +364,6 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
       // ✅ Apply step filter (ignored when search is active for global search)
       if (selectedStep && selectedStep !== 'all' && !searchQuery) {
         query = query.eq('step_id', selectedStep);
-      }
-
-      // Apply workflow filter
-      if (selectedWorkflow && selectedWorkflow !== 'all') {
-        query = query.eq('workflow_type', selectedWorkflow);
       }
 
       // Apply priority filter
@@ -449,7 +443,6 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
           trim: vehicle.vehicle_trim || '',
           step_id: vehicle.step_id,
           step_name: vehicle.get_ready_steps?.name || 'Unknown',
-          workflow_type: vehicle.workflow_type,
           priority: vehicle.priority,
           days_in_step: calculateDIS(vehicle.intake_date),
           days_to_frontline: calculateDTF(stepOrder, 8, 12), // 8 steps, 12h avg per step
@@ -534,7 +527,6 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
           vehicle_model,
           vehicle_trim,
           step_id,
-          workflow_type,
           priority,
           status,
           assigned_to,
@@ -572,11 +564,6 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
       // ✅ Apply step filter (ignored when search is active for global search)
       if (selectedStep && selectedStep !== 'all' && !searchQuery) {
         query = query.eq('step_id', selectedStep);
-      }
-
-      // Apply workflow filter
-      if (selectedWorkflow && selectedWorkflow !== 'all') {
-        query = query.eq('workflow_type', selectedWorkflow);
       }
 
       // Apply priority filter
@@ -672,7 +659,6 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
           trim: vehicle.vehicle_trim || '',
           step_id: vehicle.step_id,
           step_name: vehicle.get_ready_steps?.name || 'Unknown',
-          workflow_type: vehicle.workflow_type,
           priority: vehicle.priority,
           days_in_step: calculateDIS(vehicle.intake_date),
           days_to_frontline: calculateDTF(stepOrder, 8, 12), // 8 steps, 12h avg per step

@@ -123,7 +123,7 @@ export function VehicleTable({ className }: VehicleTableProps) {
           <TableRow className="h-9 hover:bg-transparent border-b-0">
             <TableHead className="w-12 py-2 bg-background text-center">#</TableHead>
             <TableHead className="py-2 bg-background">{t('get_ready.table.vehicle_stock')}</TableHead>
-            <TableHead className="w-32 py-2 bg-background">{t('get_ready.table.step_workflow')}</TableHead>
+            <TableHead className="w-32 py-2 bg-background">{t('get_ready.table.current_step')}</TableHead>
             <TableHead className="w-40 py-2 bg-background">{t('get_ready.table.progress_time')}</TableHead>
             <TableHead className="w-24 py-2 bg-background">{t('get_ready.table.priority')}</TableHead>
             <TableHead className="w-16 py-2 bg-background text-center">{t('common.actions')}</TableHead>
@@ -165,18 +165,18 @@ export function VehicleTable({ className }: VehicleTableProps) {
                           VIN: {(vehicle.vin || vehicle.short_vin)?.slice(-8)}
                         </span>
                       </div>
-                      {/* Small media/notes badges */}
+                      {/* Enhanced media/notes badges */}
                       {((vehicle.media_count ?? 0) > 0 || (vehicle.notes_preview?.length ?? 0) > 0) && (
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1.5">
                           {(vehicle.media_count ?? 0) > 0 && (
-                            <Badge variant="secondary" className="h-4 px-1 text-[10px] bg-purple-100 text-purple-700 gap-0.5">
-                              <Image className="h-2.5 w-2.5" />
+                            <Badge variant="secondary" className="h-5 px-1.5 text-xs font-medium bg-purple-500/10 text-purple-700 border border-purple-500/20 gap-1 shadow-sm">
+                              <Image className="h-3.5 w-3.5" />
                               {vehicle.media_count}
                             </Badge>
                           )}
                           {(vehicle.notes_preview?.length ?? 0) > 0 && (
-                            <Badge variant="secondary" className="h-4 px-1 text-[10px] bg-blue-100 text-blue-700 gap-0.5">
-                              <FileText className="h-2.5 w-2.5" />
+                            <Badge variant="secondary" className="h-5 px-1.5 text-xs font-medium bg-blue-500/10 text-blue-700 border border-blue-500/20 gap-1 shadow-sm">
+                              <FileText className="h-3.5 w-3.5" />
                               {vehicle.notes_preview.length}
                             </Badge>
                           )}
@@ -187,23 +187,18 @@ export function VehicleTable({ className }: VehicleTableProps) {
                 </div>
               </TableCell>
 
-              {/* Step & Workflow - Grouped */}
+              {/* Current Step */}
               <TableCell className="py-2">
-                <div className="space-y-1">
-                  <Badge
-                    variant="outline"
-                    className="text-xs font-medium"
-                    style={{
-                      borderColor: vehicle.current_step_color,
-                      color: vehicle.current_step_color
-                    }}
-                  >
-                    {vehicle.current_step_name}
-                  </Badge>
-                  <div className="text-xs text-muted-foreground capitalize">
-                    {vehicle.workflow_type || 'Standard'}
-                  </div>
-                </div>
+                <Badge
+                  variant="outline"
+                  className="text-xs font-medium"
+                  style={{
+                    borderColor: vehicle.current_step_color,
+                    color: vehicle.current_step_color
+                  }}
+                >
+                  {vehicle.current_step_name}
+                </Badge>
               </TableCell>
 
               {/* Progress & Time - Grouped */}

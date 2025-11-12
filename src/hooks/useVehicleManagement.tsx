@@ -14,7 +14,6 @@ interface CreateVehicleInput {
   vehicle_model: string;
   vehicle_trim?: string;
   step_id: string;
-  workflow_type: 'standard' | 'express' | 'priority';
   priority: 'low' | 'normal' | 'medium' | 'high' | 'urgent';
   assigned_to?: string;
   notes?: string;
@@ -51,7 +50,6 @@ export function useVehicleManagement() {
           vehicle_model: input.vehicle_model,
           vehicle_trim: input.vehicle_trim || null,
           step_id: input.step_id,
-          workflow_type: input.workflow_type,
           priority: input.priority,
           assigned_to: input.assigned_to || null,
           notes: input.notes || null,
@@ -182,7 +180,6 @@ export function useVehicleManagement() {
       if (input.vehicle_model) updateData.vehicle_model = input.vehicle_model;
       if (input.vehicle_trim !== undefined) updateData.vehicle_trim = input.vehicle_trim || null;
       if (input.step_id) updateData.step_id = input.step_id;
-      if (input.workflow_type) updateData.workflow_type = input.workflow_type;
       if (input.priority) updateData.priority = input.priority;
       if (input.assigned_to !== undefined) updateData.assigned_to = input.assigned_to || null;
       if (input.notes !== undefined) updateData.notes = input.notes || null;

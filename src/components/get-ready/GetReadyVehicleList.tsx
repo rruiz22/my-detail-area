@@ -153,10 +153,10 @@ export function GetReadyVehicleList({
     handleMoveToStep(vehicleId, currentStepId, nextStep.id);
   };
 
-  const handleUpdateVehicle = (vehicleId: string, updates: { workflow_type?: 'standard' | 'express' | 'priority'; priority?: 'low' | 'normal' | 'medium' | 'high' | 'urgent' }) => {
+  const handleUpdateVehicle = (vehicleId: string, updates: { priority?: 'low' | 'normal' | 'medium' | 'high' | 'urgent' }) => {
     updateVehicle({
       id: vehicleId,
-      data: updates
+      ...updates
     });
   };
 
@@ -223,19 +223,6 @@ export function GetReadyVehicleList({
         return 'bg-gray-100 text-gray-800 border-gray-200';
       default:
         return 'bg-blue-100 text-blue-800 border-blue-200';
-    }
-  };
-
-  const getWorkflowColor = (workflow: string) => {
-    switch (workflow) {
-      case 'priority':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
-      case 'express':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'standard':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
@@ -379,9 +366,6 @@ export function GetReadyVehicleList({
               <CardContent className="space-y-2 pt-2">
                 {/* Status and Progress */}
                 <div className="flex items-center justify-between gap-2">
-                  <Badge variant="outline" className={cn("text-xs", getWorkflowColor(vehicle.workflow_type))}>
-                    {t(`get_ready.workflow.${vehicle.workflow_type}`)}
-                  </Badge>
                   <div className="flex items-center gap-1">
                     {getSLAStatusIcon(vehicle.sla_status)}
                     <span className="text-xs text-muted-foreground">
@@ -497,7 +481,6 @@ export function GetReadyVehicleList({
                   <TableHead className="w-[100px] text-center py-2 bg-background">{t('get_ready.table.stock')}</TableHead>
                   <TableHead className="w-[200px] text-center py-2 bg-background">{t('get_ready.table.vehicle')}</TableHead>
                   <TableHead className="w-[140px] text-center py-2 bg-background">{t('get_ready.table.step')}</TableHead>
-                  <TableHead className="w-[110px] text-center py-2 bg-background">Workflow</TableHead>
                   <TableHead className="w-[80px] text-center py-2 bg-background">
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -717,70 +700,6 @@ export function GetReadyVehicleList({
                       onAdvanceStep={() => handleAdvanceStep(vehicle.id, vehicle.step_id)}
                       variant="table"
                     />
-                  </div>
-                </TableCell>
-
-                {/* Workflow - Editable */}
-                <TableCell className="w-[110px] py-1 text-center" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex justify-center">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className={cn("h-6 py-0.5 px-2 hover:bg-accent text-xs", getWorkflowColor(vehicle.workflow_type))}
-                          disabled={isMoving || isUpdating}
-                        >
-                          {t(`get_ready.workflow.${vehicle.workflow_type}`)}
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="center">
-                        <DropdownMenuLabel>{t('get_ready.workflow.change_workflow')}</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleUpdateVehicle(vehicle.id, { workflow_type: 'standard' });
-                          }}
-                          disabled={vehicle.workflow_type === 'standard'}
-                        >
-                          <div className="flex items-center gap-2 w-full">
-                            <span className="flex-1">{t('get_ready.workflow.standard')}</span>
-                            {vehicle.workflow_type === 'standard' && (
-                              <Check className="h-4 w-4 text-primary" />
-                            )}
-                          </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleUpdateVehicle(vehicle.id, { workflow_type: 'express' });
-                          }}
-                          disabled={vehicle.workflow_type === 'express'}
-                        >
-                          <div className="flex items-center gap-2 w-full">
-                            <span className="flex-1">{t('get_ready.workflow.express')}</span>
-                            {vehicle.workflow_type === 'express' && (
-                              <Check className="h-4 w-4 text-primary" />
-                            )}
-                          </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleUpdateVehicle(vehicle.id, { workflow_type: 'priority' });
-                          }}
-                          disabled={vehicle.workflow_type === 'priority'}
-                        >
-                          <div className="flex items-center gap-2 w-full">
-                            <span className="flex-1">{t('get_ready.workflow.priority')}</span>
-                            {vehicle.workflow_type === 'priority' && (
-                              <Check className="h-4 w-4 text-primary" />
-                            )}
-                          </div>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
                   </div>
                 </TableCell>
 

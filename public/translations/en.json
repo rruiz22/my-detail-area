@@ -4222,8 +4222,10 @@
       "priority": "Priority",
       "click_to_view": "Click on a row to view vehicle details",
       "vehicle_stock": "Vehicle & Stock",
+      "current_step": "Current Step",
       "step_workflow": "Step & Workflow",
       "progress": "Progress",
+      "progress_time": "Progress & Time",
       "unassigned": "Unassigned",
       "no_work_items": "No work items"
     },

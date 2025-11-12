@@ -11,7 +11,7 @@ export const mockVehicles = [
     trim: 'LX',
     step_id: 'inspection',
     step_name: 'Inspection',
-    workflow_type: 'standard',
+
     priority: 'high',
     days_in_step: 3,
     days_to_frontline: 15,
@@ -37,7 +37,7 @@ export const mockVehicles = [
     trim: 'S',
     step_id: 'inspection',
     step_name: 'Inspection',
-    workflow_type: 'express',
+
     priority: 'medium',
     days_in_step: 1,
     days_to_frontline: 14,
@@ -63,7 +63,7 @@ export const mockVehicles = [
     trim: 'Touring',
     step_id: 'inspection',
     step_name: 'Inspection',
-    workflow_type: 'priority',
+
     priority: 'urgent',
     days_in_step: 5,
     days_to_frontline: 16,
@@ -91,7 +91,7 @@ export const mockVehicles = [
     trim: 'LE',
     step_id: 'mechanical',
     step_name: 'Mechanical',
-    workflow_type: 'express',
+
     priority: 'medium',
     days_in_step: 7,
     days_to_frontline: 8,
@@ -117,7 +117,7 @@ export const mockVehicles = [
     trim: 'Premium',
     step_id: 'mechanical',
     step_name: 'Mechanical',
-    workflow_type: 'standard',
+
     priority: 'high',
     days_in_step: 4,
     days_to_frontline: 6,
@@ -145,7 +145,7 @@ export const mockVehicles = [
     trim: 'SEL',
     step_id: 'body_work',
     step_name: 'Body Work',
-    workflow_type: 'standard',
+
     priority: 'medium',
     days_in_step: 6,
     days_to_frontline: 8,
@@ -173,7 +173,7 @@ export const mockVehicles = [
     trim: 'XLT',
     step_id: 'detailing',
     step_name: 'Detailing',
-    workflow_type: 'priority',
+
     priority: 'low',
     days_in_step: 2,
     days_to_frontline: 2,
@@ -199,7 +199,7 @@ export const mockVehicles = [
     trim: 'Latitude',
     step_id: 'detailing',
     step_name: 'Detailing',
-    workflow_type: 'express',
+
     priority: 'normal',
     days_in_step: 1,
     days_to_frontline: 1,
@@ -227,7 +227,6 @@ export interface MockVehicle {
   trim: string;
   step_id: string;
   step_name: string;
-  workflow_type: 'standard' | 'express' | 'priority';
   priority: 'low' | 'normal' | 'medium' | 'high' | 'urgent';
   days_in_step: number;
   days_to_frontline: number;

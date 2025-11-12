@@ -35,7 +35,6 @@ interface DeletedVehicle {
   vehicle_make: string;
   vehicle_model: string;
   vehicle_trim?: string;
-  workflow_type: string;
   deleted_at: string;
   deleted_by: string;
 }
@@ -173,7 +172,6 @@ export function DeletedVehiclesDialog({ open, onOpenChange }: DeletedVehiclesDia
                 <TableRow>
                   <TableHead>{t('get_ready.table.vehicle_stock')}</TableHead>
                   <TableHead>{t('get_ready.table.vin')}</TableHead>
-                  <TableHead>{t('get_ready.table.workflow')}</TableHead>
                   <TableHead>{t('get_ready.deleted_vehicles.deleted_at')}</TableHead>
                   <TableHead className="text-right">{t('common.actions')}</TableHead>
                 </TableRow>
@@ -195,11 +193,6 @@ export function DeletedVehiclesDialog({ open, onOpenChange }: DeletedVehiclesDia
                       <code className="text-xs bg-muted px-1.5 py-0.5 rounded">
                         {vehicle.vin?.slice(-8)}
                       </code>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="capitalize">
-                        {vehicle.workflow_type}
-                      </Badge>
                     </TableCell>
                     <TableCell>
                       <div className="text-sm text-muted-foreground">
