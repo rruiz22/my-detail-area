@@ -160,14 +160,9 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     isFetchingNextPage: isFetchingNextApprovalPage
   } = useGetReadyVehiclesInfinite({});
 
-  // Auto-load ALL pages for accurate approval counting and display
-  // This ensures the Approvals page shows all vehicles needing approval, not just the first page
-  useEffect(() => {
-    if (hasNextApprovalPage && !isFetchingNextApprovalPage) {
-      console.log('📄 [Approvals] Auto-fetching next page for complete approval list');
-      fetchNextApprovalPage();
-    }
-  }, [hasNextApprovalPage, isFetchingNextApprovalPage, fetchNextApprovalPage]);
+  // PHASE 3 OPTIMIZATION: Removed auto-fetch ALL pages loop
+  // Now using server-side RPC function get_pending_approvals_count() for accurate counts
+  // This eliminates 10-20 queries per page load
 
   // Flatten all vehicles from infinite query
   const allVehicles =
