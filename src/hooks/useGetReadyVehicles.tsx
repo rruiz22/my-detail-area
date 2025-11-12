@@ -9,6 +9,7 @@ import type { GetReadyWorkItemSummary, VehicleDatabaseResponse, VehicleSortField
 import { sanitizeAndLowercase } from '@/utils/searchSanitization';
 import { validateDealershipObject } from '@/utils/dealerValidation';
 import { calculateVehicleProgress } from '@/utils/progressCalculation';
+import { CACHE_TIMES, GC_TIMES } from '@/constants/cacheConfig';
 
 // Type definition for vehicle detail
 export interface VehicleDetail {
@@ -356,7 +357,7 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
 
       // BATCH QUERY: Get vehicle images from Stock inventory by VIN
       const vins = data.map(v => v.vin).filter(Boolean);
-      let stockImagesMap = new Map<string, string>();
+      const stockImagesMap = new Map<string, string>();
 
       if (vins.length > 0) {
         const { data: stockImages, error: stockError } = await supabase
@@ -569,7 +570,7 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
 
       // BATCH QUERY: Get vehicle images from Stock inventory by VIN
       const vins = data.map(v => v.vin).filter(Boolean);
-      let stockImagesMap = new Map<string, string>();
+      const stockImagesMap = new Map<string, string>();
 
       if (vins.length > 0) {
         const { data: stockImages, error: stockError } = await supabase
@@ -663,8 +664,9 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
       return lastPage.hasMore ? allPages.length : undefined;
     },
     enabled: !!dealerId,
-    staleTime: 1000 * 10, // ✅ OPTIMIZED: Reduced from 30s to 10s for faster updates
-    refetchOnMount: true, // ✅ Always refetch on mount to catch server changes
+    staleTime: CACHE_TIMES.MEDIUM, // 5 minutes - vehicles don't change that frequently
+    gcTime: GC_TIMES.MEDIUM, // 10 minutes garbage collection
+    refetchOnMount: 'stale', // Only refetch if data is stale
     refetchOnWindowFocus: false, // Prevent unnecessary refetches on window focus
   });
 }
