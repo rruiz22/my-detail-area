@@ -8,6 +8,7 @@ import { ProtectedLayout } from "@/components/ProtectedLayout";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { UpdateBanner } from "@/components/version/UpdateBanner";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { DealerFilterProvider } from "@/contexts/DealerFilterContext";
 import { DealershipProvider } from "@/contexts/DealershipContext";
@@ -326,6 +327,8 @@ const App = () => (
                         }}
                       >
                         <AppRoutes />
+                        {/* Update banner for new versions */}
+                        <UpdateBanner />
                         {/* Permissions Debugger - Temporalmente deshabilitado por error de hooks
                         {import.meta.env.DEV && <PermissionsDebugger />}
                         */}
