@@ -718,10 +718,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       toast({ description: `Invoice ${invoiceNumber} created with ${selectedVehicles.length} vehicles` });
 
       // Invalidate queries to refresh the invoice list automatically
-      queryClient.invalidateQueries({ queryKey: ['invoices'] });
-      queryClient.invalidateQueries({ queryKey: ['invoice-summary'] });
-      queryClient.invalidateQueries({ queryKey: ['all-vehicles-for-counts'] });
-      queryClient.invalidateQueries({ queryKey: ['vehicles-without-invoice'] });
+      invalidateInvoiceQueries(queryClient);
 
       // Reset and switch to invoices tab
       setSelectedVehicleIds(new Set());
