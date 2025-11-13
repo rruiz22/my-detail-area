@@ -75,6 +75,7 @@ import {
 import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { QUERY_LIMITS } from '@/constants/queryLimits';
+import { isOrderInDateRange, toEndOfDay } from '@/utils/reportDateUtils';
 import { useToast } from '@/hooks/use-toast';
 import { useDateCalculations } from '@/hooks/useDateCalculations';
 import { useQueryClient } from '@tanstack/react-query';
@@ -329,8 +330,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
       // Filter by appropriate date field based on order_type (client-side)
       const startDateTime = parseISO(startDate);
-      const endDateTime = parseISO(endDate);
-      endDateTime.setHours(23, 59, 59, 999);
+      let endDateTime = parseISO(endDate);
+      endDateTime = toEndOfDay(endDateTime);
 
       const filteredByDate = orders.filter(order => {
         let reportDate: Date;
@@ -401,8 +402,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       // Filter by appropriate date field based on order_type (client-side)
       // Sales/Service: use due_date, Recon/CarWash: use completed_at
       const startDateTime = parseISO(startDate);
-      const endDateTime = parseISO(endDate);
-      endDateTime.setHours(23, 59, 59, 999);
+      let endDateTime = parseISO(endDate);
+      endDateTime = toEndOfDay(endDateTime);
 
       const filteredByDate = orders.filter(order => {
         let reportDate: Date;
@@ -1632,7 +1633,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                                   setShowPaymentDialog(true);
                                 }}
                                 disabled={invoice.status === 'paid' || invoice.status === 'cancelled'}
-                                title="Add Payment"
+                                title={t('reports.add_payment')}
                               >
                                 <DollarSign className="h-4 w-4" />
                               </Button>
@@ -1644,7 +1645,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                                   setSelectedInvoice(invoice);
                                   setShowDetailsDialog(true);
                                 }}
-                                title="View Details"
+                                title={t('reports.view_details')}
                               >
                                 <Eye className="h-4 w-4" />
                               </Button>
@@ -1656,7 +1657,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                                   handleDeleteInvoice(invoice);
                                 }}
                                 disabled={invoice.status === 'paid'}
-                                title="Delete Invoice"
+                                title={t('reports.delete_invoice')}
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
@@ -1736,8 +1737,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="today">Today</SelectItem>
-                      <SelectItem value="this_week">This Week</SelectItem>
-                      <SelectItem value="last_week">Last Week</SelectItem>
+                      <SelectItem value="this_week">{t('reports.this_week')}</SelectItem>
+                      <SelectItem value="last_week">{t('reports.last_week')}</SelectItem>
                       <SelectItem value="this_month">This Month</SelectItem>
                       <SelectItem value="last_month">Last Month</SelectItem>
                       <SelectItem value="last_3_months">Last 3 Months</SelectItem>
@@ -1809,7 +1810,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                   <Label>Include Only Service</Label>
                   <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>
                     <SelectTrigger>
-                      <SelectValue placeholder={loadingServices ? "Loading services..." : "All services"} />
+                      <SelectValue placeholder={loadingServices ? t('reports.loading_services') : "All services"} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">
@@ -1856,8 +1857,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                     <SelectTrigger>
                       <SelectValue placeholder={
                         loadingServices ? "Loading..." :
-                        availableServices.length === 0 ? "No services available" :
-                        "Add service to exclude..."
+                        availableServices.length === 0 ? t('reports.no_services_available') :
+                        t('reports.add_service_to_exclude')
                       } />
                     </SelectTrigger>
                     <SelectContent>

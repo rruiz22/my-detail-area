@@ -41,6 +41,7 @@ const COLORS = {
   amber500: [245, 158, 11],
   red500: [239, 68, 68],
   indigo500: [99, 102, 241],
+  primary: [99, 102, 241], // Indigo - muted primary color (Notion-compliant)
 };
 
 // =====================================================

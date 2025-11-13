@@ -222,25 +222,35 @@ export const ManageCustomRolesModal: React.FC<ManageCustomRolesModalProps> = ({
       await fetchUserRolesAndAvailable();
 
       // AGGRESSIVE: Reset queries instead of just invalidating
-      // This forces immediate refetch regardless of staleTime
+      // 🔒 CRITICAL FIX v1.3.17: Force refetch for the modified user
+      // This ensures the user sees updated permissions immediately across all sessions
+
+      // Step 1: Reset queries (clears cache AND triggers refetch)
       await queryClient.resetQueries({
         queryKey: ['user-permissions', user.id]
       });
       await queryClient.resetQueries({
         queryKey: ['user_profile_permissions', user.id]
       });
-      // Also invalidate dealer users cache
+
+      // Step 2: Clear serialized localStorage cache for this user
+      clearPermissionsCache(user.id);
+
+      // Step 3: Invalidate dealer users list
       await queryClient.invalidateQueries({
         queryKey: ['dealer_users_with_roles']
       });
 
-      // FORCE clear ALL cache to ensure user sees changes
+      // Step 4: Force clear ALL permission-related cache globally
       forceInvalidateAllPermissionCache();
 
-      // Also clear the user profile cache
+      // Step 5: Clear user profile cache
       localStorage.removeItem('user_profile_cache');
 
+      // Step 6: Refresh current user's permissions (admin who made the change)
       refreshPermissions();
+
+      // Step 7: Notify parent component
       onRolesUpdated();
     } catch (error) {
       console.error('Error adding role:', error);
@@ -291,25 +301,35 @@ export const ManageCustomRolesModal: React.FC<ManageCustomRolesModalProps> = ({
       await fetchUserRolesAndAvailable();
 
       // AGGRESSIVE: Reset queries instead of just invalidating
-      // This forces immediate refetch regardless of staleTime
+      // 🔒 CRITICAL FIX v1.3.17: Force refetch for the modified user
+      // This ensures the user sees updated permissions immediately across all sessions
+
+      // Step 1: Reset queries (clears cache AND triggers refetch)
       await queryClient.resetQueries({
         queryKey: ['user-permissions', user.id]
       });
       await queryClient.resetQueries({
         queryKey: ['user_profile_permissions', user.id]
       });
-      // Also invalidate dealer users cache
+
+      // Step 2: Clear serialized localStorage cache for this user
+      clearPermissionsCache(user.id);
+
+      // Step 3: Invalidate dealer users list
       await queryClient.invalidateQueries({
         queryKey: ['dealer_users_with_roles']
       });
 
-      // FORCE clear ALL cache to ensure user sees changes
+      // Step 4: Force clear ALL permission-related cache globally
       forceInvalidateAllPermissionCache();
 
-      // Also clear the user profile cache
+      // Step 5: Clear user profile cache
       localStorage.removeItem('user_profile_cache');
 
+      // Step 6: Refresh current user's permissions (admin who made the change)
       refreshPermissions();
+
+      // Step 7: Notify parent component
       onRolesUpdated();
     } catch (error) {
       console.error('Error removing role:', error);

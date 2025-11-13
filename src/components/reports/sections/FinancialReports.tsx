@@ -1054,9 +1054,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                         wrapperStyle={{ fontSize: '12px' }}
                         formatter={(value) => value.replace(/week(\d)Revenue/, 'Week $1')}
                       />
-                      <Bar dataKey="week1Revenue" fill="#10b981" name="This Week" radius={[8, 8, 0, 0]} />
-                      <Bar dataKey="week2Revenue" fill="#3b82f6" name="Last Week" radius={[8, 8, 0, 0]} />
-                      <Bar dataKey="week3Revenue" fill="#8b5cf6" name="2 Weeks Ago" radius={[8, 8, 0, 0]} />
+                      <Bar dataKey="week1Revenue" fill="#10b981" name={t('reports.this_week')} radius={[8, 8, 0, 0]} />
+                      <Bar dataKey="week2Revenue" fill="#3b82f6" name={t('reports.last_week')} radius={[8, 8, 0, 0]} />
+                      <Bar dataKey="week3Revenue" fill="#8b5cf6" name={t('reports.two_weeks_ago')} radius={[8, 8, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 ) : (
@@ -1107,9 +1107,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                         wrapperStyle={{ fontSize: '12px' }}
                         formatter={(value) => value.replace(/week(\d)Orders/, 'Week $1')}
                       />
-                      <Bar dataKey="week1Orders" fill="#10b981" name="This Week" radius={[8, 8, 0, 0]} />
-                      <Bar dataKey="week2Orders" fill="#3b82f6" name="Last Week" radius={[8, 8, 0, 0]} />
-                      <Bar dataKey="week3Orders" fill="#8b5cf6" name="2 Weeks Ago" radius={[8, 8, 0, 0]} />
+                      <Bar dataKey="week1Orders" fill="#10b981" name={t('reports.this_week')} radius={[8, 8, 0, 0]} />
+                      <Bar dataKey="week2Orders" fill="#3b82f6" name={t('reports.last_week')} radius={[8, 8, 0, 0]} />
+                      <Bar dataKey="week3Orders" fill="#8b5cf6" name={t('reports.two_weeks_ago')} radius={[8, 8, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 ) : (
