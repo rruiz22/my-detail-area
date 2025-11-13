@@ -488,11 +488,25 @@ export const usePermissions = () => {
               continue;
             }
 
-            // Get module permissions for this role
-            const { data: modulePerms, error: modulePermsError } = await supabase
-              .from('module_permissions')
-              .select('module, permission_key')
-              .in('module', (moduleAccess || []).filter((m: any) => m.is_enabled).map((m: any) => m.module));
+            // 🔒 SECURITY FIX v1.3.17: Get only explicitly assigned permissions
+            // BEFORE: Queried module_permissions directly (returned ALL permissions for enabled modules)
+            // NOW: Query through role_module_permissions_new to verify assignment
+            const { data: roleModulePerms, error: modulePermsError } = await supabase
+              .from('role_module_permissions_new')
+              .select(`
+                permission_id,
+                module_permissions!inner(
+                  module,
+                  permission_key
+                )
+              `)
+              .eq('role_id', role.id);
+
+            // Extract the nested module_permissions data
+            const modulePerms = roleModulePerms?.map((rmp: any) => ({
+              module: rmp.module_permissions.module,
+              permission_key: rmp.module_permissions.permission_key
+            })) || [];
 
             if (modulePermsError) {
               logger.error(`❌ Error fetching module permissions for role ${role.id}:`, modulePermsError);
