@@ -120,6 +120,11 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
     return { monday, sunday };
   };
 
+  // Helper to normalize date to UTC midnight (removes timezone offset)
+  const toUTCMidnight = (date: Date): Date => {
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0));
+  };
+
   // Function to detect if a specific date range is active
   const isActiveRange = (rangeType: DateRangeType): boolean => {
     const now = new Date();

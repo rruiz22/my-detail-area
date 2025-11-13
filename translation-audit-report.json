@@ -1206,457 +1206,457 @@
         "hardcodedStrings": [
           {
             "text": "Operational Performance Summary",
-            "line": 300,
-            "context": "299: <div>\n300: <CardTitle className=\"text-xl\">Operational Performance Summary</CardTitle>\n301: <CardDescription className=\"mt-1\">"
+            "line": 297,
+            "context": "296: <div>\n297: <CardTitle className=\"text-xl\">Operational Performance Summary</CardTitle>\n298: <CardDescription className=\"mt-1\">"
           },
           {
             "text": "Key operational metrics and efficiency indicators",
-            "line": 301,
-            "context": "300: <CardTitle className=\"text-xl\">Operational Performance Summary</CardTitle>\n301: <CardDescription className=\"mt-1\">\n302: Key operational metrics and efficiency indicators"
+            "line": 298,
+            "context": "297: <CardTitle className=\"text-xl\">Operational Performance Summary</CardTitle>\n298: <CardDescription className=\"mt-1\">\n299: Key operational metrics and efficiency indicators"
           },
           {
             "text": "Efficiency Score",
-            "line": 308,
-            "context": "307: <div>\n308: <div className=\"text-xs text-muted-foreground\">Efficiency Score</div>\n309: <div className=\"text-2xl font-bold\">{efficiencyScore.toFixed(0)}</div>"
+            "line": 305,
+            "context": "304: <div>\n305: <div className=\"text-xs text-muted-foreground\">Efficiency Score</div>\n306: <div className=\"text-2xl font-bold\">{efficiencyScore.toFixed(0)}</div>"
           },
           {
             "text": "Total Volume",
-            "line": 318,
-            "context": "317: <div className=\"flex items-center justify-between\">\n318: <span className=\"text-sm font-medium text-muted-foreground\">Total Volume</span>\n319: <Package className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 315,
+            "context": "314: <div className=\"flex items-center justify-between\">\n315: <span className=\"text-sm font-medium text-muted-foreground\">Total Volume</span>\n316: <Package className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Completion Rate",
-            "line": 326,
-            "context": "325: <div className=\"flex items-center justify-between\">\n326: <span className=\"text-sm font-medium text-muted-foreground\">Completion Rate</span>\n327: <CheckCircle className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 323,
+            "context": "322: <div className=\"flex items-center justify-between\">\n323: <span className=\"text-sm font-medium text-muted-foreground\">Completion Rate</span>\n324: <CheckCircle className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Avg Processing Time",
-            "line": 334,
-            "context": "333: <div className=\"flex items-center justify-between\">\n334: <span className=\"text-sm font-medium text-muted-foreground\">Avg Processing Time</span>\n335: <Clock className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 331,
+            "context": "330: <div className=\"flex items-center justify-between\">\n331: <span className=\"text-sm font-medium text-muted-foreground\">Avg Processing Time</span>\n332: <Clock className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Total Revenue",
-            "line": 342,
-            "context": "341: <div className=\"flex items-center justify-between\">\n342: <span className=\"text-sm font-medium text-muted-foreground\">Total Revenue</span>\n343: <DollarSign className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 339,
+            "context": "338: <div className=\"flex items-center justify-between\">\n339: <span className=\"text-sm font-medium text-muted-foreground\">Total Revenue</span>\n340: <DollarSign className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Orders",
-            "line": 361,
-            "context": "360: <TabsList className=\"grid w-full grid-cols-4\">\n361: <TabsTrigger value=\"orders\">Orders</TabsTrigger>\n362: <TabsTrigger value=\"volume\">Order Volume</TabsTrigger>"
+            "line": 358,
+            "context": "357: <TabsList className=\"grid w-full grid-cols-4\">\n358: <TabsTrigger value=\"orders\">Orders</TabsTrigger>\n359: <TabsTrigger value=\"volume\">Order Volume</TabsTrigger>"
           },
           {
             "text": "Order Volume",
-            "line": 362,
-            "context": "361: <TabsTrigger value=\"orders\">Orders</TabsTrigger>\n362: <TabsTrigger value=\"volume\">Order Volume</TabsTrigger>\n363: <TabsTrigger value=\"status\">Status Analysis</TabsTrigger>"
+            "line": 359,
+            "context": "358: <TabsTrigger value=\"orders\">Orders</TabsTrigger>\n359: <TabsTrigger value=\"volume\">Order Volume</TabsTrigger>\n360: <TabsTrigger value=\"status\">Status Analysis</TabsTrigger>"
           },
           {
             "text": "Status Analysis",
-            "line": 363,
-            "context": "362: <TabsTrigger value=\"volume\">Order Volume</TabsTrigger>\n363: <TabsTrigger value=\"status\">Status Analysis</TabsTrigger>\n364: <TabsTrigger value=\"performance\">Performance</TabsTrigger>"
+            "line": 360,
+            "context": "359: <TabsTrigger value=\"volume\">Order Volume</TabsTrigger>\n360: <TabsTrigger value=\"status\">Status Analysis</TabsTrigger>\n361: <TabsTrigger value=\"performance\">Performance</TabsTrigger>"
           },
           {
             "text": "Performance",
-            "line": 364,
-            "context": "363: <TabsTrigger value=\"status\">Status Analysis</TabsTrigger>\n364: <TabsTrigger value=\"performance\">Performance</TabsTrigger>\n365: </TabsList>"
+            "line": 361,
+            "context": "360: <TabsTrigger value=\"status\">Status Analysis</TabsTrigger>\n361: <TabsTrigger value=\"performance\">Performance</TabsTrigger>\n362: </TabsList>"
           },
           {
             "text": "Total Orders",
-            "line": 373,
-            "context": "372: <div className=\"flex items-center justify-between mb-2\">\n373: <span className=\"text-sm text-muted-foreground\">Total Orders</span>\n374: <Package className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 370,
+            "context": "369: <div className=\"flex items-center justify-between mb-2\">\n370: <span className=\"text-sm text-muted-foreground\">Total Orders</span>\n371: <Package className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Across all departments",
-            "line": 377,
-            "context": "376: <div className=\"text-2xl font-bold mb-1\">{orderAnalytics?.total_orders || 0}</div>\n377: <p className=\"text-xs text-muted-foreground\">Across all departments</p>\n378: </CardContent>"
+            "line": 374,
+            "context": "373: <div className=\"text-2xl font-bold mb-1\">{orderAnalytics?.total_orders || 0}</div>\n374: <p className=\"text-xs text-muted-foreground\">Across all departments</p>\n375: </CardContent>"
           },
           {
             "text": "Completed",
-            "line": 383,
-            "context": "382: <div className=\"flex items-center justify-between mb-2\">\n383: <span className=\"text-sm text-muted-foreground\">Completed</span>\n384: <CheckCircle className=\"h-4 w-4 text-green-600\" />"
+            "line": 380,
+            "context": "379: <div className=\"flex items-center justify-between mb-2\">\n380: <span className=\"text-sm text-muted-foreground\">Completed</span>\n381: <CheckCircle className=\"h-4 w-4 text-green-600\" />"
           },
           {
             "text": "In Progress",
-            "line": 393,
-            "context": "392: <div className=\"flex items-center justify-between mb-2\">\n393: <span className=\"text-sm text-muted-foreground\">In Progress</span>\n394: <Activity className=\"h-4 w-4 text-blue-600\" />"
+            "line": 390,
+            "context": "389: <div className=\"flex items-center justify-between mb-2\">\n390: <span className=\"text-sm text-muted-foreground\">In Progress</span>\n391: <Activity className=\"h-4 w-4 text-blue-600\" />"
           },
           {
             "text": "Currently active",
-            "line": 397,
-            "context": "396: <div className=\"text-2xl font-bold mb-1 text-blue-600\">{orderAnalytics?.in_progress_orders || 0}</div>\n397: <p className=\"text-xs text-muted-foreground\">Currently active</p>\n398: </CardContent>"
+            "line": 394,
+            "context": "393: <div className=\"text-2xl font-bold mb-1 text-blue-600\">{orderAnalytics?.in_progress_orders || 0}</div>\n394: <p className=\"text-xs text-muted-foreground\">Currently active</p>\n395: </CardContent>"
           },
           {
             "text": "Daily Average",
-            "line": 403,
-            "context": "402: <div className=\"flex items-center justify-between mb-2\">\n403: <span className=\"text-sm text-muted-foreground\">Daily Average</span>\n404: <BarChart3 className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 400,
+            "context": "399: <div className=\"flex items-center justify-between mb-2\">\n400: <span className=\"text-sm text-muted-foreground\">Daily Average</span>\n401: <BarChart3 className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Orders per day",
-            "line": 409,
-            "context": "408: </div>\n409: <p className=\"text-xs text-muted-foreground\">Orders per day</p>\n410: </CardContent>"
+            "line": 406,
+            "context": "405: </div>\n406: <p className=\"text-xs text-muted-foreground\">Orders per day</p>\n407: </CardContent>"
           },
           {
             "text": "Order Volume Trend",
-            "line": 419,
-            "context": "418: <div>\n419: <CardTitle>Order Volume Trend</CardTitle>\n420: <CardDescription className=\"mt-1\">"
+            "line": 416,
+            "context": "415: <div>\n416: <CardTitle>Order Volume Trend</CardTitle>\n417: <CardDescription className=\"mt-1\">"
           },
           {
             "text": "Daily order volume and revenue correlation over time",
-            "line": 420,
-            "context": "419: <CardTitle>Order Volume Trend</CardTitle>\n420: <CardDescription className=\"mt-1\">\n421: Daily order volume and revenue correlation over time"
+            "line": 417,
+            "context": "416: <CardTitle>Order Volume Trend</CardTitle>\n417: <CardDescription className=\"mt-1\">\n418: Daily order volume and revenue correlation over time"
           },
           {
             "text": "Total Orders",
-            "line": 439,
-            "context": "438: <div className=\"text-center\">\n439: <div className=\"text-sm text-muted-foreground mb-1\">Total Orders</div>\n440: <div className=\"text-xl font-bold\">{orderAnalytics.total_orders}</div>"
+            "line": 436,
+            "context": "435: <div className=\"text-center\">\n436: <div className=\"text-sm text-muted-foreground mb-1\">Total Orders</div>\n437: <div className=\"text-xl font-bold\">{orderAnalytics.total_orders}</div>"
           },
           {
             "text": "Total Revenue",
-            "line": 443,
-            "context": "442: <div className=\"text-center border-l border-r\">\n443: <div className=\"text-sm text-muted-foreground mb-1\">Total Revenue</div>\n444: <div className=\"text-xl font-bold\">{formatCurrency(orderAnalytics.total_revenue)}</div>"
+            "line": 440,
+            "context": "439: <div className=\"text-center border-l border-r\">\n440: <div className=\"text-sm text-muted-foreground mb-1\">Total Revenue</div>\n441: <div className=\"text-xl font-bold\">{formatCurrency(orderAnalytics.total_revenue)}</div>"
           },
           {
             "text": "Avg Order Value",
-            "line": 447,
-            "context": "446: <div className=\"text-center\">\n447: <div className=\"text-sm text-muted-foreground mb-1\">Avg Order Value</div>\n448: <div className=\"text-xl font-bold\">{formatCurrency(orderAnalytics.avg_order_value)}</div>"
+            "line": 444,
+            "context": "443: <div className=\"text-center\">\n444: <div className=\"text-sm text-muted-foreground mb-1\">Avg Order Value</div>\n445: <div className=\"text-xl font-bold\">{formatCurrency(orderAnalytics.avg_order_value)}</div>"
           },
           {
             "text": "No volume data available",
-            "line": 455,
-            "context": "454: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n455: <p>No volume data available</p>\n456: </div>"
+            "line": 452,
+            "context": "451: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n452: <p>No volume data available</p>\n453: </div>"
           },
           {
             "text": "Completion Rate",
-            "line": 468,
-            "context": "467: <div className=\"flex items-center justify-between mb-2\">\n468: <span className=\"text-sm text-muted-foreground\">Completion Rate</span>\n469: <CheckCircle className=\"h-4 w-4 text-green-600\" />"
+            "line": 465,
+            "context": "464: <div className=\"flex items-center justify-between mb-2\">\n465: <span className=\"text-sm text-muted-foreground\">Completion Rate</span>\n466: <CheckCircle className=\"h-4 w-4 text-green-600\" />"
           },
           {
             "text": "Success Rate",
-            "line": 478,
-            "context": "477: <div className=\"flex items-center justify-between mb-2\">\n478: <span className=\"text-sm text-muted-foreground\">Success Rate</span>\n479: <Target className=\"h-4 w-4 text-blue-600\" />"
+            "line": 475,
+            "context": "474: <div className=\"flex items-center justify-between mb-2\">\n475: <span className=\"text-sm text-muted-foreground\">Success Rate</span>\n476: <Target className=\"h-4 w-4 text-blue-600\" />"
           },
           {
             "text": "Cancellation Rate",
-            "line": 492,
-            "context": "491: <div className=\"flex items-center justify-between mb-2\">\n492: <span className=\"text-sm text-muted-foreground\">Cancellation Rate</span>\n493: <AlertCircle className=\"h-4 w-4 text-red-600\" />"
+            "line": 489,
+            "context": "488: <div className=\"flex items-center justify-between mb-2\">\n489: <span className=\"text-sm text-muted-foreground\">Cancellation Rate</span>\n490: <AlertCircle className=\"h-4 w-4 text-red-600\" />"
           },
           {
             "text": "Active Orders",
-            "line": 506,
-            "context": "505: <div className=\"flex items-center justify-between mb-2\">\n506: <span className=\"text-sm text-muted-foreground\">Active Orders</span>\n507: <Activity className=\"h-4 w-4 text-blue-600\" />"
+            "line": 503,
+            "context": "502: <div className=\"flex items-center justify-between mb-2\">\n503: <span className=\"text-sm text-muted-foreground\">Active Orders</span>\n504: <Activity className=\"h-4 w-4 text-blue-600\" />"
           },
           {
             "text": "Status Distribution",
-            "line": 521,
-            "context": "520: <CardHeader>\n521: <CardTitle>Status Distribution</CardTitle>\n522: <CardDescription>"
+            "line": 518,
+            "context": "517: <CardHeader>\n518: <CardTitle>Status Distribution</CardTitle>\n519: <CardDescription>"
           },
           {
             "text": "Visual breakdown of order statuses",
-            "line": 522,
-            "context": "521: <CardTitle>Status Distribution</CardTitle>\n522: <CardDescription>\n523: Visual breakdown of order statuses"
+            "line": 519,
+            "context": "518: <CardTitle>Status Distribution</CardTitle>\n519: <CardDescription>\n520: Visual breakdown of order statuses"
           },
           {
             "text": "No status data available",
-            "line": 536,
-            "context": "535: <PieChart className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n536: <p>No status data available</p>\n537: </div>"
+            "line": 533,
+            "context": "532: <PieChart className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n533: <p>No status data available</p>\n534: </div>"
           },
           {
             "text": "Detailed Status Breakdown",
-            "line": 545,
-            "context": "544: <CardHeader>\n545: <CardTitle>Detailed Status Breakdown</CardTitle>\n546: <CardDescription>"
+            "line": 542,
+            "context": "541: <CardHeader>\n542: <CardTitle>Detailed Status Breakdown</CardTitle>\n543: <CardDescription>"
           },
           {
             "text": "Order counts and percentages by status",
-            "line": 546,
-            "context": "545: <CardTitle>Detailed Status Breakdown</CardTitle>\n546: <CardDescription>\n547: Order counts and percentages by status"
+            "line": 543,
+            "context": "542: <CardTitle>Detailed Status Breakdown</CardTitle>\n543: <CardDescription>\n544: Order counts and percentages by status"
           },
           {
             "text": "Pending",
-            "line": 569,
-            "context": "568: <div>\n569: <div className=\"font-semibold text-base\">Pending</div>\n570: <div className=\"text-xs text-muted-foreground\">Awaiting processing</div>"
+            "line": 566,
+            "context": "565: <div>\n566: <div className=\"font-semibold text-base\">Pending</div>\n567: <div className=\"text-xs text-muted-foreground\">Awaiting processing</div>"
           },
           {
             "text": "Awaiting processing",
-            "line": 570,
-            "context": "569: <div className=\"font-semibold text-base\">Pending</div>\n570: <div className=\"text-xs text-muted-foreground\">Awaiting processing</div>\n571: </div>"
+            "line": 567,
+            "context": "566: <div className=\"font-semibold text-base\">Pending</div>\n567: <div className=\"text-xs text-muted-foreground\">Awaiting processing</div>\n568: </div>"
           },
           {
             "text": "In Progress",
-            "line": 590,
-            "context": "589: <div>\n590: <div className=\"font-semibold text-base\">In Progress</div>\n591: <div className=\"text-xs text-muted-foreground\">Currently processing</div>"
+            "line": 587,
+            "context": "586: <div>\n587: <div className=\"font-semibold text-base\">In Progress</div>\n588: <div className=\"text-xs text-muted-foreground\">Currently processing</div>"
           },
           {
             "text": "Currently processing",
-            "line": 591,
-            "context": "590: <div className=\"font-semibold text-base\">In Progress</div>\n591: <div className=\"text-xs text-muted-foreground\">Currently processing</div>\n592: </div>"
+            "line": 588,
+            "context": "587: <div className=\"font-semibold text-base\">In Progress</div>\n588: <div className=\"text-xs text-muted-foreground\">Currently processing</div>\n589: </div>"
           },
           {
             "text": "Completed",
-            "line": 611,
-            "context": "610: <div>\n611: <div className=\"font-semibold text-base\">Completed</div>\n612: <div className=\"text-xs text-muted-foreground\">Successfully finished</div>"
+            "line": 608,
+            "context": "607: <div>\n608: <div className=\"font-semibold text-base\">Completed</div>\n609: <div className=\"text-xs text-muted-foreground\">Successfully finished</div>"
           },
           {
             "text": "Successfully finished",
-            "line": 612,
-            "context": "611: <div className=\"font-semibold text-base\">Completed</div>\n612: <div className=\"text-xs text-muted-foreground\">Successfully finished</div>\n613: </div>"
+            "line": 609,
+            "context": "608: <div className=\"font-semibold text-base\">Completed</div>\n609: <div className=\"text-xs text-muted-foreground\">Successfully finished</div>\n610: </div>"
           },
           {
             "text": "Cancelled",
-            "line": 632,
-            "context": "631: <div>\n632: <div className=\"font-semibold text-base\">Cancelled</div>\n633: <div className=\"text-xs text-muted-foreground\">Not completed</div>"
+            "line": 629,
+            "context": "628: <div>\n629: <div className=\"font-semibold text-base\">Cancelled</div>\n630: <div className=\"text-xs text-muted-foreground\">Not completed</div>"
           },
           {
             "text": "Not completed",
-            "line": 633,
-            "context": "632: <div className=\"font-semibold text-base\">Cancelled</div>\n633: <div className=\"text-xs text-muted-foreground\">Not completed</div>\n634: </div>"
+            "line": 630,
+            "context": "629: <div className=\"font-semibold text-base\">Cancelled</div>\n630: <div className=\"text-xs text-muted-foreground\">Not completed</div>\n631: </div>"
           },
           {
             "text": "High Completion Rate",
-            "line": 667,
-            "context": "666: <div>\n667: <div className=\"font-semibold mb-1\">High Completion Rate</div>\n668: <p className=\"text-sm text-muted-foreground\">"
+            "line": 664,
+            "context": "663: <div>\n664: <div className=\"font-semibold mb-1\">High Completion Rate</div>\n665: <p className=\"text-sm text-muted-foreground\">"
           },
           {
             "text": "Processing Efficiency",
-            "line": 680,
-            "context": "679: <div>\n680: <div className=\"font-semibold mb-1\">Processing Efficiency</div>\n681: <p className=\"text-sm text-muted-foreground\">"
+            "line": 677,
+            "context": "676: <div>\n677: <div className=\"font-semibold mb-1\">Processing Efficiency</div>\n678: <p className=\"text-sm text-muted-foreground\">"
           },
           {
             "text": "Pending Queue",
-            "line": 693,
-            "context": "692: <div>\n693: <div className=\"font-semibold mb-1\">Pending Queue</div>\n694: <p className=\"text-sm text-muted-foreground\">"
+            "line": 690,
+            "context": "689: <div>\n690: <div className=\"font-semibold mb-1\">Pending Queue</div>\n691: <p className=\"text-sm text-muted-foreground\">"
           },
           {
             "text": "Avg Processing Time",
-            "line": 711,
-            "context": "710: <div className=\"flex items-center justify-between mb-2\">\n711: <span className=\"text-sm text-muted-foreground\">Avg Processing Time</span>\n712: <Clock className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 708,
+            "context": "707: <div className=\"flex items-center justify-between mb-2\">\n708: <span className=\"text-sm text-muted-foreground\">Avg Processing Time</span>\n709: <Clock className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Per order average",
-            "line": 715,
-            "context": "714: <div className=\"text-2xl font-bold mb-1\">{formatHours(orderAnalytics?.avg_processing_time_hours || 0)}</div>\n715: <p className=\"text-xs text-muted-foreground\">Per order average</p>\n716: </CardContent>"
+            "line": 712,
+            "context": "711: <div className=\"text-2xl font-bold mb-1\">{formatHours(orderAnalytics?.avg_processing_time_hours || 0)}</div>\n712: <p className=\"text-xs text-muted-foreground\">Per order average</p>\n713: </CardContent>"
           },
           {
             "text": "SLA Compliance",
-            "line": 721,
-            "context": "720: <div className=\"flex items-center justify-between mb-2\">\n721: <span className=\"text-sm text-muted-foreground\">SLA Compliance</span>\n722: <Target className=\"h-4 w-4 text-green-600\" />"
+            "line": 718,
+            "context": "717: <div className=\"flex items-center justify-between mb-2\">\n718: <span className=\"text-sm text-muted-foreground\">SLA Compliance</span>\n719: <Target className=\"h-4 w-4 text-green-600\" />"
           },
           {
             "text": "Efficiency Score",
-            "line": 731,
-            "context": "730: <div className=\"flex items-center justify-between mb-2\">\n731: <span className=\"text-sm text-muted-foreground\">Efficiency Score</span>\n732: <Zap className=\"h-4 w-4 text-amber-600\" />"
+            "line": 728,
+            "context": "727: <div className=\"flex items-center justify-between mb-2\">\n728: <span className=\"text-sm text-muted-foreground\">Efficiency Score</span>\n729: <Zap className=\"h-4 w-4 text-amber-600\" />"
           },
           {
             "text": "Revenue per Hour",
-            "line": 741,
-            "context": "740: <div className=\"flex items-center justify-between mb-2\">\n741: <span className=\"text-sm text-muted-foreground\">Revenue per Hour</span>\n742: <DollarSign className=\"h-4 w-4 text-green-600\" />"
+            "line": 738,
+            "context": "737: <div className=\"flex items-center justify-between mb-2\">\n738: <span className=\"text-sm text-muted-foreground\">Revenue per Hour</span>\n739: <DollarSign className=\"h-4 w-4 text-green-600\" />"
           },
           {
             "text": "Productivity metric",
-            "line": 751,
-            "context": "750: </div>\n751: <p className=\"text-xs text-muted-foreground\">Productivity metric</p>\n752: </CardContent>"
+            "line": 748,
+            "context": "747: </div>\n748: <p className=\"text-xs text-muted-foreground\">Productivity metric</p>\n749: </CardContent>"
           },
           {
             "text": "Department Performance Analysis",
-            "line": 761,
-            "context": "760: <div>\n761: <CardTitle>Department Performance Analysis</CardTitle>\n762: <CardDescription className=\"mt-1\">"
+            "line": 758,
+            "context": "757: <div>\n758: <CardTitle>Department Performance Analysis</CardTitle>\n759: <CardDescription className=\"mt-1\">"
           },
           {
             "text": "Detailed metrics and KPIs by department",
-            "line": 762,
-            "context": "761: <CardTitle>Department Performance Analysis</CardTitle>\n762: <CardDescription className=\"mt-1\">\n763: Detailed metrics and KPIs by department"
+            "line": 759,
+            "context": "758: <CardTitle>Department Performance Analysis</CardTitle>\n759: <CardDescription className=\"mt-1\">\n760: Detailed metrics and KPIs by department"
           },
           {
             "text": "High Performer",
-            "line": 793,
-            "context": "792: {isHighPerformer && (\n793: <Badge variant=\"outline\" className=\"text-green-600 border-green-200\">\n794: High Performer"
+            "line": 790,
+            "context": "789: {isHighPerformer && (\n790: <Badge variant=\"outline\" className=\"text-green-600 border-green-200\">\n791: High Performer"
           },
           {
             "text": "Completion",
-            "line": 803,
-            "context": "802: <div className=\"px-4 py-2 border rounded-lg text-center min-w-[100px]\">\n803: <div className=\"text-xs text-muted-foreground mb-1\">Completion</div>\n804: <div className=\"text-xl font-bold\">{dept.completion_rate}%</div>"
+            "line": 800,
+            "context": "799: <div className=\"px-4 py-2 border rounded-lg text-center min-w-[100px]\">\n800: <div className=\"text-xs text-muted-foreground mb-1\">Completion</div>\n801: <div className=\"text-xl font-bold\">{dept.completion_rate}%</div>"
           },
           {
             "text": "Avg Time",
-            "line": 807,
-            "context": "806: <div className=\"px-4 py-2 border rounded-lg text-center min-w-[100px]\">\n807: <div className=\"text-xs text-muted-foreground mb-1\">Avg Time</div>\n808: <div className=\"text-xl font-bold\">{formatHours(dept.avg_processing_time)}</div>"
+            "line": 804,
+            "context": "803: <div className=\"px-4 py-2 border rounded-lg text-center min-w-[100px]\">\n804: <div className=\"text-xs text-muted-foreground mb-1\">Avg Time</div>\n805: <div className=\"text-xl font-bold\">{formatHours(dept.avg_processing_time)}</div>"
           },
           {
             "text": "Completion Rate",
-            "line": 817,
-            "context": "816: <div className=\"flex justify-between text-sm mb-2\">\n817: <span className=\"text-muted-foreground\">Completion Rate</span>\n818: <span className=\"font-semibold\">{dept.completion_rate}%</span>"
+            "line": 814,
+            "context": "813: <div className=\"flex justify-between text-sm mb-2\">\n814: <span className=\"text-muted-foreground\">Completion Rate</span>\n815: <span className=\"font-semibold\">{dept.completion_rate}%</span>"
           },
           {
             "text": "No department performance data available",
-            "line": 860,
-            "context": "859: <Users className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n860: <p className=\"mb-1\">No department performance data available</p>\n861: <p className=\"text-sm\">Data will appear once departments start processing orders</p>"
+            "line": 857,
+            "context": "856: <Users className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n857: <p className=\"mb-1\">No department performance data available</p>\n858: <p className=\"text-sm\">Data will appear once departments start processing orders</p>"
           },
           {
             "text": "Data will appear once departments start processing orders",
-            "line": 861,
-            "context": "860: <p className=\"mb-1\">No department performance data available</p>\n861: <p className=\"text-sm\">Data will appear once departments start processing orders</p>\n862: </div>"
+            "line": 858,
+            "context": "857: <p className=\"mb-1\">No department performance data available</p>\n858: <p className=\"text-sm\">Data will appear once departments start processing orders</p>\n859: </div>"
           },
           {
             "text": "Performance Insights",
-            "line": 870,
-            "context": "869: <CardHeader>\n870: <CardTitle>Performance Insights</CardTitle>\n871: <CardDescription>"
+            "line": 867,
+            "context": "866: <CardHeader>\n867: <CardTitle>Performance Insights</CardTitle>\n868: <CardDescription>"
           },
           {
             "text": "Key takeaways and optimization opportunities",
-            "line": 871,
-            "context": "870: <CardTitle>Performance Insights</CardTitle>\n871: <CardDescription>\n872: Key takeaways and optimization opportunities"
+            "line": 868,
+            "context": "867: <CardTitle>Performance Insights</CardTitle>\n868: <CardDescription>\n869: Key takeaways and optimization opportunities"
           },
           {
             "text": "Strong Performance",
-            "line": 883,
-            "context": "882: <div>\n883: <div className=\"font-semibold mb-2\">Strong Performance</div>\n884: <p className=\"text-sm text-muted-foreground mb-3\">"
+            "line": 880,
+            "context": "879: <div>\n880: <div className=\"font-semibold mb-2\">Strong Performance</div>\n881: <p className=\"text-sm text-muted-foreground mb-3\">"
           },
           {
             "text": "Meeting targets",
-            "line": 887,
-            "context": "886: </p>\n887: <Badge variant=\"outline\" className=\"text-green-600 border-green-200\">\n888: Meeting targets"
+            "line": 884,
+            "context": "883: </p>\n884: <Badge variant=\"outline\" className=\"text-green-600 border-green-200\">\n885: Meeting targets"
           },
           {
             "text": "Processing Efficiency",
-            "line": 899,
-            "context": "898: <div>\n899: <div className=\"font-semibold mb-2\">Processing Efficiency</div>\n900: <p className=\"text-sm text-muted-foreground mb-3\">"
+            "line": 896,
+            "context": "895: <div>\n896: <div className=\"font-semibold mb-2\">Processing Efficiency</div>\n897: <p className=\"text-sm text-muted-foreground mb-3\">"
           },
           {
             "text": "Optimized workflow",
-            "line": 903,
-            "context": "902: </p>\n903: <Badge variant=\"outline\" className=\"text-blue-600 border-blue-200\">\n904: Optimized workflow"
+            "line": 900,
+            "context": "899: </p>\n900: <Badge variant=\"outline\" className=\"text-blue-600 border-blue-200\">\n901: Optimized workflow"
           },
           {
             "text": "Total Orders",
-            "line": 920,
-            "context": "919: <div className=\"flex items-center justify-between mb-2\">\n920: <span className=\"text-sm font-medium text-muted-foreground\">Total Orders</span>\n921: <FileText className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 917,
+            "context": "916: <div className=\"flex items-center justify-between mb-2\">\n917: <span className=\"text-sm font-medium text-muted-foreground\">Total Orders</span>\n918: <FileText className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "In selected period",
-            "line": 924,
-            "context": "923: <div className=\"text-3xl font-bold mb-1\">{vehiclesList.length}</div>\n924: <p className=\"text-xs text-muted-foreground\">In selected period</p>\n925: </CardContent>"
+            "line": 921,
+            "context": "920: <div className=\"text-3xl font-bold mb-1\">{vehiclesList.length}</div>\n921: <p className=\"text-xs text-muted-foreground\">In selected period</p>\n922: </CardContent>"
           },
           {
             "text": "Pending",
-            "line": 930,
-            "context": "929: <div className=\"flex items-center justify-between mb-2\">\n930: <span className=\"text-sm font-medium text-muted-foreground\">Pending</span>\n931: <AlertCircle className=\"h-4 w-4 text-amber-600\" />"
+            "line": 927,
+            "context": "926: <div className=\"flex items-center justify-between mb-2\">\n927: <span className=\"text-sm font-medium text-muted-foreground\">Pending</span>\n928: <AlertCircle className=\"h-4 w-4 text-amber-600\" />"
           },
           {
             "text": "In Progress",
-            "line": 946,
-            "context": "945: <div className=\"flex items-center justify-between mb-2\">\n946: <span className=\"text-sm font-medium text-muted-foreground\">In Progress</span>\n947: <Activity className=\"h-4 w-4 text-blue-600\" />"
+            "line": 943,
+            "context": "942: <div className=\"flex items-center justify-between mb-2\">\n943: <span className=\"text-sm font-medium text-muted-foreground\">In Progress</span>\n944: <Activity className=\"h-4 w-4 text-blue-600\" />"
           },
           {
             "text": "Completed",
-            "line": 962,
-            "context": "961: <div className=\"flex items-center justify-between mb-2\">\n962: <span className=\"text-sm font-medium text-muted-foreground\">Completed</span>\n963: <CheckCircle className=\"h-4 w-4 text-green-600\" />"
+            "line": 959,
+            "context": "958: <div className=\"flex items-center justify-between mb-2\">\n959: <span className=\"text-sm font-medium text-muted-foreground\">Completed</span>\n960: <CheckCircle className=\"h-4 w-4 text-green-600\" />"
           },
           {
             "text": "Cancelled",
-            "line": 978,
-            "context": "977: <div className=\"flex items-center justify-between mb-2\">\n978: <span className=\"text-sm font-medium text-muted-foreground\">Cancelled</span>\n979: <AlertCircle className=\"h-4 w-4 text-red-600\" />"
+            "line": 975,
+            "context": "974: <div className=\"flex items-center justify-between mb-2\">\n975: <span className=\"text-sm font-medium text-muted-foreground\">Cancelled</span>\n976: <AlertCircle className=\"h-4 w-4 text-red-600\" />"
           },
           {
             "text": "Orders Report",
-            "line": 999,
-            "context": "998: <CardTitle className=\"flex items-center gap-2 text-lg\">\n999: <FileText className=\"h-5 w-5\" />\n1000: Orders Report"
+            "line": 996,
+            "context": "995: <CardTitle className=\"flex items-center gap-2 text-lg\">\n996: <FileText className=\"h-5 w-5\" />\n997: Orders Report"
           },
           {
             "text": "Detailed vehicle orders matching your filters",
-            "line": 1002,
-            "context": "1001: </CardTitle>\n1002: <CardDescription className=\"mt-1\">\n1003: Detailed vehicle orders matching your filters"
+            "line": 999,
+            "context": "998: </CardTitle>\n999: <CardDescription className=\"mt-1\">\n1000: Detailed vehicle orders matching your filters"
           },
           {
             "text": "No orders found",
-            "line": 1027,
-            "context": "1026: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1027: <p className=\"text-muted-foreground mb-1\">No orders found</p>\n1028: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
+            "line": 1024,
+            "context": "1023: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1024: <p className=\"text-muted-foreground mb-1\">No orders found</p>\n1025: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
           },
           {
             "text": "Try adjusting your filters",
-            "line": 1028,
-            "context": "1027: <p className=\"text-muted-foreground mb-1\">No orders found</p>\n1028: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n1029: </div>"
+            "line": 1025,
+            "context": "1024: <p className=\"text-muted-foreground mb-1\">No orders found</p>\n1025: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n1026: </div>"
           },
           {
             "text": "Vehicle",
-            "line": 1039,
-            "context": "1038: </TableHead>\n1039: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Vehicle</TableHead>\n1040: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">VIN</TableHead>"
+            "line": 1036,
+            "context": "1035: </TableHead>\n1036: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Vehicle</TableHead>\n1037: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">VIN</TableHead>"
           },
           {
             "text": "Assigned",
-            "line": 1041,
-            "context": "1040: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">VIN</TableHead>\n1041: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Assigned</TableHead>\n1042: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Dept</TableHead>"
+            "line": 1038,
+            "context": "1037: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">VIN</TableHead>\n1038: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Assigned</TableHead>\n1039: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Dept</TableHead>"
           },
           {
             "text": "Dept",
-            "line": 1042,
-            "context": "1041: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Assigned</TableHead>\n1042: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Dept</TableHead>\n1043: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Status</TableHead>"
+            "line": 1039,
+            "context": "1038: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Assigned</TableHead>\n1039: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Dept</TableHead>\n1040: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Status</TableHead>"
           },
           {
             "text": "Status",
-            "line": 1043,
-            "context": "1042: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Dept</TableHead>\n1043: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Status</TableHead>\n1044: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Invoice</TableHead>"
+            "line": 1040,
+            "context": "1039: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Dept</TableHead>\n1040: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Status</TableHead>\n1041: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Invoice</TableHead>"
           },
           {
             "text": "Invoice",
-            "line": 1044,
-            "context": "1043: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Status</TableHead>\n1044: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Invoice</TableHead>\n1045: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Amount</TableHead>"
+            "line": 1041,
+            "context": "1040: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Status</TableHead>\n1041: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Invoice</TableHead>\n1042: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 1045,
-            "context": "1044: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Invoice</TableHead>\n1045: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Amount</TableHead>\n1046: </TableRow>"
+            "line": 1042,
+            "context": "1041: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Invoice</TableHead>\n1042: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Amount</TableHead>\n1043: </TableRow>"
           },
           {
             "text": "Unassigned",
-            "line": 1122,
-            "context": "1121: ) : (\n1122: <span className=\"text-muted-foreground text-xs\">Unassigned</span>\n1123: )}"
+            "line": 1119,
+            "context": "1118: ) : (\n1119: <span className=\"text-muted-foreground text-xs\">Unassigned</span>\n1120: )}"
           },
           {
             "text": "No invoice yet",
-            "line": 1146,
-            "context": "1145: ) : (\n1146: <span className=\"text-xs text-muted-foreground italic\">No invoice yet</span>\n1147: )}"
+            "line": 1143,
+            "context": "1142: ) : (\n1143: <span className=\"text-xs text-muted-foreground italic\">No invoice yet</span>\n1144: )}"
           }
         ],
         "translationCalls": [
           {
             "key": "common.loading",
-            "line": 432,
+            "line": 429,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 529,
+            "line": 526,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 774,
+            "line": 771,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 1022,
+            "line": 1019,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.loading",
-            "line": 432,
-            "context": "431: <div className=\"h-80 flex items-center justify-center\">\n432: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n433: </div>"
+            "line": 429,
+            "context": "428: <div className=\"h-80 flex items-center justify-center\">\n429: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n430: </div>"
           },
           {
             "key": "common.loading",
-            "line": 529,
-            "context": "528: <div className=\"h-80 flex items-center justify-center\">\n529: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n530: </div>"
+            "line": 526,
+            "context": "525: <div className=\"h-80 flex items-center justify-center\">\n526: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n527: </div>"
           },
           {
             "key": "common.loading",
-            "line": 774,
-            "context": "773: <div className=\"h-48 flex items-center justify-center\">\n774: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n775: </div>"
+            "line": 771,
+            "context": "770: <div className=\"h-48 flex items-center justify-center\">\n771: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n772: </div>"
           },
           {
             "key": "common.loading",
-            "line": 1022,
-            "context": "1021: <div className=\"flex items-center justify-center h-64\">\n1022: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n1023: </div>"
+            "line": 1019,
+            "context": "1018: <div className=\"flex items-center justify-center h-64\">\n1019: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n1020: </div>"
           }
         ],
         "coverage": 5,
@@ -44464,275 +44464,275 @@
         "translationCalls": [
           {
             "key": "reports.filters.clear_all",
-            "line": 289,
+            "line": 294,
             "exists": false
           },
           {
             "key": "reports.filters.filters",
-            "line": 297,
+            "line": 302,
             "exists": false
           },
           {
             "key": "reports.filters.start_date",
-            "line": 315,
+            "line": 320,
             "exists": false
           },
           {
             "key": "reports.filters.end_date",
-            "line": 344,
+            "line": 349,
             "exists": false
           },
           {
             "key": "reports.filters.select_department",
-            "line": 369,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.all_departments",
-            "line": 372,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.sales",
-            "line": 373,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.service",
             "line": 374,
             "exists": false
           },
           {
-            "key": "reports.filters.recon",
-            "line": 375,
+            "key": "reports.filters.all_departments",
+            "line": 377,
             "exists": false
           },
           {
-            "key": "reports.filters.car_wash",
-            "line": 376,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.select_status",
-            "line": 388,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.all_statuses",
-            "line": 391,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.pending",
-            "line": 392,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.in_progress",
-            "line": 393,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.completed",
-            "line": 394,
-            "exists": false
-          },
-          {
-            "key": "reports.filters.cancelled",
-            "line": 395,
+            "key": "reports.filters.sales",
+            "line": 378,
             "exists": false
           },
           {
             "key": "reports.filters.service",
-            "line": 410,
+            "line": 379,
+            "exists": false
+          },
+          {
+            "key": "reports.filters.recon",
+            "line": 380,
+            "exists": false
+          },
+          {
+            "key": "reports.filters.car_wash",
+            "line": 381,
+            "exists": false
+          },
+          {
+            "key": "reports.filters.select_status",
+            "line": 393,
+            "exists": false
+          },
+          {
+            "key": "reports.filters.all_statuses",
+            "line": 396,
+            "exists": false
+          },
+          {
+            "key": "reports.filters.pending",
+            "line": 397,
+            "exists": false
+          },
+          {
+            "key": "reports.filters.in_progress",
+            "line": 398,
+            "exists": false
+          },
+          {
+            "key": "reports.filters.completed",
+            "line": 399,
+            "exists": false
+          },
+          {
+            "key": "reports.filters.cancelled",
+            "line": 400,
+            "exists": false
+          },
+          {
+            "key": "reports.filters.service",
+            "line": 415,
             "exists": false
           },
           {
             "key": "common.selected",
-            "line": 411,
+            "line": 416,
             "exists": false
           },
           {
             "key": "reports.filters.all_services",
-            "line": 414,
+            "line": 419,
             "exists": false
           },
           {
             "key": "reports.filters.select_service",
-            "line": 422,
+            "line": 427,
             "exists": false
           },
           {
             "key": "common.select_all",
-            "line": 434,
+            "line": 439,
             "exists": false
           },
           {
             "key": "common.clear_all",
-            "line": 444,
+            "line": 449,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 453,
+            "line": 458,
             "exists": false
           },
           {
             "key": "reports.filters.no_services",
-            "line": 457,
+            "line": 462,
             "exists": false
           },
           {
             "key": "reports.filters.active_filters",
-            "line": 532,
+            "line": 537,
             "exists": false
           },
           {
             "key": "reports.filters.${filters.orderType === ",
-            "line": 536,
+            "line": 541,
             "exists": false
           },
           {
             "key": "reports.filters.${filters.status}",
-            "line": 541,
+            "line": 546,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "reports.filters.clear_all",
-            "line": 289,
-            "context": "288: <X className=\"h-4 w-4 mr-1\" />\n289: {t('reports.filters.clear_all')}\n290: </Button>"
+            "line": 294,
+            "context": "293: <X className=\"h-4 w-4 mr-1\" />\n294: {t('reports.filters.clear_all')}\n295: </Button>"
           },
           {
             "key": "reports.filters.filters",
-            "line": 297,
-            "context": "296: <Filter className=\"h-4 w-4\" />\n297: {t('reports.filters.filters')}:\n298: </div>"
+            "line": 302,
+            "context": "301: <Filter className=\"h-4 w-4\" />\n302: {t('reports.filters.filters')}:\n303: </div>"
           },
           {
             "key": "reports.filters.start_date",
-            "line": 315,
-            "context": "314: ) : (\n315: <span>{t('reports.filters.start_date')}</span>\n316: )}"
+            "line": 320,
+            "context": "319: ) : (\n320: <span>{t('reports.filters.start_date')}</span>\n321: )}"
           },
           {
             "key": "reports.filters.end_date",
-            "line": 344,
-            "context": "343: ) : (\n344: <span>{t('reports.filters.end_date')}</span>\n345: )}"
+            "line": 349,
+            "context": "348: ) : (\n349: <span>{t('reports.filters.end_date')}</span>\n350: )}"
           },
           {
             "key": "reports.filters.select_department",
-            "line": 369,
-            "context": "368: <SelectTrigger className=\"w-48\">\n369: <SelectValue placeholder={t('reports.filters.select_department')} />\n370: </SelectTrigger>"
+            "line": 374,
+            "context": "373: <SelectTrigger className=\"w-48\">\n374: <SelectValue placeholder={t('reports.filters.select_department')} />\n375: </SelectTrigger>"
           },
           {
             "key": "reports.filters.all_departments",
-            "line": 372,
-            "context": "371: <SelectContent>\n372: <SelectItem value=\"all\">{t('reports.filters.all_departments')}</SelectItem>\n373: <SelectItem value=\"sales\">{t('reports.filters.sales')}</SelectItem>"
+            "line": 377,
+            "context": "376: <SelectContent>\n377: <SelectItem value=\"all\">{t('reports.filters.all_departments')}</SelectItem>\n378: <SelectItem value=\"sales\">{t('reports.filters.sales')}</SelectItem>"
           },
           {
             "key": "reports.filters.sales",
-            "line": 373,
-            "context": "372: <SelectItem value=\"all\">{t('reports.filters.all_departments')}</SelectItem>\n373: <SelectItem value=\"sales\">{t('reports.filters.sales')}</SelectItem>\n374: <SelectItem value=\"service\">{t('reports.filters.service')}</SelectItem>"
+            "line": 378,
+            "context": "377: <SelectItem value=\"all\">{t('reports.filters.all_departments')}</SelectItem>\n378: <SelectItem value=\"sales\">{t('reports.filters.sales')}</SelectItem>\n379: <SelectItem value=\"service\">{t('reports.filters.service')}</SelectItem>"
           },
           {
             "key": "reports.filters.service",
-            "line": 374,
-            "context": "373: <SelectItem value=\"sales\">{t('reports.filters.sales')}</SelectItem>\n374: <SelectItem value=\"service\">{t('reports.filters.service')}</SelectItem>\n375: <SelectItem value=\"recon\">{t('reports.filters.recon')}</SelectItem>"
+            "line": 379,
+            "context": "378: <SelectItem value=\"sales\">{t('reports.filters.sales')}</SelectItem>\n379: <SelectItem value=\"service\">{t('reports.filters.service')}</SelectItem>\n380: <SelectItem value=\"recon\">{t('reports.filters.recon')}</SelectItem>"
           },
           {
             "key": "reports.filters.recon",
-            "line": 375,
-            "context": "374: <SelectItem value=\"service\">{t('reports.filters.service')}</SelectItem>\n375: <SelectItem value=\"recon\">{t('reports.filters.recon')}</SelectItem>\n376: <SelectItem value=\"carwash\">{t('reports.filters.car_wash')}</SelectItem>"
+            "line": 380,
+            "context": "379: <SelectItem value=\"service\">{t('reports.filters.service')}</SelectItem>\n380: <SelectItem value=\"recon\">{t('reports.filters.recon')}</SelectItem>\n381: <SelectItem value=\"carwash\">{t('reports.filters.car_wash')}</SelectItem>"
           },
           {
             "key": "reports.filters.car_wash",
-            "line": 376,
-            "context": "375: <SelectItem value=\"recon\">{t('reports.filters.recon')}</SelectItem>\n376: <SelectItem value=\"carwash\">{t('reports.filters.car_wash')}</SelectItem>\n377: </SelectContent>"
+            "line": 381,
+            "context": "380: <SelectItem value=\"recon\">{t('reports.filters.recon')}</SelectItem>\n381: <SelectItem value=\"carwash\">{t('reports.filters.car_wash')}</SelectItem>\n382: </SelectContent>"
           },
           {
             "key": "reports.filters.select_status",
-            "line": 388,
-            "context": "387: <SelectTrigger className=\"w-48\">\n388: <SelectValue placeholder={t('reports.filters.select_status')} />\n389: </SelectTrigger>"
+            "line": 393,
+            "context": "392: <SelectTrigger className=\"w-48\">\n393: <SelectValue placeholder={t('reports.filters.select_status')} />\n394: </SelectTrigger>"
           },
           {
             "key": "reports.filters.all_statuses",
-            "line": 391,
-            "context": "390: <SelectContent>\n391: <SelectItem value=\"all\">{t('reports.filters.all_statuses')}</SelectItem>\n392: <SelectItem value=\"pending\">{t('reports.filters.pending')}</SelectItem>"
+            "line": 396,
+            "context": "395: <SelectContent>\n396: <SelectItem value=\"all\">{t('reports.filters.all_statuses')}</SelectItem>\n397: <SelectItem value=\"pending\">{t('reports.filters.pending')}</SelectItem>"
           },
           {
             "key": "reports.filters.pending",
-            "line": 392,
-            "context": "391: <SelectItem value=\"all\">{t('reports.filters.all_statuses')}</SelectItem>\n392: <SelectItem value=\"pending\">{t('reports.filters.pending')}</SelectItem>\n393: <SelectItem value=\"in_progress\">{t('reports.filters.in_progress')}</SelectItem>"
+            "line": 397,
+            "context": "396: <SelectItem value=\"all\">{t('reports.filters.all_statuses')}</SelectItem>\n397: <SelectItem value=\"pending\">{t('reports.filters.pending')}</SelectItem>\n398: <SelectItem value=\"in_progress\">{t('reports.filters.in_progress')}</SelectItem>"
           },
           {
             "key": "reports.filters.in_progress",
-            "line": 393,
-            "context": "392: <SelectItem value=\"pending\">{t('reports.filters.pending')}</SelectItem>\n393: <SelectItem value=\"in_progress\">{t('reports.filters.in_progress')}</SelectItem>\n394: <SelectItem value=\"completed\">{t('reports.filters.completed')}</SelectItem>"
+            "line": 398,
+            "context": "397: <SelectItem value=\"pending\">{t('reports.filters.pending')}</SelectItem>\n398: <SelectItem value=\"in_progress\">{t('reports.filters.in_progress')}</SelectItem>\n399: <SelectItem value=\"completed\">{t('reports.filters.completed')}</SelectItem>"
           },
           {
             "key": "reports.filters.completed",
-            "line": 394,
-            "context": "393: <SelectItem value=\"in_progress\">{t('reports.filters.in_progress')}</SelectItem>\n394: <SelectItem value=\"completed\">{t('reports.filters.completed')}</SelectItem>\n395: <SelectItem value=\"cancelled\">{t('reports.filters.cancelled')}</SelectItem>"
+            "line": 399,
+            "context": "398: <SelectItem value=\"in_progress\">{t('reports.filters.in_progress')}</SelectItem>\n399: <SelectItem value=\"completed\">{t('reports.filters.completed')}</SelectItem>\n400: <SelectItem value=\"cancelled\">{t('reports.filters.cancelled')}</SelectItem>"
           },
           {
             "key": "reports.filters.cancelled",
-            "line": 395,
-            "context": "394: <SelectItem value=\"completed\">{t('reports.filters.completed')}</SelectItem>\n395: <SelectItem value=\"cancelled\">{t('reports.filters.cancelled')}</SelectItem>\n396: </SelectContent>"
+            "line": 400,
+            "context": "399: <SelectItem value=\"completed\">{t('reports.filters.completed')}</SelectItem>\n400: <SelectItem value=\"cancelled\">{t('reports.filters.cancelled')}</SelectItem>\n401: </SelectContent>"
           },
           {
             "key": "reports.filters.service",
-            "line": 410,
-            "context": "409: <span className=\"truncate\">\n410: {filters.serviceIds.length} {t('reports.filters.service', 'service')}\n411: {filters.serviceIds.length > 1 ? 's' : ''} {t('common.selected', 'selected')}"
+            "line": 415,
+            "context": "414: <span className=\"truncate\">\n415: {filters.serviceIds.length} {t('reports.filters.service', 'service')}\n416: {filters.serviceIds.length > 1 ? 's' : ''} {t('common.selected', 'selected')}"
           },
           {
             "key": "common.selected",
-            "line": 411,
-            "context": "410: {filters.serviceIds.length} {t('reports.filters.service', 'service')}\n411: {filters.serviceIds.length > 1 ? 's' : ''} {t('common.selected', 'selected')}\n412: </span>"
+            "line": 416,
+            "context": "415: {filters.serviceIds.length} {t('reports.filters.service', 'service')}\n416: {filters.serviceIds.length > 1 ? 's' : ''} {t('common.selected', 'selected')}\n417: </span>"
           },
           {
             "key": "reports.filters.all_services",
-            "line": 414,
-            "context": "413: ) : (\n414: <span>{t('reports.filters.all_services', 'All Services')}</span>\n415: )}"
+            "line": 419,
+            "context": "418: ) : (\n419: <span>{t('reports.filters.all_services', 'All Services')}</span>\n420: )}"
           },
           {
             "key": "reports.filters.select_service",
-            "line": 422,
-            "context": "421: <div className=\"flex items-center justify-between\">\n422: <span className=\"text-sm font-medium\">{t('reports.filters.select_service', 'Select Services')}</span>\n423: <div className=\"flex gap-1\">"
+            "line": 427,
+            "context": "426: <div className=\"flex items-center justify-between\">\n427: <span className=\"text-sm font-medium\">{t('reports.filters.select_service', 'Select Services')}</span>\n428: <div className=\"flex gap-1\">"
           },
           {
             "key": "common.select_all",
-            "line": 434,
-            "context": "433: >\n434: {t('common.select_all', 'Select All')}\n435: </Button>"
+            "line": 439,
+            "context": "438: >\n439: {t('common.select_all', 'Select All')}\n440: </Button>"
           },
           {
             "key": "common.clear_all",
-            "line": 444,
-            "context": "443: >\n444: {t('common.clear_all', 'Clear All')}\n445: </Button>"
+            "line": 449,
+            "context": "448: >\n449: {t('common.clear_all', 'Clear All')}\n450: </Button>"
           },
           {
             "key": "common.loading",
-            "line": 453,
-            "context": "452: <div className=\"text-center py-4 text-sm text-muted-foreground\">\n453: {t('common.loading', 'Loading...')}\n454: </div>"
+            "line": 458,
+            "context": "457: <div className=\"text-center py-4 text-sm text-muted-foreground\">\n458: {t('common.loading', 'Loading...')}\n459: </div>"
           },
           {
             "key": "reports.filters.no_services",
-            "line": 457,
-            "context": "456: <div className=\"text-center py-4 text-sm text-muted-foreground\">\n457: {t('reports.filters.no_services', 'No services available')}\n458: </div>"
+            "line": 462,
+            "context": "461: <div className=\"text-center py-4 text-sm text-muted-foreground\">\n462: {t('reports.filters.no_services', 'No services available')}\n463: </div>"
           },
           {
             "key": "reports.filters.active_filters",
-            "line": 532,
-            "context": "531: <div className=\"flex items-center gap-2 text-xs text-muted-foreground px-4\">\n532: <span className=\"font-medium\">{t('reports.filters.active_filters')}:</span>\n533: <div className=\"flex gap-2 flex-wrap\">"
+            "line": 537,
+            "context": "536: <div className=\"flex items-center gap-2 text-xs text-muted-foreground px-4\">\n537: <span className=\"font-medium\">{t('reports.filters.active_filters')}:</span>\n538: <div className=\"flex gap-2 flex-wrap\">"
           },
           {
             "key": "reports.filters.${filters.orderType === ",
-            "line": 536,
-            "context": "535: <span className=\"px-2 py-1 bg-primary/10 text-primary rounded-md font-medium\">\n536: {t(`reports.filters.${filters.orderType === 'carwash' ? 'car_wash' : filters.orderType}`)}\n537: </span>"
+            "line": 541,
+            "context": "540: <span className=\"px-2 py-1 bg-primary/10 text-primary rounded-md font-medium\">\n541: {t(`reports.filters.${filters.orderType === 'carwash' ? 'car_wash' : filters.orderType}`)}\n542: </span>"
           },
           {
             "key": "reports.filters.${filters.status}",
-            "line": 541,
-            "context": "540: <span className=\"px-2 py-1 bg-emerald-500/10 text-emerald-600 rounded-md font-medium\">\n541: {t(`reports.filters.${filters.status}`)}\n542: </span>"
+            "line": 546,
+            "context": "545: <span className=\"px-2 py-1 bg-emerald-500/10 text-emerald-600 rounded-md font-medium\">\n546: {t(`reports.filters.${filters.status}`)}\n547: </span>"
           }
         ],
         "coverage": 100,
@@ -49961,432 +49961,432 @@
         "hardcodedStrings": [
           {
             "text": "Personal Information",
-            "line": 217,
-            "context": "216: <AlertDescription>\n217: 📱 You need to add a phone number in <strong>Personal Information</strong> tab to receive SMS notifications.\n218: </AlertDescription>"
+            "line": 218,
+            "context": "217: <AlertDescription>\n218: 📱 You need to add a phone number in <strong>Personal Information</strong> tab to receive SMS notifications.\n219: </AlertDescription>"
           }
         ],
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 135,
-            "exists": false
-          },
-          {
-            "key": "notifications.errors.event_not_allowed_by_role",
             "line": 136,
             "exists": false
           },
           {
+            "key": "notifications.errors.event_not_allowed_by_role",
+            "line": 137,
+            "exists": false
+          },
+          {
             "key": "profile.notification_types",
-            "line": 227,
+            "line": 228,
             "exists": false
           },
           {
             "key": "profile.email_notifications",
-            "line": 235,
+            "line": 236,
             "exists": false
           },
           {
             "key": "profile.email_notifications_desc",
-            "line": 238,
+            "line": 239,
             "exists": false
           },
           {
             "key": "profile.sms_notifications",
-            "line": 253,
+            "line": 254,
             "exists": false
           },
           {
             "key": "profile.sms_notifications_desc",
-            "line": 261,
+            "line": 262,
             "exists": false
           },
           {
             "key": "profile.push_notifications",
-            "line": 276,
+            "line": 277,
             "exists": false
           },
           {
             "key": "profile.push_notifications_desc",
-            "line": 279,
+            "line": 280,
             "exists": false
           },
           {
             "key": "profile.in_app_notifications",
-            "line": 294,
+            "line": 295,
             "exists": false
           },
           {
             "key": "profile.in_app_notifications_desc",
-            "line": 297,
+            "line": 298,
             "exists": false
           },
           {
             "key": "notifications.level_3_title",
-            "line": 312,
+            "line": 313,
             "exists": false
           },
           {
             "key": "notifications.level_3_description",
-            "line": 315,
+            "line": 316,
             "exists": false
           },
           {
             "key": "profile.notification_settings",
-            "line": 324,
+            "line": 325,
             "exists": false
           },
           {
             "key": "profile.notification_frequency",
-            "line": 329,
+            "line": 330,
             "exists": false
           },
           {
             "key": "profile.immediate",
-            "line": 338,
-            "exists": false
-          },
-          {
-            "key": "profile.hourly",
             "line": 339,
             "exists": false
           },
           {
-            "key": "profile.daily",
+            "key": "profile.hourly",
             "line": 340,
             "exists": false
           },
           {
-            "key": "profile.weekly",
+            "key": "profile.daily",
             "line": 341,
             "exists": false
           },
           {
+            "key": "profile.weekly",
+            "line": 342,
+            "exists": false
+          },
+          {
             "key": "profile.quiet_hours_start",
-            "line": 348,
+            "line": 349,
             "exists": false
           },
           {
             "key": "profile.select_time",
-            "line": 354,
+            "line": 355,
             "exists": false
           },
           {
             "key": "profile.quiet_hours_end",
-            "line": 370,
+            "line": 371,
             "exists": false
           },
           {
             "key": "profile.select_time",
-            "line": 376,
+            "line": 377,
             "exists": false
           },
           {
             "key": "profile.localization",
-            "line": 399,
+            "line": 400,
             "exists": false
           },
           {
             "key": "profile.language",
-            "line": 405,
+            "line": 406,
             "exists": false
           },
           {
             "key": "profile.timezone",
-            "line": 424,
+            "line": 425,
             "exists": false
           },
           {
             "key": "profile.date_format",
-            "line": 445,
+            "line": 446,
             "exists": false
           },
           {
             "key": "profile.time_format",
-            "line": 464,
+            "line": 465,
             "exists": false
           },
           {
             "key": "notifications.granular_settings",
-            "line": 491,
+            "line": 492,
             "exists": false
           },
           {
             "key": "notifications.all_categories",
-            "line": 499,
-            "exists": false
-          },
-          {
-            "key": "notifications.categories.orders",
             "line": 500,
             "exists": false
           },
           {
-            "key": "notifications.categories.team",
+            "key": "notifications.categories.orders",
             "line": 501,
             "exists": false
           },
           {
-            "key": "notifications.categories.deadlines",
+            "key": "notifications.categories.team",
             "line": 502,
             "exists": false
           },
           {
-            "key": "notifications.categories.financial",
+            "key": "notifications.categories.deadlines",
             "line": 503,
             "exists": false
           },
           {
-            "key": "notifications.categories.system",
+            "key": "notifications.categories.financial",
             "line": 504,
             "exists": false
           },
           {
-            "key": "notifications.modules.sales",
-            "line": 513,
+            "key": "notifications.categories.system",
+            "line": 505,
             "exists": false
           },
           {
-            "key": "notifications.modules.service",
+            "key": "notifications.modules.sales",
             "line": 514,
             "exists": false
           },
           {
-            "key": "notifications.modules.recon",
+            "key": "notifications.modules.service",
             "line": 515,
             "exists": false
           },
           {
-            "key": "notifications.modules.car_wash",
+            "key": "notifications.modules.recon",
             "line": 516,
             "exists": false
           },
           {
-            "key": "notifications.modules.get_ready",
+            "key": "notifications.modules.car_wash",
             "line": 517,
             "exists": false
           },
           {
+            "key": "notifications.modules.get_ready",
+            "line": 518,
+            "exists": false
+          },
+          {
             "key": "common.saving",
-            "line": 567,
+            "line": 568,
             "exists": false
           },
           {
             "key": "common.save_changes",
-            "line": 567,
+            "line": 568,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.error",
-            "line": 135,
-            "context": "134: variant: 'destructive',\n135: title: t('common.error'),\n136: description: t('notifications.errors.event_not_allowed_by_role', 'This event is not enabled for your role. Contact your administrator.'),"
+            "line": 136,
+            "context": "135: variant: 'destructive',\n136: title: t('common.error'),\n137: description: t('notifications.errors.event_not_allowed_by_role', 'This event is not enabled for your role. Contact your administrator.'),"
           },
           {
             "key": "notifications.errors.event_not_allowed_by_role",
-            "line": 136,
-            "context": "135: title: t('common.error'),\n136: description: t('notifications.errors.event_not_allowed_by_role', 'This event is not enabled for your role. Contact your administrator.'),\n137: });"
+            "line": 137,
+            "context": "136: title: t('common.error'),\n137: description: t('notifications.errors.event_not_allowed_by_role', 'This event is not enabled for your role. Contact your administrator.'),\n138: });"
           },
           {
             "key": "profile.notification_types",
-            "line": 227,
-            "context": "226: <Bell className=\"h-5 w-5\" />\n227: {t('profile.notification_types')}\n228: </CardTitle>"
+            "line": 228,
+            "context": "227: <Bell className=\"h-5 w-5\" />\n228: {t('profile.notification_types')}\n229: </CardTitle>"
           },
           {
             "key": "profile.email_notifications",
-            "line": 235,
-            "context": "234: <Mail className=\"h-4 w-4\" />\n235: <Label className=\"font-medium\">{t('profile.email_notifications')}</Label>\n236: </div>"
+            "line": 236,
+            "context": "235: <Mail className=\"h-4 w-4\" />\n236: <Label className=\"font-medium\">{t('profile.email_notifications')}</Label>\n237: </div>"
           },
           {
             "key": "profile.email_notifications_desc",
-            "line": 238,
-            "context": "237: <p className=\"text-sm text-muted-foreground\">\n238: {t('profile.email_notifications_desc')}\n239: </p>"
+            "line": 239,
+            "context": "238: <p className=\"text-sm text-muted-foreground\">\n239: {t('profile.email_notifications_desc')}\n240: </p>"
           },
           {
             "key": "profile.sms_notifications",
-            "line": 253,
-            "context": "252: <MessageSquare className=\"h-4 w-4\" />\n253: <Label className=\"font-medium\">{t('profile.sms_notifications')}</Label>\n254: {hasPhoneNumber ? ("
+            "line": 254,
+            "context": "253: <MessageSquare className=\"h-4 w-4\" />\n254: <Label className=\"font-medium\">{t('profile.sms_notifications')}</Label>\n255: {hasPhoneNumber ? ("
           },
           {
             "key": "profile.sms_notifications_desc",
-            "line": 261,
-            "context": "260: <p className=\"text-sm text-muted-foreground\">\n261: {t('profile.sms_notifications_desc', 'Receive notifications via SMS')}\n262: </p>"
+            "line": 262,
+            "context": "261: <p className=\"text-sm text-muted-foreground\">\n262: {t('profile.sms_notifications_desc', 'Receive notifications via SMS')}\n263: </p>"
           },
           {
             "key": "profile.push_notifications",
-            "line": 276,
-            "context": "275: <Smartphone className=\"h-4 w-4\" />\n276: <Label className=\"font-medium\">{t('profile.push_notifications')}</Label>\n277: </div>"
+            "line": 277,
+            "context": "276: <Smartphone className=\"h-4 w-4\" />\n277: <Label className=\"font-medium\">{t('profile.push_notifications')}</Label>\n278: </div>"
           },
           {
             "key": "profile.push_notifications_desc",
-            "line": 279,
-            "context": "278: <p className=\"text-sm text-muted-foreground\">\n279: {t('profile.push_notifications_desc')}\n280: </p>"
+            "line": 280,
+            "context": "279: <p className=\"text-sm text-muted-foreground\">\n280: {t('profile.push_notifications_desc')}\n281: </p>"
           },
           {
             "key": "profile.in_app_notifications",
-            "line": 294,
-            "context": "293: <Bell className=\"h-4 w-4\" />\n294: <Label className=\"font-medium\">{t('profile.in_app_notifications')}</Label>\n295: </div>"
+            "line": 295,
+            "context": "294: <Bell className=\"h-4 w-4\" />\n295: <Label className=\"font-medium\">{t('profile.in_app_notifications')}</Label>\n296: </div>"
           },
           {
             "key": "profile.in_app_notifications_desc",
-            "line": 297,
-            "context": "296: <p className=\"text-sm text-muted-foreground\">\n297: {t('profile.in_app_notifications_desc')}\n298: </p>"
+            "line": 298,
+            "context": "297: <p className=\"text-sm text-muted-foreground\">\n298: {t('profile.in_app_notifications_desc')}\n299: </p>"
           },
           {
             "key": "notifications.level_3_title",
-            "line": 312,
-            "context": "311: <AlertTitle className=\"text-blue-900 dark:text-blue-100\">\n312: {t('notifications.level_3_title', 'Level 3: Your Personal Preferences')}\n313: </AlertTitle>"
+            "line": 313,
+            "context": "312: <AlertTitle className=\"text-blue-900 dark:text-blue-100\">\n313: {t('notifications.level_3_title', 'Level 3: Your Personal Preferences')}\n314: </AlertTitle>"
           },
           {
             "key": "notifications.level_3_description",
-            "line": 315,
-            "context": "314: <AlertDescription className=\"text-blue-800 dark:text-blue-200 text-sm\">\n315: {t('notifications.level_3_description', 'You can only enable notifications for events allowed by your Custom Role. You must also be a follower of orders to receive notifications.')}\n316: </AlertDescription>"
+            "line": 316,
+            "context": "315: <AlertDescription className=\"text-blue-800 dark:text-blue-200 text-sm\">\n316: {t('notifications.level_3_description', 'You can only enable notifications for events allowed by your Custom Role. You must also be a follower of orders to receive notifications.')}\n317: </AlertDescription>"
           },
           {
             "key": "profile.notification_settings",
-            "line": 324,
-            "context": "323: <Clock className=\"h-5 w-5\" />\n324: {t('profile.notification_settings')}\n325: </CardTitle>"
+            "line": 325,
+            "context": "324: <Clock className=\"h-5 w-5\" />\n325: {t('profile.notification_settings')}\n326: </CardTitle>"
           },
           {
             "key": "profile.notification_frequency",
-            "line": 329,
-            "context": "328: <div className=\"space-y-2\">\n329: <Label>{t('profile.notification_frequency')}</Label>\n330: <Select"
+            "line": 330,
+            "context": "329: <div className=\"space-y-2\">\n330: <Label>{t('profile.notification_frequency')}</Label>\n331: <Select"
           },
           {
             "key": "profile.immediate",
-            "line": 338,
-            "context": "337: <SelectContent>\n338: <SelectItem value=\"immediate\">{t('profile.immediate')}</SelectItem>\n339: <SelectItem value=\"hourly\">{t('profile.hourly')}</SelectItem>"
+            "line": 339,
+            "context": "338: <SelectContent>\n339: <SelectItem value=\"immediate\">{t('profile.immediate')}</SelectItem>\n340: <SelectItem value=\"hourly\">{t('profile.hourly')}</SelectItem>"
           },
           {
             "key": "profile.hourly",
-            "line": 339,
-            "context": "338: <SelectItem value=\"immediate\">{t('profile.immediate')}</SelectItem>\n339: <SelectItem value=\"hourly\">{t('profile.hourly')}</SelectItem>\n340: <SelectItem value=\"daily\">{t('profile.daily')}</SelectItem>"
+            "line": 340,
+            "context": "339: <SelectItem value=\"immediate\">{t('profile.immediate')}</SelectItem>\n340: <SelectItem value=\"hourly\">{t('profile.hourly')}</SelectItem>\n341: <SelectItem value=\"daily\">{t('profile.daily')}</SelectItem>"
           },
           {
             "key": "profile.daily",
-            "line": 340,
-            "context": "339: <SelectItem value=\"hourly\">{t('profile.hourly')}</SelectItem>\n340: <SelectItem value=\"daily\">{t('profile.daily')}</SelectItem>\n341: <SelectItem value=\"weekly\">{t('profile.weekly')}</SelectItem>"
+            "line": 341,
+            "context": "340: <SelectItem value=\"hourly\">{t('profile.hourly')}</SelectItem>\n341: <SelectItem value=\"daily\">{t('profile.daily')}</SelectItem>\n342: <SelectItem value=\"weekly\">{t('profile.weekly')}</SelectItem>"
           },
           {
             "key": "profile.weekly",
-            "line": 341,
-            "context": "340: <SelectItem value=\"daily\">{t('profile.daily')}</SelectItem>\n341: <SelectItem value=\"weekly\">{t('profile.weekly')}</SelectItem>\n342: </SelectContent>"
+            "line": 342,
+            "context": "341: <SelectItem value=\"daily\">{t('profile.daily')}</SelectItem>\n342: <SelectItem value=\"weekly\">{t('profile.weekly')}</SelectItem>\n343: </SelectContent>"
           },
           {
             "key": "profile.quiet_hours_start",
-            "line": 348,
-            "context": "347: <div className=\"space-y-2\">\n348: <Label>{t('profile.quiet_hours_start')}</Label>\n349: <Select"
+            "line": 349,
+            "context": "348: <div className=\"space-y-2\">\n349: <Label>{t('profile.quiet_hours_start')}</Label>\n350: <Select"
           },
           {
             "key": "profile.select_time",
-            "line": 354,
-            "context": "353: <SelectTrigger>\n354: <SelectValue placeholder={t('profile.select_time')} />\n355: </SelectTrigger>"
+            "line": 355,
+            "context": "354: <SelectTrigger>\n355: <SelectValue placeholder={t('profile.select_time')} />\n356: </SelectTrigger>"
           },
           {
             "key": "profile.quiet_hours_end",
-            "line": 370,
-            "context": "369: <div className=\"space-y-2\">\n370: <Label>{t('profile.quiet_hours_end')}</Label>\n371: <Select"
+            "line": 371,
+            "context": "370: <div className=\"space-y-2\">\n371: <Label>{t('profile.quiet_hours_end')}</Label>\n372: <Select"
           },
           {
             "key": "profile.select_time",
-            "line": 376,
-            "context": "375: <SelectTrigger>\n376: <SelectValue placeholder={t('profile.select_time')} />\n377: </SelectTrigger>"
+            "line": 377,
+            "context": "376: <SelectTrigger>\n377: <SelectValue placeholder={t('profile.select_time')} />\n378: </SelectTrigger>"
           },
           {
             "key": "profile.localization",
-            "line": 399,
-            "context": "398: <Globe className=\"h-5 w-5\" />\n399: {t('profile.localization')}\n400: </CardTitle>"
+            "line": 400,
+            "context": "399: <Globe className=\"h-5 w-5\" />\n400: {t('profile.localization')}\n401: </CardTitle>"
           },
           {
             "key": "profile.language",
-            "line": 405,
-            "context": "404: <div className=\"space-y-2\">\n405: <Label>{t('profile.language')}</Label>\n406: <Select"
+            "line": 406,
+            "context": "405: <div className=\"space-y-2\">\n406: <Label>{t('profile.language')}</Label>\n407: <Select"
           },
           {
             "key": "profile.timezone",
-            "line": 424,
-            "context": "423: <div className=\"space-y-2\">\n424: <Label>{t('profile.timezone')}</Label>\n425: <Select"
+            "line": 425,
+            "context": "424: <div className=\"space-y-2\">\n425: <Label>{t('profile.timezone')}</Label>\n426: <Select"
           },
           {
             "key": "profile.date_format",
-            "line": 445,
-            "context": "444: <div className=\"space-y-2\">\n445: <Label>{t('profile.date_format')}</Label>\n446: <Select"
+            "line": 446,
+            "context": "445: <div className=\"space-y-2\">\n446: <Label>{t('profile.date_format')}</Label>\n447: <Select"
           },
           {
             "key": "profile.time_format",
-            "line": 464,
-            "context": "463: <div className=\"space-y-2\">\n464: <Label>{t('profile.time_format')}</Label>\n465: <Select"
+            "line": 465,
+            "context": "464: <div className=\"space-y-2\">\n465: <Label>{t('profile.time_format')}</Label>\n466: <Select"
           },
           {
             "key": "notifications.granular_settings",
-            "line": 491,
-            "context": "490: <Bell className=\"h-5 w-5\" />\n491: {t('notifications.granular_settings', 'Event-Based Notifications')}\n492: </CardTitle>"
+            "line": 492,
+            "context": "491: <Bell className=\"h-5 w-5\" />\n492: {t('notifications.granular_settings', 'Event-Based Notifications')}\n493: </CardTitle>"
           },
           {
             "key": "notifications.all_categories",
-            "line": 499,
-            "context": "498: <SelectContent>\n499: <SelectItem value=\"all\">{t('notifications.all_categories', 'All Categories')}</SelectItem>\n500: <SelectItem value=\"orders\">{t('notifications.categories.orders', 'Orders')}</SelectItem>"
+            "line": 500,
+            "context": "499: <SelectContent>\n500: <SelectItem value=\"all\">{t('notifications.all_categories', 'All Categories')}</SelectItem>\n501: <SelectItem value=\"orders\">{t('notifications.categories.orders', 'Orders')}</SelectItem>"
           },
           {
             "key": "notifications.categories.orders",
-            "line": 500,
-            "context": "499: <SelectItem value=\"all\">{t('notifications.all_categories', 'All Categories')}</SelectItem>\n500: <SelectItem value=\"orders\">{t('notifications.categories.orders', 'Orders')}</SelectItem>\n501: <SelectItem value=\"team\">{t('notifications.categories.team', 'Team')}</SelectItem>"
+            "line": 501,
+            "context": "500: <SelectItem value=\"all\">{t('notifications.all_categories', 'All Categories')}</SelectItem>\n501: <SelectItem value=\"orders\">{t('notifications.categories.orders', 'Orders')}</SelectItem>\n502: <SelectItem value=\"team\">{t('notifications.categories.team', 'Team')}</SelectItem>"
           },
           {
             "key": "notifications.categories.team",
-            "line": 501,
-            "context": "500: <SelectItem value=\"orders\">{t('notifications.categories.orders', 'Orders')}</SelectItem>\n501: <SelectItem value=\"team\">{t('notifications.categories.team', 'Team')}</SelectItem>\n502: <SelectItem value=\"deadlines\">{t('notifications.categories.deadlines', 'Deadlines')}</SelectItem>"
+            "line": 502,
+            "context": "501: <SelectItem value=\"orders\">{t('notifications.categories.orders', 'Orders')}</SelectItem>\n502: <SelectItem value=\"team\">{t('notifications.categories.team', 'Team')}</SelectItem>\n503: <SelectItem value=\"deadlines\">{t('notifications.categories.deadlines', 'Deadlines')}</SelectItem>"
           },
           {
             "key": "notifications.categories.deadlines",
-            "line": 502,
-            "context": "501: <SelectItem value=\"team\">{t('notifications.categories.team', 'Team')}</SelectItem>\n502: <SelectItem value=\"deadlines\">{t('notifications.categories.deadlines', 'Deadlines')}</SelectItem>\n503: <SelectItem value=\"financial\">{t('notifications.categories.financial', 'Financial')}</SelectItem>"
+            "line": 503,
+            "context": "502: <SelectItem value=\"team\">{t('notifications.categories.team', 'Team')}</SelectItem>\n503: <SelectItem value=\"deadlines\">{t('notifications.categories.deadlines', 'Deadlines')}</SelectItem>\n504: <SelectItem value=\"financial\">{t('notifications.categories.financial', 'Financial')}</SelectItem>"
           },
           {
             "key": "notifications.categories.financial",
-            "line": 503,
-            "context": "502: <SelectItem value=\"deadlines\">{t('notifications.categories.deadlines', 'Deadlines')}</SelectItem>\n503: <SelectItem value=\"financial\">{t('notifications.categories.financial', 'Financial')}</SelectItem>\n504: <SelectItem value=\"system\">{t('notifications.categories.system', 'System')}</SelectItem>"
+            "line": 504,
+            "context": "503: <SelectItem value=\"deadlines\">{t('notifications.categories.deadlines', 'Deadlines')}</SelectItem>\n504: <SelectItem value=\"financial\">{t('notifications.categories.financial', 'Financial')}</SelectItem>\n505: <SelectItem value=\"system\">{t('notifications.categories.system', 'System')}</SelectItem>"
           },
           {
             "key": "notifications.categories.system",
-            "line": 504,
-            "context": "503: <SelectItem value=\"financial\">{t('notifications.categories.financial', 'Financial')}</SelectItem>\n504: <SelectItem value=\"system\">{t('notifications.categories.system', 'System')}</SelectItem>\n505: </SelectContent>"
+            "line": 505,
+            "context": "504: <SelectItem value=\"financial\">{t('notifications.categories.financial', 'Financial')}</SelectItem>\n505: <SelectItem value=\"system\">{t('notifications.categories.system', 'System')}</SelectItem>\n506: </SelectContent>"
           },
           {
             "key": "notifications.modules.sales",
-            "line": 513,
-            "context": "512: <TabsList className=\"grid w-full grid-cols-5 mb-4\">\n513: <TabsTrigger value=\"sales_orders\">{t('notifications.modules.sales', 'Sales')}</TabsTrigger>\n514: <TabsTrigger value=\"service_orders\">{t('notifications.modules.service', 'Service')}</TabsTrigger>"
+            "line": 514,
+            "context": "513: <TabsList className=\"grid w-full grid-cols-5 mb-4\">\n514: <TabsTrigger value=\"sales_orders\">{t('notifications.modules.sales', 'Sales')}</TabsTrigger>\n515: <TabsTrigger value=\"service_orders\">{t('notifications.modules.service', 'Service')}</TabsTrigger>"
           },
           {
             "key": "notifications.modules.service",
-            "line": 514,
-            "context": "513: <TabsTrigger value=\"sales_orders\">{t('notifications.modules.sales', 'Sales')}</TabsTrigger>\n514: <TabsTrigger value=\"service_orders\">{t('notifications.modules.service', 'Service')}</TabsTrigger>\n515: <TabsTrigger value=\"recon_orders\">{t('notifications.modules.recon', 'Recon')}</TabsTrigger>"
+            "line": 515,
+            "context": "514: <TabsTrigger value=\"sales_orders\">{t('notifications.modules.sales', 'Sales')}</TabsTrigger>\n515: <TabsTrigger value=\"service_orders\">{t('notifications.modules.service', 'Service')}</TabsTrigger>\n516: <TabsTrigger value=\"recon_orders\">{t('notifications.modules.recon', 'Recon')}</TabsTrigger>"
           },
           {
             "key": "notifications.modules.recon",
-            "line": 515,
-            "context": "514: <TabsTrigger value=\"service_orders\">{t('notifications.modules.service', 'Service')}</TabsTrigger>\n515: <TabsTrigger value=\"recon_orders\">{t('notifications.modules.recon', 'Recon')}</TabsTrigger>\n516: <TabsTrigger value=\"car_wash\">{t('notifications.modules.car_wash', 'Car Wash')}</TabsTrigger>"
+            "line": 516,
+            "context": "515: <TabsTrigger value=\"service_orders\">{t('notifications.modules.service', 'Service')}</TabsTrigger>\n516: <TabsTrigger value=\"recon_orders\">{t('notifications.modules.recon', 'Recon')}</TabsTrigger>\n517: <TabsTrigger value=\"car_wash\">{t('notifications.modules.car_wash', 'Car Wash')}</TabsTrigger>"
           },
           {
             "key": "notifications.modules.car_wash",
-            "line": 516,
-            "context": "515: <TabsTrigger value=\"recon_orders\">{t('notifications.modules.recon', 'Recon')}</TabsTrigger>\n516: <TabsTrigger value=\"car_wash\">{t('notifications.modules.car_wash', 'Car Wash')}</TabsTrigger>\n517: <TabsTrigger value=\"get_ready\">{t('notifications.modules.get_ready', 'Get Ready')}</TabsTrigger>"
+            "line": 517,
+            "context": "516: <TabsTrigger value=\"recon_orders\">{t('notifications.modules.recon', 'Recon')}</TabsTrigger>\n517: <TabsTrigger value=\"car_wash\">{t('notifications.modules.car_wash', 'Car Wash')}</TabsTrigger>\n518: <TabsTrigger value=\"get_ready\">{t('notifications.modules.get_ready', 'Get Ready')}</TabsTrigger>"
           },
           {
             "key": "notifications.modules.get_ready",
-            "line": 517,
-            "context": "516: <TabsTrigger value=\"car_wash\">{t('notifications.modules.car_wash', 'Car Wash')}</TabsTrigger>\n517: <TabsTrigger value=\"get_ready\">{t('notifications.modules.get_ready', 'Get Ready')}</TabsTrigger>\n518: </TabsList>"
+            "line": 518,
+            "context": "517: <TabsTrigger value=\"car_wash\">{t('notifications.modules.car_wash', 'Car Wash')}</TabsTrigger>\n518: <TabsTrigger value=\"get_ready\">{t('notifications.modules.get_ready', 'Get Ready')}</TabsTrigger>\n519: </TabsList>"
           },
           {
             "key": "common.saving",
-            "line": 567,
-            "context": "566: <Save className=\"h-4 w-4 mr-2\" />\n567: {(loading || eventsSaving) ? t('common.saving') : t('common.save_changes')}\n568: </Button>"
+            "line": 568,
+            "context": "567: <Save className=\"h-4 w-4 mr-2\" />\n568: {(loading || eventsSaving) ? t('common.saving') : t('common.save_changes')}\n569: </Button>"
           },
           {
             "key": "common.save_changes",
-            "line": 567,
-            "context": "566: <Save className=\"h-4 w-4 mr-2\" />\n567: {(loading || eventsSaving) ? t('common.saving') : t('common.save_changes')}\n568: </Button>"
+            "line": 568,
+            "context": "567: <Save className=\"h-4 w-4 mr-2\" />\n568: {(loading || eventsSaving) ? t('common.saving') : t('common.save_changes')}\n569: </Button>"
           }
         ],
         "coverage": 98,

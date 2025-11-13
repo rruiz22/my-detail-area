@@ -194,110 +194,29 @@ export const useDepartmentRevenue = (filters: ReportsFilters) => {
       if (!dealerId) throw new Error('Dealer ID is required');
 
       // Adjust endDate to end of day (23:59:59.999) to include all orders on that day
-      const endOfDay = new Date(filters.endDate);
-      endOfDay.setHours(23, 59, 59, 999);
+      const endOfDay = toEndOfDay(filters.endDate);
 
-      // Build query with base filters
-      // CRITICAL: We need to fetch ALL orders that match the filters, not just the first 1000
-      // because we filter by date AFTER fetching. The SQL function filters by date in the query,
-      // but we can't do that efficiently with Supabase client due to complex date logic.
-      let query = supabase
-        .from('orders')
-        .select('order_type, total_amount, status, created_at, completed_at, due_date, services')
-        .eq('dealer_id', dealerId)
-        .neq('status', 'cancelled') // Exclude cancelled orders to match get_revenue_analytics
-        .order('created_at', { ascending: false }); // Get most recent first
-
-      // Apply orderType filter if not 'all'
-      if (filters.orderType && filters.orderType !== 'all') {
-        query = query.eq('order_type', filters.orderType);
-      }
-
-      // Apply status filter if not 'all'
-      if (filters.status && filters.status !== 'all') {
-        query = query.eq('status', filters.status);
-      }
-
-      // Fetch ALL matching orders (Supabase default limit is 1000, we need more)
-      const { data: orders, error, count } = await query.limit(QUERY_LIMITS.EXTENDED); // Extended limit for reports - TODO: Implement pagination
+      // Use server-side RPC for department revenue aggregation
+      // This eliminates client-side LIMIT issues and ensures consistency with get_revenue_analytics
+      const { data, error } = await supabase.rpc('get_department_revenue', {
+        p_dealer_id: dealerId,
+        p_start_date: filters.startDate.toISOString(),
+        p_end_date: endOfDay.toISOString(),
+        p_order_type: filters.orderType || 'all',
+        p_status: filters.status || 'all',
+        p_service_ids: filters.serviceIds && filters.serviceIds.length > 0 ? filters.serviceIds : null
+      });
 
       if (error) throw error;
 
-      console.log('🔍 useDepartmentRevenue - Total orders fetched:', orders?.length);
-      console.log('🔍 useDepartmentRevenue - Service filter:', filters.serviceIds);
-      console.log('🔍 useDepartmentRevenue - Date range:', {
-        startDate: filters.startDate.toISOString(),
-        endDate: endOfDay.toISOString()
-      });
-
-      // Filter orders using EXACT SAME logic as get_revenue_analytics SQL function:
-      // - sales/service: COALESCE(due_date, created_at)
-      // - recon/carwash: COALESCE(completed_at, created_at)
-      // This ensures Financial tab matches Operational tab behavior
-      const filteredOrders = orders?.filter(order => {
-        // Use centralized date selection logic (sales/service use due_date, recon/carwash use completed_at)
-        const inDateRange = isOrderInDateRange(order, filters.startDate, endOfDay);
-
-        // Check service filter (if provided) - MUST match SQL logic exactly
-        let matchesServiceFilter = true;
-        if (filters.serviceIds && filters.serviceIds.length > 0) {
-          const orderServices = order.services || [];
-
-          // Services can be stored as:
-          // 1. Strings (legacy): ["service-id-1", "service-id-2"]
-          // 2. Objects with 'id' field: [{"id": "service-id", "name": "...", "price": ...}]
-          // 3. Objects with 'type' field: [{"type": "service-id", "name": "...", "price": ...}]
-          // This matches the SQL EXISTS clause in get_revenue_analytics
-          const hasMatchingService = orderServices.some((service: any) => {
-            // Handle string format (legacy)
-            if (typeof service === 'string') {
-              return filters.serviceIds?.includes(service);
-            }
-            // Handle object format - check BOTH 'id' and 'type' fields
-            if (typeof service === 'object' && service !== null) {
-              return filters.serviceIds?.includes(service.id) ||
-                     filters.serviceIds?.includes(service.type);
-            }
-            return false;
-          });
-          matchesServiceFilter = hasMatchingService;
-        }
-
-        return inDateRange && matchesServiceFilter;
-      }) || [];
-
-      console.log('🔍 useDepartmentRevenue - After filtering:', filteredOrders.length);
-      console.log('🔍 useDepartmentRevenue - Total revenue:', filteredOrders.reduce((sum, o) => sum + (o.total_amount || 0), 0));
-      console.log('🔍 useDepartmentRevenue - Fix applied: Checking both service.id and service.type');
-
-      // Group by department
-      const departments: Record<string, { revenue: number; orders: number; completed: number }> = {
-        sales: { revenue: 0, orders: 0, completed: 0 },
-        service: { revenue: 0, orders: 0, completed: 0 },
-        recon: { revenue: 0, orders: 0, completed: 0 },
-        carwash: { revenue: 0, orders: 0, completed: 0 },
-      };
-
-      filteredOrders.forEach(order => {
-        // Normalize order_type to lowercase for consistent grouping
-        const dept = (order.order_type?.toLowerCase() || 'sales');
-        if (departments[dept]) {
-          departments[dept].revenue += order.total_amount || 0;
-          departments[dept].orders += 1;
-          if (order.status === 'completed') {
-            departments[dept].completed += 1;
-          }
-        }
-      });
-
-      // Convert to array format for charts
-      return Object.entries(departments).map(([name, data]) => ({
-        name: name.charAt(0).toUpperCase() + name.slice(1),
-        revenue: data.revenue,
-        orders: data.orders,
-        completed: data.completed,
-        avgOrderValue: data.orders > 0 ? data.revenue / data.orders : 0,
-        completionRate: data.orders > 0 ? (data.completed / data.orders) * 100 : 0,
+      // Transform RPC result to match expected format
+      return (data || []).map((row: any) => ({
+        name: row.department.charAt(0).toUpperCase() + row.department.slice(1),
+        revenue: parseFloat(row.revenue || 0),
+        orders: row.orders || 0,
+        completed: row.completed || 0,
+        avgOrderValue: parseFloat(row.avg_order_value || 0),
+        completionRate: parseFloat(row.completion_rate || 0)
       }));
     },
     enabled: !!dealerId,
@@ -345,3 +264,4 @@ export const usePerformanceTrends = (filters: ReportsFilters) => {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };
+ 
