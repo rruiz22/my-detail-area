@@ -1,6 +1,8 @@
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 import { useAccessibleDealerships } from './useAccessibleDealerships';
+import { CACHE_TIMES, GC_TIMES } from '@/constants/cacheConfig';
+import { QUERY_LIMITS } from '@/constants/queryLimits';
 
 export interface ReportsFilters {
   startDate: Date;
@@ -177,8 +179,8 @@ export const useRevenueAnalytics = (filters: ReportsFilters, grouping: 'daily' |
       };
     },
     enabled: !!dealerId,
-    staleTime: 0, // Temporarily disabled cache for debugging
-    cacheTime: 0, // Don't cache at all
+    staleTime: CACHE_TIMES.SHORT, // 1 minute - Dashboard/analytics data
+    gcTime: GC_TIMES.MEDIUM, // 10 minutes
   });
 };
 
@@ -216,7 +218,7 @@ export const useDepartmentRevenue = (filters: ReportsFilters) => {
       }
 
       // Fetch ALL matching orders (Supabase default limit is 1000, we need more)
-      const { data: orders, error, count } = await query.limit(10000);
+      const { data: orders, error, count } = await query.limit(QUERY_LIMITS.EXTENDED); // Extended limit for reports - TODO: Implement pagination
 
       if (error) throw error;
 
@@ -311,8 +313,8 @@ export const useDepartmentRevenue = (filters: ReportsFilters) => {
       }));
     },
     enabled: !!dealerId,
-    staleTime: 0, // Temporarily disabled cache for debugging
-    cacheTime: 0, // Don't cache at all
+    staleTime: CACHE_TIMES.SHORT, // 1 minute - Dashboard/analytics data
+    gcTime: GC_TIMES.MEDIUM, // 10 minutes
   });
 };
 

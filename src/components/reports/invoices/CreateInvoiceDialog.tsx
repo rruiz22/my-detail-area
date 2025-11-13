@@ -152,7 +152,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
         .eq('dealer_id', dealerId)
         .eq('status', 'completed')
         .order('created_at', { ascending: false })
-        .limit(1000); // Increased limit since we filter client-side
+        .limit(QUERY_LIMITS.STANDARD); // Standard limit - TODO: Implement server-side filtering or pagination
 
       // Apply order type filter
       if (orderType !== 'all') {
