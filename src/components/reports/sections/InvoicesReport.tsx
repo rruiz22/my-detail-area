@@ -74,6 +74,7 @@ import {
 } from 'lucide-react';
 import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { QUERY_LIMITS } from '@/constants/queryLimits';
 import { useToast } from '@/hooks/use-toast';
 import { useDateCalculations } from '@/hooks/useDateCalculations';
 import { useQueryClient } from '@tanstack/react-query';
@@ -385,7 +386,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
         .select('id, order_number, custom_order_number, order_type, customer_name, stock_number, po, ro, tag, vehicle_make, vehicle_model, vehicle_year, vehicle_vin, total_amount, services, status, created_at, completed_at, due_date, assigned_group_id')
         .eq('dealer_id', dealerId)
         .order('created_at', { ascending: false })
-        .limit(1000); // Increased limit since we filter client-side
+        .limit(QUERY_LIMITS.STANDARD); // Standard limit - TODO: Implement server-side filtering or pagination
 
       // Apply order type filter
       if (orderType !== 'all') {
