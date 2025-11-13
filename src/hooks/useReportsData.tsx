@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAccessibleDealerships } from './useAccessibleDealerships';
 import { CACHE_TIMES, GC_TIMES } from '@/constants/cacheConfig';
 import { QUERY_LIMITS } from '@/constants/queryLimits';
+import { getReportDateForOrder, isOrderInDateRange, toEndOfDay } from '@/utils/reportDateUtils';
 
 export interface ReportsFilters {
   startDate: Date;
@@ -234,21 +235,8 @@ export const useDepartmentRevenue = (filters: ReportsFilters) => {
       // - recon/carwash: COALESCE(completed_at, created_at)
       // This ensures Financial tab matches Operational tab behavior
       const filteredOrders = orders?.filter(order => {
-        let reportDate: Date | null = null;
-        const orderTypeLower = order.order_type?.toLowerCase() || 'sales';
-
-        if (orderTypeLower === 'sales' || orderTypeLower === 'service') {
-          // Use due_date, fallback to created_at
-          reportDate = order.due_date ? new Date(order.due_date) : new Date(order.created_at);
-        } else if (orderTypeLower === 'recon' || orderTypeLower === 'carwash') {
-          // Use completed_at, fallback to created_at (matches SQL COALESCE logic)
-          reportDate = order.completed_at ? new Date(order.completed_at) : new Date(order.created_at);
-        } else {
-          reportDate = new Date(order.created_at);
-        }
-
-        // Check date range
-        const inDateRange = reportDate >= filters.startDate && reportDate <= endOfDay;
+        // Use centralized date selection logic (sales/service use due_date, recon/carwash use completed_at)
+        const inDateRange = isOrderInDateRange(order, filters.startDate, endOfDay);
 
         // Check service filter (if provided) - MUST match SQL logic exactly
         let matchesServiceFilter = true;

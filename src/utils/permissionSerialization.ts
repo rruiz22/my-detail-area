@@ -175,16 +175,28 @@ export function getCachedPermissions(userId: string): EnhancedUserGranular | nul
 /**
  * Clear permission cache from localStorage
  * Called on logout or when cache becomes invalid
+ *
+ * @param userId - Optional user ID to clear cache for a specific user.
+ *                 Note: localStorage is shared across browser, so this won't
+ *                 clear cache for other logged-in users on different devices.
+ *                 It only clears the cache in the current browser session.
  */
-export function clearPermissionsCache(): void {
+export function clearPermissionsCache(userId?: string): void {
   try {
+    // If userId is provided, we still clear global cache since localStorage
+    // doesn't support per-user storage (same browser = same localStorage)
     localStorage.removeItem(CACHE_KEY);
     // Also clear any legacy cache keys
     localStorage.removeItem('permissions_cache_v2');
     localStorage.removeItem('permissions_cache_v3');
     // Clear user profile cache too
     localStorage.removeItem('user_profile_cache');
-    console.log('🗑️ Permission cache cleared completely');
+
+    if (userId) {
+      console.log(`🗑️ Permission cache cleared for user ${userId.substring(0, 8)}...`);
+    } else {
+      console.log('🗑️ Permission cache cleared completely');
+    }
   } catch (error) {
     console.warn('⚠️ Failed to clear permission cache:', error);
   }

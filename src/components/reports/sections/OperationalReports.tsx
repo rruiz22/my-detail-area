@@ -28,6 +28,7 @@ import { useOrdersAnalytics, usePerformanceTrends, type ReportsFilters } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { isOrderInDateRange } from '@/utils/reportDateUtils';
 import { format, parseISO } from 'date-fns';
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import type { UnifiedOrderData } from '@/types/unifiedOrder';
