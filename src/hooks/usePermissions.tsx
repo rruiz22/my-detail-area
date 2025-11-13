@@ -670,10 +670,11 @@ export const usePermissions = () => {
             logger.dev(`   This should not happen - dealership may need module configuration`);
             roleHasModuleAccess = false;
           } else if (!moduleIsExplicitlyConfigured) {
-            // Has config for OTHER modules, but not THIS one - ALLOW (default allow for unconfigured)
-            // This handles new modules added to the system
-            logger.dev(`[hasModuleAccess] ℹ️ Module ${module} not explicitly configured for role ${role.role_name} - ALLOWING by default`);
-            roleHasModuleAccess = true;
+            // 🔒 CRITICAL FIX: Has config for OTHER modules, but not THIS one - DENY (fail-closed security)
+            // This prevents privilege escalation where users get access to unconfigured modules
+            // Changed from: roleHasModuleAccess = true (SECURITY BUG!)
+            logger.dev(`[hasModuleAccess] 🚫 Module ${module} not explicitly configured for role ${role.role_name} - DENYING (fail-closed security)`);
+            roleHasModuleAccess = false;
           } else {
             // Explicitly configured - use the configured value
             roleHasModuleAccess = moduleIsEnabled;

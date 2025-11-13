@@ -579,13 +579,21 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
         }
       }
 
-      // Apply sorting
+      // Apply priority-first sorting
+      // CRITICAL: HIGH and URGENT priority vehicles ALWAYS appear first
+      // Then sort by requested field within each priority group
       const ascending = sortOrder === 'asc';
+
+      // Step 1: Always sort by priority first (urgent > high > medium > normal > low)
+      query = query.order('priority', { ascending: false });
+
+      // Step 2: Then apply secondary sort
       if (sortBy === 'days_in_step') {
         query = query.order('intake_date', { ascending: !ascending });
       } else if (sortBy === 'stock_number') {
         query = query.order('stock_number', { ascending });
-      } else {
+      } else if (sortBy !== 'priority') {
+        // Only add secondary sort if not already sorting by priority
         query = query.order(sortBy as VehicleSortField, { ascending });
       }
 

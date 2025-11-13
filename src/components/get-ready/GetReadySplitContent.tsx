@@ -28,10 +28,10 @@ import { useToast } from "@/hooks/use-toast";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { useGetReady } from "@/hooks/useGetReady";
 import {
+  cleanupLegacyWorkflowFilter,
   useGetReadyPriorityFilter,
   useGetReadySearchQuery,
   useGetReadySortPreferences,
-  useGetReadyWorkflowFilter,
 } from "@/hooks/useGetReadyPersistence";
 import { useGetReadyStore } from "@/hooks/useGetReadyStore";
 import { useGetReadyVehiclesInfinite } from "@/hooks/useGetReadyVehicles";
@@ -115,7 +115,6 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
 
   // State for filters when in details view - WITH LOCALSTORAGE PERSISTENCE
   const [searchQuery, setSearchQuery] = useGetReadySearchQuery();
-  const [selectedWorkflow, setSelectedWorkflow] = useGetReadyWorkflowFilter();
   const [selectedPriority, setSelectedPriority] = useGetReadyPriorityFilter();
   const { sortBy, setSortBy, sortOrder, setSortOrder } =
     useGetReadySortPreferences();
@@ -173,7 +172,6 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const { data: vehiclesData } = useGetReadyVehiclesInfinite({
     searchQuery,
     selectedStep,
-    selectedWorkflow,
     selectedPriority,
     sortBy,
     sortOrder,
@@ -348,13 +346,11 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   };
 
   const hasActiveFilters =
-    selectedWorkflow !== "all" ||
     selectedPriority !== "all" ||
     searchQuery.length > 0;
 
   const clearFilters = () => {
     setSearchQuery("");
-    setSelectedWorkflow("all");
     setSelectedPriority("all");
   };
 
@@ -791,25 +787,6 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
             )}
           </div>
 
-          {/* Workflow filter */}
-          <Select value={selectedWorkflow} onValueChange={setSelectedWorkflow}>
-            <SelectTrigger className="w-32 h-9">
-              <SelectValue placeholder="Workflow" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="standard">
-                {t("get_ready.workflow.standard")}
-              </SelectItem>
-              <SelectItem value="express">
-                {t("get_ready.workflow.express")}
-              </SelectItem>
-              <SelectItem value="priority">
-                {t("get_ready.workflow.priority")}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-
           {/* Priority filter */}
           <Select value={selectedPriority} onValueChange={setSelectedPriority}>
             <SelectTrigger className="w-32 h-9">
@@ -873,7 +850,6 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
             <GetReadyVehicleList
               searchQuery={searchQuery}
               selectedStep={selectedStep}
-              selectedWorkflow={selectedWorkflow}
               selectedPriority={selectedPriority}
               sortBy={sortBy}
               sortOrder={sortOrder}
