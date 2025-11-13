@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 878,
-  "totalStrings": 8564,
-  "hardcodedStrings": 2041,
-  "translatedStrings": 6523,
+  "scannedFiles": 879,
+  "totalStrings": 8559,
+  "hardcodedStrings": 2039,
+  "translatedStrings": 6520,
   "issues": {
     "critical": [
       {
@@ -2943,259 +2943,234 @@
         "hardcodedStrings": [
           {
             "text": "Performance Report",
-            "line": 466,
-            "context": "465: <CardHeader>\n466: <CardTitle className=\"text-base\">Performance Report</CardTitle>\n467: </CardHeader>"
+            "line": 467,
+            "context": "466: <CardHeader>\n467: <CardTitle className=\"text-base\">Performance Report</CardTitle>\n468: </CardHeader>"
           },
           {
             "text": "View overall workflow performance metrics and KPIs",
-            "line": 469,
-            "context": "468: <CardContent>\n469: <p className=\"text-sm text-muted-foreground mb-4\">\n470: View overall workflow performance metrics and KPIs"
+            "line": 470,
+            "context": "469: <CardContent>\n470: <p className=\"text-sm text-muted-foreground mb-4\">\n471: View overall workflow performance metrics and KPIs"
           },
           {
             "text": "Generate Report",
-            "line": 473,
-            "context": "472: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n473: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n474: Generate Report"
+            "line": 474,
+            "context": "473: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n474: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n475: Generate Report"
           },
           {
             "text": "Vehicle History",
-            "line": 481,
-            "context": "480: <CardHeader>\n481: <CardTitle className=\"text-base\">Vehicle History</CardTitle>\n482: </CardHeader>"
+            "line": 482,
+            "context": "481: <CardHeader>\n482: <CardTitle className=\"text-base\">Vehicle History</CardTitle>\n483: </CardHeader>"
           },
           {
             "text": "Export detailed vehicle movement and status history",
-            "line": 484,
-            "context": "483: <CardContent>\n484: <p className=\"text-sm text-muted-foreground mb-4\">\n485: Export detailed vehicle movement and status history"
+            "line": 485,
+            "context": "484: <CardContent>\n485: <p className=\"text-sm text-muted-foreground mb-4\">\n486: Export detailed vehicle movement and status history"
           },
           {
             "text": "Export Data",
-            "line": 488,
-            "context": "487: <Button className=\"w-full\" onClick={() => handleExport(\"csv\")}>\n488: <FileText className=\"h-4 w-4 mr-2\" />\n489: Export Data"
+            "line": 489,
+            "context": "488: <Button className=\"w-full\" onClick={() => handleExport(\"csv\")}>\n489: <FileText className=\"h-4 w-4 mr-2\" />\n490: Export Data"
           },
           {
             "text": "SLA Compliance",
-            "line": 496,
-            "context": "495: <CardHeader>\n496: <CardTitle className=\"text-base\">SLA Compliance</CardTitle>\n497: </CardHeader>"
+            "line": 497,
+            "context": "496: <CardHeader>\n497: <CardTitle className=\"text-base\">SLA Compliance</CardTitle>\n498: </CardHeader>"
           },
           {
             "text": "Review SLA compliance rates and identify bottlenecks",
-            "line": 499,
-            "context": "498: <CardContent>\n499: <p className=\"text-sm text-muted-foreground mb-4\">\n500: Review SLA compliance rates and identify bottlenecks"
+            "line": 500,
+            "context": "499: <CardContent>\n500: <p className=\"text-sm text-muted-foreground mb-4\">\n501: Review SLA compliance rates and identify bottlenecks"
           },
           {
             "text": "View Report",
-            "line": 503,
-            "context": "502: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n503: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n504: View Report"
+            "line": 504,
+            "context": "503: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n504: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n505: View Report"
           },
           {
             "text": "Recent Exports",
-            "line": 516,
-            "context": "515: <CardHeader>\n516: <CardTitle>Recent Exports</CardTitle>\n517: </CardHeader>"
+            "line": 517,
+            "context": "516: <CardHeader>\n517: <CardTitle>Recent Exports</CardTitle>\n518: </CardHeader>"
           },
           {
             "text": "Searching all steps",
-            "line": 788,
-            "context": "787: <Badge variant=\"outline\" className=\"bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/30 dark:text-amber-400\">\n788: <Search className=\"h-3 w-3 mr-1\" />\n789: Searching all steps"
-          },
-          {
-            "text": "All Types",
-            "line": 800,
-            "context": "799: <SelectContent>\n800: <SelectItem value=\"all\">All Types</SelectItem>\n801: <SelectItem value=\"standard\">"
+            "line": 789,
+            "context": "788: <Badge variant=\"outline\" className=\"bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/30 dark:text-amber-400\">\n789: <Search className=\"h-3 w-3 mr-1\" />\n790: Searching all steps"
           },
           {
             "text": "All Priorities",
-            "line": 819,
-            "context": "818: <SelectContent>\n819: <SelectItem value=\"all\">All Priorities</SelectItem>\n820: <SelectItem value=\"low\">Low</SelectItem>"
+            "line": 801,
+            "context": "800: <SelectContent>\n801: <SelectItem value=\"all\">All Priorities</SelectItem>\n802: <SelectItem value=\"low\">Low</SelectItem>"
           },
           {
             "text": "Normal",
-            "line": 821,
-            "context": "820: <SelectItem value=\"low\">Low</SelectItem>\n821: <SelectItem value=\"normal\">Normal</SelectItem>\n822: <SelectItem value=\"high\">High</SelectItem>"
+            "line": 803,
+            "context": "802: <SelectItem value=\"low\">Low</SelectItem>\n803: <SelectItem value=\"normal\">Normal</SelectItem>\n804: <SelectItem value=\"high\">High</SelectItem>"
           },
           {
             "text": "High",
-            "line": 822,
-            "context": "821: <SelectItem value=\"normal\">Normal</SelectItem>\n822: <SelectItem value=\"high\">High</SelectItem>\n823: <SelectItem value=\"urgent\">Urgent</SelectItem>"
+            "line": 804,
+            "context": "803: <SelectItem value=\"normal\">Normal</SelectItem>\n804: <SelectItem value=\"high\">High</SelectItem>\n805: <SelectItem value=\"urgent\">Urgent</SelectItem>"
           },
           {
             "text": "Urgent",
-            "line": 823,
-            "context": "822: <SelectItem value=\"high\">High</SelectItem>\n823: <SelectItem value=\"urgent\">Urgent</SelectItem>\n824: </SelectContent>"
+            "line": 805,
+            "context": "804: <SelectItem value=\"high\">High</SelectItem>\n805: <SelectItem value=\"urgent\">Urgent</SelectItem>\n806: </SelectContent>"
           },
           {
             "text": "Days in Step",
-            "line": 834,
-            "context": "833: <SelectContent>\n834: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n835: <SelectItem value=\"days_to_frontline\">"
+            "line": 816,
+            "context": "815: <SelectContent>\n816: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n817: <SelectItem value=\"days_to_frontline\">"
           },
           {
             "text": "Days to Finish",
-            "line": 835,
-            "context": "834: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n835: <SelectItem value=\"days_to_frontline\">\n836: Days to Finish"
+            "line": 817,
+            "context": "816: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n817: <SelectItem value=\"days_to_frontline\">\n818: Days to Finish"
           },
           {
             "text": "Priority Score",
-            "line": 838,
-            "context": "837: </SelectItem>\n838: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n839: <SelectItem value=\"sla_status\">SLA Status</SelectItem>"
+            "line": 820,
+            "context": "819: </SelectItem>\n820: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n821: <SelectItem value=\"sla_status\">SLA Status</SelectItem>"
           },
           {
             "text": "SLA Status",
-            "line": 839,
-            "context": "838: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n839: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n840: <SelectItem value=\"stock_number\">Stock Number</SelectItem>"
+            "line": 821,
+            "context": "820: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n821: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n822: <SelectItem value=\"stock_number\">Stock Number</SelectItem>"
           },
           {
             "text": "Stock Number",
-            "line": 840,
-            "context": "839: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n840: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n841: <SelectItem value=\"created_at\">Date Added</SelectItem>"
+            "line": 822,
+            "context": "821: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n822: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n823: <SelectItem value=\"created_at\">Date Added</SelectItem>"
           },
           {
             "text": "Date Added",
-            "line": 841,
-            "context": "840: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n841: <SelectItem value=\"created_at\">Date Added</SelectItem>\n842: </SelectContent>"
+            "line": 823,
+            "context": "822: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n823: <SelectItem value=\"created_at\">Date Added</SelectItem>\n824: </SelectContent>"
           },
           {
             "text": "Clear Filters",
-            "line": 863,
-            "context": "862: onClick={clearFilters}\n863: >\n864: Clear Filters"
-          },
-          {
-            "text": "Workflow",
-            "line": 797,
-            "context": "796: <SelectTrigger className=\"w-32 h-9\">\n797: <SelectValue placeholder=\"Workflow\" />\n798: </SelectTrigger>"
+            "line": 845,
+            "context": "844: onClick={clearFilters}\n845: >\n846: Clear Filters"
           },
           {
             "text": "Priority",
-            "line": 816,
-            "context": "815: <SelectTrigger className=\"w-32 h-9\">\n816: <SelectValue placeholder=\"Priority\" />\n817: </SelectTrigger>"
+            "line": 798,
+            "context": "797: <SelectTrigger className=\"w-32 h-9\">\n798: <SelectValue placeholder=\"Priority\" />\n799: </SelectTrigger>"
           },
           {
             "text": "Clear Filters\n            ",
-            "line": 858,
-            "context": "857: {hasActiveFilters && (\n858: <Button\n859: variant=\"ghost\""
+            "line": 840,
+            "context": "839: {hasActiveFilters && (\n840: <Button\n841: variant=\"ghost\""
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.vehicle_not_found",
-            "line": 243,
+            "line": 246,
             "exists": true
           },
           {
             "key": "common.data_refreshed",
-            "line": 289,
+            "line": 292,
             "exists": true
           },
           {
             "key": "common.refresh_failed",
-            "line": 295,
+            "line": 298,
             "exists": true
           },
           {
             "key": "get_ready.export.no_vehicles",
-            "line": 306,
+            "line": 309,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_deleted",
-            "line": 335,
+            "line": 338,
             "exists": true
           },
           {
             "key": "get_ready.delete_failed",
-            "line": 344,
+            "line": 347,
             "exists": true
           },
           {
             "key": "get_ready.reports.title",
-            "line": 454,
+            "line": 455,
             "exists": true
           },
           {
             "key": "get_ready.reports.subtitle",
-            "line": 457,
+            "line": 458,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.approved_title",
-            "line": 582,
+            "line": 583,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.no_approved",
-            "line": 588,
+            "line": 589,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.rejected_title",
-            "line": 622,
+            "line": 623,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.no_rejected",
-            "line": 628,
+            "line": 629,
             "exists": true
           },
           {
             "key": "get_ready.approvals.modal.rejection_reason",
-            "line": 651,
+            "line": 652,
             "exists": true
           },
           {
             "key": "get_ready.search_placeholder",
-            "line": 695,
+            "line": 696,
             "exists": true
           },
           {
             "key": "common.action_buttons.refresh",
-            "line": 722,
+            "line": 723,
             "exists": true
           },
           {
             "key": "common.action_buttons.exporting",
-            "line": 735,
-            "exists": true
-          },
-          {
-            "key": "common.action_buttons.export",
             "line": 736,
             "exists": true
           },
           {
             "key": "common.action_buttons.export",
-            "line": 743,
+            "line": 737,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.export",
+            "line": 744,
             "exists": true
           },
           {
             "key": "common.action_buttons.export_csv",
-            "line": 748,
+            "line": 749,
             "exists": true
           },
           {
             "key": "common.action_buttons.export_excel",
-            "line": 752,
+            "line": 753,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.add_vehicle",
-            "line": 766,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.standard",
-            "line": 802,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.express",
-            "line": 805,
-            "exists": true
-          },
-          {
-            "key": "get_ready.workflow.priority",
-            "line": 808,
+            "line": 767,
             "exists": true
           }
         ],
         "missingKeys": [],
-        "coverage": 48,
+        "coverage": 47,
         "severity": "critical"
       },
       {
@@ -12586,242 +12561,242 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 53,
-            "context": "52: onEditVehicle?: (vehicleId: string) => void;\n53: onDeleteVehicle?: (vehicleId: string) => Promise<void>;\n54: }"
+            "line": 52,
+            "context": "51: onEditVehicle?: (vehicleId: string) => void;\n52: onDeleteVehicle?: (vehicleId: string) => Promise<void>;\n53: }"
           },
           {
             "text": "Table",
-            "line": 280,
-            "context": "279: onClick={() => setViewMode('table')}\n280: >\n281: Table"
+            "line": 277,
+            "context": "276: onClick={() => setViewMode('table')}\n277: >\n278: Table"
           },
           {
             "text": "Grid",
-            "line": 287,
-            "context": "286: onClick={() => setViewMode('grid')}\n287: >\n288: Grid"
+            "line": 284,
+            "context": "283: onClick={() => setViewMode('grid')}\n284: >\n285: Grid"
           },
           {
             "text": "Table",
-            "line": 459,
-            "context": "458: onClick={() => setViewMode('table')}\n459: >\n460: Table"
+            "line": 456,
+            "context": "455: onClick={() => setViewMode('table')}\n456: >\n457: Table"
           },
           {
             "text": "Grid",
-            "line": 466,
-            "context": "465: onClick={() => setViewMode('grid')}\n466: >\n467: Grid"
+            "line": 463,
+            "context": "462: onClick={() => setViewMode('grid')}\n463: >\n464: Grid"
           },
           {
             "text": "Actions",
-            "line": 508,
-            "context": "507: <TableHead className=\"w-[150px] text-center py-2 bg-background\">{t('get_ready.table.progress')}</TableHead>\n508: <TableHead className=\"w-[100px] text-center py-2 bg-background\">Actions</TableHead>\n509: </TableRow>"
+            "line": 505,
+            "context": "504: <TableHead className=\"w-[150px] text-center py-2 bg-background\">{t('get_ready.table.progress')}</TableHead>\n505: <TableHead className=\"w-[100px] text-center py-2 bg-background\">Actions</TableHead>\n506: </TableRow>"
           },
           {
             "text": "Urgent",
-            "line": 748,
-            "context": "747: <div className=\"flex items-center gap-2 w-full\">\n748: <span className=\"flex-1 capitalize\">Urgent</span>\n749: {vehicle.priority === 'urgent' && ("
+            "line": 745,
+            "context": "744: <div className=\"flex items-center gap-2 w-full\">\n745: <span className=\"flex-1 capitalize\">Urgent</span>\n746: {vehicle.priority === 'urgent' && ("
           },
           {
             "text": "High",
-            "line": 762,
-            "context": "761: <div className=\"flex items-center gap-2 w-full\">\n762: <span className=\"flex-1 capitalize\">High</span>\n763: {vehicle.priority === 'high' && ("
+            "line": 759,
+            "context": "758: <div className=\"flex items-center gap-2 w-full\">\n759: <span className=\"flex-1 capitalize\">High</span>\n760: {vehicle.priority === 'high' && ("
           },
           {
             "text": "Medium",
-            "line": 776,
-            "context": "775: <div className=\"flex items-center gap-2 w-full\">\n776: <span className=\"flex-1 capitalize\">Medium</span>\n777: {vehicle.priority === 'medium' && ("
+            "line": 773,
+            "context": "772: <div className=\"flex items-center gap-2 w-full\">\n773: <span className=\"flex-1 capitalize\">Medium</span>\n774: {vehicle.priority === 'medium' && ("
           },
           {
             "text": "Normal",
-            "line": 790,
-            "context": "789: <div className=\"flex items-center gap-2 w-full\">\n790: <span className=\"flex-1 capitalize\">Normal</span>\n791: {vehicle.priority === 'normal' && ("
+            "line": 787,
+            "context": "786: <div className=\"flex items-center gap-2 w-full\">\n787: <span className=\"flex-1 capitalize\">Normal</span>\n788: {vehicle.priority === 'normal' && ("
           }
         ],
         "translationCalls": [
           {
             "key": "common.loading",
-            "line": 261,
+            "line": 258,
             "exists": true
           },
           {
             "key": "get_ready.actions.actions",
+            "line": 342,
+            "exists": true
+          },
+          {
+            "key": "get_ready.actions.view_details",
             "line": 345,
             "exists": true
           },
           {
-            "key": "get_ready.actions.view_details",
-            "line": 348,
-            "exists": true
-          },
-          {
             "key": "get_ready.actions.edit_vehicle",
-            "line": 352,
+            "line": 349,
             "exists": true
           },
           {
             "key": "get_ready.actions.delete_vehicle",
-            "line": 360,
+            "line": 357,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.t2l",
-            "line": 398,
+            "line": 395,
             "exists": true
           },
           {
             "key": "get_ready.steps.dis",
-            "line": 409,
+            "line": 406,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.days_in_step",
-            "line": 414,
+            "line": 411,
             "exists": true
           },
           {
             "key": "get_ready.steps.dis_tooltip",
-            "line": 415,
+            "line": 412,
             "exists": true
           },
           {
             "key": "get_ready.table.click_to_view",
-            "line": 451,
+            "line": 448,
             "exists": true
           },
           {
             "key": "get_ready.table.image",
-            "line": 480,
+            "line": 477,
             "exists": true
           },
           {
             "key": "get_ready.table.stock",
-            "line": 481,
+            "line": 478,
             "exists": true
           },
           {
             "key": "get_ready.table.vehicle",
-            "line": 482,
+            "line": 479,
             "exists": true
           },
           {
             "key": "get_ready.table.step",
-            "line": 483,
+            "line": 480,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.t2l_short",
-            "line": 487,
+            "line": 484,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.t2l_full",
-            "line": 490,
+            "line": 487,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.t2l_description",
-            "line": 491,
+            "line": 488,
             "exists": true
           },
           {
             "key": "get_ready.steps.dis",
-            "line": 498,
+            "line": 495,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_list.days_in_step",
-            "line": 501,
+            "line": 498,
             "exists": true
           },
           {
             "key": "get_ready.steps.dis_tooltip",
-            "line": 502,
+            "line": 499,
             "exists": true
           },
           {
             "key": "get_ready.table.priority",
-            "line": 506,
+            "line": 503,
             "exists": true
           },
           {
             "key": "get_ready.table.progress",
-            "line": 507,
+            "line": 504,
             "exists": true
           },
           {
             "key": "get_ready.no_vehicles.title",
-            "line": 518,
+            "line": 515,
             "exists": true
           },
           {
             "key": "get_ready.no_vehicles.description",
-            "line": 521,
+            "line": 518,
             "exists": true
           },
           {
             "key": "get_ready.priority.change_priority",
-            "line": 738,
+            "line": 735,
             "exists": true
           },
           {
             "key": "get_ready.actions.view_details",
-            "line": 847,
+            "line": 844,
             "exists": true
           },
           {
             "key": "get_ready.actions.edit_vehicle",
-            "line": 859,
+            "line": 856,
             "exists": true
           },
           {
             "key": "get_ready.actions.delete_vehicle",
-            "line": 871,
+            "line": 868,
             "exists": true
           },
           {
             "key": "common.showing",
-            "line": 897,
+            "line": 894,
             "exists": true
           },
           {
             "key": "common.of",
-            "line": 897,
+            "line": 894,
             "exists": true
           },
           {
             "key": "get_ready.confirm_delete_title",
-            "line": 965,
+            "line": 962,
             "exists": false
           },
           {
             "key": "get_ready.confirm_delete",
-            "line": 966,
+            "line": 963,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 967,
+            "line": 964,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 968,
+            "line": 965,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "get_ready.confirm_delete_title",
-            "line": 965,
-            "context": "964: onOpenChange={setDeleteDialogOpen}\n965: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n966: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}"
+            "line": 962,
+            "context": "961: onOpenChange={setDeleteDialogOpen}\n962: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n963: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}"
           },
           {
             "key": "get_ready.confirm_delete",
-            "line": 966,
-            "context": "965: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n966: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n967: confirmText={t('common.delete', 'Delete')}"
+            "line": 963,
+            "context": "962: title={t('get_ready.confirm_delete_title', 'Delete Vehicle from Get Ready?')}\n963: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n964: confirmText={t('common.delete', 'Delete')}"
           },
           {
             "key": "common.delete",
-            "line": 967,
-            "context": "966: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n967: confirmText={t('common.delete', 'Delete')}\n968: cancelText={t('common.cancel', 'Cancel')}"
+            "line": 964,
+            "context": "963: description={t('get_ready.confirm_delete', 'Are you sure you want to remove this vehicle from the Get Ready process? This action cannot be undone.')}\n964: confirmText={t('common.delete', 'Delete')}\n965: cancelText={t('common.cancel', 'Cancel')}"
           }
         ],
         "coverage": 77,
@@ -58001,8 +57976,8 @@
         "src\\components\\productivity\\ProductivityQuickNotes.tsx",
         "src\\components\\chat\\ContextualChatLauncher.tsx",
         "src\\pages\\Settings.tsx",
-        "src\\components\\get-ready\\GetReadySplitContent.tsx",
         "src\\components\\orders\\OrderTasksSection.tsx",
+        "src\\components\\get-ready\\GetReadySplitContent.tsx",
         "src\\components\\detail-hub\\TimecardSystem.BACKUP.tsx",
         "src\\components\\get-ready\\GetReadyActivityFeed.tsx",
         "src\\components\\get-ready\\GetReadyOverview.tsx",

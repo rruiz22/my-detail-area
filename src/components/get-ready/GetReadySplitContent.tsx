@@ -141,6 +141,11 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   // Use the selected step from sidebar, or 'all' if none selected
   const selectedStep = selectedStepId || "all";
 
+  // ✅ One-time cleanup of legacy workflow filter from localStorage
+  useEffect(() => {
+    cleanupLegacyWorkflowFilter();
+  }, []);
+
   // Auto-open modal when prefillData is provided (e.g., from Stock page)
   useEffect(() => {
     const state = location.state as {
