@@ -44,7 +44,6 @@ import { useTranslation } from 'react-i18next';
 interface GetReadyVehicleListProps {
   searchQuery: string;
   selectedStep: string;
-  selectedWorkflow: string;
   selectedPriority: string;
   sortBy: string;
   sortOrder: 'asc' | 'desc';
@@ -56,7 +55,6 @@ interface GetReadyVehicleListProps {
 export function GetReadyVehicleList({
   searchQuery,
   selectedStep,
-  selectedWorkflow,
   selectedPriority,
   sortBy,
   sortOrder,
@@ -170,7 +168,6 @@ export function GetReadyVehicleList({
   } = useGetReadyVehiclesInfinite({
     searchQuery,
     selectedStep,
-    selectedWorkflow,
     selectedPriority,
     sortBy,
     sortOrder
@@ -189,7 +186,7 @@ export function GetReadyVehicleList({
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedStep, selectedWorkflow, selectedPriority, sortBy, sortOrder]);
+  }, [searchQuery, selectedStep, selectedPriority, sortBy, sortOrder]);
 
   // Auto-load more pages in background for smooth navigation
   useEffect(() => {

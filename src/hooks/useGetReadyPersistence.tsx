@@ -9,7 +9,6 @@ import { useCallback, useState, useEffect } from 'react';
 const STORAGE_KEYS = {
   VIEW_MODE: 'get_ready_viewMode',
   SEARCH_QUERY: 'get_ready_searchQuery',
-  SELECTED_WORKFLOW: 'get_ready_selectedWorkflow',
   SELECTED_PRIORITY: 'get_ready_selectedPriority',
   SORT_BY: 'get_ready_sortBy',
   SORT_ORDER: 'get_ready_sortOrder',
@@ -106,34 +105,6 @@ export function useGetReadySearchQuery() {
   }, [searchQuery]);
 
   return [searchQuery, setPersistedSearchQuery] as const;
-}
-
-/**
- * Hook for Get Ready workflow filter persistence
- */
-export function useGetReadyWorkflowFilter() {
-  const [selectedWorkflow, setSelectedWorkflow] = useState<string>(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEYS.SELECTED_WORKFLOW);
-      if (stored && ['all', 'standard', 'express', 'priority'].includes(stored)) {
-        return stored;
-      }
-    } catch (error) {
-      console.warn('Failed to read workflow filter from localStorage:', error);
-    }
-    return 'all';
-  });
-
-  const setPersistedWorkflow = useCallback((workflow: string) => {
-    setSelectedWorkflow(workflow);
-    try {
-      localStorage.setItem(STORAGE_KEYS.SELECTED_WORKFLOW, workflow);
-    } catch (error) {
-      console.warn('Failed to save workflow filter to localStorage:', error);
-    }
-  }, []);
-
-  return [selectedWorkflow, setPersistedWorkflow] as const;
 }
 
 /**
@@ -252,5 +223,21 @@ export function clearGetReadyStorage() {
   } catch (error) {
     console.error('Failed to clear Get Ready localStorage:', error);
     return false;
+  }
+}
+
+/**
+ * One-time cleanup for legacy workflow filter
+ * Automatically removes old workflow filter data from localStorage
+ */
+export function cleanupLegacyWorkflowFilter() {
+  try {
+    const legacyKey = 'get_ready_selectedWorkflow';
+    if (localStorage.getItem(legacyKey)) {
+      localStorage.removeItem(legacyKey);
+      console.log('🧹 Removed legacy workflow filter from localStorage');
+    }
+  } catch (error) {
+    console.warn('Failed to cleanup legacy workflow filter:', error);
   }
 }
