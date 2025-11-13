@@ -1,37 +1,34 @@
-import React, { useMemo, useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useOrdersAnalytics, usePerformanceTrends, type ReportsFilters } from '@/hooks/useReportsData';
+import { supabase } from '@/integrations/supabase/client';
+import type { UnifiedOrderData } from '@/types/unifiedOrder';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { format, parseISO } from 'date-fns';
 import {
-  TrendingUp,
-  TrendingDown,
-  Clock,
-  CheckCircle,
+  Activity,
   AlertCircle,
   BarChart3,
-  Users,
-  Target,
-  Zap,
-  Activity,
-  Package,
-  DollarSign,
-  PieChart,
   Car,
-  FileText
+  CheckCircle,
+  Clock,
+  DollarSign,
+  FileText,
+  Package,
+  PieChart,
+  Target,
+  TrendingUp,
+  Users,
+  Zap
 } from 'lucide-react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { OrderVolumeChart } from '../charts/OrderVolumeChart';
 import { StatusDistributionChart } from '../charts/StatusDistributionChart';
-import { MetricCard } from '../ReportsLayout';
-import { useOrdersAnalytics, usePerformanceTrends, type ReportsFilters } from '@/hooks/useReportsData';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { supabase } from '@/integrations/supabase/client';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { isOrderInDateRange } from '@/utils/reportDateUtils';
-import { format, parseISO } from 'date-fns';
-import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
-import type { UnifiedOrderData } from '@/types/unifiedOrder';
 import { RecalculateOrderTotals } from '../RecalculateOrderTotals';
 
 interface OperationalReportsProps {
@@ -141,7 +138,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
         `)
         .eq('dealer_id', filters.dealerId)
         .order('created_at', { ascending: false })
-        .limit(2000); // Fetch more to filter client-side
+        .limit(100000)
 
       // Apply order type filter
       if (filters.orderType !== 'all') {
