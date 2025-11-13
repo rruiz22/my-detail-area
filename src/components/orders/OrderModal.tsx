@@ -958,29 +958,30 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         }
       }
 
+      // ⚠️ DISABLED: Appointment slot reservation (causing 400 errors)
       // Reserve appointment slot before creating order when needed
       // NOTE: Slot management during EDIT is now handled by database trigger
       // The trigger automatically releases old slot and reserves new slot
-      const shouldReserveSlot = !isEditing && requiresDueDate && formData.dueDate && selectedDealership;
-
-      if (shouldReserveSlot) {
-        try {
-          const slotReserved = await reserveSlot(
-            parseInt(selectedDealership),
-            formData.dueDate as Date,
-            getHourInTimezone(formData.dueDate as Date) // Use NY timezone hour
-          );
-
-          if (!slotReserved) {
-            toast({ variant: 'destructive', description: t('validation.failedToReserveSlot') });
-            setSubmitting(false);
-            return;
-          }
-        } catch (slotError) {
-          toast({ description: t('validation.slotReservationWarning') });
-          // Continue with order creation even if slot reservation fails
-        }
-      }
+      // const shouldReserveSlot = !isEditing && requiresDueDate && formData.dueDate && selectedDealership;
+      //
+      // if (shouldReserveSlot) {
+      //   try {
+      //     const slotReserved = await reserveSlot(
+      //       parseInt(selectedDealership),
+      //       formData.dueDate as Date,
+      //       getHourInTimezone(formData.dueDate as Date) // Use NY timezone hour
+      //     );
+      //
+      //     if (!slotReserved) {
+      //       toast({ variant: 'destructive', description: t('validation.failedToReserveSlot') });
+      //       setSubmitting(false);
+      //       return;
+      //     }
+      //   } catch (slotError) {
+      //     toast({ description: t('validation.slotReservationWarning') });
+      //     // Continue with order creation even if slot reservation fails
+      //   }
+      // }
 
       // Check if we have multiple services - create separate orders for each
       if (!isEditing && selectedServices.length > 1) {

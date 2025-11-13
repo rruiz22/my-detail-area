@@ -106,17 +106,20 @@ export function DueDateTimePicker({
     return slots;
   };
 
-  // Load available slots when date changes
+  // ⚠️ DISABLED: Load available slots (causing 400 errors)
   const loadAvailableSlots = React.useCallback(async (date: Date) => {
-    if (!enforceBusinessRules || !dealerId || !date) return;
+    // TEMPORARY: Slot capacity system disabled
+    return;
 
-    try {
-      const slots = await getAvailableSlots(dealerId, date);
-      setAvailableSlots(slots);
-    } catch (error) {
-      console.error('Error loading available slots:', error);
-      setAvailableSlots([]);
-    }
+    // if (!enforceBusinessRules || !dealerId || !date) return;
+    //
+    // try {
+    //   const slots = await getAvailableSlots(dealerId, date);
+    //   setAvailableSlots(slots);
+    // } catch (error) {
+    //   console.error('Error loading available slots:', error);
+    //   setAvailableSlots([]);
+    // }
   }, [dealerId, enforceBusinessRules, getAvailableSlots]);
 
   const handleDateChange = (date: Date | undefined) => {
