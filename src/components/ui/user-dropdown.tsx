@@ -12,6 +12,8 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { usePermissions } from '@/hooks/usePermissions';
+import { clearAllCachesSelective } from '@/utils/cacheManagement';
+import { useQueryClient } from '@tanstack/react-query';
 import { Building2, LogOut, RefreshCw, Settings, Shield, User } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +24,7 @@ export function UserDropdown() {
   const { user, signOut } = useAuth();
   const { enhancedUser } = usePermissions();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const { seed } = useAvatarPreferences();
   const { currentDealership } = useAccessibleDealerships();
@@ -48,8 +51,13 @@ export function UserDropdown() {
     navigate('/clearcache');
   };
 
-  const handleQuickClearClick = () => {
-    navigate('/clearcache?auto=quick');
+  const handleQuickClearClick = async () => {
+    try {
+      await clearAllCachesSelective(queryClient);
+    } catch (error) {
+      console.error('Error clearing cache:', error);
+      // Error is already handled in clearAllCachesSelective
+    }
   };
 
   const getUserDisplayName = () => {
