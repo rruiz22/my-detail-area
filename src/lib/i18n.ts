@@ -3,7 +3,7 @@ import { initReactI18next } from 'react-i18next';
 
 // 🔴 CRITICAL FIX: Use STATIC version from package.json instead of dynamic Date.now()
 // This allows proper cache validation and automatic invalidation on version bumps
-const APP_VERSION = '1.3.17'; // 🔴 CRITICAL FIX: Slack notifications complete (VIN, assignedTo, NY timezone, clean button)
+const APP_VERSION = '1.3.18'; // 🔴 CRITICAL FIX: Slack notifications complete (VIN, assignedTo, NY timezone, clean button)
 const TRANSLATION_VERSION = APP_VERSION; // Tied to app version for cache invalidation
 
 // ✅ Include app version in cache key - auto-invalidates on version change
