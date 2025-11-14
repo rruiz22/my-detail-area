@@ -382,13 +382,6 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               @page {
                 margin: 0.5in;
                 size: letter;
-                /* Hide browser's default header/footer */
-                margin-top: 0.5in;
-                margin-bottom: 0.5in;
-              }
-              /* Hide URL in print footer */
-              @page :first {
-                margin-bottom: 0.5in;
               }
               table {
                 page-break-inside: auto;
