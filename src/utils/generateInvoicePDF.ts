@@ -366,14 +366,14 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       minCellHeight: 8,
     },
     columnStyles: {
-      0: { cellWidth: 8, halign: 'center', fontStyle: 'bold', textColor: '#6B7280' }, // # (row number)
-      1: { cellWidth: 13, halign: 'center' },                                      // Date
-      2: { cellWidth: 17, halign: 'center', overflow: 'visible' },                 // Order - No wrap
-      3: { cellWidth: 28, halign: 'left', overflow: 'linebreak', fontSize: 7.5 },  // PO/RO/Tag or Stock
-      4: { cellWidth: 26, halign: 'left' },                                        // Vehicle
-      5: { cellWidth: 24, halign: 'center', fontStyle: 'bold', overflow: 'hidden', fontSize: 7 }, // VIN
-      6: { cellWidth: 32, halign: 'left' },                                        // Services
-      7: { cellWidth: 20, halign: 'right', fontStyle: 'bold' },                    // Amount
+      0: { cellWidth: 7, halign: 'center', fontStyle: 'bold', textColor: '#6B7280' }, // # (row number)
+      1: { cellWidth: 12, halign: 'center' },                                      // Date
+      2: { cellWidth: 15, halign: 'center', overflow: 'visible' },                 // Order - No wrap
+      3: { cellWidth: 24, halign: 'left', overflow: 'linebreak', fontSize: 7.5 },  // PO/RO/Tag or Stock
+      4: { cellWidth: 24, halign: 'left' },                                        // Vehicle
+      5: { cellWidth: 30, halign: 'center', fontStyle: 'bold', overflow: 'linebreak', fontSize: 6.5 }, // VIN - increased width, allow wrap, smaller font
+      6: { cellWidth: 30, halign: 'left' },                                        // Services
+      7: { cellWidth: 18, halign: 'right', fontStyle: 'bold' },                    // Amount
     },
     alternateRowStyles: {
       fillColor: [249, 250, 251], // Gray-50 for zebra striping
