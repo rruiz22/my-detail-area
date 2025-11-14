@@ -82,6 +82,13 @@ export const QuickFilterBar = memo(function QuickFilterBar({
       color: 'bg-success/10 text-success border-success/20'
     },
     {
+      id: 'tomorrow',
+      label: 'Tomorrow',
+      count: tabCounts.tomorrow || 0,
+      icon: Clock,
+      color: 'bg-primary/10 text-primary border-primary/20'
+    },
+    {
       id: 'queued',
       label: 'Queued',
       count: tabCounts.queued || 0,

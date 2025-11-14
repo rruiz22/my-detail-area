@@ -738,6 +738,7 @@
                          "tabs":  {
                                       "dashboard":  "Dashboard",
                                       "today":  "Today",
+                                      "tomorrow":  "Tomorrow",
                                       "queued":  "Queued",
                                       "week":  "Week",
                                       "all":  "All Orders",
