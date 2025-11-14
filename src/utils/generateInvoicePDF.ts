@@ -5,9 +5,9 @@
 // Description: Generate professional PDF from invoice data with 7-column table
 // =====================================================
 
+import type { InvoiceWithDetails } from '@/types/invoices';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import type { InvoiceWithDetails } from '@/types/invoices';
 
 // =====================================================
 // UTILITY FUNCTIONS
@@ -55,6 +55,70 @@ function formatLongDate(dateString: string): string {
     month: 'short',
     day: 'numeric'
   });
+}
+
+/**
+ * Get the correct date for an invoice item based on order type
+ * Sales & Service orders: due_date
+ * Recon & Carwash orders: completed_date
+ */
+function getCorrectItemDate(item: any): string {
+  const orderType = item.metadata?.order_type;
+
+  // Console log for debugging - remove in production
+  console.log('🔍 [DATE DEBUG] Item:', {
+    orderType,
+    due_date: item.metadata?.due_date,
+    completed_at: item.metadata?.completed_at,
+    completed_date: item.metadata?.completed_date,
+    createdAt: item.createdAt,
+    metadata: item.metadata
+  });
+
+  if (orderType === 'sales' || orderType === 'service') {
+    // Priority order for sales/service: due_date -> completed_at -> createdAt
+    const dueDate = item.metadata?.due_date;
+    const completedAt = item.metadata?.completed_at;
+    const createdAt = item.createdAt;
+
+    // Return the first valid date found
+    if (dueDate && dueDate !== 'null' && dueDate !== '') {
+      console.log(`✅ [${orderType}] Using due_date:`, dueDate);
+      return dueDate;
+    }
+    if (completedAt && completedAt !== 'null' && completedAt !== '') {
+      console.log(`⚠️ [${orderType}] Fallback to completed_at:`, completedAt);
+      return completedAt;
+    }
+    if (createdAt && createdAt !== 'null' && createdAt !== '') {
+      console.log(`⚠️ [${orderType}] Fallback to createdAt:`, createdAt);
+      return createdAt;
+    }
+  } else if (orderType === 'recon' || orderType === 'carwash') {
+    // Priority order for recon/carwash: completed_at -> completed_date -> createdAt
+    const completedAt = item.metadata?.completed_at;
+    const completedDate = item.metadata?.completed_date;
+    const createdAt = item.createdAt;
+
+    // Return the first valid date found
+    if (completedAt && completedAt !== 'null' && completedAt !== '') {
+      console.log(`✅ [${orderType}] Using completed_at:`, completedAt);
+      return completedAt;
+    }
+    if (completedDate && completedDate !== 'null' && completedDate !== '') {
+      console.log(`✅ [${orderType}] Using completed_date:`, completedDate);
+      return completedDate;
+    }
+    if (createdAt && createdAt !== 'null' && createdAt !== '') {
+      console.log(`⚠️ [${orderType}] Fallback to createdAt:`, createdAt);
+      return createdAt;
+    }
+  }
+
+  // Final fallback for unknown order types or when no dates are available
+  const fallbackDate = item.metadata?.completed_at || item.createdAt;
+  console.log(`⚠️ [${orderType || 'unknown'}] Using fallback date:`, fallbackDate);
+  return fallbackDate;
 }
 
 // =====================================================
@@ -156,6 +220,17 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
   doc.setTextColor('#000000');
   doc.text(`#${invoice.invoiceNumber}`, pageWidth - 20, rightY, { align: 'right' });
 
+  rightY += 6;
+  // Add service period range below invoice number
+  if (invoice.metadata?.filter_date_range) {
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(colors.secondary);
+    const startDate = formatLongDate(invoice.metadata.filter_date_range.start);
+    const endDate = formatLongDate(invoice.metadata.filter_date_range.end);
+    doc.text(`${startDate} - ${endDate}`, pageWidth - 20, rightY, { align: 'right' });
+  }
+
   rightY += 8;
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
@@ -208,12 +283,12 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
   const poRoTagHeader = hasServiceOrders ? 'PO | RO | Tag' : 'Stock';
 
   // Prepare table headers
-  const tableHeaders = [['Date', 'Order', poRoTagHeader, 'Vehicle', 'VIN', 'Services', 'Amount']];
+  const tableHeaders = [['#', 'Date', 'Order', poRoTagHeader, 'Vehicle', 'VIN', 'Services', 'Amount']];
 
-  // Sort items by date (ascending)
+  // Sort items by date (ascending) - using correct date based on order type
   const sortedItems = (invoice.items || []).sort((a, b) => {
-    const dateA = a.metadata?.completed_at || a.createdAt;
-    const dateB = b.metadata?.completed_at || b.createdAt;
+    const dateA = getCorrectItemDate(a);
+    const dateB = getCorrectItemDate(b);
     return new Date(dateA).getTime() - new Date(dateB).getTime();
   });
 
@@ -223,7 +298,7 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
   let currentGroup: any[] = [];
 
   sortedItems.forEach((item, index) => {
-    const itemDate = formatShortDate(item.metadata?.completed_at || item.createdAt);
+    const itemDate = formatShortDate(getCorrectItemDate(item));
 
     if (itemDate !== currentDate) {
       if (currentGroup.length > 0) {
@@ -243,10 +318,16 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
 
   // Build table data with separators
   const tableData: any[] = [];
+  let orderCounter = 1; // Initialize order counter
+
   groupedByDate.forEach((group, groupIndex) => {
     group.items.forEach(item => {
-      // Date (MM/DD)
-      const date = formatShortDate(item.metadata?.completed_at || item.createdAt);
+      // Order number (sequential numbering)
+      const orderNum = orderCounter.toString();
+      orderCounter++;
+
+      // Date (MM/DD) - Use correct date based on order type
+      const date = formatShortDate(getCorrectItemDate(item));
 
       // Order number
       const orderNumber = item.metadata?.order_number || '';
@@ -271,7 +352,7 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
         vehicle = vehicle.split(' - ')[0].trim();
       }
 
-      // VIN
+      // VIN - ensure full visibility
       const vin = item.metadata?.vehicle_vin || '';
 
       // Services (service names from metadata, with fallback)
@@ -315,7 +396,7 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       // Amount
       const amount = formatCurrency(item.totalAmount);
 
-      tableData.push([date, orderNumber, poRoTagStock, vehicle, vin, services, amount]);
+      tableData.push([orderNum, date, orderNumber, poRoTagStock, vehicle, vin, services, amount]);
     });
 
     // Add separator row with date after each group (except last)
@@ -324,7 +405,7 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       tableData.push([
         {
           content: nextGroupDate,
-          colSpan: 7,
+          colSpan: 8, // Updated to 8 columns due to new # column
           styles: {
             fillColor: '#E5E7EB',
             minCellHeight: 6,
@@ -347,29 +428,32 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
     theme: 'plain',
     styles: {
       fontSize: 8,
-      cellPadding: 3,
+      cellPadding: 2.5,
       textColor: colors.primary,
       lineColor: colors.border,
       lineWidth: 0.1,
+      overflow: 'visible', // Default to visible for all cells
+      minCellHeight: 7,
     },
     headStyles: {
       fillColor: colors.headerBg,
       textColor: colors.headerText,
       fontStyle: 'bold',
       halign: 'center',
-      fontSize: 8.5,
-      cellPadding: 3,
+      fontSize: 8,
+      cellPadding: 2.5,
       overflow: 'visible', // No wrap for headers
-      minCellHeight: 8,
+      minCellHeight: 9,
     },
     columnStyles: {
-      0: { cellWidth: 13, halign: 'center' },                                      // Date
-      1: { cellWidth: 17, halign: 'center', overflow: 'visible' },                 // Order - No wrap
-      2: { cellWidth: 30, halign: 'left', overflow: 'linebreak', fontSize: 7.5 },  // PO/RO/Tag or Stock
-      3: { cellWidth: 28, halign: 'left' },                                        // Vehicle
-      4: { cellWidth: 26, halign: 'center', fontStyle: 'bold', overflow: 'hidden', fontSize: 7 }, // VIN
-      5: { cellWidth: 34, halign: 'left' },                                        // Services
-      6: { cellWidth: 20, halign: 'right', fontStyle: 'bold' },                    // Amount
+      0: { cellWidth: 10, halign: 'center', fontStyle: 'bold', fontSize: 8 },     // # (Order Number)
+      1: { cellWidth: 15, halign: 'center', fontSize: 8 },                       // Date
+      2: { cellWidth: 18, halign: 'center', overflow: 'visible', fontSize: 8 },  // Order - No wrap
+      3: { cellWidth: 18, halign: 'left', overflow: 'visible', fontSize: 7 },    // PO/RO/Tag or Stock - No wrap
+      4: { cellWidth: 28, halign: 'left', fontSize: 7.5 },                       // Vehicle
+      5: { cellWidth: 35, halign: 'center', fontStyle: 'bold', overflow: 'visible', fontSize: 7 }, // VIN - No wrap, inline
+      6: { cellWidth: 30, halign: 'left', fontSize: 7.5 },                       // Services
+      7: { cellWidth: 18, halign: 'right', fontStyle: 'bold', fontSize: 8 },     // Amount
     },
     alternateRowStyles: {
       fillColor: [249, 250, 251], // Gray-50 for zebra striping
@@ -381,98 +465,120 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       if (data.section === 'head') {
         data.cell.styles.overflow = 'visible';
         data.cell.styles.fontSize = 8;
-        // Special handling for PO/RO/Tag or Stock header
-        if (data.column.index === 2) {
-          data.cell.styles.fontSize = 7;
+        // Special handling for smaller headers
+        if (data.column.index === 3 || data.column.index === 5) {
+          data.cell.styles.fontSize = 7.5;
         }
       }
 
-      // Force no wrap for Order column (column 1)
-      if (data.section === 'body' && data.column.index === 1) {
-        data.cell.styles.overflow = 'visible';
+      // Force no wrap for critical columns that need inline display
+      if (data.section === 'body') {
+        // Order number column (#) - column 0
+        if (data.column.index === 0) {
+          data.cell.styles.overflow = 'visible';
+          data.cell.styles.fontStyle = 'bold';
+        }
+        // Order column - column 2
+        if (data.column.index === 2) {
+          data.cell.styles.overflow = 'visible';
+        }
+        // Stock/PO/RO column - column 3
+        if (data.column.index === 3) {
+          data.cell.styles.overflow = 'visible';
+        }
+        // VIN column (column 5) - FORCE inline, no wrapping
+        if (data.column.index === 5) {
+          data.cell.styles.overflow = 'visible';
+          data.cell.styles.fontSize = 7;
+          data.cell.styles.fontStyle = 'bold';
+        }
       }
 
-      // Style separator rows (rows with colSpan: 7) - styles already set in tableData
-      // Just ensure they are preserved
-      if (data.section === 'body' && data.cell.raw && typeof data.cell.raw === 'object' && data.cell.raw.colSpan === 7) {
+      // Style separator rows (rows with colSpan: 8) - styles already set in tableData
+      if (data.section === 'body' && data.cell.raw && typeof data.cell.raw === 'object' && data.cell.raw.colSpan === 8) {
         // Styles are already applied in the tableData definition above
-        // This is just to ensure they're not overridden
       }
     },
     didDrawPage: (data) => {
+      // This function is called AFTER the table is fully rendered
+      // So we can get the correct total number of pages
       const pageHeight = doc.internal.pageSize.height;
       const currentPage = doc.getCurrentPageInfo().pageNumber;
-      const totalPages = doc.getNumberOfPages();
 
-      // Add footer separator line
-      doc.setDrawColor(colors.border);
-      doc.setLineWidth(0.3);
-      doc.line(20, pageHeight - 20, pageWidth - 20, pageHeight - 20);
+      // Wait for next tick to ensure all pages are created
+      setTimeout(() => {
+        const totalPages = doc.getNumberOfPages();
 
-      // Footer metadata
-      doc.setFontSize(7);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(colors.muted);
+        // Add footer separator line
+        doc.setDrawColor(colors.border);
+        doc.setLineWidth(0.3);
+        doc.line(20, pageHeight - 20, pageWidth - 20, pageHeight - 20);
 
-      // Left side - Generated date and invoice info
-      const generatedDate = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
+        // Footer metadata
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(colors.muted);
 
-      doc.text(`Generated: ${generatedDate}`, 20, pageHeight - 15);
-      doc.text(`Invoice #${invoice.invoiceNumber}`, 20, pageHeight - 11);
+        // Left side - Generated date and invoice info
+        const generatedDate = new Date().toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
 
-      // Department (if available)
-      if (invoice.metadata?.departments && invoice.metadata.departments.length > 0) {
-        const depts = invoice.metadata.departments.map((d: string) => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
-        doc.text(`Dept: ${depts}`, 20, pageHeight - 7);
-      }
+        doc.text(`Generated: ${generatedDate}`, 20, pageHeight - 15);
+        doc.text(`Invoice #${invoice.invoiceNumber}`, 20, pageHeight - 11);
 
-      // Center - Page numbers (always show)
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(colors.primary);
-      doc.text(
-        `Page ${currentPage} of ${totalPages}`,
-        pageWidth / 2,
-        pageHeight - 11,
-        { align: 'center' }
-      );
+        // Department (if available)
+        if (invoice.metadata?.departments && invoice.metadata.departments.length > 0) {
+          const depts = invoice.metadata.departments.map((d: string) => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
+          doc.text(`Dept: ${depts}`, 20, pageHeight - 7);
+        }
 
-      // Right side - Dealer name and service period
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(colors.muted);
-      doc.text(
-        invoice.dealership?.name || 'My Detail Area',
-        pageWidth - 20,
-        pageHeight - 15,
-        { align: 'right' }
-      );
-
-      // Service period (if available)
-      if (invoice.metadata?.filter_date_range) {
-        const startDate = formatShortDate(invoice.metadata.filter_date_range.start);
-        const endDate = formatShortDate(invoice.metadata.filter_date_range.end);
-        doc.setFontSize(6);
+        // Center - Page numbers (always show) - NOW WITH CORRECT TOTAL
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(colors.primary);
         doc.text(
-          `Period: ${startDate} - ${endDate}`,
-          pageWidth - 20,
+          `Page ${currentPage} of ${totalPages}`,
+          pageWidth / 2,
           pageHeight - 11,
+          { align: 'center' }
+        );
+
+        // Right side - Dealer name and service period
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(colors.muted);
+        doc.text(
+          invoice.dealership?.name || 'My Detail Area',
+          pageWidth - 20,
+          pageHeight - 15,
           { align: 'right' }
         );
-      }
 
-      // Total vehicles count
-      doc.setFontSize(6);
-      doc.text(
-        `${invoice.items?.length || 0} vehicles`,
-        pageWidth - 20,
-        pageHeight - 7,
-        { align: 'right' }
-      );
+        // Service period (if available)
+        if (invoice.metadata?.filter_date_range) {
+          const startDate = formatShortDate(invoice.metadata.filter_date_range.start);
+          const endDate = formatShortDate(invoice.metadata.filter_date_range.end);
+          doc.setFontSize(6);
+          doc.text(
+            `Period: ${startDate} - ${endDate}`,
+            pageWidth - 20,
+            pageHeight - 11,
+            { align: 'right' }
+          );
+        }
+
+        // Total vehicles count
+        doc.setFontSize(6);
+        doc.text(
+          `${invoice.items?.length || 0} vehicles`,
+          pageWidth - 20,
+          pageHeight - 7,
+          { align: 'right' }
+        );
+      }, 0);
     }
   });
 
@@ -480,6 +586,158 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
   // @ts-ignore - autoTable adds lastAutoTable property to jsPDF instance
   const finalY = doc.lastAutoTable?.finalY || yPosition + 50;
   yPosition = finalY + 10;
+
+  // ===== ADD FOOTERS TO ALL PAGES AFTER TABLE COMPLETION =====
+  const totalPages = doc.getNumberOfPages();
+  const pageHeight = doc.internal.pageSize.height;
+
+  // Add footers to all pages now that we have the correct total
+  for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+    doc.setPage(pageNum);
+
+    // Add footer separator line
+    doc.setDrawColor(colors.border);
+    doc.setLineWidth(0.3);
+    doc.line(20, pageHeight - 20, pageWidth - 20, pageHeight - 20);
+
+    // Footer metadata
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(colors.muted);
+
+    // Left side - Generated date and invoice info
+    const generatedDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    doc.text(`Generated: ${generatedDate}`, 20, pageHeight - 15);
+    doc.text(`Invoice #${invoice.invoiceNumber}`, 20, pageHeight - 11);
+
+    // Department (if available)
+    if (invoice.metadata?.departments && invoice.metadata.departments.length > 0) {
+      const depts = invoice.metadata.departments.map((d: string) => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
+      doc.text(`Dept: ${depts}`, 20, pageHeight - 7);
+    }
+
+    // Center - Page numbers (NOW WITH CORRECT TOTAL)
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(colors.primary);
+    doc.text(
+      `Page ${pageNum} of ${totalPages}`,
+      pageWidth / 2,
+      pageHeight - 11,
+      { align: 'center' }
+    );
+
+    // Right side - Dealer name and service period
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(colors.muted);
+    doc.text(
+      invoice.dealership?.name || 'My Detail Area',
+      pageWidth - 20,
+      pageHeight - 15,
+      { align: 'right' }
+    );
+
+    // Service period (if available)
+    if (invoice.metadata?.filter_date_range) {
+      const startDate = formatShortDate(invoice.metadata.filter_date_range.start);
+      const endDate = formatShortDate(invoice.metadata.filter_date_range.end);
+      doc.setFontSize(6);
+      doc.text(
+        `Period: ${startDate} - ${endDate}`,
+        pageWidth - 20,
+        pageHeight - 11,
+        { align: 'right' }
+      );
+    }
+
+    // Total vehicles count
+    doc.setFontSize(6);
+    doc.text(
+      `${invoice.items?.length || 0} vehicles`,
+      pageWidth - 20,
+      pageHeight - 7,
+      { align: 'right' }
+    );
+  }
+  for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+    doc.setPage(pageNum);
+
+    // Add footer separator line
+    doc.setDrawColor(colors.border);
+    doc.setLineWidth(0.3);
+    doc.line(20, pageHeight - 20, pageWidth - 20, pageHeight - 20);
+
+    // Footer metadata
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(colors.muted);
+
+    // Left side - Generated date and invoice info
+    const generatedDate = new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    doc.text(`Generated: ${generatedDate}`, 20, pageHeight - 15);
+    doc.text(`Invoice #${invoice.invoiceNumber}`, 20, pageHeight - 11);
+
+    // Department (if available)
+    if (invoice.metadata?.departments && invoice.metadata.departments.length > 0) {
+      const depts = invoice.metadata.departments.map((d: string) => d.charAt(0).toUpperCase() + d.slice(1)).join(', ');
+      doc.text(`Dept: ${depts}`, 20, pageHeight - 7);
+    }
+
+    // Center - Page numbers (NOW WITH CORRECT TOTAL)
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(colors.primary);
+    doc.text(
+      `Page ${pageNum} of ${totalPages}`,
+      pageWidth / 2,
+      pageHeight - 11,
+      { align: 'center' }
+    );
+
+    // Right side - Dealer name and service period
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(colors.muted);
+    doc.text(
+      invoice.dealership?.name || 'My Detail Area',
+      pageWidth - 20,
+      pageHeight - 15,
+      { align: 'right' }
+    );
+
+    // Service period (if available)
+    if (invoice.metadata?.filter_date_range) {
+      const startDate = formatShortDate(invoice.metadata.filter_date_range.start);
+      const endDate = formatShortDate(invoice.metadata.filter_date_range.end);
+      doc.setFontSize(6);
+      doc.text(
+        `Period: ${startDate} - ${endDate}`,
+        pageWidth - 20,
+        pageHeight - 11,
+        { align: 'right' }
+      );
+    }
+
+    // Total vehicles count
+    doc.setFontSize(6);
+    doc.text(
+      `${invoice.items?.length || 0} vehicles`,
+      pageWidth - 20,
+      pageHeight - 7,
+      { align: 'right' }
+    );
+  }
 
   // ===== NOTES SECTION (if any) =====
   if (invoice.invoiceNotes) {

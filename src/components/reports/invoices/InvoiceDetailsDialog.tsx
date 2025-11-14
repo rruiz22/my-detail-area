@@ -4,53 +4,53 @@
 // Description: Display invoice details with vehicle list
 // =====================================================
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
 } from '@/components/ui/dialog';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/components/ui/table';
-import { useInvoice, useDeleteInvoice, useDeletePayment } from '@/hooks/useInvoices';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { useDeleteInvoice, useDeletePayment, useInvoice } from '@/hooks/useInvoices';
 import { useRecalculateInvoice } from '@/hooks/useRecalculateInvoice';
 import type { InvoiceStatus } from '@/types/invoices';
+import { generateInvoiceExcel } from '@/utils/generateInvoiceExcel';
+import { generateInvoicePDF } from '@/utils/generateInvoicePDF';
 import { format, parseISO } from 'date-fns';
 import { Download, FileSpreadsheet, FileText, Loader2, Mail, Printer, RefreshCw, Trash2, X } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { generateInvoicePDF } from '@/utils/generateInvoicePDF';
-import { generateInvoiceExcel } from '@/utils/generateInvoiceExcel';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
 import { SendInvoiceEmailDialog } from './email/SendInvoiceEmailDialog';
-import { InvoiceEmailLog } from './InvoiceEmailLog';
 import { InvoiceComments } from './InvoiceComments';
+import { InvoiceEmailLog } from './InvoiceEmailLog';
 
 interface InvoiceDetailsDialogProps {
   open: boolean;
@@ -104,6 +104,50 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
     return format(parseISO(dateString), 'MMM dd, yyyy');
   };
 
+  /**
+   * Get the correct date for an invoice item based on order type
+   * Sales & Service orders: due_date
+   * Recon & Carwash orders: completed_date
+   */
+  const getCorrectItemDate = (item: any): string => {
+    const orderType = item.metadata?.order_type;
+
+    if (orderType === 'sales' || orderType === 'service') {
+      // Priority order for sales/service: due_date -> completed_at -> createdAt
+      const dueDate = item.metadata?.due_date;
+      const completedAt = item.metadata?.completed_at;
+      const createdAt = item.createdAt;
+
+      if (dueDate && dueDate !== 'null' && dueDate !== '') {
+        return dueDate;
+      }
+      if (completedAt && completedAt !== 'null' && completedAt !== '') {
+        return completedAt;
+      }
+      if (createdAt && createdAt !== 'null' && createdAt !== '') {
+        return createdAt;
+      }
+    } else if (orderType === 'recon' || orderType === 'carwash') {
+      // Priority order for recon/carwash: completed_at -> completed_date -> createdAt
+      const completedAt = item.metadata?.completed_at;
+      const completedDate = item.metadata?.completed_date;
+      const createdAt = item.createdAt;
+
+      if (completedAt && completedAt !== 'null' && completedAt !== '') {
+        return completedAt;
+      }
+      if (completedDate && completedDate !== 'null' && completedDate !== '') {
+        return completedDate;
+      }
+      if (createdAt && createdAt !== 'null' && createdAt !== '') {
+        return createdAt;
+      }
+    }
+
+    // Final fallback
+    return item.metadata?.completed_at || item.createdAt;
+  };
+
   // Clean vehicle description - remove stock number suffix if present
   const cleanVehicleDescription = (description: string): string => {
     if (!description || description === 'N/A') return description;
@@ -137,10 +181,10 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
         ? invoice.metadata.departments.map((d: string) => d.charAt(0).toUpperCase() + d.slice(1)).join(', ')
         : null;
 
-      // Sort items by date (ascending)
+      // Sort items by date (ascending) - using correct date based on order type
       const sortedItems = (invoice.items || []).sort((a, b) => {
-        const dateA = a.metadata?.completed_at || a.createdAt;
-        const dateB = b.metadata?.completed_at || b.createdAt;
+        const dateA = getCorrectItemDate(a);
+        const dateB = getCorrectItemDate(b);
         return new Date(dateA).getTime() - new Date(dateB).getTime();
       });
 
@@ -868,10 +912,10 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                 <TableBody>
                   {invoice.items && invoice.items.length > 0 ? (
                     (() => {
-                      // Sort items by date (ascending)
+                      // Sort items by date (ascending) - using correct date based on order type
                       const sortedItems = [...invoice.items].sort((a, b) => {
-                        const dateA = a.metadata?.completed_at || a.createdAt;
-                        const dateB = b.metadata?.completed_at || b.createdAt;
+                        const dateA = getCorrectItemDate(a);
+                        const dateB = getCorrectItemDate(b);
                         return new Date(dateA).getTime() - new Date(dateB).getTime();
                       });
 
@@ -893,11 +937,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                           poRoTag = item.metadata?.stock_number || 'N/A';
                         }
 
-                        const itemDate = item.metadata?.completed_at
-                          ? format(parseISO(item.metadata.completed_at), 'MM/dd')
-                          : item.createdAt
-                          ? format(parseISO(item.createdAt), 'MM/dd')
-                          : format(parseISO(invoice.issueDate), 'MM/dd');
+                        const itemDate = format(parseISO(getCorrectItemDate(item)), 'MM/dd');
 
                         // Add separator row if date changes
                         if (itemDate !== lastDate && index > 0) {
@@ -917,11 +957,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                             className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50/50 transition-colors`}
                           >
                           <TableCell className="text-sm text-center font-medium text-gray-700">
-                            {item.metadata?.completed_at
-                              ? format(parseISO(item.metadata.completed_at), 'MM/dd')
-                              : item.createdAt
-                              ? format(parseISO(item.createdAt), 'MM/dd')
-                              : format(parseISO(invoice.issueDate), 'MM/dd')}
+                            {format(parseISO(getCorrectItemDate(item)), 'MM/dd')}
                           </TableCell>
                           <TableCell className="text-sm text-center font-semibold text-gray-900 whitespace-nowrap">
                             {item.metadata?.order_number || 'N/A'}

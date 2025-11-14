@@ -16,7 +16,7 @@ const SCAN_CONFIG = {
     '!src/**/*.test.{ts,tsx,js,jsx}',
     '!src/**/*.stories.{ts,tsx,js,jsx}'
   ],
-  
+
   // Hardcoded string detection patterns
   hardcodedPatterns: [
     // JSX text content
@@ -83,17 +83,20 @@ class TranslationScanner {
   }
 
   scanFiles() {
-    const files = glob.sync(SCAN_CONFIG.includePatterns, {
-      ignore: SCAN_CONFIG.includePatterns.filter(p => p.startsWith('!'))
-    });
-
-    console.log(`🔍 Scanning ${files.length} files for translation issues...\n`);
+    // Simplified glob pattern handling
+    const files = glob.sync('src/**/*.{tsx,ts,jsx,js}', {
+      ignore: [
+        'src/**/*.d.ts',
+        'src/**/*.test.{ts,tsx,js,jsx}',
+        'src/**/*.stories.{ts,tsx,js,jsx}'
+      ]
+    });    console.log(`🔍 Scanning ${files.length} files for translation issues...\n`);
 
     const fileResults = files.map(file => this.scanFile(file)).filter(Boolean);
-    
+
     this.generateSummary(fileResults);
     this.generateRecommendations(fileResults);
-    
+
     return {
       ...this.results,
       fileResults
@@ -104,9 +107,9 @@ class TranslationScanner {
     try {
       const content = fs.readFileSync(filePath, 'utf8');
       const relativePath = path.relative(process.cwd(), filePath);
-      
+
       this.results.scannedFiles++;
-      
+
       const fileResult = {
         file: relativePath,
         hardcodedStrings: [],
@@ -123,7 +126,7 @@ class TranslationScanner {
         while ((match = globalPattern.exec(content)) !== null) {
           const string = match[1];
           if (this.shouldIgnoreString(string)) continue;
-          
+
           const lineNumber = this.getLineNumber(content, match.index);
           fileResult.hardcodedStrings.push({
             text: string,
@@ -146,7 +149,7 @@ class TranslationScanner {
               line: lineNumber,
               exists: this.keyExists(key)
             });
-            
+
             if (!this.keyExists(key)) {
               fileResult.missingKeys.push({
                 key,
@@ -160,7 +163,7 @@ class TranslationScanner {
 
       // Calculate coverage
       const totalStrings = fileResult.hardcodedStrings.length + fileResult.translationCalls.length;
-      fileResult.coverage = totalStrings > 0 
+      fileResult.coverage = totalStrings > 0
         ? Math.round((fileResult.translationCalls.length / totalStrings) * 100)
         : 100;
 
@@ -194,7 +197,7 @@ class TranslationScanner {
     const lineIndex = this.getLineNumber(content, index) - 1;
     const start = Math.max(0, lineIndex - 1);
     const end = Math.min(lines.length, lineIndex + 2);
-    
+
     return lines.slice(start, end)
       .map((line, i) => `${start + i + 1}: ${line.trim()}`)
       .join('\n');
@@ -205,16 +208,16 @@ class TranslationScanner {
   }
 
   generateSummary(fileResults) {
-    this.results.totalStrings = fileResults.reduce((sum, result) => 
+    this.results.totalStrings = fileResults.reduce((sum, result) =>
       sum + result.hardcodedStrings.length + result.translationCalls.length, 0);
-    
-    this.results.hardcodedStrings = fileResults.reduce((sum, result) => 
+
+    this.results.hardcodedStrings = fileResults.reduce((sum, result) =>
       sum + result.hardcodedStrings.length, 0);
-    
-    this.results.translatedStrings = fileResults.reduce((sum, result) => 
+
+    this.results.translatedStrings = fileResults.reduce((sum, result) =>
       sum + result.translationCalls.length, 0);
-    
-    this.results.coverage = this.results.totalStrings > 0 
+
+    this.results.coverage = this.results.totalStrings > 0
       ? Math.round((this.results.translatedStrings / this.results.totalStrings) * 100)
       : 100;
 
@@ -246,7 +249,7 @@ class TranslationScanner {
     const topFiles = fileResults
       .sort((a, b) => b.hardcodedStrings.length - a.hardcodedStrings.length)
       .slice(0, 5);
-    
+
     recommendations.push({
       priority: 'HIGH',
       title: 'Batch Process Top 5 Files',
@@ -307,10 +310,10 @@ class TranslationScanner {
 
   printReport() {
     const { results } = this;
-    
+
     console.log('🏢 MY DETAIL AREA - Translation Coverage Analysis\n');
     console.log('=' .repeat(60));
-    
+
     // Summary Statistics
     console.log('\n📊 SUMMARY STATISTICS');
     console.log('-' .repeat(30));
@@ -321,8 +324,8 @@ class TranslationScanner {
     console.log(`Overall Coverage: ${results.coverage}%`);
 
     // Coverage Status
-    const status = results.coverage >= 90 ? '✅ EXCELLENT' 
-                 : results.coverage >= 70 ? '⚠️  GOOD' 
+    const status = results.coverage >= 90 ? '✅ EXCELLENT'
+                 : results.coverage >= 70 ? '⚠️  GOOD'
                  : results.coverage >= 50 ? '❌ NEEDS WORK'
                  : '🚨 CRITICAL';
     console.log(`Status: ${status}\n`);
@@ -332,8 +335,8 @@ class TranslationScanner {
     console.log('-' .repeat(30));
     Object.entries(results.issues).forEach(([severity, files]) => {
       if (files.length > 0) {
-        const icon = severity === 'critical' ? '🔴' 
-                   : severity === 'high' ? '🟡' 
+        const icon = severity === 'critical' ? '🔴'
+                   : severity === 'high' ? '🟡'
                    : severity === 'medium' ? '🟠' : '🔵';
         console.log(`${icon} ${severity.toUpperCase()}: ${files.length} files`);
         files.slice(0, 3).forEach(file => {
@@ -381,7 +384,7 @@ if (require.main === module) {
   const results = scanner.scanFiles();
   scanner.printReport();
   scanner.saveReport();
-  
+
   // Exit with error code if coverage is too low
   process.exit(results.coverage < 50 ? 1 : 0);
 }

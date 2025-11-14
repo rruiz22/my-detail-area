@@ -12,8 +12,9 @@ import { useSearchPersistence, useTabPersistence, useViewModePersistence } from 
 import { useStatusPermissions } from '@/hooks/useStatusPermissions';
 import { useDealerFilter } from '@/contexts/DealerFilterContext';
 import { orderEvents } from '@/utils/eventBus';
-import { dev, warn } from '@/utils/logger';
+import { dev, warn, error as logError } from '@/utils/logger';
 import { determineTabForOrder } from '@/utils/orderUtils';
+import { generateOrderListPDF } from '@/utils/generateOrderListPDF';
 import { Plus, RefreshCw } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -70,6 +71,7 @@ export default function ServiceOrders() {
   const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
+  const [isPrinting, setIsPrinting] = useState(false);
 
   const {
     orders,
@@ -357,6 +359,57 @@ export default function ServiceOrders() {
     }
   }, [setViewMode]);
 
+  // Get dynamic title based on active filter
+  const getFilterTitle = (filter: string): string => {
+    const titleMap: Record<string, string> = {
+      dashboard: t('sales_orders.tabs.dashboard'),
+      today: t('sales_orders.tabs.today'),
+      tomorrow: t('sales_orders.tabs.tomorrow'),
+      pending: t('sales_orders.tabs.pending'),
+      in_process: t('sales_orders.in_process_orders'),
+      week: t('sales_orders.tabs.week'),
+      all: t('sales_orders.tabs.all'),
+      queued: t('sales_orders.tabs.queued'),
+      deleted: t('sales_orders.tabs.deleted')
+    };
+    return titleMap[filter] || filter;
+  };
+
+  // Handle print list
+  const handlePrintList = useCallback(async () => {
+    if (orders.length === 0) {
+      toast({
+        variant: 'destructive',
+        description: t('common.action_buttons.print_failed') + ': No orders to print'
+      });
+      return;
+    }
+
+    try {
+      setIsPrinting(true);
+
+      await generateOrderListPDF({
+        orders: orders,
+        orderType: 'service',
+        filterLabel: getFilterTitle(activeFilter),
+        dealershipName: orders[0]?.dealershipName || 'Dealership',
+        searchTerm: searchTerm || undefined
+      });
+
+      toast({
+        description: t('common.action_buttons.print_success')
+      });
+    } catch (error) {
+      logError('Print list failed:', error);
+      toast({
+        variant: 'destructive',
+        description: t('common.action_buttons.print_failed')
+      });
+    } finally {
+      setIsPrinting(false);
+    }
+  }, [orders, activeFilter, searchTerm, t, toast]);
+
   // Force table view on mobile (disable kanban and calendar)
   const effectiveViewMode = isMobile ? 'table' : viewMode;
 
@@ -423,6 +476,8 @@ export default function ServiceOrders() {
             onToggleFilters={() => setShowFilters(!showFilters)}
             weekOffset={weekOffset}
             onWeekChange={setWeekOffset}
+            onPrintList={handlePrintList}
+            isPrinting={isPrinting}
           />
         </OrderViewErrorBoundary>
 

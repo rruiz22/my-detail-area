@@ -79,6 +79,11 @@
                                           "download":  "Download",
                                           "upload":  "Upload",
                                           "print":  "Print",
+                                          "print_list":  "Print List",
+                                          "print_filtered_orders":  "Print Filtered Orders",
+                                          "printing":  "Printing...",
+                                          "print_success":  "PDF generated successfully",
+                                          "print_failed":  "Failed to generate PDF",
                                           "refresh":  "Refresh",
                                           "reload":  "Reload",
                                           "copy":  "Copy",
@@ -6565,7 +6570,10 @@
                                       "file_too_large":  "File too large (~{{size}}MB). Max 5MB.",
                                       "format_not_allowed":  "Format {{format}} not allowed. Use JPEG, PNG, or WebP.",
                                       "network_error":  "Network error occurred",
-                                      "storage_error":  "Failed to save to storage"
+                                      "storage_error":  "Failed to save to storage",
+                                      "permission_system_error":  "Permission System Error",
+                                      "permission_denied":  "Access Denied",
+                                      "access_denied":  "You don't have permission to access this resource"
                                   },
                        "common":  {
                                       "loading":  "Loading...",

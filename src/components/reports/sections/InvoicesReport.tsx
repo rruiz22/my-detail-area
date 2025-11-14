@@ -4,13 +4,22 @@
 // Description: Full invoice management interface within Reports
 // =====================================================
 
+import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { InvoiceCommentsTooltip } from '@/components/ui/invoice-comments-tooltip';
 import { Label } from '@/components/ui/label';
+import { NotesTooltip } from '@/components/ui/notes-tooltip';
 import {
   Select,
   SelectContent,
@@ -18,12 +27,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import {
   Table,
   TableBody,
@@ -33,21 +36,18 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { NotesTooltip } from '@/components/ui/notes-tooltip';
-import { InvoiceCommentsTooltip } from '@/components/ui/invoice-comments-tooltip';
-import { CreateInvoiceDialog } from '../invoices/CreateInvoiceDialog';
-import { InvoiceDetailsDialog } from '../invoices/InvoiceDetailsDialog';
-import { RecordPaymentDialog } from '../invoices/RecordPaymentDialog';
-import { VehicleInvoiceSearch } from '../invoices/VehicleInvoiceSearch';
-import { SendInvoiceEmailDialog } from '../invoices/email/SendInvoiceEmailDialog';
-import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
+import { QUERY_LIMITS } from '@/constants/queryLimits';
 import { useAuth } from '@/contexts/AuthContext';
-import { useInvoices, useInvoiceSummary, useDeleteInvoice } from '@/hooks/useInvoices';
-import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
+import { useDateCalculations } from '@/hooks/useDateCalculations';
+import { useDeleteInvoice, useInvoices, useInvoiceSummary } from '@/hooks/useInvoices';
 import type { ReportsFilters } from '@/hooks/useReportsData';
+import { supabase } from '@/integrations/supabase/client';
 import type { Invoice, InvoiceFilters, InvoiceStatus } from '@/types/invoices';
 import type { UnifiedOrderData } from '@/types/unifiedOrder';
-import { useQuery } from '@tanstack/react-query';
+import { invalidateInvoiceQueries } from '@/utils/queryInvalidation';
+import { toEndOfDay } from '@/utils/reportDateUtils';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
 import {
   AlertCircle,
@@ -58,11 +58,9 @@ import {
   CheckCircle2,
   Clock,
   DollarSign,
-  Download,
   Eye,
   FileText,
   Filter,
-  Mail,
   MessageSquare,
   Plus,
   Printer,
@@ -72,13 +70,12 @@ import {
   Trash2,
   X
 } from 'lucide-react';
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { QUERY_LIMITS } from '@/constants/queryLimits';
-import { isOrderInDateRange, toEndOfDay } from '@/utils/reportDateUtils';
-import { useToast } from '@/hooks/use-toast';
-import { useDateCalculations } from '@/hooks/useDateCalculations';
-import { useQueryClient } from '@tanstack/react-query';
+import { CreateInvoiceDialog } from '../invoices/CreateInvoiceDialog';
+import { InvoiceDetailsDialog } from '../invoices/InvoiceDetailsDialog';
+import { RecordPaymentDialog } from '../invoices/RecordPaymentDialog';
+import { VehicleInvoiceSearch } from '../invoices/VehicleInvoiceSearch';
 
 interface InvoicesReportProps {
   filters: ReportsFilters;
@@ -245,7 +242,6 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
   const [showQuickCreateDialog, setShowQuickCreateDialog] = useState(false);
   const [showDetailsDialog, setShowDetailsDialog] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
-  const [showEmailDialog, setShowEmailDialog] = useState(false);
   const [showInvoicePreview, setShowInvoicePreview] = useState(false);
   const [invoiceHtml, setInvoiceHtml] = useState('');
 
@@ -2145,15 +2141,6 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
           open={showPaymentDialog}
           onOpenChange={setShowPaymentDialog}
           invoice={selectedInvoice}
-        />
-      )}
-
-      {selectedInvoice && showEmailDialog && (
-        <SendInvoiceEmailDialog
-          open={showEmailDialog}
-          onOpenChange={setShowEmailDialog}
-          invoiceId={selectedInvoice.id}
-          dealershipId={selectedInvoice.dealerId}
         />
       )}
 

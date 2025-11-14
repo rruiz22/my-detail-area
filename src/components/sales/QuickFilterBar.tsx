@@ -1,11 +1,11 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Calendar, Clock, AlertCircle, BarChart3, List, Kanban, Filter, Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { useTranslation } from 'react-i18next';
-import { useState, useEffect, memo } from 'react';
 import { WeekNavigator } from '@/components/ui/WeekNavigator';
+import { AlertCircle, BarChart3, Calendar, Clock, Kanban, List, Printer, Search, X } from 'lucide-react';
+import { memo, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import type { LucideIcon } from 'lucide-react';
 
@@ -29,6 +29,8 @@ interface QuickFilterBarProps {
   onToggleFilters?: () => void;
   weekOffset?: number;
   onWeekChange?: (offset: number) => void;
+  onPrintList?: () => void;
+  isPrinting?: boolean;
 }
 
 export const QuickFilterBar = memo(function QuickFilterBar({
@@ -42,7 +44,9 @@ export const QuickFilterBar = memo(function QuickFilterBar({
   showFilters = false,
   onToggleFilters,
   weekOffset = 0,
-  onWeekChange
+  onWeekChange,
+  onPrintList,
+  isPrinting = false
 }: QuickFilterBarProps) {
   const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(false);
@@ -148,6 +152,23 @@ export const QuickFilterBar = memo(function QuickFilterBar({
 
           {/* View Mode & Filters Toggle */}
           <div className="flex items-center gap-2">
+            {/* Print List Button - Only show if callback provided */}
+            {onPrintList && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={onPrintList}
+                disabled={isPrinting}
+                className="h-8 px-3"
+                title={t('common.action_buttons.print_filtered_orders')}
+              >
+                <Printer className="w-4 h-4 mr-2" />
+                <span className="hidden sm:inline">
+                  {isPrinting ? t('common.action_buttons.printing') : t('common.action_buttons.print_list')}
+                </span>
+              </Button>
+            )}
+
             {/* View Mode Toggle - Only show if viewMode props are provided */}
             {viewMode && onViewModeChange && (
               <div className="flex items-center bg-muted/50 rounded-lg p-1">
@@ -175,33 +196,11 @@ export const QuickFilterBar = memo(function QuickFilterBar({
                   </Button>
                 )}
 
-                {/* Calendar - Only on desktop */}
-                {!isMobile && (
-                  <Button
-                    size="sm"
-                    variant={viewMode === 'calendar' ? 'default' : 'ghost'}
-                    onClick={() => onViewModeChange('calendar')}
-                    className="h-8 px-2 sm:px-3"
-                  >
-                    <Calendar className="w-4 h-4 sm:mr-2" />
-                    <span className="hidden sm:inline">{t('common.calendar')}</span>
-                  </Button>
-                )}
+
               </div>
             )}
 
-            {/* Filters Toggle */}
-            {onToggleFilters && (
-              <Button
-                size="sm"
-                variant={showFilters ? 'default' : 'outline'}
-                onClick={onToggleFilters}
-                className="h-8 px-3"
-              >
-                <Filter className="w-4 h-4 mr-2" />
-                Filters
-              </Button>
-            )}
+
           </div>
         </div>
 
@@ -210,7 +209,7 @@ export const QuickFilterBar = memo(function QuickFilterBar({
           {filterOptions.map((option) => {
             const Icon = option.icon;
             const isActive = activeFilter === option.id;
-            
+
             return (
               <Button
                 key={option.id}
@@ -219,8 +218,8 @@ export const QuickFilterBar = memo(function QuickFilterBar({
                 onClick={() => onFilterChange(option.id)}
                 className={`
                   h-9 px-2 sm:px-3 border-2 transition-all duration-200 hover:scale-105
-                  ${isActive 
-                    ? `${option.color} shadow-sm` 
+                  ${isActive
+                    ? `${option.color} shadow-sm`
                     : 'bg-background hover:bg-muted/50 border-border text-muted-foreground hover:text-foreground'
                   }
                 `}
@@ -228,12 +227,12 @@ export const QuickFilterBar = memo(function QuickFilterBar({
                 <Icon className="w-4 h-4 mr-1 sm:mr-2" />
                 <span className="text-sm sm:text-base">{option.label}</span>
                 {option.count > 0 && (
-                  <Badge 
-                    variant="secondary" 
+                  <Badge
+                    variant="secondary"
                     className={`
-                      ml-2 text-xs px-1.5 py-0 min-w-[20px] h-5 
-                      ${isActive 
-                        ? 'bg-white/20 text-current' 
+                      ml-2 text-xs px-1.5 py-0 min-w-[20px] h-5
+                      ${isActive
+                        ? 'bg-white/20 text-current'
                         : 'bg-muted text-muted-foreground'
                       }
                     `}

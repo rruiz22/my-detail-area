@@ -1,15 +1,15 @@
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
 import { LiveTimer } from '@/components/ui/LiveTimer';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useToast } from '@/hooks/use-toast';
@@ -17,10 +17,11 @@ import { useManualRefresh } from '@/hooks/useManualRefresh';
 import { usePermissions } from '@/hooks/usePermissions';
 import type { ReconOrder, ReconOrderData } from "@/hooks/useReconOrderManagement";
 import { useReconOrderManagement } from '@/hooks/useReconOrderManagement';
-import { useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
 import { useStatusPermissions } from '@/hooks/useStatusPermissions';
+import { useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersistence';
 import { getSystemTimezone } from '@/utils/dateUtils';
 import { orderEvents } from '@/utils/eventBus';
+import { generateOrderListPDF } from '@/utils/generateOrderListPDF';
 import logger from '@/utils/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus, RefreshCw } from 'lucide-react';
@@ -29,14 +30,13 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 // Direct imports - no lazy loading for maximum speed
-import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
-import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
-import { OrderViewLoadingFallback } from '@/components/orders/OrderViewLoadingFallback';
-import { OrderViewErrorBoundary } from '@/components/orders/OrderViewErrorBoundary';
-import { OrderDataTable } from '@/components/orders/OrderDataTable';
-import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
 import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
+import { OrderDataTable } from '@/components/orders/OrderDataTable';
+import { OrderViewErrorBoundary } from '@/components/orders/OrderViewErrorBoundary';
 import { ReconOrderModal } from '@/components/orders/ReconOrderModal';
+import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
+import { OrderKanbanBoard } from '@/components/sales/OrderKanbanBoard';
+import { QuickFilterBar } from '@/components/sales/QuickFilterBar';
 
 export default function ReconOrders() {
   const { t } = useTranslation();
@@ -62,6 +62,7 @@ export default function ReconOrders() {
   const [hasProcessedUrlOrder, setHasProcessedUrlOrder] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
+  const [isPrinting, setIsPrinting] = useState(false);
 
   // Accessibility: Live region for screen reader announcements
   const [liveRegionMessage, setLiveRegionMessage] = useState<string>('');
@@ -432,9 +433,20 @@ export default function ReconOrders() {
     }
   }, [updateOrder, queryClient]);
 
-
-  // Force table view on mobile (disable kanban and calendar)
-  const effectiveViewMode = isMobile ? 'table' : viewMode;
+  // Get dynamic title based on active filter
+  const getFilterTitle = (filter: string): string => {
+    const titleMap: Record<string, string> = {
+      dashboard: t('sales_orders.tabs.dashboard'),
+      today: t('sales_orders.tabs.today'),
+      tomorrow: t('sales_orders.tabs.tomorrow'),
+      pending: t('sales_orders.tabs.pending'),
+      in_process: t('sales_orders.in_process_orders'),
+      week: t('sales_orders.tabs.week'),
+      all: t('sales_orders.tabs.all'),
+      deleted: t('sales_orders.tabs.deleted')
+    };
+    return titleMap[filter] || filter;
+  };
 
   // Transform ReconOrder to Order format for compatibility with OrderKanbanBoard/OrderDataTable
   // Memoized to prevent recalculation on every render
@@ -446,45 +458,32 @@ export default function ReconOrders() {
       customerName: t('recon_defaults.default_customer'),
       dealershipName: order.dealershipName || 'Unknown Dealer',
       dealer_id: order.dealerId,
-      // Vehicle fields - camelCase for OrderDataTable
+      status: order.status,
       vehicleYear: order.vehicleYear,
       vehicleMake: order.vehicleMake,
       vehicleModel: order.vehicleModel,
+      vehicleColor: order.vehicleColor,
+      vehicleMileage: order.vehicleMileage,
       vehicleVin: order.vehicleVin,
-      vehicleInfo: order.vehicleInfo,
-      // Also snake_case for compatibility
-      vehicle_year: order.vehicleYear,
-      vehicle_make: order.vehicleMake,
-      vehicle_model: order.vehicleModel,
       vehicle_vin: order.vehicleVin,
-      vehicle_info: order.vehicleInfo,
-      // Stock fields
       stock: order.stockNumber,
       stockNumber: order.stockNumber,
-      stock_number: order.stockNumber,
-      // Legacy aliases
-      vin: order.vehicleVin || '',
-      year: order.vehicleYear || 0,
-      make: order.vehicleMake || '',
-      model: order.vehicleModel || '',
-      status: order.status,
-      services: order.services || [],
-      total_amount: order.totalAmount,
-      totalAmount: order.totalAmount,
-      created_at: order.createdAt,
-      createdAt: order.createdAt,
-      updated_at: order.updatedAt,
-      updatedAt: order.updatedAt,
-      due_date: order.dueDate,
-      dueDate: order.dueDate,
-      completed_at: order.completedAt,
-      completedAt: order.completedAt,
-      priority: order.priority || 'normal',
+      tag: order.tag,
       assignedTo: order.assignedTo,
-      // Recon specific fields
-      condition_grade: order.conditionGrade,
-      recon_category: order.reconCategory,
-      // Required fields for Order interface
+      assigned_to: order.assignedTo,
+      dueDate: order.dueDate,
+      completedAt: order.completedAt,
+      totalAmount: order.reconCost,
+      total_amount: order.reconCost,
+      reconCategory: order.reconCategory,
+      reconCost: order.reconCost,
+      reconNotes: order.reconNotes,
+      created_at: order.createdAt,
+      vehicleLocation: order.vehicleLocation,
+      priority: order.priority || 'medium',
+      orderType: 'recon' as const,
+      // Default service info for recon
+      service_type: t('recon_defaults.default_service'),
       service: t('recon_defaults.default_service'),
       description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,
       price: order.reconCost || 0,
@@ -494,17 +493,56 @@ export default function ReconOrders() {
   }), [filteredOrdersByTab, t]);
 
   // Filter orders based on search term
-  const filteredOrders = transformedOrders.filter((order) => {
-    if (!searchTerm) return true;
-    const searchLower = searchTerm.toLowerCase();
-    return (
-      order.id.toLowerCase().includes(searchLower) ||
-      order.vehicle_vin?.toLowerCase().includes(searchLower) ||
-      order.stock?.toLowerCase().includes(searchLower) ||
-      order.order_number?.toLowerCase().includes(searchLower) ||
-      `${order.vehicle_year} ${order.vehicle_make} ${order.vehicle_model}`.toLowerCase().includes(searchLower)
-    );
-  });
+  const filteredOrders = useMemo(() => {
+    return transformedOrders.filter((order) => {
+      if (!searchTerm) return true;
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        order.id.toLowerCase().includes(searchLower) ||
+        order.vehicle_vin?.toLowerCase().includes(searchLower) ||
+        order.stock?.toLowerCase().includes(searchLower) ||
+        order.order_number?.toLowerCase().includes(searchLower) ||
+        `${order.vehicle_year} ${order.vehicle_make} ${order.vehicle_model}`.toLowerCase().includes(searchLower)
+      );
+    });
+  }, [transformedOrders, searchTerm]);
+
+  // Handle print list
+  const handlePrintList = useCallback(async () => {
+    if (filteredOrders.length === 0) {
+      toast({
+        variant: 'destructive',
+        description: t('common.action_buttons.print_failed') + ': No orders to print'
+      });
+      return;
+    }
+
+    setIsPrinting(true);
+    try {
+      await generateOrderListPDF({
+        orders: filteredOrders,
+        orderType: 'recon',
+        filterLabel: getFilterTitle(activeFilter),
+        dealershipName: filteredOrders[0]?.dealershipName || 'Dealership',
+        searchTerm
+      });
+
+      toast({
+        description: t('common.action_buttons.print_success')
+      });
+    } catch (error) {
+      console.error('Print error:', error);
+      toast({
+        variant: 'destructive',
+        description: t('common.action_buttons.print_failed')
+      });
+    } finally {
+      setIsPrinting(false);
+    }
+  }, [filteredOrders, activeFilter, searchTerm, t, toast]);
+
+  // Force table view on mobile (disable kanban and calendar)
+  const effectiveViewMode = isMobile ? 'table' : viewMode;
 
   return (
     <div className="space-y-6">
@@ -560,6 +598,8 @@ export default function ReconOrders() {
           onToggleFilters={() => setShowFilters(!showFilters)}
           weekOffset={weekOffset}
           onWeekChange={setWeekOffset}
+          onPrintList={handlePrintList}
+          isPrinting={isPrinting}
         />
 
         {/* Main Content - Direct rendering for maximum speed */}

@@ -1,4 +1,3 @@
-import { PermissionsDebugger } from "@/components/debug/PermissionsDebugger";
 import { RouteLogger } from "@/components/debug/RouteLogger";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { GlobalChatWrapper } from "@/components/GlobalChatWrapper";
@@ -19,13 +18,12 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router-dom";
 // ✅ PHASE 3.3: Import AppLoadingBoundary for global loading state
 import { AppLoadingBoundary } from "@/components/loading/AppLoadingBoundary";
+import { CACHE_TIMES, GC_TIMES } from "@/constants/cacheConfig";
 import { DuplicateTooltipTester } from "./components/debug/DuplicateTooltipTester";
 import { TooltipTester } from "./components/debug/TooltipTester";
-import { CACHE_TIMES, GC_TIMES } from "@/constants/cacheConfig";
 import AdminDashboard from "./pages/AdminDashboard";
 import Announcements from "./pages/Announcements";
 import Auth from "./pages/Auth";
-import MDAChatWidget from "./pages/MDAChatWidget";
 import CarWash from "./pages/CarWash";
 import Chat from "./pages/Chat";
 import Contacts from "./pages/Contacts";
@@ -35,7 +33,9 @@ import DetailHub from "./pages/DetailHub";
 import ForgotPassword from "./pages/ForgotPassword";
 import GetReady from "./pages/GetReady";
 import Index from "./pages/Index";
+import MDAChatWidget from "./pages/MDAChatWidget";
 // Invoices moved to Reports tab - no longer a separate page
+import ClearCache from "./pages/ClearCache";
 import { InvitationAccept } from "./pages/InvitationAccept";
 import NFCTracking from "./pages/NFCTracking";
 import NotFound from "./pages/NotFound";
@@ -53,7 +53,6 @@ import Settings from "./pages/Settings";
 import Stock from "./pages/Stock";
 import VehicleDetailsPage from "./pages/VehicleDetailsPage";
 import VinScanner from "./pages/VinScanner";
-import ClearCache from "./pages/ClearCache";
 
     console.log('🚀 App starting up with improved navigation');
     console.log('📱 Current URL:', window.location.href);
@@ -329,9 +328,7 @@ const App = () => (
                         <AppRoutes />
                         {/* Update banner for new versions */}
                         <UpdateBanner />
-                        {/* Permissions Debugger - Temporalmente deshabilitado por error de hooks
-                        {import.meta.env.DEV && <PermissionsDebugger />}
-                        */}
+
                       </BrowserRouter>
                     </NotificationProvider>
                   </GlobalChatWrapper>
