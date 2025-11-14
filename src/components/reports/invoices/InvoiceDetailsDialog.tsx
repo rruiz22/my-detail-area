@@ -474,25 +474,25 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
 
                   // Add separator row if date changes
                   if (itemDate !== lastDate && index > 0) {
-                    rows += \`
+                    rows += `
                       <tr class="date-separator">
-                        <td colspan="8">\${itemDate}</td>
+                        <td colspan="8">${itemDate}</td>
                       </tr>
-                    \`;
+                    `;
                   }
                   lastDate = itemDate;
 
                   rowNumber++;
 
-                  rows += \`
+                  rows += `
                     <tr>
-                      <td style="font-weight: 600; color: #6B7280;">\${rowNumber}</td>
-                      <td>\${itemDate}</td>
-                      <td style="font-weight: 600; white-space: nowrap;">\${item.metadata?.order_number || 'N/A'}</td>
-                      <td class="po-ro-tag" style="white-space: nowrap;">\${poRoTag}</td>
-                      <td>\${cleanVehicleDescription(item.description)}</td>
-                      <td class="font-mono" style="white-space: nowrap;">\${item.metadata?.vehicle_vin || 'N/A'}</td>
-                      <td class="text-left">\${(() => {
+                      <td style="font-weight: 600; color: #6B7280;">${rowNumber}</td>
+                      <td>${itemDate}</td>
+                      <td style="font-weight: 600; white-space: nowrap;">${item.metadata?.order_number || 'N/A'}</td>
+                      <td class="po-ro-tag" style="white-space: nowrap;">${poRoTag}</td>
+                      <td>${cleanVehicleDescription(item.description)}</td>
+                      <td class="font-mono" style="white-space: nowrap;">${item.metadata?.vehicle_vin || 'N/A'}</td>
+                      <td class="text-left">${(() => {
                         // Extract service names with fallback logic
                         if (item.metadata?.service_names) {
                           return item.metadata.service_names;
@@ -509,9 +509,9 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                         }
                         return item.serviceReference || 'N/A';
                       })()}</td>
-                      <td class="amount-cell">\${formatCurrency(item.totalAmount)}</td>
+                      <td class="amount-cell">${formatCurrency(item.totalAmount)}</td>
                     </tr>
-                  \`;
+                  `;
                 });
 
                 return rows;
