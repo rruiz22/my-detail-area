@@ -144,12 +144,15 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
         return new Date(dateA).getTime() - new Date(dateB).getTime();
       });
 
-      // Generate print-friendly HTML
+      // Generate print-friendly HTML with proper URL (not about:blank)
       const printWindow = window.open('', '_blank');
       if (!printWindow) {
         toast({ variant: 'destructive', description: 'Please allow popups to print' });
         return;
       }
+
+      // Set a proper document title for the URL bar
+      printWindow.document.title = `Invoice-${invoice.invoiceNumber}-${dealerName.replace(/\s+/g, '-')}`;
 
       // Get sender info for header
       const senderName = 'DEALER DETAIL SERVICE LLC';
@@ -185,6 +188,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
             .print-header {
               text-align: center;
               margin-bottom: 20px;
+              width: 100%;
             }
             .sender-name {
               font-size: 13pt;
@@ -192,22 +196,34 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               color: #6B7280;
               margin-bottom: 12px;
               letter-spacing: 1px;
+              display: block;
+              width: 100%;
+              text-align: center;
             }
             .doc-title {
               font-size: 18pt;
               font-weight: bold;
               color: #111827;
               margin-bottom: 8px;
+              display: block;
+              width: 100%;
+              text-align: center;
             }
             .period-info {
               font-size: 9pt;
               color: #374151;
               margin-bottom: 4px;
+              display: block;
+              width: 100%;
+              text-align: center;
             }
             .generated-time {
               font-size: 7pt;
               font-style: italic;
               color: #6B7280;
+              display: block;
+              width: 100%;
+              text-align: center;
             }
             .divider {
               border-top: 1px solid #E5E7EB;
