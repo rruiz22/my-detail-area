@@ -1,8 +1,8 @@
 // =====================================================
 // GENERATE INVOICE PDF
 // Created: 2025-10-23
-// Updated: 2025-10-31
-// Description: Generate professional PDF from invoice data with 7-column table
+// Updated: 2025-11-14
+// Description: Generate professional PDF from invoice data with 8-column table (includes row numbers)
 // =====================================================
 
 import jsPDF from 'jspdf';
@@ -201,14 +201,14 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
 
   yPosition += 8;
 
-  // ===== ITEMS TABLE WITH AUTOTABLE (7 COLUMNS) =====
+  // ===== ITEMS TABLE WITH AUTOTABLE (8 COLUMNS) =====
 
   // Determine header for column 3 based on order type
   const hasServiceOrders = invoice.items?.some(item => item.metadata?.order_type === 'service');
   const poRoTagHeader = hasServiceOrders ? 'PO | RO | Tag' : 'Stock';
 
-  // Prepare table headers
-  const tableHeaders = [['Date', 'Order', poRoTagHeader, 'Vehicle', 'VIN', 'Services', 'Amount']];
+  // Prepare table headers (8 columns - added # column)
+  const tableHeaders = [['#', 'Date', 'Order', poRoTagHeader, 'Vehicle', 'VIN', 'Services', 'Amount']];
 
   // Sort items by date (ascending)
   const sortedItems = (invoice.items || []).sort((a, b) => {
@@ -243,8 +243,11 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
 
   // Build table data with separators
   const tableData: any[] = [];
+  let rowNumber = 0; // Row counter
   groupedByDate.forEach((group, groupIndex) => {
     group.items.forEach(item => {
+      rowNumber++; // Increment row number
+
       // Date (MM/DD)
       const date = formatShortDate(item.metadata?.completed_at || item.createdAt);
 
@@ -315,7 +318,7 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       // Amount
       const amount = formatCurrency(item.totalAmount);
 
-      tableData.push([date, orderNumber, poRoTagStock, vehicle, vin, services, amount]);
+      tableData.push([rowNumber.toString(), date, orderNumber, poRoTagStock, vehicle, vin, services, amount]);
     });
 
     // Add separator row with date after each group (except last)
@@ -324,7 +327,7 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       tableData.push([
         {
           content: nextGroupDate,
-          colSpan: 7,
+          colSpan: 8,
           styles: {
             fillColor: '#E5E7EB',
             minCellHeight: 6,
@@ -363,13 +366,14 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       minCellHeight: 8,
     },
     columnStyles: {
-      0: { cellWidth: 13, halign: 'center' },                                      // Date
-      1: { cellWidth: 17, halign: 'center', overflow: 'visible' },                 // Order - No wrap
-      2: { cellWidth: 30, halign: 'left', overflow: 'linebreak', fontSize: 7.5 },  // PO/RO/Tag or Stock
-      3: { cellWidth: 28, halign: 'left' },                                        // Vehicle
-      4: { cellWidth: 26, halign: 'center', fontStyle: 'bold', overflow: 'hidden', fontSize: 7 }, // VIN
-      5: { cellWidth: 34, halign: 'left' },                                        // Services
-      6: { cellWidth: 20, halign: 'right', fontStyle: 'bold' },                    // Amount
+      0: { cellWidth: 8, halign: 'center', fontStyle: 'bold', textColor: '#6B7280' }, // # (row number)
+      1: { cellWidth: 13, halign: 'center' },                                      // Date
+      2: { cellWidth: 17, halign: 'center', overflow: 'visible' },                 // Order - No wrap
+      3: { cellWidth: 28, halign: 'left', overflow: 'linebreak', fontSize: 7.5 },  // PO/RO/Tag or Stock
+      4: { cellWidth: 26, halign: 'left' },                                        // Vehicle
+      5: { cellWidth: 24, halign: 'center', fontStyle: 'bold', overflow: 'hidden', fontSize: 7 }, // VIN
+      6: { cellWidth: 32, halign: 'left' },                                        // Services
+      7: { cellWidth: 20, halign: 'right', fontStyle: 'bold' },                    // Amount
     },
     alternateRowStyles: {
       fillColor: [249, 250, 251], // Gray-50 for zebra striping
@@ -381,20 +385,20 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       if (data.section === 'head') {
         data.cell.styles.overflow = 'visible';
         data.cell.styles.fontSize = 8;
-        // Special handling for PO/RO/Tag or Stock header
-        if (data.column.index === 2) {
+        // Special handling for PO/RO/Tag or Stock header (now column 3)
+        if (data.column.index === 3) {
           data.cell.styles.fontSize = 7;
         }
       }
 
-      // Force no wrap for Order column (column 1)
-      if (data.section === 'body' && data.column.index === 1) {
+      // Force no wrap for Order column (now column 2)
+      if (data.section === 'body' && data.column.index === 2) {
         data.cell.styles.overflow = 'visible';
       }
 
-      // Style separator rows (rows with colSpan: 7) - styles already set in tableData
+      // Style separator rows (rows with colSpan: 8) - styles already set in tableData
       // Just ensure they are preserved
-      if (data.section === 'body' && data.cell.raw && typeof data.cell.raw === 'object' && data.cell.raw.colSpan === 7) {
+      if (data.section === 'body' && data.cell.raw && typeof data.cell.raw === 'object' && data.cell.raw.colSpan === 8) {
         // Styles are already applied in the tableData definition above
         // This is just to ensure they're not overridden
       }

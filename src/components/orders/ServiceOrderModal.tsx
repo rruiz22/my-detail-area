@@ -145,7 +145,10 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
   const [needsAutopopulate, setNeedsAutopopulate] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const canViewPrices = canViewPricing([], enhancedUser?.is_system_admin ?? false);
+  const canViewPrices = canViewPricing(
+    enhancedUser?.custom_roles,
+    enhancedUser?.is_system_admin ?? false
+  );
 
   const isEditing = Boolean(order);
 

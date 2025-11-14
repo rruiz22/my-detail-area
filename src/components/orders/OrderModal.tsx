@@ -214,7 +214,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     address?: string;
   }>({});
 
-  const canViewPrices = canViewPricing([], enhancedUser?.is_system_admin ?? false);
+  const canViewPrices = canViewPricing(
+    enhancedUser?.custom_roles,
+    enhancedUser?.is_system_admin ?? false
+  );
 
   const isEditing = Boolean(order);
   const requiresDueDate = !isEditing && ['sales', 'service'].includes(formData.orderType);
