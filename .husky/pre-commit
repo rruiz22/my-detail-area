@@ -1,6 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 # Translation coverage check
 echo "🔍 Checking translation coverage..."
 node scripts/translation-scanner.cjs

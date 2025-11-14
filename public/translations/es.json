@@ -79,6 +79,11 @@
                                           "download":  "Descargar",
                                           "upload":  "Subir",
                                           "print":  "Imprimir",
+                                          "print_list":  "Imprimir Listado",
+                                          "print_filtered_orders":  "Imprimir Órdenes Filtradas",
+                                          "printing":  "Imprimiendo...",
+                                          "print_success":  "PDF generado exitosamente",
+                                          "print_failed":  "Error al generar PDF",
                                           "refresh":  "Actualizar",
                                           "reload":  "Recargar",
                                           "copy":  "Copiar",
@@ -6365,7 +6370,10 @@
                                       "file_too_large":  "Archivo demasiado grande (~{{size}}MB). MÃ¡ximo 5MB.",
                                       "format_not_allowed":  "Formato {{format}} no permitido. Use JPEG, PNG o WebP.",
                                       "network_error":  "OcurriÃ³ un error de red",
-                                      "storage_error":  "Error al guardar en almacenamiento"
+                                      "storage_error":  "Error al guardar en almacenamiento",
+                                      "permission_system_error":  "Error del Sistema de Permisos",
+                                      "permission_denied":  "Acceso Denegado",
+                                      "access_denied":  "No tienes permisos para acceder a este recurso"
                                   },
                        "common":  {
                                       "loading":  "Cargando...",

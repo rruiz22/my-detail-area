@@ -18,6 +18,7 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDealerFilter } from '@/contexts/DealerFilterContext';
+import { generateOrderListPDF } from '@/utils/generateOrderListPDF';
 
 // Direct imports - no lazy loading for maximum speed
 import { UnifiedOrderDetailModal } from '@/components/orders/UnifiedOrderDetailModal';
@@ -83,6 +84,7 @@ export default function SalesOrders() {
   const [weekOffset, setWeekOffset] = useState(0);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
+  const [isPrinting, setIsPrinting] = useState(false);
 
   const {
     orders,
@@ -421,6 +423,41 @@ export default function SalesOrders() {
     );
   }, [orders, searchTerm]);
 
+  // Handle print list (must be after filteredOrders)
+  const handlePrintList = useCallback(async () => {
+    if (filteredOrders.length === 0) {
+      toast({
+        variant: 'destructive',
+        description: t('common.action_buttons.print_failed') + ': No orders to print'
+      });
+      return;
+    }
+
+    try {
+      setIsPrinting(true);
+
+      await generateOrderListPDF({
+        orders: filteredOrders,
+        orderType: 'sales',
+        filterLabel: getFilterTitle(activeFilter),
+        dealershipName: filteredOrders[0]?.dealershipName || 'Dealership',
+        searchTerm: searchTerm || undefined
+      });
+
+      toast({
+        description: t('common.action_buttons.print_success')
+      });
+    } catch (error) {
+      logError('Print list failed:', error);
+      toast({
+        variant: 'destructive',
+        description: t('common.action_buttons.print_failed')
+      });
+    } finally {
+      setIsPrinting(false);
+    }
+  }, [filteredOrders, activeFilter, searchTerm, t, toast]);
+
   return (
     <div className="space-y-6">
         {/* Accessibility: Live region for screen reader announcements */}
@@ -477,6 +514,8 @@ export default function SalesOrders() {
           onToggleFilters={() => setShowFilters(!showFilters)}
           weekOffset={weekOffset}
           onWeekChange={setWeekOffset}
+          onPrintList={handlePrintList}
+          isPrinting={isPrinting}
         />
 
         {/* Filters */}
