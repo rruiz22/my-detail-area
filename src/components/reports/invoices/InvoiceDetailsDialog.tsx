@@ -378,17 +378,18 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
             }
             @media print {
               body {
-                padding: 0;
+                padding: 0 0 1in 0; /* Bottom padding to prevent content overlap with footer */
                 margin: 0;
                 counter-reset: page;
               }
               .no-print { display: none; }
               @page {
-                margin: 0.5in 0.5in 0.75in 0.5in; /* Extra bottom margin for footer */
+                margin: 0.5in;
                 size: letter;
               }
               table {
                 page-break-inside: auto;
+                margin-bottom: 1in; /* Extra space before footer */
               }
               tr {
                 page-break-inside: avoid;
@@ -405,11 +406,12 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               .page-footer {
                 display: block;
                 position: fixed;
-                bottom: 0.25in;
+                bottom: 0.3in;
                 left: 0.5in;
                 right: 0.5in;
-                padding: 8px 0;
+                padding: 10px 0 5px 0;
                 border-top: 1px solid #E5E7EB;
+                background: white;
                 font-size: 7pt;
                 color: #6B7280;
               }
@@ -421,14 +423,23 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               }
               .footer-left {
                 text-align: left;
+                line-height: 1.4;
+              }
+              .footer-left div {
+                margin: 1px 0;
               }
               .footer-center {
                 text-align: center;
                 font-weight: 600;
                 color: #111827;
+                white-space: nowrap;
               }
               .footer-right {
                 text-align: right;
+                line-height: 1.4;
+              }
+              .footer-right div {
+                margin: 1px 0;
               }
               /* Page counter */
               .footer-center::after {
