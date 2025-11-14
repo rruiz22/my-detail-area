@@ -1,0 +1,33 @@
+{
+  "mcpServers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=swfnnrpzpkdypbrzmgnr",
+      "description": "Supabase MCP server for MyDetailArea dealership management system",
+      "capabilities": [
+        "Database queries and mutations",
+        "Table schema inspection",
+        "Edge Functions deployment",
+        "Real-time subscriptions",
+        "Storage operations",
+        "Auth management"
+      ]
+    }
+  },
+  "project": {
+    "name": "MyDetailArea",
+    "type": "dealership-management",
+    "database": {
+      "provider": "supabase",
+      "project_id": "swfnnrpzpkdypbrzmgnr",
+      "project_url": "https://swfnnrpzpkdypbrzmgnr.supabase.co"
+    },
+    "stack": {
+      "frontend": "React 18 + TypeScript + Vite",
+      "ui": "shadcn/ui + Radix UI + Tailwind CSS",
+      "backend": "Supabase (PostgreSQL + Auth + Edge Functions)",
+      "state": "TanStack Query + React Context",
+      "i18n": "react-i18next (EN, ES, PT-BR)"
+    }
+  }
+}

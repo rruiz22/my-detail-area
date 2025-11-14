@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useVehicleAutoPopulation, VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
-import { Car, Image as ImageIcon, Loader2, Search, X, Zap } from 'lucide-react';
+import { AlertCircle, Car, ClipboardList, Image as ImageIcon, Loader2, Search, X, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -130,6 +130,7 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
     switch (source) {
       case 'inventory': return <Car className="h-3 w-3" />;
       case 'vin_api': return <Zap className="h-3 w-3" />;
+      case 'orders': return <ClipboardList className="h-3 w-3" />;
       default: return <Search className="h-3 w-3" />;
     }
   };
@@ -249,9 +250,15 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
 
       {isOpen && query.length >= 2 && results.length === 0 && !loading && (
         <Card className="absolute top-full left-0 right-0 z-50 mt-1 shadow-lg border border-border">
-          <CardContent className="p-4 text-center text-muted-foreground">
-            <Search className="h-8 w-8 mx-auto mb-2 opacity-50" />
-            <p className="text-sm">{t('stock.autopop.noResults')}</p>
+          <CardContent className="p-4 text-center">
+            <AlertCircle className="h-8 w-8 mx-auto mb-2 opacity-50 text-muted-foreground" />
+            <p className="text-sm font-medium">{t('stock.autopop.noResults')}</p>
+            {query && (
+              <p className="text-xs text-muted-foreground mt-2 font-mono">"{query}"</p>
+            )}
+            <p className="text-xs text-muted-foreground mt-2">
+              {t('stock.autopop.tryDifferentSearch')}
+            </p>
           </CardContent>
         </Card>
       )}
