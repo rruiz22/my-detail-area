@@ -780,6 +780,7 @@
                          "tabs":  {
                                       "dashboard":  "Painel",
                                       "today":  "Hoje",
+                                      "tomorrow":  "AmanhÃ£",
                                       "queued":  "Na Fila",
                                       "week":  "Semana",
                                       "all":  "Todos os Pedidos",
