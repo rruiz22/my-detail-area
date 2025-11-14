@@ -13,7 +13,7 @@ export const TAB_CONFIGS = {
   service_orders: {
     key: 'service',
     defaultTab: 'dashboard',
-    validTabs: ['dashboard', 'today', 'tomorrow', 'pending', 'in_process', 'week', 'all', 'services', 'deleted']
+    validTabs: ['dashboard', 'today', 'queued', 'week', 'all', 'services', 'deleted']
   },
   recon_orders: {
     key: 'recon',

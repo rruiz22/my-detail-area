@@ -54,11 +54,7 @@ export interface ServiceOrderData {
 interface ServiceTabCounts {
   all: number;
   today: number;
-  tomorrow: number;
-  pending: number;
-  in_process: number;
-  completed: number;
-  cancelled: number;
+  queued: number;
   week: number;
 }
 
@@ -314,13 +310,10 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
   );
 
   // OPTIMIZATION: Single-pass reduce for tabCounts calculation O(n)
-  // Benefits: Reduces 8 separate array iterations to 1, better performance for large datasets
+  // Benefits: Reduces separate array iterations to 1, better performance for large datasets
   const tabCounts = useMemo((): ServiceTabCounts => {
     const today = new Date();
     const todayString = today.toDateString();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowString = tomorrow.toDateString();
 
     // Single-pass accumulator for ALL tab counts
     const counts = allOrders.reduce((acc, order) => {
@@ -329,24 +322,18 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
 
       // Date-based counts
       if (orderDateString === todayString) acc.today++;
-      if (orderDateString === tomorrowString) acc.tomorrow++;
       if (isDateInWeek(orderDate, weekOffset)) acc.week++;
 
-      // Status-based counts
-      if (order.status === 'pending') acc.pending++;
-      else if (order.status === 'in_progress') acc.in_process++;
-      else if (order.status === 'completed') acc.completed++;
-      else if (order.status === 'cancelled') acc.cancelled++;
+      // Queued count: pending + in_progress (NOT completed or cancelled)
+      if (order.status === 'pending' || order.status === 'in_progress') {
+        acc.queued++;
+      }
 
       return acc;
     }, {
       all: allOrders.length,
       today: 0,
-      tomorrow: 0,
-      pending: 0,
-      in_process: 0,
-      completed: 0,
-      cancelled: 0,
+      queued: 0,
       week: 0
     });
 
@@ -359,39 +346,25 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
     // Apply tab-specific filtering
     if (activeTab !== 'dashboard' && activeTab !== 'all') {
       const today = new Date();
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
 
       switch (activeTab) {
-        case 'week':
-          filtered = filtered.filter(order => {
-            const orderDate = new Date(order.dueDate || order.createdAt);
-            return isDateInWeek(orderDate, weekOffset);
-          });
-          break;
         case 'today':
           filtered = filtered.filter(order => {
             const orderDate = new Date(order.dueDate || order.createdAt);
             return orderDate.toDateString() === today.toDateString();
           });
           break;
-        case 'tomorrow':
+        case 'queued':
+          // Filter orders that are NOT completed or cancelled
+          filtered = filtered.filter(order =>
+            order.status === 'pending' || order.status === 'in_progress'
+          );
+          break;
+        case 'week':
           filtered = filtered.filter(order => {
             const orderDate = new Date(order.dueDate || order.createdAt);
-            return orderDate.toDateString() === tomorrow.toDateString();
+            return isDateInWeek(orderDate, weekOffset);
           });
-          break;
-        case 'pending':
-          filtered = filtered.filter(order => order.status === 'pending');
-          break;
-        case 'in_process':
-          filtered = filtered.filter(order => order.status === 'in_progress');
-          break;
-        case 'completed':
-          filtered = filtered.filter(order => order.status === 'completed');
-          break;
-        case 'cancelled':
-          filtered = filtered.filter(order => order.status === 'cancelled');
           break;
       }
     }
@@ -430,6 +403,15 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
       const toDate = new Date(filters.dateRange.to);
       toDate.setHours(23, 59, 59, 999);
       filtered = filtered.filter(order => new Date(order.createdAt) <= toDate);
+    }
+
+    // Sort orders by due date ascending (earliest first) for time-sensitive filters
+    if (activeTab === 'today' || activeTab === 'queued' || activeTab === 'week') {
+      filtered = filtered.sort((a, b) => {
+        const dateA = new Date(a.dueDate || a.createdAt).getTime();
+        const dateB = new Date(b.dueDate || b.createdAt).getTime();
+        return dateA - dateB;
+      });
     }
 
     return filtered;

@@ -738,8 +738,7 @@
                          "tabs":  {
                                       "dashboard":  "Dashboard",
                                       "today":  "Today",
-                                      "tomorrow":  "Tomorrow",
-                                      "pending":  "Pending",
+                                      "queued":  "Queued",
                                       "week":  "Week",
                                       "all":  "All Orders",
                                       "services":  "Services",
@@ -5694,6 +5693,8 @@
                                   "vinDecoded":  "VIN Decoded",
                                   "useVehicle":  "Use this vehicle",
                                   "noResults":  "No vehicles found",
+                                  "tryDifferentSearch":  "Try searching by stock number, VIN, make, or model",
+                                  "fromOrder":  "From order",
                                   "cleared":  "Vehicle cleared - you can now enter manually",
                                   "autoPopulated":  "Auto-populated from",
                                   "confidence":  {
@@ -5702,6 +5703,9 @@
                                                      "low":  "Low Match"
                                                  }
                               },
+                  "source":  {
+                                 "previous_order":  "Previous Order"
+                             },
                   "upload":  {
                                  "title":  "Upload Inventory",
                                  "drag_drop_files":  "Drag and drop your CSV file here",
