@@ -163,7 +163,8 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
         <!DOCTYPE html>
         <html>
         <head>
-          <title>Invoice ${invoice.invoiceNumber}</title>
+          <meta charset="UTF-8">
+          <title>Invoice #${invoice.invoiceNumber} - ${dealerName}</title>
           <style>
             @page {
               margin: 0.5in;
@@ -436,12 +437,13 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
           <table>
             <thead>
               <tr>
-                <th style="width: 8%;">Date</th>
-                <th style="width: 10%;">Order</th>
-                <th style="width: 18%;">PO | RO | Tag</th>
-                <th style="width: 16%;">Vehicle</th>
-                <th style="width: 14%;">VIN</th>
-                <th style="width: 22%;" class="text-left">Services</th>
+                <th style="width: 4%;">#</th>
+                <th style="width: 7%;">Date</th>
+                <th style="width: 9%;">Order</th>
+                <th style="width: 17%;">PO | RO | Tag</th>
+                <th style="width: 15%;">Vehicle</th>
+                <th style="width: 13%;">VIN</th>
+                <th style="width: 23%;" class="text-left">Services</th>
                 <th style="width: 12%;">Amount</th>
               </tr>
             </thead>
@@ -449,6 +451,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               ${(() => {
                 let lastDate = '';
                 let rows = '';
+                let rowNumber = 0;
 
                 sortedItems.forEach((item, index) => {
                   const po = item.metadata?.po || '';
@@ -471,22 +474,25 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
 
                   // Add separator row if date changes
                   if (itemDate !== lastDate && index > 0) {
-                    rows += `
+                    rows += \`
                       <tr class="date-separator">
-                        <td colspan="7">${itemDate}</td>
+                        <td colspan="8">\${itemDate}</td>
                       </tr>
-                    `;
+                    \`;
                   }
                   lastDate = itemDate;
 
-                  rows += `
+                  rowNumber++;
+
+                  rows += \`
                     <tr>
-                      <td>${itemDate}</td>
-                      <td style="font-weight: 600; white-space: nowrap;">${item.metadata?.order_number || 'N/A'}</td>
-                      <td class="po-ro-tag" style="white-space: nowrap;">${poRoTag}</td>
-                      <td>${cleanVehicleDescription(item.description)}</td>
-                      <td class="font-mono" style="white-space: nowrap;">${item.metadata?.vehicle_vin || 'N/A'}</td>
-                      <td class="text-left">${(() => {
+                      <td style="font-weight: 600; color: #6B7280;">\${rowNumber}</td>
+                      <td>\${itemDate}</td>
+                      <td style="font-weight: 600; white-space: nowrap;">\${item.metadata?.order_number || 'N/A'}</td>
+                      <td class="po-ro-tag" style="white-space: nowrap;">\${poRoTag}</td>
+                      <td>\${cleanVehicleDescription(item.description)}</td>
+                      <td class="font-mono" style="white-space: nowrap;">\${item.metadata?.vehicle_vin || 'N/A'}</td>
+                      <td class="text-left">\${(() => {
                         // Extract service names with fallback logic
                         if (item.metadata?.service_names) {
                           return item.metadata.service_names;
@@ -503,9 +509,9 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                         }
                         return item.serviceReference || 'N/A';
                       })()}</td>
-                      <td class="amount-cell">${formatCurrency(item.totalAmount)}</td>
+                      <td class="amount-cell">\${formatCurrency(item.totalAmount)}</td>
                     </tr>
-                  `;
+                  \`;
                 });
 
                 return rows;
