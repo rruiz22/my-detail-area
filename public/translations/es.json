@@ -804,10 +804,9 @@
                          "tabs":  {
                                       "dashboard":  "Panel",
                                       "today":  "Hoy",
-                                      "tomorrow":  "MaÃ±ana",
-                                      "pending":  "Pendientes",
+                                      "queued":  "En Cola",
                                       "week":  "Semana",
-                                      "all":  "Todas las Ã“rdenes",
+                                      "all":  "Todas las Ã"rdenes",
                                       "services":  "Servicios",
                                       "deleted":  "Eliminadas"
                                   },
@@ -5494,6 +5493,8 @@
                                   "vinDecoded":  "VIN Decodificado",
                                   "useVehicle":  "Usar este vehÃ­culo",
                                   "noResults":  "No se encontraron vehÃ­culos",
+                                  "tryDifferentSearch":  "Intenta buscar por nÃºmero de stock, VIN, marca o modelo",
+                                  "fromOrder":  "De la orden",
                                   "cleared":  "VehÃ­culo eliminado - ahora puedes ingresar manualmente",
                                   "autoPopulated":  "Auto-completado desde",
                                   "confidence":  {
@@ -5502,6 +5503,9 @@
                                                      "low":  "Baja Coincidencia"
                                                  }
                               },
+                  "source":  {
+                                 "previous_order":  "Orden Anterior"
+                             },
                   "upload":  {
                                  "title":  "Subir Inventario",
                                  "drag_drop_files":  "Arrastra y suelta tu archivo CSV aquÃ­",
