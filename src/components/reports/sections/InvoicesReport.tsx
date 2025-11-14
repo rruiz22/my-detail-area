@@ -1018,21 +1018,6 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
               color: #10b981;
               font-size: 16px;
             }
-            .page-footer {
-              position: fixed;
-              bottom: 0;
-              right: 0;
-              font-size: 10px;
-              color: #6b7280;
-              padding: 10px 20px;
-            }
-            @media print {
-              .page-footer {
-                position: fixed;
-                bottom: 0;
-                right: 0;
-              }
-            }
           </style>
         </head>
         <body>
