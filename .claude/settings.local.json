@@ -85,7 +85,9 @@
       "Bash(cp:*)",
       "Bash(if [ -d \"supabase/migrations\" ])",
       "Bash(then ls -la supabase/migrations)",
-      "Bash(else echo \"No migrations folder found\")"
+      "Bash(else echo \"No migrations folder found\")",
+      "Bash(export:*)",
+      "Bash(ping:*)"
     ],
     "deny": [],
     "ask": []

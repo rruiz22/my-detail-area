@@ -6,7 +6,7 @@ import { VehicleSearchInput } from '@/components/ui/vehicle-search-input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { Car, Zap, X, Image as ImageIcon } from 'lucide-react';
+import { Car, ClipboardList, Zap, X, Image as ImageIcon } from 'lucide-react';
 import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
 
 interface VehicleAutoPopulationFieldProps {
@@ -56,6 +56,7 @@ export const VehicleAutoPopulationField: React.FC<VehicleAutoPopulationFieldProp
     switch (source) {
       case 'inventory': return <Car className="h-4 w-4 text-green-600" />;
       case 'vin_api': return <Zap className="h-4 w-4 text-indigo-500" />;
+      case 'orders': return <ClipboardList className="h-4 w-4 text-indigo-500" />;
       default: return null;
     }
   };
@@ -64,6 +65,7 @@ export const VehicleAutoPopulationField: React.FC<VehicleAutoPopulationFieldProp
     switch (source) {
       case 'inventory': return t('stock.autopop.localInventory');
       case 'vin_api': return t('stock.autopop.vinDecoded');
+      case 'orders': return t('stock.source.previous_order');
       default: return '';
     }
   };
@@ -145,6 +147,18 @@ export const VehicleAutoPopulationField: React.FC<VehicleAutoPopulationFieldProp
                   {selectedVehicle.data.vin && (
                     <div className="mb-2">
                       <span className="font-medium">VIN:</span> <span className="font-mono text-xs">{selectedVehicle.data.vin}</span>
+                    </div>
+                  )}
+
+                  {/* Show order info if source is 'orders' */}
+                  {selectedVehicle.source === 'orders' && (
+                    <div className="mb-2 text-xs text-muted-foreground">
+                      {selectedVehicle.data.orderNumber && (
+                        <span>{t('stock.autopop.fromOrder')} #{selectedVehicle.data.orderNumber}</span>
+                      )}
+                      {selectedVehicle.data.orderDate && selectedVehicle.data.orderNumber && <span> • </span>}
+                      {selectedVehicle.data.orderDate && <span>{selectedVehicle.data.orderDate}</span>}
+                      {selectedVehicle.data.orderStatus && <span> • {selectedVehicle.data.orderStatus}</span>}
                     </div>
                   )}
                 </div>

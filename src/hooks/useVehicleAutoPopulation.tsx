@@ -2,9 +2,10 @@ import { useState, useCallback } from 'react';
 import { useStockManagement } from '@/hooks/useStockManagement';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface VehicleSearchResult {
-  source: 'inventory' | 'vin_api' | 'manual';
+  source: 'inventory' | 'vin_api' | 'manual' | 'orders';
   confidence: 'high' | 'medium' | 'low';
   data: {
     stockNumber?: string;
@@ -24,6 +25,10 @@ export interface VehicleSearchResult {
     market_rank_overall?: number;
     acv_wholesale?: number;
     estimated_profit?: number;
+    // Orders-specific data
+    orderNumber?: string;
+    orderDate?: string;
+    orderStatus?: string;
   };
   preview?: {
     title: string;
@@ -118,6 +123,64 @@ export function useVehicleAutoPopulation(dealerId?: number): UseVehicleAutoPopul
     };
   };
 
+  const createOrderResult = (order: any): VehicleSearchResult => {
+    const title = `${order.vehicle_year || ''} ${order.vehicle_make || ''} ${order.vehicle_model || ''}`.trim();
+    const orderDate = order.created_at ? new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '';
+    const subtitle = [
+      order.stock_number ? `Stock: ${order.stock_number}` : null,
+      order.order_number ? `Order #${order.order_number}` : null
+    ].filter(Boolean).join(' • ');
+
+    return {
+      source: 'orders',
+      confidence: 'medium',
+      data: {
+        stockNumber: order.stock_number,
+        vin: order.vehicle_vin,
+        year: order.vehicle_year,
+        make: order.vehicle_make,
+        model: order.vehicle_model,
+        vehicleInfo: order.vehicle_info || title,
+        orderNumber: order.order_number,
+        orderDate,
+        orderStatus: order.status
+      },
+      preview: {
+        title,
+        subtitle,
+        badge: `${orderDate} • ${order.status || 'N/A'}`,
+        badgeVariant: 'outline'
+      }
+    };
+  };
+
+  const searchOrdersForVehicles = useCallback(async (query: string, dealerId: number): Promise<VehicleSearchResult[]> => {
+    try {
+      // Search in orders table from the last year only
+      const oneYearAgo = new Date();
+      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+      const { data, error } = await supabase
+        .from('orders')
+        .select('vehicle_vin, vehicle_year, vehicle_make, vehicle_model, vehicle_info, stock_number, order_number, created_at, status, order_type')
+        .eq('dealer_id', dealerId)
+        .in('order_type', ['sales', 'recon'])
+        .gte('created_at', oneYearAgo.toISOString())
+        .or(`stock_number.ilike.%${query}%,vehicle_vin.ilike.%${query}%,vehicle_make.ilike.%${query}%,vehicle_model.ilike.%${query}%`)
+        .limit(5);
+
+      if (error) {
+        console.error('Error searching orders:', error);
+        return [];
+      }
+
+      return (data || []).map(order => createOrderResult(order));
+    } catch (err) {
+      console.error('Error in searchOrdersForVehicles:', err);
+      return [];
+    }
+  }, []);
+
   const searchByStock = useCallback(async (stockNumber: string): Promise<VehicleSearchResult | null> => {
     if (!stockNumber || !currentDealerId) return null;
     
@@ -172,27 +235,27 @@ export function useVehicleAutoPopulation(dealerId?: number): UseVehicleAutoPopul
 
   const searchVehicle = useCallback(async (query: string): Promise<VehicleSearchResult[]> => {
     if (!query || query.length < 2) return [];
-    
+
     setLoading(true);
     setError(null);
-    
+
     try {
       const results: VehicleSearchResult[] = [];
-      
+
       // Check if it's a VIN (17 characters)
       if (query.length === 17) {
         const vinResult = await searchByVin(query);
         if (vinResult) results.push(vinResult);
         return results;
       }
-      
+
       // Check if it's a stock number first
       if (currentDealerId) {
         const stockResult = await searchByStock(query);
         if (stockResult) {
           results.push(stockResult);
         }
-        
+
         // Search inventory by general query
         const inventoryResults = searchInventory(query);
         inventoryResults.forEach(vehicle => {
@@ -201,8 +264,30 @@ export function useVehicleAutoPopulation(dealerId?: number): UseVehicleAutoPopul
             results.push(createInventoryResult(vehicle));
           }
         });
+
+        // If we have less than 5 results, search in orders as fallback
+        if (results.length < 5) {
+          const ordersResults = await searchOrdersForVehicles(query, currentDealerId);
+
+          // Deduplicate by VIN - prioritize inventory results
+          const seenVins = new Set(
+            results
+              .map(r => r.data.vin)
+              .filter((vin): vin is string => Boolean(vin))
+          );
+
+          ordersResults.forEach(orderResult => {
+            // Only add if VIN is not already in results (or if no VIN)
+            if (!orderResult.data.vin || !seenVins.has(orderResult.data.vin)) {
+              results.push(orderResult);
+              if (orderResult.data.vin) {
+                seenVins.add(orderResult.data.vin);
+              }
+            }
+          });
+        }
       }
-      
+
       return results.slice(0, 5); // Limit to 5 results
     } catch (err) {
       setError('Error searching vehicles');
@@ -210,7 +295,7 @@ export function useVehicleAutoPopulation(dealerId?: number): UseVehicleAutoPopul
     } finally {
       setLoading(false);
     }
-  }, [currentDealerId, searchInventory, searchByStock, searchByVin]);
+  }, [currentDealerId, searchInventory, searchByStock, searchByVin, searchOrdersForVehicles]);
 
   return {
     searchVehicle,

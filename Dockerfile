@@ -1,7 +1,7 @@
 # ============================================
 # Stage 1: Build the application
 # ============================================
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -23,7 +23,7 @@ RUN npm run build
 # ============================================
 # Stage 2: Production image
 # ============================================
-FROM node:18-alpine
+FROM node:20-alpine
 
 # Install serve globally
 RUN npm install -g serve
