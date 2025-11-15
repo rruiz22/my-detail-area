@@ -33,17 +33,31 @@ export function useAppVersion() {
     }
   }, []);
 
-  // 🔴 CRITICAL FIX: Check for updates IMMEDIATELY on load, then every 5 minutes
+  // 🔴 CRITICAL FIX: Check for updates IMMEDIATELY on load, then every 30 seconds
+  // + Check when user returns to tab for instant detection
   useEffect(() => {
     // Check immediately on mount
     checkForUpdate();
 
-    // Then check every 5 minutes
+    // Then check every 30 seconds (fast detection for critical fixes)
     const checkInterval = setInterval(() => {
       checkForUpdate();
-    }, 5 * 60 * 1000); // 5 minutos
+    }, 30 * 1000); // 30 segundos - detección rápida
 
-    return () => clearInterval(checkInterval);
+    // Check when user returns to tab (instant detection)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        console.log('🔍 Tab visible - checking for updates...');
+        checkForUpdate();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      clearInterval(checkInterval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
