@@ -6,13 +6,13 @@
       "args": [
         "-y",
         "@supabase/mcp-server-supabase",
-        "swfnnrpzpkdypbrzmgnr",
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN3Zm5ucnB6cGtkeXBicnptZ25yIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NzE4Njk2MCwiZXhwIjoyMDcyNzYyOTYwfQ.ud57lvk528bfk8lb-D5CGn2UeN6_fLuEXXwd-CKaYrE"
+        "YOUR_SUPABASE_PROJECT_REF",
+        "YOUR_SUPABASE_SERVICE_ROLE_KEY"
       ],
       "disabled": false,
       "description": "Supabase MCP Server for MyDetailArea - provides database queries, edge functions, storage, and auth management",
       "env": {
-        "SUPABASE_PROJECT_REF": "swfnnrpzpkdypbrzmgnr"
+        "SUPABASE_PROJECT_REF": "YOUR_SUPABASE_PROJECT_REF"
       }
     },
     "firebase": {
@@ -22,7 +22,7 @@
         "firebase-tools@latest",
         "mcp",
         "--dir",
-        "C:\\Users\\rudyr\\apps\\mydetailarea"
+        "C:\\Users\\YOUR_USERNAME\\apps\\mydetailarea"
       ],
       "disabled": true,
       "description": "Firebase MCP Server (disabled - using Supabase as primary backend)"

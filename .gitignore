@@ -29,6 +29,10 @@ dist-ssr
 .env.local
 .env.*.local
 
+# MCP Configuration (contains credentials)
+.claude/mcp.json
+.clauderc
+
 # Supabase
 .branches
 .temp
