@@ -141,6 +141,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [pendingServiceIds, setPendingServiceIds] = useState<string[]>([]); // Store service IDs until services are loaded
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [vinDecoded, setVinDecoded] = useState(false);
   const [needsAutopopulate, setNeedsAutopopulate] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -554,6 +555,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null); // Reset any previous errors
+    setSubmitting(true); // Activate loading state
 
     // Check if we have multiple services - create separate orders for each
     if (!order && selectedServices.length > 1) {
@@ -604,6 +606,8 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
           description: errorMessage,
           variant: 'destructive'
         });
+      } finally {
+        setSubmitting(false); // Clear loading state
       }
     } else {
       // Single service or editing - proceed as normal
@@ -673,6 +677,8 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
           description: errorMessage,
           variant: 'destructive'
         });
+      } finally {
+        setSubmitting(false); // Clear loading state
       }
     }
   };
@@ -1260,6 +1266,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
           <Button
             onClick={handleSubmit}
             disabled={
+              submitting ||
               loading ||
               !selectedDealership ||
               !selectedAssignedTo ||
@@ -1272,7 +1279,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
             }
             className="w-1/2 sm:w-auto min-h-[44px]"
           >
-            {loading ? (
+            {submitting ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 {order ? t('orders.updating') : t('orders.creating')}

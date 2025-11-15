@@ -775,8 +775,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       })(),
 
       // Financial data - CRITICAL for reports
-      // ✅ VALIDATION: Calculate total with proper NULL handling
-      total_amount: canViewPrices ? selectedServices.reduce((total, serviceId) => {
+      // ✅ FIXED: Calculate total ALWAYS, regardless of user permissions
+      // Price must be saved to DB even if user can't view it in UI
+      total_amount: selectedServices.reduce((total, serviceId) => {
         const service = services.find((s: { id: string; price?: number }) => s.id === serviceId);
         const servicePrice = service?.price ?? 0;  // ✅ Default to 0 instead of undefined
 
@@ -790,7 +791,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         }
 
         return total + servicePrice;
-      }, 0) : 0,
+      }, 0),
 
       // Location data - for new orders only
       ...(currentLocation.lat && currentLocation.lng ? {
