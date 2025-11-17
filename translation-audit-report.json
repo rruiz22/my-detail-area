@@ -3188,292 +3188,292 @@
         "hardcodedStrings": [
           {
             "text": "Financial Performance Overview",
-            "line": 833,
-            "context": "832: <CardHeader className=\"pb-3\">\n833: <CardTitle className=\"text-xl\">Financial Performance Overview</CardTitle>\n834: <CardDescription className=\"mt-1\">"
+            "line": 838,
+            "context": "837: <CardHeader className=\"pb-3\">\n838: <CardTitle className=\"text-xl\">Financial Performance Overview</CardTitle>\n839: <CardDescription className=\"mt-1\">"
           },
           {
             "text": "Revenue insights and financial metrics",
-            "line": 834,
-            "context": "833: <CardTitle className=\"text-xl\">Financial Performance Overview</CardTitle>\n834: <CardDescription className=\"mt-1\">\n835: Revenue insights and financial metrics"
+            "line": 839,
+            "context": "838: <CardTitle className=\"text-xl\">Financial Performance Overview</CardTitle>\n839: <CardDescription className=\"mt-1\">\n840: Revenue insights and financial metrics"
           },
           {
             "text": "Total Revenue",
-            "line": 842,
-            "context": "841: <div className=\"flex items-center justify-between\">\n842: <span className=\"text-sm font-medium text-muted-foreground\">Total Revenue</span>\n843: <DollarSign className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 847,
+            "context": "846: <div className=\"flex items-center justify-between\">\n847: <span className=\"text-sm font-medium text-muted-foreground\">Total Revenue</span>\n848: <DollarSign className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Total Orders",
-            "line": 886,
-            "context": "885: <div className=\"flex items-center justify-between\">\n886: <span className=\"text-sm font-medium text-muted-foreground\">Total Orders</span>\n887: <Target className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 891,
+            "context": "890: <div className=\"flex items-center justify-between\">\n891: <span className=\"text-sm font-medium text-muted-foreground\">Total Orders</span>\n892: <Target className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Total by Departments",
-            "line": 936,
-            "context": "935: <div className=\"flex items-center justify-between\">\n936: <span className=\"text-sm font-medium text-indigo-700\">Total by Departments</span>\n937: <DollarSign className=\"h-4 w-4 text-indigo-600\" />"
+            "line": 941,
+            "context": "940: <div className=\"flex items-center justify-between\">\n941: <span className=\"text-sm font-medium text-indigo-700\">Total by Departments</span>\n942: <DollarSign className=\"h-4 w-4 text-indigo-600\" />"
           },
           {
             "text": "By Department",
-            "line": 951,
-            "context": "950: <TabsList className=\"grid w-full grid-cols-4\">\n951: <TabsTrigger value=\"departments\">By Department</TabsTrigger>\n952: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>"
+            "line": 956,
+            "context": "955: <TabsList className=\"grid w-full grid-cols-4\">\n956: <TabsTrigger value=\"departments\">By Department</TabsTrigger>\n957: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>"
           },
           {
             "text": "Revenue Trends",
-            "line": 952,
-            "context": "951: <TabsTrigger value=\"departments\">By Department</TabsTrigger>\n952: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>\n953: <TabsTrigger value=\"services\">Top Services</TabsTrigger>"
+            "line": 957,
+            "context": "956: <TabsTrigger value=\"departments\">By Department</TabsTrigger>\n957: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>\n958: <TabsTrigger value=\"services\">Top Services</TabsTrigger>"
           },
           {
             "text": "Top Services",
-            "line": 953,
-            "context": "952: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>\n953: <TabsTrigger value=\"services\">Top Services</TabsTrigger>\n954: <TabsTrigger value=\"analysis\">Detailed Analysis</TabsTrigger>"
+            "line": 958,
+            "context": "957: <TabsTrigger value=\"trends\">Revenue Trends</TabsTrigger>\n958: <TabsTrigger value=\"services\">Top Services</TabsTrigger>\n959: <TabsTrigger value=\"analysis\">Detailed Analysis</TabsTrigger>"
           },
           {
             "text": "Detailed Analysis",
-            "line": 954,
-            "context": "953: <TabsTrigger value=\"services\">Top Services</TabsTrigger>\n954: <TabsTrigger value=\"analysis\">Detailed Analysis</TabsTrigger>\n955: </TabsList>"
+            "line": 959,
+            "context": "958: <TabsTrigger value=\"services\">Top Services</TabsTrigger>\n959: <TabsTrigger value=\"analysis\">Detailed Analysis</TabsTrigger>\n960: </TabsList>"
           },
           {
             "text": "Revenue by Department",
-            "line": 1019,
-            "context": "1018: <CardHeader>\n1019: <CardTitle>Revenue by Department</CardTitle>\n1020: <CardDescription>"
+            "line": 1024,
+            "context": "1023: <CardHeader>\n1024: <CardTitle>Revenue by Department</CardTitle>\n1025: <CardDescription>"
           },
           {
             "text": "No department data available",
-            "line": 1065,
-            "context": "1064: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1065: <p>No department data available</p>\n1066: </div>"
+            "line": 1070,
+            "context": "1069: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1070: <p>No department data available</p>\n1071: </div>"
           },
           {
             "text": "Order Count by Department",
-            "line": 1073,
-            "context": "1072: <CardHeader>\n1073: <CardTitle>Order Count by Department</CardTitle>\n1074: <CardDescription>"
+            "line": 1078,
+            "context": "1077: <CardHeader>\n1078: <CardTitle>Order Count by Department</CardTitle>\n1079: <CardDescription>"
           },
           {
             "text": "No department data available",
-            "line": 1118,
-            "context": "1117: <Target className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1118: <p>No department data available</p>\n1119: </div>"
+            "line": 1123,
+            "context": "1122: <Target className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1123: <p>No department data available</p>\n1124: </div>"
           },
           {
             "text": "Department Performance Summary",
-            "line": 1128,
-            "context": "1127: <CardHeader className=\"bg-slate-50 border-b\">\n1128: <CardTitle>Department Performance Summary</CardTitle>\n1129: <CardDescription>"
+            "line": 1133,
+            "context": "1132: <CardHeader className=\"bg-slate-50 border-b\">\n1133: <CardTitle>Department Performance Summary</CardTitle>\n1134: <CardDescription>"
           },
           {
             "text": "Detailed metrics for each department",
-            "line": 1129,
-            "context": "1128: <CardTitle>Department Performance Summary</CardTitle>\n1129: <CardDescription>\n1130: Detailed metrics for each department"
+            "line": 1134,
+            "context": "1133: <CardTitle>Department Performance Summary</CardTitle>\n1134: <CardDescription>\n1135: Detailed metrics for each department"
           },
           {
             "text": "Department",
-            "line": 1143,
-            "context": "1142: <tr>\n1143: <th className=\"text-left px-6 py-4 text-sm font-bold text-slate-700\">Department</th>\n1144: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>"
+            "line": 1148,
+            "context": "1147: <tr>\n1148: <th className=\"text-left px-6 py-4 text-sm font-bold text-slate-700\">Department</th>\n1149: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>"
           },
           {
             "text": "Total Revenue",
-            "line": 1144,
-            "context": "1143: <th className=\"text-left px-6 py-4 text-sm font-bold text-slate-700\">Department</th>\n1144: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>\n1145: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>"
+            "line": 1149,
+            "context": "1148: <th className=\"text-left px-6 py-4 text-sm font-bold text-slate-700\">Department</th>\n1149: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>\n1150: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>"
           },
           {
             "text": "Orders",
-            "line": 1145,
-            "context": "1144: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>\n1145: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>\n1146: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>"
+            "line": 1150,
+            "context": "1149: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Total Revenue</th>\n1150: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>\n1151: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>"
           },
           {
             "text": "Avg Order Value",
-            "line": 1146,
-            "context": "1145: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>\n1146: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>\n1147: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Completion Rate</th>"
+            "line": 1151,
+            "context": "1150: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Orders</th>\n1151: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>\n1152: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Completion Rate</th>"
           },
           {
             "text": "Completion Rate",
-            "line": 1147,
-            "context": "1146: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>\n1147: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Completion Rate</th>\n1148: </tr>"
+            "line": 1152,
+            "context": "1151: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Avg Order Value</th>\n1152: <th className=\"text-right px-6 py-4 text-sm font-bold text-slate-700\">Completion Rate</th>\n1153: </tr>"
           },
           {
             "text": "No department data available",
-            "line": 1180,
-            "context": "1179: <BarChart3 className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1180: <p className=\"text-muted-foreground\">No department data available</p>\n1181: </div>"
+            "line": 1185,
+            "context": "1184: <BarChart3 className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1185: <p className=\"text-muted-foreground\">No department data available</p>\n1186: </div>"
           },
           {
             "text": "Revenue Performance Over Time",
-            "line": 1190,
-            "context": "1189: <CardHeader>\n1190: <CardTitle>Revenue Performance Over Time</CardTitle>\n1191: <CardDescription>"
+            "line": 1195,
+            "context": "1194: <CardHeader>\n1195: <CardTitle>Revenue Performance Over Time</CardTitle>\n1196: <CardDescription>"
           },
           {
             "text": "Monthly revenue trends with order volume correlation",
-            "line": 1191,
-            "context": "1190: <CardTitle>Revenue Performance Over Time</CardTitle>\n1191: <CardDescription>\n1192: Monthly revenue trends with order volume correlation"
+            "line": 1196,
+            "context": "1195: <CardTitle>Revenue Performance Over Time</CardTitle>\n1196: <CardDescription>\n1197: Monthly revenue trends with order volume correlation"
           },
           {
             "text": "No revenue data available",
-            "line": 1253,
-            "context": "1252: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1253: <p>No revenue data available</p>\n1254: </div>"
+            "line": 1258,
+            "context": "1257: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1258: <p>No revenue data available</p>\n1259: </div>"
           },
           {
             "text": "Top Revenue Generators",
-            "line": 1264,
-            "context": "1263: <CardHeader>\n1264: <CardTitle>Top Revenue Generators</CardTitle>\n1265: <CardDescription>"
+            "line": 1269,
+            "context": "1268: <CardHeader>\n1269: <CardTitle>Top Revenue Generators</CardTitle>\n1270: <CardDescription>"
           },
           {
             "text": "Services ranked by total revenue contribution",
-            "line": 1265,
-            "context": "1264: <CardTitle>Top Revenue Generators</CardTitle>\n1265: <CardDescription>\n1266: Services ranked by total revenue contribution"
+            "line": 1270,
+            "context": "1269: <CardTitle>Top Revenue Generators</CardTitle>\n1270: <CardDescription>\n1271: Services ranked by total revenue contribution"
           },
           {
             "text": "No service data available",
-            "line": 1309,
-            "context": "1308: <PieChart className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1309: <p>No service data available</p>\n1310: </div>"
+            "line": 1314,
+            "context": "1313: <PieChart className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1314: <p>No service data available</p>\n1315: </div>"
           },
           {
             "text": "Revenue Distribution",
-            "line": 1317,
-            "context": "1316: <CardHeader>\n1317: <CardTitle>Revenue Distribution</CardTitle>\n1318: <CardDescription>"
+            "line": 1322,
+            "context": "1321: <CardHeader>\n1322: <CardTitle>Revenue Distribution</CardTitle>\n1323: <CardDescription>"
           },
           {
             "text": "Detailed breakdown of service contributions",
-            "line": 1318,
-            "context": "1317: <CardTitle>Revenue Distribution</CardTitle>\n1318: <CardDescription>\n1319: Detailed breakdown of service contributions"
+            "line": 1323,
+            "context": "1322: <CardTitle>Revenue Distribution</CardTitle>\n1323: <CardDescription>\n1324: Detailed breakdown of service contributions"
           },
           {
             "text": "No service data available",
-            "line": 1366,
-            "context": "1365: <Award className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1366: <p>No service data available</p>\n1367: </div>"
+            "line": 1371,
+            "context": "1370: <Award className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1371: <p>No service data available</p>\n1372: </div>"
           },
           {
             "text": "Average Order Value Analysis",
-            "line": 1377,
-            "context": "1376: <CardHeader>\n1377: <CardTitle>Average Order Value Analysis</CardTitle>\n1378: <CardDescription>"
+            "line": 1382,
+            "context": "1381: <CardHeader>\n1382: <CardTitle>Average Order Value Analysis</CardTitle>\n1383: <CardDescription>"
           },
           {
             "text": "Track changes in transaction values over time",
-            "line": 1378,
-            "context": "1377: <CardTitle>Average Order Value Analysis</CardTitle>\n1378: <CardDescription>\n1379: Track changes in transaction values over time"
+            "line": 1383,
+            "context": "1382: <CardTitle>Average Order Value Analysis</CardTitle>\n1383: <CardDescription>\n1384: Track changes in transaction values over time"
           },
           {
             "text": "No analysis data available",
-            "line": 1416,
-            "context": "1415: <Target className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1416: <p>No analysis data available</p>\n1417: </div>"
+            "line": 1421,
+            "context": "1420: <Target className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n1421: <p>No analysis data available</p>\n1422: </div>"
           }
         ],
         "translationCalls": [
           {
             "key": "common.loading",
-            "line": 1027,
+            "line": 1032,
             "exists": false
           },
           {
             "key": "reports.this_week",
-            "line": 1057,
+            "line": 1062,
             "exists": false
           },
           {
             "key": "reports.last_week",
-            "line": 1058,
+            "line": 1063,
             "exists": false
           },
           {
             "key": "reports.two_weeks_ago",
-            "line": 1059,
+            "line": 1064,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 1081,
+            "line": 1086,
             "exists": false
           },
           {
             "key": "reports.this_week",
-            "line": 1110,
+            "line": 1115,
             "exists": false
           },
           {
             "key": "reports.last_week",
-            "line": 1111,
+            "line": 1116,
             "exists": false
           },
           {
             "key": "reports.two_weeks_ago",
-            "line": 1112,
+            "line": 1117,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 1136,
+            "line": 1141,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 1198,
+            "line": 1203,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 1272,
+            "line": 1277,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 1385,
+            "line": 1390,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.loading",
-            "line": 1027,
-            "context": "1026: <div className=\"h-80 flex items-center justify-center\">\n1027: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n1028: </div>"
+            "line": 1032,
+            "context": "1031: <div className=\"h-80 flex items-center justify-center\">\n1032: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n1033: </div>"
           },
           {
             "key": "reports.this_week",
-            "line": 1057,
-            "context": "1056: />\n1057: <Bar dataKey=\"week1Revenue\" fill=\"#10b981\" name={t('reports.this_week')} radius={[8, 8, 0, 0]} />\n1058: <Bar dataKey=\"week2Revenue\" fill=\"#3b82f6\" name={t('reports.last_week')} radius={[8, 8, 0, 0]} />"
+            "line": 1062,
+            "context": "1061: />\n1062: <Bar dataKey=\"week1Revenue\" fill=\"#10b981\" name={t('reports.this_week')} radius={[8, 8, 0, 0]} />\n1063: <Bar dataKey=\"week2Revenue\" fill=\"#3b82f6\" name={t('reports.last_week')} radius={[8, 8, 0, 0]} />"
           },
           {
             "key": "reports.last_week",
-            "line": 1058,
-            "context": "1057: <Bar dataKey=\"week1Revenue\" fill=\"#10b981\" name={t('reports.this_week')} radius={[8, 8, 0, 0]} />\n1058: <Bar dataKey=\"week2Revenue\" fill=\"#3b82f6\" name={t('reports.last_week')} radius={[8, 8, 0, 0]} />\n1059: <Bar dataKey=\"week3Revenue\" fill=\"#8b5cf6\" name={t('reports.two_weeks_ago')} radius={[8, 8, 0, 0]} />"
+            "line": 1063,
+            "context": "1062: <Bar dataKey=\"week1Revenue\" fill=\"#10b981\" name={t('reports.this_week')} radius={[8, 8, 0, 0]} />\n1063: <Bar dataKey=\"week2Revenue\" fill=\"#3b82f6\" name={t('reports.last_week')} radius={[8, 8, 0, 0]} />\n1064: <Bar dataKey=\"week3Revenue\" fill=\"#8b5cf6\" name={t('reports.two_weeks_ago')} radius={[8, 8, 0, 0]} />"
           },
           {
             "key": "reports.two_weeks_ago",
-            "line": 1059,
-            "context": "1058: <Bar dataKey=\"week2Revenue\" fill=\"#3b82f6\" name={t('reports.last_week')} radius={[8, 8, 0, 0]} />\n1059: <Bar dataKey=\"week3Revenue\" fill=\"#8b5cf6\" name={t('reports.two_weeks_ago')} radius={[8, 8, 0, 0]} />\n1060: </BarChart>"
+            "line": 1064,
+            "context": "1063: <Bar dataKey=\"week2Revenue\" fill=\"#3b82f6\" name={t('reports.last_week')} radius={[8, 8, 0, 0]} />\n1064: <Bar dataKey=\"week3Revenue\" fill=\"#8b5cf6\" name={t('reports.two_weeks_ago')} radius={[8, 8, 0, 0]} />\n1065: </BarChart>"
           },
           {
             "key": "common.loading",
-            "line": 1081,
-            "context": "1080: <div className=\"h-80 flex items-center justify-center\">\n1081: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n1082: </div>"
+            "line": 1086,
+            "context": "1085: <div className=\"h-80 flex items-center justify-center\">\n1086: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n1087: </div>"
           },
           {
             "key": "reports.this_week",
-            "line": 1110,
-            "context": "1109: />\n1110: <Bar dataKey=\"week1Orders\" fill=\"#10b981\" name={t('reports.this_week')} radius={[8, 8, 0, 0]} />\n1111: <Bar dataKey=\"week2Orders\" fill=\"#3b82f6\" name={t('reports.last_week')} radius={[8, 8, 0, 0]} />"
+            "line": 1115,
+            "context": "1114: />\n1115: <Bar dataKey=\"week1Orders\" fill=\"#10b981\" name={t('reports.this_week')} radius={[8, 8, 0, 0]} />\n1116: <Bar dataKey=\"week2Orders\" fill=\"#3b82f6\" name={t('reports.last_week')} radius={[8, 8, 0, 0]} />"
           },
           {
             "key": "reports.last_week",
-            "line": 1111,
-            "context": "1110: <Bar dataKey=\"week1Orders\" fill=\"#10b981\" name={t('reports.this_week')} radius={[8, 8, 0, 0]} />\n1111: <Bar dataKey=\"week2Orders\" fill=\"#3b82f6\" name={t('reports.last_week')} radius={[8, 8, 0, 0]} />\n1112: <Bar dataKey=\"week3Orders\" fill=\"#8b5cf6\" name={t('reports.two_weeks_ago')} radius={[8, 8, 0, 0]} />"
+            "line": 1116,
+            "context": "1115: <Bar dataKey=\"week1Orders\" fill=\"#10b981\" name={t('reports.this_week')} radius={[8, 8, 0, 0]} />\n1116: <Bar dataKey=\"week2Orders\" fill=\"#3b82f6\" name={t('reports.last_week')} radius={[8, 8, 0, 0]} />\n1117: <Bar dataKey=\"week3Orders\" fill=\"#8b5cf6\" name={t('reports.two_weeks_ago')} radius={[8, 8, 0, 0]} />"
           },
           {
             "key": "reports.two_weeks_ago",
-            "line": 1112,
-            "context": "1111: <Bar dataKey=\"week2Orders\" fill=\"#3b82f6\" name={t('reports.last_week')} radius={[8, 8, 0, 0]} />\n1112: <Bar dataKey=\"week3Orders\" fill=\"#8b5cf6\" name={t('reports.two_weeks_ago')} radius={[8, 8, 0, 0]} />\n1113: </BarChart>"
+            "line": 1117,
+            "context": "1116: <Bar dataKey=\"week2Orders\" fill=\"#3b82f6\" name={t('reports.last_week')} radius={[8, 8, 0, 0]} />\n1117: <Bar dataKey=\"week3Orders\" fill=\"#8b5cf6\" name={t('reports.two_weeks_ago')} radius={[8, 8, 0, 0]} />\n1118: </BarChart>"
           },
           {
             "key": "common.loading",
-            "line": 1136,
-            "context": "1135: <div className=\"flex items-center justify-center h-64\">\n1136: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n1137: </div>"
+            "line": 1141,
+            "context": "1140: <div className=\"flex items-center justify-center h-64\">\n1141: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n1142: </div>"
           },
           {
             "key": "common.loading",
-            "line": 1198,
-            "context": "1197: <div className=\"h-80 flex items-center justify-center\">\n1198: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n1199: </div>"
+            "line": 1203,
+            "context": "1202: <div className=\"h-80 flex items-center justify-center\">\n1203: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n1204: </div>"
           },
           {
             "key": "common.loading",
-            "line": 1272,
-            "context": "1271: <div className=\"h-72 flex items-center justify-center\">\n1272: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n1273: </div>"
+            "line": 1277,
+            "context": "1276: <div className=\"h-72 flex items-center justify-center\">\n1277: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n1278: </div>"
           },
           {
             "key": "common.loading",
-            "line": 1385,
-            "context": "1384: <div className=\"h-72 flex items-center justify-center\">\n1385: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n1386: </div>"
+            "line": 1390,
+            "context": "1389: <div className=\"h-72 flex items-center justify-center\">\n1390: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n1391: </div>"
           }
         ],
         "coverage": 27,
@@ -4290,457 +4290,457 @@
         "hardcodedStrings": [
           {
             "text": "Operational Performance Summary",
-            "line": 297,
-            "context": "296: <div>\n297: <CardTitle className=\"text-xl\">Operational Performance Summary</CardTitle>\n298: <CardDescription className=\"mt-1\">"
+            "line": 127,
+            "context": "126: <div>\n127: <CardTitle className=\"text-xl\">Operational Performance Summary</CardTitle>\n128: <CardDescription className=\"mt-1\">"
           },
           {
             "text": "Key operational metrics and efficiency indicators",
-            "line": 298,
-            "context": "297: <CardTitle className=\"text-xl\">Operational Performance Summary</CardTitle>\n298: <CardDescription className=\"mt-1\">\n299: Key operational metrics and efficiency indicators"
+            "line": 128,
+            "context": "127: <CardTitle className=\"text-xl\">Operational Performance Summary</CardTitle>\n128: <CardDescription className=\"mt-1\">\n129: Key operational metrics and efficiency indicators"
           },
           {
             "text": "Efficiency Score",
-            "line": 305,
-            "context": "304: <div>\n305: <div className=\"text-xs text-muted-foreground\">Efficiency Score</div>\n306: <div className=\"text-2xl font-bold\">{efficiencyScore.toFixed(0)}</div>"
+            "line": 135,
+            "context": "134: <div>\n135: <div className=\"text-xs text-muted-foreground\">Efficiency Score</div>\n136: <div className=\"text-2xl font-bold\">{efficiencyScore.toFixed(0)}</div>"
           },
           {
             "text": "Total Volume",
-            "line": 315,
-            "context": "314: <div className=\"flex items-center justify-between\">\n315: <span className=\"text-sm font-medium text-muted-foreground\">Total Volume</span>\n316: <Package className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 145,
+            "context": "144: <div className=\"flex items-center justify-between\">\n145: <span className=\"text-sm font-medium text-muted-foreground\">Total Volume</span>\n146: <Package className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Completion Rate",
-            "line": 323,
-            "context": "322: <div className=\"flex items-center justify-between\">\n323: <span className=\"text-sm font-medium text-muted-foreground\">Completion Rate</span>\n324: <CheckCircle className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 153,
+            "context": "152: <div className=\"flex items-center justify-between\">\n153: <span className=\"text-sm font-medium text-muted-foreground\">Completion Rate</span>\n154: <CheckCircle className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Avg Processing Time",
-            "line": 331,
-            "context": "330: <div className=\"flex items-center justify-between\">\n331: <span className=\"text-sm font-medium text-muted-foreground\">Avg Processing Time</span>\n332: <Clock className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 161,
+            "context": "160: <div className=\"flex items-center justify-between\">\n161: <span className=\"text-sm font-medium text-muted-foreground\">Avg Processing Time</span>\n162: <Clock className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Total Revenue",
-            "line": 339,
-            "context": "338: <div className=\"flex items-center justify-between\">\n339: <span className=\"text-sm font-medium text-muted-foreground\">Total Revenue</span>\n340: <DollarSign className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 169,
+            "context": "168: <div className=\"flex items-center justify-between\">\n169: <span className=\"text-sm font-medium text-muted-foreground\">Total Revenue</span>\n170: <DollarSign className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Orders",
-            "line": 358,
-            "context": "357: <TabsList className=\"grid w-full grid-cols-4\">\n358: <TabsTrigger value=\"orders\">Orders</TabsTrigger>\n359: <TabsTrigger value=\"volume\">Order Volume</TabsTrigger>"
+            "line": 188,
+            "context": "187: <TabsList className=\"grid w-full grid-cols-4\">\n188: <TabsTrigger value=\"orders\">Orders</TabsTrigger>\n189: <TabsTrigger value=\"volume\">Order Volume</TabsTrigger>"
           },
           {
             "text": "Order Volume",
-            "line": 359,
-            "context": "358: <TabsTrigger value=\"orders\">Orders</TabsTrigger>\n359: <TabsTrigger value=\"volume\">Order Volume</TabsTrigger>\n360: <TabsTrigger value=\"status\">Status Analysis</TabsTrigger>"
+            "line": 189,
+            "context": "188: <TabsTrigger value=\"orders\">Orders</TabsTrigger>\n189: <TabsTrigger value=\"volume\">Order Volume</TabsTrigger>\n190: <TabsTrigger value=\"status\">Status Analysis</TabsTrigger>"
           },
           {
             "text": "Status Analysis",
-            "line": 360,
-            "context": "359: <TabsTrigger value=\"volume\">Order Volume</TabsTrigger>\n360: <TabsTrigger value=\"status\">Status Analysis</TabsTrigger>\n361: <TabsTrigger value=\"performance\">Performance</TabsTrigger>"
+            "line": 190,
+            "context": "189: <TabsTrigger value=\"volume\">Order Volume</TabsTrigger>\n190: <TabsTrigger value=\"status\">Status Analysis</TabsTrigger>\n191: <TabsTrigger value=\"performance\">Performance</TabsTrigger>"
           },
           {
             "text": "Performance",
-            "line": 361,
-            "context": "360: <TabsTrigger value=\"status\">Status Analysis</TabsTrigger>\n361: <TabsTrigger value=\"performance\">Performance</TabsTrigger>\n362: </TabsList>"
+            "line": 191,
+            "context": "190: <TabsTrigger value=\"status\">Status Analysis</TabsTrigger>\n191: <TabsTrigger value=\"performance\">Performance</TabsTrigger>\n192: </TabsList>"
           },
           {
             "text": "Total Orders",
-            "line": 370,
-            "context": "369: <div className=\"flex items-center justify-between mb-2\">\n370: <span className=\"text-sm text-muted-foreground\">Total Orders</span>\n371: <Package className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 200,
+            "context": "199: <div className=\"flex items-center justify-between mb-2\">\n200: <span className=\"text-sm text-muted-foreground\">Total Orders</span>\n201: <Package className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Across all departments",
-            "line": 374,
-            "context": "373: <div className=\"text-2xl font-bold mb-1\">{orderAnalytics?.total_orders || 0}</div>\n374: <p className=\"text-xs text-muted-foreground\">Across all departments</p>\n375: </CardContent>"
+            "line": 204,
+            "context": "203: <div className=\"text-2xl font-bold mb-1\">{orderAnalytics?.total_orders || 0}</div>\n204: <p className=\"text-xs text-muted-foreground\">Across all departments</p>\n205: </CardContent>"
           },
           {
             "text": "Completed",
-            "line": 380,
-            "context": "379: <div className=\"flex items-center justify-between mb-2\">\n380: <span className=\"text-sm text-muted-foreground\">Completed</span>\n381: <CheckCircle className=\"h-4 w-4 text-green-600\" />"
+            "line": 210,
+            "context": "209: <div className=\"flex items-center justify-between mb-2\">\n210: <span className=\"text-sm text-muted-foreground\">Completed</span>\n211: <CheckCircle className=\"h-4 w-4 text-green-600\" />"
           },
           {
             "text": "In Progress",
-            "line": 390,
-            "context": "389: <div className=\"flex items-center justify-between mb-2\">\n390: <span className=\"text-sm text-muted-foreground\">In Progress</span>\n391: <Activity className=\"h-4 w-4 text-blue-600\" />"
+            "line": 220,
+            "context": "219: <div className=\"flex items-center justify-between mb-2\">\n220: <span className=\"text-sm text-muted-foreground\">In Progress</span>\n221: <Activity className=\"h-4 w-4 text-blue-600\" />"
           },
           {
             "text": "Currently active",
-            "line": 394,
-            "context": "393: <div className=\"text-2xl font-bold mb-1 text-blue-600\">{orderAnalytics?.in_progress_orders || 0}</div>\n394: <p className=\"text-xs text-muted-foreground\">Currently active</p>\n395: </CardContent>"
+            "line": 224,
+            "context": "223: <div className=\"text-2xl font-bold mb-1 text-blue-600\">{orderAnalytics?.in_progress_orders || 0}</div>\n224: <p className=\"text-xs text-muted-foreground\">Currently active</p>\n225: </CardContent>"
           },
           {
             "text": "Daily Average",
-            "line": 400,
-            "context": "399: <div className=\"flex items-center justify-between mb-2\">\n400: <span className=\"text-sm text-muted-foreground\">Daily Average</span>\n401: <BarChart3 className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 230,
+            "context": "229: <div className=\"flex items-center justify-between mb-2\">\n230: <span className=\"text-sm text-muted-foreground\">Daily Average</span>\n231: <BarChart3 className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Orders per day",
-            "line": 406,
-            "context": "405: </div>\n406: <p className=\"text-xs text-muted-foreground\">Orders per day</p>\n407: </CardContent>"
+            "line": 236,
+            "context": "235: </div>\n236: <p className=\"text-xs text-muted-foreground\">Orders per day</p>\n237: </CardContent>"
           },
           {
             "text": "Order Volume Trend",
-            "line": 416,
-            "context": "415: <div>\n416: <CardTitle>Order Volume Trend</CardTitle>\n417: <CardDescription className=\"mt-1\">"
+            "line": 246,
+            "context": "245: <div>\n246: <CardTitle>Order Volume Trend</CardTitle>\n247: <CardDescription className=\"mt-1\">"
           },
           {
             "text": "Daily order volume and revenue correlation over time",
-            "line": 417,
-            "context": "416: <CardTitle>Order Volume Trend</CardTitle>\n417: <CardDescription className=\"mt-1\">\n418: Daily order volume and revenue correlation over time"
+            "line": 247,
+            "context": "246: <CardTitle>Order Volume Trend</CardTitle>\n247: <CardDescription className=\"mt-1\">\n248: Daily order volume and revenue correlation over time"
           },
           {
             "text": "Total Orders",
-            "line": 436,
-            "context": "435: <div className=\"text-center\">\n436: <div className=\"text-sm text-muted-foreground mb-1\">Total Orders</div>\n437: <div className=\"text-xl font-bold\">{orderAnalytics.total_orders}</div>"
+            "line": 266,
+            "context": "265: <div className=\"text-center\">\n266: <div className=\"text-sm text-muted-foreground mb-1\">Total Orders</div>\n267: <div className=\"text-xl font-bold\">{orderAnalytics.total_orders}</div>"
           },
           {
             "text": "Total Revenue",
-            "line": 440,
-            "context": "439: <div className=\"text-center border-l border-r\">\n440: <div className=\"text-sm text-muted-foreground mb-1\">Total Revenue</div>\n441: <div className=\"text-xl font-bold\">{formatCurrency(orderAnalytics.total_revenue)}</div>"
+            "line": 270,
+            "context": "269: <div className=\"text-center border-l border-r\">\n270: <div className=\"text-sm text-muted-foreground mb-1\">Total Revenue</div>\n271: <div className=\"text-xl font-bold\">{formatCurrency(orderAnalytics.total_revenue)}</div>"
           },
           {
             "text": "Avg Order Value",
-            "line": 444,
-            "context": "443: <div className=\"text-center\">\n444: <div className=\"text-sm text-muted-foreground mb-1\">Avg Order Value</div>\n445: <div className=\"text-xl font-bold\">{formatCurrency(orderAnalytics.avg_order_value)}</div>"
+            "line": 274,
+            "context": "273: <div className=\"text-center\">\n274: <div className=\"text-sm text-muted-foreground mb-1\">Avg Order Value</div>\n275: <div className=\"text-xl font-bold\">{formatCurrency(orderAnalytics.avg_order_value)}</div>"
           },
           {
             "text": "No volume data available",
-            "line": 452,
-            "context": "451: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n452: <p>No volume data available</p>\n453: </div>"
+            "line": 282,
+            "context": "281: <BarChart3 className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n282: <p>No volume data available</p>\n283: </div>"
           },
           {
             "text": "Completion Rate",
-            "line": 465,
-            "context": "464: <div className=\"flex items-center justify-between mb-2\">\n465: <span className=\"text-sm text-muted-foreground\">Completion Rate</span>\n466: <CheckCircle className=\"h-4 w-4 text-green-600\" />"
+            "line": 295,
+            "context": "294: <div className=\"flex items-center justify-between mb-2\">\n295: <span className=\"text-sm text-muted-foreground\">Completion Rate</span>\n296: <CheckCircle className=\"h-4 w-4 text-green-600\" />"
           },
           {
             "text": "Success Rate",
-            "line": 475,
-            "context": "474: <div className=\"flex items-center justify-between mb-2\">\n475: <span className=\"text-sm text-muted-foreground\">Success Rate</span>\n476: <Target className=\"h-4 w-4 text-blue-600\" />"
+            "line": 305,
+            "context": "304: <div className=\"flex items-center justify-between mb-2\">\n305: <span className=\"text-sm text-muted-foreground\">Success Rate</span>\n306: <Target className=\"h-4 w-4 text-blue-600\" />"
           },
           {
             "text": "Cancellation Rate",
-            "line": 489,
-            "context": "488: <div className=\"flex items-center justify-between mb-2\">\n489: <span className=\"text-sm text-muted-foreground\">Cancellation Rate</span>\n490: <AlertCircle className=\"h-4 w-4 text-red-600\" />"
+            "line": 319,
+            "context": "318: <div className=\"flex items-center justify-between mb-2\">\n319: <span className=\"text-sm text-muted-foreground\">Cancellation Rate</span>\n320: <AlertCircle className=\"h-4 w-4 text-red-600\" />"
           },
           {
             "text": "Active Orders",
-            "line": 503,
-            "context": "502: <div className=\"flex items-center justify-between mb-2\">\n503: <span className=\"text-sm text-muted-foreground\">Active Orders</span>\n504: <Activity className=\"h-4 w-4 text-blue-600\" />"
+            "line": 333,
+            "context": "332: <div className=\"flex items-center justify-between mb-2\">\n333: <span className=\"text-sm text-muted-foreground\">Active Orders</span>\n334: <Activity className=\"h-4 w-4 text-blue-600\" />"
           },
           {
             "text": "Status Distribution",
-            "line": 518,
-            "context": "517: <CardHeader>\n518: <CardTitle>Status Distribution</CardTitle>\n519: <CardDescription>"
+            "line": 348,
+            "context": "347: <CardHeader>\n348: <CardTitle>Status Distribution</CardTitle>\n349: <CardDescription>"
           },
           {
             "text": "Visual breakdown of order statuses",
-            "line": 519,
-            "context": "518: <CardTitle>Status Distribution</CardTitle>\n519: <CardDescription>\n520: Visual breakdown of order statuses"
+            "line": 349,
+            "context": "348: <CardTitle>Status Distribution</CardTitle>\n349: <CardDescription>\n350: Visual breakdown of order statuses"
           },
           {
             "text": "No status data available",
-            "line": 533,
-            "context": "532: <PieChart className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n533: <p>No status data available</p>\n534: </div>"
+            "line": 363,
+            "context": "362: <PieChart className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n363: <p>No status data available</p>\n364: </div>"
           },
           {
             "text": "Detailed Status Breakdown",
-            "line": 542,
-            "context": "541: <CardHeader>\n542: <CardTitle>Detailed Status Breakdown</CardTitle>\n543: <CardDescription>"
+            "line": 372,
+            "context": "371: <CardHeader>\n372: <CardTitle>Detailed Status Breakdown</CardTitle>\n373: <CardDescription>"
           },
           {
             "text": "Order counts and percentages by status",
-            "line": 543,
-            "context": "542: <CardTitle>Detailed Status Breakdown</CardTitle>\n543: <CardDescription>\n544: Order counts and percentages by status"
+            "line": 373,
+            "context": "372: <CardTitle>Detailed Status Breakdown</CardTitle>\n373: <CardDescription>\n374: Order counts and percentages by status"
           },
           {
             "text": "Pending",
-            "line": 566,
-            "context": "565: <div>\n566: <div className=\"font-semibold text-base\">Pending</div>\n567: <div className=\"text-xs text-muted-foreground\">Awaiting processing</div>"
+            "line": 396,
+            "context": "395: <div>\n396: <div className=\"font-semibold text-base\">Pending</div>\n397: <div className=\"text-xs text-muted-foreground\">Awaiting processing</div>"
           },
           {
             "text": "Awaiting processing",
-            "line": 567,
-            "context": "566: <div className=\"font-semibold text-base\">Pending</div>\n567: <div className=\"text-xs text-muted-foreground\">Awaiting processing</div>\n568: </div>"
+            "line": 397,
+            "context": "396: <div className=\"font-semibold text-base\">Pending</div>\n397: <div className=\"text-xs text-muted-foreground\">Awaiting processing</div>\n398: </div>"
           },
           {
             "text": "In Progress",
-            "line": 587,
-            "context": "586: <div>\n587: <div className=\"font-semibold text-base\">In Progress</div>\n588: <div className=\"text-xs text-muted-foreground\">Currently processing</div>"
+            "line": 417,
+            "context": "416: <div>\n417: <div className=\"font-semibold text-base\">In Progress</div>\n418: <div className=\"text-xs text-muted-foreground\">Currently processing</div>"
           },
           {
             "text": "Currently processing",
-            "line": 588,
-            "context": "587: <div className=\"font-semibold text-base\">In Progress</div>\n588: <div className=\"text-xs text-muted-foreground\">Currently processing</div>\n589: </div>"
+            "line": 418,
+            "context": "417: <div className=\"font-semibold text-base\">In Progress</div>\n418: <div className=\"text-xs text-muted-foreground\">Currently processing</div>\n419: </div>"
           },
           {
             "text": "Completed",
-            "line": 608,
-            "context": "607: <div>\n608: <div className=\"font-semibold text-base\">Completed</div>\n609: <div className=\"text-xs text-muted-foreground\">Successfully finished</div>"
+            "line": 438,
+            "context": "437: <div>\n438: <div className=\"font-semibold text-base\">Completed</div>\n439: <div className=\"text-xs text-muted-foreground\">Successfully finished</div>"
           },
           {
             "text": "Successfully finished",
-            "line": 609,
-            "context": "608: <div className=\"font-semibold text-base\">Completed</div>\n609: <div className=\"text-xs text-muted-foreground\">Successfully finished</div>\n610: </div>"
+            "line": 439,
+            "context": "438: <div className=\"font-semibold text-base\">Completed</div>\n439: <div className=\"text-xs text-muted-foreground\">Successfully finished</div>\n440: </div>"
           },
           {
             "text": "Cancelled",
-            "line": 629,
-            "context": "628: <div>\n629: <div className=\"font-semibold text-base\">Cancelled</div>\n630: <div className=\"text-xs text-muted-foreground\">Not completed</div>"
+            "line": 459,
+            "context": "458: <div>\n459: <div className=\"font-semibold text-base\">Cancelled</div>\n460: <div className=\"text-xs text-muted-foreground\">Not completed</div>"
           },
           {
             "text": "Not completed",
-            "line": 630,
-            "context": "629: <div className=\"font-semibold text-base\">Cancelled</div>\n630: <div className=\"text-xs text-muted-foreground\">Not completed</div>\n631: </div>"
+            "line": 460,
+            "context": "459: <div className=\"font-semibold text-base\">Cancelled</div>\n460: <div className=\"text-xs text-muted-foreground\">Not completed</div>\n461: </div>"
           },
           {
             "text": "High Completion Rate",
-            "line": 664,
-            "context": "663: <div>\n664: <div className=\"font-semibold mb-1\">High Completion Rate</div>\n665: <p className=\"text-sm text-muted-foreground\">"
+            "line": 494,
+            "context": "493: <div>\n494: <div className=\"font-semibold mb-1\">High Completion Rate</div>\n495: <p className=\"text-sm text-muted-foreground\">"
           },
           {
             "text": "Processing Efficiency",
-            "line": 677,
-            "context": "676: <div>\n677: <div className=\"font-semibold mb-1\">Processing Efficiency</div>\n678: <p className=\"text-sm text-muted-foreground\">"
+            "line": 507,
+            "context": "506: <div>\n507: <div className=\"font-semibold mb-1\">Processing Efficiency</div>\n508: <p className=\"text-sm text-muted-foreground\">"
           },
           {
             "text": "Pending Queue",
-            "line": 690,
-            "context": "689: <div>\n690: <div className=\"font-semibold mb-1\">Pending Queue</div>\n691: <p className=\"text-sm text-muted-foreground\">"
+            "line": 520,
+            "context": "519: <div>\n520: <div className=\"font-semibold mb-1\">Pending Queue</div>\n521: <p className=\"text-sm text-muted-foreground\">"
           },
           {
             "text": "Avg Processing Time",
-            "line": 708,
-            "context": "707: <div className=\"flex items-center justify-between mb-2\">\n708: <span className=\"text-sm text-muted-foreground\">Avg Processing Time</span>\n709: <Clock className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 538,
+            "context": "537: <div className=\"flex items-center justify-between mb-2\">\n538: <span className=\"text-sm text-muted-foreground\">Avg Processing Time</span>\n539: <Clock className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "Per order average",
-            "line": 712,
-            "context": "711: <div className=\"text-2xl font-bold mb-1\">{formatHours(orderAnalytics?.avg_processing_time_hours || 0)}</div>\n712: <p className=\"text-xs text-muted-foreground\">Per order average</p>\n713: </CardContent>"
+            "line": 542,
+            "context": "541: <div className=\"text-2xl font-bold mb-1\">{formatHours(orderAnalytics?.avg_processing_time_hours || 0)}</div>\n542: <p className=\"text-xs text-muted-foreground\">Per order average</p>\n543: </CardContent>"
           },
           {
             "text": "SLA Compliance",
-            "line": 718,
-            "context": "717: <div className=\"flex items-center justify-between mb-2\">\n718: <span className=\"text-sm text-muted-foreground\">SLA Compliance</span>\n719: <Target className=\"h-4 w-4 text-green-600\" />"
+            "line": 548,
+            "context": "547: <div className=\"flex items-center justify-between mb-2\">\n548: <span className=\"text-sm text-muted-foreground\">SLA Compliance</span>\n549: <Target className=\"h-4 w-4 text-green-600\" />"
           },
           {
             "text": "Efficiency Score",
-            "line": 728,
-            "context": "727: <div className=\"flex items-center justify-between mb-2\">\n728: <span className=\"text-sm text-muted-foreground\">Efficiency Score</span>\n729: <Zap className=\"h-4 w-4 text-amber-600\" />"
+            "line": 558,
+            "context": "557: <div className=\"flex items-center justify-between mb-2\">\n558: <span className=\"text-sm text-muted-foreground\">Efficiency Score</span>\n559: <Zap className=\"h-4 w-4 text-amber-600\" />"
           },
           {
             "text": "Revenue per Hour",
-            "line": 738,
-            "context": "737: <div className=\"flex items-center justify-between mb-2\">\n738: <span className=\"text-sm text-muted-foreground\">Revenue per Hour</span>\n739: <DollarSign className=\"h-4 w-4 text-green-600\" />"
+            "line": 568,
+            "context": "567: <div className=\"flex items-center justify-between mb-2\">\n568: <span className=\"text-sm text-muted-foreground\">Revenue per Hour</span>\n569: <DollarSign className=\"h-4 w-4 text-green-600\" />"
           },
           {
             "text": "Productivity metric",
-            "line": 748,
-            "context": "747: </div>\n748: <p className=\"text-xs text-muted-foreground\">Productivity metric</p>\n749: </CardContent>"
+            "line": 578,
+            "context": "577: </div>\n578: <p className=\"text-xs text-muted-foreground\">Productivity metric</p>\n579: </CardContent>"
           },
           {
             "text": "Department Performance Analysis",
-            "line": 758,
-            "context": "757: <div>\n758: <CardTitle>Department Performance Analysis</CardTitle>\n759: <CardDescription className=\"mt-1\">"
+            "line": 588,
+            "context": "587: <div>\n588: <CardTitle>Department Performance Analysis</CardTitle>\n589: <CardDescription className=\"mt-1\">"
           },
           {
             "text": "Detailed metrics and KPIs by department",
-            "line": 759,
-            "context": "758: <CardTitle>Department Performance Analysis</CardTitle>\n759: <CardDescription className=\"mt-1\">\n760: Detailed metrics and KPIs by department"
+            "line": 589,
+            "context": "588: <CardTitle>Department Performance Analysis</CardTitle>\n589: <CardDescription className=\"mt-1\">\n590: Detailed metrics and KPIs by department"
           },
           {
             "text": "High Performer",
-            "line": 790,
-            "context": "789: {isHighPerformer && (\n790: <Badge variant=\"outline\" className=\"text-green-600 border-green-200\">\n791: High Performer"
+            "line": 620,
+            "context": "619: {isHighPerformer && (\n620: <Badge variant=\"outline\" className=\"text-green-600 border-green-200\">\n621: High Performer"
           },
           {
             "text": "Completion",
-            "line": 800,
-            "context": "799: <div className=\"px-4 py-2 border rounded-lg text-center min-w-[100px]\">\n800: <div className=\"text-xs text-muted-foreground mb-1\">Completion</div>\n801: <div className=\"text-xl font-bold\">{dept.completion_rate}%</div>"
+            "line": 630,
+            "context": "629: <div className=\"px-4 py-2 border rounded-lg text-center min-w-[100px]\">\n630: <div className=\"text-xs text-muted-foreground mb-1\">Completion</div>\n631: <div className=\"text-xl font-bold\">{dept.completion_rate}%</div>"
           },
           {
             "text": "Avg Time",
-            "line": 804,
-            "context": "803: <div className=\"px-4 py-2 border rounded-lg text-center min-w-[100px]\">\n804: <div className=\"text-xs text-muted-foreground mb-1\">Avg Time</div>\n805: <div className=\"text-xl font-bold\">{formatHours(dept.avg_processing_time)}</div>"
+            "line": 634,
+            "context": "633: <div className=\"px-4 py-2 border rounded-lg text-center min-w-[100px]\">\n634: <div className=\"text-xs text-muted-foreground mb-1\">Avg Time</div>\n635: <div className=\"text-xl font-bold\">{formatHours(dept.avg_processing_time)}</div>"
           },
           {
             "text": "Completion Rate",
-            "line": 814,
-            "context": "813: <div className=\"flex justify-between text-sm mb-2\">\n814: <span className=\"text-muted-foreground\">Completion Rate</span>\n815: <span className=\"font-semibold\">{dept.completion_rate}%</span>"
+            "line": 644,
+            "context": "643: <div className=\"flex justify-between text-sm mb-2\">\n644: <span className=\"text-muted-foreground\">Completion Rate</span>\n645: <span className=\"font-semibold\">{dept.completion_rate}%</span>"
           },
           {
             "text": "No department performance data available",
-            "line": 857,
-            "context": "856: <Users className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n857: <p className=\"mb-1\">No department performance data available</p>\n858: <p className=\"text-sm\">Data will appear once departments start processing orders</p>"
+            "line": 687,
+            "context": "686: <Users className=\"h-12 w-12 mx-auto mb-3 opacity-20\" />\n687: <p className=\"mb-1\">No department performance data available</p>\n688: <p className=\"text-sm\">Data will appear once departments start processing orders</p>"
           },
           {
             "text": "Data will appear once departments start processing orders",
-            "line": 858,
-            "context": "857: <p className=\"mb-1\">No department performance data available</p>\n858: <p className=\"text-sm\">Data will appear once departments start processing orders</p>\n859: </div>"
+            "line": 688,
+            "context": "687: <p className=\"mb-1\">No department performance data available</p>\n688: <p className=\"text-sm\">Data will appear once departments start processing orders</p>\n689: </div>"
           },
           {
             "text": "Performance Insights",
-            "line": 867,
-            "context": "866: <CardHeader>\n867: <CardTitle>Performance Insights</CardTitle>\n868: <CardDescription>"
+            "line": 697,
+            "context": "696: <CardHeader>\n697: <CardTitle>Performance Insights</CardTitle>\n698: <CardDescription>"
           },
           {
             "text": "Key takeaways and optimization opportunities",
-            "line": 868,
-            "context": "867: <CardTitle>Performance Insights</CardTitle>\n868: <CardDescription>\n869: Key takeaways and optimization opportunities"
+            "line": 698,
+            "context": "697: <CardTitle>Performance Insights</CardTitle>\n698: <CardDescription>\n699: Key takeaways and optimization opportunities"
           },
           {
             "text": "Strong Performance",
-            "line": 880,
-            "context": "879: <div>\n880: <div className=\"font-semibold mb-2\">Strong Performance</div>\n881: <p className=\"text-sm text-muted-foreground mb-3\">"
+            "line": 710,
+            "context": "709: <div>\n710: <div className=\"font-semibold mb-2\">Strong Performance</div>\n711: <p className=\"text-sm text-muted-foreground mb-3\">"
           },
           {
             "text": "Meeting targets",
-            "line": 884,
-            "context": "883: </p>\n884: <Badge variant=\"outline\" className=\"text-green-600 border-green-200\">\n885: Meeting targets"
+            "line": 714,
+            "context": "713: </p>\n714: <Badge variant=\"outline\" className=\"text-green-600 border-green-200\">\n715: Meeting targets"
           },
           {
             "text": "Processing Efficiency",
-            "line": 896,
-            "context": "895: <div>\n896: <div className=\"font-semibold mb-2\">Processing Efficiency</div>\n897: <p className=\"text-sm text-muted-foreground mb-3\">"
+            "line": 726,
+            "context": "725: <div>\n726: <div className=\"font-semibold mb-2\">Processing Efficiency</div>\n727: <p className=\"text-sm text-muted-foreground mb-3\">"
           },
           {
             "text": "Optimized workflow",
-            "line": 900,
-            "context": "899: </p>\n900: <Badge variant=\"outline\" className=\"text-blue-600 border-blue-200\">\n901: Optimized workflow"
+            "line": 730,
+            "context": "729: </p>\n730: <Badge variant=\"outline\" className=\"text-blue-600 border-blue-200\">\n731: Optimized workflow"
           },
           {
             "text": "Total Orders",
-            "line": 917,
-            "context": "916: <div className=\"flex items-center justify-between mb-2\">\n917: <span className=\"text-sm font-medium text-muted-foreground\">Total Orders</span>\n918: <FileText className=\"h-4 w-4 text-muted-foreground\" />"
+            "line": 747,
+            "context": "746: <div className=\"flex items-center justify-between mb-2\">\n747: <span className=\"text-sm font-medium text-muted-foreground\">Total Orders</span>\n748: <FileText className=\"h-4 w-4 text-muted-foreground\" />"
           },
           {
             "text": "In selected period",
-            "line": 921,
-            "context": "920: <div className=\"text-3xl font-bold mb-1\">{vehiclesList.length}</div>\n921: <p className=\"text-xs text-muted-foreground\">In selected period</p>\n922: </CardContent>"
+            "line": 751,
+            "context": "750: <div className=\"text-3xl font-bold mb-1\">{orderAnalytics?.total_orders || 0}</div>\n751: <p className=\"text-xs text-muted-foreground\">In selected period</p>\n752: </CardContent>"
           },
           {
             "text": "Pending",
-            "line": 927,
-            "context": "926: <div className=\"flex items-center justify-between mb-2\">\n927: <span className=\"text-sm font-medium text-muted-foreground\">Pending</span>\n928: <AlertCircle className=\"h-4 w-4 text-amber-600\" />"
+            "line": 757,
+            "context": "756: <div className=\"flex items-center justify-between mb-2\">\n757: <span className=\"text-sm font-medium text-muted-foreground\">Pending</span>\n758: <AlertCircle className=\"h-4 w-4 text-amber-600\" />"
           },
           {
             "text": "In Progress",
-            "line": 943,
-            "context": "942: <div className=\"flex items-center justify-between mb-2\">\n943: <span className=\"text-sm font-medium text-muted-foreground\">In Progress</span>\n944: <Activity className=\"h-4 w-4 text-blue-600\" />"
+            "line": 773,
+            "context": "772: <div className=\"flex items-center justify-between mb-2\">\n773: <span className=\"text-sm font-medium text-muted-foreground\">In Progress</span>\n774: <Activity className=\"h-4 w-4 text-blue-600\" />"
           },
           {
             "text": "Completed",
-            "line": 959,
-            "context": "958: <div className=\"flex items-center justify-between mb-2\">\n959: <span className=\"text-sm font-medium text-muted-foreground\">Completed</span>\n960: <CheckCircle className=\"h-4 w-4 text-green-600\" />"
+            "line": 789,
+            "context": "788: <div className=\"flex items-center justify-between mb-2\">\n789: <span className=\"text-sm font-medium text-muted-foreground\">Completed</span>\n790: <CheckCircle className=\"h-4 w-4 text-green-600\" />"
           },
           {
             "text": "Cancelled",
-            "line": 975,
-            "context": "974: <div className=\"flex items-center justify-between mb-2\">\n975: <span className=\"text-sm font-medium text-muted-foreground\">Cancelled</span>\n976: <AlertCircle className=\"h-4 w-4 text-red-600\" />"
+            "line": 805,
+            "context": "804: <div className=\"flex items-center justify-between mb-2\">\n805: <span className=\"text-sm font-medium text-muted-foreground\">Cancelled</span>\n806: <AlertCircle className=\"h-4 w-4 text-red-600\" />"
           },
           {
             "text": "Orders Report",
-            "line": 996,
-            "context": "995: <CardTitle className=\"flex items-center gap-2 text-lg\">\n996: <FileText className=\"h-5 w-5\" />\n997: Orders Report"
+            "line": 826,
+            "context": "825: <CardTitle className=\"flex items-center gap-2 text-lg\">\n826: <FileText className=\"h-5 w-5\" />\n827: Orders Report"
           },
           {
             "text": "Detailed vehicle orders matching your filters",
-            "line": 999,
-            "context": "998: </CardTitle>\n999: <CardDescription className=\"mt-1\">\n1000: Detailed vehicle orders matching your filters"
+            "line": 829,
+            "context": "828: </CardTitle>\n829: <CardDescription className=\"mt-1\">\n830: Detailed vehicle orders matching your filters"
           },
           {
             "text": "No orders found",
-            "line": 1024,
-            "context": "1023: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1024: <p className=\"text-muted-foreground mb-1\">No orders found</p>\n1025: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
+            "line": 854,
+            "context": "853: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n854: <p className=\"text-muted-foreground mb-1\">No orders found</p>\n855: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
           },
           {
             "text": "Try adjusting your filters",
-            "line": 1025,
-            "context": "1024: <p className=\"text-muted-foreground mb-1\">No orders found</p>\n1025: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n1026: </div>"
+            "line": 855,
+            "context": "854: <p className=\"text-muted-foreground mb-1\">No orders found</p>\n855: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n856: </div>"
           },
           {
             "text": "Vehicle",
-            "line": 1036,
-            "context": "1035: </TableHead>\n1036: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Vehicle</TableHead>\n1037: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">VIN</TableHead>"
+            "line": 866,
+            "context": "865: </TableHead>\n866: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Vehicle</TableHead>\n867: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">VIN</TableHead>"
           },
           {
             "text": "Assigned",
-            "line": 1038,
-            "context": "1037: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">VIN</TableHead>\n1038: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Assigned</TableHead>\n1039: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Dept</TableHead>"
+            "line": 868,
+            "context": "867: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">VIN</TableHead>\n868: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Assigned</TableHead>\n869: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Dept</TableHead>"
           },
           {
             "text": "Dept",
-            "line": 1039,
-            "context": "1038: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Assigned</TableHead>\n1039: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Dept</TableHead>\n1040: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Status</TableHead>"
+            "line": 869,
+            "context": "868: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Assigned</TableHead>\n869: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Dept</TableHead>\n870: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Status</TableHead>"
           },
           {
             "text": "Status",
-            "line": 1040,
-            "context": "1039: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Dept</TableHead>\n1040: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Status</TableHead>\n1041: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Invoice</TableHead>"
+            "line": 870,
+            "context": "869: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Dept</TableHead>\n870: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Status</TableHead>\n871: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Invoice</TableHead>"
           },
           {
             "text": "Invoice",
-            "line": 1041,
-            "context": "1040: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Status</TableHead>\n1041: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Invoice</TableHead>\n1042: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Amount</TableHead>"
+            "line": 871,
+            "context": "870: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Status</TableHead>\n871: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Invoice</TableHead>\n872: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 1042,
-            "context": "1041: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Invoice</TableHead>\n1042: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Amount</TableHead>\n1043: </TableRow>"
+            "line": 872,
+            "context": "871: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Invoice</TableHead>\n872: <TableHead className=\"text-center font-bold text-slate-700 bg-slate-100\">Amount</TableHead>\n873: </TableRow>"
           },
           {
             "text": "Unassigned",
-            "line": 1119,
-            "context": "1118: ) : (\n1119: <span className=\"text-muted-foreground text-xs\">Unassigned</span>\n1120: )}"
+            "line": 949,
+            "context": "948: ) : (\n949: <span className=\"text-muted-foreground text-xs\">Unassigned</span>\n950: )}"
           },
           {
             "text": "No invoice yet",
-            "line": 1143,
-            "context": "1142: ) : (\n1143: <span className=\"text-xs text-muted-foreground italic\">No invoice yet</span>\n1144: )}"
+            "line": 973,
+            "context": "972: ) : (\n973: <span className=\"text-xs text-muted-foreground italic\">No invoice yet</span>\n974: )}"
           }
         ],
         "translationCalls": [
           {
             "key": "common.loading",
-            "line": 429,
+            "line": 259,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 526,
+            "line": 356,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 771,
+            "line": 601,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 1019,
+            "line": 849,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.loading",
-            "line": 429,
-            "context": "428: <div className=\"h-80 flex items-center justify-center\">\n429: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n430: </div>"
+            "line": 259,
+            "context": "258: <div className=\"h-80 flex items-center justify-center\">\n259: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n260: </div>"
           },
           {
             "key": "common.loading",
-            "line": 526,
-            "context": "525: <div className=\"h-80 flex items-center justify-center\">\n526: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n527: </div>"
+            "line": 356,
+            "context": "355: <div className=\"h-80 flex items-center justify-center\">\n356: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n357: </div>"
           },
           {
             "key": "common.loading",
-            "line": 771,
-            "context": "770: <div className=\"h-48 flex items-center justify-center\">\n771: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n772: </div>"
+            "line": 601,
+            "context": "600: <div className=\"h-48 flex items-center justify-center\">\n601: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n602: </div>"
           },
           {
             "key": "common.loading",
-            "line": 1019,
-            "context": "1018: <div className=\"flex items-center justify-center h-64\">\n1019: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n1020: </div>"
+            "line": 849,
+            "context": "848: <div className=\"flex items-center justify-center h-64\">\n849: <div className=\"text-muted-foreground\">{t('common.loading')}</div>\n850: </div>"
           }
         ],
         "coverage": 5,
