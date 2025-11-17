@@ -2498,8 +2498,10 @@ export type Database = {
       }
       detail_hub_employees: {
         Row: {
+          can_punch_any_kiosk: boolean
           created_at: string | null
           dealership_id: number
+          default_kiosk_id: string | null
           department: string
           email: string | null
           employee_number: string
@@ -2522,8 +2524,10 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          can_punch_any_kiosk?: boolean
           created_at?: string | null
           dealership_id: number
+          default_kiosk_id?: string | null
           department: string
           email?: string | null
           employee_number: string
@@ -2546,8 +2550,10 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          can_punch_any_kiosk?: boolean
           created_at?: string | null
           dealership_id?: number
+          default_kiosk_id?: string | null
           department?: string
           email?: string | null
           employee_number?: string
@@ -2590,6 +2596,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "mv_dealership_stats"
             referencedColumns: ["dealer_id"]
+          },
+          {
+            foreignKeyName: "detail_hub_employees_default_kiosk_id_fkey"
+            columns: ["default_kiosk_id"]
+            isOneToOne: false
+            referencedRelation: "detail_hub_kiosks"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -2680,6 +2693,13 @@ export type Database = {
             foreignKeyName: "detail_hub_face_audit_employee_id_fkey"
             columns: ["employee_id"]
             isOneToOne: false
+            referencedRelation: "detail_hub_currently_working"
+            referencedColumns: ["employee_id"]
+          },
+          {
+            foreignKeyName: "detail_hub_face_audit_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
             referencedRelation: "detail_hub_employees"
             referencedColumns: ["id"]
           },
@@ -2729,6 +2749,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "detail_hub_invoices"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "detail_hub_invoice_line_items_time_entry_id_fkey"
+            columns: ["time_entry_id"]
+            isOneToOne: false
+            referencedRelation: "detail_hub_currently_working"
+            referencedColumns: ["time_entry_id"]
           },
           {
             foreignKeyName: "detail_hub_invoice_line_items_time_entry_id_fkey"
@@ -2927,21 +2954,144 @@ export type Database = {
           },
         ]
       }
+      detail_hub_schedules: {
+        Row: {
+          assigned_kiosk_id: string | null
+          break_is_paid: boolean
+          created_at: string
+          created_by: string | null
+          dealership_id: number
+          early_punch_allowed_minutes: number
+          employee_id: string
+          id: string
+          late_punch_grace_minutes: number
+          notes: string | null
+          required_break_minutes: number
+          shift_date: string
+          shift_end_time: string
+          shift_start_time: string
+          status: Database["public"]["Enums"]["detail_hub_shift_status"]
+          time_entry_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          assigned_kiosk_id?: string | null
+          break_is_paid?: boolean
+          created_at?: string
+          created_by?: string | null
+          dealership_id: number
+          early_punch_allowed_minutes?: number
+          employee_id: string
+          id?: string
+          late_punch_grace_minutes?: number
+          notes?: string | null
+          required_break_minutes?: number
+          shift_date: string
+          shift_end_time: string
+          shift_start_time: string
+          status?: Database["public"]["Enums"]["detail_hub_shift_status"]
+          time_entry_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          assigned_kiosk_id?: string | null
+          break_is_paid?: boolean
+          created_at?: string
+          created_by?: string | null
+          dealership_id?: number
+          early_punch_allowed_minutes?: number
+          employee_id?: string
+          id?: string
+          late_punch_grace_minutes?: number
+          notes?: string | null
+          required_break_minutes?: number
+          shift_date?: string
+          shift_end_time?: string
+          shift_start_time?: string
+          status?: Database["public"]["Enums"]["detail_hub_shift_status"]
+          time_entry_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "detail_hub_schedules_assigned_kiosk_id_fkey"
+            columns: ["assigned_kiosk_id"]
+            isOneToOne: false
+            referencedRelation: "detail_hub_kiosks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "detail_hub_schedules_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "appointment_slots_health"
+            referencedColumns: ["dealer_id"]
+          },
+          {
+            foreignKeyName: "detail_hub_schedules_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "detail_hub_schedules_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "mv_dealership_stats"
+            referencedColumns: ["dealer_id"]
+          },
+          {
+            foreignKeyName: "detail_hub_schedules_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "detail_hub_currently_working"
+            referencedColumns: ["employee_id"]
+          },
+          {
+            foreignKeyName: "detail_hub_schedules_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "detail_hub_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "detail_hub_schedules_time_entry_id_fkey"
+            columns: ["time_entry_id"]
+            isOneToOne: false
+            referencedRelation: "detail_hub_currently_working"
+            referencedColumns: ["time_entry_id"]
+          },
+          {
+            foreignKeyName: "detail_hub_schedules_time_entry_id_fkey"
+            columns: ["time_entry_id"]
+            isOneToOne: false
+            referencedRelation: "detail_hub_time_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       detail_hub_time_entries: {
         Row: {
           break_duration_minutes: number | null
           break_end: string | null
+          break_end_photo_url: string | null
+          break_policy_compliant: boolean | null
           break_start: string | null
+          break_start_photo_url: string | null
+          break_violation_reason: string | null
           clock_in: string
           clock_out: string | null
           created_at: string | null
           dealership_id: number
+          early_punch_approved: boolean | null
           employee_id: string
           face_confidence_in: number | null
           face_confidence_out: number | null
           id: string
           ip_address: unknown
           kiosk_id: string | null
+          late_punch_approved: boolean | null
           notes: string | null
           overtime_hours: number | null
           photo_in_url: string | null
@@ -2950,6 +3100,8 @@ export type Database = {
           punch_out_method: string | null
           regular_hours: number | null
           requires_manual_verification: boolean | null
+          schedule_id: string | null
+          schedule_variance_minutes: number | null
           status: string | null
           total_hours: number | null
           updated_at: string | null
@@ -2960,17 +3112,23 @@ export type Database = {
         Insert: {
           break_duration_minutes?: number | null
           break_end?: string | null
+          break_end_photo_url?: string | null
+          break_policy_compliant?: boolean | null
           break_start?: string | null
+          break_start_photo_url?: string | null
+          break_violation_reason?: string | null
           clock_in: string
           clock_out?: string | null
           created_at?: string | null
           dealership_id: number
+          early_punch_approved?: boolean | null
           employee_id: string
           face_confidence_in?: number | null
           face_confidence_out?: number | null
           id?: string
           ip_address?: unknown
           kiosk_id?: string | null
+          late_punch_approved?: boolean | null
           notes?: string | null
           overtime_hours?: number | null
           photo_in_url?: string | null
@@ -2979,6 +3137,8 @@ export type Database = {
           punch_out_method?: string | null
           regular_hours?: number | null
           requires_manual_verification?: boolean | null
+          schedule_id?: string | null
+          schedule_variance_minutes?: number | null
           status?: string | null
           total_hours?: number | null
           updated_at?: string | null
@@ -2989,17 +3149,23 @@ export type Database = {
         Update: {
           break_duration_minutes?: number | null
           break_end?: string | null
+          break_end_photo_url?: string | null
+          break_policy_compliant?: boolean | null
           break_start?: string | null
+          break_start_photo_url?: string | null
+          break_violation_reason?: string | null
           clock_in?: string
           clock_out?: string | null
           created_at?: string | null
           dealership_id?: number
+          early_punch_approved?: boolean | null
           employee_id?: string
           face_confidence_in?: number | null
           face_confidence_out?: number | null
           id?: string
           ip_address?: unknown
           kiosk_id?: string | null
+          late_punch_approved?: boolean | null
           notes?: string | null
           overtime_hours?: number | null
           photo_in_url?: string | null
@@ -3008,6 +3174,8 @@ export type Database = {
           punch_out_method?: string | null
           regular_hours?: number | null
           requires_manual_verification?: boolean | null
+          schedule_id?: string | null
+          schedule_variance_minutes?: number | null
           status?: string | null
           total_hours?: number | null
           updated_at?: string | null
@@ -3041,7 +3209,21 @@ export type Database = {
             foreignKeyName: "detail_hub_time_entries_employee_id_fkey"
             columns: ["employee_id"]
             isOneToOne: false
+            referencedRelation: "detail_hub_currently_working"
+            referencedColumns: ["employee_id"]
+          },
+          {
+            foreignKeyName: "detail_hub_time_entries_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
             referencedRelation: "detail_hub_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "detail_hub_time_entries_schedule_id_fkey"
+            columns: ["schedule_id"]
+            isOneToOne: false
+            referencedRelation: "detail_hub_schedules"
             referencedColumns: ["id"]
           },
           {
@@ -11344,6 +11526,55 @@ export type Database = {
           },
         ]
       }
+      detail_hub_currently_working: {
+        Row: {
+          break_elapsed_minutes: number | null
+          break_start: string | null
+          clock_in: string | null
+          dealership_id: number | null
+          department: string | null
+          elapsed_hours: number | null
+          elapsed_time_formatted: string | null
+          employee_id: string | null
+          employee_name: string | null
+          employee_number: string | null
+          first_name: string | null
+          is_on_break: boolean | null
+          kiosk_code: string | null
+          kiosk_id: string | null
+          kiosk_name: string | null
+          last_name: string | null
+          profile_photo_url: string | null
+          role: string | null
+          schedule_variance_minutes: number | null
+          scheduled_end: string | null
+          scheduled_start: string | null
+          time_entry_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "detail_hub_time_entries_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "appointment_slots_health"
+            referencedColumns: ["dealer_id"]
+          },
+          {
+            foreignKeyName: "detail_hub_time_entries_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "detail_hub_time_entries_dealership_id_fkey"
+            columns: ["dealership_id"]
+            isOneToOne: false
+            referencedRelation: "mv_dealership_stats"
+            referencedColumns: ["dealer_id"]
+          },
+        ]
+      }
       mv_dealership_stats: {
         Row: {
           active_user_count: number | null
@@ -11758,6 +11989,21 @@ export type Database = {
         Args: { dealer_id: number; user_id: string }
         Returns: boolean
       }
+      can_punch_in_now: {
+        Args: {
+          p_current_time?: string
+          p_employee_id: string
+          p_kiosk_id: string
+        }
+        Returns: {
+          allowed: boolean
+          minutes_until_allowed: number
+          reason: string
+          schedule_id: string
+          shift_end_time: string
+          shift_start_time: string
+        }[]
+      }
       can_user_access_order_type: {
         Args: { target_order_type: string; user_uuid: string }
         Returns: boolean
@@ -11850,6 +12096,16 @@ export type Database = {
           user_role: string
           user_type: string
         }[]
+      }
+      detect_schedule_conflicts: {
+        Args: {
+          p_employee_id: string
+          p_exclude_schedule_id?: string
+          p_shift_date: string
+          p_shift_end_time: string
+          p_shift_start_time: string
+        }
+        Returns: boolean
       }
       dismiss_get_ready_notification: {
         Args: { p_notification_id: string }
@@ -11950,6 +12206,24 @@ export type Database = {
           step_id: string
           step_name: string
           vehicle_count: number
+        }[]
+      }
+      get_break_violations: {
+        Args: {
+          p_dealership_id: number
+          p_end_date?: string
+          p_start_date?: string
+        }
+        Returns: {
+          break_minutes: number
+          employee_id: string
+          employee_name: string
+          required_minutes: number
+          shift_date: string
+          shift_hours: number
+          shortage_minutes: number
+          time_entry_id: string
+          violation_reason: string
         }[]
       }
       get_chat_effective_permissions: {
@@ -12209,6 +12483,34 @@ export type Database = {
           total_revenue: number
         }[]
       }
+      get_employee_schedule: {
+        Args: { p_date?: string; p_employee_id: string }
+        Returns: {
+          assigned_kiosk_id: string | null
+          break_is_paid: boolean
+          created_at: string
+          created_by: string | null
+          dealership_id: number
+          early_punch_allowed_minutes: number
+          employee_id: string
+          id: string
+          late_punch_grace_minutes: number
+          notes: string | null
+          required_break_minutes: number
+          shift_date: string
+          shift_end_time: string
+          shift_start_time: string
+          status: Database["public"]["Enums"]["detail_hub_shift_status"]
+          time_entry_id: string | null
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "detail_hub_schedules"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       get_entity_followers: {
         Args: {
           p_dealer_id: number
@@ -12349,6 +12651,16 @@ export type Database = {
           vehicle_model: string
           vehicle_vin: string
           vehicle_year: number
+        }[]
+      }
+      get_live_dashboard_stats: {
+        Args: { p_dealership_id: number }
+        Returns: {
+          avg_elapsed_hours: number
+          total_clocked_in: number
+          total_hours_today: number
+          total_on_break: number
+          unique_departments: number
         }[]
       }
       get_nfc_analytics: {
@@ -12633,6 +12945,23 @@ export type Database = {
           count: number
           details: Json
           metric: string
+        }[]
+      }
+      get_schedule_compliance_report: {
+        Args: {
+          p_dealership_id: number
+          p_end_date?: string
+          p_start_date?: string
+        }
+        Returns: {
+          compliance_percentage: number
+          early_shifts: number
+          employee_id: string
+          employee_name: string
+          late_shifts: number
+          missed_shifts: number
+          on_time_shifts: number
+          total_shifts: number
         }[]
       }
       get_sla_alerts: {
@@ -12943,6 +13272,34 @@ export type Database = {
           total_hits: number
         }[]
       }
+      get_weekly_schedules: {
+        Args: { p_dealership_id: number; p_week_start_date: string }
+        Returns: {
+          assigned_kiosk_id: string | null
+          break_is_paid: boolean
+          created_at: string
+          created_by: string | null
+          dealership_id: number
+          early_punch_allowed_minutes: number
+          employee_id: string
+          id: string
+          late_punch_grace_minutes: number
+          notes: string | null
+          required_break_minutes: number
+          shift_date: string
+          shift_end_time: string
+          shift_start_time: string
+          status: Database["public"]["Enums"]["detail_hub_shift_status"]
+          time_entry_id: string | null
+          updated_at: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "detail_hub_schedules"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       has_permission: {
         Args: {
           check_module: Database["public"]["Enums"]["app_module"]
@@ -13228,6 +13585,19 @@ export type Database = {
         Returns: boolean
       }
       user_is_system_admin: { Args: { user_id?: string }; Returns: boolean }
+      validate_break_duration: {
+        Args: {
+          p_break_end: string
+          p_break_start: string
+          p_time_entry_id: string
+        }
+        Returns: {
+          compliant: boolean
+          duration_minutes: number
+          reason: string
+          required_minutes: number
+        }[]
+      }
       validate_order_due_date: {
         Args: { due_date_param: string }
         Returns: boolean
@@ -13337,6 +13707,13 @@ export type Database = {
         | "sent"
         | "paid"
         | "overdue"
+        | "cancelled"
+      detail_hub_shift_status:
+        | "scheduled"
+        | "confirmed"
+        | "in_progress"
+        | "completed"
+        | "missed"
         | "cancelled"
       detail_role:
         | "super_manager"
@@ -13705,6 +14082,14 @@ export const Constants = {
         "sent",
         "paid",
         "overdue",
+        "cancelled",
+      ],
+      detail_hub_shift_status: [
+        "scheduled",
+        "confirmed",
+        "in_progress",
+        "completed",
+        "missed",
         "cancelled",
       ],
       detail_role: [

@@ -58,20 +58,36 @@
 
     <!-- MDAChat Live Chat Widget - Only in production -->
     <script>
-      // Only load widget in production to avoid console errors in development
-      if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-        window.BeChatSettings = {
-          widgetDomain: "https://dds.mydetailarea.com",
-        };
+      (function() {
+        const hostname = window.location.hostname;
+        const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
 
-        const script = document.createElement('script');
-        script.src = 'https://support.mydetailarea.com/livechat-loader.js';
-        script.async = true;
-        script.defer = true;
-        document.body.appendChild(script);
-      } else {
-        console.log('🔇 [DEV] MDAChat widget disabled in development');
-      }
+        if (!isLocalhost) {
+          // Widget enabled in production
+          console.log('💬 [MDAChat] Loading widget for hostname:', hostname);
+
+          window.BeChatSettings = {
+            widgetDomain: "https://dds.mydetailarea.com",
+          };
+
+          const script = document.createElement('script');
+          script.src = 'https://support.mydetailarea.com/livechat-loader.js';
+          script.async = true;
+          script.defer = true;
+
+          script.onload = function() {
+            console.log('✅ [MDAChat] Widget script loaded successfully');
+          };
+
+          script.onerror = function(error) {
+            console.error('❌ [MDAChat] Failed to load widget script:', error);
+          };
+
+          document.body.appendChild(script);
+        } else {
+          console.log('🔇 [DEV] MDAChat widget disabled in localhost (hostname: ' + hostname + ')');
+        }
+      })();
     </script>
   </body>
 </html>

@@ -20,6 +20,26 @@
     "recent_activity": "Recent Activity",
     "view_all": "View All"
   },
+  "live_dashboard": {
+    "title": "Who's Working Now",
+    "subtitle": "Real-time employee status",
+    "clocked_in_at": "Clocked in at",
+    "clock_in": "Clock In",
+    "elapsed_time": "Elapsed",
+    "elapsed": "Elapsed",
+    "break_duration": "Break Duration",
+    "on_break": "On Break",
+    "active": "Active",
+    "view_details": "View",
+    "edit": "Edit",
+    "no_employees_working": "No employees currently working",
+    "stats": {
+      "clocked_in": "Clocked In",
+      "on_break": "On Break",
+      "total_hours_today": "Total Hours Today",
+      "active_departments": "Active Departments"
+    }
+  },
   "punch_clock": {
     "title": "Detail Hub Time Clock",
     "subtitle": "Employee time tracking kiosk",

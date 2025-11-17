@@ -15,6 +15,7 @@ import DetailHubAnalytics from "./DetailHubAnalytics";
 import ReportsCenter from "./ReportsCenter";
 import InvoiceCenter from "./InvoiceCenter";
 import KioskManager from "./KioskManager";
+import LiveStatusDashboard from "./LiveStatusDashboard";
 import { TimeClockModal } from "./TimeClockModal";
 
 const DetailHubDashboard = () => {
@@ -81,123 +82,9 @@ const DetailHubDashboard = () => {
           <TabsTrigger value="kiosks">{t('detail_hub.tabs.kiosks')}</TabsTrigger>
         </TabsList>
 
-        {/* TAB: Overview (contenido actual) */}
+        {/* TAB: Overview - Live Status Dashboard */}
         <TabsContent value="overview" className="space-y-6">
-
-      {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat, index) => (
-          <Card key={index}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-              <stat.icon className={`h-4 w-4 ${stat.color}`} />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">
-                <span className={stat.change.startsWith('+') ? 'text-green-600' : stat.change.startsWith('-') ? 'text-red-600' : 'text-muted-foreground'}>
-                  {stat.change}
-                </span>
-                {" "}{t('time.last_week')}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('detail_hub.dashboard.quick_actions.title')}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button
-              variant="outline"
-              className="w-full justify-start"
-              onClick={() => navigate("/detail-hub/timecard")}
-            >
-              <Calendar className="w-4 h-4 mr-2" />
-              {t('detail_hub.timecard.title')}
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full justify-start"
-              onClick={() => navigate("/detail-hub/invoices")}
-            >
-              <DollarSign className="w-4 h-4 mr-2" />
-              {t('detail_hub.invoices.title')}
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full justify-start"
-              onClick={() => navigate("/detail-hub/reports")}
-            >
-              <TrendingUp className="w-4 h-4 mr-2" />
-              {t('detail_hub.reports.title')}
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full justify-start"
-              onClick={() => navigate("/detail-hub/kiosk-manager")}
-            >
-              <UserCheck className="w-4 h-4 mr-2" />
-              {t('detail_hub.kiosk_manager.title')}
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('detail_hub.dashboard.recent_activity')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {recentActivity.map((activity, index) => (
-                <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-2 h-2 rounded-full ${
-                      activity.status === 'success' ? 'bg-green-500' :
-                      activity.status === 'warning' ? 'bg-yellow-500' : 'bg-red-500'
-                    }`} />
-                    <div>
-                      <p className="font-medium">{activity.employee}</p>
-                      <p className="text-sm text-muted-foreground">{activity.action}</p>
-                    </div>
-                  </div>
-                  <Badge variant="outline" className="text-xs">
-                    {activity.time}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* System Status */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('detail_hub.punch_clock.status.title')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="w-4 h-4 text-green-500" />
-              <span className="text-sm">{t('detail_hub.punch_clock.status.face_recognition')}: {t('detail_hub.punch_clock.status.online')}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <CheckCircle className="w-4 h-4 text-green-500" />
-              <span className="text-sm">{t('detail_hub.dashboard.quick_actions.time_clock')}: {t('detail_hub.punch_clock.status.active')}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <AlertCircle className="w-4 h-4 text-yellow-500" />
-              <span className="text-sm">{t('detail_hub.punch_clock.status.network_connection')}: {t('detail_hub.timecard.status_badges.clocked_in')}</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          <LiveStatusDashboard />
         </TabsContent>
 
         {/* TAB: Employees */}
