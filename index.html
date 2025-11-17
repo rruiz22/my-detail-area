@@ -56,21 +56,30 @@
     </script>
     <script type="module" src="/src/main.tsx"></script>
 
-    <!-- MDAChat Live Chat Widget - Only in production -->
+    <!--
+      MDAChat Live Chat Widget - DISABLED
+
+      Reason: Widget backend returns 500 Internal Server Error
+      Error: GET https://support.mydetailarea.com/lc/widget (500)
+
+      To re-enable when backend is fixed, uncomment this section.
+
+      Configuration:
+      - widgetDomain: https://support.mydetailarea.com
+      - Script: https://support.mydetailarea.com/livechat-loader.js
+    -->
+    <!--
     <script>
       (function() {
         const hostname = window.location.hostname;
         const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
 
         if (!isLocalhost) {
-          // Widget enabled in production
           console.log('💬 [MDAChat] Loading widget for hostname:', hostname);
 
           window.BeChatSettings = {
             widgetDomain: "https://support.mydetailarea.com",
           };
-
-          console.log('⚙️ [MDAChat] Settings configured:', window.BeChatSettings);
 
           const script = document.createElement('script');
           script.src = 'https://support.mydetailarea.com/livechat-loader.js';
@@ -80,17 +89,13 @@
           script.onload = function() {
             console.log('✅ [MDAChat] Widget script loaded successfully');
 
-            // Wait for BeChat API to be available, then show launcher
             const showWidget = function() {
               if (window.BeChat && typeof window.BeChat.showLauncher === 'function') {
                 window.BeChat.showLauncher();
                 console.log('👁️ [MDAChat] Widget launcher displayed');
-              } else {
-                console.warn('⚠️ [MDAChat] BeChat API not available yet');
               }
             };
 
-            // Try immediately, then retry after delays
             setTimeout(showWidget, 100);
             setTimeout(showWidget, 500);
             setTimeout(showWidget, 1000);
@@ -101,10 +106,9 @@
           };
 
           document.body.appendChild(script);
-        } else {
-          console.log('🔇 [DEV] MDAChat widget disabled in localhost (hostname: ' + hostname + ')');
         }
       })();
     </script>
+    -->
   </body>
 </html>

@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 858,
-  "totalStrings": 9803,
-  "hardcodedStrings": 2046,
-  "translatedStrings": 7757,
+  "scannedFiles": 861,
+  "totalStrings": 9880,
+  "hardcodedStrings": 2049,
+  "translatedStrings": 7831,
   "issues": {
     "critical": [
       {
@@ -28559,155 +28559,165 @@
         "translationCalls": [
           {
             "key": "detail_hub.dashboard.stats.active_employees",
-            "line": 40,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.dashboard.stats.todays_hours",
             "line": 41,
             "exists": false
           },
           {
-            "key": "detail_hub.dashboard.stats.pending_reviews",
+            "key": "detail_hub.dashboard.stats.todays_hours",
             "line": 42,
             "exists": false
           },
           {
+            "key": "detail_hub.dashboard.stats.pending_reviews",
+            "line": 43,
+            "exists": false
+          },
+          {
             "key": "detail_hub.toasts.clocked_out",
-            "line": 49,
+            "line": 50,
             "exists": false
           },
           {
             "key": "detail_hub.toasts.clocked_in",
-            "line": 49,
+            "line": 50,
             "exists": false
           },
           {
             "key": "detail_hub.title",
-            "line": 59,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.subtitle",
             "line": 60,
             "exists": false
           },
           {
+            "key": "detail_hub.subtitle",
+            "line": 61,
+            "exists": false
+          },
+          {
             "key": "detail_hub.dashboard.quick_actions.time_clock",
-            "line": 65,
+            "line": 66,
             "exists": false
           },
           {
             "key": "detail_hub.tabs.overview",
-            "line": 76,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.tabs.employees",
             "line": 77,
             "exists": false
           },
           {
-            "key": "detail_hub.tabs.timecards",
+            "key": "detail_hub.tabs.employees",
             "line": 78,
             "exists": false
           },
           {
-            "key": "detail_hub.tabs.analytics",
+            "key": "detail_hub.tabs.schedules",
             "line": 79,
             "exists": false
           },
           {
-            "key": "detail_hub.tabs.reports",
+            "key": "detail_hub.tabs.timecards",
             "line": 80,
             "exists": false
           },
           {
-            "key": "detail_hub.tabs.invoices",
+            "key": "detail_hub.tabs.analytics",
             "line": 81,
             "exists": false
           },
           {
-            "key": "detail_hub.tabs.kiosks",
+            "key": "detail_hub.tabs.reports",
             "line": 82,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.tabs.invoices",
+            "line": 83,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.tabs.kiosks",
+            "line": 84,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "detail_hub.dashboard.stats.active_employees",
-            "line": 40,
-            "context": "39: const stats = [\n40: { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: \"+2\", color: \"text-blue-600\" },\n41: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-green-600\" },"
+            "line": 41,
+            "context": "40: const stats = [\n41: { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: \"+2\", color: \"text-blue-600\" },\n42: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-green-600\" },"
           },
           {
             "key": "detail_hub.dashboard.stats.todays_hours",
-            "line": 41,
-            "context": "40: { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: \"+2\", color: \"text-blue-600\" },\n41: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-green-600\" },\n42: { title: t('detail_hub.dashboard.stats.pending_reviews'), value: pendingReviews.length.toString(), icon: AlertCircle, change: \"\", color: \"text-orange-600\" },"
+            "line": 42,
+            "context": "41: { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: \"+2\", color: \"text-blue-600\" },\n42: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-green-600\" },\n43: { title: t('detail_hub.dashboard.stats.pending_reviews'), value: pendingReviews.length.toString(), icon: AlertCircle, change: \"\", color: \"text-orange-600\" },"
           },
           {
             "key": "detail_hub.dashboard.stats.pending_reviews",
-            "line": 42,
-            "context": "41: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-green-600\" },\n42: { title: t('detail_hub.dashboard.stats.pending_reviews'), value: pendingReviews.length.toString(), icon: AlertCircle, change: \"\", color: \"text-orange-600\" },\n43: { title: \"Total Employees\", value: employees.length.toString(), icon: UserCheck, change: \"\", color: \"text-emerald-600\" }"
+            "line": 43,
+            "context": "42: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-green-600\" },\n43: { title: t('detail_hub.dashboard.stats.pending_reviews'), value: pendingReviews.length.toString(), icon: AlertCircle, change: \"\", color: \"text-orange-600\" },\n44: { title: \"Total Employees\", value: employees.length.toString(), icon: UserCheck, change: \"\", color: \"text-emerald-600\" }"
           },
           {
             "key": "detail_hub.toasts.clocked_out",
-            "line": 49,
-            "context": "48: employee: entry.employee_id, // TODO: Join with employees to get name\n49: action: entry.clock_out ? t('detail_hub.toasts.clocked_out') : t('detail_hub.toasts.clocked_in'),\n50: time: new Date(entry.clock_in).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),"
+            "line": 50,
+            "context": "49: employee: entry.employee_id, // TODO: Join with employees to get name\n50: action: entry.clock_out ? t('detail_hub.toasts.clocked_out') : t('detail_hub.toasts.clocked_in'),\n51: time: new Date(entry.clock_in).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),"
           },
           {
             "key": "detail_hub.toasts.clocked_in",
-            "line": 49,
-            "context": "48: employee: entry.employee_id, // TODO: Join with employees to get name\n49: action: entry.clock_out ? t('detail_hub.toasts.clocked_out') : t('detail_hub.toasts.clocked_in'),\n50: time: new Date(entry.clock_in).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),"
+            "line": 50,
+            "context": "49: employee: entry.employee_id, // TODO: Join with employees to get name\n50: action: entry.clock_out ? t('detail_hub.toasts.clocked_out') : t('detail_hub.toasts.clocked_in'),\n51: time: new Date(entry.clock_in).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),"
           },
           {
             "key": "detail_hub.title",
-            "line": 59,
-            "context": "58: <div>\n59: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.title')}</h1>\n60: <p className=\"text-muted-foreground\">{t('detail_hub.subtitle')}</p>"
+            "line": 60,
+            "context": "59: <div>\n60: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.title')}</h1>\n61: <p className=\"text-muted-foreground\">{t('detail_hub.subtitle')}</p>"
           },
           {
             "key": "detail_hub.subtitle",
-            "line": 60,
-            "context": "59: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.title')}</h1>\n60: <p className=\"text-muted-foreground\">{t('detail_hub.subtitle')}</p>\n61: </div>"
+            "line": 61,
+            "context": "60: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.title')}</h1>\n61: <p className=\"text-muted-foreground\">{t('detail_hub.subtitle')}</p>\n62: </div>"
           },
           {
             "key": "detail_hub.dashboard.quick_actions.time_clock",
-            "line": 65,
-            "context": "64: <Clock className=\"w-4 h-4 mr-2\" />\n65: {t('detail_hub.dashboard.quick_actions.time_clock')}\n66: </Button>"
+            "line": 66,
+            "context": "65: <Clock className=\"w-4 h-4 mr-2\" />\n66: {t('detail_hub.dashboard.quick_actions.time_clock')}\n67: </Button>"
           },
           {
             "key": "detail_hub.tabs.overview",
-            "line": 76,
-            "context": "75: <TabsList className=\"grid w-full grid-cols-7\">\n76: <TabsTrigger value=\"overview\">{t('detail_hub.tabs.overview')}</TabsTrigger>\n77: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>"
+            "line": 77,
+            "context": "76: <TabsList className=\"grid w-full grid-cols-8\">\n77: <TabsTrigger value=\"overview\">{t('detail_hub.tabs.overview')}</TabsTrigger>\n78: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.employees",
-            "line": 77,
-            "context": "76: <TabsTrigger value=\"overview\">{t('detail_hub.tabs.overview')}</TabsTrigger>\n77: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>\n78: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>"
+            "line": 78,
+            "context": "77: <TabsTrigger value=\"overview\">{t('detail_hub.tabs.overview')}</TabsTrigger>\n78: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>\n79: <TabsTrigger value=\"schedules\">{t('detail_hub.tabs.schedules')}</TabsTrigger>"
+          },
+          {
+            "key": "detail_hub.tabs.schedules",
+            "line": 79,
+            "context": "78: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>\n79: <TabsTrigger value=\"schedules\">{t('detail_hub.tabs.schedules')}</TabsTrigger>\n80: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.timecards",
-            "line": 78,
-            "context": "77: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>\n78: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>\n79: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>"
+            "line": 80,
+            "context": "79: <TabsTrigger value=\"schedules\">{t('detail_hub.tabs.schedules')}</TabsTrigger>\n80: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>\n81: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.analytics",
-            "line": 79,
-            "context": "78: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>\n79: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>\n80: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>"
+            "line": 81,
+            "context": "80: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>\n81: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>\n82: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.reports",
-            "line": 80,
-            "context": "79: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>\n80: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>\n81: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>"
+            "line": 82,
+            "context": "81: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>\n82: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>\n83: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.invoices",
-            "line": 81,
-            "context": "80: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>\n81: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>\n82: <TabsTrigger value=\"kiosks\">{t('detail_hub.tabs.kiosks')}</TabsTrigger>"
+            "line": 83,
+            "context": "82: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>\n83: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>\n84: <TabsTrigger value=\"kiosks\">{t('detail_hub.tabs.kiosks')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.kiosks",
-            "line": 82,
-            "context": "81: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>\n82: <TabsTrigger value=\"kiosks\">{t('detail_hub.tabs.kiosks')}</TabsTrigger>\n83: </TabsList>"
+            "line": 84,
+            "context": "83: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>\n84: <TabsTrigger value=\"kiosks\">{t('detail_hub.tabs.kiosks')}</TabsTrigger>\n85: </TabsList>"
           }
         ],
         "coverage": 100,
@@ -31563,6 +31573,782 @@
           }
         ],
         "coverage": 91,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\detail-hub\\ScheduleCalendar.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "detail_hub.schedules.calendar_title",
+            "line": 204,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.previous_week",
+            "line": 215,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.today",
+            "line": 225,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.next_week",
+            "line": 231,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.add_shift",
+            "line": 245,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.total_shifts",
+            "line": 258,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.employees_scheduled",
+            "line": 267,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.total_hours",
+            "line": 276,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.common.loading",
+            "line": 290,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.time",
+            "line": 298,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.departments",
+            "line": 407,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "detail_hub.schedules.calendar_title",
+            "line": 204,
+            "context": "203: <CardTitle className=\"text-2xl font-bold text-gray-900\">\n204: {t('detail_hub.schedules.calendar_title')}\n205: </CardTitle>"
+          },
+          {
+            "key": "detail_hub.schedules.previous_week",
+            "line": 215,
+            "context": "214: onClick={handlePreviousWeek}\n215: aria-label={t('detail_hub.schedules.previous_week')}\n216: >"
+          },
+          {
+            "key": "detail_hub.schedules.today",
+            "line": 225,
+            "context": "224: <CalendarIcon className=\"w-4 h-4 mr-2\" />\n225: {t('detail_hub.schedules.today')}\n226: </Button>"
+          },
+          {
+            "key": "detail_hub.schedules.next_week",
+            "line": 231,
+            "context": "230: onClick={handleNextWeek}\n231: aria-label={t('detail_hub.schedules.next_week')}\n232: >"
+          },
+          {
+            "key": "detail_hub.schedules.add_shift",
+            "line": 245,
+            "context": "244: <Plus className=\"w-4 h-4 mr-2\" />\n245: {t('detail_hub.schedules.add_shift')}\n246: </Button>"
+          },
+          {
+            "key": "detail_hub.schedules.total_shifts",
+            "line": 258,
+            "context": "257: <div>\n258: <p className=\"text-xs text-gray-500\">{t('detail_hub.schedules.total_shifts')}</p>\n259: <p className=\"text-lg font-bold text-gray-900\">{weekStats.totalShifts}</p>"
+          },
+          {
+            "key": "detail_hub.schedules.employees_scheduled",
+            "line": 267,
+            "context": "266: <div>\n267: <p className=\"text-xs text-gray-500\">{t('detail_hub.schedules.employees_scheduled')}</p>\n268: <p className=\"text-lg font-bold text-gray-900\">{weekStats.uniqueEmployees}</p>"
+          },
+          {
+            "key": "detail_hub.schedules.total_hours",
+            "line": 276,
+            "context": "275: <div>\n276: <p className=\"text-xs text-gray-500\">{t('detail_hub.schedules.total_hours')}</p>\n277: <p className=\"text-lg font-bold text-gray-900\">{weekStats.totalHours.toFixed(1)}h</p>"
+          },
+          {
+            "key": "detail_hub.common.loading",
+            "line": 290,
+            "context": "289: <Clock className=\"w-8 h-8 text-gray-400 mx-auto mb-3 animate-spin\" />\n290: <p className=\"text-sm text-gray-500\">{t('detail_hub.common.loading')}</p>\n291: </div>"
+          },
+          {
+            "key": "detail_hub.schedules.time",
+            "line": 298,
+            "context": "297: <div className=\"p-3 text-xs font-medium text-gray-500 text-center\">\n298: {t('detail_hub.schedules.time')}\n299: </div>"
+          },
+          {
+            "key": "detail_hub.schedules.departments",
+            "line": 407,
+            "context": "406: <p className=\"text-xs font-medium text-gray-500\">\n407: {t('detail_hub.schedules.departments')}:\n408: </p>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\detail-hub\\ScheduleList.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "detail_hub.schedules.confirm_delete",
+            "line": 222,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.list_title",
+            "line": 250,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.shifts",
+            "line": 253,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.add_shift",
+            "line": 258,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.search_placeholder",
+            "line": 267,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.all_statuses",
+            "line": 285,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.status.scheduled",
+            "line": 286,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.status.confirmed",
+            "line": 287,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.status.in_progress",
+            "line": 288,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.status.completed",
+            "line": 289,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.status.missed",
+            "line": 290,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.status.cancelled",
+            "line": 291,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.all_departments",
+            "line": 304,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.departments.detail",
+            "line": 305,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.departments.car_wash",
+            "line": 306,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.departments.service",
+            "line": 307,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.departments.management",
+            "line": 308,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.common.loading",
+            "line": 320,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.no_schedules",
+            "line": 331,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.no_schedules_message",
+            "line": 334,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.add_first_shift",
+            "line": 338,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.today",
+            "line": 350,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.tomorrow",
+            "line": 361,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.this_week",
+            "line": 372,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.upcoming",
+            "line": 383,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.past",
+            "line": 394,
+            "exists": false
+          },
+          {
+            "key": "common.edit",
+            "line": 572,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.duplicate",
+            "line": 576,
+            "exists": false
+          },
+          {
+            "key": "common.delete",
+            "line": 584,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "detail_hub.schedules.confirm_delete",
+            "line": 222,
+            "context": "221: const handleDelete = (schedule: DetailHubSchedule) => {\n222: if (confirm(t('detail_hub.schedules.confirm_delete'))) {\n223: deleteSchedule(schedule.id);"
+          },
+          {
+            "key": "detail_hub.schedules.list_title",
+            "line": 250,
+            "context": "249: <CardTitle className=\"text-2xl font-bold text-gray-900\">\n250: {t('detail_hub.schedules.list_title')}\n251: </CardTitle>"
+          },
+          {
+            "key": "detail_hub.schedules.shifts",
+            "line": 253,
+            "context": "252: <p className=\"text-sm text-gray-500 mt-1\">\n253: {filteredSchedules.length} {t('detail_hub.schedules.shifts')}\n254: </p>"
+          },
+          {
+            "key": "detail_hub.schedules.add_shift",
+            "line": 258,
+            "context": "257: <Plus className=\"w-4 h-4 mr-2\" />\n258: {t('detail_hub.schedules.add_shift')}\n259: </Button>"
+          },
+          {
+            "key": "detail_hub.schedules.search_placeholder",
+            "line": 267,
+            "context": "266: <Input\n267: placeholder={t('detail_hub.schedules.search_placeholder')}\n268: value={searchTerm}"
+          },
+          {
+            "key": "detail_hub.schedules.all_statuses",
+            "line": 285,
+            "context": "284: <SelectContent>\n285: <SelectItem value=\"all\">{t('detail_hub.schedules.all_statuses')}</SelectItem>\n286: <SelectItem value=\"scheduled\">{t('detail_hub.schedules.status.scheduled')}</SelectItem>"
+          },
+          {
+            "key": "detail_hub.schedules.status.scheduled",
+            "line": 286,
+            "context": "285: <SelectItem value=\"all\">{t('detail_hub.schedules.all_statuses')}</SelectItem>\n286: <SelectItem value=\"scheduled\">{t('detail_hub.schedules.status.scheduled')}</SelectItem>\n287: <SelectItem value=\"confirmed\">{t('detail_hub.schedules.status.confirmed')}</SelectItem>"
+          },
+          {
+            "key": "detail_hub.schedules.status.confirmed",
+            "line": 287,
+            "context": "286: <SelectItem value=\"scheduled\">{t('detail_hub.schedules.status.scheduled')}</SelectItem>\n287: <SelectItem value=\"confirmed\">{t('detail_hub.schedules.status.confirmed')}</SelectItem>\n288: <SelectItem value=\"in_progress\">{t('detail_hub.schedules.status.in_progress')}</SelectItem>"
+          },
+          {
+            "key": "detail_hub.schedules.status.in_progress",
+            "line": 288,
+            "context": "287: <SelectItem value=\"confirmed\">{t('detail_hub.schedules.status.confirmed')}</SelectItem>\n288: <SelectItem value=\"in_progress\">{t('detail_hub.schedules.status.in_progress')}</SelectItem>\n289: <SelectItem value=\"completed\">{t('detail_hub.schedules.status.completed')}</SelectItem>"
+          },
+          {
+            "key": "detail_hub.schedules.status.completed",
+            "line": 289,
+            "context": "288: <SelectItem value=\"in_progress\">{t('detail_hub.schedules.status.in_progress')}</SelectItem>\n289: <SelectItem value=\"completed\">{t('detail_hub.schedules.status.completed')}</SelectItem>\n290: <SelectItem value=\"missed\">{t('detail_hub.schedules.status.missed')}</SelectItem>"
+          },
+          {
+            "key": "detail_hub.schedules.status.missed",
+            "line": 290,
+            "context": "289: <SelectItem value=\"completed\">{t('detail_hub.schedules.status.completed')}</SelectItem>\n290: <SelectItem value=\"missed\">{t('detail_hub.schedules.status.missed')}</SelectItem>\n291: <SelectItem value=\"cancelled\">{t('detail_hub.schedules.status.cancelled')}</SelectItem>"
+          },
+          {
+            "key": "detail_hub.schedules.status.cancelled",
+            "line": 291,
+            "context": "290: <SelectItem value=\"missed\">{t('detail_hub.schedules.status.missed')}</SelectItem>\n291: <SelectItem value=\"cancelled\">{t('detail_hub.schedules.status.cancelled')}</SelectItem>\n292: </SelectContent>"
+          },
+          {
+            "key": "detail_hub.schedules.all_departments",
+            "line": 304,
+            "context": "303: <SelectContent>\n304: <SelectItem value=\"all\">{t('detail_hub.schedules.all_departments')}</SelectItem>\n305: <SelectItem value=\"detail\">{t('detail_hub.employees.departments.detail')}</SelectItem>"
+          },
+          {
+            "key": "detail_hub.employees.departments.detail",
+            "line": 305,
+            "context": "304: <SelectItem value=\"all\">{t('detail_hub.schedules.all_departments')}</SelectItem>\n305: <SelectItem value=\"detail\">{t('detail_hub.employees.departments.detail')}</SelectItem>\n306: <SelectItem value=\"car_wash\">{t('detail_hub.employees.departments.car_wash')}</SelectItem>"
+          },
+          {
+            "key": "detail_hub.employees.departments.car_wash",
+            "line": 306,
+            "context": "305: <SelectItem value=\"detail\">{t('detail_hub.employees.departments.detail')}</SelectItem>\n306: <SelectItem value=\"car_wash\">{t('detail_hub.employees.departments.car_wash')}</SelectItem>\n307: <SelectItem value=\"service\">{t('detail_hub.employees.departments.service')}</SelectItem>"
+          },
+          {
+            "key": "detail_hub.employees.departments.service",
+            "line": 307,
+            "context": "306: <SelectItem value=\"car_wash\">{t('detail_hub.employees.departments.car_wash')}</SelectItem>\n307: <SelectItem value=\"service\">{t('detail_hub.employees.departments.service')}</SelectItem>\n308: <SelectItem value=\"management\">{t('detail_hub.employees.departments.management')}</SelectItem>"
+          },
+          {
+            "key": "detail_hub.employees.departments.management",
+            "line": 308,
+            "context": "307: <SelectItem value=\"service\">{t('detail_hub.employees.departments.service')}</SelectItem>\n308: <SelectItem value=\"management\">{t('detail_hub.employees.departments.management')}</SelectItem>\n309: </SelectContent>"
+          },
+          {
+            "key": "detail_hub.common.loading",
+            "line": 320,
+            "context": "319: <Clock className=\"w-8 h-8 text-gray-400 mx-auto mb-3 animate-spin\" />\n320: <p className=\"text-sm text-gray-500\">{t('detail_hub.common.loading')}</p>\n321: </CardContent>"
+          },
+          {
+            "key": "detail_hub.schedules.no_schedules",
+            "line": 331,
+            "context": "330: <h3 className=\"text-lg font-semibold text-gray-900 mb-1\">\n331: {t('detail_hub.schedules.no_schedules')}\n332: </h3>"
+          },
+          {
+            "key": "detail_hub.schedules.no_schedules_message",
+            "line": 334,
+            "context": "333: <p className=\"text-sm text-gray-500 mb-4\">\n334: {t('detail_hub.schedules.no_schedules_message')}\n335: </p>"
+          },
+          {
+            "key": "detail_hub.schedules.add_first_shift",
+            "line": 338,
+            "context": "337: <Plus className=\"w-4 h-4 mr-2\" />\n338: {t('detail_hub.schedules.add_first_shift')}\n339: </Button>"
+          },
+          {
+            "key": "detail_hub.schedules.today",
+            "line": 350,
+            "context": "349: <ScheduleGroup\n350: title={t('detail_hub.schedules.today')}\n351: schedules={groupedSchedules.today}"
+          },
+          {
+            "key": "detail_hub.schedules.tomorrow",
+            "line": 361,
+            "context": "360: <ScheduleGroup\n361: title={t('detail_hub.schedules.tomorrow')}\n362: schedules={groupedSchedules.tomorrow}"
+          },
+          {
+            "key": "detail_hub.schedules.this_week",
+            "line": 372,
+            "context": "371: <ScheduleGroup\n372: title={t('detail_hub.schedules.this_week')}\n373: schedules={groupedSchedules.thisWeek}"
+          },
+          {
+            "key": "detail_hub.schedules.upcoming",
+            "line": 383,
+            "context": "382: <ScheduleGroup\n383: title={t('detail_hub.schedules.upcoming')}\n384: schedules={groupedSchedules.upcoming}"
+          },
+          {
+            "key": "detail_hub.schedules.past",
+            "line": 394,
+            "context": "393: <ScheduleGroup\n394: title={t('detail_hub.schedules.past')}\n395: schedules={groupedSchedules.past}"
+          },
+          {
+            "key": "common.edit",
+            "line": 572,
+            "context": "571: <Edit className=\"w-4 h-4 mr-2\" />\n572: {t('common.edit')}\n573: </DropdownMenuItem>"
+          },
+          {
+            "key": "detail_hub.schedules.duplicate",
+            "line": 576,
+            "context": "575: <Copy className=\"w-4 h-4 mr-2\" />\n576: {t('detail_hub.schedules.duplicate')}\n577: </DropdownMenuItem>"
+          },
+          {
+            "key": "common.delete",
+            "line": 584,
+            "context": "583: <Trash2 className=\"w-4 h-4 mr-2\" />\n584: {t('common.delete')}\n585: </DropdownMenuItem>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\detail-hub\\ShiftAssignmentDialog.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Spacer",
+            "line": 560,
+            "context": "559: <FormItem className=\"flex flex-col justify-end\">\n560: <FormLabel className=\"text-xs opacity-0\">Spacer</FormLabel>\n561: <div className=\"flex items-center gap-2 h-10\">"
+          },
+          {
+            "text": "Spacer",
+            "line": 560,
+            "context": "559: <FormItem className=\"flex flex-col justify-end\">\n560: <FormLabel className=\"text-xs opacity-0\">Spacer</FormLabel>\n561: <div className=\"flex items-center gap-2 h-10\">"
+          },
+          {
+            "text": "Date is required",
+            "line": 88,
+            "context": "87: employee_id: z.string().min(1, \"Employee is required\"),\n88: shift_date: z.date({ required_error: \"Date is required\" }),\n89: shift_start_time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, \"Invalid time format\"),"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "detail_hub.schedules.conflict_detected",
+            "line": 216,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.confirm_delete",
+            "line": 274,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.edit_shift",
+            "line": 295,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.add_shift",
+            "line": 296,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.employee",
+            "line": 312,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.select_employee",
+            "line": 340,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.search_employee",
+            "line": 349,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.no_employee_found",
+            "line": 352,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.date",
+            "line": 402,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.pick_date",
+            "line": 416,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.start_time",
+            "line": 442,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.end_time",
+            "line": 460,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.assigned_kiosk",
+            "line": 482,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.select_kiosk",
+            "line": 490,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.no_kiosk",
+            "line": 495,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.kiosk_help",
+            "line": 517,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.break_duration",
+            "line": 533,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.minutes",
+            "line": 546,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.paid_break",
+            "line": 570,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.early_punch_window",
+            "line": 585,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.minutes",
+            "line": 597,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.early_punch_help",
+            "line": 602,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.late_punch_grace",
+            "line": 614,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.minutes",
+            "line": 626,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.late_punch_help",
+            "line": 631,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.notes",
+            "line": 645,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.notes_placeholder",
+            "line": 652,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.conflict_message",
+            "line": 667,
+            "exists": false
+          },
+          {
+            "key": "common.deleting",
+            "line": 688,
+            "exists": false
+          },
+          {
+            "key": "common.delete",
+            "line": 688,
+            "exists": false
+          },
+          {
+            "key": "common.cancel",
+            "line": 699,
+            "exists": false
+          },
+          {
+            "key": "common.save",
+            "line": 709,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.add_shift",
+            "line": 709,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "detail_hub.schedules.conflict_detected",
+            "line": 216,
+            "context": "215: if (hasConflict) {\n216: setConflictError(t('detail_hub.schedules.conflict_detected'));\n217: return true;"
+          },
+          {
+            "key": "detail_hub.schedules.confirm_delete",
+            "line": 274,
+            "context": "273: \n274: if (confirm(t('detail_hub.schedules.confirm_delete'))) {\n275: deleteSchedule(schedule.id, {"
+          },
+          {
+            "key": "detail_hub.schedules.edit_shift",
+            "line": 295,
+            "context": "294: {schedule\n295: ? t('detail_hub.schedules.edit_shift')\n296: : t('detail_hub.schedules.add_shift')}"
+          },
+          {
+            "key": "detail_hub.schedules.add_shift",
+            "line": 296,
+            "context": "295: ? t('detail_hub.schedules.edit_shift')\n296: : t('detail_hub.schedules.add_shift')}\n297: </DialogTitle>"
+          },
+          {
+            "key": "detail_hub.schedules.employee",
+            "line": 312,
+            "context": "311: <User className=\"w-4 h-4\" />\n312: {t('detail_hub.schedules.employee')}\n313: <span className=\"text-destructive\">*</span>"
+          },
+          {
+            "key": "detail_hub.schedules.select_employee",
+            "line": 340,
+            "context": "339: ) : (\n340: t('detail_hub.schedules.select_employee')\n341: )}"
+          },
+          {
+            "key": "detail_hub.schedules.search_employee",
+            "line": 349,
+            "context": "348: <CommandInput\n349: placeholder={t('detail_hub.schedules.search_employee')}\n350: />"
+          },
+          {
+            "key": "detail_hub.schedules.no_employee_found",
+            "line": 352,
+            "context": "351: <CommandEmpty>\n352: {t('detail_hub.schedules.no_employee_found')}\n353: </CommandEmpty>"
+          },
+          {
+            "key": "detail_hub.schedules.date",
+            "line": 402,
+            "context": "401: <FormItem className=\"flex flex-col\">\n402: <FormLabel>{t('detail_hub.schedules.date')}</FormLabel>\n403: <Popover>"
+          },
+          {
+            "key": "detail_hub.schedules.pick_date",
+            "line": 416,
+            "context": "415: ) : (\n416: <span>{t('detail_hub.schedules.pick_date')}</span>\n417: )}"
+          },
+          {
+            "key": "detail_hub.schedules.start_time",
+            "line": 442,
+            "context": "441: <FormItem>\n442: <FormLabel>{t('detail_hub.schedules.start_time')}</FormLabel>\n443: <FormControl>"
+          },
+          {
+            "key": "detail_hub.schedules.end_time",
+            "line": 460,
+            "context": "459: <FormItem>\n460: <FormLabel>{t('detail_hub.schedules.end_time')}</FormLabel>\n461: <FormControl>"
+          },
+          {
+            "key": "detail_hub.schedules.assigned_kiosk",
+            "line": 482,
+            "context": "481: <Monitor className=\"w-4 h-4\" />\n482: {t('detail_hub.schedules.assigned_kiosk')}\n483: </FormLabel>"
+          },
+          {
+            "key": "detail_hub.schedules.select_kiosk",
+            "line": 490,
+            "context": "489: <SelectTrigger>\n490: <SelectValue placeholder={t('detail_hub.schedules.select_kiosk')} />\n491: </SelectTrigger>"
+          },
+          {
+            "key": "detail_hub.schedules.no_kiosk",
+            "line": 495,
+            "context": "494: <SelectItem value=\"__none__\">\n495: {t('detail_hub.schedules.no_kiosk')}\n496: </SelectItem>"
+          },
+          {
+            "key": "detail_hub.schedules.kiosk_help",
+            "line": 517,
+            "context": "516: <FormDescription className=\"text-xs\">\n517: {t('detail_hub.schedules.kiosk_help')}\n518: </FormDescription>"
+          },
+          {
+            "key": "detail_hub.schedules.break_duration",
+            "line": 533,
+            "context": "532: <Coffee className=\"w-4 h-4\" />\n533: {t('detail_hub.schedules.break_duration')}\n534: </FormLabel>"
+          },
+          {
+            "key": "detail_hub.schedules.minutes",
+            "line": 546,
+            "context": "545: <span className=\"text-sm text-muted-foreground\">\n546: {t('detail_hub.schedules.minutes')}\n547: </span>"
+          },
+          {
+            "key": "detail_hub.schedules.paid_break",
+            "line": 570,
+            "context": "569: <Label htmlFor=\"break_is_paid\" className=\"font-normal cursor-pointer\">\n570: {t('detail_hub.schedules.paid_break')}\n571: </Label>"
+          },
+          {
+            "key": "detail_hub.schedules.early_punch_window",
+            "line": 585,
+            "context": "584: <FormItem>\n585: <FormLabel>{t('detail_hub.schedules.early_punch_window')}</FormLabel>\n586: <FormControl>"
+          },
+          {
+            "key": "detail_hub.schedules.minutes",
+            "line": 597,
+            "context": "596: <span className=\"text-sm text-muted-foreground\">\n597: {t('detail_hub.schedules.minutes')}\n598: </span>"
+          },
+          {
+            "key": "detail_hub.schedules.early_punch_help",
+            "line": 602,
+            "context": "601: <FormDescription className=\"text-xs\">\n602: {t('detail_hub.schedules.early_punch_help')}\n603: </FormDescription>"
+          },
+          {
+            "key": "detail_hub.schedules.late_punch_grace",
+            "line": 614,
+            "context": "613: <FormItem>\n614: <FormLabel>{t('detail_hub.schedules.late_punch_grace')}</FormLabel>\n615: <FormControl>"
+          },
+          {
+            "key": "detail_hub.schedules.minutes",
+            "line": 626,
+            "context": "625: <span className=\"text-sm text-muted-foreground\">\n626: {t('detail_hub.schedules.minutes')}\n627: </span>"
+          },
+          {
+            "key": "detail_hub.schedules.late_punch_help",
+            "line": 631,
+            "context": "630: <FormDescription className=\"text-xs\">\n631: {t('detail_hub.schedules.late_punch_help')}\n632: </FormDescription>"
+          },
+          {
+            "key": "detail_hub.schedules.notes",
+            "line": 645,
+            "context": "644: <FormItem>\n645: <FormLabel>{t('detail_hub.schedules.notes')}</FormLabel>\n646: <FormControl>"
+          },
+          {
+            "key": "detail_hub.schedules.notes_placeholder",
+            "line": 652,
+            "context": "651: className=\"w-full px-3 py-2 text-sm border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent\"\n652: placeholder={t('detail_hub.schedules.notes_placeholder')}\n653: />"
+          },
+          {
+            "key": "detail_hub.schedules.conflict_message",
+            "line": 667,
+            "context": "666: <p className=\"text-xs text-red-700 mt-1\">\n667: {t('detail_hub.schedules.conflict_message')}\n668: </p>"
+          },
+          {
+            "key": "common.deleting",
+            "line": 688,
+            "context": "687: <Trash2 className=\"w-4 h-4 mr-2\" />\n688: {isDeleting ? t('common.deleting') : t('common.delete')}\n689: </Button>"
+          },
+          {
+            "key": "common.delete",
+            "line": 688,
+            "context": "687: <Trash2 className=\"w-4 h-4 mr-2\" />\n688: {isDeleting ? t('common.deleting') : t('common.delete')}\n689: </Button>"
+          },
+          {
+            "key": "common.cancel",
+            "line": 699,
+            "context": "698: >\n699: {t('common.cancel')}\n700: </Button>"
+          },
+          {
+            "key": "common.save",
+            "line": 709,
+            "context": "708: {!isCreating && !isUpdating && <Save className=\"w-4 h-4 mr-2\" />}\n709: {schedule ? t('common.save') : t('detail_hub.schedules.add_shift')}\n710: </Button>"
+          },
+          {
+            "key": "detail_hub.schedules.add_shift",
+            "line": 709,
+            "context": "708: {!isCreating && !isUpdating && <Save className=\"w-4 h-4 mr-2\" />}\n709: {schedule ? t('common.save') : t('detail_hub.schedules.add_shift')}\n710: </Button>"
+          }
+        ],
+        "coverage": 92,
         "severity": "low"
       },
       {
@@ -93483,7 +94269,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "500 Component components need translation",
+      "description": "503 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\OperationalReports.tsx",
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
@@ -93610,6 +94396,7 @@
         "src\\utils\\photoFallback.ts",
         "src\\components\\debug\\TooltipTester.tsx",
         "src\\components\\detail-hub\\EmployeePortal.NO_CRUD.tsx",
+        "src\\components\\detail-hub\\ShiftAssignmentDialog.tsx",
         "src\\components\\get-ready\\GetReadyStepsSidebar.tsx",
         "src\\components\\management\\OrderNumberMigration.tsx",
         "src\\components\\management\\SystemBrandingEditor.tsx",
@@ -93804,6 +94591,8 @@
         "src\\components\\detail-hub\\DetailHubDashboard.NO_TABS.tsx",
         "src\\components\\detail-hub\\DetailHubDashboard.tsx",
         "src\\components\\detail-hub\\FacialEnrollment.tsx",
+        "src\\components\\detail-hub\\ScheduleCalendar.tsx",
+        "src\\components\\detail-hub\\ScheduleList.tsx",
         "src\\components\\filters\\DealershipFilter.tsx",
         "src\\components\\get-ready\\analytics\\SafeBarChart.tsx",
         "src\\components\\get-ready\\analytics\\StepPerformanceMatrix.tsx",
@@ -93986,14 +94775,14 @@
         "src\\utils\\stockCSVHelpers.ts",
         "src\\utils\\translationAudit.ts"
       ],
-      "estimatedEffort": "250 hours"
+      "estimatedEffort": "252 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "7757 translation keys are referenced but missing",
+      "description": "7831 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "388 hours"
+      "estimatedEffort": "392 hours"
     }
   ],
   "coverage": 79

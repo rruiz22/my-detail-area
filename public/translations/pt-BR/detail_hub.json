@@ -4,7 +4,7 @@
   "dashboard": {
     "title": "Painel de Controle de Detalhamento",
     "stats": {
-      "active_employees": "FuncionÃ¡rios Ativos",
+      "active_employees": "Funcionários Ativos",
       "todays_hours": "Horas de Hoje",
       "pending_reviews": "RevisÃµes Pendentes",
       "total_revenue": "Receita Total"
@@ -13,9 +13,9 @@
       "title": "AÃ§Ãµes RÃ¡pidas",
       "add_employee": "Adicionar FuncionÃ¡rio",
       "time_clock": "RelÃ³gio de Ponto",
-      "view_reports": "Ver RelatÃ³rios",
+      "view_reports": "Ver Relatórios",
       "manage_kiosks": "Gerenciar Quiosques",
-      "manage_employees": "Gerenciar FuncionÃ¡rios"
+      "manage_employees": "Gerenciar Funcionários"
     },
     "recent_activity": "Atividade Recente",
     "view_all": "Ver Tudo"
@@ -112,10 +112,10 @@
     }
   },
   "employees": {
-    "title": "Portal de FuncionÃ¡rios",
+    "title": "Portal de Funcionários",
     "subtitle": "Gerenciar equipe de detalhamento e lavagem",
     "add_employee": "Adicionar FuncionÃ¡rio",
-    "employee_list": "Lista de FuncionÃ¡rios",
+    "employee_list": "Lista de Funcionários",
     "search_employees": "Buscar funcionÃ¡rios...",
     "active": "Ativo",
     "inactive": "Inativo",
@@ -156,7 +156,7 @@
     "daily_view": "VisualizaÃ§Ã£o DiÃ¡ria",
     "weekly_summary": "Resumo Semanal",
     "monthly_report": "RelatÃ³rio Mensal",
-    "daily_timecards": "CartÃµes DiÃ¡rios",
+    "daily_timecards": "Cartões DiÃ¡rios",
     "export": "Exportar",
     "filter": "Filtrar",
     "pick_date": "Escolher data",
@@ -167,7 +167,7 @@
     "stats": {
       "total_hours": "Horas Totais",
       "overtime_hours": "Horas Extras",
-      "active_employees": "FuncionÃ¡rios Ativos",
+      "active_employees": "Funcionários Ativos",
       "total_payroll": "Folha de Pagamento Total"
     },
     "table": {
@@ -252,7 +252,7 @@
     "has_lighting": "Tem IluminaÃ§Ã£o",
     "status": "Status",
     "last_heartbeat": "Ãšltimo Sinal",
-    "settings": "ConfiguraÃ§Ãµes",
+    "settings": "Configurações",
     "edit": "Editar",
     "delete": "Excluir",
     "status_values": {
@@ -275,7 +275,7 @@
     }
   },
   "analytics": {
-    "title": "AnÃ¡lise de Detalhamento",
+    "title": "Análise de Detalhamento",
     "subtitle": "MÃ©tricas de desempenho e insights",
     "labor_costs": "Custos Trabalhistas",
     "productivity": "Produtividade",
@@ -287,13 +287,13 @@
     "efficiency_rating": "ClassificaÃ§Ã£o de EficiÃªncia"
   },
   "reports": {
-    "title": "Central de RelatÃ³rios",
+    "title": "Central de Relatórios",
     "subtitle": "Gerar e exportar relatÃ³rios detalhados",
     "generate_report": "Gerar RelatÃ³rio",
     "payroll_report": "RelatÃ³rio de Folha de Pagamento",
     "attendance_report": "RelatÃ³rio de PresenÃ§a",
     "productivity_report": "RelatÃ³rio de Produtividade",
-    "labor_cost_analysis": "AnÃ¡lise de Custos Trabalhistas",
+    "labor_cost_analysis": "Análise de Custos Trabalhistas",
     "export_pdf": "Exportar PDF",
     "export_excel": "Exportar Excel",
     "date_range": "Intervalo de Datas",
@@ -379,14 +379,15 @@
     "search": "Buscar...",
     "filter": "Filtrar",
     "export": "Exportar",
-    "settings": "ConfiguraÃ§Ãµes"
+    "settings": "Configurações"
   },
   "tabs": {
-    "overview": "VisÃ£o Geral",
-    "employees": "FuncionÃ¡rios",
-    "timecards": "CartÃµes de Ponto",
-    "analytics": "AnÃ¡lise",
-    "reports": "RelatÃ³rios",
+    "overview": "Visão Geral",
+    "employees": "Funcionários",
+    "schedules": "Horários",
+    "timecards": "Cartões de Ponto",
+    "analytics": "Análise",
+    "reports": "Relatórios",
     "invoices": "Faturas",
     "kiosks": "Quiosques"
   },
