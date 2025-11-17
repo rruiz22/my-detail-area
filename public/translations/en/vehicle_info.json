@@ -1,0 +1,11 @@
+{
+  "vehicle_information": "Vehicle Information",
+  "decoded_from_vin": "Decoded from VIN",
+  "vin_status": "VIN Status",
+  "manual_entry": "Manual Entry",
+  "manually_entered": "Manually entered information",
+  "no_image_available": "No vehicle image available",
+  "vehicle_image": "Vehicle Image",
+  "vehicle_image_alt": "Vehicle photo",
+  "display_preview": "Display preview"
+}

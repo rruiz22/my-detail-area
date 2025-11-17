@@ -44,7 +44,8 @@ import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 
 export default function ServiceOrders() {
   dev('🔵 ServiceOrders component is RENDERING');
-  const { t } = useTranslation();
+  // 🚀 CODE SPLITTING: Load service_orders + orders + common namespaces
+  const { t } = useTranslation(['service_orders', 'orders', 'common']);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { toast } = useToast();

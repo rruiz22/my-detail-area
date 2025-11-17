@@ -65,7 +65,8 @@ import { useContacts, Contact } from '@/hooks/useContacts';
 import { exportContactsToCSV, exportContactsToExcel } from '@/utils/contactExport';
 
 export default function Contacts() {
-  const { t } = useTranslation();
+  // 🚀 CODE SPLITTING: Load contacts + common namespaces
+  const { t } = useTranslation(['contacts', 'common']);
   const { toast } = useToast();
   const { selectedDealerId } = useDealerFilter();
   const { dealerships, currentDealership } = useAccessibleDealerships();

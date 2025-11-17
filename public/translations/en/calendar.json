@@ -1,0 +1,20 @@
+{
+  "month": "Month",
+  "week": "Week",
+  "day": "Day",
+  "today": "Today",
+  "previous": "Previous",
+  "next": "Next",
+  "agenda": "Agenda",
+  "date": "Date",
+  "time": "Time",
+  "event": "Event",
+  "noEventsInRange": "No orders in this date range",
+  "showMore": "Show more",
+  "clickToCreateOrder": "Click on an empty slot to create a new order",
+  "status_legend": "Status Colors",
+  "date_source_legend": "Date Sources",
+  "due_date": "Due Date",
+  "scheduled_date": "Scheduled Date",
+  "created_date": "Created Date"
+}

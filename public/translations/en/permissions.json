@@ -1,0 +1,20 @@
+{
+  "granular_permissions": "Special Permissions",
+  "granular_permissions_desc": "Additional capabilities beyond module access",
+  "administration_permissions": "Administration Permissions",
+  "module_permissions": "Module Permissions",
+  "system_permissions": "System-Level Permissions",
+  "dangerous_permission": "Dangerous Permission",
+  "prerequisites": "Prerequisites",
+  "requires": "Requires",
+  "can_access_internal_notes": "Access internal notes",
+  "can_access_internal_notes_desc": "Can view and create internal notes on orders",
+  "can_view_pricing": "View pricing",
+  "can_view_pricing_desc": "Can see pricing information and costs",
+  "can_delete_orders": "Delete orders",
+  "can_delete_orders_desc": "Can permanently delete orders",
+  "can_export_reports": "Export reports",
+  "can_export_reports_desc": "Can export data and generate reports",
+  "can_change_order_status": "Change order status",
+  "can_change_order_status_desc": "Can modify order status (pending, in progress, complete, etc.)"
+}

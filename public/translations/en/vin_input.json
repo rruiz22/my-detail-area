@@ -1,0 +1,7 @@
+{
+  "placeholder": "Enter 17-character VIN",
+  "paste_button": "Paste VIN",
+  "clipboard_error": "Unable to read from clipboard.",
+  "clipboard_no_vin": "No complete VIN was found in your clipboard.",
+  "clipboard_unsupported": "Clipboard access is not available in this browser."
+}

@@ -1,0 +1,28 @@
+{
+  "views": {
+    "kanban": "Kanban",
+    "table": "Table",
+    "calendar": "Calendar"
+  },
+  "tabs": {
+    "overview": "Overview",
+    "dashboard": "Dashboard",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "pending": "Pending",
+    "in_process": "In Process",
+    "week": "Week",
+    "all_orders": "All Orders",
+    "all": "All Orders",
+    "services": "Services",
+    "deleted": "Deleted"
+  },
+  "metrics": {
+    "completion_rate": "Completion Rate",
+    "progress": "Progress",
+    "revenue_potential": "Revenue Potential",
+    "avg_processing_time": "Avg Processing Time",
+    "orders_this_month": "Orders This Month",
+    "sla_compliance": "SLA Compliance"
+  }
+}

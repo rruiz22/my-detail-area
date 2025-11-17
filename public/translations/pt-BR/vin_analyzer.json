@@ -1,0 +1,21 @@
+{
+  "title": "AnÃ¡lise de VIN",
+  "subtitle": "Decodificar e validar detalhes do VIN",
+  "enter_vin": "Insira um VIN para ver a anÃ¡lise detalhada",
+  "vin_input_label": "NÃºmero de IdentificaÃ§Ã£o do VeÃ­culo (VIN)",
+  "analyze_button": "Analisar VIN",
+  "analyzing": "Analisando...",
+  "status_valid": "VIN VÃ¡lido",
+  "status_invalid": "VIN InvÃ¡lido",
+  "check_digit_valid": "DÃ­gito de verificaÃ§Ã£o vÃ¡lido",
+  "check_digit_invalid": "DÃ­gito de verificaÃ§Ã£o invÃ¡lido",
+  "manufacturer_info": "InformaÃ§Ãµes do Fabricante",
+  "wmi_label": "WMI (1-3):",
+  "wmi_desc": "Identificador Mundial do Fabricante",
+  "vds_label": "VDS (4-9):",
+  "vds_desc": "SeÃ§Ã£o Descritora do VeÃ­culo",
+  "vis_label": "VIS (10-17):",
+  "vis_desc": "SeÃ§Ã£o Identificadora do VeÃ­culo",
+  "decoded_info": "InformaÃ§Ãµes Decodificadas",
+  "no_data": "Nenhum dado decodificado disponÃ­vel"
+}

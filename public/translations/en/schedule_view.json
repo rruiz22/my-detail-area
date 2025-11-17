@@ -1,0 +1,17 @@
+{
+  "schedule_timeline": "Schedule Timeline",
+  "order_progress": "Order Progress",
+  "in_progress": "In Progress",
+  "timeline": "Timeline",
+  "no_due_date": "No due date",
+  "not_set": "Not set",
+  "most_recent_change": "Most recent change",
+  "days_overdue": "{{days}} days overdue",
+  "due_tomorrow": "Due tomorrow",
+  "due_in_days": "Due in {{days}} days",
+  "order_completed": "Order completed",
+  "sla_compliance": "SLA Compliance",
+  "on_track": "On Track",
+  "at_risk": "At Risk",
+  "target_completion": "Target: {{hours}} hours"
+}

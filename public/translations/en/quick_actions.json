@@ -1,0 +1,21 @@
+{
+  "title": "Quick Actions",
+  "new_sales_order": "New Sales Order",
+  "new_service_order": "New Service Order",
+  "new_recon_order": "New Recon Order",
+  "new_car_wash": "New Car Wash",
+  "new_contact": "New Contact",
+  "new_user": "Add User",
+  "invite_user": "Invite User",
+  "new_dealership": "New Dealership",
+  "view_reports": "View Reports",
+  "export_sales": "Export Sales",
+  "export": "Export",
+  "import": "Import",
+  "filter": "Filter",
+  "settings": "Settings",
+  "scan_vin": "Scan VIN",
+  "scheduler": "Open Scheduler",
+  "more": "More Actions",
+  "more_actions": "More Actions"
+}

@@ -1,0 +1,22 @@
+{
+  "title": "Scan History",
+  "subtitle": "Previous VIN scans and results",
+  "filter_all": "All Scans",
+  "filter_valid": "Valid Only",
+  "filter_invalid": "Invalid Only",
+  "filter_corrected": "Auto-corrected",
+  "sort_newest": "Newest First",
+  "sort_oldest": "Oldest First",
+  "sort_confidence": "Highest Confidence",
+  "clear_history": "Clear History",
+  "confirm_clear": "Are you sure you want to clear scan history?",
+  "history_cleared": "Scan history cleared",
+  "no_history": "No scan history",
+  "scanned_at": "Scanned at",
+  "confidence_score": "Confidence: {{score}}%",
+  "status_valid": "Valid",
+  "status_invalid": "Invalid",
+  "status_corrected": "Auto-corrected",
+  "view_details": "View Details",
+  "rescan": "Rescan"
+}

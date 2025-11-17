@@ -1,0 +1,19 @@
+{
+  "title": "VIN Scanner Integration",
+  "subtitle": "How to use VIN scanner in your workflow",
+  "step_1_title": "1. Open Scanner",
+  "step_1_desc": "Click the QR code icon next to any VIN input field",
+  "step_2_title": "2. Scan VIN",
+  "step_2_desc": "Position the VIN sticker in camera frame or upload an image",
+  "step_3_title": "3. Auto-decode",
+  "step_3_desc": "VIN is automatically decoded and vehicle info populated",
+  "available_in": "Available in:",
+  "sales_orders": "Sales Orders",
+  "service_orders": "Service Orders",
+  "recon_orders": "Recon Orders",
+  "car_wash": "Car Wash Orders",
+  "best_practices": "Best Practices",
+  "practice_lighting": "Use good lighting for best results",
+  "practice_steady": "Hold device steady while scanning",
+  "practice_verify": "Always verify decoded information"
+}

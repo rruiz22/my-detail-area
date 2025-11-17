@@ -1,0 +1,161 @@
+{
+  "order_card": {
+    "order_number": "Order {{number}}",
+    "customer": "Customer {{name}}",
+    "due_time": "Due {{time}} on {{date}}",
+    "assigned_to": "Assigned to {{name}}",
+    "unassigned": "Unassigned",
+    "actions_menu": "Order actions menu",
+    "open_actions": "Open actions menu",
+    "quick_actions": "Quick actions",
+    "view_order": "View order details",
+    "edit_order": "Edit order",
+    "drag_handle": "Drag to reorder"
+  },
+  "kanban": {
+    "board_label": "Kanban board with order columns",
+    "column_label": "{{title}} column with {{count}} orders",
+    "orders_list": "Orders list for {{status}} status",
+    "no_orders": "No orders",
+    "drag_hint": "Drag orders here",
+    "move_order": "Move order to {{status}}",
+    "reorder": "Reorder orders"
+  },
+  "dashboard": {
+    "overview": "Dashboard overview",
+    "kpi_cards": "Key performance indicator cards",
+    "kpi_card": "{{title}}: {{value}}",
+    "stats_cards": "Statistics cards",
+    "completion_rate": "Completion rate statistics",
+    "team_activity": "Team activity statistics",
+    "vehicle_insights": "Vehicle insights statistics",
+    "progress_percentage": "{{value}} percent complete",
+    "orders_with_comments": "{{count}} orders with comments",
+    "total_comments": "{{count}} total comments",
+    "average_comments": "{{value}} average comments per order",
+    "vehicle_count": "{{make}}: {{count}} orders"
+  },
+  "filter_bar": {
+    "search_input": "Search orders by VIN, stock number, or customer",
+    "clear_search": "Clear search",
+    "view_mode": "Change view mode",
+    "table_view": "Switch to table view",
+    "kanban_view": "Switch to kanban view",
+    "calendar_view": "Switch to calendar view",
+    "filters": "Filter options",
+    "active_filter": "Active filter: {{filter}}"
+  },
+  "data_table": {
+    "orders_table": "Orders data table",
+    "row_number": "Row {{number}}",
+    "order_row": "Order {{id}} - {{status}}",
+    "sort_column": "Sort by {{column}}",
+    "actions_column": "Actions for order {{id}}",
+    "loading": "Loading orders data",
+    "no_results": "No orders found"
+  },
+  "navigation": {
+    "skip_to_main": "Skip to main content",
+    "skip_to_navigation": "Skip to navigation",
+    "main_menu": "Main navigation menu",
+    "breadcrumb": "Breadcrumb navigation",
+    "page_navigation": "Page navigation"
+  },
+  "loading": {
+    "dashboard": "Loading dashboard",
+    "kanban": "Loading kanban board",
+    "table": "Loading orders table",
+    "calendar": "Loading calendar",
+    "generic": "Loading content"
+  },
+  "status_change": {
+    "updating": "Updating order status",
+    "updated": "Order status updated to {{status}}",
+    "failed": "Failed to update order status"
+  },
+  "modals": {
+    "close": "Close modal",
+    "save": "Save and close",
+    "cancel": "Cancel and close",
+    "modal_title": "{{title}} modal"
+  },
+  "buttons": {
+    "submit": "Submit form",
+    "reset": "Reset form",
+    "delete": "Delete item",
+    "edit": "Edit item",
+    "view": "View details",
+    "expand": "Expand section",
+    "collapse": "Collapse section"
+  },
+  "forms": {
+    "required_field": "Required field",
+    "optional_field": "Optional field",
+    "field_error": "{{field}} has an error",
+    "validation_error": "Form has validation errors"
+  },
+  "announcements": {
+    "order_created": "New order created successfully",
+    "order_updated": "Order updated successfully",
+    "order_deleted": "Order deleted successfully",
+    "status_changed": "Order status changed to {{status}}",
+    "error_occurred": "An error occurred: {{message}}"
+  },
+  "service_orders": {
+    "main_content": "Service orders main content",
+    "page_title": "Service Orders Management",
+    "refresh_button": "Refresh service orders",
+    "create_button": "Create new service order",
+    "loading_orders": "Loading service orders",
+    "no_orders": "No service orders found",
+    "order_count": "{{count}} service orders",
+    "filter_active": "Filtering service orders by {{filter}}",
+    "search_active": "Searching service orders for: {{term}}",
+    "view_switched": "Switched to {{view}} view",
+    "order_created": "Service order created successfully",
+    "order_updated": "Service order updated successfully",
+    "order_deleted": "Service order deleted successfully",
+    "status_updated": "Service order status updated to {{status}}",
+    "export_started": "Exporting service orders",
+    "export_complete": "Service orders exported successfully",
+    "keyboard_shortcuts": "Keyboard shortcuts: Tab to navigate, Enter to select, Escape to close"
+  },
+  "recon_orders": {
+    "main_content": "Recon orders main content",
+    "page_title": "Recon Orders Management",
+    "refresh_button": "Refresh recon orders",
+    "create_button": "Create new recon order",
+    "loading_orders": "Loading recon orders",
+    "no_orders": "No recon orders found",
+    "order_count": "{{count}} recon orders",
+    "filter_active": "Filtering recon orders by {{filter}}",
+    "search_active": "Searching recon orders for: {{term}}",
+    "view_switched": "Switched to {{view}} view",
+    "order_created": "Recon order created successfully",
+    "order_updated": "Recon order updated successfully",
+    "order_deleted": "Recon order deleted successfully",
+    "status_updated": "Recon order status updated to {{status}}",
+    "export_started": "Exporting recon orders",
+    "export_complete": "Recon orders exported successfully",
+    "keyboard_shortcuts": "Keyboard shortcuts: Tab to navigate, Enter to select, Escape to close"
+  },
+  "car_wash_orders": {
+    "main_content": "Car wash orders main content",
+    "page_title": "Car Wash Orders Management",
+    "refresh_button": "Refresh car wash orders",
+    "create_button": "Create new car wash order",
+    "loading_orders": "Loading car wash orders",
+    "no_orders": "No car wash orders found",
+    "order_count": "{{count}} car wash orders",
+    "filter_active": "Filtering car wash orders by {{filter}}",
+    "search_active": "Searching car wash orders for: {{term}}",
+    "view_switched": "Switched to {{view}} view",
+    "order_created": "Car wash order created successfully",
+    "order_updated": "Car wash order updated successfully",
+    "order_deleted": "Car wash order deleted successfully",
+    "status_updated": "Car wash order status updated to {{status}}",
+    "export_started": "Exporting car wash orders",
+    "export_complete": "Car wash orders exported successfully",
+    "keyboard_shortcuts": "Keyboard shortcuts: Tab to navigate, Enter to select, Escape to close"
+  }
+}

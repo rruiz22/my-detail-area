@@ -1,0 +1,110 @@
+{
+  "po_number": "PO Number",
+  "ro_number": "RO Number",
+  "tag_number": "TAG Number",
+  "order_identifiers": "Order Identifiers",
+  "vehicle_identification": "Vehicle Identification",
+  "dealership_assignment": "Dealership & Assignment",
+  "customer_details": "Customer Details",
+  "service_selection": "Service Selection",
+  "additional_notes": "Additional Notes",
+  "purchase_order": "Purchase Order",
+  "repair_order": "Repair Order",
+  "tag": "Tag",
+  "service_information": "Service Information",
+  "tabs": {
+    "dashboard": "Dashboard",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "pending": "Pending",
+    "week": "Week",
+    "all": "All Orders",
+    "services": "Services",
+    "deleted": "Deleted"
+  },
+  "in_process_orders": "In Process Orders",
+  "dealership": "Dealership",
+  "assignment": "Assignment",
+  "select_dealership": "Select a dealership",
+  "assigned_to": "Assigned To",
+  "select_dealership_first": "Select a dealership first",
+  "select_assignee": "Select an assignee",
+  "kanban": {
+    "pending_column": "Pending",
+    "in_process_column": "In Process",
+    "complete_column": "Complete",
+    "cancelled_column": "Cancelled",
+    "no_orders": "No service orders",
+    "drag_orders_here": "Drag service orders here"
+  },
+  "dashboard": {
+    "delayed_orders": "Delayed Orders",
+    "delayed_orders_subtitle": "Require immediate attention",
+    "unassigned_orders": "Unassigned Orders",
+    "unassigned_orders_subtitle": "Awaiting assignment",
+    "in_progress": "In Progress",
+    "in_progress_subtitle": "Active service orders",
+    "completion_rate": "Completion Rate",
+    "progress": "Progress",
+    "orders_completed": "{{completed}} of {{total}} service orders completed",
+    "team_activity": "Team Activity",
+    "orders_with_comments": "Orders with comments",
+    "total_comments": "Total comments",
+    "avg_per_order": "Avg per order",
+    "vehicle_insights": "Vehicle Insights",
+    "top_makes": "Top Makes:",
+    "orders_count": "{{count}} service orders",
+    "no_vehicle_data": "No vehicle data yet"
+  },
+  "filters": {
+    "overview": "Overview",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "pending": "Pending",
+    "in_process": "In Process",
+    "week": "Week",
+    "all_orders": "All Service Orders",
+    "active_filter": "Active filter:",
+    "clear": "Clear"
+  },
+  "view_modes": {
+    "table": "Table",
+    "kanban": "Kanban",
+    "filters": "Filters"
+  },
+  "card": {
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "no_due_date": "No due date",
+    "customer": "Customer: {{name}}",
+    "tag": "Tag: {{tag}}",
+    "po": "PO: {{po}}",
+    "ro": "RO: {{ro}}"
+  },
+  "search": {
+    "showing_results": "Showing service orders matching \"{{searchTerm}}\""
+  },
+  "table": {
+    "po_copied": "PO number copied to clipboard",
+    "ro_copied": "RO number copied to clipboard",
+    "po_copy_failed": "Failed to copy PO number",
+    "ro_copy_failed": "Failed to copy RO number",
+    "vehicle": "Vehicle",
+    "tag": "Tag",
+    "po": "PO",
+    "ro": "RO",
+    "tap_to_copy": "Tap to copy full",
+    "no_po": "No PO",
+    "no_ro": "No RO",
+    "order_id": "Order ID",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "loading": {
+    "kanban_view": "Loading kanban view",
+    "dashboard_view": "Loading dashboard view",
+    "calendar_view": "Loading calendar view",
+    "table_view": "Loading table view"
+  }
+}

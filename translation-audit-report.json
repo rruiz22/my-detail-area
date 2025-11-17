@@ -51718,7 +51718,7 @@
             "context": "1409: className={selectedVehicle ? \"border-input bg-muted/30 uppercase w-full\" : \"border-input bg-background uppercase w-full\"}\n1410: placeholder=\"ST-001\"\n1411: readOnly={!!selectedVehicle}"
           },
           {
-            "text": ", error);\n      toast({ variant: ",
+            "text": ", error);\r\n      toast({ variant: ",
             "line": 1027,
             "context": "1026: } catch (error) {\n1027: console.error('Submit error:', error);\n1028: toast({ variant: 'destructive', description: t('orders.creation_failed') });"
           }
@@ -84968,655 +84968,655 @@
         "translationCalls": [
           {
             "key": "auth.signup.invalid_token_error",
-            "line": 177,
+            "line": 178,
             "exists": false
           },
           {
             "key": "auth.unexpected_error",
-            "line": 184,
+            "line": 185,
             "exists": false
           },
           {
             "key": "auth.invalid_email_title",
-            "line": 208,
-            "exists": false
-          },
-          {
-            "key": "auth.invalid_email_description",
             "line": 209,
             "exists": false
           },
           {
-            "key": "auth.too_many_attempts_title",
-            "line": 218,
+            "key": "auth.invalid_email_description",
+            "line": 210,
             "exists": false
           },
           {
-            "key": "auth.too_many_attempts_description",
+            "key": "auth.too_many_attempts_title",
             "line": 219,
             "exists": false
           },
           {
-            "key": "auth.sign_in_error_title",
-            "line": 236,
+            "key": "auth.too_many_attempts_description",
+            "line": 220,
             "exists": false
           },
           {
-            "key": "auth.invalid_credentials_generic",
+            "key": "auth.sign_in_error_title",
             "line": 237,
             "exists": false
           },
           {
-            "key": "auth.error_title",
-            "line": 246,
+            "key": "auth.invalid_credentials_generic",
+            "line": 238,
             "exists": false
           },
           {
-            "key": "auth.unexpected_error",
+            "key": "auth.error_title",
             "line": 247,
             "exists": false
           },
           {
-            "key": "auth.invalid_email_title",
-            "line": 265,
+            "key": "auth.unexpected_error",
+            "line": 248,
             "exists": false
           },
           {
-            "key": "auth.invalid_email_description",
+            "key": "auth.invalid_email_title",
             "line": 266,
             "exists": false
           },
           {
-            "key": "auth.signup.password_weak_title",
-            "line": 276,
+            "key": "auth.invalid_email_description",
+            "line": 267,
             "exists": false
           },
           {
-            "key": "auth.signup.password_requirements",
+            "key": "auth.signup.password_weak_title",
             "line": 277,
             "exists": false
           },
           {
-            "key": "auth.signup.required_fields_title",
-            "line": 286,
+            "key": "auth.signup.password_requirements",
+            "line": 278,
             "exists": false
           },
           {
-            "key": "auth.signup.required_fields_description",
+            "key": "auth.signup.required_fields_title",
             "line": 287,
             "exists": false
           },
           {
-            "key": "auth.signup.email_mismatch_title",
-            "line": 296,
+            "key": "auth.signup.required_fields_description",
+            "line": 288,
             "exists": false
           },
           {
-            "key": "auth.signup.email_mismatch_description",
+            "key": "auth.signup.email_mismatch_title",
             "line": 297,
             "exists": false
           },
           {
+            "key": "auth.signup.email_mismatch_description",
+            "line": 298,
+            "exists": false
+          },
+          {
             "key": "auth.signup.error_title",
-            "line": 310,
+            "line": 311,
             "exists": false
           },
           {
             "key": "auth.signup.success_title",
-            "line": 320,
-            "exists": false
-          },
-          {
-            "key": "auth.signup.check_email",
             "line": 321,
             "exists": false
           },
           {
-            "key": "auth.error_title",
-            "line": 328,
+            "key": "auth.signup.check_email",
+            "line": 322,
             "exists": false
           },
           {
-            "key": "auth.unexpected_error",
+            "key": "auth.error_title",
             "line": 329,
             "exists": false
           },
           {
+            "key": "auth.unexpected_error",
+            "line": 330,
+            "exists": false
+          },
+          {
             "key": "auth.signup.invitation_accept_error",
-            "line": 359,
+            "line": 360,
             "exists": false
           },
           {
             "key": "auth.signup.success_title",
-            "line": 365,
-            "exists": false
-          },
-          {
-            "key": "auth.signup.invitation_accepted",
             "line": 366,
             "exists": false
           },
           {
-            "key": "auth.signup.success_title",
-            "line": 381,
+            "key": "auth.signup.invitation_accepted",
+            "line": 367,
             "exists": false
           },
           {
-            "key": "auth.signup.email_confirmation_pending_with_invitation",
+            "key": "auth.signup.success_title",
             "line": 382,
             "exists": false
           },
           {
+            "key": "auth.signup.email_confirmation_pending_with_invitation",
+            "line": 383,
+            "exists": false
+          },
+          {
             "key": "auth.unexpected_error",
-            "line": 386,
+            "line": 387,
             "exists": false
           },
           {
             "key": "auth.signup.invitation_accept_error",
-            "line": 388,
+            "line": 389,
             "exists": false
           },
           {
             "key": "auth.skip_to_form",
-            "line": 402,
+            "line": 403,
             "exists": false
           },
           {
             "key": "auth.app_title",
-            "line": 432,
+            "line": 433,
             "exists": false
           },
           {
             "key": "auth.app_subtitle",
-            "line": 437,
+            "line": 438,
             "exists": false
           },
           {
             "key": "auth.signup.welcome_title",
-            "line": 444,
+            "line": 445,
             "exists": false
           },
           {
             "key": "auth.welcome_title",
-            "line": 444,
+            "line": 445,
             "exists": false
           },
           {
             "key": "auth.signup.welcome_subtitle",
-            "line": 447,
+            "line": 448,
             "exists": false
           },
           {
             "key": "auth.welcome_subtitle",
-            "line": 447,
+            "line": 448,
             "exists": false
           },
           {
             "key": "auth.signup.invitation_info",
-            "line": 454,
+            "line": 455,
             "exists": false
           },
           {
             "key": "auth.signup.as_role",
-            "line": 454,
+            "line": 455,
             "exists": false
           },
           {
             "key": "auth.signup.verifying_invitation",
-            "line": 474,
+            "line": 475,
             "exists": false
           },
           {
             "key": "auth.signup.first_name",
-            "line": 487,
+            "line": 488,
             "exists": false
           },
           {
             "key": "auth.signup.first_name_placeholder",
-            "line": 499,
+            "line": 500,
             "exists": false
           },
           {
             "key": "auth.signup.last_name",
-            "line": 504,
+            "line": 505,
             "exists": false
           },
           {
             "key": "auth.signup.last_name_placeholder",
-            "line": 516,
+            "line": 517,
             "exists": false
           },
           {
             "key": "auth.email_label",
-            "line": 525,
+            "line": 526,
             "exists": false
           },
           {
             "key": "auth.email_placeholder",
-            "line": 538,
+            "line": 539,
             "exists": false
           },
           {
             "key": "auth.invalid_email_description",
-            "line": 544,
+            "line": 545,
             "exists": false
           },
           {
             "key": "auth.password_label",
-            "line": 553,
+            "line": 554,
             "exists": false
           },
           {
             "key": "auth.signup.password_placeholder",
-            "line": 564,
+            "line": 565,
             "exists": false
           },
           {
             "key": "auth.password_placeholder",
-            "line": 564,
+            "line": 565,
             "exists": false
           },
           {
             "key": "auth.forgot_password_link",
-            "line": 574,
+            "line": 575,
             "exists": false
           },
           {
             "key": "auth.signup.password_length",
-            "line": 587,
+            "line": 588,
             "exists": false
           },
           {
             "key": "auth.signup.password_uppercase",
-            "line": 591,
+            "line": 592,
             "exists": false
           },
           {
             "key": "auth.signup.password_lowercase",
-            "line": 595,
+            "line": 596,
             "exists": false
           },
           {
             "key": "auth.signup.password_number",
-            "line": 599,
+            "line": 600,
             "exists": false
           },
           {
             "key": "auth.signup.creating_account",
-            "line": 618,
+            "line": 619,
             "exists": false
           },
           {
             "key": "auth.signing_in",
-            "line": 618,
+            "line": 619,
             "exists": false
           },
           {
             "key": "auth.signup.create_account_button",
-            "line": 621,
+            "line": 622,
             "exists": false
           },
           {
             "key": "auth.sign_in_button",
-            "line": 621,
+            "line": 622,
             "exists": false
           },
           {
             "key": "auth.signup.already_have_account",
-            "line": 629,
+            "line": 630,
             "exists": false
           },
           {
             "key": "auth.signup.sign_in_instead",
-            "line": 635,
+            "line": 636,
             "exists": false
           },
           {
             "key": "auth.signup.invitation_invalid",
-            "line": 647,
+            "line": 648,
             "exists": false
           },
           {
             "key": "auth.signup.go_to_signin",
-            "line": 653,
+            "line": 654,
             "exists": false
           },
           {
             "key": "auth.no_access_text",
-            "line": 660,
+            "line": 661,
             "exists": false
           },
           {
             "key": "auth.footer_text",
-            "line": 668,
+            "line": 669,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "auth.signup.invalid_token_error",
-            "line": 177,
-            "context": "176: if (!data || !data.valid) {\n177: throw new Error(data?.message || t('auth.signup.invalid_token_error'));\n178: }"
+            "line": 178,
+            "context": "177: if (!data || !data.valid) {\n178: throw new Error(data?.message || t('auth.signup.invalid_token_error'));\n179: }"
           },
           {
             "key": "auth.unexpected_error",
-            "line": 184,
-            "context": "183: } catch (error) {\n184: const errorMessage = error instanceof Error ? error.message : t('auth.unexpected_error');\n185: setInvitationError(errorMessage);"
+            "line": 185,
+            "context": "184: } catch (error) {\n185: const errorMessage = error instanceof Error ? error.message : t('auth.unexpected_error');\n186: setInvitationError(errorMessage);"
           },
           {
             "key": "auth.invalid_email_title",
-            "line": 208,
-            "context": "207: toast({\n208: title: t('auth.invalid_email_title'),\n209: description: t('auth.invalid_email_description'),"
+            "line": 209,
+            "context": "208: toast({\n209: title: t('auth.invalid_email_title'),\n210: description: t('auth.invalid_email_description'),"
           },
           {
             "key": "auth.invalid_email_description",
-            "line": 209,
-            "context": "208: title: t('auth.invalid_email_title'),\n209: description: t('auth.invalid_email_description'),\n210: variant: \"destructive\","
+            "line": 210,
+            "context": "209: title: t('auth.invalid_email_title'),\n210: description: t('auth.invalid_email_description'),\n211: variant: \"destructive\","
           },
           {
             "key": "auth.too_many_attempts_title",
-            "line": 218,
-            "context": "217: toast({\n218: title: t('auth.too_many_attempts_title'),\n219: description: t('auth.too_many_attempts_description'),"
+            "line": 219,
+            "context": "218: toast({\n219: title: t('auth.too_many_attempts_title'),\n220: description: t('auth.too_many_attempts_description'),"
           },
           {
             "key": "auth.too_many_attempts_description",
-            "line": 219,
-            "context": "218: title: t('auth.too_many_attempts_title'),\n219: description: t('auth.too_many_attempts_description'),\n220: variant: \"destructive\","
+            "line": 220,
+            "context": "219: title: t('auth.too_many_attempts_title'),\n220: description: t('auth.too_many_attempts_description'),\n221: variant: \"destructive\","
           },
           {
             "key": "auth.sign_in_error_title",
-            "line": 236,
-            "context": "235: toast({\n236: title: t('auth.sign_in_error_title'),\n237: description: t('auth.invalid_credentials_generic'),"
+            "line": 237,
+            "context": "236: toast({\n237: title: t('auth.sign_in_error_title'),\n238: description: t('auth.invalid_credentials_generic'),"
           },
           {
             "key": "auth.invalid_credentials_generic",
-            "line": 237,
-            "context": "236: title: t('auth.sign_in_error_title'),\n237: description: t('auth.invalid_credentials_generic'),\n238: variant: \"destructive\","
+            "line": 238,
+            "context": "237: title: t('auth.sign_in_error_title'),\n238: description: t('auth.invalid_credentials_generic'),\n239: variant: \"destructive\","
           },
           {
             "key": "auth.error_title",
-            "line": 246,
-            "context": "245: toast({\n246: title: t('auth.error_title'),\n247: description: t('auth.unexpected_error'),"
+            "line": 247,
+            "context": "246: toast({\n247: title: t('auth.error_title'),\n248: description: t('auth.unexpected_error'),"
           },
           {
             "key": "auth.unexpected_error",
-            "line": 247,
-            "context": "246: title: t('auth.error_title'),\n247: description: t('auth.unexpected_error'),\n248: variant: \"destructive\","
+            "line": 248,
+            "context": "247: title: t('auth.error_title'),\n248: description: t('auth.unexpected_error'),\n249: variant: \"destructive\","
           },
           {
             "key": "auth.invalid_email_title",
-            "line": 265,
-            "context": "264: toast({\n265: title: t('auth.invalid_email_title'),\n266: description: t('auth.invalid_email_description'),"
+            "line": 266,
+            "context": "265: toast({\n266: title: t('auth.invalid_email_title'),\n267: description: t('auth.invalid_email_description'),"
           },
           {
             "key": "auth.invalid_email_description",
-            "line": 266,
-            "context": "265: title: t('auth.invalid_email_title'),\n266: description: t('auth.invalid_email_description'),\n267: variant: \"destructive\","
+            "line": 267,
+            "context": "266: title: t('auth.invalid_email_title'),\n267: description: t('auth.invalid_email_description'),\n268: variant: \"destructive\","
           },
           {
             "key": "auth.signup.password_weak_title",
-            "line": 276,
-            "context": "275: toast({\n276: title: t('auth.signup.password_weak_title'),\n277: description: t('auth.signup.password_requirements'),"
+            "line": 277,
+            "context": "276: toast({\n277: title: t('auth.signup.password_weak_title'),\n278: description: t('auth.signup.password_requirements'),"
           },
           {
             "key": "auth.signup.password_requirements",
-            "line": 277,
-            "context": "276: title: t('auth.signup.password_weak_title'),\n277: description: t('auth.signup.password_requirements'),\n278: variant: \"destructive\","
+            "line": 278,
+            "context": "277: title: t('auth.signup.password_weak_title'),\n278: description: t('auth.signup.password_requirements'),\n279: variant: \"destructive\","
           },
           {
             "key": "auth.signup.required_fields_title",
-            "line": 286,
-            "context": "285: toast({\n286: title: t('auth.signup.required_fields_title'),\n287: description: t('auth.signup.required_fields_description'),"
+            "line": 287,
+            "context": "286: toast({\n287: title: t('auth.signup.required_fields_title'),\n288: description: t('auth.signup.required_fields_description'),"
           },
           {
             "key": "auth.signup.required_fields_description",
-            "line": 287,
-            "context": "286: title: t('auth.signup.required_fields_title'),\n287: description: t('auth.signup.required_fields_description'),\n288: variant: \"destructive\","
+            "line": 288,
+            "context": "287: title: t('auth.signup.required_fields_title'),\n288: description: t('auth.signup.required_fields_description'),\n289: variant: \"destructive\","
           },
           {
             "key": "auth.signup.email_mismatch_title",
-            "line": 296,
-            "context": "295: toast({\n296: title: t('auth.signup.email_mismatch_title'),\n297: description: t('auth.signup.email_mismatch_description'),"
+            "line": 297,
+            "context": "296: toast({\n297: title: t('auth.signup.email_mismatch_title'),\n298: description: t('auth.signup.email_mismatch_description'),"
           },
           {
             "key": "auth.signup.email_mismatch_description",
-            "line": 297,
-            "context": "296: title: t('auth.signup.email_mismatch_title'),\n297: description: t('auth.signup.email_mismatch_description'),\n298: variant: \"destructive\","
+            "line": 298,
+            "context": "297: title: t('auth.signup.email_mismatch_title'),\n298: description: t('auth.signup.email_mismatch_description'),\n299: variant: \"destructive\","
           },
           {
             "key": "auth.signup.error_title",
-            "line": 310,
-            "context": "309: toast({\n310: title: t('auth.signup.error_title'),\n311: description: error.message,"
+            "line": 311,
+            "context": "310: toast({\n311: title: t('auth.signup.error_title'),\n312: description: error.message,"
           },
           {
             "key": "auth.signup.success_title",
-            "line": 320,
-            "context": "319: toast({\n320: title: t('auth.signup.success_title'),\n321: description: t('auth.signup.check_email'),"
+            "line": 321,
+            "context": "320: toast({\n321: title: t('auth.signup.success_title'),\n322: description: t('auth.signup.check_email'),"
           },
           {
             "key": "auth.signup.check_email",
-            "line": 321,
-            "context": "320: title: t('auth.signup.success_title'),\n321: description: t('auth.signup.check_email'),\n322: variant: \"default\","
+            "line": 322,
+            "context": "321: title: t('auth.signup.success_title'),\n322: description: t('auth.signup.check_email'),\n323: variant: \"default\","
           },
           {
             "key": "auth.error_title",
-            "line": 328,
-            "context": "327: toast({\n328: title: t('auth.error_title'),\n329: description: t('auth.unexpected_error'),"
+            "line": 329,
+            "context": "328: toast({\n329: title: t('auth.error_title'),\n330: description: t('auth.unexpected_error'),"
           },
           {
             "key": "auth.unexpected_error",
-            "line": 329,
-            "context": "328: title: t('auth.error_title'),\n329: description: t('auth.unexpected_error'),\n330: variant: \"destructive\","
+            "line": 330,
+            "context": "329: title: t('auth.error_title'),\n330: description: t('auth.unexpected_error'),\n331: variant: \"destructive\","
           },
           {
             "key": "auth.signup.invitation_accept_error",
-            "line": 359,
-            "context": "358: toast({\n359: title: t('auth.signup.invitation_accept_error'),\n360: description: error.message,"
+            "line": 360,
+            "context": "359: toast({\n360: title: t('auth.signup.invitation_accept_error'),\n361: description: error.message,"
           },
           {
             "key": "auth.signup.success_title",
-            "line": 365,
-            "context": "364: toast({\n365: title: t('auth.signup.success_title'),\n366: description: t('auth.signup.invitation_accepted'),"
+            "line": 366,
+            "context": "365: toast({\n366: title: t('auth.signup.success_title'),\n367: description: t('auth.signup.invitation_accepted'),"
           },
           {
             "key": "auth.signup.invitation_accepted",
-            "line": 366,
-            "context": "365: title: t('auth.signup.success_title'),\n366: description: t('auth.signup.invitation_accepted'),\n367: variant: \"default\","
+            "line": 367,
+            "context": "366: title: t('auth.signup.success_title'),\n367: description: t('auth.signup.invitation_accepted'),\n368: variant: \"default\","
           },
           {
             "key": "auth.signup.success_title",
-            "line": 381,
-            "context": "380: toast({\n381: title: t('auth.signup.success_title'),\n382: description: t('auth.signup.email_confirmation_pending_with_invitation'),"
+            "line": 382,
+            "context": "381: toast({\n382: title: t('auth.signup.success_title'),\n383: description: t('auth.signup.email_confirmation_pending_with_invitation'),"
           },
           {
             "key": "auth.signup.email_confirmation_pending_with_invitation",
-            "line": 382,
-            "context": "381: title: t('auth.signup.success_title'),\n382: description: t('auth.signup.email_confirmation_pending_with_invitation'),\n383: variant: \"default\","
+            "line": 383,
+            "context": "382: title: t('auth.signup.success_title'),\n383: description: t('auth.signup.email_confirmation_pending_with_invitation'),\n384: variant: \"default\","
           },
           {
             "key": "auth.unexpected_error",
-            "line": 386,
-            "context": "385: } catch (error) {\n386: const errorMessage = error instanceof Error ? error.message : t('auth.unexpected_error');\n387: toast({"
+            "line": 387,
+            "context": "386: } catch (error) {\n387: const errorMessage = error instanceof Error ? error.message : t('auth.unexpected_error');\n388: toast({"
           },
           {
             "key": "auth.signup.invitation_accept_error",
-            "line": 388,
-            "context": "387: toast({\n388: title: t('auth.signup.invitation_accept_error'),\n389: description: errorMessage,"
+            "line": 389,
+            "context": "388: toast({\n389: title: t('auth.signup.invitation_accept_error'),\n390: description: errorMessage,"
           },
           {
             "key": "auth.skip_to_form",
-            "line": 402,
-            "context": "401: >\n402: {t('auth.skip_to_form', 'Skip to sign in form')}\n403: </a>"
+            "line": 403,
+            "context": "402: >\n403: {t('auth.skip_to_form', 'Skip to sign in form')}\n404: </a>"
           },
           {
             "key": "auth.app_title",
-            "line": 432,
-            "context": "431: <h1 className=\"text-4xl font-bold text-foreground mb-2 tracking-tight\">\n432: {branding.enabled && branding.title ? branding.title : t('auth.app_title', 'My Detail Area')}\n433: </h1>"
+            "line": 433,
+            "context": "432: <h1 className=\"text-4xl font-bold text-foreground mb-2 tracking-tight\">\n433: {branding.enabled && branding.title ? branding.title : t('auth.app_title', 'My Detail Area')}\n434: </h1>"
           },
           {
             "key": "auth.app_subtitle",
-            "line": 437,
-            "context": "436: <p className=\"text-muted-foreground text-lg\">\n437: {branding.enabled && branding.tagline ? branding.tagline : t('auth.app_subtitle', 'Dealership Operations Platform')}\n438: </p>"
+            "line": 438,
+            "context": "437: <p className=\"text-muted-foreground text-lg\">\n438: {branding.enabled && branding.tagline ? branding.tagline : t('auth.app_subtitle', 'Dealership Operations Platform')}\n439: </p>"
           },
           {
             "key": "auth.signup.welcome_title",
-            "line": 444,
-            "context": "443: <CardTitle className=\"text-2xl font-semibold text-foreground mb-2\">\n444: {isSignupMode ? t('auth.signup.welcome_title', 'Create Your Account') : t('auth.welcome_title', 'Welcome back')}\n445: </CardTitle>"
+            "line": 445,
+            "context": "444: <CardTitle className=\"text-2xl font-semibold text-foreground mb-2\">\n445: {isSignupMode ? t('auth.signup.welcome_title', 'Create Your Account') : t('auth.welcome_title', 'Welcome back')}\n446: </CardTitle>"
           },
           {
             "key": "auth.welcome_title",
-            "line": 444,
-            "context": "443: <CardTitle className=\"text-2xl font-semibold text-foreground mb-2\">\n444: {isSignupMode ? t('auth.signup.welcome_title', 'Create Your Account') : t('auth.welcome_title', 'Welcome back')}\n445: </CardTitle>"
+            "line": 445,
+            "context": "444: <CardTitle className=\"text-2xl font-semibold text-foreground mb-2\">\n445: {isSignupMode ? t('auth.signup.welcome_title', 'Create Your Account') : t('auth.welcome_title', 'Welcome back')}\n446: </CardTitle>"
           },
           {
             "key": "auth.signup.welcome_subtitle",
-            "line": 447,
-            "context": "446: <CardDescription className=\"text-base text-muted-foreground\">\n447: {isSignupMode ? t('auth.signup.welcome_subtitle', 'Join the dealership') : t('auth.welcome_subtitle', 'Sign in to your account')}\n448: </CardDescription>"
+            "line": 448,
+            "context": "447: <CardDescription className=\"text-base text-muted-foreground\">\n448: {isSignupMode ? t('auth.signup.welcome_subtitle', 'Join the dealership') : t('auth.welcome_subtitle', 'Sign in to your account')}\n449: </CardDescription>"
           },
           {
             "key": "auth.welcome_subtitle",
-            "line": 447,
-            "context": "446: <CardDescription className=\"text-base text-muted-foreground\">\n447: {isSignupMode ? t('auth.signup.welcome_subtitle', 'Join the dealership') : t('auth.welcome_subtitle', 'Sign in to your account')}\n448: </CardDescription>"
+            "line": 448,
+            "context": "447: <CardDescription className=\"text-base text-muted-foreground\">\n448: {isSignupMode ? t('auth.signup.welcome_subtitle', 'Join the dealership') : t('auth.welcome_subtitle', 'Sign in to your account')}\n449: </CardDescription>"
           },
           {
             "key": "auth.signup.invitation_info",
-            "line": 454,
-            "context": "453: <p className=\"text-sm text-indigo-500 dark:text-indigo-500\">\n454: {t('auth.signup.invitation_info', 'You\\'ve been invited to join')} <strong>{invitationData.dealership.name}</strong> {t('auth.signup.as_role', 'as')} <strong>{formatRoleName(invitationData.role_name)}</strong>\n455: </p>"
+            "line": 455,
+            "context": "454: <p className=\"text-sm text-indigo-500 dark:text-indigo-500\">\n455: {t('auth.signup.invitation_info', 'You\\'ve been invited to join')} <strong>{invitationData.dealership.name}</strong> {t('auth.signup.as_role', 'as')} <strong>{formatRoleName(invitationData.role_name)}</strong>\n456: </p>"
           },
           {
             "key": "auth.signup.as_role",
-            "line": 454,
-            "context": "453: <p className=\"text-sm text-indigo-500 dark:text-indigo-500\">\n454: {t('auth.signup.invitation_info', 'You\\'ve been invited to join')} <strong>{invitationData.dealership.name}</strong> {t('auth.signup.as_role', 'as')} <strong>{formatRoleName(invitationData.role_name)}</strong>\n455: </p>"
+            "line": 455,
+            "context": "454: <p className=\"text-sm text-indigo-500 dark:text-indigo-500\">\n455: {t('auth.signup.invitation_info', 'You\\'ve been invited to join')} <strong>{invitationData.dealership.name}</strong> {t('auth.signup.as_role', 'as')} <strong>{formatRoleName(invitationData.role_name)}</strong>\n456: </p>"
           },
           {
             "key": "auth.signup.verifying_invitation",
-            "line": 474,
-            "context": "473: <div className=\"w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin\" aria-hidden=\"true\" />\n474: <span className=\"text-muted-foreground\">{t('auth.signup.verifying_invitation', 'Verifying invitation...')}</span>\n475: </div>"
+            "line": 475,
+            "context": "474: <div className=\"w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin\" aria-hidden=\"true\" />\n475: <span className=\"text-muted-foreground\">{t('auth.signup.verifying_invitation', 'Verifying invitation...')}</span>\n476: </div>"
           },
           {
             "key": "auth.signup.first_name",
-            "line": 487,
-            "context": "486: <Label htmlFor=\"firstName\" className=\"text-sm font-semibold text-foreground dark:text-foreground\">\n487: {t('auth.signup.first_name', 'First Name')}\n488: </Label>"
+            "line": 488,
+            "context": "487: <Label htmlFor=\"firstName\" className=\"text-sm font-semibold text-foreground dark:text-foreground\">\n488: {t('auth.signup.first_name', 'First Name')}\n489: </Label>"
           },
           {
             "key": "auth.signup.first_name_placeholder",
-            "line": 499,
-            "context": "498: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n499: placeholder={t('auth.signup.first_name_placeholder', 'Enter first name')}\n500: />"
+            "line": 500,
+            "context": "499: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n500: placeholder={t('auth.signup.first_name_placeholder', 'Enter first name')}\n501: />"
           },
           {
             "key": "auth.signup.last_name",
-            "line": 504,
-            "context": "503: <Label htmlFor=\"lastName\" className=\"text-sm font-semibold text-foreground dark:text-foreground\">\n504: {t('auth.signup.last_name', 'Last Name')}\n505: </Label>"
+            "line": 505,
+            "context": "504: <Label htmlFor=\"lastName\" className=\"text-sm font-semibold text-foreground dark:text-foreground\">\n505: {t('auth.signup.last_name', 'Last Name')}\n506: </Label>"
           },
           {
             "key": "auth.signup.last_name_placeholder",
-            "line": 516,
-            "context": "515: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n516: placeholder={t('auth.signup.last_name_placeholder', 'Enter last name')}\n517: />"
+            "line": 517,
+            "context": "516: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n517: placeholder={t('auth.signup.last_name_placeholder', 'Enter last name')}\n518: />"
           },
           {
             "key": "auth.email_label",
-            "line": 525,
-            "context": "524: <Label htmlFor=\"email\" className=\"text-sm font-semibold text-foreground dark:text-foreground\">\n525: {t('auth.email_label', 'Email address')}\n526: </Label>"
+            "line": 526,
+            "context": "525: <Label htmlFor=\"email\" className=\"text-sm font-semibold text-foreground dark:text-foreground\">\n526: {t('auth.email_label', 'Email address')}\n527: </Label>"
           },
           {
             "key": "auth.email_placeholder",
-            "line": 538,
-            "context": "537: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors disabled:opacity-50\"\n538: placeholder={t('auth.email_placeholder', 'Enter your email address')}\n539: />"
+            "line": 539,
+            "context": "538: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors disabled:opacity-50\"\n539: placeholder={t('auth.email_placeholder', 'Enter your email address')}\n540: />"
           },
           {
             "key": "auth.invalid_email_description",
-            "line": 544,
-            "context": "543: <AlertDescription className=\"text-sm\">\n544: {t('auth.invalid_email_description')}\n545: </AlertDescription>"
+            "line": 545,
+            "context": "544: <AlertDescription className=\"text-sm\">\n545: {t('auth.invalid_email_description')}\n546: </AlertDescription>"
           },
           {
             "key": "auth.password_label",
-            "line": 553,
-            "context": "552: <Label htmlFor=\"password\" className=\"text-sm font-semibold text-foreground dark:text-foreground\">\n553: {t('auth.password_label', 'Password')}\n554: </Label>"
+            "line": 554,
+            "context": "553: <Label htmlFor=\"password\" className=\"text-sm font-semibold text-foreground dark:text-foreground\">\n554: {t('auth.password_label', 'Password')}\n555: </Label>"
           },
           {
             "key": "auth.signup.password_placeholder",
-            "line": 564,
-            "context": "563: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n564: placeholder={isSignupMode ? t('auth.signup.password_placeholder', 'Create a strong password') : t('auth.password_placeholder', 'Enter your password')}\n565: />"
+            "line": 565,
+            "context": "564: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n565: placeholder={isSignupMode ? t('auth.signup.password_placeholder', 'Create a strong password') : t('auth.password_placeholder', 'Enter your password')}\n566: />"
           },
           {
             "key": "auth.password_placeholder",
-            "line": 564,
-            "context": "563: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n564: placeholder={isSignupMode ? t('auth.signup.password_placeholder', 'Create a strong password') : t('auth.password_placeholder', 'Enter your password')}\n565: />"
+            "line": 565,
+            "context": "564: className=\"h-11 bg-background dark:bg-muted/10 border-border dark:border-border/60 focus:border-accent dark:focus:border-accent text-foreground transition-colors\"\n565: placeholder={isSignupMode ? t('auth.signup.password_placeholder', 'Create a strong password') : t('auth.password_placeholder', 'Enter your password')}\n566: />"
           },
           {
             "key": "auth.forgot_password_link",
-            "line": 574,
-            "context": "573: >\n574: {t('auth.forgot_password_link', 'Forgot password?')}\n575: </button>"
+            "line": 575,
+            "context": "574: >\n575: {t('auth.forgot_password_link', 'Forgot password?')}\n576: </button>"
           },
           {
             "key": "auth.signup.password_length",
-            "line": 587,
-            "context": "586: {validation.checks.length ? <Check className=\"h-3 w-3\" /> : <X className=\"h-3 w-3\" />}\n587: {t('auth.signup.password_length', 'At least 6 characters')}\n588: </div>"
+            "line": 588,
+            "context": "587: {validation.checks.length ? <Check className=\"h-3 w-3\" /> : <X className=\"h-3 w-3\" />}\n588: {t('auth.signup.password_length', 'At least 6 characters')}\n589: </div>"
           },
           {
             "key": "auth.signup.password_uppercase",
-            "line": 591,
-            "context": "590: {validation.checks.uppercase ? <Check className=\"h-3 w-3\" /> : <X className=\"h-3 w-3\" />}\n591: {t('auth.signup.password_uppercase', 'One uppercase letter')}\n592: </div>"
+            "line": 592,
+            "context": "591: {validation.checks.uppercase ? <Check className=\"h-3 w-3\" /> : <X className=\"h-3 w-3\" />}\n592: {t('auth.signup.password_uppercase', 'One uppercase letter')}\n593: </div>"
           },
           {
             "key": "auth.signup.password_lowercase",
-            "line": 595,
-            "context": "594: {validation.checks.lowercase ? <Check className=\"h-3 w-3\" /> : <X className=\"h-3 w-3\" />}\n595: {t('auth.signup.password_lowercase', 'One lowercase letter')}\n596: </div>"
+            "line": 596,
+            "context": "595: {validation.checks.lowercase ? <Check className=\"h-3 w-3\" /> : <X className=\"h-3 w-3\" />}\n596: {t('auth.signup.password_lowercase', 'One lowercase letter')}\n597: </div>"
           },
           {
             "key": "auth.signup.password_number",
-            "line": 599,
-            "context": "598: {validation.checks.number ? <Check className=\"h-3 w-3\" /> : <X className=\"h-3 w-3\" />}\n599: {t('auth.signup.password_number', 'One number')}\n600: </div>"
+            "line": 600,
+            "context": "599: {validation.checks.number ? <Check className=\"h-3 w-3\" /> : <X className=\"h-3 w-3\" />}\n600: {t('auth.signup.password_number', 'One number')}\n601: </div>"
           },
           {
             "key": "auth.signup.creating_account",
-            "line": 618,
-            "context": "617: <div className=\"w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin\" aria-hidden=\"true\" />\n618: {isSignupMode ? t('auth.signup.creating_account', 'Creating account...') : t('auth.signing_in', 'Signing in...')}\n619: </div>"
+            "line": 619,
+            "context": "618: <div className=\"w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin\" aria-hidden=\"true\" />\n619: {isSignupMode ? t('auth.signup.creating_account', 'Creating account...') : t('auth.signing_in', 'Signing in...')}\n620: </div>"
           },
           {
             "key": "auth.signing_in",
-            "line": 618,
-            "context": "617: <div className=\"w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin\" aria-hidden=\"true\" />\n618: {isSignupMode ? t('auth.signup.creating_account', 'Creating account...') : t('auth.signing_in', 'Signing in...')}\n619: </div>"
+            "line": 619,
+            "context": "618: <div className=\"w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin\" aria-hidden=\"true\" />\n619: {isSignupMode ? t('auth.signup.creating_account', 'Creating account...') : t('auth.signing_in', 'Signing in...')}\n620: </div>"
           },
           {
             "key": "auth.signup.create_account_button",
-            "line": 621,
-            "context": "620: ) : (\n621: isSignupMode ? t('auth.signup.create_account_button', 'Create Account') : t('auth.sign_in_button', 'Sign In')\n622: )}"
+            "line": 622,
+            "context": "621: ) : (\n622: isSignupMode ? t('auth.signup.create_account_button', 'Create Account') : t('auth.sign_in_button', 'Sign In')\n623: )}"
           },
           {
             "key": "auth.sign_in_button",
-            "line": 621,
-            "context": "620: ) : (\n621: isSignupMode ? t('auth.signup.create_account_button', 'Create Account') : t('auth.sign_in_button', 'Sign In')\n622: )}"
+            "line": 622,
+            "context": "621: ) : (\n622: isSignupMode ? t('auth.signup.create_account_button', 'Create Account') : t('auth.sign_in_button', 'Sign In')\n623: )}"
           },
           {
             "key": "auth.signup.already_have_account",
-            "line": 629,
-            "context": "628: <p className=\"text-sm text-muted-foreground\">\n629: {t('auth.signup.already_have_account', 'Already have an account?')}{' '}\n630: <button"
+            "line": 630,
+            "context": "629: <p className=\"text-sm text-muted-foreground\">\n630: {t('auth.signup.already_have_account', 'Already have an account?')}{' '}\n631: <button"
           },
           {
             "key": "auth.signup.sign_in_instead",
-            "line": 635,
-            "context": "634: >\n635: {t('auth.signup.sign_in_instead', 'Sign in instead')}\n636: </button>"
+            "line": 636,
+            "context": "635: >\n636: {t('auth.signup.sign_in_instead', 'Sign in instead')}\n637: </button>"
           },
           {
             "key": "auth.signup.invitation_invalid",
-            "line": 647,
-            "context": "646: <p className=\"text-muted-foreground mb-4\">\n647: {t('auth.signup.invitation_invalid', 'This invitation is invalid or has expired.')}\n648: </p>"
+            "line": 648,
+            "context": "647: <p className=\"text-muted-foreground mb-4\">\n648: {t('auth.signup.invitation_invalid', 'This invitation is invalid or has expired.')}\n649: </p>"
           },
           {
             "key": "auth.signup.go_to_signin",
-            "line": 653,
-            "context": "652: >\n653: {t('auth.signup.go_to_signin', 'Go to Sign In')}\n654: </Button>"
+            "line": 654,
+            "context": "653: >\n654: {t('auth.signup.go_to_signin', 'Go to Sign In')}\n655: </Button>"
           },
           {
             "key": "auth.no_access_text",
-            "line": 660,
-            "context": "659: <p className=\"text-sm text-muted-foreground\">\n660: {t('auth.no_access_text', \"Don't have access? Contact your dealer administrator.\")}\n661: </p>"
+            "line": 661,
+            "context": "660: <p className=\"text-sm text-muted-foreground\">\n661: {t('auth.no_access_text', \"Don't have access? Contact your dealer administrator.\")}\n662: </p>"
           },
           {
             "key": "auth.footer_text",
-            "line": 668,
-            "context": "667: <footer className=\"text-center mt-8 text-sm text-muted-foreground\">\n668: <p>{t('auth.footer_text', { year: currentYear })} {getFormattedVersion()}</p>\n669: </footer>"
+            "line": 669,
+            "context": "668: <footer className=\"text-center mt-8 text-sm text-muted-foreground\">\n669: <p>{t('auth.footer_text', { year: currentYear })} {getFormattedVersion()}</p>\n670: </footer>"
           }
         ],
         "coverage": 98,
@@ -85628,385 +85628,385 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 125,
+            "line": 124,
             "exists": false
           },
           {
             "key": "errors.no_permission",
+            "line": 219,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission_create_order",
             "line": 220,
             "exists": false
           },
           {
-            "key": "errors.no_permission_create_order",
-            "line": 221,
-            "exists": false
-          },
-          {
             "key": "accessibility.car_wash_orders.order_deleted",
-            "line": 254,
+            "line": 253,
             "exists": false
           },
           {
             "key": "orders.deleted_success",
-            "line": 256,
+            "line": 255,
             "exists": false
           },
           {
             "key": "orders.delete_error",
-            "line": 262,
+            "line": 261,
             "exists": false
           },
           {
             "key": "accessibility.car_wash_orders.order_updated",
-            "line": 284,
+            "line": 283,
             "exists": false
           },
           {
             "key": "accessibility.car_wash_orders.order_created",
-            "line": 290,
+            "line": 289,
             "exists": false
           },
           {
             "key": "orders.order_not_found",
-            "line": 307,
+            "line": 306,
             "exists": false
           },
           {
             "key": "errors.no_permission_status_change",
-            "line": 324,
+            "line": 323,
             "exists": false
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 343,
+            "line": 342,
             "exists": false
           },
           {
             "key": "orders.status_change_failed",
-            "line": 355,
+            "line": 354,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.dashboard",
+            "line": 380,
+            "exists": false
+          },
+          {
+            "key": "sales_orders.tabs.today",
             "line": 381,
             "exists": false
           },
           {
-            "key": "sales_orders.tabs.today",
+            "key": "sales_orders.tabs.tomorrow",
             "line": 382,
             "exists": false
           },
           {
-            "key": "sales_orders.tabs.tomorrow",
+            "key": "sales_orders.tabs.pending",
             "line": 383,
             "exists": false
           },
           {
-            "key": "sales_orders.tabs.pending",
+            "key": "sales_orders.in_process_orders",
             "line": 384,
             "exists": false
           },
           {
-            "key": "sales_orders.in_process_orders",
+            "key": "sales_orders.tabs.week",
             "line": 385,
             "exists": false
           },
           {
-            "key": "sales_orders.tabs.week",
+            "key": "sales_orders.tabs.all",
             "line": 386,
             "exists": false
           },
           {
-            "key": "sales_orders.tabs.all",
+            "key": "sales_orders.tabs.deleted",
             "line": 387,
             "exists": false
           },
           {
-            "key": "sales_orders.tabs.deleted",
-            "line": 388,
-            "exists": false
-          },
-          {
             "key": "common.action_buttons.print_failed",
-            "line": 404,
+            "line": 412,
             "exists": false
           },
           {
             "key": "common.action_buttons.print_success",
-            "line": 421,
+            "line": 429,
             "exists": false
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 427,
+            "line": 435,
             "exists": false
           },
           {
             "key": "pages.car_wash",
-            "line": 445,
+            "line": 453,
             "exists": false
           },
           {
             "key": "accessibility.car_wash_orders.refresh_button",
-            "line": 456,
+            "line": 464,
             "exists": false
           },
           {
             "key": "common.refresh",
-            "line": 460,
+            "line": 468,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 466,
+            "line": 474,
             "exists": false
           },
           {
             "key": "accessibility.car_wash_orders.create_button",
-            "line": 467,
+            "line": 475,
             "exists": false
           },
           {
             "key": "car_wash_orders.quick_order",
-            "line": 470,
+            "line": 478,
             "exists": false
           },
           {
             "key": "accessibility.car_wash_orders.main_content",
-            "line": 492,
+            "line": 500,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 497,
+            "line": 505,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 497,
+            "line": 505,
             "exists": false
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 497,
+            "line": 505,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 497,
+            "line": 505,
             "exists": false
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 563,
+            "line": 571,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 565,
+            "line": 573,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 569,
+            "line": 577,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 574,
+            "line": 582,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_not_found",
-            "line": 125,
-            "context": "124: toast({\n125: description: t('orders.order_not_found'),\n126: variant: 'destructive'"
+            "line": 124,
+            "context": "123: toast({\n124: description: t('orders.order_not_found'),\n125: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 220,
-            "context": "219: toast({\n220: title: t('errors.no_permission', 'No Permission'),\n221: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 219,
+            "context": "218: toast({\n219: title: t('errors.no_permission', 'No Permission'),\n220: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 221,
-            "context": "220: title: t('errors.no_permission', 'No Permission'),\n221: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n222: variant: 'destructive'"
+            "line": 220,
+            "context": "219: title: t('errors.no_permission', 'No Permission'),\n220: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n221: variant: 'destructive'"
           },
           {
             "key": "accessibility.car_wash_orders.order_deleted",
-            "line": 254,
-            "context": "253: // Accessibility: Announce deletion to screen readers\n254: setLiveRegionMessage(t('accessibility.car_wash_orders.order_deleted'));\n255: toast({"
+            "line": 253,
+            "context": "252: // Accessibility: Announce deletion to screen readers\n253: setLiveRegionMessage(t('accessibility.car_wash_orders.order_deleted'));\n254: toast({"
           },
           {
             "key": "orders.deleted_success",
-            "line": 256,
-            "context": "255: toast({\n256: title: t('orders.deleted_success', 'Order deleted successfully')\n257: });"
+            "line": 255,
+            "context": "254: toast({\n255: title: t('orders.deleted_success', 'Order deleted successfully')\n256: });"
           },
           {
             "key": "orders.delete_error",
-            "line": 262,
-            "context": "261: variant: 'destructive',\n262: title: t('orders.delete_error', 'Failed to delete order')\n263: });"
+            "line": 261,
+            "context": "260: variant: 'destructive',\n261: title: t('orders.delete_error', 'Failed to delete order')\n262: });"
           },
           {
             "key": "accessibility.car_wash_orders.order_updated",
-            "line": 284,
-            "context": "283: // Accessibility: Announce update to screen readers\n284: setLiveRegionMessage(t('accessibility.car_wash_orders.order_updated'));\n285: } else {"
+            "line": 283,
+            "context": "282: // Accessibility: Announce update to screen readers\n283: setLiveRegionMessage(t('accessibility.car_wash_orders.order_updated'));\n284: } else {"
           },
           {
             "key": "accessibility.car_wash_orders.order_created",
-            "line": 290,
-            "context": "289: // Accessibility: Announce creation to screen readers\n290: setLiveRegionMessage(t('accessibility.car_wash_orders.order_created'));\n291: }"
+            "line": 289,
+            "context": "288: // Accessibility: Announce creation to screen readers\n289: setLiveRegionMessage(t('accessibility.car_wash_orders.order_created'));\n290: }"
           },
           {
             "key": "orders.order_not_found",
-            "line": 307,
-            "context": "306: toast({\n307: description: t('orders.order_not_found'),\n308: variant: 'destructive'"
+            "line": 306,
+            "context": "305: toast({\n306: description: t('orders.order_not_found'),\n307: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission_status_change",
-            "line": 324,
-            "context": "323: toast({\n324: description: t('errors.no_permission_status_change', 'You do not have permission to change this status'),\n325: variant: 'destructive'"
+            "line": 323,
+            "context": "322: toast({\n323: description: t('errors.no_permission_status_change', 'You do not have permission to change this status'),\n324: variant: 'destructive'"
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 343,
-            "context": "342: toast({\n343: description: t('orders.status_updated_successfully'),\n344: variant: 'default'"
+            "line": 342,
+            "context": "341: toast({\n342: description: t('orders.status_updated_successfully'),\n343: variant: 'default'"
           },
           {
             "key": "orders.status_change_failed",
-            "line": 355,
-            "context": "354: toast({\n355: description: t('orders.status_change_failed'),\n356: variant: 'destructive'"
+            "line": 354,
+            "context": "353: toast({\n354: description: t('orders.status_change_failed'),\n355: variant: 'destructive'"
           },
           {
             "key": "sales_orders.tabs.dashboard",
-            "line": 381,
-            "context": "380: const titleMap: Record<string, string> = {\n381: dashboard: t('sales_orders.tabs.dashboard'),\n382: today: t('sales_orders.tabs.today'),"
+            "line": 380,
+            "context": "379: const titleMap: Record<string, string> = {\n380: dashboard: t('sales_orders.tabs.dashboard'),\n381: today: t('sales_orders.tabs.today'),"
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 382,
-            "context": "381: dashboard: t('sales_orders.tabs.dashboard'),\n382: today: t('sales_orders.tabs.today'),\n383: tomorrow: t('sales_orders.tabs.tomorrow'),"
+            "line": 381,
+            "context": "380: dashboard: t('sales_orders.tabs.dashboard'),\n381: today: t('sales_orders.tabs.today'),\n382: tomorrow: t('sales_orders.tabs.tomorrow'),"
           },
           {
             "key": "sales_orders.tabs.tomorrow",
-            "line": 383,
-            "context": "382: today: t('sales_orders.tabs.today'),\n383: tomorrow: t('sales_orders.tabs.tomorrow'),\n384: pending: t('sales_orders.tabs.pending'),"
+            "line": 382,
+            "context": "381: today: t('sales_orders.tabs.today'),\n382: tomorrow: t('sales_orders.tabs.tomorrow'),\n383: pending: t('sales_orders.tabs.pending'),"
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 384,
-            "context": "383: tomorrow: t('sales_orders.tabs.tomorrow'),\n384: pending: t('sales_orders.tabs.pending'),\n385: in_process: t('sales_orders.in_process_orders'),"
+            "line": 383,
+            "context": "382: tomorrow: t('sales_orders.tabs.tomorrow'),\n383: pending: t('sales_orders.tabs.pending'),\n384: in_process: t('sales_orders.in_process_orders'),"
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 385,
-            "context": "384: pending: t('sales_orders.tabs.pending'),\n385: in_process: t('sales_orders.in_process_orders'),\n386: week: t('sales_orders.tabs.week'),"
+            "line": 384,
+            "context": "383: pending: t('sales_orders.tabs.pending'),\n384: in_process: t('sales_orders.in_process_orders'),\n385: week: t('sales_orders.tabs.week'),"
           },
           {
             "key": "sales_orders.tabs.week",
-            "line": 386,
-            "context": "385: in_process: t('sales_orders.in_process_orders'),\n386: week: t('sales_orders.tabs.week'),\n387: all: t('sales_orders.tabs.all'),"
+            "line": 385,
+            "context": "384: in_process: t('sales_orders.in_process_orders'),\n385: week: t('sales_orders.tabs.week'),\n386: all: t('sales_orders.tabs.all'),"
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 387,
-            "context": "386: week: t('sales_orders.tabs.week'),\n387: all: t('sales_orders.tabs.all'),\n388: deleted: t('sales_orders.tabs.deleted')"
+            "line": 386,
+            "context": "385: week: t('sales_orders.tabs.week'),\n386: all: t('sales_orders.tabs.all'),\n387: deleted: t('sales_orders.tabs.deleted')"
           },
           {
             "key": "sales_orders.tabs.deleted",
-            "line": 388,
-            "context": "387: all: t('sales_orders.tabs.all'),\n388: deleted: t('sales_orders.tabs.deleted')\n389: };"
+            "line": 387,
+            "context": "386: all: t('sales_orders.tabs.all'),\n387: deleted: t('sales_orders.tabs.deleted')\n388: };"
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 404,
-            "context": "403: variant: 'destructive',\n404: description: t('common.action_buttons.print_failed') + ': No orders to print'\n405: });"
+            "line": 412,
+            "context": "411: variant: 'destructive',\n412: description: t('common.action_buttons.print_failed') + ': No orders to print'\n413: });"
           },
           {
             "key": "common.action_buttons.print_success",
-            "line": 421,
-            "context": "420: toast({\n421: description: t('common.action_buttons.print_success')\n422: });"
+            "line": 429,
+            "context": "428: toast({\n429: description: t('common.action_buttons.print_success')\n430: });"
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 427,
-            "context": "426: variant: 'destructive',\n427: description: t('common.action_buttons.print_failed')\n428: });"
+            "line": 435,
+            "context": "434: variant: 'destructive',\n435: description: t('common.action_buttons.print_failed')\n436: });"
           },
           {
             "key": "pages.car_wash",
-            "line": 445,
-            "context": "444: <div className=\"flex justify-between items-center\">\n445: <h1 className=\"text-2xl font-bold\">{t('pages.car_wash')}</h1>\n446: <div className=\"flex items-center gap-2 sm:gap-3\">"
+            "line": 453,
+            "context": "452: <div className=\"flex justify-between items-center\">\n453: <h1 className=\"text-2xl font-bold\">{t('pages.car_wash')}</h1>\n454: <div className=\"flex items-center gap-2 sm:gap-3\">"
           },
           {
             "key": "accessibility.car_wash_orders.refresh_button",
-            "line": 456,
-            "context": "455: disabled={isRefreshing}\n456: aria-label={t('accessibility.car_wash_orders.refresh_button')}\n457: aria-busy={isRefreshing}"
+            "line": 464,
+            "context": "463: disabled={isRefreshing}\n464: aria-label={t('accessibility.car_wash_orders.refresh_button')}\n465: aria-busy={isRefreshing}"
           },
           {
             "key": "common.refresh",
-            "line": 460,
-            "context": "459: <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''} sm:mr-2`} />\n460: <span className=\"hidden sm:inline\">{t('common.refresh')}</span>\n461: </Button>"
+            "line": 468,
+            "context": "467: <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''} sm:mr-2`} />\n468: <span className=\"hidden sm:inline\">{t('common.refresh')}</span>\n469: </Button>"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 466,
-            "context": "465: disabled={!canCreate}\n466: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n467: aria-label={t('accessibility.car_wash_orders.create_button')}"
+            "line": 474,
+            "context": "473: disabled={!canCreate}\n474: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n475: aria-label={t('accessibility.car_wash_orders.create_button')}"
           },
           {
             "key": "accessibility.car_wash_orders.create_button",
-            "line": 467,
-            "context": "466: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n467: aria-label={t('accessibility.car_wash_orders.create_button')}\n468: >"
+            "line": 475,
+            "context": "474: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n475: aria-label={t('accessibility.car_wash_orders.create_button')}\n476: >"
           },
           {
             "key": "car_wash_orders.quick_order",
-            "line": 470,
-            "context": "469: <Plus className=\"h-4 w-4 sm:mr-2\" />\n470: <span className=\"hidden sm:inline\">{t('car_wash_orders.quick_order')}</span>\n471: </Button>"
+            "line": 478,
+            "context": "477: <Plus className=\"h-4 w-4 sm:mr-2\" />\n478: <span className=\"hidden sm:inline\">{t('car_wash_orders.quick_order')}</span>\n479: </Button>"
           },
           {
             "key": "accessibility.car_wash_orders.main_content",
-            "line": 492,
-            "context": "491: {/* Main Content - Code Split with Suspense and Error Boundaries */}\n492: <main aria-label={t('accessibility.car_wash_orders.main_content')} className=\"space-y-6\">\n493: <div className=\"space-y-4\">"
+            "line": 500,
+            "context": "499: {/* Main Content - Code Split with Suspense and Error Boundaries */}\n500: <main aria-label={t('accessibility.car_wash_orders.main_content')} className=\"space-y-6\">\n501: <div className=\"space-y-4\">"
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 497,
-            "context": "496: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n497: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n498: </h2>"
+            "line": 505,
+            "context": "504: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n505: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n506: </h2>"
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 497,
-            "context": "496: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n497: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n498: </h2>"
+            "line": 505,
+            "context": "504: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n505: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n506: </h2>"
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 497,
-            "context": "496: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n497: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n498: </h2>"
+            "line": 505,
+            "context": "504: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n505: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n506: </h2>"
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 497,
-            "context": "496: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n497: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n498: </h2>"
+            "line": 505,
+            "context": "504: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n505: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n506: </h2>"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 563,
-            "context": "562: <AlertDialogHeader>\n563: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n564: <AlertDialogDescription>"
+            "line": 571,
+            "context": "570: <AlertDialogHeader>\n571: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n572: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 565,
-            "context": "564: <AlertDialogDescription>\n565: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n566: </AlertDialogDescription>"
+            "line": 573,
+            "context": "572: <AlertDialogDescription>\n573: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n574: </AlertDialogDescription>"
           },
           {
             "key": "common.cancel",
-            "line": 569,
-            "context": "568: <AlertDialogFooter>\n569: <AlertDialogCancel>{t('common.cancel', 'Cancel')}</AlertDialogCancel>\n570: <AlertDialogAction"
+            "line": 577,
+            "context": "576: <AlertDialogFooter>\n577: <AlertDialogCancel>{t('common.cancel', 'Cancel')}</AlertDialogCancel>\n578: <AlertDialogAction"
           },
           {
             "key": "common.delete",
-            "line": 574,
-            "context": "573: >\n574: {t('common.delete', 'Delete')}\n575: </AlertDialogAction>"
+            "line": 582,
+            "context": "581: >\n582: {t('common.delete', 'Delete')}\n583: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -86738,545 +86738,545 @@
         "translationCalls": [
           {
             "key": "dealerships.all_dealerships",
-            "line": 101,
+            "line": 102,
             "exists": false
           },
           {
             "key": "contacts.exported_successfully",
-            "line": 150,
+            "line": 151,
             "exists": false
           },
           {
             "key": "contacts.exported_successfully",
-            "line": 155,
+            "line": 156,
             "exists": false
           },
           {
             "key": "contacts.title",
-            "line": 210,
+            "line": 211,
             "exists": false
           },
           {
             "key": "contacts.directory_note",
-            "line": 213,
+            "line": 214,
             "exists": false
           },
           {
             "key": "common.import",
-            "line": 224,
+            "line": 225,
             "exists": false
           },
           {
             "key": "common.export",
-            "line": 232,
+            "line": 233,
             "exists": false
           },
           {
             "key": "common.export_csv",
-            "line": 238,
+            "line": 239,
             "exists": false
           },
           {
             "key": "common.export_excel",
-            "line": 242,
+            "line": 243,
             "exists": false
           },
           {
             "key": "contacts.add_new",
-            "line": 254,
+            "line": 255,
             "exists": false
           },
           {
             "key": "common.filter",
-            "line": 274,
+            "line": 275,
             "exists": false
           },
           {
             "key": "common.search",
-            "line": 282,
+            "line": 283,
             "exists": false
           },
           {
             "key": "contacts.department",
-            "line": 291,
+            "line": 292,
             "exists": false
           },
           {
             "key": "contacts.all_departments",
-            "line": 294,
-            "exists": false
-          },
-          {
-            "key": "contacts.sales",
             "line": 295,
             "exists": false
           },
           {
-            "key": "contacts.service",
+            "key": "contacts.sales",
             "line": 296,
             "exists": false
           },
           {
-            "key": "contacts.management",
+            "key": "contacts.service",
             "line": 297,
             "exists": false
           },
           {
-            "key": "contacts.finance",
+            "key": "contacts.management",
             "line": 298,
             "exists": false
           },
           {
-            "key": "contacts.parts",
+            "key": "contacts.finance",
             "line": 299,
             "exists": false
           },
           {
-            "key": "contacts.other",
+            "key": "contacts.parts",
             "line": 300,
             "exists": false
           },
           {
+            "key": "contacts.other",
+            "line": 301,
+            "exists": false
+          },
+          {
             "key": "contacts.status",
-            "line": 306,
+            "line": 307,
             "exists": false
           },
           {
             "key": "contacts.all_statuses",
-            "line": 309,
-            "exists": false
-          },
-          {
-            "key": "contacts.active",
             "line": 310,
             "exists": false
           },
           {
-            "key": "contacts.inactive",
+            "key": "contacts.active",
             "line": 311,
             "exists": false
           },
           {
-            "key": "contacts.suspended",
+            "key": "contacts.inactive",
             "line": 312,
             "exists": false
           },
           {
+            "key": "contacts.suspended",
+            "line": 313,
+            "exists": false
+          },
+          {
             "key": "contacts.contact_type",
-            "line": 318,
+            "line": 319,
             "exists": false
           },
           {
             "key": "contacts.all_contacts",
-            "line": 321,
-            "exists": false
-          },
-          {
-            "key": "contacts.primary_only",
             "line": 322,
             "exists": false
           },
           {
-            "key": "contacts.non_primary",
+            "key": "contacts.primary_only",
             "line": 323,
             "exists": false
           },
           {
+            "key": "contacts.non_primary",
+            "line": 324,
+            "exists": false
+          },
+          {
             "key": "common.loading",
-            "line": 335,
+            "line": 336,
             "exists": false
           },
           {
             "key": "common.no_data",
-            "line": 341,
+            "line": 342,
             "exists": false
           },
           {
             "key": "common.view",
-            "line": 375,
+            "line": 376,
             "exists": false
           },
           {
             "key": "common.edit",
-            "line": 380,
+            "line": 381,
             "exists": false
           },
           {
             "key": "contacts.call",
-            "line": 385,
+            "line": 386,
             "exists": false
           },
           {
             "key": "contacts.send_email",
-            "line": 389,
+            "line": 390,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 397,
+            "line": 398,
             "exists": false
           },
           {
             "key": "contacts.${contact.department}",
-            "line": 423,
+            "line": 424,
             "exists": false
           },
           {
             "key": "contacts.primary",
-            "line": 426,
+            "line": 427,
             "exists": false
           },
           {
             "key": "contacts.name",
-            "line": 448,
+            "line": 449,
             "exists": false
           },
           {
             "key": "contacts.contact_info",
-            "line": 452,
+            "line": 453,
             "exists": false
           },
           {
             "key": "contacts.position",
-            "line": 458,
+            "line": 459,
             "exists": false
           },
           {
             "key": "contacts.department",
-            "line": 467,
+            "line": 468,
             "exists": false
           },
           {
             "key": "dealerships.title",
-            "line": 471,
+            "line": 472,
             "exists": false
           },
           {
             "key": "common.no_data",
-            "line": 481,
+            "line": 482,
             "exists": false
           },
           {
             "key": "contacts.${contact.department}",
-            "line": 531,
+            "line": 532,
             "exists": false
           },
           {
             "key": "common.view",
-            "line": 549,
+            "line": 550,
             "exists": false
           },
           {
             "key": "common.edit",
-            "line": 554,
+            "line": 555,
             "exists": false
           },
           {
             "key": "contacts.call",
-            "line": 559,
+            "line": 560,
             "exists": false
           },
           {
             "key": "contacts.send_email",
-            "line": 563,
+            "line": 564,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 571,
+            "line": 572,
             "exists": false
           },
           {
             "key": "contacts.delete_title",
-            "line": 627,
-            "exists": false
-          },
-          {
-            "key": "contacts.delete_description",
             "line": 628,
             "exists": false
           },
           {
-            "key": "common.action_buttons.delete",
+            "key": "contacts.delete_description",
             "line": 629,
             "exists": false
           },
           {
-            "key": "common.action_buttons.cancel",
+            "key": "common.action_buttons.delete",
             "line": 630,
+            "exists": false
+          },
+          {
+            "key": "common.action_buttons.cancel",
+            "line": 631,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "dealerships.all_dealerships",
-            "line": 101,
-            "context": "100: const currentDealershipName = selectedDealerId === 'all'\n101: ? t('dealerships.all_dealerships')\n102: : currentDealership?.name || '';"
+            "line": 102,
+            "context": "101: const currentDealershipName = selectedDealerId === 'all'\n102: ? t('dealerships.all_dealerships')\n103: : currentDealership?.name || '';"
           },
           {
             "key": "contacts.exported_successfully",
-            "line": 150,
-            "context": "149: exportContactsToCSV(contacts, `contacts_${new Date().toISOString().split('T')[0]}.csv`);\n150: toast({ description: t('contacts.exported_successfully', 'Contacts exported successfully') });\n151: };"
+            "line": 151,
+            "context": "150: exportContactsToCSV(contacts, `contacts_${new Date().toISOString().split('T')[0]}.csv`);\n151: toast({ description: t('contacts.exported_successfully', 'Contacts exported successfully') });\n152: };"
           },
           {
             "key": "contacts.exported_successfully",
-            "line": 155,
-            "context": "154: exportContactsToExcel(contacts, `contacts_${new Date().toISOString().split('T')[0]}.xls`);\n155: toast({ description: t('contacts.exported_successfully', 'Contacts exported successfully') });\n156: };"
+            "line": 156,
+            "context": "155: exportContactsToExcel(contacts, `contacts_${new Date().toISOString().split('T')[0]}.xls`);\n156: toast({ description: t('contacts.exported_successfully', 'Contacts exported successfully') });\n157: };"
           },
           {
             "key": "contacts.title",
-            "line": 210,
-            "context": "209: <Users2 className=\"h-8 w-8 text-secondary\" />\n210: {t('contacts.title')}\n211: </h1>"
+            "line": 211,
+            "context": "210: <Users2 className=\"h-8 w-8 text-secondary\" />\n211: {t('contacts.title')}\n212: </h1>"
           },
           {
             "key": "contacts.directory_note",
-            "line": 213,
-            "context": "212: <p className=\"text-muted-foreground mt-2\">\n213: {t('contacts.directory_note', 'Contact directory for dealership team')}\n214: </p>"
+            "line": 214,
+            "context": "213: <p className=\"text-muted-foreground mt-2\">\n214: {t('contacts.directory_note', 'Contact directory for dealership team')}\n215: </p>"
           },
           {
             "key": "common.import",
-            "line": 224,
-            "context": "223: <Upload className=\"h-4 w-4\" />\n224: {t('common.import', 'Import')}\n225: </Button>"
+            "line": 225,
+            "context": "224: <Upload className=\"h-4 w-4\" />\n225: {t('common.import', 'Import')}\n226: </Button>"
           },
           {
             "key": "common.export",
-            "line": 232,
-            "context": "231: <Download className=\"h-4 w-4\" />\n232: {t('common.export', 'Export')}\n233: </Button>"
+            "line": 233,
+            "context": "232: <Download className=\"h-4 w-4\" />\n233: {t('common.export', 'Export')}\n234: </Button>"
           },
           {
             "key": "common.export_csv",
-            "line": 238,
-            "context": "237: <Download className=\"mr-2 h-4 w-4\" />\n238: {t('common.export_csv', 'Export as CSV')}\n239: </DropdownMenuItem>"
+            "line": 239,
+            "context": "238: <Download className=\"mr-2 h-4 w-4\" />\n239: {t('common.export_csv', 'Export as CSV')}\n240: </DropdownMenuItem>"
           },
           {
             "key": "common.export_excel",
-            "line": 242,
-            "context": "241: <Download className=\"mr-2 h-4 w-4\" />\n242: {t('common.export_excel', 'Export as Excel')}\n243: </DropdownMenuItem>"
+            "line": 243,
+            "context": "242: <Download className=\"mr-2 h-4 w-4\" />\n243: {t('common.export_excel', 'Export as Excel')}\n244: </DropdownMenuItem>"
           },
           {
             "key": "contacts.add_new",
-            "line": 254,
-            "context": "253: <Plus className=\"h-4 w-4\" />\n254: {t('contacts.add_new')}\n255: </Button>"
+            "line": 255,
+            "context": "254: <Plus className=\"h-4 w-4\" />\n255: {t('contacts.add_new')}\n256: </Button>"
           },
           {
             "key": "common.filter",
-            "line": 274,
-            "context": "273: <Filter className=\"h-5 w-5\" />\n274: {t('common.filter')}\n275: </CardTitle>"
+            "line": 275,
+            "context": "274: <Filter className=\"h-5 w-5\" />\n275: {t('common.filter')}\n276: </CardTitle>"
           },
           {
             "key": "common.search",
-            "line": 282,
-            "context": "281: <Input\n282: placeholder={t('common.search')}\n283: value={filters.search}"
+            "line": 283,
+            "context": "282: <Input\n283: placeholder={t('common.search')}\n284: value={filters.search}"
           },
           {
             "key": "contacts.department",
-            "line": 291,
-            "context": "290: <SelectTrigger>\n291: <SelectValue placeholder={t('contacts.department')} />\n292: </SelectTrigger>"
+            "line": 292,
+            "context": "291: <SelectTrigger>\n292: <SelectValue placeholder={t('contacts.department')} />\n293: </SelectTrigger>"
           },
           {
             "key": "contacts.all_departments",
-            "line": 294,
-            "context": "293: <SelectContent>\n294: <SelectItem value=\"all\">{t('contacts.all_departments')}</SelectItem>\n295: <SelectItem value=\"sales\">{t('contacts.sales')}</SelectItem>"
+            "line": 295,
+            "context": "294: <SelectContent>\n295: <SelectItem value=\"all\">{t('contacts.all_departments')}</SelectItem>\n296: <SelectItem value=\"sales\">{t('contacts.sales')}</SelectItem>"
           },
           {
             "key": "contacts.sales",
-            "line": 295,
-            "context": "294: <SelectItem value=\"all\">{t('contacts.all_departments')}</SelectItem>\n295: <SelectItem value=\"sales\">{t('contacts.sales')}</SelectItem>\n296: <SelectItem value=\"service\">{t('contacts.service')}</SelectItem>"
+            "line": 296,
+            "context": "295: <SelectItem value=\"all\">{t('contacts.all_departments')}</SelectItem>\n296: <SelectItem value=\"sales\">{t('contacts.sales')}</SelectItem>\n297: <SelectItem value=\"service\">{t('contacts.service')}</SelectItem>"
           },
           {
             "key": "contacts.service",
-            "line": 296,
-            "context": "295: <SelectItem value=\"sales\">{t('contacts.sales')}</SelectItem>\n296: <SelectItem value=\"service\">{t('contacts.service')}</SelectItem>\n297: <SelectItem value=\"management\">{t('contacts.management')}</SelectItem>"
+            "line": 297,
+            "context": "296: <SelectItem value=\"sales\">{t('contacts.sales')}</SelectItem>\n297: <SelectItem value=\"service\">{t('contacts.service')}</SelectItem>\n298: <SelectItem value=\"management\">{t('contacts.management')}</SelectItem>"
           },
           {
             "key": "contacts.management",
-            "line": 297,
-            "context": "296: <SelectItem value=\"service\">{t('contacts.service')}</SelectItem>\n297: <SelectItem value=\"management\">{t('contacts.management')}</SelectItem>\n298: <SelectItem value=\"finance\">{t('contacts.finance')}</SelectItem>"
+            "line": 298,
+            "context": "297: <SelectItem value=\"service\">{t('contacts.service')}</SelectItem>\n298: <SelectItem value=\"management\">{t('contacts.management')}</SelectItem>\n299: <SelectItem value=\"finance\">{t('contacts.finance')}</SelectItem>"
           },
           {
             "key": "contacts.finance",
-            "line": 298,
-            "context": "297: <SelectItem value=\"management\">{t('contacts.management')}</SelectItem>\n298: <SelectItem value=\"finance\">{t('contacts.finance')}</SelectItem>\n299: <SelectItem value=\"parts\">{t('contacts.parts', 'Parts')}</SelectItem>"
+            "line": 299,
+            "context": "298: <SelectItem value=\"management\">{t('contacts.management')}</SelectItem>\n299: <SelectItem value=\"finance\">{t('contacts.finance')}</SelectItem>\n300: <SelectItem value=\"parts\">{t('contacts.parts', 'Parts')}</SelectItem>"
           },
           {
             "key": "contacts.parts",
-            "line": 299,
-            "context": "298: <SelectItem value=\"finance\">{t('contacts.finance')}</SelectItem>\n299: <SelectItem value=\"parts\">{t('contacts.parts', 'Parts')}</SelectItem>\n300: <SelectItem value=\"other\">{t('contacts.other')}</SelectItem>"
+            "line": 300,
+            "context": "299: <SelectItem value=\"finance\">{t('contacts.finance')}</SelectItem>\n300: <SelectItem value=\"parts\">{t('contacts.parts', 'Parts')}</SelectItem>\n301: <SelectItem value=\"other\">{t('contacts.other')}</SelectItem>"
           },
           {
             "key": "contacts.other",
-            "line": 300,
-            "context": "299: <SelectItem value=\"parts\">{t('contacts.parts', 'Parts')}</SelectItem>\n300: <SelectItem value=\"other\">{t('contacts.other')}</SelectItem>\n301: </SelectContent>"
+            "line": 301,
+            "context": "300: <SelectItem value=\"parts\">{t('contacts.parts', 'Parts')}</SelectItem>\n301: <SelectItem value=\"other\">{t('contacts.other')}</SelectItem>\n302: </SelectContent>"
           },
           {
             "key": "contacts.status",
-            "line": 306,
-            "context": "305: <SelectTrigger>\n306: <SelectValue placeholder={t('contacts.status')} />\n307: </SelectTrigger>"
+            "line": 307,
+            "context": "306: <SelectTrigger>\n307: <SelectValue placeholder={t('contacts.status')} />\n308: </SelectTrigger>"
           },
           {
             "key": "contacts.all_statuses",
-            "line": 309,
-            "context": "308: <SelectContent>\n309: <SelectItem value=\"all\">{t('contacts.all_statuses', 'All Statuses')}</SelectItem>\n310: <SelectItem value=\"active\">{t('contacts.active')}</SelectItem>"
+            "line": 310,
+            "context": "309: <SelectContent>\n310: <SelectItem value=\"all\">{t('contacts.all_statuses', 'All Statuses')}</SelectItem>\n311: <SelectItem value=\"active\">{t('contacts.active')}</SelectItem>"
           },
           {
             "key": "contacts.active",
-            "line": 310,
-            "context": "309: <SelectItem value=\"all\">{t('contacts.all_statuses', 'All Statuses')}</SelectItem>\n310: <SelectItem value=\"active\">{t('contacts.active')}</SelectItem>\n311: <SelectItem value=\"inactive\">{t('contacts.inactive')}</SelectItem>"
+            "line": 311,
+            "context": "310: <SelectItem value=\"all\">{t('contacts.all_statuses', 'All Statuses')}</SelectItem>\n311: <SelectItem value=\"active\">{t('contacts.active')}</SelectItem>\n312: <SelectItem value=\"inactive\">{t('contacts.inactive')}</SelectItem>"
           },
           {
             "key": "contacts.inactive",
-            "line": 311,
-            "context": "310: <SelectItem value=\"active\">{t('contacts.active')}</SelectItem>\n311: <SelectItem value=\"inactive\">{t('contacts.inactive')}</SelectItem>\n312: <SelectItem value=\"suspended\">{t('contacts.suspended')}</SelectItem>"
+            "line": 312,
+            "context": "311: <SelectItem value=\"active\">{t('contacts.active')}</SelectItem>\n312: <SelectItem value=\"inactive\">{t('contacts.inactive')}</SelectItem>\n313: <SelectItem value=\"suspended\">{t('contacts.suspended')}</SelectItem>"
           },
           {
             "key": "contacts.suspended",
-            "line": 312,
-            "context": "311: <SelectItem value=\"inactive\">{t('contacts.inactive')}</SelectItem>\n312: <SelectItem value=\"suspended\">{t('contacts.suspended')}</SelectItem>\n313: </SelectContent>"
+            "line": 313,
+            "context": "312: <SelectItem value=\"inactive\">{t('contacts.inactive')}</SelectItem>\n313: <SelectItem value=\"suspended\">{t('contacts.suspended')}</SelectItem>\n314: </SelectContent>"
           },
           {
             "key": "contacts.contact_type",
-            "line": 318,
-            "context": "317: <SelectTrigger>\n318: <SelectValue placeholder={t('contacts.contact_type', 'Type')} />\n319: </SelectTrigger>"
+            "line": 319,
+            "context": "318: <SelectTrigger>\n319: <SelectValue placeholder={t('contacts.contact_type', 'Type')} />\n320: </SelectTrigger>"
           },
           {
             "key": "contacts.all_contacts",
-            "line": 321,
-            "context": "320: <SelectContent>\n321: <SelectItem value=\"all\">{t('contacts.all_contacts', 'All Contacts')}</SelectItem>\n322: <SelectItem value=\"true\">{t('contacts.primary_only', 'Primary Only')}</SelectItem>"
+            "line": 322,
+            "context": "321: <SelectContent>\n322: <SelectItem value=\"all\">{t('contacts.all_contacts', 'All Contacts')}</SelectItem>\n323: <SelectItem value=\"true\">{t('contacts.primary_only', 'Primary Only')}</SelectItem>"
           },
           {
             "key": "contacts.primary_only",
-            "line": 322,
-            "context": "321: <SelectItem value=\"all\">{t('contacts.all_contacts', 'All Contacts')}</SelectItem>\n322: <SelectItem value=\"true\">{t('contacts.primary_only', 'Primary Only')}</SelectItem>\n323: <SelectItem value=\"false\">{t('contacts.non_primary', 'Non-Primary')}</SelectItem>"
+            "line": 323,
+            "context": "322: <SelectItem value=\"all\">{t('contacts.all_contacts', 'All Contacts')}</SelectItem>\n323: <SelectItem value=\"true\">{t('contacts.primary_only', 'Primary Only')}</SelectItem>\n324: <SelectItem value=\"false\">{t('contacts.non_primary', 'Non-Primary')}</SelectItem>"
           },
           {
             "key": "contacts.non_primary",
-            "line": 323,
-            "context": "322: <SelectItem value=\"true\">{t('contacts.primary_only', 'Primary Only')}</SelectItem>\n323: <SelectItem value=\"false\">{t('contacts.non_primary', 'Non-Primary')}</SelectItem>\n324: </SelectContent>"
+            "line": 324,
+            "context": "323: <SelectItem value=\"true\">{t('contacts.primary_only', 'Primary Only')}</SelectItem>\n324: <SelectItem value=\"false\">{t('contacts.non_primary', 'Non-Primary')}</SelectItem>\n325: </SelectContent>"
           },
           {
             "key": "common.loading",
-            "line": 335,
-            "context": "334: <CardContent className=\"p-6\">\n335: <div className=\"text-center\">{t('common.loading')}</div>\n336: </CardContent>"
+            "line": 336,
+            "context": "335: <CardContent className=\"p-6\">\n336: <div className=\"text-center\">{t('common.loading')}</div>\n337: </CardContent>"
           },
           {
             "key": "common.no_data",
-            "line": 341,
-            "context": "340: <CardContent className=\"p-6\">\n341: <div className=\"text-center text-muted-foreground\">{t('common.no_data')}</div>\n342: </CardContent>"
+            "line": 342,
+            "context": "341: <CardContent className=\"p-6\">\n342: <div className=\"text-center text-muted-foreground\">{t('common.no_data')}</div>\n343: </CardContent>"
           },
           {
             "key": "common.view",
-            "line": 375,
-            "context": "374: <Eye className=\"mr-2 h-4 w-4\" />\n375: {t('common.view')}\n376: </DropdownMenuItem>"
+            "line": 376,
+            "context": "375: <Eye className=\"mr-2 h-4 w-4\" />\n376: {t('common.view')}\n377: </DropdownMenuItem>"
           },
           {
             "key": "common.edit",
-            "line": 380,
-            "context": "379: <Edit className=\"mr-2 h-4 w-4\" />\n380: {t('common.edit')}\n381: </DropdownMenuItem>"
+            "line": 381,
+            "context": "380: <Edit className=\"mr-2 h-4 w-4\" />\n381: {t('common.edit')}\n382: </DropdownMenuItem>"
           },
           {
             "key": "contacts.call",
-            "line": 385,
-            "context": "384: <PhoneCall className=\"mr-2 h-4 w-4\" />\n385: {t('contacts.call')}\n386: </DropdownMenuItem>"
+            "line": 386,
+            "context": "385: <PhoneCall className=\"mr-2 h-4 w-4\" />\n386: {t('contacts.call')}\n387: </DropdownMenuItem>"
           },
           {
             "key": "contacts.send_email",
-            "line": 389,
-            "context": "388: <MessageSquare className=\"mr-2 h-4 w-4\" />\n389: {t('contacts.send_email')}\n390: </DropdownMenuItem>"
+            "line": 390,
+            "context": "389: <MessageSquare className=\"mr-2 h-4 w-4\" />\n390: {t('contacts.send_email')}\n391: </DropdownMenuItem>"
           },
           {
             "key": "common.delete",
-            "line": 397,
-            "context": "396: <Trash2 className=\"mr-2 h-4 w-4\" />\n397: {t('common.delete')}\n398: </DropdownMenuItem>"
+            "line": 398,
+            "context": "397: <Trash2 className=\"mr-2 h-4 w-4\" />\n398: {t('common.delete')}\n399: </DropdownMenuItem>"
           },
           {
             "key": "contacts.${contact.department}",
-            "line": 423,
-            "context": "422: <Badge variant={getDepartmentBadgeVariant(contact.department)}>\n423: {t(`contacts.${contact.department}`)}\n424: </Badge>"
+            "line": 424,
+            "context": "423: <Badge variant={getDepartmentBadgeVariant(contact.department)}>\n424: {t(`contacts.${contact.department}`)}\n425: </Badge>"
           },
           {
             "key": "contacts.primary",
-            "line": 426,
-            "context": "425: {contact.is_primary && (\n426: <Badge variant=\"outline\">{t('contacts.primary')}</Badge>\n427: )}"
+            "line": 427,
+            "context": "426: {contact.is_primary && (\n427: <Badge variant=\"outline\">{t('contacts.primary')}</Badge>\n428: )}"
           },
           {
             "key": "contacts.name",
-            "line": 448,
-            "context": "447: <div className=\"flex items-center\">\n448: {t('contacts.name')}\n449: {getSortIcon('first_name')}"
+            "line": 449,
+            "context": "448: <div className=\"flex items-center\">\n449: {t('contacts.name')}\n450: {getSortIcon('first_name')}"
           },
           {
             "key": "contacts.contact_info",
-            "line": 452,
-            "context": "451: </TableHead>\n452: <TableHead>{t('contacts.contact_info')}</TableHead>\n453: <TableHead"
+            "line": 453,
+            "context": "452: </TableHead>\n453: <TableHead>{t('contacts.contact_info')}</TableHead>\n454: <TableHead"
           },
           {
             "key": "contacts.position",
-            "line": 458,
-            "context": "457: <div className=\"flex items-center\">\n458: {t('contacts.position')}\n459: {getSortIcon('position')}"
+            "line": 459,
+            "context": "458: <div className=\"flex items-center\">\n459: {t('contacts.position')}\n460: {getSortIcon('position')}"
           },
           {
             "key": "contacts.department",
-            "line": 467,
-            "context": "466: <div className=\"flex items-center\">\n467: {t('contacts.department')}\n468: {getSortIcon('department')}"
+            "line": 468,
+            "context": "467: <div className=\"flex items-center\">\n468: {t('contacts.department')}\n469: {getSortIcon('department')}"
           },
           {
             "key": "dealerships.title",
-            "line": 471,
-            "context": "470: </TableHead>\n471: <TableHead>{t('dealerships.title')}</TableHead>\n472: <TableHead className=\"w-12\"></TableHead>"
+            "line": 472,
+            "context": "471: </TableHead>\n472: <TableHead>{t('dealerships.title')}</TableHead>\n473: <TableHead className=\"w-12\"></TableHead>"
           },
           {
             "key": "common.no_data",
-            "line": 481,
-            "context": "480: <TableCell colSpan={7} className=\"h-24 text-center\">\n481: {t('common.no_data')}\n482: </TableCell>"
+            "line": 482,
+            "context": "481: <TableCell colSpan={7} className=\"h-24 text-center\">\n482: {t('common.no_data')}\n483: </TableCell>"
           },
           {
             "key": "contacts.${contact.department}",
-            "line": 531,
-            "context": "530: <Badge variant={getDepartmentBadgeVariant(contact.department)}>\n531: {t(`contacts.${contact.department}`)}\n532: </Badge>"
+            "line": 532,
+            "context": "531: <Badge variant={getDepartmentBadgeVariant(contact.department)}>\n532: {t(`contacts.${contact.department}`)}\n533: </Badge>"
           },
           {
             "key": "common.view",
-            "line": 549,
-            "context": "548: <Eye className=\"mr-2 h-4 w-4\" />\n549: {t('common.view')}\n550: </DropdownMenuItem>"
+            "line": 550,
+            "context": "549: <Eye className=\"mr-2 h-4 w-4\" />\n550: {t('common.view')}\n551: </DropdownMenuItem>"
           },
           {
             "key": "common.edit",
-            "line": 554,
-            "context": "553: <Edit className=\"mr-2 h-4 w-4\" />\n554: {t('common.edit')}\n555: </DropdownMenuItem>"
+            "line": 555,
+            "context": "554: <Edit className=\"mr-2 h-4 w-4\" />\n555: {t('common.edit')}\n556: </DropdownMenuItem>"
           },
           {
             "key": "contacts.call",
-            "line": 559,
-            "context": "558: <PhoneCall className=\"mr-2 h-4 w-4\" />\n559: {t('contacts.call')}\n560: </DropdownMenuItem>"
+            "line": 560,
+            "context": "559: <PhoneCall className=\"mr-2 h-4 w-4\" />\n560: {t('contacts.call')}\n561: </DropdownMenuItem>"
           },
           {
             "key": "contacts.send_email",
-            "line": 563,
-            "context": "562: <MessageSquare className=\"mr-2 h-4 w-4\" />\n563: {t('contacts.send_email')}\n564: </DropdownMenuItem>"
+            "line": 564,
+            "context": "563: <MessageSquare className=\"mr-2 h-4 w-4\" />\n564: {t('contacts.send_email')}\n565: </DropdownMenuItem>"
           },
           {
             "key": "common.delete",
-            "line": 571,
-            "context": "570: <Trash2 className=\"mr-2 h-4 w-4\" />\n571: {t('common.delete')}\n572: </DropdownMenuItem>"
+            "line": 572,
+            "context": "571: <Trash2 className=\"mr-2 h-4 w-4\" />\n572: {t('common.delete')}\n573: </DropdownMenuItem>"
           },
           {
             "key": "contacts.delete_title",
-            "line": 627,
-            "context": "626: onOpenChange={setDeleteDialogOpen}\n627: title={t('contacts.delete_title', { defaultValue: 'Delete Contact?' })}\n628: description={t('contacts.delete_description', { defaultValue: 'Are you sure you want to delete this contact? This action cannot be undone.' })}"
+            "line": 628,
+            "context": "627: onOpenChange={setDeleteDialogOpen}\n628: title={t('contacts.delete_title', { defaultValue: 'Delete Contact?' })}\n629: description={t('contacts.delete_description', { defaultValue: 'Are you sure you want to delete this contact? This action cannot be undone.' })}"
           },
           {
             "key": "contacts.delete_description",
-            "line": 628,
-            "context": "627: title={t('contacts.delete_title', { defaultValue: 'Delete Contact?' })}\n628: description={t('contacts.delete_description', { defaultValue: 'Are you sure you want to delete this contact? This action cannot be undone.' })}\n629: confirmText={t('common.action_buttons.delete')}"
+            "line": 629,
+            "context": "628: title={t('contacts.delete_title', { defaultValue: 'Delete Contact?' })}\n629: description={t('contacts.delete_description', { defaultValue: 'Are you sure you want to delete this contact? This action cannot be undone.' })}\n630: confirmText={t('common.action_buttons.delete')}"
           },
           {
             "key": "common.action_buttons.delete",
-            "line": 629,
-            "context": "628: description={t('contacts.delete_description', { defaultValue: 'Are you sure you want to delete this contact? This action cannot be undone.' })}\n629: confirmText={t('common.action_buttons.delete')}\n630: cancelText={t('common.action_buttons.cancel')}"
+            "line": 630,
+            "context": "629: description={t('contacts.delete_description', { defaultValue: 'Are you sure you want to delete this contact? This action cannot be undone.' })}\n630: confirmText={t('common.action_buttons.delete')}\n631: cancelText={t('common.action_buttons.cancel')}"
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 630,
-            "context": "629: confirmText={t('common.action_buttons.delete')}\n630: cancelText={t('common.action_buttons.cancel')}\n631: onConfirm={confirmDelete}"
+            "line": 631,
+            "context": "630: confirmText={t('common.action_buttons.delete')}\n631: cancelText={t('common.action_buttons.cancel')}\n632: onConfirm={confirmDelete}"
           }
         ],
         "coverage": 100,
@@ -87288,215 +87288,215 @@
         "translationCalls": [
           {
             "key": "cache.cleared_title",
-            "line": 31,
-            "exists": false
-          },
-          {
-            "key": "cache.cleared_success",
             "line": 32,
             "exists": false
           },
           {
-            "key": "system_update.success_title",
-            "line": 43,
+            "key": "cache.cleared_success",
+            "line": 33,
             "exists": false
           },
           {
-            "key": "system_update.success_desc",
+            "key": "system_update.success_title",
             "line": 44,
             "exists": false
           },
           {
+            "key": "system_update.success_desc",
+            "line": 45,
+            "exists": false
+          },
+          {
             "key": "dashboard.hero.welcome_to",
-            "line": 76,
+            "line": 77,
             "exists": false
           },
           {
             "key": "dashboard.hero.subtitle",
-            "line": 78,
+            "line": 79,
             "exists": false
           },
           {
             "key": "dashboard.empty_state.no_access_title",
-            "line": 90,
+            "line": 91,
             "exists": false
           },
           {
             "key": "dashboard.empty_state.no_access_message",
-            "line": 92,
+            "line": 93,
             "exists": false
           },
           {
             "key": "dashboard.empty_state.contact_admin",
-            "line": 97,
+            "line": 98,
             "exists": false
           },
           {
             "key": "dashboard.departments.sales",
-            "line": 100,
-            "exists": false
-          },
-          {
-            "key": "dashboard.empty_state.sales_module",
             "line": 101,
             "exists": false
           },
           {
-            "key": "dashboard.departments.service",
-            "line": 104,
+            "key": "dashboard.empty_state.sales_module",
+            "line": 102,
             "exists": false
           },
           {
-            "key": "dashboard.empty_state.service_module",
+            "key": "dashboard.departments.service",
             "line": 105,
             "exists": false
           },
           {
-            "key": "dashboard.departments.recon",
-            "line": 108,
+            "key": "dashboard.empty_state.service_module",
+            "line": 106,
             "exists": false
           },
           {
-            "key": "dashboard.empty_state.recon_module",
+            "key": "dashboard.departments.recon",
             "line": 109,
             "exists": false
           },
           {
-            "key": "dashboard.departments.car_wash",
-            "line": 112,
+            "key": "dashboard.empty_state.recon_module",
+            "line": 110,
             "exists": false
           },
           {
-            "key": "dashboard.empty_state.carwash_module",
+            "key": "dashboard.departments.car_wash",
             "line": 113,
             "exists": false
           },
           {
+            "key": "dashboard.empty_state.carwash_module",
+            "line": 114,
+            "exists": false
+          },
+          {
             "key": "dashboard.empty_state.view_profile",
-            "line": 121,
+            "line": 122,
             "exists": false
           },
           {
             "key": "dashboard.empty_state.contact_support",
-            "line": 125,
+            "line": 126,
             "exists": false
           },
           {
             "key": "dashboard.hero.welcome_to",
-            "line": 147,
+            "line": 148,
             "exists": false
           },
           {
             "key": "dashboard.hero.subtitle",
-            "line": 149,
+            "line": 150,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "cache.cleared_title",
-            "line": 31,
-            "context": "30: toast({\n31: title: '✅ ' + t('cache.cleared_title', { defaultValue: 'Cache Cleared' }),\n32: description: t('cache.cleared_success', {"
+            "line": 32,
+            "context": "31: toast({\n32: title: '✅ ' + t('cache.cleared_title', { defaultValue: 'Cache Cleared' }),\n33: description: t('cache.cleared_success', {"
           },
           {
             "key": "cache.cleared_success",
-            "line": 32,
-            "context": "31: title: '✅ ' + t('cache.cleared_title', { defaultValue: 'Cache Cleared' }),\n32: description: t('cache.cleared_success', {\n33: defaultValue: 'All caches have been cleared successfully.'"
+            "line": 33,
+            "context": "32: title: '✅ ' + t('cache.cleared_title', { defaultValue: 'Cache Cleared' }),\n33: description: t('cache.cleared_success', {\n34: defaultValue: 'All caches have been cleared successfully.'"
           },
           {
             "key": "system_update.success_title",
-            "line": 43,
-            "context": "42: toast({\n43: title: '✅ ' + t('system_update.success_title', { defaultValue: 'App Updated' }),\n44: description: t('system_update.success_desc', {"
+            "line": 44,
+            "context": "43: toast({\n44: title: '✅ ' + t('system_update.success_title', { defaultValue: 'App Updated' }),\n45: description: t('system_update.success_desc', {"
           },
           {
             "key": "system_update.success_desc",
-            "line": 44,
-            "context": "43: title: '✅ ' + t('system_update.success_title', { defaultValue: 'App Updated' }),\n44: description: t('system_update.success_desc', {\n45: defaultValue: 'The application has been updated successfully.'"
+            "line": 45,
+            "context": "44: title: '✅ ' + t('system_update.success_title', { defaultValue: 'App Updated' }),\n45: description: t('system_update.success_desc', {\n46: defaultValue: 'The application has been updated successfully.'"
           },
           {
             "key": "dashboard.hero.welcome_to",
-            "line": 76,
-            "context": "75: <h1 className=\"text-2xl sm:text-3xl font-bold mb-2 text-white\">\n76: {t('dashboard.hero.welcome_to')} {senderInfo?.company_name || 'My Detail Area'}\n77: </h1>"
+            "line": 77,
+            "context": "76: <h1 className=\"text-2xl sm:text-3xl font-bold mb-2 text-white\">\n77: {t('dashboard.hero.welcome_to')} {senderInfo?.company_name || 'My Detail Area'}\n78: </h1>"
           },
           {
             "key": "dashboard.hero.subtitle",
-            "line": 78,
-            "context": "77: </h1>\n78: <p className=\"text-lg sm:text-xl text-white/90\">{t('dashboard.hero.subtitle')}</p>\n79: </div>"
+            "line": 79,
+            "context": "78: </h1>\n79: <p className=\"text-lg sm:text-xl text-white/90\">{t('dashboard.hero.subtitle')}</p>\n80: </div>"
           },
           {
             "key": "dashboard.empty_state.no_access_title",
-            "line": 90,
-            "context": "89: </div>\n90: <CardTitle className=\"text-xl\">{t('dashboard.empty_state.no_access_title')}</CardTitle>\n91: <CardDescription className=\"text-base\">"
+            "line": 91,
+            "context": "90: </div>\n91: <CardTitle className=\"text-xl\">{t('dashboard.empty_state.no_access_title')}</CardTitle>\n92: <CardDescription className=\"text-base\">"
           },
           {
             "key": "dashboard.empty_state.no_access_message",
-            "line": 92,
-            "context": "91: <CardDescription className=\"text-base\">\n92: {t('dashboard.empty_state.no_access_message')}\n93: </CardDescription>"
+            "line": 93,
+            "context": "92: <CardDescription className=\"text-base\">\n93: {t('dashboard.empty_state.no_access_message')}\n94: </CardDescription>"
           },
           {
             "key": "dashboard.empty_state.contact_admin",
-            "line": 97,
-            "context": "96: <div>\n97: <p className=\"text-sm font-medium mb-3\">{t('dashboard.empty_state.contact_admin')}</p>\n98: <div className=\"grid grid-cols-1 md:grid-cols-2 gap-3\">"
+            "line": 98,
+            "context": "97: <div>\n98: <p className=\"text-sm font-medium mb-3\">{t('dashboard.empty_state.contact_admin')}</p>\n99: <div className=\"grid grid-cols-1 md:grid-cols-2 gap-3\">"
           },
           {
             "key": "dashboard.departments.sales",
-            "line": 100,
-            "context": "99: <div className=\"p-3 bg-white rounded-lg border\">\n100: <p className=\"text-sm font-medium mb-1\">📊 {t('dashboard.departments.sales')}</p>\n101: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.sales_module')}</p>"
+            "line": 101,
+            "context": "100: <div className=\"p-3 bg-white rounded-lg border\">\n101: <p className=\"text-sm font-medium mb-1\">📊 {t('dashboard.departments.sales')}</p>\n102: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.sales_module')}</p>"
           },
           {
             "key": "dashboard.empty_state.sales_module",
-            "line": 101,
-            "context": "100: <p className=\"text-sm font-medium mb-1\">📊 {t('dashboard.departments.sales')}</p>\n101: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.sales_module')}</p>\n102: </div>"
+            "line": 102,
+            "context": "101: <p className=\"text-sm font-medium mb-1\">📊 {t('dashboard.departments.sales')}</p>\n102: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.sales_module')}</p>\n103: </div>"
           },
           {
             "key": "dashboard.departments.service",
-            "line": 104,
-            "context": "103: <div className=\"p-3 bg-white rounded-lg border\">\n104: <p className=\"text-sm font-medium mb-1\">🔧 {t('dashboard.departments.service')}</p>\n105: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.service_module')}</p>"
+            "line": 105,
+            "context": "104: <div className=\"p-3 bg-white rounded-lg border\">\n105: <p className=\"text-sm font-medium mb-1\">🔧 {t('dashboard.departments.service')}</p>\n106: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.service_module')}</p>"
           },
           {
             "key": "dashboard.empty_state.service_module",
-            "line": 105,
-            "context": "104: <p className=\"text-sm font-medium mb-1\">🔧 {t('dashboard.departments.service')}</p>\n105: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.service_module')}</p>\n106: </div>"
+            "line": 106,
+            "context": "105: <p className=\"text-sm font-medium mb-1\">🔧 {t('dashboard.departments.service')}</p>\n106: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.service_module')}</p>\n107: </div>"
           },
           {
             "key": "dashboard.departments.recon",
-            "line": 108,
-            "context": "107: <div className=\"p-3 bg-white rounded-lg border\">\n108: <p className=\"text-sm font-medium mb-1\">🔄 {t('dashboard.departments.recon')}</p>\n109: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.recon_module')}</p>"
+            "line": 109,
+            "context": "108: <div className=\"p-3 bg-white rounded-lg border\">\n109: <p className=\"text-sm font-medium mb-1\">🔄 {t('dashboard.departments.recon')}</p>\n110: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.recon_module')}</p>"
           },
           {
             "key": "dashboard.empty_state.recon_module",
-            "line": 109,
-            "context": "108: <p className=\"text-sm font-medium mb-1\">🔄 {t('dashboard.departments.recon')}</p>\n109: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.recon_module')}</p>\n110: </div>"
+            "line": 110,
+            "context": "109: <p className=\"text-sm font-medium mb-1\">🔄 {t('dashboard.departments.recon')}</p>\n110: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.recon_module')}</p>\n111: </div>"
           },
           {
             "key": "dashboard.departments.car_wash",
-            "line": 112,
-            "context": "111: <div className=\"p-3 bg-white rounded-lg border\">\n112: <p className=\"text-sm font-medium mb-1\">💧 {t('dashboard.departments.car_wash')}</p>\n113: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.carwash_module')}</p>"
+            "line": 113,
+            "context": "112: <div className=\"p-3 bg-white rounded-lg border\">\n113: <p className=\"text-sm font-medium mb-1\">💧 {t('dashboard.departments.car_wash')}</p>\n114: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.carwash_module')}</p>"
           },
           {
             "key": "dashboard.empty_state.carwash_module",
-            "line": 113,
-            "context": "112: <p className=\"text-sm font-medium mb-1\">💧 {t('dashboard.departments.car_wash')}</p>\n113: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.carwash_module')}</p>\n114: </div>"
+            "line": 114,
+            "context": "113: <p className=\"text-sm font-medium mb-1\">💧 {t('dashboard.departments.car_wash')}</p>\n114: <p className=\"text-xs text-muted-foreground\">{t('dashboard.empty_state.carwash_module')}</p>\n115: </div>"
           },
           {
             "key": "dashboard.empty_state.view_profile",
-            "line": 121,
-            "context": "120: <User className=\"w-4 h-4 mr-2\" />\n121: {t('dashboard.empty_state.view_profile')}\n122: </Button>"
+            "line": 122,
+            "context": "121: <User className=\"w-4 h-4 mr-2\" />\n122: {t('dashboard.empty_state.view_profile')}\n123: </Button>"
           },
           {
             "key": "dashboard.empty_state.contact_support",
-            "line": 125,
-            "context": "124: <Mail className=\"w-4 h-4 mr-2\" />\n125: {t('dashboard.empty_state.contact_support')}\n126: </Button>"
+            "line": 126,
+            "context": "125: <Mail className=\"w-4 h-4 mr-2\" />\n126: {t('dashboard.empty_state.contact_support')}\n127: </Button>"
           },
           {
             "key": "dashboard.hero.welcome_to",
-            "line": 147,
-            "context": "146: <h1 className=\"text-2xl sm:text-3xl font-bold mb-2 text-white\">\n147: {t('dashboard.hero.welcome_to')} {senderInfo?.company_name || 'My Detail Area'}\n148: </h1>"
+            "line": 148,
+            "context": "147: <h1 className=\"text-2xl sm:text-3xl font-bold mb-2 text-white\">\n148: {t('dashboard.hero.welcome_to')} {senderInfo?.company_name || 'My Detail Area'}\n149: </h1>"
           },
           {
             "key": "dashboard.hero.subtitle",
-            "line": 149,
-            "context": "148: </h1>\n149: <p className=\"text-lg sm:text-xl text-white/90\">{t('dashboard.hero.subtitle')}</p>\n150: </div>"
+            "line": 150,
+            "context": "149: </h1>\n150: <p className=\"text-lg sm:text-xl text-white/90\">{t('dashboard.hero.subtitle')}</p>\n151: </div>"
           }
         ],
         "coverage": 100,
@@ -90200,125 +90200,130 @@
         "file": "src\\pages\\ReconOrders.tsx",
         "hardcodedStrings": [
           {
-            "text": ", error);\n      toast({\n        variant: ",
-            "line": 526,
-            "context": "525: } catch (error) {\n526: console.error('Print error:', error);\n527: toast({"
+            "text": ", error);\r\n      toast({\r\n        variant: ",
+            "line": 534,
+            "context": "533: } catch (error) {\n534: console.error('Print error:', error);\n535: toast({"
           }
         ],
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 112,
+            "line": 111,
             "exists": false
           },
           {
             "key": "errors.no_permission",
+            "line": 206,
+            "exists": false
+          },
+          {
+            "key": "errors.no_permission_create_order",
             "line": 207,
             "exists": false
           },
           {
-            "key": "errors.no_permission_create_order",
-            "line": 208,
+            "key": "errors.no_permission",
+            "line": 222,
             "exists": false
           },
           {
-            "key": "errors.no_permission",
+            "key": "errors.no_permission_create_order",
             "line": 223,
             "exists": false
           },
           {
-            "key": "errors.no_permission_create_order",
-            "line": 224,
-            "exists": false
-          },
-          {
             "key": "accessibility.recon_orders.order_deleted",
-            "line": 258,
+            "line": 257,
             "exists": false
           },
           {
             "key": "orders.deleted_success",
-            "line": 260,
+            "line": 259,
             "exists": false
           },
           {
             "key": "orders.delete_error",
-            "line": 266,
+            "line": 265,
             "exists": false
           },
           {
             "key": "orders.multiple_created_successfully",
-            "line": 300,
+            "line": 299,
             "exists": false
           },
           {
             "key": "accessibility.recon_orders.order_updated",
-            "line": 339,
+            "line": 338,
             "exists": false
           },
           {
             "key": "accessibility.recon_orders.order_created",
-            "line": 347,
+            "line": 346,
             "exists": false
           },
           {
             "key": "orders.order_not_found",
-            "line": 365,
+            "line": 364,
             "exists": false
           },
           {
             "key": "errors.no_permission_status_change",
-            "line": 382,
+            "line": 381,
             "exists": false
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 402,
+            "line": 401,
             "exists": false
           },
           {
             "key": "orders.status_change_failed",
-            "line": 414,
+            "line": 413,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.dashboard",
-            "line": 440,
+            "line": 439,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 441,
+            "line": 440,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.tomorrow",
-            "line": 442,
+            "line": 441,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 443,
+            "line": 442,
             "exists": false
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 444,
+            "line": 443,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.week",
-            "line": 445,
+            "line": 444,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 446,
+            "line": 445,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.deleted",
-            "line": 447,
+            "line": 446,
+            "exists": false
+          },
+          {
+            "key": "recon_defaults.default_customer",
+            "line": 457,
             "exists": false
           },
           {
@@ -90327,8 +90332,8 @@
             "exists": false
           },
           {
-            "key": "recon_defaults.default_customer",
-            "line": 459,
+            "key": "recon_defaults.default_service",
+            "line": 486,
             "exists": false
           },
           {
@@ -90342,361 +90347,356 @@
             "exists": false
           },
           {
-            "key": "recon_defaults.default_service",
-            "line": 489,
-            "exists": false
-          },
-          {
             "key": "common.general",
-            "line": 489,
+            "line": 488,
             "exists": false
           },
           {
             "key": "recon_defaults.default_advisor",
-            "line": 491,
+            "line": 490,
             "exists": false
           },
           {
             "key": "recon_defaults.default_department",
-            "line": 492,
+            "line": 491,
             "exists": false
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 507,
+            "line": 515,
             "exists": false
           },
           {
             "key": "common.action_buttons.print_success",
-            "line": 523,
+            "line": 531,
             "exists": false
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 529,
+            "line": 537,
             "exists": false
           },
           {
             "key": "pages.recon_orders",
-            "line": 549,
+            "line": 557,
             "exists": false
           },
           {
             "key": "accessibility.recon_orders.refresh_button",
-            "line": 560,
+            "line": 568,
             "exists": false
           },
           {
             "key": "common.refresh",
-            "line": 564,
+            "line": 572,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 570,
+            "line": 578,
             "exists": false
           },
           {
             "key": "accessibility.recon_orders.create_button",
-            "line": 571,
+            "line": 579,
             "exists": false
           },
           {
             "key": "recon.new_recon_order",
-            "line": 574,
+            "line": 582,
             "exists": false
           },
           {
             "key": "accessibility.recon_orders.main_content",
-            "line": 598,
+            "line": 606,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 603,
+            "line": 611,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 603,
+            "line": 611,
             "exists": false
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 603,
+            "line": 611,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 603,
+            "line": 611,
             "exists": false
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 692,
+            "line": 700,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 694,
+            "line": 702,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 698,
+            "line": 706,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 703,
+            "line": 711,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_not_found",
-            "line": 112,
-            "context": "111: toast({\n112: description: t('orders.order_not_found'),\n113: variant: 'destructive'"
+            "line": 111,
+            "context": "110: toast({\n111: description: t('orders.order_not_found'),\n112: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
+            "line": 206,
+            "context": "205: toast({\n206: title: t('errors.no_permission', 'No Permission'),\n207: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+          },
+          {
+            "key": "errors.no_permission_create_order",
             "line": 207,
-            "context": "206: toast({\n207: title: t('errors.no_permission', 'No Permission'),\n208: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
-          },
-          {
-            "key": "errors.no_permission_create_order",
-            "line": 208,
-            "context": "207: title: t('errors.no_permission', 'No Permission'),\n208: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n209: variant: 'destructive'"
+            "context": "206: title: t('errors.no_permission', 'No Permission'),\n207: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n208: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 223,
-            "context": "222: toast({\n223: title: t('errors.no_permission', 'No Permission'),\n224: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "line": 222,
+            "context": "221: toast({\n222: title: t('errors.no_permission', 'No Permission'),\n223: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 224,
-            "context": "223: title: t('errors.no_permission', 'No Permission'),\n224: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n225: variant: 'destructive'"
+            "line": 223,
+            "context": "222: title: t('errors.no_permission', 'No Permission'),\n223: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n224: variant: 'destructive'"
           },
           {
             "key": "accessibility.recon_orders.order_deleted",
-            "line": 258,
-            "context": "257: // Accessibility: Announce deletion to screen readers\n258: setLiveRegionMessage(t('accessibility.recon_orders.order_deleted'));\n259: toast({"
+            "line": 257,
+            "context": "256: // Accessibility: Announce deletion to screen readers\n257: setLiveRegionMessage(t('accessibility.recon_orders.order_deleted'));\n258: toast({"
           },
           {
             "key": "orders.deleted_success",
-            "line": 260,
-            "context": "259: toast({\n260: title: t('orders.deleted_success', 'Order deleted successfully')\n261: });"
+            "line": 259,
+            "context": "258: toast({\n259: title: t('orders.deleted_success', 'Order deleted successfully')\n260: });"
           },
           {
             "key": "orders.delete_error",
-            "line": 266,
-            "context": "265: variant: 'destructive',\n266: title: t('orders.delete_error', 'Failed to delete order')\n267: });"
+            "line": 265,
+            "context": "264: variant: 'destructive',\n265: title: t('orders.delete_error', 'Failed to delete order')\n266: });"
           },
           {
             "key": "orders.multiple_created_successfully",
-            "line": 300,
-            "context": "299: \n300: const message = t('orders.multiple_created_successfully', {\n301: count: createdOrders.length,"
+            "line": 299,
+            "context": "298: \n299: const message = t('orders.multiple_created_successfully', {\n300: count: createdOrders.length,"
           },
           {
             "key": "accessibility.recon_orders.order_updated",
-            "line": 339,
-            "context": "338: // Accessibility: Announce update to screen readers\n339: setLiveRegionMessage(t('accessibility.recon_orders.order_updated'));\n340: } else {"
+            "line": 338,
+            "context": "337: // Accessibility: Announce update to screen readers\n338: setLiveRegionMessage(t('accessibility.recon_orders.order_updated'));\n339: } else {"
           },
           {
             "key": "accessibility.recon_orders.order_created",
-            "line": 347,
-            "context": "346: // Accessibility: Announce creation to screen readers\n347: setLiveRegionMessage(t('accessibility.recon_orders.order_created'));\n348: }"
+            "line": 346,
+            "context": "345: // Accessibility: Announce creation to screen readers\n346: setLiveRegionMessage(t('accessibility.recon_orders.order_created'));\n347: }"
           },
           {
             "key": "orders.order_not_found",
-            "line": 365,
-            "context": "364: toast({\n365: description: t('orders.order_not_found'),\n366: variant: 'destructive'"
+            "line": 364,
+            "context": "363: toast({\n364: description: t('orders.order_not_found'),\n365: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission_status_change",
-            "line": 382,
-            "context": "381: toast({\n382: description: t('errors.no_permission_status_change', 'You do not have permission to change this status'),\n383: variant: 'destructive'"
+            "line": 381,
+            "context": "380: toast({\n381: description: t('errors.no_permission_status_change', 'You do not have permission to change this status'),\n382: variant: 'destructive'"
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 402,
-            "context": "401: toast({\n402: description: t('orders.status_updated_successfully'),\n403: variant: 'default'"
+            "line": 401,
+            "context": "400: toast({\n401: description: t('orders.status_updated_successfully'),\n402: variant: 'default'"
           },
           {
             "key": "orders.status_change_failed",
-            "line": 414,
-            "context": "413: toast({\n414: description: t('orders.status_change_failed'),\n415: variant: 'destructive'"
+            "line": 413,
+            "context": "412: toast({\n413: description: t('orders.status_change_failed'),\n414: variant: 'destructive'"
           },
           {
             "key": "sales_orders.tabs.dashboard",
-            "line": 440,
-            "context": "439: const titleMap: Record<string, string> = {\n440: dashboard: t('sales_orders.tabs.dashboard'),\n441: today: t('sales_orders.tabs.today'),"
+            "line": 439,
+            "context": "438: const titleMap: Record<string, string> = {\n439: dashboard: t('sales_orders.tabs.dashboard'),\n440: today: t('sales_orders.tabs.today'),"
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 441,
-            "context": "440: dashboard: t('sales_orders.tabs.dashboard'),\n441: today: t('sales_orders.tabs.today'),\n442: tomorrow: t('sales_orders.tabs.tomorrow'),"
+            "line": 440,
+            "context": "439: dashboard: t('sales_orders.tabs.dashboard'),\n440: today: t('sales_orders.tabs.today'),\n441: tomorrow: t('sales_orders.tabs.tomorrow'),"
           },
           {
             "key": "sales_orders.tabs.tomorrow",
-            "line": 442,
-            "context": "441: today: t('sales_orders.tabs.today'),\n442: tomorrow: t('sales_orders.tabs.tomorrow'),\n443: pending: t('sales_orders.tabs.pending'),"
+            "line": 441,
+            "context": "440: today: t('sales_orders.tabs.today'),\n441: tomorrow: t('sales_orders.tabs.tomorrow'),\n442: pending: t('sales_orders.tabs.pending'),"
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 443,
-            "context": "442: tomorrow: t('sales_orders.tabs.tomorrow'),\n443: pending: t('sales_orders.tabs.pending'),\n444: in_process: t('sales_orders.in_process_orders'),"
+            "line": 442,
+            "context": "441: tomorrow: t('sales_orders.tabs.tomorrow'),\n442: pending: t('sales_orders.tabs.pending'),\n443: in_process: t('sales_orders.in_process_orders'),"
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 444,
-            "context": "443: pending: t('sales_orders.tabs.pending'),\n444: in_process: t('sales_orders.in_process_orders'),\n445: week: t('sales_orders.tabs.week'),"
+            "line": 443,
+            "context": "442: pending: t('sales_orders.tabs.pending'),\n443: in_process: t('sales_orders.in_process_orders'),\n444: week: t('sales_orders.tabs.week'),"
           },
           {
             "key": "sales_orders.tabs.week",
-            "line": 445,
-            "context": "444: in_process: t('sales_orders.in_process_orders'),\n445: week: t('sales_orders.tabs.week'),\n446: all: t('sales_orders.tabs.all'),"
+            "line": 444,
+            "context": "443: in_process: t('sales_orders.in_process_orders'),\n444: week: t('sales_orders.tabs.week'),\n445: all: t('sales_orders.tabs.all'),"
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 446,
-            "context": "445: week: t('sales_orders.tabs.week'),\n446: all: t('sales_orders.tabs.all'),\n447: deleted: t('sales_orders.tabs.deleted')"
+            "line": 445,
+            "context": "444: week: t('sales_orders.tabs.week'),\n445: all: t('sales_orders.tabs.all'),\n446: deleted: t('sales_orders.tabs.deleted')"
           },
           {
             "key": "sales_orders.tabs.deleted",
-            "line": 447,
-            "context": "446: all: t('sales_orders.tabs.all'),\n447: deleted: t('sales_orders.tabs.deleted')\n448: };"
+            "line": 446,
+            "context": "445: all: t('sales_orders.tabs.all'),\n446: deleted: t('sales_orders.tabs.deleted')\n447: };"
+          },
+          {
+            "key": "recon_defaults.default_customer",
+            "line": 457,
+            "context": "456: order_number: order.orderNumber,\n457: customer_name: t('recon_defaults.default_customer'),\n458: customerName: t('recon_defaults.default_customer'),"
           },
           {
             "key": "recon_defaults.default_customer",
             "line": 458,
-            "context": "457: order_number: order.orderNumber,\n458: customer_name: t('recon_defaults.default_customer'),\n459: customerName: t('recon_defaults.default_customer'),"
+            "context": "457: customer_name: t('recon_defaults.default_customer'),\n458: customerName: t('recon_defaults.default_customer'),\n459: dealershipName: order.dealershipName || 'Unknown Dealer',"
           },
           {
-            "key": "recon_defaults.default_customer",
-            "line": 459,
-            "context": "458: customer_name: t('recon_defaults.default_customer'),\n459: customerName: t('recon_defaults.default_customer'),\n460: dealershipName: order.dealershipName || 'Unknown Dealer',"
+            "key": "recon_defaults.default_service",
+            "line": 486,
+            "context": "485: // Default service info for recon\n486: service_type: t('recon_defaults.default_service'),\n487: service: t('recon_defaults.default_service'),"
           },
           {
             "key": "recon_defaults.default_service",
             "line": 487,
-            "context": "486: // Default service info for recon\n487: service_type: t('recon_defaults.default_service'),\n488: service: t('recon_defaults.default_service'),"
+            "context": "486: service_type: t('recon_defaults.default_service'),\n487: service: t('recon_defaults.default_service'),\n488: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,"
           },
           {
             "key": "recon_defaults.default_service",
             "line": 488,
-            "context": "487: service_type: t('recon_defaults.default_service'),\n488: service: t('recon_defaults.default_service'),\n489: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,"
-          },
-          {
-            "key": "recon_defaults.default_service",
-            "line": 489,
-            "context": "488: service: t('recon_defaults.default_service'),\n489: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,\n490: price: order.reconCost || 0,"
+            "context": "487: service: t('recon_defaults.default_service'),\n488: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,\n489: price: order.reconCost || 0,"
           },
           {
             "key": "common.general",
-            "line": 489,
-            "context": "488: service: t('recon_defaults.default_service'),\n489: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,\n490: price: order.reconCost || 0,"
+            "line": 488,
+            "context": "487: service: t('recon_defaults.default_service'),\n488: description: `${t('recon_defaults.default_service')} - ${order.reconCategory || t('common.general')}`,\n489: price: order.reconCost || 0,"
           },
           {
             "key": "recon_defaults.default_advisor",
-            "line": 491,
-            "context": "490: price: order.reconCost || 0,\n491: advisor: t('recon_defaults.default_advisor'),\n492: department: t('recon_defaults.default_department')"
+            "line": 490,
+            "context": "489: price: order.reconCost || 0,\n490: advisor: t('recon_defaults.default_advisor'),\n491: department: t('recon_defaults.default_department')"
           },
           {
             "key": "recon_defaults.default_department",
-            "line": 492,
-            "context": "491: advisor: t('recon_defaults.default_advisor'),\n492: department: t('recon_defaults.default_department')\n493: };"
+            "line": 491,
+            "context": "490: advisor: t('recon_defaults.default_advisor'),\n491: department: t('recon_defaults.default_department')\n492: };"
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 507,
-            "context": "506: variant: 'destructive',\n507: description: t('common.action_buttons.print_failed') + ': No orders to print'\n508: });"
+            "line": 515,
+            "context": "514: variant: 'destructive',\n515: description: t('common.action_buttons.print_failed') + ': No orders to print'\n516: });"
           },
           {
             "key": "common.action_buttons.print_success",
-            "line": 523,
-            "context": "522: toast({\n523: description: t('common.action_buttons.print_success')\n524: });"
+            "line": 531,
+            "context": "530: toast({\n531: description: t('common.action_buttons.print_success')\n532: });"
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 529,
-            "context": "528: variant: 'destructive',\n529: description: t('common.action_buttons.print_failed')\n530: });"
+            "line": 537,
+            "context": "536: variant: 'destructive',\n537: description: t('common.action_buttons.print_failed')\n538: });"
           },
           {
             "key": "pages.recon_orders",
-            "line": 549,
-            "context": "548: <div className=\"flex justify-between items-center\">\n549: <h1 className=\"text-2xl font-bold\">{t('pages.recon_orders')}</h1>\n550: <div className=\"flex items-center gap-2 sm:gap-3\">"
+            "line": 557,
+            "context": "556: <div className=\"flex justify-between items-center\">\n557: <h1 className=\"text-2xl font-bold\">{t('pages.recon_orders')}</h1>\n558: <div className=\"flex items-center gap-2 sm:gap-3\">"
           },
           {
             "key": "accessibility.recon_orders.refresh_button",
-            "line": 560,
-            "context": "559: disabled={isRefreshing}\n560: aria-label={t('accessibility.recon_orders.refresh_button')}\n561: aria-busy={isRefreshing}"
+            "line": 568,
+            "context": "567: disabled={isRefreshing}\n568: aria-label={t('accessibility.recon_orders.refresh_button')}\n569: aria-busy={isRefreshing}"
           },
           {
             "key": "common.refresh",
-            "line": 564,
-            "context": "563: <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''} sm:mr-2`} />\n564: <span className=\"hidden sm:inline\">{t('common.refresh')}</span>\n565: </Button>"
+            "line": 572,
+            "context": "571: <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''} sm:mr-2`} />\n572: <span className=\"hidden sm:inline\">{t('common.refresh')}</span>\n573: </Button>"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 570,
-            "context": "569: disabled={!canCreate}\n570: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n571: aria-label={t('accessibility.recon_orders.create_button')}"
+            "line": 578,
+            "context": "577: disabled={!canCreate}\n578: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n579: aria-label={t('accessibility.recon_orders.create_button')}"
           },
           {
             "key": "accessibility.recon_orders.create_button",
-            "line": 571,
-            "context": "570: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n571: aria-label={t('accessibility.recon_orders.create_button')}\n572: >"
+            "line": 579,
+            "context": "578: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n579: aria-label={t('accessibility.recon_orders.create_button')}\n580: >"
           },
           {
             "key": "recon.new_recon_order",
-            "line": 574,
-            "context": "573: <Plus className=\"h-4 w-4 sm:mr-2\" />\n574: <span className=\"hidden sm:inline\">{t('recon.new_recon_order')}</span>\n575: </Button>"
+            "line": 582,
+            "context": "581: <Plus className=\"h-4 w-4 sm:mr-2\" />\n582: <span className=\"hidden sm:inline\">{t('recon.new_recon_order')}</span>\n583: </Button>"
           },
           {
             "key": "accessibility.recon_orders.main_content",
-            "line": 598,
-            "context": "597: {/* Main Content - Direct rendering for maximum speed */}\n598: <main aria-label={t('accessibility.recon_orders.main_content')} className=\"space-y-6\">\n599: <div className=\"space-y-4\">"
+            "line": 606,
+            "context": "605: {/* Main Content - Direct rendering for maximum speed */}\n606: <main aria-label={t('accessibility.recon_orders.main_content')} className=\"space-y-6\">\n607: <div className=\"space-y-4\">"
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 603,
-            "context": "602: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n603: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n604: </h2>"
+            "line": 611,
+            "context": "610: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n611: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n612: </h2>"
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 603,
-            "context": "602: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n603: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n604: </h2>"
+            "line": 611,
+            "context": "610: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n611: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n612: </h2>"
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 603,
-            "context": "602: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n603: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n604: </h2>"
+            "line": 611,
+            "context": "610: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n611: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n612: </h2>"
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 603,
-            "context": "602: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n603: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n604: </h2>"
+            "line": 611,
+            "context": "610: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n611: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n612: </h2>"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 692,
-            "context": "691: <AlertDialogHeader>\n692: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n693: <AlertDialogDescription>"
+            "line": 700,
+            "context": "699: <AlertDialogHeader>\n700: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n701: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 694,
-            "context": "693: <AlertDialogDescription>\n694: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n695: </AlertDialogDescription>"
+            "line": 702,
+            "context": "701: <AlertDialogDescription>\n702: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n703: </AlertDialogDescription>"
           },
           {
             "key": "common.cancel",
-            "line": 698,
-            "context": "697: <AlertDialogFooter>\n698: <AlertDialogCancel>{t('common.cancel', 'Cancel')}</AlertDialogCancel>\n699: <AlertDialogAction"
+            "line": 706,
+            "context": "705: <AlertDialogFooter>\n706: <AlertDialogCancel>{t('common.cancel', 'Cancel')}</AlertDialogCancel>\n707: <AlertDialogAction"
           },
           {
             "key": "common.delete",
-            "line": 703,
-            "context": "702: >\n703: {t('common.delete', 'Delete')}\n704: </AlertDialogAction>"
+            "line": 711,
+            "context": "710: >\n711: {t('common.delete', 'Delete')}\n712: </AlertDialogAction>"
           }
         ],
         "coverage": 98,
@@ -91284,57 +91284,57 @@
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 423,
+            "line": 432,
             "exists": false
           },
           {
             "key": "common.action_buttons.print_success",
-            "line": 440,
+            "line": 449,
             "exists": false
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 446,
+            "line": 455,
             "exists": false
           },
           {
             "key": "pages.sales_orders",
-            "line": 468,
+            "line": 477,
             "exists": false
           },
           {
             "key": "common.refresh",
-            "line": 481,
-            "exists": false
-          },
-          {
-            "key": "errors.no_permission_create_order",
-            "line": 487,
-            "exists": false
-          },
-          {
-            "key": "common.new_order",
             "line": 490,
             "exists": false
           },
           {
+            "key": "errors.no_permission_create_order",
+            "line": 496,
+            "exists": false
+          },
+          {
+            "key": "common.new_order",
+            "line": 499,
+            "exists": false
+          },
+          {
             "key": "orders.confirm_delete_title",
-            "line": 634,
+            "line": 643,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 636,
+            "line": 645,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 640,
+            "line": 649,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 645,
+            "line": 654,
             "exists": false
           }
         ],
@@ -91461,58 +91461,58 @@
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 423,
-            "context": "422: variant: 'destructive',\n423: description: t('common.action_buttons.print_failed') + ': No orders to print'\n424: });"
+            "line": 432,
+            "context": "431: variant: 'destructive',\n432: description: t('common.action_buttons.print_failed') + ': No orders to print'\n433: });"
           },
           {
             "key": "common.action_buttons.print_success",
-            "line": 440,
-            "context": "439: toast({\n440: description: t('common.action_buttons.print_success')\n441: });"
+            "line": 449,
+            "context": "448: toast({\n449: description: t('common.action_buttons.print_success')\n450: });"
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 446,
-            "context": "445: variant: 'destructive',\n446: description: t('common.action_buttons.print_failed')\n447: });"
+            "line": 455,
+            "context": "454: variant: 'destructive',\n455: description: t('common.action_buttons.print_failed')\n456: });"
           },
           {
             "key": "pages.sales_orders",
-            "line": 468,
-            "context": "467: <div className=\"flex justify-between items-center\">\n468: <h1 className=\"text-2xl font-bold\">{t('pages.sales_orders')}</h1>\n469: <div className=\"flex items-center gap-2 sm:gap-3\">"
+            "line": 477,
+            "context": "476: <div className=\"flex justify-between items-center\">\n477: <h1 className=\"text-2xl font-bold\">{t('pages.sales_orders')}</h1>\n478: <div className=\"flex items-center gap-2 sm:gap-3\">"
           },
           {
             "key": "common.refresh",
-            "line": 481,
-            "context": "480: <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''} sm:mr-2`} />\n481: <span className=\"hidden sm:inline\">{t('common.refresh')}</span>\n482: </Button>"
+            "line": 490,
+            "context": "489: <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''} sm:mr-2`} />\n490: <span className=\"hidden sm:inline\">{t('common.refresh')}</span>\n491: </Button>"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 487,
-            "context": "486: disabled={!canCreate}\n487: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n488: >"
+            "line": 496,
+            "context": "495: disabled={!canCreate}\n496: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n497: >"
           },
           {
             "key": "common.new_order",
-            "line": 490,
-            "context": "489: <Plus className=\"h-4 w-4 sm:mr-2\" />\n490: <span className=\"hidden sm:inline\">{t('common.new_order')}</span>\n491: </Button>"
+            "line": 499,
+            "context": "498: <Plus className=\"h-4 w-4 sm:mr-2\" />\n499: <span className=\"hidden sm:inline\">{t('common.new_order')}</span>\n500: </Button>"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 634,
-            "context": "633: <AlertDialogHeader>\n634: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n635: <AlertDialogDescription>"
+            "line": 643,
+            "context": "642: <AlertDialogHeader>\n643: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n644: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 636,
-            "context": "635: <AlertDialogDescription>\n636: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n637: </AlertDialogDescription>"
+            "line": 645,
+            "context": "644: <AlertDialogDescription>\n645: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n646: </AlertDialogDescription>"
           },
           {
             "key": "common.cancel",
-            "line": 640,
-            "context": "639: <AlertDialogFooter>\n640: <AlertDialogCancel>{t('common.cancel', 'Cancel')}</AlertDialogCancel>\n641: <AlertDialogAction"
+            "line": 649,
+            "context": "648: <AlertDialogFooter>\n649: <AlertDialogCancel>{t('common.cancel', 'Cancel')}</AlertDialogCancel>\n650: <AlertDialogAction"
           },
           {
             "key": "common.delete",
-            "line": 645,
-            "context": "644: >\n645: {t('common.delete', 'Delete')}\n646: </AlertDialogAction>"
+            "line": 654,
+            "context": "653: >\n654: {t('common.delete', 'Delete')}\n655: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -91524,445 +91524,445 @@
         "translationCalls": [
           {
             "key": "orders.order_not_found",
-            "line": 129,
+            "line": 130,
             "exists": false
           },
           {
             "key": "errors.no_permission",
-            "line": 141,
-            "exists": false
-          },
-          {
-            "key": "errors.no_permission_create_order",
             "line": 142,
             "exists": false
           },
           {
-            "key": "errors.no_permission",
-            "line": 157,
+            "key": "errors.no_permission_create_order",
+            "line": 143,
             "exists": false
           },
           {
-            "key": "errors.no_permission_create_order",
+            "key": "errors.no_permission",
             "line": 158,
             "exists": false
           },
           {
+            "key": "errors.no_permission_create_order",
+            "line": 159,
+            "exists": false
+          },
+          {
             "key": "orders.deleted_success",
-            "line": 192,
+            "line": 193,
             "exists": false
           },
           {
             "key": "orders.delete_error",
-            "line": 198,
+            "line": 199,
             "exists": false
           },
           {
             "key": "orders.multiple_created_successfully",
-            "line": 223,
+            "line": 224,
             "exists": false
           },
           {
             "key": "orders.updated_successfully",
-            "line": 235,
+            "line": 236,
             "exists": false
           },
           {
             "key": "orders.created_successfully",
-            "line": 243,
+            "line": 244,
             "exists": false
           },
           {
             "key": "orders.save_failed",
-            "line": 253,
+            "line": 254,
             "exists": false
           },
           {
             "key": "orders.order_not_found",
-            "line": 270,
+            "line": 271,
             "exists": false
           },
           {
             "key": "errors.no_permission_status_change",
-            "line": 287,
+            "line": 288,
             "exists": false
           },
           {
             "key": "common.status.${newStatus}",
-            "line": 306,
+            "line": 307,
             "exists": false
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 308,
+            "line": 309,
             "exists": false
           },
           {
             "key": "orders.status_update_failed",
-            "line": 323,
+            "line": 324,
             "exists": false
           },
           {
             "key": "orders.field_updated_successfully",
-            "line": 342,
+            "line": 343,
             "exists": false
           },
           {
             "key": "orders.update_failed",
-            "line": 348,
+            "line": 349,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.dashboard",
-            "line": 365,
-            "exists": false
-          },
-          {
-            "key": "sales_orders.tabs.today",
             "line": 366,
             "exists": false
           },
           {
-            "key": "sales_orders.tabs.tomorrow",
+            "key": "sales_orders.tabs.today",
             "line": 367,
             "exists": false
           },
           {
-            "key": "sales_orders.tabs.pending",
+            "key": "sales_orders.tabs.tomorrow",
             "line": 368,
             "exists": false
           },
           {
-            "key": "sales_orders.in_process_orders",
+            "key": "sales_orders.tabs.pending",
             "line": 369,
             "exists": false
           },
           {
-            "key": "sales_orders.tabs.week",
+            "key": "sales_orders.in_process_orders",
             "line": 370,
             "exists": false
           },
           {
-            "key": "sales_orders.tabs.all",
+            "key": "sales_orders.tabs.week",
             "line": 371,
             "exists": false
           },
           {
-            "key": "sales_orders.tabs.queued",
+            "key": "sales_orders.tabs.all",
             "line": 372,
             "exists": false
           },
           {
-            "key": "sales_orders.tabs.deleted",
+            "key": "sales_orders.tabs.queued",
             "line": 373,
             "exists": false
           },
           {
+            "key": "sales_orders.tabs.deleted",
+            "line": 374,
+            "exists": false
+          },
+          {
             "key": "common.action_buttons.print_failed",
-            "line": 383,
+            "line": 384,
             "exists": false
           },
           {
             "key": "common.action_buttons.print_success",
-            "line": 400,
+            "line": 401,
             "exists": false
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 406,
+            "line": 407,
             "exists": false
           },
           {
             "key": "pages.service_orders",
-            "line": 434,
+            "line": 435,
             "exists": false
           },
           {
             "key": "accessibility.service_orders.refresh_button",
-            "line": 445,
+            "line": 446,
             "exists": false
           },
           {
             "key": "common.refresh",
-            "line": 449,
+            "line": 450,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 455,
-            "exists": false
-          },
-          {
-            "key": "accessibility.service_orders.create_button",
             "line": 456,
             "exists": false
           },
           {
+            "key": "accessibility.service_orders.create_button",
+            "line": 457,
+            "exists": false
+          },
+          {
             "key": "common.new_order",
-            "line": 459,
+            "line": 460,
             "exists": false
           },
           {
             "key": "accessibility.service_orders.main_content",
-            "line": 494,
+            "line": 495,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 507,
+            "line": 508,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.queued",
-            "line": 507,
+            "line": 508,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 507,
+            "line": 508,
             "exists": false
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 595,
+            "line": 596,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 597,
+            "line": 598,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 601,
+            "line": 602,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 606,
+            "line": 607,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "orders.order_not_found",
-            "line": 129,
-            "context": "128: toast({\n129: description: t('orders.order_not_found', 'Order not found'),\n130: variant: 'destructive'"
+            "line": 130,
+            "context": "129: toast({\n130: description: t('orders.order_not_found', 'Order not found'),\n131: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission",
-            "line": 141,
-            "context": "140: toast({\n141: title: t('errors.no_permission', 'No Permission'),\n142: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
-          },
-          {
-            "key": "errors.no_permission_create_order",
             "line": 142,
-            "context": "141: title: t('errors.no_permission', 'No Permission'),\n142: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n143: variant: 'destructive'"
-          },
-          {
-            "key": "errors.no_permission",
-            "line": 157,
-            "context": "156: toast({\n157: title: t('errors.no_permission', 'No Permission'),\n158: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+            "context": "141: toast({\n142: title: t('errors.no_permission', 'No Permission'),\n143: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
           },
           {
             "key": "errors.no_permission_create_order",
+            "line": 143,
+            "context": "142: title: t('errors.no_permission', 'No Permission'),\n143: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n144: variant: 'destructive'"
+          },
+          {
+            "key": "errors.no_permission",
             "line": 158,
-            "context": "157: title: t('errors.no_permission', 'No Permission'),\n158: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n159: variant: 'destructive'"
+            "context": "157: toast({\n158: title: t('errors.no_permission', 'No Permission'),\n159: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),"
+          },
+          {
+            "key": "errors.no_permission_create_order",
+            "line": 159,
+            "context": "158: title: t('errors.no_permission', 'No Permission'),\n159: description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),\n160: variant: 'destructive'"
           },
           {
             "key": "orders.deleted_success",
-            "line": 192,
-            "context": "191: toast({\n192: title: t('orders.deleted_success', 'Order deleted successfully')\n193: });"
+            "line": 193,
+            "context": "192: toast({\n193: title: t('orders.deleted_success', 'Order deleted successfully')\n194: });"
           },
           {
             "key": "orders.delete_error",
-            "line": 198,
-            "context": "197: variant: 'destructive',\n198: title: t('orders.delete_error', 'Failed to delete order')\n199: });"
+            "line": 199,
+            "context": "198: variant: 'destructive',\n199: title: t('orders.delete_error', 'Failed to delete order')\n200: });"
           },
           {
             "key": "orders.multiple_created_successfully",
-            "line": 223,
-            "context": "222: \n223: const message = t('orders.multiple_created_successfully', {\n224: count: createdOrders.length,"
+            "line": 224,
+            "context": "223: \n224: const message = t('orders.multiple_created_successfully', {\n225: count: createdOrders.length,"
           },
           {
             "key": "orders.updated_successfully",
-            "line": 235,
-            "context": "234: await updateOrder(selectedOrder.id, orderData);\n235: const message = t('orders.updated_successfully', 'Order updated successfully');\n236: toast({"
+            "line": 236,
+            "context": "235: await updateOrder(selectedOrder.id, orderData);\n236: const message = t('orders.updated_successfully', 'Order updated successfully');\n237: toast({"
           },
           {
             "key": "orders.created_successfully",
-            "line": 243,
-            "context": "242: await createOrder(orderData);\n243: const message = t('orders.created_successfully', 'Order created successfully');\n244: toast({"
+            "line": 244,
+            "context": "243: await createOrder(orderData);\n244: const message = t('orders.created_successfully', 'Order created successfully');\n245: toast({"
           },
           {
             "key": "orders.save_failed",
-            "line": 253,
-            "context": "252: console.error('Error saving order:', error);\n253: const message = t('orders.save_failed', 'Failed to save order');\n254: toast({"
+            "line": 254,
+            "context": "253: console.error('Error saving order:', error);\n254: const message = t('orders.save_failed', 'Failed to save order');\n255: toast({"
           },
           {
             "key": "orders.order_not_found",
-            "line": 270,
-            "context": "269: toast({\n270: description: t('orders.order_not_found'),\n271: variant: 'destructive'"
+            "line": 271,
+            "context": "270: toast({\n271: description: t('orders.order_not_found'),\n272: variant: 'destructive'"
           },
           {
             "key": "errors.no_permission_status_change",
-            "line": 287,
-            "context": "286: toast({\n287: description: t('errors.no_permission_status_change', 'You do not have permission to change this status'),\n288: variant: 'destructive'"
+            "line": 288,
+            "context": "287: toast({\n288: description: t('errors.no_permission_status_change', 'You do not have permission to change this status'),\n289: variant: 'destructive'"
           },
           {
             "key": "common.status.${newStatus}",
-            "line": 306,
-            "context": "305: // ✅ 4. Show success toast\n306: const statusLabel = t(`common.status.${newStatus}`, newStatus);\n307: toast({"
+            "line": 307,
+            "context": "306: // ✅ 4. Show success toast\n307: const statusLabel = t(`common.status.${newStatus}`, newStatus);\n308: toast({"
           },
           {
             "key": "orders.status_updated_successfully",
-            "line": 308,
-            "context": "307: toast({\n308: description: t('orders.status_updated_successfully', {\n309: defaultValue: `Status updated to ${statusLabel}`,"
+            "line": 309,
+            "context": "308: toast({\n309: description: t('orders.status_updated_successfully', {\n310: defaultValue: `Status updated to ${statusLabel}`,"
           },
           {
             "key": "orders.status_update_failed",
-            "line": 323,
-            "context": "322: variant: 'destructive',\n323: description: t('orders.status_update_failed', 'Failed to update status')\n324: });"
+            "line": 324,
+            "context": "323: variant: 'destructive',\n324: description: t('orders.status_update_failed', 'Failed to update status')\n325: });"
           },
           {
             "key": "orders.field_updated_successfully",
-            "line": 342,
-            "context": "341: toast({\n342: description: t('orders.field_updated_successfully', 'Order updated successfully')\n343: });"
+            "line": 343,
+            "context": "342: toast({\n343: description: t('orders.field_updated_successfully', 'Order updated successfully')\n344: });"
           },
           {
             "key": "orders.update_failed",
-            "line": 348,
-            "context": "347: variant: 'destructive',\n348: description: t('orders.update_failed', 'Failed to update order')\n349: });"
+            "line": 349,
+            "context": "348: variant: 'destructive',\n349: description: t('orders.update_failed', 'Failed to update order')\n350: });"
           },
           {
             "key": "sales_orders.tabs.dashboard",
-            "line": 365,
-            "context": "364: const titleMap: Record<string, string> = {\n365: dashboard: t('sales_orders.tabs.dashboard'),\n366: today: t('sales_orders.tabs.today'),"
+            "line": 366,
+            "context": "365: const titleMap: Record<string, string> = {\n366: dashboard: t('sales_orders.tabs.dashboard'),\n367: today: t('sales_orders.tabs.today'),"
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 366,
-            "context": "365: dashboard: t('sales_orders.tabs.dashboard'),\n366: today: t('sales_orders.tabs.today'),\n367: tomorrow: t('sales_orders.tabs.tomorrow'),"
+            "line": 367,
+            "context": "366: dashboard: t('sales_orders.tabs.dashboard'),\n367: today: t('sales_orders.tabs.today'),\n368: tomorrow: t('sales_orders.tabs.tomorrow'),"
           },
           {
             "key": "sales_orders.tabs.tomorrow",
-            "line": 367,
-            "context": "366: today: t('sales_orders.tabs.today'),\n367: tomorrow: t('sales_orders.tabs.tomorrow'),\n368: pending: t('sales_orders.tabs.pending'),"
+            "line": 368,
+            "context": "367: today: t('sales_orders.tabs.today'),\n368: tomorrow: t('sales_orders.tabs.tomorrow'),\n369: pending: t('sales_orders.tabs.pending'),"
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 368,
-            "context": "367: tomorrow: t('sales_orders.tabs.tomorrow'),\n368: pending: t('sales_orders.tabs.pending'),\n369: in_process: t('sales_orders.in_process_orders'),"
+            "line": 369,
+            "context": "368: tomorrow: t('sales_orders.tabs.tomorrow'),\n369: pending: t('sales_orders.tabs.pending'),\n370: in_process: t('sales_orders.in_process_orders'),"
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 369,
-            "context": "368: pending: t('sales_orders.tabs.pending'),\n369: in_process: t('sales_orders.in_process_orders'),\n370: week: t('sales_orders.tabs.week'),"
+            "line": 370,
+            "context": "369: pending: t('sales_orders.tabs.pending'),\n370: in_process: t('sales_orders.in_process_orders'),\n371: week: t('sales_orders.tabs.week'),"
           },
           {
             "key": "sales_orders.tabs.week",
-            "line": 370,
-            "context": "369: in_process: t('sales_orders.in_process_orders'),\n370: week: t('sales_orders.tabs.week'),\n371: all: t('sales_orders.tabs.all'),"
+            "line": 371,
+            "context": "370: in_process: t('sales_orders.in_process_orders'),\n371: week: t('sales_orders.tabs.week'),\n372: all: t('sales_orders.tabs.all'),"
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 371,
-            "context": "370: week: t('sales_orders.tabs.week'),\n371: all: t('sales_orders.tabs.all'),\n372: queued: t('sales_orders.tabs.queued'),"
+            "line": 372,
+            "context": "371: week: t('sales_orders.tabs.week'),\n372: all: t('sales_orders.tabs.all'),\n373: queued: t('sales_orders.tabs.queued'),"
           },
           {
             "key": "sales_orders.tabs.queued",
-            "line": 372,
-            "context": "371: all: t('sales_orders.tabs.all'),\n372: queued: t('sales_orders.tabs.queued'),\n373: deleted: t('sales_orders.tabs.deleted')"
+            "line": 373,
+            "context": "372: all: t('sales_orders.tabs.all'),\n373: queued: t('sales_orders.tabs.queued'),\n374: deleted: t('sales_orders.tabs.deleted')"
           },
           {
             "key": "sales_orders.tabs.deleted",
-            "line": 373,
-            "context": "372: queued: t('sales_orders.tabs.queued'),\n373: deleted: t('sales_orders.tabs.deleted')\n374: };"
+            "line": 374,
+            "context": "373: queued: t('sales_orders.tabs.queued'),\n374: deleted: t('sales_orders.tabs.deleted')\n375: };"
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 383,
-            "context": "382: variant: 'destructive',\n383: description: t('common.action_buttons.print_failed') + ': No orders to print'\n384: });"
+            "line": 384,
+            "context": "383: variant: 'destructive',\n384: description: t('common.action_buttons.print_failed') + ': No orders to print'\n385: });"
           },
           {
             "key": "common.action_buttons.print_success",
-            "line": 400,
-            "context": "399: toast({\n400: description: t('common.action_buttons.print_success')\n401: });"
+            "line": 401,
+            "context": "400: toast({\n401: description: t('common.action_buttons.print_success')\n402: });"
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 406,
-            "context": "405: variant: 'destructive',\n406: description: t('common.action_buttons.print_failed')\n407: });"
+            "line": 407,
+            "context": "406: variant: 'destructive',\n407: description: t('common.action_buttons.print_failed')\n408: });"
           },
           {
             "key": "pages.service_orders",
-            "line": 434,
-            "context": "433: <div className=\"flex justify-between items-center\">\n434: <h1 className=\"text-2xl font-bold\">{t('pages.service_orders')}</h1>\n435: <div className=\"flex items-center gap-2 sm:gap-3\">"
+            "line": 435,
+            "context": "434: <div className=\"flex justify-between items-center\">\n435: <h1 className=\"text-2xl font-bold\">{t('pages.service_orders')}</h1>\n436: <div className=\"flex items-center gap-2 sm:gap-3\">"
           },
           {
             "key": "accessibility.service_orders.refresh_button",
-            "line": 445,
-            "context": "444: disabled={isRefreshing}\n445: aria-label={t('accessibility.service_orders.refresh_button', 'Refresh service orders')}\n446: aria-busy={isRefreshing}"
+            "line": 446,
+            "context": "445: disabled={isRefreshing}\n446: aria-label={t('accessibility.service_orders.refresh_button', 'Refresh service orders')}\n447: aria-busy={isRefreshing}"
           },
           {
             "key": "common.refresh",
-            "line": 449,
-            "context": "448: <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''} sm:mr-2`} />\n449: <span className=\"hidden sm:inline\">{t('common.refresh')}</span>\n450: </Button>"
+            "line": 450,
+            "context": "449: <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''} sm:mr-2`} />\n450: <span className=\"hidden sm:inline\">{t('common.refresh')}</span>\n451: </Button>"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 455,
-            "context": "454: disabled={!canCreate}\n455: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n456: aria-label={t('accessibility.service_orders.create_button', 'Create new service order')}"
+            "line": 456,
+            "context": "455: disabled={!canCreate}\n456: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n457: aria-label={t('accessibility.service_orders.create_button', 'Create new service order')}"
           },
           {
             "key": "accessibility.service_orders.create_button",
-            "line": 456,
-            "context": "455: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n456: aria-label={t('accessibility.service_orders.create_button', 'Create new service order')}\n457: >"
+            "line": 457,
+            "context": "456: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n457: aria-label={t('accessibility.service_orders.create_button', 'Create new service order')}\n458: >"
           },
           {
             "key": "common.new_order",
-            "line": 459,
-            "context": "458: <Plus className=\"h-4 w-4 sm:mr-2\" />\n459: <span className=\"hidden sm:inline\">{t('common.new_order')}</span>\n460: </Button>"
+            "line": 460,
+            "context": "459: <Plus className=\"h-4 w-4 sm:mr-2\" />\n460: <span className=\"hidden sm:inline\">{t('common.new_order')}</span>\n461: </Button>"
           },
           {
             "key": "accessibility.service_orders.main_content",
-            "line": 494,
-            "context": "493: {/* Main Content Area - Direct rendering for maximum speed */}\n494: <main className=\"space-y-6\" aria-label={t('accessibility.service_orders.main_content', 'Service orders main content')}>\n495: <OrderViewErrorBoundary>"
+            "line": 495,
+            "context": "494: {/* Main Content Area - Direct rendering for maximum speed */}\n495: <main className=\"space-y-6\" aria-label={t('accessibility.service_orders.main_content', 'Service orders main content')}>\n496: <OrderViewErrorBoundary>"
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 507,
-            "context": "506: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n507: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'queued' ? t('sales_orders.tabs.queued') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n508: </h2>"
+            "line": 508,
+            "context": "507: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n508: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'queued' ? t('sales_orders.tabs.queued') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n509: </h2>"
           },
           {
             "key": "sales_orders.tabs.queued",
-            "line": 507,
-            "context": "506: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n507: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'queued' ? t('sales_orders.tabs.queued') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n508: </h2>"
+            "line": 508,
+            "context": "507: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n508: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'queued' ? t('sales_orders.tabs.queued') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n509: </h2>"
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 507,
-            "context": "506: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n507: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'queued' ? t('sales_orders.tabs.queued') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n508: </h2>"
+            "line": 508,
+            "context": "507: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n508: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'queued' ? t('sales_orders.tabs.queued') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n509: </h2>"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 595,
-            "context": "594: <AlertDialogHeader>\n595: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n596: <AlertDialogDescription>"
+            "line": 596,
+            "context": "595: <AlertDialogHeader>\n596: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n597: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 597,
-            "context": "596: <AlertDialogDescription>\n597: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n598: </AlertDialogDescription>"
+            "line": 598,
+            "context": "597: <AlertDialogDescription>\n598: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n599: </AlertDialogDescription>"
           },
           {
             "key": "common.cancel",
-            "line": 601,
-            "context": "600: <AlertDialogFooter>\n601: <AlertDialogCancel>{t('common.cancel', 'Cancel')}</AlertDialogCancel>\n602: <AlertDialogAction"
+            "line": 602,
+            "context": "601: <AlertDialogFooter>\n602: <AlertDialogCancel>{t('common.cancel', 'Cancel')}</AlertDialogCancel>\n603: <AlertDialogAction"
           },
           {
             "key": "common.delete",
-            "line": 606,
-            "context": "605: >\n606: {t('common.delete', 'Delete')}\n607: </AlertDialogAction>"
+            "line": 607,
+            "context": "606: >\n607: {t('common.delete', 'Delete')}\n608: </AlertDialogAction>"
           }
         ],
         "coverage": 100,

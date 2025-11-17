@@ -1,0 +1,11 @@
+{
+  "title": "Due Date & Time",
+  "date_placeholder": "Select due date",
+  "time_placeholder": "Select time",
+  "validation": {
+    "no_slots_available": "No time slots available",
+    "closed_sundays": "Closed on Sundays",
+    "same_day_notice": "Same-day appointments require immediate processing",
+    "business_hours_only": "Business hours only"
+  }
+}

@@ -101,7 +101,8 @@ const rateLimiter = {
 };
 
 export default function Auth() {
-  const { t } = useTranslation();
+  // 🚀 CODE SPLITTING: Load auth namespace + common
+  const { t } = useTranslation(['auth', 'common']);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');

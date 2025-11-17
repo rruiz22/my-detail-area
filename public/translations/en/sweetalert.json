@@ -1,0 +1,10 @@
+{
+  "confirm_delete": "Delete Order?",
+  "delete_warning": "This action cannot be undone. The order will be permanently deleted.",
+  "confirm_status": "Change Status?",
+  "success": "Success!",
+  "error": "Error",
+  "info": "Information",
+  "yes_delete": "Yes, delete it!",
+  "cancel": "Cancel"
+}

@@ -1,0 +1,22 @@
+{
+  "title": "HistÃ³rico de DigitalizaÃ§Ãµes",
+  "subtitle": "DigitalizaÃ§Ãµes VIN anteriores e resultados",
+  "filter_all": "Todas as DigitalizaÃ§Ãµes",
+  "filter_valid": "Somente VÃ¡lidos",
+  "filter_invalid": "Somente InvÃ¡lidos",
+  "filter_corrected": "Auto-corrigidos",
+  "sort_newest": "Mais Recentes Primeiro",
+  "sort_oldest": "Mais Antigos Primeiro",
+  "sort_confidence": "Maior ConfianÃ§a",
+  "clear_history": "Limpar HistÃ³rico",
+  "confirm_clear": "Tem certeza de que deseja limpar o histÃ³rico de digitalizaÃ§Ãµes?",
+  "history_cleared": "HistÃ³rico de digitalizaÃ§Ãµes limpo",
+  "no_history": "Sem histÃ³rico de digitalizaÃ§Ãµes",
+  "scanned_at": "Digitalizado em",
+  "confidence_score": "ConfianÃ§a: {{score}}%",
+  "status_valid": "VÃ¡lido",
+  "status_invalid": "InvÃ¡lido",
+  "status_corrected": "Auto-corrigido",
+  "view_details": "Ver Detalhes",
+  "rescan": "Redigitalizar"
+}

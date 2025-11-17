@@ -1,0 +1,22 @@
+{
+  "no_stock": "No stock",
+  "vin_not_provided": "VIN not provided",
+  "due_today": "Due Today",
+  "no_orders_found": "No orders found",
+  "adjust_filters_or_create": "Try adjusting filters or creating a new order",
+  "unknown_dealer": "Unknown Dealer",
+  "unassigned": "Unassigned",
+  "no_time_set": "No time set",
+  "no_date_set": "No date set",
+  "orders_count": "{{count}} orders",
+  "page_of": "Page {{current}} of {{total}}",
+  "showing_range": "Showing {{start}}-{{end}} of {{total}} orders",
+  "view": "View",
+  "edit": "Edit",
+  "delete": "Delete",
+  "view_details": "View Details",
+  "edit_order": "Edit Order",
+  "delete_order": "Delete Order",
+  "print_order": "Print Order",
+  "items_per_page": "Items per page:"
+}

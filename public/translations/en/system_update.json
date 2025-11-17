@@ -1,0 +1,5 @@
+{
+  "title": "New Version Available",
+  "message": "Version {{version}} is ready",
+  "button": "Update Now"
+}

@@ -1,0 +1,37 @@
+{
+  "title": "Followers",
+  "loading": "Loading team...",
+  "no_followers": "No followers",
+  "add_team_member": "Add Team Member",
+  "add_follower": "Add Follower",
+  "add_follower_title": "Add Team Member as Follower",
+  "add_follower_description": "Select a team member to follow this order and receive notifications about updates.",
+  "search_team": "Search Team Members",
+  "search_placeholder": "Search by name or email...",
+  "loading_team": "Loading team...",
+  "no_team_members": "No team members found",
+  "already_following": "Following",
+  "notification_level": "Notification Level",
+  "all_notifications": "All notifications",
+  "important_only": "Important only",
+  "no_notifications": "No notifications",
+  "adding": "Adding...",
+  "added_successfully": "Follower added successfully",
+  "add_failed": "Failed to add follower",
+  "removed_successfully": "Follower removed successfully",
+  "remove_failed": "Failed to remove follower",
+  "notification_updated": "Notification level updated",
+  "notification_update_failed": "Failed to update notification level",
+  "view_all": "View All",
+  "follow_types": {
+    "assigned": "Assigned",
+    "creator": "Creator",
+    "manual": "Manual",
+    "interested": "Interested"
+  },
+  "notification_levels": {
+    "all": "All notifications",
+    "important": "Important only",
+    "none": "No notifications"
+  }
+}

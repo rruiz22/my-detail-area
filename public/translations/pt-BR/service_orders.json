@@ -1,0 +1,110 @@
+{
+  "po_number": "NÃºmero PO",
+  "ro_number": "NÃºmero RO",
+  "tag_number": "NÃºmero TAG",
+  "order_identifiers": "Identificadores de Pedido",
+  "vehicle_identification": "IdentificaÃ§Ã£o do VeÃ­culo",
+  "dealership_assignment": "ConcessionÃ¡ria e AtribuiÃ§Ã£o",
+  "customer_details": "Detalhes do Cliente",
+  "service_selection": "SeleÃ§Ã£o de ServiÃ§os",
+  "additional_notes": "Notas Adicionais",
+  "purchase_order": "Ordem de Compra",
+  "repair_order": "Ordem de Reparo",
+  "tag": "Etiqueta",
+  "service_information": "InformaÃ§Ãµes do ServiÃ§o",
+  "tabs": {
+    "dashboard": "Painel",
+    "today": "Hoje",
+    "tomorrow": "AmanhÃ£",
+    "pending": "Pendente",
+    "week": "Semana",
+    "all": "Todos os Pedidos",
+    "services": "ServiÃ§os",
+    "deleted": "ExcluÃ­dos"
+  },
+  "in_process_orders": "Pedidos em Processo",
+  "dealership": "ConcessionÃ¡ria",
+  "assignment": "AtribuiÃ§Ã£o",
+  "select_dealership": "Selecione uma concessionÃ¡ria",
+  "assigned_to": "AtribuÃ­do a",
+  "select_dealership_first": "Selecione primeiro uma concessionÃ¡ria",
+  "select_assignee": "Selecione um responsÃ¡vel",
+  "kanban": {
+    "pending_column": "Pendente",
+    "in_process_column": "Em Processo",
+    "complete_column": "ConcluÃ­do",
+    "cancelled_column": "Cancelado",
+    "no_orders": "Sem ordens de serviÃ§o",
+    "drag_orders_here": "Arraste ordens de serviÃ§o aqui"
+  },
+  "dashboard": {
+    "delayed_orders": "Pedidos Atrasados",
+    "delayed_orders_subtitle": "Requerem atenÃ§Ã£o imediata",
+    "unassigned_orders": "Pedidos NÃ£o AtribuÃ­dos",
+    "unassigned_orders_subtitle": "Aguardando atribuiÃ§Ã£o",
+    "in_progress": "Em Progresso",
+    "in_progress_subtitle": "Ordens de serviÃ§o ativas",
+    "completion_rate": "Taxa de ConclusÃ£o",
+    "progress": "Progresso",
+    "orders_completed": "{{completed}} de {{total}} ordens de serviÃ§o concluÃ­das",
+    "team_activity": "Atividade da Equipe",
+    "orders_with_comments": "Pedidos com comentÃ¡rios",
+    "total_comments": "Total de comentÃ¡rios",
+    "avg_per_order": "MÃ©dia por pedido",
+    "vehicle_insights": "AnÃ¡lise de VeÃ­culos",
+    "top_makes": "Principais Marcas:",
+    "orders_count": "{{count}} ordens de serviÃ§o",
+    "no_vehicle_data": "Sem dados de veÃ­culos ainda"
+  },
+  "filters": {
+    "overview": "VisÃ£o Geral",
+    "today": "Hoje",
+    "tomorrow": "AmanhÃ£",
+    "pending": "Pendente",
+    "in_process": "Em Processo",
+    "week": "Semana",
+    "all_orders": "Todas as Ordens de ServiÃ§o",
+    "active_filter": "Filtro ativo:",
+    "clear": "Limpar"
+  },
+  "view_modes": {
+    "table": "Tabela",
+    "kanban": "Kanban",
+    "filters": "Filtros"
+  },
+  "card": {
+    "view": "Ver",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "no_due_date": "Sem data limite",
+    "customer": "Cliente: {{name}}",
+    "tag": "Etiqueta: {{tag}}",
+    "po": "PO: {{po}}",
+    "ro": "RO: {{ro}}"
+  },
+  "search": {
+    "showing_results": "Mostrando ordens de serviÃ§o correspondentes a \"{{searchTerm}}\""
+  },
+  "table": {
+    "po_copied": "NÃºmero PO copiado para Ã¡rea de transferÃªncia",
+    "ro_copied": "NÃºmero RO copiado para Ã¡rea de transferÃªncia",
+    "po_copy_failed": "Falha ao copiar nÃºmero PO",
+    "ro_copy_failed": "Falha ao copiar nÃºmero RO",
+    "vehicle": "VeÃ­culo",
+    "tag": "Etiqueta",
+    "po": "PO",
+    "ro": "RO",
+    "tap_to_copy": "Toque para copiar completo",
+    "no_po": "Sem PO",
+    "no_ro": "Sem RO",
+    "order_id": "ID do Pedido",
+    "previous": "Anterior",
+    "next": "PrÃ³ximo"
+  },
+  "loading": {
+    "kanban_view": "Carregando visualizaÃ§Ã£o kanban",
+    "dashboard_view": "Carregando visualizaÃ§Ã£o do painel",
+    "calendar_view": "Carregando visualizaÃ§Ã£o do calendÃ¡rio",
+    "table_view": "Carregando visualizaÃ§Ã£o da tabela"
+  }
+}

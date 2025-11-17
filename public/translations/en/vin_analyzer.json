@@ -1,0 +1,21 @@
+{
+  "title": "VIN Analysis",
+  "subtitle": "Decode and validate VIN details",
+  "enter_vin": "Enter a VIN to see detailed analysis",
+  "vin_input_label": "Vehicle Identification Number (VIN)",
+  "analyze_button": "Analyze VIN",
+  "analyzing": "Analyzing...",
+  "status_valid": "Valid VIN",
+  "status_invalid": "Invalid VIN",
+  "check_digit_valid": "Check digit valid",
+  "check_digit_invalid": "Check digit invalid",
+  "manufacturer_info": "Manufacturer Info",
+  "wmi_label": "WMI (1-3):",
+  "wmi_desc": "World Manufacturer Identifier",
+  "vds_label": "VDS (4-9):",
+  "vds_desc": "Vehicle Descriptor Section",
+  "vis_label": "VIS (10-17):",
+  "vis_desc": "Vehicle Identifier Section",
+  "decoded_info": "Decoded Information",
+  "no_data": "No decoded data available"
+}

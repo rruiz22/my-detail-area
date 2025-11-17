@@ -1,0 +1,10 @@
+{
+  "confirm_delete": "Excluir Pedido?",
+  "delete_warning": "Esta aÃ§Ã£o nÃ£o pode ser desfeita. O pedido serÃ¡ excluÃ­do permanentemente.",
+  "confirm_status": "Mudar Status?",
+  "success": "Sucesso!",
+  "error": "Erro",
+  "info": "InformaÃ§Ã£o",
+  "yes_delete": "Sim, excluir",
+  "cancel": "Cancelar"
+}

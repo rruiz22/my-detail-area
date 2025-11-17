@@ -1,0 +1,10 @@
+{
+  "title": "Recon Orders",
+  "description": "Manage vehicle reconditioning orders",
+  "toast": {
+    "create_success": "Recon Order Created",
+    "create_success_description": "The reconditioning order has been created successfully",
+    "create_error": "Failed to Create Order",
+    "create_error_description": "Could not create the reconditioning order. Please try again."
+  }
+}

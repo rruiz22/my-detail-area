@@ -1,0 +1,22 @@
+{
+  "quick_order": "New Quick Order",
+  "quick_car_wash_order": "Quick Car Wash Order",
+  "edit_order": "Edit Car Wash Order",
+  "dealership": "Dealership",
+  "select_dealership": "Select dealership",
+  "vehicle_display": "Vehicle Information",
+  "stock_number": "Stock/Tag",
+  "tag": "TAG",
+  "waiter_priority": "Waiter - Customer Waiting",
+  "waiter_description": "This order will be marked as urgent priority (customer is waiting)",
+  "notes_placeholder": "Add any special instructions or details about this car wash service...",
+  "decoded": "Decoded",
+  "auto_populated": "Auto-populated from VIN",
+  "car_wash_information": "Car Wash Information",
+  "service_performer": "Service Performer",
+  "service_type": "Service Type",
+  "waiter": "Waiter",
+  "standard_wash": "Standard Wash",
+  "max_one_service": "Car wash orders can only have one service",
+  "one_service_limit": "Car wash orders can only have one service. Uncheck to select another."
+}

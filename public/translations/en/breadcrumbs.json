@@ -1,0 +1,16 @@
+{
+  "home": "Home",
+  "administration": "Administration",
+  "dealerships": "Dealerships",
+  "sales_orders": "Sales Orders",
+  "service_orders": "Service Orders",
+  "recon_orders": "Recon Orders",
+  "car_wash": "Car Wash",
+  "contacts": "Contacts",
+  "users": "Users",
+  "settings": "Settings",
+  "reports": "Reports",
+  "order": "Order",
+  "contact": "Contact",
+  "user": "User"
+}

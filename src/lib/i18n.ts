@@ -1,13 +1,18 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import Backend from 'i18next-http-backend';
 
 // 🔴 CRITICAL FIX: Use STATIC version from package.json instead of dynamic Date.now()
 // This allows proper cache validation and automatic invalidation on version bumps
-const APP_VERSION = '1.3.34'; // 🔴 CRITICAL FIX: Slack notifications complete (VIN, assignedTo, NY timezone, clean button)
+const APP_VERSION = '1.3.35'; // 🚀 Code splitting implementation (Phase 2)
 const TRANSLATION_VERSION = APP_VERSION; // Tied to app version for cache invalidation
 
+// 🎛️ FEATURE FLAG: Enable code splitting (set to false for rollback)
+// Set via environment variable: VITE_USE_CODE_SPLITTING
+const USE_CODE_SPLITTING = import.meta.env.VITE_USE_CODE_SPLITTING !== 'false';
+
 // ✅ Include app version in cache key - auto-invalidates on version change
-const TRANSLATION_CACHE_KEY = `i18n_translations_cache_${APP_VERSION}`;
+const TRANSLATION_CACHE_KEY = `i18n_translations_cache_${APP_VERSION}${USE_CODE_SPLITTING ? '_split' : ''}`;
 
 // Cache expiration time (1 hour)
 const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour
@@ -49,16 +54,10 @@ const getSavedLanguage = (): string => {
   }
 };
 
-i18n
-  .use(initReactI18next)
-  .init({
-    lng: getSavedLanguage(), // default language (safe even in private mode)
-    fallbackLng: 'en',
-    resources,
-    interpolation: {
-      escapeValue: false, // not needed for react as it escapes by default
-    },
-  });
+// 📦 CODE SPLITTING: Default namespaces to preload
+// 'common' is loaded immediately, others lazy-loaded per route
+const DEFAULT_NAMESPACE = 'common';
+const PRELOAD_NAMESPACES = ['common', 'navigation', 'messages'];
 
 // Track if initial language is being loaded
 let initialLanguageLoading: Promise<any> | null = null;
@@ -87,8 +86,12 @@ const fetchWithRetry = async (url: string, maxRetries = 2): Promise<Response> =>
   throw new Error('Max retries exceeded');
 };
 
+// ============================================================
+// LEGACY SYSTEM (Monolithic translations)
+// ============================================================
+
 // ✅ Load translation with storage cache + memory fallback + expiration + version validation
-const loadLanguage = async (language: string) => {
+const loadLanguageMonolithic = async (language: string) => {
   try {
     const cacheKey = `${TRANSLATION_CACHE_KEY}_${language}`;
     const storageAvailable = isStorageAvailable('sessionStorage');
@@ -123,7 +126,7 @@ const loadLanguage = async (language: string) => {
             if (!i18n.hasResourceBundle(language, 'translation')) {
               i18n.addResourceBundle(language, 'translation', cachedData.translations);
             }
-            console.log(`⚡ Translations loaded from sessionStorage for ${language} (v${cachedData.version})`);
+            console.log(`⚡ [MONOLITHIC] Translations loaded from sessionStorage for ${language} (v${cachedData.version})`);
             return cachedData.translations;
           }
         }
@@ -145,7 +148,7 @@ const loadLanguage = async (language: string) => {
         if (!i18n.hasResourceBundle(language, 'translation')) {
           i18n.addResourceBundle(language, 'translation', memCached.translations);
         }
-        console.log(`⚡ Translations loaded from memory cache for ${language} (v${memCached.version})`);
+        console.log(`⚡ [MONOLITHIC] Translations loaded from memory cache for ${language} (v${memCached.version})`);
         return memCached.translations;
       }
     }
@@ -192,19 +195,19 @@ const loadLanguage = async (language: string) => {
     if (storageAvailable) {
       try {
         sessionStorage.setItem(cacheKey, JSON.stringify(cacheData));
-        console.log(`💾 Translations cached in sessionStorage for ${language} (v${TRANSLATION_VERSION})`);
+        console.log(`💾 [MONOLITHIC] Translations cached in sessionStorage for ${language} (v${TRANSLATION_VERSION})`);
       } catch (storageError) {
         console.warn('sessionStorage write failed, using memory cache:', storageError);
         memoryCache.set(cacheKey, cacheData);
-        console.log(`💾 Translations cached in memory for ${language} (v${TRANSLATION_VERSION})`);
+        console.log(`💾 [MONOLITHIC] Translations cached in memory for ${language} (v${TRANSLATION_VERSION})`);
       }
     } else {
       // Use memory cache if sessionStorage not available
       memoryCache.set(cacheKey, cacheData);
-      console.log(`💾 Translations cached in memory for ${language} (v${TRANSLATION_VERSION}) [storage unavailable]`);
+      console.log(`💾 [MONOLITHIC] Translations cached in memory for ${language} (v${TRANSLATION_VERSION}) [storage unavailable]`);
     }
 
-    console.log(`✅ Translations loaded for ${language} (v${TRANSLATION_VERSION})`);
+    console.log(`✅ [MONOLITHIC] Translations loaded for ${language} (v${TRANSLATION_VERSION})`);
     return translations;
   } catch (error) {
     console.error(`❌ Failed to load language ${language}:`, error);
@@ -274,20 +277,90 @@ const loadLanguage = async (language: string) => {
   }
 };
 
-// ✅ PHASE 4.1: Preload user's preferred language IMMEDIATELY
-// This starts loading BEFORE React mounts, reducing perceived load time
-const userLanguage = getSavedLanguage() || navigator.language.split('-')[0] || 'en';
+// ============================================================
+// INITIALIZATION: Choose strategy based on feature flag
+// ============================================================
 
-// Start loading immediately (before init even completes)
-initialLanguageLoading = loadLanguage(userLanguage).then(() => {
-  console.log('⚡ Initial translations preloaded before React mount');
-});
+if (USE_CODE_SPLITTING) {
+  console.log('🚀 Code splitting ENABLED - using namespace-based translations');
+
+  // Initialize with Backend for namespace-based loading
+  i18n
+    .use(Backend)
+    .use(initReactI18next)
+    .init({
+      lng: getSavedLanguage(),
+      fallbackLng: 'en',
+      ns: PRELOAD_NAMESPACES, // Preload these namespaces
+      defaultNS: DEFAULT_NAMESPACE,
+      fallbackNS: DEFAULT_NAMESPACE,
+
+      backend: {
+        loadPath: '/translations/{{lng}}/{{ns}}.json?v=' + TRANSLATION_VERSION,
+        requestOptions: {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
+        }
+      },
+
+      interpolation: {
+        escapeValue: false, // not needed for react as it escapes by default
+      },
+
+      // Load namespaces asynchronously
+      partialBundledLanguages: true,
+
+      // React-specific
+      react: {
+        useSuspense: false // Disable suspense to use our custom loading boundary
+      }
+    });
+
+  console.log(`⚡ Preloading namespaces: ${PRELOAD_NAMESPACES.join(', ')}`);
+
+} else {
+  console.log('📦 Code splitting DISABLED - using monolithic translations');
+
+  // Initialize without Backend (legacy system)
+  i18n
+    .use(initReactI18next)
+    .init({
+      lng: getSavedLanguage(), // default language (safe even in private mode)
+      fallbackLng: 'en',
+      resources,
+      interpolation: {
+        escapeValue: false, // not needed for react as it escapes by default
+      },
+    });
+
+  // ✅ PHASE 4.1: Preload user's preferred language IMMEDIATELY
+  // This starts loading BEFORE React mounts, reducing perceived load time
+  const userLanguage = getSavedLanguage() || navigator.language.split('-')[0] || 'en';
+
+  // Start loading immediately (before init even completes)
+  initialLanguageLoading = loadLanguageMonolithic(userLanguage).then(() => {
+    console.log('⚡ [MONOLITHIC] Initial translations preloaded before React mount');
+  });
+}
 
 // Export function to wait for initial translations
-export const waitForInitialTranslations = () => initialLanguageLoading;
+export const waitForInitialTranslations = () => {
+  if (USE_CODE_SPLITTING) {
+    // With Backend, i18next handles loading automatically
+    return i18n.loadNamespaces(PRELOAD_NAMESPACES);
+  } else {
+    // Legacy system
+    return initialLanguageLoading;
+  }
+};
 
 export const changeLanguage = async (language: string) => {
-  await loadLanguage(language);
+  if (!USE_CODE_SPLITTING) {
+    // Legacy system - manual loading
+    await loadLanguageMonolithic(language);
+  }
+
+  // Both systems use i18n.changeLanguage
   await i18n.changeLanguage(language);
 
   // 🔴 CRITICAL FIX: Safely save language (may fail in private mode)
@@ -303,5 +376,8 @@ export const supportedLanguages = [
   { code: 'es', name: 'Español', flag: 'https://flagcdn.com/w20/es.png' },
   { code: 'pt-BR', name: 'Português (BR)', flag: 'https://flagcdn.com/w20/br.png' },
 ];
+
+// Export feature flag status for debugging
+export const isCodeSplittingEnabled = () => USE_CODE_SPLITTING;
 
 export default i18n;

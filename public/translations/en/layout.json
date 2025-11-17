@@ -1,0 +1,14 @@
+{
+  "search_placeholder": "Search orders...",
+  "mobile_menu": "Menu",
+  "tools": "Tools",
+  "preferences": "Preferences",
+  "footer": {
+    "copyright": "Â© {{year}} My Detail Area",
+    "tagline": "Enterprise Dealership Management",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service",
+    "support": "Support",
+    "version": "v{{version}}"
+  }
+}

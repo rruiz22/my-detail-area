@@ -1,0 +1,17 @@
+{
+  "simple_notes": "Notes",
+  "no_notes_provided": "No notes provided",
+  "words": "words",
+  "characters": "characters",
+  "added": "Added",
+  "short_link_created": "QR code generated successfully",
+  "qr_generation_failed": "Failed to generate QR code",
+  "regenerate_qr": "QR code regenerated successfully",
+  "qr_regeneration_failed": "Failed to regenerate QR code",
+  "copy_link": "Link copied to clipboard",
+  "copy_failed": "Failed to copy link",
+  "qr_analytics": "Analytics",
+  "total_scans": "Total Scans",
+  "unique_visitors": "Unique Visitors",
+  "last_accessed": "Last accessed"
+}

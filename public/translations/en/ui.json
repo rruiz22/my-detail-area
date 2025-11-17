@@ -1,0 +1,19 @@
+{
+  "headers": {
+    "welcome": "Welcome",
+    "overview": "Overview",
+    "details": "Details",
+    "settings": "Settings",
+    "advanced": "Advanced",
+    "summary": "Summary"
+  },
+  "buttons": {
+    "get_started": "Get Started",
+    "learn_more": "Learn More",
+    "try_again": "Try Again",
+    "go_back": "Go Back",
+    "view_details": "View Details",
+    "show_more": "Show More",
+    "show_less": "Show Less"
+  }
+}

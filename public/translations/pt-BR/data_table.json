@@ -1,0 +1,22 @@
+{
+  "no_stock": "Sem estoque",
+  "vin_not_provided": "VIN nÃ£o fornecido",
+  "due_today": "Vence Hoje",
+  "no_orders_found": "Nenhum pedido encontrado",
+  "adjust_filters_or_create": "Tente ajustar os filtros ou criar um novo pedido",
+  "unknown_dealer": "ConcessionÃ¡ria Desconhecida",
+  "unassigned": "NÃ£o AtribuÃ­do",
+  "no_time_set": "Nenhum horÃ¡rio definido",
+  "no_date_set": "Nenhuma data definida",
+  "orders_count": "{{count}} pedidos",
+  "page_of": "PÃ¡gina {{current}} de {{total}}",
+  "showing_range": "Mostrando {{start}}-{{end}} de {{total}} pedidos",
+  "view": "Ver",
+  "edit": "Editar",
+  "delete": "Excluir",
+  "view_details": "Ver Detalhes",
+  "edit_order": "Editar Pedido",
+  "delete_order": "Excluir Pedido",
+  "print_order": "Imprimir Pedido",
+  "items_per_page": "Itens por pÃ¡gina:"
+}

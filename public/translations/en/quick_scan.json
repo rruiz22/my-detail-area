@@ -1,0 +1,18 @@
+{
+  "title": "Quick Scan",
+  "description": "Fast VIN scanning with automatic detection",
+  "start_scan": "Start Scan",
+  "stop_scan": "Stop Scan",
+  "scanning": "Scanning...",
+  "position_vin": "Position VIN in camera frame",
+  "hold_steady": "Hold steady...",
+  "detecting": "Detecting VIN...",
+  "vin_found": "VIN Found!",
+  "processing": "Processing...",
+  "scan_complete": "Scan Complete",
+  "use_this_vin": "Use This VIN",
+  "scan_another": "Scan Another",
+  "tips": "Tips for best results",
+  "tip_lighting": "Ensure good lighting",
+  "tip_focus": "Keep VIN in focus and clear"
+}

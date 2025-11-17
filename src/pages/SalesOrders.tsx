@@ -45,7 +45,8 @@ import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 // Removed mock chart data - now handled by SmartDashboard
 
 export default function SalesOrders() {
-  const { t } = useTranslation();
+  // 🚀 CODE SPLITTING: Load sales_orders + orders + common namespaces
+  const { t } = useTranslation(['sales_orders', 'orders', 'common']);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { toast } = useToast();

@@ -1,0 +1,45 @@
+{
+  "global_placeholder": "Search orders, contacts, users... (Ctrl+S)",
+  "no_results": "No results found",
+  "try_different_keywords": "Try different search terms or check your filters",
+  "searching": "Searching...",
+  "results_found": "{{count}} results found",
+  "result_found": "{{count}} result found",
+  "view_all": "View all results",
+  "stock": "Stock",
+  "vin": "VIN",
+  "due_date": "Due",
+  "completed": "Completed",
+  "services": "Services",
+  "status": {
+    "pending": "Pending",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled",
+    "active": "Active",
+    "new": "New",
+    "in_stock": "In Stock",
+    "in_transit": "In Transit",
+    "retail": "Retail",
+    "wholesale": "Wholesale",
+    "hold": "On Hold",
+    "unavailable": "Unavailable"
+  },
+  "categories": {
+    "sales_order": "Sales Orders",
+    "service_order": "Service Orders",
+    "recon_order": "Recon Orders",
+    "car_wash": "Car Wash",
+    "contact": "Contacts",
+    "user": "Users",
+    "get_ready": "Get Ready Vehicles",
+    "stock": "Stock Inventory"
+  },
+  "shortcuts": {
+    "open": "Open search",
+    "close": "Close",
+    "navigate": "Navigate",
+    "select": "Select"
+  }
+}

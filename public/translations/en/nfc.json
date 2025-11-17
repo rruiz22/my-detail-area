@@ -1,0 +1,58 @@
+{
+  "writer": {
+    "title": "NFC Writer",
+    "preparing": "Preparing...",
+    "writing": "Writing to Tag...",
+    "success": "Write Successful",
+    "error": "Write Failed",
+    "ready": "Ready to Write",
+    "write_to_physical": "Write to Physical Tag",
+    "write_tag": "Write Tag",
+    "retry": "Retry",
+    "instructions": {
+      "preparing": "Requesting NFC permissions...",
+      "writing": "Hold your device near the NFC tag",
+      "success": "Tag written successfully!",
+      "error": "Failed to write tag. Please try again.",
+      "ready": "Click 'Write Tag' and hold device near tag"
+    }
+  },
+  "reader": {
+    "title": "NFC Reader",
+    "scanning": "Scanning...",
+    "success": "Tag Read Successfully",
+    "error": "Read Failed",
+    "ready": "Ready to Scan",
+    "start_scanning": "Start Scanning",
+    "stop_scanning": "Stop Scanning",
+    "scan_another": "Scan Another",
+    "retry": "Retry",
+    "tag_data": "Tag Data",
+    "instructions": {
+      "scanning": "Hold your device near an NFC tag",
+      "success": "Tag read successfully!",
+      "error": "Failed to read tag. Please try again.",
+      "ready": "Click 'Start Scanning' to begin"
+    }
+  },
+  "tag_info": {
+    "id": "Tag ID",
+    "name": "Name",
+    "type": "Type",
+    "vin": "VIN",
+    "location": "Location",
+    "url": "URL"
+  },
+  "templates": {
+    "title": "Tag Templates",
+    "subtitle": "Quick create tags from predefined templates",
+    "quick_create": "Templates",
+    "create_tag": "Create Tag from Template"
+  },
+  "errors": {
+    "not_supported": "NFC is not supported on this device",
+    "permission_denied": "NFC permission denied",
+    "write_failed": "Failed to write to NFC tag",
+    "read_failed": "Failed to read NFC tag"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "service_date": "Service Date",
+  "select_service_date": "Select service date",
+  "service_date_help": "Date when the car wash service was completed",
+  "order_created_successfully": "Car wash order created successfully",
+  "order_updated_successfully": "Car wash order updated successfully",
+  "order_deleted_successfully": "Car wash order deleted successfully",
+  "error_creating_order": "Error creating car wash order",
+  "error_updating_order": "Error updating car wash order",
+  "error_deleting_order": "Error deleting car wash order"
+}

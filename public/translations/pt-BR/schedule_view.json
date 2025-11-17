@@ -1,0 +1,17 @@
+{
+  "schedule_timeline": "Cronograma Programado",
+  "order_progress": "Progresso do Pedido",
+  "in_progress": "Em Andamento",
+  "timeline": "Cronograma",
+  "no_due_date": "Sem prazo definido",
+  "not_set": "NÃ£o definido",
+  "most_recent_change": "MudanÃ§a mais recente",
+  "days_overdue": "{{days}} dias em atraso",
+  "due_tomorrow": "Vence amanhÃ£",
+  "due_in_days": "Vence em {{days}} dias",
+  "order_completed": "Pedido concluÃ­do",
+  "sla_compliance": "Conformidade SLA",
+  "on_track": "No Prazo",
+  "at_risk": "Em Risco",
+  "target_completion": "Meta: {{hours}} horas"
+}

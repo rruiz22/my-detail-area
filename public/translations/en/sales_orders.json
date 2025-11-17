@@ -1,0 +1,96 @@
+{
+  "tabs": {
+    "dashboard": "Dashboard",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "queued": "Queued",
+    "week": "Week",
+    "all": "All Orders",
+    "services": "Services",
+    "deleted": "Deleted"
+  },
+  "in_process_orders": "In Process Orders",
+  "dealership": "Dealership",
+  "assignment": "Assignment",
+  "select_dealership": "Select a dealership",
+  "assigned_to": "Assigned To",
+  "select_dealership_first": "Select a dealership first",
+  "select_assignee": "Select an assignee",
+  "vin_decoded_successfully": "VIN Decoded Successfully",
+  "stock_number": "Stock Number",
+  "vehicle": "Vehicle Information",
+  "manual_vehicle_entry": "Enter vehicle details manually or scan VIN for auto-fill",
+  "kanban": {
+    "pending_column": "Pending",
+    "in_process_column": "In Process",
+    "complete_column": "Complete",
+    "cancelled_column": "Cancelled",
+    "no_orders": "No orders",
+    "drag_orders_here": "Drag orders here"
+  },
+  "dashboard": {
+    "delayed_orders": "Delayed Orders",
+    "delayed_orders_subtitle": "Require immediate attention",
+    "unassigned_orders": "Unassigned Orders",
+    "unassigned_orders_subtitle": "Awaiting assignment",
+    "in_progress": "In Progress",
+    "in_progress_subtitle": "Active work orders",
+    "completion_rate": "Completion Rate",
+    "progress": "Progress",
+    "orders_completed": "{{completed}} of {{total}} orders completed",
+    "team_activity": "Team Activity",
+    "orders_with_comments": "Orders with comments",
+    "total_comments": "Total comments",
+    "avg_per_order": "Avg per order",
+    "vehicle_insights": "Vehicle Insights",
+    "top_makes": "Top Makes:",
+    "orders_count": "{{count}} orders",
+    "no_vehicle_data": "No vehicle data yet"
+  },
+  "filters": {
+    "overview": "Overview",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "pending": "Pending",
+    "in_process": "In Process",
+    "week": "Week",
+    "all_orders": "All Orders",
+    "active_filter": "Active filter:",
+    "clear": "Clear"
+  },
+  "view_modes": {
+    "table": "Table",
+    "kanban": "Kanban",
+    "filters": "Filters"
+  },
+  "card": {
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "no_due_date": "No due date",
+    "customer": "Customer: {{name}}",
+    "tag": "Tag: {{tag}}",
+    "vin_l8v": "L8V: {{vin}}"
+  },
+  "search": {
+    "showing_results": "Showing results matching \"{{searchTerm}}\""
+  },
+  "table": {
+    "vin_copied": "VIN copied to clipboard",
+    "vin_copy_failed": "Failed to copy VIN",
+    "vehicle": "Vehicle",
+    "tag": "Tag",
+    "stock": "Stock",
+    "tap_to_copy": "Tap to copy full",
+    "no_vin": "No VIN",
+    "order_id": "Order ID",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "loading": {
+    "kanban_view": "Loading kanban view",
+    "dashboard_view": "Loading dashboard view",
+    "calendar_view": "Loading calendar view",
+    "table_view": "Loading table view"
+  }
+}

@@ -16,7 +16,8 @@ import { useMemo, useEffect } from 'react';
 
 export default function Dashboard() {
   logger.dev('🟢 Dashboard component is RENDERING');
-  const { t } = useTranslation();
+  // 🚀 CODE SPLITTING: Load dashboard + cache + common namespaces
+  const { t } = useTranslation(['dashboard', 'cache', 'system_update', 'common']);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { hasPermission } = usePermissions();

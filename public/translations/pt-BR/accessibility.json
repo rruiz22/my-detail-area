@@ -1,0 +1,161 @@
+{
+  "order_card": {
+    "order_number": "Pedido {{number}}",
+    "customer": "Cliente {{name}}",
+    "due_time": "Vence Ã s {{time}} em {{date}}",
+    "assigned_to": "AtribuÃ­do a {{name}}",
+    "unassigned": "NÃ£o atribuÃ­do",
+    "actions_menu": "Menu de aÃ§Ãµes do pedido",
+    "open_actions": "Abrir menu de aÃ§Ãµes",
+    "quick_actions": "AÃ§Ãµes rÃ¡pidas",
+    "view_order": "Ver detalhes do pedido",
+    "edit_order": "Editar pedido",
+    "drag_handle": "Arrastar para reordenar"
+  },
+  "kanban": {
+    "board_label": "Quadro kanban com colunas de pedidos",
+    "column_label": "Coluna {{title}} com {{count}} pedidos",
+    "orders_list": "Lista de pedidos para status {{status}}",
+    "no_orders": "Sem pedidos",
+    "drag_hint": "Arraste pedidos aqui",
+    "move_order": "Mover pedido para {{status}}",
+    "reorder": "Reordenar pedidos"
+  },
+  "dashboard": {
+    "overview": "VisÃ£o geral do painel",
+    "kpi_cards": "CartÃµes de indicadores-chave",
+    "kpi_card": "{{title}}: {{value}}",
+    "stats_cards": "CartÃµes de estatÃ­sticas",
+    "completion_rate": "EstatÃ­sticas de taxa de conclusÃ£o",
+    "team_activity": "EstatÃ­sticas de atividade da equipe",
+    "vehicle_insights": "EstatÃ­sticas de veÃ­culos",
+    "progress_percentage": "{{value}} por cento completo",
+    "orders_with_comments": "{{count}} pedidos com comentÃ¡rios",
+    "total_comments": "{{count}} comentÃ¡rios totais",
+    "average_comments": "{{value}} comentÃ¡rios mÃ©dios por pedido",
+    "vehicle_count": "{{make}}: {{count}} pedidos"
+  },
+  "filter_bar": {
+    "search_input": "Pesquisar pedidos por VIN, nÃºmero de estoque ou cliente",
+    "clear_search": "Limpar pesquisa",
+    "view_mode": "Alterar modo de visualizaÃ§Ã£o",
+    "table_view": "Mudar para visualizaÃ§Ã£o de tabela",
+    "kanban_view": "Mudar para visualizaÃ§Ã£o kanban",
+    "calendar_view": "Mudar para visualizaÃ§Ã£o de calendÃ¡rio",
+    "filters": "OpÃ§Ãµes de filtro",
+    "active_filter": "Filtro ativo: {{filter}}"
+  },
+  "data_table": {
+    "orders_table": "Tabela de dados de pedidos",
+    "row_number": "Linha {{number}}",
+    "order_row": "Pedido {{id}} - {{status}}",
+    "sort_column": "Ordenar por {{column}}",
+    "actions_column": "AÃ§Ãµes para pedido {{id}}",
+    "loading": "Carregando dados de pedidos",
+    "no_results": "Nenhum pedido encontrado"
+  },
+  "navigation": {
+    "skip_to_main": "Pular para conteÃºdo principal",
+    "skip_to_navigation": "Pular para navegaÃ§Ã£o",
+    "main_menu": "Menu de navegaÃ§Ã£o principal",
+    "breadcrumb": "NavegaÃ§Ã£o breadcrumb",
+    "page_navigation": "NavegaÃ§Ã£o de pÃ¡gina"
+  },
+  "loading": {
+    "dashboard": "Carregando painel",
+    "kanban": "Carregando quadro kanban",
+    "table": "Carregando tabela de pedidos",
+    "calendar": "Carregando calendÃ¡rio",
+    "generic": "Carregando conteÃºdo"
+  },
+  "status_change": {
+    "updating": "Atualizando status do pedido",
+    "updated": "Status do pedido atualizado para {{status}}",
+    "failed": "Falha ao atualizar status do pedido"
+  },
+  "modals": {
+    "close": "Fechar modal",
+    "save": "Salvar e fechar",
+    "cancel": "Cancelar e fechar",
+    "modal_title": "Modal de {{title}}"
+  },
+  "buttons": {
+    "submit": "Enviar formulÃ¡rio",
+    "reset": "Redefinir formulÃ¡rio",
+    "delete": "Excluir item",
+    "edit": "Editar item",
+    "view": "Ver detalhes",
+    "expand": "Expandir seÃ§Ã£o",
+    "collapse": "Recolher seÃ§Ã£o"
+  },
+  "forms": {
+    "required_field": "Campo obrigatÃ³rio",
+    "optional_field": "Campo opcional",
+    "field_error": "{{field}} tem um erro",
+    "validation_error": "O formulÃ¡rio tem erros de validaÃ§Ã£o"
+  },
+  "announcements": {
+    "order_created": "Novo pedido criado com sucesso",
+    "order_updated": "Pedido atualizado com sucesso",
+    "order_deleted": "Pedido excluÃ­do com sucesso",
+    "status_changed": "Status do pedido alterado para {{status}}",
+    "error_occurred": "Ocorreu um erro: {{message}}"
+  },
+  "service_orders": {
+    "main_content": "ConteÃºdo principal de ordens de serviÃ§o",
+    "page_title": "GestÃ£o de Ordens de ServiÃ§o",
+    "refresh_button": "Atualizar ordens de serviÃ§o",
+    "create_button": "Criar nova ordem de serviÃ§o",
+    "loading_orders": "Carregando ordens de serviÃ§o",
+    "no_orders": "Nenhuma ordem de serviÃ§o encontrada",
+    "order_count": "{{count}} ordens de serviÃ§o",
+    "filter_active": "Filtrando ordens de serviÃ§o por {{filter}}",
+    "search_active": "Buscando ordens de serviÃ§o: {{term}}",
+    "view_switched": "Mudado para visualizaÃ§Ã£o {{view}}",
+    "order_created": "Ordem de serviÃ§o criada com sucesso",
+    "order_updated": "Ordem de serviÃ§o atualizada com sucesso",
+    "order_deleted": "Ordem de serviÃ§o excluÃ­da com sucesso",
+    "status_updated": "Status da ordem de serviÃ§o atualizado para {{status}}",
+    "export_started": "Exportando ordens de serviÃ§o",
+    "export_complete": "Ordens de serviÃ§o exportadas com sucesso",
+    "keyboard_shortcuts": "Atalhos de teclado: Tab para navegar, Enter para selecionar, Escape para fechar"
+  },
+  "recon_orders": {
+    "main_content": "ConteÃºdo principal de ordens de recondicionamento",
+    "page_title": "GestÃ£o de Ordens de Recondicionamento",
+    "refresh_button": "Atualizar ordens de recondicionamento",
+    "create_button": "Criar nova ordem de recondicionamento",
+    "loading_orders": "Carregando ordens de recondicionamento",
+    "no_orders": "Nenhuma ordem de recondicionamento encontrada",
+    "order_count": "{{count}} ordens de recondicionamento",
+    "filter_active": "Filtrando ordens de recondicionamento por {{filter}}",
+    "search_active": "Buscando ordens de recondicionamento: {{term}}",
+    "view_switched": "Mudado para visualizaÃ§Ã£o {{view}}",
+    "order_created": "Ordem de recondicionamento criada com sucesso",
+    "order_updated": "Ordem de recondicionamento atualizada com sucesso",
+    "order_deleted": "Ordem de recondicionamento excluÃ­da com sucesso",
+    "status_updated": "Status da ordem de recondicionamento atualizado para {{status}}",
+    "export_started": "Exportando ordens de recondicionamento",
+    "export_complete": "Ordens de recondicionamento exportadas com sucesso",
+    "keyboard_shortcuts": "Atalhos de teclado: Tab para navegar, Enter para selecionar, Escape para fechar"
+  },
+  "car_wash_orders": {
+    "main_content": "ConteÃºdo principal de ordens de lavagem de carros",
+    "page_title": "GestÃ£o de Ordens de Lavagem de Carros",
+    "refresh_button": "Atualizar ordens de lavagem de carros",
+    "create_button": "Criar nova ordem de lavagem de carros",
+    "loading_orders": "Carregando ordens de lavagem de carros",
+    "no_orders": "Nenhuma ordem de lavagem de carros encontrada",
+    "order_count": "{{count}} ordens de lavagem de carros",
+    "filter_active": "Filtrando ordens de lavagem de carros por {{filter}}",
+    "search_active": "Buscando ordens de lavagem de carros: {{term}}",
+    "view_switched": "Mudado para visualizaÃ§Ã£o {{view}}",
+    "order_created": "Ordem de lavagem de carros criada com sucesso",
+    "order_updated": "Ordem de lavagem de carros atualizada com sucesso",
+    "order_deleted": "Ordem de lavagem de carros excluÃ­da com sucesso",
+    "status_updated": "Status da ordem de lavagem de carros atualizado para {{status}}",
+    "export_started": "Exportando ordens de lavagem de carros",
+    "export_complete": "Ordens de lavagem de carros exportadas com sucesso",
+    "keyboard_shortcuts": "Atalhos de teclado: Tab para navegar, Enter para selecionar, Escape para fechar"
+  }
+}

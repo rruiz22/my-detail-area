@@ -1,0 +1,58 @@
+{
+  "title": "Recent Activity",
+  "loading": "Loading activity...",
+  "no_activity": "No recent activity",
+  "no_activity_description": "Activity will appear here",
+  "error_loading": "Failed to load activity. Please try again.",
+  "retry": "Click to retry",
+  "last_activity": "Last activity",
+  "none": "None",
+  "debug_mode": "Debug Mode",
+  "show_debug": "Show Technical Details",
+  "hide_debug": "Hide Technical Details",
+  "actions": {
+    "added_comment": "Added comment",
+    "added_internal_note": "Added internal note",
+    "replied_to_comment": "Replied to comment",
+    "replied_to_internal_note": "Replied to internal note",
+    "comment_deleted": "Deleted comment",
+    "internal_note_deleted": "Deleted internal note",
+    "reaction_added": "Reacted to comment",
+    "reaction_removed": "Removed reaction",
+    "uploaded_file": "Uploaded file",
+    "order_updated": "Order updated",
+    "order_info_modified": "Order information was modified",
+    "status_changed": "Status changed",
+    "assignment_changed": "Assignment changed",
+    "due_date_changed": "Due date changed",
+    "notes_updated": "Notes updated",
+    "order_created": "Order created",
+    "priority_changed": "Priority changed",
+    "customer_updated": "Customer updated",
+    "services_updated": "Services updated",
+    "amount_updated": "Amount updated",
+    "changed_field": "Changed {{field}}",
+    "initial_creation": "Initial order creation"
+  },
+  "files": {
+    "attached": "Attached: {{filename}}"
+  },
+  "user": {
+    "by": "by {{name}}",
+    "system": "System",
+    "team_member": "Team Member",
+    "creator": "Order Creator"
+  },
+  "time": {
+    "just_now": "Just now",
+    "minutes_ago": "{{count}}m ago",
+    "hours_ago": "{{count}}h ago",
+    "days_ago": "{{count}}d ago"
+  },
+  "sources": {
+    "comments": "Comments",
+    "attachments": "Attachments",
+    "activity_log": "Activity Log",
+    "order_data": "Order Data"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "translation_loading_failed": {
+    "title": "Translation Loading Failed",
+    "description": "We couldn't load the application translations. This might be due to a network issue or cached content.",
+    "refresh_button": "Refresh Page",
+    "clear_cache_button": "Clear Cache & Reset",
+    "help_text": "If refreshing doesn't work, try clearing cache. This will reset all app data but fix loading issues."
+  },
+  "private_mode": {
+    "title": "Private/Incognito Mode Detected",
+    "description": "You're browsing in private mode. Some features may be limited. For the best experience, please use regular browsing mode."
+  }
+}

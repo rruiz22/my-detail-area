@@ -1,0 +1,45 @@
+{
+  "success": {
+    "status_updated": "Status do pedido atualizado com sucesso"
+  },
+  "error": {
+    "something_went_wrong": "Algo deu errado",
+    "please_try_again": "Por favor, tente novamente",
+    "operation_failed": "A operaÃ§Ã£o falhou",
+    "network_error": "Erro de rede",
+    "server_error": "Erro do servidor",
+    "invalid_request": "SolicitaÃ§Ã£o invÃ¡lida",
+    "access_denied": "Acesso negado",
+    "insufficient_permissions": "VocÃª nÃ£o tem permissÃ£o para acessar este recurso",
+    "back_to_dashboard": "Voltar ao Painel",
+    "not_found": "NÃ£o encontrado",
+    "forbidden": "Proibido",
+    "unauthorized": "NÃ£o autorizado",
+    "session_expired": "SessÃ£o expirada",
+    "connection_failed": "ConexÃ£o falhou",
+    "timeout": "Erro de timeout",
+    "fix_validation_errors": "Por favor, corrija os erros de validaÃ§Ã£o"
+  },
+  "errors": {
+    "no_permission": "Sem PermissÃ£o",
+    "no_permission_create_order": "VocÃª nÃ£o tem permissÃ£o para criar pedidos",
+    "no_permission_status_change": "VocÃª nÃ£o tem permissÃ£o para alterar o status do pedido",
+    "status_update_failed": "Falha ao atualizar o status do pedido",
+    "permission_system_error": "Erro no Sistema de PermissÃµes",
+    "permission_system_error_description": "Houve um erro ao carregar suas permissÃµes. Isso pode ser temporÃ¡rio.",
+    "what_you_can_do": "O que vocÃª pode fazer:",
+    "try_refresh": "Tente atualizar a pÃ¡gina",
+    "clear_cache": "Limpe o cache do seu navegador",
+    "contact_admin": "Entre em contato com o administrador do sistema se o problema persistir"
+  },
+  "info": {
+    "loading": "Carregando...",
+    "no_data": "Nenhum dado disponÃ­vel",
+    "processing": "Processando..."
+  },
+  "descriptions": {
+    "network_error": "Verifique sua conexÃ£o com a internet e tente novamente",
+    "server_error": "Nossos servidores estÃ£o enfrentando problemas. Por favor, tente novamente mais tarde."
+  },
+  "confirm_delete_order": "Tem certeza que deseja excluir este pedido?"
+}
