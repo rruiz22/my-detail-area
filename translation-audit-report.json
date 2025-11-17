@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 850,
-  "totalStrings": 9760,
+  "scannedFiles": 851,
+  "totalStrings": 9762,
   "hardcodedStrings": 2023,
-  "translatedStrings": 7737,
+  "translatedStrings": 7739,
   "issues": {
     "critical": [
       {
@@ -84499,6 +84499,36 @@
         "severity": "low"
       },
       {
+        "file": "src\\lib\\i18n.ts",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "navigation.dashboard",
+            "line": 333,
+            "exists": false
+          },
+          {
+            "key": "navigation.dashboard",
+            "line": 334,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "navigation.dashboard",
+            "line": 333,
+            "context": "332: // 🔴 CRITICAL FIX: Enable namespace separation via dot notation\n333: // This allows t('navigation.dashboard') to look in 'navigation' namespace for 'dashboard' key\n334: // Without this, t('navigation.dashboard') looks for nested key in 'common' namespace"
+          },
+          {
+            "key": "navigation.dashboard",
+            "line": 334,
+            "context": "333: // This allows t('navigation.dashboard') to look in 'navigation' namespace for 'dashboard' key\n334: // Without this, t('navigation.dashboard') looks for nested key in 'common' namespace\n335: nsSeparator: '.',"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
         "file": "src\\lib\\notification-analytics.ts",
         "hardcodedStrings": [
           {
@@ -93125,7 +93155,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "496 Component components need translation",
+      "description": "497 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\OperationalReports.tsx",
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
@@ -93602,6 +93632,7 @@
         "src\\hooks\\useUserSessions.tsx",
         "src\\hooks\\useVendors.tsx",
         "src\\hooks\\useWorkItemTemplates.tsx",
+        "src\\lib\\i18n.ts",
         "src\\pages\\AdminDashboard.tsx",
         "src\\pages\\Announcements.tsx",
         "src\\pages\\CarWash.tsx",
@@ -93624,12 +93655,12 @@
         "src\\utils\\stockCSVHelpers.ts",
         "src\\utils\\translationAudit.ts"
       ],
-      "estimatedEffort": "248 hours"
+      "estimatedEffort": "249 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "7737 translation keys are referenced but missing",
+      "description": "7739 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "387 hours"
     }
