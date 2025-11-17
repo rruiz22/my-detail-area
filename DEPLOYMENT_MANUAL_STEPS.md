@@ -1,3 +1,43 @@
+# 🚀 Manual Deployment: send-invitation-email (SendGrid)
+
+## ⚠️ CLI Deployment Issue
+
+El deployment vía CLI está fallando debido a configuración del access token. Usa este método manual a través del Dashboard de Supabase.
+
+---
+
+## 📋 Deployment Manual (Método Recomendado)
+
+### **Paso 1: Acceder al Dashboard de Supabase**
+
+1. Abre tu navegador y ve a: https://supabase.com/dashboard/project/swfnnrpzpkdypbrzmgnr
+2. Inicia sesión si es necesario
+3. Navega a: **Edge Functions** (menú lateral izquierdo)
+
+### **Paso 2: Encontrar la Función**
+
+1. En la lista de Edge Functions, busca: `send-invitation-email`
+2. Haz clic en el nombre de la función para abrirla
+
+### **Paso 3: Crear Nueva Versión**
+
+1. Dentro de la función, haz clic en: **Deploy New Version** (botón superior derecho)
+2. Se abrirá un editor de código
+
+### **Paso 4: Copiar el Código Migrado**
+
+**Opción A: Desde el archivo local**
+1. Abre el archivo: `c:\Users\rudyr\apps\mydetailarea\supabase\functions\send-invitation-email\index.ts`
+2. Selecciona TODO el contenido (Ctrl+A)
+3. Copia el código (Ctrl+C)
+4. Pega en el editor del Dashboard (Ctrl+V)
+
+**Opción B: Usar el código abajo** (750 líneas)
+
+<details>
+<summary>Ver código completo de send-invitation-email con SendGrid</summary>
+
+```typescript
 // @ts-nocheck - This file is for Supabase Edge Functions (Deno environment)
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
@@ -748,3 +788,117 @@ function getDefaultSubject(dealershipName: string): string {
 
 
 serve(handler);
+```
+
+</details>
+
+### **Paso 5: Desplegar**
+
+1. Haz clic en el botón **Deploy** (esquina inferior derecha del editor)
+2. Espera a que se complete el deployment (aparecerá un mensaje de éxito)
+3. Verifica el status: debe aparecer como **"Active"** o **"Deployed"**
+
+### **Paso 6: Verificar Secrets (CRÍTICO)**
+
+Antes de probar, asegúrate que estos secrets estén configurados:
+
+1. En el Dashboard, ve a: **Settings** → **Edge Functions** → **Secrets**
+2. Verifica que existan:
+   - ✅ `SENDGRID_API_KEY`
+   - ✅ `EMAIL_FROM_ADDRESS`
+   - ✅ `EMAIL_FROM_NAME`
+
+**Si faltan, agrégalos:**
+- `SENDGRID_API_KEY` = Tu API key de SendGrid (comienza con `SG.`)
+- `EMAIL_FROM_ADDRESS` = `noreply@mydetailarea.com` (o tu sender verificado)
+- `EMAIL_FROM_NAME` = `My Detail Area`
+
+### **Paso 7: Probar el Deployment**
+
+**Opción A: Desde la aplicación**
+1. Ve a MyDetailArea → **Users** → **Send Invitation**
+2. Llena el formulario de invitación
+3. Haz clic en **Send Invitation**
+4. Revisa los logs en tiempo real (ver paso siguiente)
+
+**Opción B: Ver logs en tiempo real**
+1. En el Dashboard de Supabase, dentro de `send-invitation-email`
+2. Ve a la pestaña **Logs**
+3. Envía una invitación de prueba
+4. Deberías ver:
+   - ✅ `[INVITATION EMAIL] Sending email via SendGrid to: test@example.com`
+   - ✅ `[INVITATION EMAIL] Email sent successfully via SendGrid: <message-id>`
+
+**Opción C: Ver actividad en SendGrid**
+1. Ve a SendGrid Dashboard → **Activity**
+2. Busca el email de prueba
+3. Verifica status: **Delivered**
+4. Revisa categories: `invitation`, nombre dealership, rol
+
+---
+
+## ✅ Verificación Post-Deployment
+
+### Checklist de Validación
+
+- [ ] Función deployada correctamente en Supabase Dashboard
+- [ ] Status muestra "Active" o "Deployed"
+- [ ] Secrets configurados (SENDGRID_API_KEY, EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME)
+- [ ] Email de prueba enviado exitosamente
+- [ ] Email recibido en inbox (revisar spam si no aparece)
+- [ ] Logs muestran `provider: 'sendgrid'`
+- [ ] SendGrid Activity muestra el email como "Delivered"
+- [ ] Invitation link funciona correctamente
+- [ ] Templates HTML y Text se renderizan bien
+
+---
+
+## 🔧 Troubleshooting Rápido
+
+### Error: "SENDGRID_API_KEY not configured"
+**Solución**: Agrega el secret en Settings → Edge Functions → Secrets
+
+### Error: "SendGrid API error: 403"
+**Solución**: Verifica sender en SendGrid (Domain Auth o Single Sender)
+
+### Email no llega
+**Checklist**:
+1. ✅ Revisar spam/junk folder
+2. ✅ Verificar logs de Supabase (sin errores)
+3. ✅ Verificar SendGrid Activity (status delivered)
+4. ✅ Verificar email address es válido
+
+### Deployment falla
+**Checklist**:
+1. ✅ Código completo copiado (750 líneas)
+2. ✅ No hay errores de sintaxis
+3. ✅ Imports correctos (Deno URLs)
+
+---
+
+## 📊 Resultado Esperado
+
+Después del deployment exitoso:
+
+```
+✅ send-invitation-email (SendGrid)
+   Status: Active
+   Provider: SendGrid REST API v3
+   Version: Latest (con migración)
+   Secrets: Configured
+```
+
+---
+
+## 📚 Documentación de Referencia
+
+- [DEPLOY_INVITATION_EMAIL_SENDGRID.md](DEPLOY_INVITATION_EMAIL_SENDGRID.md) - Guía completa
+- [SENDGRID_SETUP.md](SENDGRID_SETUP.md) - Configuración SendGrid
+- Archivo local: `supabase/functions/send-invitation-email/index.ts`
+
+---
+
+**Fecha de migración**: November 17, 2025
+**Migrado por**: Claude Code
+**Provider**: SendGrid API v3
+**Status**: ✅ Listo para deployment manual
