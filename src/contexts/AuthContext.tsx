@@ -48,6 +48,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // ✅ PERF FIX: Get QueryClient for pre-loading permissions
   const queryClient = useQueryClient();
 
+  // 🔒 CRITICAL: Track previous userId to detect user changes without causing re-renders
+  const previousUserIdRef = React.useRef<string | null>(null);
+
   // Load extended user profile data with timeout and fallback
   const loadUserProfile = async (authUser: User): Promise<ExtendedUser> => {
     try {
@@ -173,16 +176,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        // 🔒 CRITICAL FIX: Clear ALL caches BEFORE processing session change
+        // This prevents race conditions where old user cache is used for new user
+        if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+          previousUserIdRef.current = null;
+          setUser(null);
+          setSession(null);
+          userProfileCache.clearCache();
+          clearPermissionsCache();
+          // Invalidate ALL React Query cache to prevent stale data
+          queryClient.clear();
+          setLoading(false);
+          return;
+        }
+
+        // 🔒 CRITICAL FIX: On user change (different user login), clear previous user's cache
+        if (event === 'SIGNED_IN' && previousUserIdRef.current && session?.user?.id !== previousUserIdRef.current) {
+          auth('🔄 User changed - clearing previous user cache');
+          userProfileCache.clearCache();
+          clearPermissionsCache();
+          queryClient.clear();
+        }
+
         setSession(session);
 
         if (session?.user) {
+          // Update ref with current userId
+          previousUserIdRef.current = session.user.id;
+          // ✅ Cache is now guaranteed to be cleared before loading new user
           await loadUserWithCache(session.user);
         } else {
           setUser(null);
-          // Clear caches on logout
-          userProfileCache.clearCache();
-          // ✅ PHASE 2.2: Clear permissions cache on logout
-          clearPermissionsCache();
         }
 
         // IMMEDIATE loading completion
@@ -210,6 +234,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setSession(session);
 
         if (session?.user) {
+          // Initialize ref with current userId on session restore
+          previousUserIdRef.current = session.user.id;
           await loadUserWithCache(session.user);
         } else {
           setUser(null);
@@ -225,7 +251,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, []); // ✅ Empty deps - listener setup only once on mount
 
   const signUp = async (email: string, password: string, firstName?: string, lastName?: string) => {
     const redirectUrl = `${window.location.origin}/dashboard`;
