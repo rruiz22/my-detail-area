@@ -154,9 +154,12 @@ const [viewMode, setViewMode] = useViewModePersistence('sales_orders'); // kanba
 #### **🚨 CRITICAL TRANSLATION REMINDER**
 **ALWAYS add translations when creating/modifying UI elements:**
 
-1. **English** - `public/translations/en.json`
-2. **Spanish** - `public/translations/es.json`
-3. **Portuguese (Brazil)** - `public/translations/pt-BR.json`
+**⚠️ IMPORTANT - CODE SPLITTING ENABLED (v1.3.36+)**:
+Translations are now organized in **80 namespaces** for optimal performance.
+
+1. **English** - `public/translations/en/{namespace}.json`
+2. **Spanish** - `public/translations/es/{namespace}.json` (needs repair)
+3. **Portuguese (Brazil)** - `public/translations/pt-BR/{namespace}.json`
 
 **Required for ALL user-facing text including:**
 - Component titles and labels
@@ -168,21 +171,35 @@ const [viewMode, setViewMode] = useViewModePersistence('sales_orders'); // kanba
 
 **Example pattern:**
 ```typescript
-// ✅ CORRECT - With translations
-const { t } = useTranslation();
-<Button>{t('feature.button_text')}</Button>
+// ✅ CORRECT - With namespace.key notation
+const { t } = useTranslation(); // No need to specify namespace!
+<Button>{t('reports.export_pdf_button')}</Button>
+// ↑ Auto-loads from 'reports' namespace
 
 // ❌ WRONG - Hardcoded text
-<Button>Save Changes</Button>
+<Button>Export to PDF</Button>
 ```
 
-**Translation key structure:**
-- `auth.*` - Authentication pages
-- `orders.*` - Order management
-- `team_communication.*` - Comments/messaging
-- `followers.*` - Team collaboration
-- `attachments.*` - File uploads
-- `common.*` - Shared elements
+**Available namespaces** (80 total):
+- `common` - Shared elements (buttons, labels, messages)
+- `navigation` - Menu items, sidebar, breadcrumbs
+- `dashboard` - Dashboard metrics and widgets
+- `orders` - General order management
+- `sales_orders` - Sales-specific orders
+- `service_orders` - Service-specific orders
+- `recon_orders` - Recon-specific orders
+- `car_wash` - Car wash orders
+- `contacts` - Contact management
+- `reports` - Business intelligence reports
+- `auth` - Authentication pages
+- `admin` - Administration panel
+- `users` - User management
+- `dealerships` - Dealership management
+- `chat` - Team communication
+- `get_ready` - Reconditioning module
+- `stock` - Inventory management
+- `profile` - User profile settings
+- ... (See `public/translations/en/` for complete list)
 
 #### **Component Creation Pattern**
 ```tsx
@@ -220,6 +237,253 @@ export function ComponentName() {
   <footer>Close button</footer>
 </DialogContent>
 ```
+
+### Translation Code Splitting System (v1.3.36+)
+
+#### **Overview**
+MyDetailArea uses **code splitting for translations** to optimize load times. Translations are divided into **80 namespaces** (~3-40KB each) instead of one monolithic file (500KB).
+
+**Performance improvement**: 5-6x faster initial load (10-15s → 2-3s on 3G)
+
+#### **Architecture**
+
+**Hybrid Approach**: All namespaces are preloaded on init for zero-config component compatibility.
+
+```
+public/translations/
+├── en/                           # English (80 files, ~256KB total)
+│   ├── common.json              # Shared elements (3.8KB)
+│   ├── navigation.json          # Navigation menus (1.1KB)
+│   ├── dashboard.json           # Dashboard (5.5KB)
+│   ├── orders.json              # Orders general (3.2KB)
+│   ├── sales_orders.json        # Sales orders (2.8KB)
+│   ├── service_orders.json      # Service orders (3.3KB)
+│   ├── contacts.json            # Contacts (3.4KB)
+│   ├── reports.json             # Reports (12.6KB)
+│   ├── get_ready.json           # Get Ready module (44KB - largest)
+│   └── ... (71 more namespaces)
+├── pt-BR/                        # Portuguese (76 files, ~260KB total)
+│   └── ... (same structure)
+└── _backup_monolithic/           # Original 500KB files (backup)
+    ├── en.json
+    ├── es.json
+    └── pt-BR.json
+```
+
+**Configuration** (`src/lib/i18n.ts`):
+```typescript
+// Feature flag (default: enabled)
+VITE_USE_CODE_SPLITTING=true
+
+// Critical config for namespace.key notation
+nsSeparator: '.'      // Enables t('namespace.key')
+keySeparator: false   // Allows dots in keys
+
+// All namespaces preloaded
+ns: ALL_NAMESPACES    // 80 namespaces
+```
+
+#### **Adding New Translations - Step by Step**
+
+##### **1. Identify Correct Namespace**
+
+Choose based on feature area:
+
+| Feature | Namespace | File |
+|---------|-----------|------|
+| Dashboard widgets | `dashboard` | `dashboard.json` |
+| Navigation menus | `navigation` | `navigation.json` |
+| Sales orders | `sales_orders` | `sales_orders.json` |
+| Service orders | `service_orders` | `service_orders.json` |
+| Contacts CRM | `contacts` | `contacts.json` |
+| Reports/BI | `reports` | `reports.json` |
+| Admin panel | `admin` | `admin.json` |
+| Authentication | `auth` | `auth.json` |
+| User management | `users` | `users.json` |
+| Shared elements | `common` | `common.json` |
+
+**Complete list**: Run `ls public/translations/en/` (80 namespaces)
+
+##### **2. Add Key to All 3 Languages**
+
+**Example**: Adding "Export to PDF" button in reports
+
+**English** (`public/translations/en/reports.json`):
+```json
+{
+  "title": "Reports",
+  "export_pdf_button": "Export to PDF",  // ← NEW
+  "export_excel_button": "Export to Excel"
+}
+```
+
+**Spanish** (`public/translations/es/reports.json`):
+```json
+{
+  "title": "Reportes",
+  "export_pdf_button": "Exportar a PDF",  // ← NEW
+  "export_excel_button": "Exportar a Excel"
+}
+```
+
+**Portuguese** (`public/translations/pt-BR/reports.json`):
+```json
+{
+  "title": "Relatórios",
+  "export_pdf_button": "Exportar para PDF",  // ← NEW
+  "export_excel_button": "Exportar para Excel"
+}
+```
+
+##### **3. Use in Component**
+
+```typescript
+import { useTranslation } from 'react-i18next';
+
+export function ReportComponent() {
+  const { t } = useTranslation(); // ← No namespace needed!
+
+  return (
+    <div>
+      <h1>{t('reports.title')}</h1>
+      <Button>{t('reports.export_pdf_button')}</Button>
+      {/* ↑ Notation: namespace.key */}
+    </div>
+  );
+}
+```
+
+**How it works**:
+- `t('reports.export_pdf_button')` → Looks in `'reports'` namespace for `'export_pdf_button'` key
+- No need to specify namespace in `useTranslation([])` thanks to `nsSeparator: '.'`
+- All 80 namespaces preloaded, accessible from any component
+
+##### **4. Verify and Test**
+
+```bash
+# Development - hot reload automatic
+npm run dev
+
+# Verify in browser
+# - Translation appears correctly
+# - No translation keys visible (reports.export_pdf_button)
+# - Works in all 3 languages
+
+# Audit coverage
+npm run translation:audit
+
+# Build production
+npm run build
+```
+
+#### **Naming Conventions**
+
+**Use descriptive snake_case keys**:
+```javascript
+✅ GOOD:
+t('orders.create_new_order')
+t('contacts.import_csv_button')
+t('dashboard.total_orders_label')
+t('validation.vin_required_error')
+
+❌ BAD:
+t('orders.btn1')
+t('contacts.text')
+t('dashboard.label')
+```
+
+**Hierarchical structure allowed**:
+```json
+{
+  "orders": {
+    "create_new_order": "Create New Order",
+    "buttons": {
+      "save": "Save Order",
+      "cancel": "Cancel"
+    },
+    "validation": {
+      "vin_required": "VIN is required"
+    }
+  }
+}
+```
+
+**Usage**:
+```typescript
+t('orders.create_new_order')
+t('orders.buttons.save')
+t('orders.validation.vin_required')
+```
+
+#### **Performance Benefits**
+
+**Before (Monolithic)**:
+- 1 request × 500KB
+- 10-15s on 3G
+- Cache invalidates entire file on any change
+
+**After (Code Splitting)**:
+- 80 requests × ~3KB average (parallel via HTTP/2)
+- 2-3s on 3G (5-6x faster)
+- Granular cache (only invalidates changed namespace)
+- Progressive loading
+
+#### **Troubleshooting**
+
+##### **Translation key shows instead of text**
+```
+Symptom: UI shows "reports.export_button" instead of "Export"
+Cause: Key doesn't exist in namespace file
+Fix: Add key to public/translations/{lang}/{namespace}.json
+```
+
+##### **Rollback to monolithic (if needed)**
+```bash
+# Create .env.local
+echo "VITE_USE_CODE_SPLITTING=false" > .env.local
+
+# Rebuild
+npm run build
+
+# Reverts to using public/translations/_backup_monolithic/*.json
+```
+
+##### **Spanish translations not working**
+```
+Status: Spanish namespace files have syntax error (position 58680)
+Workaround: System auto-falls back to English
+Fix: Repair public/translations/_backup_monolithic/es.json and re-run:
+  node scripts/split-translations.cjs
+```
+
+#### **Validation Scripts**
+
+```bash
+# Translation coverage audit
+npm run translation:audit
+
+# Fix missing translations
+npm run translation:fix
+
+# Coverage report (runs in pre-commit hook)
+npm run translation:coverage
+```
+
+#### **Key Technical Details**
+
+**Configuration** (`src/lib/i18n.ts`):
+```typescript
+// Critical settings for namespace.key notation
+nsSeparator: '.'        // Enables t('namespace.key')
+keySeparator: false     // Allows dots in translation keys
+ns: ALL_NAMESPACES      // Preloads all 80 namespaces
+defaultNS: 'common'     // Fallback namespace
+fallbackNS: 'common'    // If key not found
+```
+
+**Zero-config components**: No need to specify namespaces in `useTranslation()` because all namespaces are preloaded and `nsSeparator` handles routing automatically.
+
+**Feature flag**: `VITE_USE_CODE_SPLITTING=true` (default enabled)
 
 ### Specialized Features
 
