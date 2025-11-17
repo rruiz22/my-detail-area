@@ -92154,12 +92154,12 @@
             "context": "514: disabled={loading}\n515: >\n516: Clear All"
           },
           {
-            "text": "Clear All\n                ",
+            "text": "Clear All\r\n                ",
             "line": 509,
             "context": "508: </Button>\n509: <Button\n510: type=\"button\""
           },
           {
-            "text": ", response.error);\n      console.log(",
+            "text": ", response.error);\r\n      console.log(",
             "line": 237,
             "context": "236: console.log('Response data:', response.data);\n237: console.log('Response error:', response.error);\n238: console.log('Data type:', typeof response.data);"
           }
