@@ -50,7 +50,7 @@ temp_*
 *.md.backup
 schema.sql
 APPLY_*.sql
-APPLY_*.md
+# APPLY_*.md  # Commented to allow APPLY_DETAILHUB_MIGRATIONS.md
 CHECK_*.sql
 CREATE_*.sql
 DIAGNOSE_*.sql
