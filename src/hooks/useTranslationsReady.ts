@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { waitForInitialTranslations } from '@/lib/i18n';
+import { waitForInitialTranslations, isCodeSplittingEnabled } from '@/lib/i18n';
 
 /**
  * Hook to detect when i18next translations are fully loaded and ready
  * Prevents rendering components before translations are available
  *
  * 🔴 CRITICAL FIX: Now returns error state to handle translation load failures gracefully
+ * 🚀 CODE SPLITTING: Supports both monolithic and namespace-based translations
  *
  * @returns object with {ready: boolean, error: boolean}
  */
@@ -20,9 +21,22 @@ export function useTranslationsReady() {
 
     // Check if translations are already loaded
     const checkReady = () => {
-      const hasTranslations = i18n.hasResourceBundle(i18n.language, 'translation');
+      const codeSplittingEnabled = isCodeSplittingEnabled();
+
+      let hasTranslations = false;
+
+      if (codeSplittingEnabled) {
+        // With code splitting: Check for critical namespace 'common'
+        hasTranslations = i18n.hasResourceBundle(i18n.language, 'common');
+        console.log(`🔍 [useTranslationsReady] Code splitting mode - checking namespace 'common': ${hasTranslations}`);
+      } else {
+        // Legacy monolithic: Check for 'translation' namespace
+        hasTranslations = i18n.hasResourceBundle(i18n.language, 'translation');
+        console.log(`🔍 [useTranslationsReady] Monolithic mode - checking namespace 'translation': ${hasTranslations}`);
+      }
 
       if (hasTranslations && isMounted) {
+        console.log(`✅ [useTranslationsReady] Translations ready for ${i18n.language}`);
         setIsReady(true);
         return true;
       }

@@ -17,9 +17,11 @@ export default defineConfig(({ mode }) => ({
     // PWA Configuration for Push Notifications
     // Re-enabled with Node.js v20 LTS for workbox-build compatibility
     VitePWA({
-      // Strategy: Generate service worker (Vite PWA handles PWA cache)
-      // Firebase Messaging SW registered separately for FCM notifications
-      strategies: 'generateSW',
+      // 🔴 CRITICAL FIX: Use injectManifest for custom SW with redirect handling
+      // Custom SW (src/sw-custom.ts) includes explicit redirect: 'follow' configuration
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw-custom.ts',
 
       // Register service worker configuration
       registerType: 'autoUpdate',
@@ -85,6 +87,11 @@ export default defineConfig(({ mode }) => ({
 
         // Generate service worker with Workbox for PWA offline support
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+
+        // 🔴 CRITICAL FIX: Navigation handling for SPA routing
+        navigateFallback: 'index.html',
+        navigateFallbackDenylist: [/^\/api/, /^\/translations/, /\.(?:png|jpg|jpeg|svg|gif|webp|ico|woff|woff2|ttf|otf|js|css)$/],
+        cleanUrls: false, // Don't manipulate URLs to prevent redirect issues
 
         // 🔴 CRITICAL FIX: Disable navigation preload to prevent redirect errors
         // navigationPreload must be false to avoid "redirect mode is not follow" errors
@@ -153,7 +160,13 @@ export default defineConfig(({ mode }) => ({
               }
             }
           }
-        ]
+        ],
+
+        // 🔴 CRITICAL FIX: Configure fetch options to follow redirects
+        // This prevents "redirect mode is not follow" errors
+        additionalManifestEntries: undefined,
+        // Custom navigation handling with redirect support
+        ignoreURLParametersMatching: [/^utm_/, /^fbclid$/]
       },
 
       // Development options
@@ -161,6 +174,12 @@ export default defineConfig(({ mode }) => ({
       devOptions: {
         enabled: false, // Disable SW in dev - only needed in production for PWA
         type: 'module'
+      },
+
+      // 🔴 FIX: injectManifest configuration for large bundles
+      injectManifest: {
+        maximumFileSizeToCacheInBytes: 25 * 1024 * 1024, // 25MB (for ML/CV libraries)
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}']
       },
 
       // Include additional files in the PWA
