@@ -36,5 +36,8 @@
   "cannot_transition_from_pending_to_in_progress": "Pedidos devem ser confirmados por um gerente primeiro",
   "cannot_transition_from_pending_to_completed": "Pedidos devem ser processados antes da conclusÃ£o",
   "cannot_transition_from_confirmed_to_completed": "Pedidos devem ser processados antes da conclusÃ£o",
-  "status_transition_error": "Esta mudanÃ§a de status nÃ£o Ã© permitida. Por favor, verifique o fluxo de trabalho"
+  "status_transition_error": "Esta mudanÃ§a de status nÃ£o Ã© permitida. Por favor, verifique o fluxo de trabalho",
+  "pin_invalid": "PIN deve ter 4-6 dÃ­gitos",
+  "pin_required": "CÃ³digo PIN Ã© obrigatÃ³rio",
+  "pin_must_be_numeric": "PIN deve conter apenas nÃºmeros"
 }

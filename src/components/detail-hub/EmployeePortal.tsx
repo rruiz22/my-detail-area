@@ -35,6 +35,7 @@ import { supabase } from "@/integrations/supabase/client";
 // VALIDATION SCHEMA
 // =====================================================
 
+// Note: Validation messages are now handled by FormMessage component with translations
 const employeeFormSchema = z.object({
   first_name: z.string().min(1, "First name is required"),
   last_name: z.string().min(1, "Last name is required"),
@@ -45,6 +46,9 @@ const employeeFormSchema = z.object({
   hourly_rate: z.coerce.number().positive("Hourly rate must be positive").nullable().optional(),
   hire_date: z.date(),
   status: z.enum(["active", "inactive", "suspended", "terminated"]).default("active"),
+  pin_code: z.string()
+    .min(1, "PIN code is required")
+    .regex(/^\d{4,6}$/, "PIN must be 4-6 digits"),
 });
 
 type EmployeeFormValues = z.infer<typeof employeeFormSchema>;
@@ -78,6 +82,7 @@ const EmployeePortal = () => {
       hourly_rate: null,
       hire_date: new Date(),
       status: "active",
+      pin_code: "",
     },
   });
 
@@ -125,6 +130,7 @@ const EmployeePortal = () => {
         hourly_rate: employee.hourly_rate,
         hire_date: new Date(employee.hire_date),
         status: employee.status,
+        pin_code: employee.pin_code || "",
       });
     } else {
       setEditingEmployee(null);
@@ -138,6 +144,7 @@ const EmployeePortal = () => {
         hourly_rate: null,
         hire_date: new Date(),
         status: "active",
+        pin_code: "",
       });
     }
     setIsDialogOpen(true);
@@ -169,6 +176,7 @@ const EmployeePortal = () => {
             hourly_rate: values.hourly_rate || null,
             hire_date: format(values.hire_date, 'yyyy-MM-dd'),
             status: values.status,
+            pin_code: values.pin_code, // Required field
           },
         },
         {
@@ -194,6 +202,7 @@ const EmployeePortal = () => {
           hourly_rate: values.hourly_rate || null,
           hire_date: format(values.hire_date, 'yyyy-MM-dd'),
           status: values.status,
+          pin_code: values.pin_code, // Required field
         },
         {
           onSuccess: () => {
@@ -296,15 +305,18 @@ const EmployeePortal = () => {
               {t('detail_hub.employees.add_employee')}
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>
-                {editingEmployee ? t('detail_hub.employees.edit') : t('detail_hub.employees.add_employee')}
-              </DialogTitle>
-            </DialogHeader>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden p-0">
+            <div className="px-6 pt-6">
+              <DialogHeader>
+                <DialogTitle>
+                  {editingEmployee ? t('detail_hub.employees.edit') : t('detail_hub.employees.add_employee')}
+                </DialogTitle>
+              </DialogHeader>
+            </div>
 
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+            <div className="overflow-y-auto max-h-[calc(90vh-120px)] px-6">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
@@ -511,6 +523,40 @@ const EmployeePortal = () => {
                   )}
                 />
 
+                <FormField
+                  control={form.control}
+                  name="pin_code"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2">
+                        <Shield className="w-4 h-4" />
+                        {t('detail_hub.employees.kiosk_pin')}
+                        <span className="text-destructive">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder={t('detail_hub.employees.kiosk_pin_placeholder')}
+                          maxLength={6}
+                          pattern="\d*"
+                          inputMode="numeric"
+                          {...field}
+                          value={field.value || ''}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/\D/g, '');
+                            field.onChange(value);
+                          }}
+                          required
+                        />
+                      </FormControl>
+                      <p className="text-xs text-muted-foreground">
+                        {t('detail_hub.employees.kiosk_pin_help')}
+                      </p>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <div className="flex justify-center py-2">
                   <Button type="button" variant="outline" className="w-40">
                     <Camera className="w-4 h-4 mr-2" />
@@ -531,6 +577,7 @@ const EmployeePortal = () => {
                 </div>
               </form>
             </Form>
+            </div>
           </DialogContent>
         </Dialog>
       </div>

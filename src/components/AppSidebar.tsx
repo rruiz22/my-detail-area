@@ -346,7 +346,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {coreNavItems.map(item => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.url}>
                   {collapsed && !isMobile ? (
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -394,7 +394,7 @@ export function AppSidebar() {
                 const showBadge = isChatItem && totalUnreadCount > 0;
 
                 return (
-                  <SidebarMenuItem key={item.title}>
+                  <SidebarMenuItem key={item.url}>
                     {collapsed && !isMobile ? (
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -474,7 +474,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {managementNavItems.map(item => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.url}>
                   {collapsed && !isMobile ? (
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -518,7 +518,7 @@ export function AppSidebar() {
             <SidebarGroupContent>
               <SidebarMenu>
                 {systemAdminNavItems.map(item => (
-                  <SidebarMenuItem key={item.title}>
+                  <SidebarMenuItem key={item.url}>
                     {collapsed && !isMobile ? (
                       <Tooltip>
                         <TooltipTrigger asChild>

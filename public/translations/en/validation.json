@@ -36,5 +36,8 @@
   "cannot_transition_from_pending_to_in_progress": "Orders must be confirmed by a manager first",
   "cannot_transition_from_pending_to_completed": "Orders must be processed before completion",
   "cannot_transition_from_confirmed_to_completed": "Orders must be processed before completion",
-  "status_transition_error": "This status change is not allowed. Please check the workflow"
+  "status_transition_error": "This status change is not allowed. Please check the workflow",
+  "pin_invalid": "PIN must be 4-6 digits",
+  "pin_required": "PIN code is required",
+  "pin_must_be_numeric": "PIN must contain only numbers"
 }
