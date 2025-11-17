@@ -1012,7 +1012,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         toast({ description: t('orders.creating_multiple_orders', { count: selectedServices.length }) || `Creating ${selectedServices.length} orders...` });
 
         // Pass array of orders to onSave - cast to OrderData type
-        onSave(ordersData as unknown as OrderData);
+        await onSave(ordersData as unknown as OrderData);
       } else {
         // Single service or editing - proceed as normal
       const dbData = transformToDbFormat(formData);
@@ -1020,7 +1020,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       // Show immediate success feedback
       toast({ description: t('orders.creating_order') });
 
-      onSave(dbData);
+      await onSave(dbData);
       }
 
     } catch (error) {

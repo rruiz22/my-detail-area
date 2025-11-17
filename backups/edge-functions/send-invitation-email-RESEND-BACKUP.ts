@@ -2,6 +2,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { Resend } from "npm:resend@2.0.0";
 
 // CORS headers - embedded to avoid import issues during deployment
 const corsHeaders = {
@@ -13,6 +14,7 @@ const corsHeaders = {
 // Constants
 const EMAIL_CONFIG = {
   DEFAULT_DEALER_ID: 'default',
+  EMAIL_DOMAIN: 'invitations@mydetailarea.com', // Updated to verified domain
   TAG_TYPES: {
     INVITATION: 'invitation'
   },
@@ -86,13 +88,13 @@ function sanitizeTemplateVariable(value: string): string {
 }
 
 function sanitizeEmailTag(value: string): string {
-  // SendGrid API only allows ASCII letters, numbers, underscores, and dashes in tags (via categories)
+  // Resend API only allows ASCII letters, numbers, underscores, and dashes in tags
   // Replace spaces and special characters with underscores
   return value
     .replace(/[^a-zA-Z0-9_-]/g, '_')
     .replace(/_+/g, '_') // Replace multiple underscores with single
     .replace(/^_|_$/g, '') // Remove leading/trailing underscores
-    .substring(0, 256); // SendGrid category max length
+    .substring(0, 256); // Resend tag max length
 }
 
 function formatRoleName(role: string): string {
@@ -148,16 +150,10 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Environment validation - SendGrid
-    const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
-    if (!sendgridApiKey) {
-      throw new Error("SENDGRID_API_KEY not configured");
-    }
-
-    const fromAddress = Deno.env.get("EMAIL_FROM_ADDRESS");
-    const fromName = Deno.env.get("EMAIL_FROM_NAME") || "My Detail Area";
-    if (!fromAddress) {
-      throw new Error("EMAIL_FROM_ADDRESS not configured");
+    // Environment validation
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    if (!resendApiKey) {
+      throw new Error("RESEND_API_KEY not configured");
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
@@ -167,6 +163,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const resend = new Resend(resendApiKey);
 
     // Input validation and parsing
     let requestBody: any;
@@ -239,56 +236,24 @@ const handler = async (req: Request): Promise<Response> => {
       customTemplate: templateData
     });
 
-    console.log('[INVITATION EMAIL] Sending email via SendGrid to:', to);
-
-    // Prepare SendGrid email payload
-    const emailPayload = {
-      personalizations: [
-        {
-          to: [{ email: to }],
-          subject: template.subject,
-        },
-      ],
-      from: {
-        email: fromAddress,
-        name: `${dealershipName} via ${fromName}`,
-      },
-      content: [
-        {
-          type: 'text/plain',
-          value: template.text,
-        },
-        {
-          type: 'text/html',
-          value: template.html,
-        },
-      ],
-      categories: [
-        EMAIL_CONFIG.TAG_TYPES.INVITATION,
-        sanitizeEmailTag(dealershipName),
-        sanitizeEmailTag(roleName)
-      ],
-    };
-
-    // Send email via SendGrid API
-    const sendgridResponse = await fetch('https://api.sendgrid.com/v3/mail/send', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${sendgridApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(emailPayload),
+    // Send the email
+    const { data, error } = await resend.emails.send({
+      from: `${dealershipName} <${EMAIL_CONFIG.EMAIL_DOMAIN}>`,
+      to: [to],
+      subject: template.subject,
+      html: template.html,
+      text: template.text,
+      tags: [
+        { name: 'type', value: EMAIL_CONFIG.TAG_TYPES.INVITATION },
+        { name: 'dealership', value: sanitizeEmailTag(dealershipName) },
+        { name: 'role', value: sanitizeEmailTag(roleName) }
+      ]
     });
 
-    if (!sendgridResponse.ok) {
-      const errorText = await sendgridResponse.text();
-      console.error('[INVITATION EMAIL] SendGrid error:', errorText);
-      throw new Error(`SendGrid API error: ${sendgridResponse.status} - ${errorText}`);
+    if (error) {
+      await logError(new Error(`Failed to send email: ${error.message}`), 'email-send', supabase);
+      throw new Error(`Failed to send email: ${error.message}`);
     }
-
-    // SendGrid returns 202 Accepted with X-Message-Id header
-    const messageId = sendgridResponse.headers.get('X-Message-Id') || 'unknown';
-    console.log('[INVITATION EMAIL] Email sent successfully via SendGrid:', messageId);
 
     // Perform database updates in parallel (non-critical operations)
     const now = new Date().toISOString();
@@ -297,7 +262,7 @@ const handler = async (req: Request): Promise<Response> => {
         .from('dealer_invitations')
         .update({
           email_sent_at: now,
-          email_id: messageId,
+          email_id: data?.id,
           updated_at: now
         })
         .eq('id', invitationId),
@@ -314,8 +279,7 @@ const handler = async (req: Request): Promise<Response> => {
             email: to,
             role: roleName,
             dealership: dealershipName,
-            email_id: messageId,
-            provider: 'sendgrid'
+            email_id: data?.id
           },
           ip_address: clientIP
         })
@@ -333,8 +297,7 @@ const handler = async (req: Request): Promise<Response> => {
       JSON.stringify({
         success: true,
         message: "Invitation email sent successfully",
-        emailId: messageId,
-        provider: 'sendgrid',
+        emailId: data?.id,
         invitationLink
       }),
       {

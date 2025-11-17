@@ -1794,6 +1794,8 @@
                    "no_results":  "No results found",
                    "try_different_keywords":  "Try different search terms or check your filters",
                    "searching":  "Searching...",
+                   "searchable_fields":  "Searchable: Order #, Customer, VIN, Stock #, Vehicle, Email, Phone, Notes",
+                   "searching_in_fields":  "Searching in {{count}} fields",
                    "results_found":  "{{count}} results found",
                    "result_found":  "{{count}} result found",
                    "view_all":  "View all results",

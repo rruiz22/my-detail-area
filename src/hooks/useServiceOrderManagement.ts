@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 import { isDateInWeek } from '@/utils/weekUtils';
 import { dev, warn, error as logError } from '@/utils/logger';
+import { searchOrders } from '@/utils/orderSearchUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { enrichOrdersArray, createUserDisplayName, type EnrichmentLookups } from '@/services/orderEnrichment';
@@ -369,17 +370,9 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
       }
     }
 
-    // Apply global filters
+    // Enhanced search using shared utility (21+ searchable fields)
     if (filters.search) {
-      const searchLower = filters.search.toLowerCase();
-      filtered = filtered.filter(order =>
-        order.id?.toLowerCase().includes(searchLower) ||
-        order.customerName?.toLowerCase().includes(searchLower) ||
-        order.po?.toLowerCase().includes(searchLower) ||
-        order.ro?.toLowerCase().includes(searchLower) ||
-        order.tag?.toLowerCase().includes(searchLower) ||
-        `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`.toLowerCase().includes(searchLower)
-      );
+      filtered = searchOrders(filtered as any, filters.search) as ServiceOrder[];
     }
 
     if (filters.status) {

@@ -12,6 +12,7 @@ import { useSearchPersistence, useTabPersistence, useViewModePersistence } from 
 import { useStatusPermissions } from '@/hooks/useStatusPermissions';
 import { dev, warn, error as logError } from '@/utils/logger';
 import { determineTabForOrder } from '@/utils/orderUtils';
+import { searchOrders } from '@/utils/orderSearchUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus, RefreshCw } from 'lucide-react';
 import { useEffect, useState, useCallback, useMemo } from 'react';
@@ -409,18 +410,9 @@ export default function SalesOrders() {
   const effectiveViewMode = useMemo(() => isMobile ? 'table' : viewMode, [isMobile, viewMode]);
 
   // Filter orders based on search term
+  // Enhanced search with 21+ searchable fields
   const filteredOrders = useMemo(() => {
-    if (!searchTerm) return orders;
-
-    const searchLower = searchTerm.toLowerCase();
-    return orders.filter((order: Order) =>
-      order.id.toLowerCase().includes(searchLower) ||
-      order.vehicleVin?.toLowerCase().includes(searchLower) ||
-      order.stockNumber?.toLowerCase().includes(searchLower) ||
-      order.notes?.toLowerCase().includes(searchLower) ||
-      order.customerName?.toLowerCase().includes(searchLower) ||
-      `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`.toLowerCase().includes(searchLower)
-    );
+    return searchOrders(orders, searchTerm);
   }, [orders, searchTerm]);
 
   // Handle print list (must be after filteredOrders)

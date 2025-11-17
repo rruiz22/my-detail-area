@@ -87,7 +87,8 @@
       "Bash(then ls -la supabase/migrations)",
       "Bash(else echo \"No migrations folder found\")",
       "Bash(export:*)",
-      "Bash(ping:*)"
+      "Bash(ping:*)",
+      "Bash(then grep -i \"SENDGRID\\|EMAIL_FROM\" .env)"
     ],
     "deny": [],
     "ask": []

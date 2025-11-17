@@ -1536,6 +1536,8 @@
                    "no_results":  "Nenhum resultado encontrado",
                    "try_different_keywords":  "Tente outros termos de pesquisa ou verifique seus filtros",
                    "searching":  "Buscando...",
+                   "searchable_fields":  "PesquisÃ¡vel: # Pedido, Cliente, VIN, Stock #, VeÃ­culo, Email, Telefone, Notas",
+                   "searching_in_fields":  "Pesquisando em {{count}} campos",
                    "results_found":  "{{count}} resultados encontrados",
                    "result_found":  "{{count}} resultado encontrado",
                    "view_all":  "Ver todos os resultados",

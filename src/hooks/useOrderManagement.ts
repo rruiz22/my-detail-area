@@ -15,6 +15,7 @@ import { sendOrderCreatedSMS } from '@/services/smsNotificationHelper';
 import { slackNotificationService } from '@/services/slackNotificationService';
 import { getSystemTimezone } from '@/utils/dateUtils';
 import { dev, error as logError, warn } from '@/utils/logger';
+import { searchOrders } from '@/utils/orderSearchUtils';
 import {
   createAssignmentNotification,
   createOrderNotification,
@@ -287,6 +288,10 @@ export interface Order {
 
   // Notes
   notes?: string;
+  internal_notes?: string; // Internal notes (not visible to customers)
+
+  // Additional fields
+  salesperson?: string; // Sales person assigned to the order
 }
 
 // Transform Supabase order to component order
@@ -347,6 +352,10 @@ const transformOrder = (supabaseOrder: SupabaseOrderWithComments): Order => {
 
     // Notes
     notes: getFieldValue(supabaseOrder.notes),
+    internal_notes: getFieldValue(supabaseOrder.internal_notes),
+
+    // Additional fields
+    salesperson: getFieldValue(supabaseOrder.salesperson),
 
     // Enhanced fields from manual JOINs (will be set in refreshData)
     dealershipName: 'Unknown Dealer',
@@ -548,15 +557,9 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
     }
 
     // Apply global filters
+    // Enhanced search using shared utility (21+ searchable fields)
     if (currentFilters.search) {
-      const searchLower = currentFilters.search.toLowerCase();
-      filtered = filtered.filter(order =>
-        order.id?.toLowerCase().includes(searchLower) ||
-        order.vehicleVin?.toLowerCase().includes(searchLower) ||
-        order.stockNumber?.toLowerCase().includes(searchLower) ||
-        order.customerName?.toLowerCase().includes(searchLower) ||
-        `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`.toLowerCase().includes(searchLower)
-      );
+      filtered = searchOrders(filtered, currentFilters.search);
     }
 
     if (currentFilters.status) {

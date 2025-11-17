@@ -298,6 +298,92 @@ try {
 
 This is an enterprise-grade dealership management system with comprehensive internationalization, advanced theme customization, and sophisticated state persistence.
 
+## 🔌 MCP (Model Context Protocol) Configuration
+
+### **Project-Specific MCP Servers**
+
+**Active MCP servers configured for this project** (`.claude/.claude.json`):
+
+#### **Supabase MCP Server** ⭐ PRIMARY
+```json
+{
+  "type": "stdio",
+  "command": "cmd",
+  "args": ["/c", "npx", "-y", "@supabase/mcp-server-supabase@latest",
+           "--project-ref=swfnnrpzpkdypbrzmgnr",
+           "--access-token=sbp_5b15b6025c6d9d31d0ab1701d02726a09a463f54"],
+  "env": {
+    "SUPABASE_URL": "https://swfnnrpzpkdypbrzmgnr.supabase.co",
+    "SUPABASE_SERVICE_ROLE_KEY": "[CONFIGURED]",
+    "SUPABASE_ACCESS_TOKEN": "[CONFIGURED]"
+  }
+}
+```
+
+**Capabilities:**
+- Direct database query execution via `execute_sql`
+- Table schema inspection via `list_tables`
+- Migration management via `apply_migration`, `list_migrations`
+- TypeScript type generation via `generate_typescript_types`
+- Edge Function deployment via `deploy_edge_function`, `list_edge_functions`, `get_edge_function`
+- Real-time logs access via `get_logs`
+- Connection to project: `swfnnrpzpkdypbrzmgnr`
+
+**Usage patterns:**
+```typescript
+// Use Supabase MCP for database operations
+mcp__supabase__execute_sql("SELECT * FROM profiles WHERE id = 'xxx'")
+mcp__supabase__list_tables()
+mcp__supabase__apply_migration("path/to/migration.sql")
+mcp__supabase__generate_typescript_types()
+```
+
+### **Globally Available MCP Servers** (Inherited from user config)
+
+The following MCP servers are available globally but should be used sparingly in this project context:
+
+| Server | Package | Primary Use Case |
+|--------|---------|------------------|
+| **memory** | `@modelcontextprotocol/server-memory` | Session memory persistence |
+| **github** | `@modelcontextprotocol/server-github` | GitHub API interactions |
+| **notion** | `notion-mcp-server` | Notion workspace integration |
+| **railway** | `@railway/mcp-server` | Railway deployment |
+| **slack** | `simple-slack-mcp-server` | Slack messaging |
+| **filesystem** | `@modelcontextprotocol/server-filesystem` | File operations (C:/Users/rudyr) |
+| **playwright-official** | `@playwright/mcp@latest` | Browser automation |
+| **context7** | `@upstash/context7-mcp` | Context management |
+| **postgresql** | `@modelcontextprotocol/server-postgres` | Generic PostgreSQL (use Supabase instead) |
+| **sqlite** | `@modelcontextprotocol/server-sqlite` | SQLite databases |
+| **gdrive** | `@modelcontextprotocol/server-gdrive` | Google Drive integration |
+| **vercel** | `mcp-vercel` | Vercel deployments |
+| **netlify** | `mcp-netlify` | Netlify deployments |
+| **sentry** | `mcp-sentry` | Error tracking |
+| **firecrawl** | `firecrawl-mcp` | Web scraping |
+| **puppeteer** | `@hisma/server-puppeteer` | Headless Chrome automation |
+
+### **MCP Server Priority for MyDetailArea**
+
+**Primary (Always use):**
+1. **Supabase MCP** - All database operations, migrations, Edge Functions
+
+**Secondary (Use when needed):**
+2. **GitHub MCP** - For git operations, PR management, issue tracking
+3. **Memory MCP** - For session context persistence
+4. **Railway MCP** - For deployment operations
+
+**Avoid in this project:**
+- **postgresql** - Use Supabase MCP instead (redundant)
+- **filesystem** - Use native tools (Read, Write, Edit) instead
+- **sqlite** - Not applicable to this project (uses PostgreSQL)
+
+### **Best Practices**
+
+1. **Always prefer Supabase MCP** for database operations over native SQL tools
+2. **Use MCP tools** when they provide better abstraction (migrations, type generation)
+3. **Avoid redundancy** - Don't use multiple MCP servers for the same task
+4. **Check MCP availability** before using: `/mcp` command shows active servers
+5. **MCP tool naming** - All MCP tools are prefixed with `mcp__<server>__<tool>`
+
 ## 🤖 Claude Code Specialized Agents & Workflows
 
 ### **Frontend Agents (4)**

@@ -1560,6 +1560,8 @@
                    "no_results":  "No se encontraron resultados",
                    "try_different_keywords":  "Intenta con otros tÃ©rminos de bÃºsqueda o revisa tus filtros",
                    "searching":  "Buscando...",
+                   "searchable_fields":  "BÃºsqueda: # Orden, Cliente, VIN, Stock #, VehÃ­culo, Email, TelÃ©fono, Notas",
+                   "searching_in_fields":  "Buscando en {{count}} campos",
                    "results_found":  "{{count}} resultados encontrados",
                    "result_found":  "{{count}} resultado encontrado",
                    "view_all":  "Ver todos los resultados",

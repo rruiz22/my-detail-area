@@ -22,6 +22,7 @@ import { useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersist
 import { getSystemTimezone } from '@/utils/dateUtils';
 import { orderEvents } from '@/utils/eventBus';
 import { generateOrderListPDF } from '@/utils/generateOrderListPDF';
+import { searchOrders } from '@/utils/orderSearchUtils';
 import logger from '@/utils/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus, RefreshCw } from 'lucide-react';
@@ -493,18 +494,9 @@ export default function ReconOrders() {
   }), [filteredOrdersByTab, t]);
 
   // Filter orders based on search term
+  // Enhanced search with 21+ searchable fields
   const filteredOrders = useMemo(() => {
-    return transformedOrders.filter((order) => {
-      if (!searchTerm) return true;
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        order.id.toLowerCase().includes(searchLower) ||
-        order.vehicle_vin?.toLowerCase().includes(searchLower) ||
-        order.stock?.toLowerCase().includes(searchLower) ||
-        order.order_number?.toLowerCase().includes(searchLower) ||
-        `${order.vehicle_year} ${order.vehicle_make} ${order.vehicle_model}`.toLowerCase().includes(searchLower)
-      );
-    });
+    return searchOrders(transformedOrders as any, searchTerm) as ReconOrder[];
   }, [transformedOrders, searchTerm]);
 
   // Handle print list

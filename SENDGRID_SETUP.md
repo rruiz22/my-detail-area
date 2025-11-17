@@ -5,9 +5,9 @@ This document outlines the migration from Resend to SendGrid for the password re
 
 ## Edge Functions Updated
 - ✅ `send-password-reset-email` - Migrated to SendGrid
+- ✅ `send-invitation-email` - Migrated to SendGrid
 
 ## Edge Functions Still Using Resend (NOT migrated yet)
-- ⏸️ `send-invitation-email`
 - ⏸️ `send-invoice-email`
 - ⏸️ `send-order-email`
 

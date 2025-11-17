@@ -10,6 +10,7 @@ import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { getSystemTimezone } from '@/utils/dateUtils';
 import { orderEvents } from '@/utils/eventBus';
 import { generateOrderListPDF } from '@/utils/generateOrderListPDF';
+import { searchOrders } from '@/utils/orderSearchUtils';
 import logger from '@/utils/logger';
 import { determineTabForOrder } from '@/utils/orderUtils';
 import { useQueryClient } from '@tanstack/react-query';
@@ -390,18 +391,9 @@ export default function CarWash() {
   };
 
   // Filter orders based on search term (after tab filtering)
+  // Enhanced search with 21+ searchable fields
   const filteredOrders = useMemo(() => {
-    return filteredOrdersByTab.filter((order: CarWashOrder) => {
-      if (!searchTerm) return true;
-      const searchLower = searchTerm.toLowerCase();
-      return (
-        order.id.toLowerCase().includes(searchLower) ||
-        order.vehicleVin?.toLowerCase().includes(searchLower) ||
-        order.stockNumber?.toLowerCase().includes(searchLower) ||
-        order.tag?.toLowerCase().includes(searchLower) ||
-        `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`.toLowerCase().includes(searchLower)
-      );
-    });
+    return searchOrders(filteredOrdersByTab as any, searchTerm) as CarWashOrder[];
   }, [filteredOrdersByTab, searchTerm]);
 
   // Handle print list
