@@ -207,7 +207,69 @@ const loadLanguage = async (language: string) => {
     console.log(`✅ Translations loaded for ${language} (v${TRANSLATION_VERSION})`);
     return translations;
   } catch (error) {
-    console.error(`Failed to load language ${language}:`, error);
+    console.error(`❌ Failed to load language ${language}:`, error);
+
+    // 🔴 CRITICAL FIX: Auto-fallback to English if preferred language fails
+    if (language !== 'en') {
+      console.warn(`⚠️ Attempting fallback to English...`);
+      try {
+        const fallbackResponse = await fetchWithRetry(`/translations/en.json?v=${TRANSLATION_VERSION}`);
+
+        if (!fallbackResponse.ok) {
+          throw new Error(`HTTP ${fallbackResponse.status}: ${fallbackResponse.statusText}`);
+        }
+
+        const fallbackText = await fallbackResponse.text();
+
+        if (!fallbackText.trim()) {
+          throw new Error('Empty fallback response received');
+        }
+
+        let fallbackTranslations;
+        try {
+          fallbackTranslations = JSON.parse(fallbackText);
+        } catch (parseError) {
+          console.error(`JSON parse error in fallback en.json:`, parseError);
+          throw new Error(`Invalid JSON in fallback en.json: ${parseError.message}`);
+        }
+
+        // Add English as fallback resource
+        if (!i18n.hasResourceBundle('en', 'translation')) {
+          i18n.addResourceBundle('en', 'translation', fallbackTranslations);
+        }
+
+        // Cache the English fallback
+        const fallbackCacheKey = `${TRANSLATION_CACHE_KEY}_en`;
+        const fallbackCacheData: CachedTranslations = {
+          translations: fallbackTranslations,
+          timestamp: Date.now(),
+          version: TRANSLATION_VERSION
+        };
+
+        const storageAvailable = isStorageAvailable('sessionStorage');
+        if (storageAvailable) {
+          try {
+            sessionStorage.setItem(fallbackCacheKey, JSON.stringify(fallbackCacheData));
+            console.log(`💾 English fallback cached in sessionStorage`);
+          } catch (storageError) {
+            memoryCache.set(fallbackCacheKey, fallbackCacheData);
+            console.log(`💾 English fallback cached in memory`);
+          }
+        } else {
+          memoryCache.set(fallbackCacheKey, fallbackCacheData);
+          console.log(`💾 English fallback cached in memory [storage unavailable]`);
+        }
+
+        // Switch to English
+        await i18n.changeLanguage('en');
+        console.log(`✅ Successfully fell back to English translations`);
+
+        return fallbackTranslations;
+      } catch (fallbackError) {
+        console.error(`❌ English fallback also failed:`, fallbackError);
+      }
+    }
+
     return null;
   }
 };
