@@ -88,8 +88,28 @@
       "enter_employee_id": "Digite o ID do FuncionÃ¡rio (ex., EMP001)"
     },
     "recent_activity": "Atividade Recente",
-    "last_action": "Ãšltima AÃ§Ã£o",
-    "kiosk_settings": "ConfiguraÃ§Ãµes do Quiosque"
+    "last_action": "Última Ação",
+    "kiosk_settings": "Configurações do Quiosque"
+  },
+  "live_dashboard": {
+    "title": "Quem Está Trabalhando Agora",
+    "subtitle": "Status de funcionários em tempo real",
+    "clocked_in_at": "Registrou entrada às",
+    "clock_in": "Entrada",
+    "elapsed_time": "Tempo",
+    "elapsed": "Decorrido",
+    "break_duration": "Duração do Intervalo",
+    "on_break": "Em Intervalo",
+    "active": "Ativo",
+    "view_details": "Ver",
+    "edit": "Editar",
+    "no_employees_working": "Nenhum funcionário trabalhando atualmente",
+    "stats": {
+      "clocked_in": "Registrados",
+      "on_break": "Em Intervalo",
+      "total_hours_today": "Horas Totais Hoje",
+      "active_departments": "Departamentos Ativos"
+    }
   },
   "employees": {
     "title": "Portal de FuncionÃ¡rios",

@@ -2,9 +2,9 @@
   "title": "Centro de Detallado",
   "subtitle": "Panel de gestión de empleados y registro de horas",
   "dashboard": {
-    "title": "Detail Hub Dashboard",
+    "title": "Panel de Control",
     "stats": {
-      "active_employees": "Active Employees",
+      "active_employees": "Empleados Activos",
       "todays_hours": "Today's Hours",
       "pending_reviews": "Pending Reviews",
       "total_revenue": "Total Revenue"
@@ -87,9 +87,29 @@
     "placeholders": {
       "enter_employee_id": "Enter Employee ID (e.g., EMP001)"
     },
-    "recent_activity": "Recent Activity",
-    "last_action": "Last Action",
-    "kiosk_settings": "Kiosk Settings"
+    "recent_activity": "Actividad Reciente",
+    "last_action": "Última Acción",
+    "kiosk_settings": "Configuración de Kiosko"
+  },
+  "live_dashboard": {
+    "title": "Quién Está Trabajando Ahora",
+    "subtitle": "Estado de empleados en tiempo real",
+    "clocked_in_at": "Marcó entrada a las",
+    "clock_in": "Entrada",
+    "elapsed_time": "Tiempo",
+    "elapsed": "Transcurrido",
+    "break_duration": "Duración del Descanso",
+    "on_break": "En Descanso",
+    "active": "Activo",
+    "view_details": "Ver",
+    "edit": "Editar",
+    "no_employees_working": "No hay empleados trabajando actualmente",
+    "stats": {
+      "clocked_in": "Registrados",
+      "on_break": "En Descanso",
+      "total_hours_today": "Horas Totales Hoy",
+      "active_departments": "Departamentos Activos"
+    }
   },
   "employees": {
     "title": "Portal de Empleados",
@@ -358,13 +378,14 @@
     "settings": "Settings"
   },
   "tabs": {
-    "overview": "Overview",
-    "employees": "Employees",
-    "timecards": "Timecards",
-    "analytics": "Analytics",
-    "reports": "Reports",
-    "invoices": "Invoices",
-    "kiosks": "Kiosks"
+    "overview": "Resumen",
+    "employees": "Empleados",
+    "schedules": "Horarios",
+    "timecards": "Tarjetas de Tiempo",
+    "analytics": "Analíticas",
+    "reports": "Reportes",
+    "invoices": "Facturas",
+    "kiosks": "Kioskos"
   },
   "qr_block": {
     "words_in_general": "Scan QR code with your phone camera to view this order details and share with team members"

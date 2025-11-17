@@ -286,6 +286,7 @@ export function useClockIn() {
       photoUrl?: string;
       faceConfidence?: number;
       kioskId?: string;
+      scheduleId?: string; // NEW: Link to schedule
     }) => {
       if (!user) throw new Error('User not authenticated');
 
@@ -313,6 +314,7 @@ export function useClockIn() {
           face_confidence_in: params.faceConfidence,
           requires_manual_verification: params.method === 'photo_fallback' || (params.faceConfidence ? params.faceConfidence < 80 : false),
           kiosk_id: params.kioskId,
+          schedule_id: params.scheduleId, // NEW: Link to schedule (triggers auto-calculate variance)
           status: 'active'
         })
         .select()

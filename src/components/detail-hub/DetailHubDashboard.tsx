@@ -16,6 +16,7 @@ import ReportsCenter from "./ReportsCenter";
 import InvoiceCenter from "./InvoiceCenter";
 import KioskManager from "./KioskManager";
 import LiveStatusDashboard from "./LiveStatusDashboard";
+import ScheduleCalendar from "./ScheduleCalendar";
 import { TimeClockModal } from "./TimeClockModal";
 
 const DetailHubDashboard = () => {
@@ -72,9 +73,10 @@ const DetailHubDashboard = () => {
 
       {/* Tabs for all Detail Hub functionality */}
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-7">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="overview">{t('detail_hub.tabs.overview')}</TabsTrigger>
           <TabsTrigger value="employees">{t('detail_hub.tabs.employees')}</TabsTrigger>
+          <TabsTrigger value="schedules">{t('detail_hub.tabs.schedules')}</TabsTrigger>
           <TabsTrigger value="timecards">{t('detail_hub.tabs.timecards')}</TabsTrigger>
           <TabsTrigger value="analytics">{t('detail_hub.tabs.analytics')}</TabsTrigger>
           <TabsTrigger value="reports">{t('detail_hub.tabs.reports')}</TabsTrigger>
@@ -90,6 +92,11 @@ const DetailHubDashboard = () => {
         {/* TAB: Employees */}
         <TabsContent value="employees">
           <EmployeePortal />
+        </TabsContent>
+
+        {/* TAB: Schedules */}
+        <TabsContent value="schedules">
+          <ScheduleCalendar />
         </TabsContent>
 
         {/* TAB: Timecards */}

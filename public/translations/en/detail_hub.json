@@ -408,6 +408,7 @@
   "tabs": {
     "overview": "Overview",
     "employees": "Employees",
+    "schedules": "Schedules",
     "timecards": "Timecards",
     "analytics": "Analytics",
     "reports": "Reports",

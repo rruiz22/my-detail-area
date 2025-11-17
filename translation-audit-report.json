@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 855,
-  "totalStrings": 9753,
-  "hardcodedStrings": 2018,
-  "translatedStrings": 7735,
+  "scannedFiles": 858,
+  "totalStrings": 9803,
+  "hardcodedStrings": 2046,
+  "translatedStrings": 7757,
   "issues": {
     "critical": [
       {
@@ -7188,6 +7188,358 @@
         "severity": "high"
       },
       {
+        "file": "src\\components\\detail-hub\\PunchClockKiosk.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Employee ID",
+            "line": 310,
+            "context": "309: <div className=\"space-y-2\">\n310: <label className=\"text-sm font-medium text-gray-700\">\n311: Employee ID"
+          },
+          {
+            "text": "Kiosk PIN",
+            "line": 326,
+            "context": "325: <label className=\"text-sm font-medium text-gray-700 flex items-center gap-2\">\n326: <Shield className=\"w-4 h-4\" />\n327: Kiosk PIN"
+          },
+          {
+            "text": "Start Break",
+            "line": 392,
+            "context": "391: >\n392: <Coffee className=\"w-6 h-6 mr-2\" />\n393: Start Break"
+          },
+          {
+            "text": "End Break",
+            "line": 403,
+            "context": "402: >\n403: <Coffee className=\"w-6 h-6 mr-2\" />\n404: End Break"
+          },
+          {
+            "text": "Confirm",
+            "line": 489,
+            "context": "488: >\n489: <CheckCircle className=\"w-5 h-5 mr-2\" />\n490: Confirm"
+          },
+          {
+            "text": "Kiosk Mode Active",
+            "line": 505,
+            "context": "504: <Badge variant=\"outline\">{KIOSK_ID}</Badge>\n505: <span>Kiosk Mode Active</span>\n506: </div>"
+          },
+          {
+            "text": "Camera Ready",
+            "line": 510,
+            "context": "509: <CheckCircle className=\"w-4 h-4 text-emerald-500\" />\n510: <span>Camera Ready</span>\n511: </div>"
+          },
+          {
+            "text": "Online",
+            "line": 514,
+            "context": "513: <CheckCircle className=\"w-4 h-4 text-emerald-500\" />\n514: <span>Online</span>\n515: </div>"
+          },
+          {
+            "text": "Enter Employee ID (e.g., EMP001)",
+            "line": 315,
+            "context": "314: type=\"text\"\n315: placeholder=\"Enter Employee ID (e.g., EMP001)\"\n316: value={employeeId}"
+          },
+          {
+            "text": "Enter 4-6 digit PIN",
+            "line": 331,
+            "context": "330: type=\"password\"\n331: placeholder=\"Enter 4-6 digit PIN\"\n332: value={pinCode}"
+          },
+          {
+            "text": "Captured",
+            "line": 439,
+            "context": "438: src={capturedPhoto}\n439: alt=\"Captured\"\n440: className=\"w-full h-full object-cover\""
+          },
+          {
+            "text": ", error);\r\n      setPhotoUploadStatus(",
+            "line": 123,
+            "context": "122: .catch(error => {\n123: console.error('Camera access error:', error);\n124: setPhotoUploadStatus(\"Camera access denied. Please enable camera.\");"
+          },
+          {
+            "text": ", error);\r\n      setPhotoUploadStatus(",
+            "line": 247,
+            "context": "246: } catch (error) {\n247: console.error('Punch error:', error);\n248: setPhotoUploadStatus(\"Error: \" + (error instanceof Error ? error.message : 'Unknown error'));"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "detail_hub.toasts.clocked_in",
+            "line": 212,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.toasts.clocked_out",
+            "line": 224,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.title",
+            "line": 287,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.punch_in_out",
+            "line": 304,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.clock_in",
+            "line": 372,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.clock_out",
+            "line": 382,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.photo_capture",
+            "line": 417,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.cancel",
+            "line": 462,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.capture",
+            "line": 470,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.retake_photo",
+            "line": 482,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "detail_hub.toasts.clocked_in",
+            "line": 212,
+            "context": "211: toast({\n212: title: t('detail_hub.toasts.clocked_in'),\n213: description: `Successfully clocked in at ${formatTime(currentTime)}`"
+          },
+          {
+            "key": "detail_hub.toasts.clocked_out",
+            "line": 224,
+            "context": "223: toast({\n224: title: t('detail_hub.toasts.clocked_out'),\n225: description: \"Successfully clocked out\""
+          },
+          {
+            "key": "detail_hub.punch_clock.title",
+            "line": 287,
+            "context": "286: <h1 className=\"text-4xl font-bold text-gray-900\">\n287: {t('detail_hub.punch_clock.title')}\n288: </h1>"
+          },
+          {
+            "key": "detail_hub.punch_clock.punch_in_out",
+            "line": 304,
+            "context": "303: <CardTitle className=\"text-xl\">\n304: {t('detail_hub.punch_clock.punch_in_out')}\n305: </CardTitle>"
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.clock_in",
+            "line": 372,
+            "context": "371: <LogIn className=\"w-6 h-6 mr-2\" />\n372: {t('detail_hub.punch_clock.messages.clock_in')}\n373: </Button>"
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.clock_out",
+            "line": 382,
+            "context": "381: <LogOut className=\"w-6 h-6 mr-2\" />\n382: {t('detail_hub.punch_clock.messages.clock_out')}\n383: </Button>"
+          },
+          {
+            "key": "detail_hub.punch_clock.photo_capture",
+            "line": 417,
+            "context": "416: <Camera className=\"w-5 h-5 inline mr-2\" />\n417: {t('detail_hub.punch_clock.photo_capture')}\n418: </CardTitle>"
+          },
+          {
+            "key": "detail_hub.punch_clock.cancel",
+            "line": 462,
+            "context": "461: >\n462: {t('detail_hub.punch_clock.cancel')}\n463: </Button>"
+          },
+          {
+            "key": "detail_hub.punch_clock.capture",
+            "line": 470,
+            "context": "469: <Camera className=\"w-5 h-5 mr-2\" />\n470: {t('detail_hub.punch_clock.capture')}\n471: </Button>"
+          },
+          {
+            "key": "detail_hub.punch_clock.retake_photo",
+            "line": 482,
+            "context": "481: <RotateCcw className=\"w-5 h-5 mr-2\" />\n482: {t('detail_hub.punch_clock.retake_photo')}\n483: </Button>"
+          }
+        ],
+        "coverage": 43,
+        "severity": "high"
+      },
+      {
+        "file": "src\\components\\detail-hub\\PunchClockKiosk.UPDATED.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Employee ID",
+            "line": 310,
+            "context": "309: <div className=\"space-y-2\">\n310: <label className=\"text-sm font-medium text-gray-700\">\n311: Employee ID"
+          },
+          {
+            "text": "Kiosk PIN",
+            "line": 326,
+            "context": "325: <label className=\"text-sm font-medium text-gray-700 flex items-center gap-2\">\n326: <Shield className=\"w-4 h-4\" />\n327: Kiosk PIN"
+          },
+          {
+            "text": "Start Break",
+            "line": 392,
+            "context": "391: >\n392: <Coffee className=\"w-6 h-6 mr-2\" />\n393: Start Break"
+          },
+          {
+            "text": "End Break",
+            "line": 403,
+            "context": "402: >\n403: <Coffee className=\"w-6 h-6 mr-2\" />\n404: End Break"
+          },
+          {
+            "text": "Confirm",
+            "line": 489,
+            "context": "488: >\n489: <CheckCircle className=\"w-5 h-5 mr-2\" />\n490: Confirm"
+          },
+          {
+            "text": "Kiosk Mode Active",
+            "line": 505,
+            "context": "504: <Badge variant=\"outline\">{KIOSK_ID}</Badge>\n505: <span>Kiosk Mode Active</span>\n506: </div>"
+          },
+          {
+            "text": "Camera Ready",
+            "line": 510,
+            "context": "509: <CheckCircle className=\"w-4 h-4 text-emerald-500\" />\n510: <span>Camera Ready</span>\n511: </div>"
+          },
+          {
+            "text": "Online",
+            "line": 514,
+            "context": "513: <CheckCircle className=\"w-4 h-4 text-emerald-500\" />\n514: <span>Online</span>\n515: </div>"
+          },
+          {
+            "text": "Enter Employee ID (e.g., EMP001)",
+            "line": 315,
+            "context": "314: type=\"text\"\n315: placeholder=\"Enter Employee ID (e.g., EMP001)\"\n316: value={employeeId}"
+          },
+          {
+            "text": "Enter 4-6 digit PIN",
+            "line": 331,
+            "context": "330: type=\"password\"\n331: placeholder=\"Enter 4-6 digit PIN\"\n332: value={pinCode}"
+          },
+          {
+            "text": "Captured",
+            "line": 439,
+            "context": "438: src={capturedPhoto}\n439: alt=\"Captured\"\n440: className=\"w-full h-full object-cover\""
+          },
+          {
+            "text": ", error);\r\n      setPhotoUploadStatus(",
+            "line": 123,
+            "context": "122: .catch(error => {\n123: console.error('Camera access error:', error);\n124: setPhotoUploadStatus(\"Camera access denied. Please enable camera.\");"
+          },
+          {
+            "text": ", error);\r\n      setPhotoUploadStatus(",
+            "line": 247,
+            "context": "246: } catch (error) {\n247: console.error('Punch error:', error);\n248: setPhotoUploadStatus(\"Error: \" + (error instanceof Error ? error.message : 'Unknown error'));"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "detail_hub.toasts.clocked_in",
+            "line": 212,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.toasts.clocked_out",
+            "line": 224,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.title",
+            "line": 287,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.punch_in_out",
+            "line": 304,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.clock_in",
+            "line": 372,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.clock_out",
+            "line": 382,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.photo_capture",
+            "line": 417,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.cancel",
+            "line": 462,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.capture",
+            "line": 470,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.retake_photo",
+            "line": 482,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "detail_hub.toasts.clocked_in",
+            "line": 212,
+            "context": "211: toast({\n212: title: t('detail_hub.toasts.clocked_in'),\n213: description: `Successfully clocked in at ${formatTime(currentTime)}`"
+          },
+          {
+            "key": "detail_hub.toasts.clocked_out",
+            "line": 224,
+            "context": "223: toast({\n224: title: t('detail_hub.toasts.clocked_out'),\n225: description: \"Successfully clocked out\""
+          },
+          {
+            "key": "detail_hub.punch_clock.title",
+            "line": 287,
+            "context": "286: <h1 className=\"text-4xl font-bold text-gray-900\">\n287: {t('detail_hub.punch_clock.title')}\n288: </h1>"
+          },
+          {
+            "key": "detail_hub.punch_clock.punch_in_out",
+            "line": 304,
+            "context": "303: <CardTitle className=\"text-xl\">\n304: {t('detail_hub.punch_clock.punch_in_out')}\n305: </CardTitle>"
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.clock_in",
+            "line": 372,
+            "context": "371: <LogIn className=\"w-6 h-6 mr-2\" />\n372: {t('detail_hub.punch_clock.messages.clock_in')}\n373: </Button>"
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.clock_out",
+            "line": 382,
+            "context": "381: <LogOut className=\"w-6 h-6 mr-2\" />\n382: {t('detail_hub.punch_clock.messages.clock_out')}\n383: </Button>"
+          },
+          {
+            "key": "detail_hub.punch_clock.photo_capture",
+            "line": 417,
+            "context": "416: <Camera className=\"w-5 h-5 inline mr-2\" />\n417: {t('detail_hub.punch_clock.photo_capture')}\n418: </CardTitle>"
+          },
+          {
+            "key": "detail_hub.punch_clock.cancel",
+            "line": 462,
+            "context": "461: >\n462: {t('detail_hub.punch_clock.cancel')}\n463: </Button>"
+          },
+          {
+            "key": "detail_hub.punch_clock.capture",
+            "line": 470,
+            "context": "469: <Camera className=\"w-5 h-5 mr-2\" />\n470: {t('detail_hub.punch_clock.capture')}\n471: </Button>"
+          },
+          {
+            "key": "detail_hub.punch_clock.retake_photo",
+            "line": 482,
+            "context": "481: <RotateCcw className=\"w-5 h-5 mr-2\" />\n482: {t('detail_hub.punch_clock.retake_photo')}\n483: </Button>"
+          }
+        ],
+        "coverage": 43,
+        "severity": "high"
+      },
+      {
         "file": "src\\components\\detail-hub\\ReportsCenter.BACKUP.tsx",
         "hardcodedStrings": [
           {
@@ -12063,7 +12415,7 @@
         "severity": "medium"
       },
       {
-        "file": "src\\components\\detail-hub\\PunchClockKiosk.tsx",
+        "file": "src\\components\\detail-hub\\PunchClockKiosk.BACKUP_BEFORE_VALIDATION.tsx",
         "hardcodedStrings": [
           {
             "text": "Employee ID",
@@ -28207,295 +28559,155 @@
         "translationCalls": [
           {
             "key": "detail_hub.dashboard.stats.active_employees",
-            "line": 39,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.dashboard.stats.todays_hours",
             "line": 40,
             "exists": false
           },
           {
-            "key": "detail_hub.dashboard.stats.pending_reviews",
+            "key": "detail_hub.dashboard.stats.todays_hours",
             "line": 41,
             "exists": false
           },
           {
+            "key": "detail_hub.dashboard.stats.pending_reviews",
+            "line": 42,
+            "exists": false
+          },
+          {
             "key": "detail_hub.toasts.clocked_out",
-            "line": 48,
+            "line": 49,
             "exists": false
           },
           {
             "key": "detail_hub.toasts.clocked_in",
-            "line": 48,
+            "line": 49,
             "exists": false
           },
           {
             "key": "detail_hub.title",
-            "line": 58,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.subtitle",
             "line": 59,
             "exists": false
           },
           {
+            "key": "detail_hub.subtitle",
+            "line": 60,
+            "exists": false
+          },
+          {
             "key": "detail_hub.dashboard.quick_actions.time_clock",
-            "line": 64,
+            "line": 65,
             "exists": false
           },
           {
             "key": "detail_hub.tabs.overview",
-            "line": 75,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.tabs.employees",
             "line": 76,
             "exists": false
           },
           {
-            "key": "detail_hub.tabs.timecards",
+            "key": "detail_hub.tabs.employees",
             "line": 77,
             "exists": false
           },
           {
-            "key": "detail_hub.tabs.analytics",
+            "key": "detail_hub.tabs.timecards",
             "line": 78,
             "exists": false
           },
           {
-            "key": "detail_hub.tabs.reports",
+            "key": "detail_hub.tabs.analytics",
             "line": 79,
             "exists": false
           },
           {
-            "key": "detail_hub.tabs.invoices",
+            "key": "detail_hub.tabs.reports",
             "line": 80,
             "exists": false
           },
           {
-            "key": "detail_hub.tabs.kiosks",
+            "key": "detail_hub.tabs.invoices",
             "line": 81,
             "exists": false
           },
           {
-            "key": "time.last_week",
-            "line": 101,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.dashboard.quick_actions.title",
-            "line": 112,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.title",
-            "line": 121,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.invoices.title",
-            "line": 129,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.reports.title",
-            "line": 137,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.kiosk_manager.title",
-            "line": 145,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.dashboard.recent_activity",
-            "line": 153,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.status.title",
-            "line": 182,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.status.face_recognition",
-            "line": 188,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.status.online",
-            "line": 188,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.dashboard.quick_actions.time_clock",
-            "line": 192,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.status.active",
-            "line": 192,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.status.network_connection",
-            "line": 196,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.status_badges.clocked_in",
-            "line": 196,
+            "key": "detail_hub.tabs.kiosks",
+            "line": 82,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "detail_hub.dashboard.stats.active_employees",
-            "line": 39,
-            "context": "38: const stats = [\n39: { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: \"+2\", color: \"text-blue-600\" },\n40: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-green-600\" },"
+            "line": 40,
+            "context": "39: const stats = [\n40: { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: \"+2\", color: \"text-blue-600\" },\n41: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-green-600\" },"
           },
           {
             "key": "detail_hub.dashboard.stats.todays_hours",
-            "line": 40,
-            "context": "39: { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: \"+2\", color: \"text-blue-600\" },\n40: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-green-600\" },\n41: { title: t('detail_hub.dashboard.stats.pending_reviews'), value: pendingReviews.length.toString(), icon: AlertCircle, change: \"\", color: \"text-orange-600\" },"
+            "line": 41,
+            "context": "40: { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: \"+2\", color: \"text-blue-600\" },\n41: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-green-600\" },\n42: { title: t('detail_hub.dashboard.stats.pending_reviews'), value: pendingReviews.length.toString(), icon: AlertCircle, change: \"\", color: \"text-orange-600\" },"
           },
           {
             "key": "detail_hub.dashboard.stats.pending_reviews",
-            "line": 41,
-            "context": "40: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-green-600\" },\n41: { title: t('detail_hub.dashboard.stats.pending_reviews'), value: pendingReviews.length.toString(), icon: AlertCircle, change: \"\", color: \"text-orange-600\" },\n42: { title: \"Total Employees\", value: employees.length.toString(), icon: UserCheck, change: \"\", color: \"text-emerald-600\" }"
+            "line": 42,
+            "context": "41: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-green-600\" },\n42: { title: t('detail_hub.dashboard.stats.pending_reviews'), value: pendingReviews.length.toString(), icon: AlertCircle, change: \"\", color: \"text-orange-600\" },\n43: { title: \"Total Employees\", value: employees.length.toString(), icon: UserCheck, change: \"\", color: \"text-emerald-600\" }"
           },
           {
             "key": "detail_hub.toasts.clocked_out",
-            "line": 48,
-            "context": "47: employee: entry.employee_id, // TODO: Join with employees to get name\n48: action: entry.clock_out ? t('detail_hub.toasts.clocked_out') : t('detail_hub.toasts.clocked_in'),\n49: time: new Date(entry.clock_in).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),"
+            "line": 49,
+            "context": "48: employee: entry.employee_id, // TODO: Join with employees to get name\n49: action: entry.clock_out ? t('detail_hub.toasts.clocked_out') : t('detail_hub.toasts.clocked_in'),\n50: time: new Date(entry.clock_in).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),"
           },
           {
             "key": "detail_hub.toasts.clocked_in",
-            "line": 48,
-            "context": "47: employee: entry.employee_id, // TODO: Join with employees to get name\n48: action: entry.clock_out ? t('detail_hub.toasts.clocked_out') : t('detail_hub.toasts.clocked_in'),\n49: time: new Date(entry.clock_in).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),"
+            "line": 49,
+            "context": "48: employee: entry.employee_id, // TODO: Join with employees to get name\n49: action: entry.clock_out ? t('detail_hub.toasts.clocked_out') : t('detail_hub.toasts.clocked_in'),\n50: time: new Date(entry.clock_in).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),"
           },
           {
             "key": "detail_hub.title",
-            "line": 58,
-            "context": "57: <div>\n58: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.title')}</h1>\n59: <p className=\"text-muted-foreground\">{t('detail_hub.subtitle')}</p>"
+            "line": 59,
+            "context": "58: <div>\n59: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.title')}</h1>\n60: <p className=\"text-muted-foreground\">{t('detail_hub.subtitle')}</p>"
           },
           {
             "key": "detail_hub.subtitle",
-            "line": 59,
-            "context": "58: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.title')}</h1>\n59: <p className=\"text-muted-foreground\">{t('detail_hub.subtitle')}</p>\n60: </div>"
+            "line": 60,
+            "context": "59: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.title')}</h1>\n60: <p className=\"text-muted-foreground\">{t('detail_hub.subtitle')}</p>\n61: </div>"
           },
           {
             "key": "detail_hub.dashboard.quick_actions.time_clock",
-            "line": 64,
-            "context": "63: <Clock className=\"w-4 h-4 mr-2\" />\n64: {t('detail_hub.dashboard.quick_actions.time_clock')}\n65: </Button>"
+            "line": 65,
+            "context": "64: <Clock className=\"w-4 h-4 mr-2\" />\n65: {t('detail_hub.dashboard.quick_actions.time_clock')}\n66: </Button>"
           },
           {
             "key": "detail_hub.tabs.overview",
-            "line": 75,
-            "context": "74: <TabsList className=\"grid w-full grid-cols-7\">\n75: <TabsTrigger value=\"overview\">{t('detail_hub.tabs.overview')}</TabsTrigger>\n76: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>"
+            "line": 76,
+            "context": "75: <TabsList className=\"grid w-full grid-cols-7\">\n76: <TabsTrigger value=\"overview\">{t('detail_hub.tabs.overview')}</TabsTrigger>\n77: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.employees",
-            "line": 76,
-            "context": "75: <TabsTrigger value=\"overview\">{t('detail_hub.tabs.overview')}</TabsTrigger>\n76: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>\n77: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>"
+            "line": 77,
+            "context": "76: <TabsTrigger value=\"overview\">{t('detail_hub.tabs.overview')}</TabsTrigger>\n77: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>\n78: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.timecards",
-            "line": 77,
-            "context": "76: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>\n77: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>\n78: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>"
+            "line": 78,
+            "context": "77: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>\n78: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>\n79: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.analytics",
-            "line": 78,
-            "context": "77: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>\n78: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>\n79: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>"
+            "line": 79,
+            "context": "78: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>\n79: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>\n80: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.reports",
-            "line": 79,
-            "context": "78: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>\n79: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>\n80: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>"
+            "line": 80,
+            "context": "79: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>\n80: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>\n81: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.invoices",
-            "line": 80,
-            "context": "79: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>\n80: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>\n81: <TabsTrigger value=\"kiosks\">{t('detail_hub.tabs.kiosks')}</TabsTrigger>"
+            "line": 81,
+            "context": "80: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>\n81: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>\n82: <TabsTrigger value=\"kiosks\">{t('detail_hub.tabs.kiosks')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.kiosks",
-            "line": 81,
-            "context": "80: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>\n81: <TabsTrigger value=\"kiosks\">{t('detail_hub.tabs.kiosks')}</TabsTrigger>\n82: </TabsList>"
-          },
-          {
-            "key": "time.last_week",
-            "line": 101,
-            "context": "100: </span>\n101: {\" \"}{t('time.last_week')}\n102: </p>"
-          },
-          {
-            "key": "detail_hub.dashboard.quick_actions.title",
-            "line": 112,
-            "context": "111: <CardHeader>\n112: <CardTitle>{t('detail_hub.dashboard.quick_actions.title')}</CardTitle>\n113: </CardHeader>"
-          },
-          {
-            "key": "detail_hub.timecard.title",
-            "line": 121,
-            "context": "120: <Calendar className=\"w-4 h-4 mr-2\" />\n121: {t('detail_hub.timecard.title')}\n122: </Button>"
-          },
-          {
-            "key": "detail_hub.invoices.title",
-            "line": 129,
-            "context": "128: <DollarSign className=\"w-4 h-4 mr-2\" />\n129: {t('detail_hub.invoices.title')}\n130: </Button>"
-          },
-          {
-            "key": "detail_hub.reports.title",
-            "line": 137,
-            "context": "136: <TrendingUp className=\"w-4 h-4 mr-2\" />\n137: {t('detail_hub.reports.title')}\n138: </Button>"
-          },
-          {
-            "key": "detail_hub.kiosk_manager.title",
-            "line": 145,
-            "context": "144: <UserCheck className=\"w-4 h-4 mr-2\" />\n145: {t('detail_hub.kiosk_manager.title')}\n146: </Button>"
-          },
-          {
-            "key": "detail_hub.dashboard.recent_activity",
-            "line": 153,
-            "context": "152: <CardHeader>\n153: <CardTitle>{t('detail_hub.dashboard.recent_activity')}</CardTitle>\n154: </CardHeader>"
-          },
-          {
-            "key": "detail_hub.punch_clock.status.title",
-            "line": 182,
-            "context": "181: <CardHeader>\n182: <CardTitle>{t('detail_hub.punch_clock.status.title')}</CardTitle>\n183: </CardHeader>"
-          },
-          {
-            "key": "detail_hub.punch_clock.status.face_recognition",
-            "line": 188,
-            "context": "187: <CheckCircle className=\"w-4 h-4 text-green-500\" />\n188: <span className=\"text-sm\">{t('detail_hub.punch_clock.status.face_recognition')}: {t('detail_hub.punch_clock.status.online')}</span>\n189: </div>"
-          },
-          {
-            "key": "detail_hub.punch_clock.status.online",
-            "line": 188,
-            "context": "187: <CheckCircle className=\"w-4 h-4 text-green-500\" />\n188: <span className=\"text-sm\">{t('detail_hub.punch_clock.status.face_recognition')}: {t('detail_hub.punch_clock.status.online')}</span>\n189: </div>"
-          },
-          {
-            "key": "detail_hub.dashboard.quick_actions.time_clock",
-            "line": 192,
-            "context": "191: <CheckCircle className=\"w-4 h-4 text-green-500\" />\n192: <span className=\"text-sm\">{t('detail_hub.dashboard.quick_actions.time_clock')}: {t('detail_hub.punch_clock.status.active')}</span>\n193: </div>"
-          },
-          {
-            "key": "detail_hub.punch_clock.status.active",
-            "line": 192,
-            "context": "191: <CheckCircle className=\"w-4 h-4 text-green-500\" />\n192: <span className=\"text-sm\">{t('detail_hub.dashboard.quick_actions.time_clock')}: {t('detail_hub.punch_clock.status.active')}</span>\n193: </div>"
-          },
-          {
-            "key": "detail_hub.punch_clock.status.network_connection",
-            "line": 196,
-            "context": "195: <AlertCircle className=\"w-4 h-4 text-yellow-500\" />\n196: <span className=\"text-sm\">{t('detail_hub.punch_clock.status.network_connection')}: {t('detail_hub.timecard.status_badges.clocked_in')}</span>\n197: </div>"
-          },
-          {
-            "key": "detail_hub.timecard.status_badges.clocked_in",
-            "line": 196,
-            "context": "195: <AlertCircle className=\"w-4 h-4 text-yellow-500\" />\n196: <span className=\"text-sm\">{t('detail_hub.punch_clock.status.network_connection')}: {t('detail_hub.timecard.status_badges.clocked_in')}</span>\n197: </div>"
+            "line": 82,
+            "context": "81: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>\n82: <TabsTrigger value=\"kiosks\">{t('detail_hub.tabs.kiosks')}</TabsTrigger>\n83: </TabsList>"
           }
         ],
         "coverage": 100,
@@ -30237,6 +30449,187 @@
           }
         ],
         "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\detail-hub\\LiveStatusDashboard.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "On time",
+            "line": 294,
+            "context": "293: <CheckCircle className=\"w-3 h-3\" />\n294: <span>On time</span>\n295: </div>"
+          },
+          {
+            "text": "Active",
+            "line": 404,
+            "context": "403: <>\n404: <div className=\"w-2 h-2 rounded-full bg-emerald-500 mr-1 animate-pulse\" />\n405: Active"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "detail_hub.live_dashboard.title",
+            "line": 54,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.subtitle",
+            "line": 57,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.clocked_in",
+            "line": 93,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.on_break",
+            "line": 111,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.total_hours_today",
+            "line": 129,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.active_departments",
+            "line": 147,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.no_employees_working",
+            "line": 167,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.on_break",
+            "line": 234,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.active",
+            "line": 239,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.clocked_in_at",
+            "line": 249,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.elapsed_time",
+            "line": 257,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.break_duration",
+            "line": 266,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.view_details",
+            "line": 318,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.edit",
+            "line": 326,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.clock_in",
+            "line": 375,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.elapsed",
+            "line": 383,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "detail_hub.live_dashboard.title",
+            "line": 54,
+            "context": "53: <h1 className=\"text-3xl font-bold tracking-tight text-gray-900\">\n54: {t('detail_hub.live_dashboard.title')}\n55: </h1>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.subtitle",
+            "line": 57,
+            "context": "56: <p className=\"text-gray-500 mt-1\">\n57: {t('detail_hub.live_dashboard.subtitle')}\n58: </p>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.clocked_in",
+            "line": 93,
+            "context": "92: <p className=\"text-sm font-medium text-gray-500\">\n93: {t('detail_hub.live_dashboard.stats.clocked_in')}\n94: </p>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.on_break",
+            "line": 111,
+            "context": "110: <p className=\"text-sm font-medium text-gray-500\">\n111: {t('detail_hub.live_dashboard.stats.on_break')}\n112: </p>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.total_hours_today",
+            "line": 129,
+            "context": "128: <p className=\"text-sm font-medium text-gray-500\">\n129: {t('detail_hub.live_dashboard.stats.total_hours_today')}\n130: </p>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.active_departments",
+            "line": 147,
+            "context": "146: <p className=\"text-sm font-medium text-gray-500\">\n147: {t('detail_hub.live_dashboard.stats.active_departments')}\n148: </p>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.no_employees_working",
+            "line": 167,
+            "context": "166: <p className=\"text-muted-foreground\">\n167: {t('detail_hub.live_dashboard.no_employees_working')}\n168: </p>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.on_break",
+            "line": 234,
+            "context": "233: <Coffee className=\"w-3 h-3 mr-1\" />\n234: {t('detail_hub.live_dashboard.on_break')}\n235: </>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.active",
+            "line": 239,
+            "context": "238: <div className=\"w-2 h-2 rounded-full bg-emerald-500 mr-1 animate-pulse\" />\n239: {t('detail_hub.live_dashboard.active')}\n240: </>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.clocked_in_at",
+            "line": 249,
+            "context": "248: <span className=\"text-gray-500\">\n249: {t('detail_hub.live_dashboard.clocked_in_at')}\n250: </span>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.elapsed_time",
+            "line": 257,
+            "context": "256: <span className=\"text-sm text-gray-500\">\n257: {t('detail_hub.live_dashboard.elapsed_time')}\n258: </span>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.break_duration",
+            "line": 266,
+            "context": "265: <span className=\"text-amber-600\">\n266: {t('detail_hub.live_dashboard.break_duration')}\n267: </span>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.view_details",
+            "line": 318,
+            "context": "317: <Eye className=\"w-3 h-3 mr-1\" />\n318: {t('detail_hub.live_dashboard.view_details')}\n319: </Button>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.edit",
+            "line": 326,
+            "context": "325: <Edit className=\"w-3 h-3 mr-1\" />\n326: {t('detail_hub.live_dashboard.edit')}\n327: </Button>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.clock_in",
+            "line": 375,
+            "context": "374: <p className=\"text-xs text-gray-500\">\n375: {t('detail_hub.live_dashboard.clock_in')}\n376: </p>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.elapsed",
+            "line": 383,
+            "context": "382: <p className=\"text-xs text-gray-500\">\n383: {t('detail_hub.live_dashboard.elapsed')}\n384: </p>"
+          }
+        ],
+        "coverage": 89,
         "severity": "low"
       },
       {
@@ -93090,7 +93483,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "497 Component components need translation",
+      "description": "500 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\OperationalReports.tsx",
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
@@ -93122,6 +93515,8 @@
         "src\\components\\dev\\StorageDevTools.tsx",
         "src\\components\\users\\AdvancedUserFilters.tsx",
         "src\\components\\debug\\PermissionsDebugger.tsx",
+        "src\\components\\detail-hub\\PunchClockKiosk.tsx",
+        "src\\components\\detail-hub\\PunchClockKiosk.UPDATED.tsx",
         "src\\components\\management\\DealershipManagementSection.tsx",
         "src\\components\\orders\\InstructionsBlock.tsx",
         "src\\components\\performance\\PerformanceMonitor.tsx",
@@ -93162,7 +93557,7 @@
         "src\\hooks\\useSmartNotifications.tsx",
         "src\\pages\\Management.tsx",
         "src\\components\\CompletedDateInline.tsx",
-        "src\\components\\detail-hub\\PunchClockKiosk.tsx",
+        "src\\components\\detail-hub\\PunchClockKiosk.BACKUP_BEFORE_VALIDATION.tsx",
         "src\\components\\get-ready\\GetReadyExample.tsx",
         "src\\components\\get-ready\\notifications\\NotificationPanel.tsx",
         "src\\components\\orders\\OrderFilters.tsx",
@@ -93248,6 +93643,7 @@
         "src\\components\\debug\\TestPermissionError.tsx",
         "src\\components\\debug\\TranslationDebugger.tsx",
         "src\\components\\detail-hub\\EmployeePortal.MOCK.tsx",
+        "src\\components\\detail-hub\\LiveStatusDashboard.tsx",
         "src\\components\\get-ready\\MediaLightbox.tsx",
         "src\\components\\get-ready\\notifications\\NotificationBell.tsx",
         "src\\components\\get-ready\\notifications\\NotificationSettings.tsx",
@@ -93590,14 +93986,14 @@
         "src\\utils\\stockCSVHelpers.ts",
         "src\\utils\\translationAudit.ts"
       ],
-      "estimatedEffort": "249 hours"
+      "estimatedEffort": "250 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "7735 translation keys are referenced but missing",
+      "description": "7757 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "387 hours"
+      "estimatedEffort": "388 hours"
     }
   ],
   "coverage": 79

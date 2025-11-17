@@ -79,6 +79,21 @@
 
           script.onload = function() {
             console.log('✅ [MDAChat] Widget script loaded successfully');
+
+            // Wait for BeChat API to be available, then show launcher
+            const showWidget = function() {
+              if (window.BeChat && typeof window.BeChat.showLauncher === 'function') {
+                window.BeChat.showLauncher();
+                console.log('👁️ [MDAChat] Widget launcher displayed');
+              } else {
+                console.warn('⚠️ [MDAChat] BeChat API not available yet');
+              }
+            };
+
+            // Try immediately, then retry after delays
+            setTimeout(showWidget, 100);
+            setTimeout(showWidget, 500);
+            setTimeout(showWidget, 1000);
           };
 
           script.onerror = function(error) {
