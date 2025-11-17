@@ -67,8 +67,10 @@
           console.log('💬 [MDAChat] Loading widget for hostname:', hostname);
 
           window.BeChatSettings = {
-            widgetDomain: "https://dds.mydetailarea.com",
+            widgetDomain: "https://support.mydetailarea.com",
           };
+
+          console.log('⚙️ [MDAChat] Settings configured:', window.BeChatSettings);
 
           const script = document.createElement('script');
           script.src = 'https://support.mydetailarea.com/livechat-loader.js';
