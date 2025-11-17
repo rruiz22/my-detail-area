@@ -14,8 +14,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- 🔴 CRITICAL PERFORMANCE FIX: Preload translations BEFORE JS execution -->
-    <!-- This reduces perceived load time by 500ms-1s by starting download earlier -->
+    <!-- 🔴 CRITICAL PERFORMANCE FIX: Preload critical translation namespaces -->
+    <!-- Code splitting enabled - preload only critical namespaces -->
     <script>
       (function() {
         try {
@@ -27,28 +27,25 @@
           // Validate language (only EN/ES/PT-BR supported)
           const validLang = ['en', 'es', 'pt-BR'].includes(preferredLang) ? preferredLang : 'en';
 
-          // Create preload link for translation file
-          const preloadLink = document.createElement('link');
-          preloadLink.rel = 'preload';
-          preloadLink.as = 'fetch';
-          preloadLink.href = '/translations/' + validLang + '.json?v=1.3.34';
-          preloadLink.crossOrigin = 'anonymous';
-          document.head.appendChild(preloadLink);
+          // Version for cache busting
+          const version = '1.3.36';
 
-          console.log('⚡ Preloading translations for:', validLang);
+          // Critical namespaces to preload (matches i18n.ts PRELOAD_NAMESPACES)
+          const namespaces = ['common', 'navigation', 'messages'];
 
-          // Also preload English as fallback if user prefers ES/PT-BR
-          if (validLang !== 'en') {
-            const fallbackLink = document.createElement('link');
-            fallbackLink.rel = 'preload';
-            fallbackLink.as = 'fetch';
-            fallbackLink.href = '/translations/en.json?v=1.3.34';
-            fallbackLink.crossOrigin = 'anonymous';
-            document.head.appendChild(fallbackLink);
-            console.log('⚡ Preloading English fallback');
-          }
+          // Preload critical namespaces
+          namespaces.forEach(function(ns) {
+            const preloadLink = document.createElement('link');
+            preloadLink.rel = 'preload';
+            preloadLink.as = 'fetch';
+            preloadLink.href = '/translations/' + validLang + '/' + ns + '.json?v=' + version;
+            preloadLink.crossOrigin = 'anonymous';
+            document.head.appendChild(preloadLink);
+          });
+
+          console.log('⚡ Preloading ' + namespaces.length + ' namespaces for:', validLang);
         } catch (error) {
-          // Fail silently - translations will load normally via i18n.ts
+          // Fail silently - translations will load normally via i18next-http-backend
           console.warn('Translation preload failed (non-critical):', error);
         }
       })();
