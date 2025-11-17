@@ -66,18 +66,23 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
   const { data: revenueData, isLoading } = useRevenueAnalytics(filters, grouping);
   const { data: departmentData = [], isLoading: deptLoading } = useDepartmentRevenue(filters);
 
-  // Get data for the last 3 weeks for comparison
-  const now = new Date();
-  const week1End = endOfWeek(now);
-  const week1Start = startOfWeek(now);
-  const week2End = endOfWeek(subWeeks(now, 1));
-  const week2Start = startOfWeek(subWeeks(now, 1));
-  const week3End = endOfWeek(subWeeks(now, 2));
-  const week3Start = startOfWeek(subWeeks(now, 2));
+  // Use filtered date range as "This Week" and calculate previous weeks from there
+  // IMPORTANT: weekStartsOn: 1 ensures Monday is first day (ISO week)
+  const week1End = filters.endDate;
+  const week1Start = filters.startDate;
+  const week2End = endOfWeek(subWeeks(filters.startDate, 1), { weekStartsOn: 1 });
+  const week2Start = startOfWeek(subWeeks(filters.startDate, 1), { weekStartsOn: 1 });
+  const week3End = endOfWeek(subWeeks(filters.startDate, 2), { weekStartsOn: 1 });
+  const week3Start = startOfWeek(subWeeks(filters.startDate, 2), { weekStartsOn: 1 });
 
   const { data: week1Data = [] } = useDepartmentRevenue({ ...filters, startDate: week1Start, endDate: week1End });
   const { data: week2Data = [] } = useDepartmentRevenue({ ...filters, startDate: week2Start, endDate: week2End });
   const { data: week3Data = [] } = useDepartmentRevenue({ ...filters, startDate: week3Start, endDate: week3End });
+
+  console.log('📅 WEEK 1 (This Week):', week1Start.toISOString(), 'to', week1End.toISOString(), '| Depts:', week1Data.length, '| Revenue:', week1Data.reduce((s, d) => s + d.revenue, 0));
+  console.log('📅 WEEK 2 (Last Week):', week2Start.toISOString(), 'to', week2End.toISOString(), '| Depts:', week2Data.length, '| Revenue:', week2Data.reduce((s, d) => s + d.revenue, 0));
+  console.log('📅 WEEK 3 (2 Weeks Ago):', week3Start.toISOString(), 'to', week3End.toISOString(), '| Depts:', week3Data.length, '| Revenue:', week3Data.reduce((s, d) => s + d.revenue, 0));
+  console.log('📅 Week data:', { week1Data, week2Data, week3Data });
 
   const { currentDealership } = useAccessibleDealerships();
   const { senderInfo } = useSenderInfo();
@@ -802,8 +807,8 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
   const growthRate = revenueData?.growth_rate || 0;
   const isPositiveGrowth = growthRate >= 0;
 
-  // Calculate total orders and averages
-  const totalOrders = revenueData?.period_data.reduce((sum, item) => sum + item.orders, 0) || 0;
+  // Use total_orders directly from RPC instead of manual sum (more accurate)
+  const totalOrders = revenueData?.total_orders || 0;
   const avgOrdersPerPeriod = revenueData?.period_data.length
     ? totalOrders / revenueData.period_data.length
     : 0;
