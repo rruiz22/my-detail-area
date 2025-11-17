@@ -56,12 +56,22 @@
     </script>
     <script type="module" src="/src/main.tsx"></script>
 
-    <!-- MDAChat Live Chat Widget -->
+    <!-- MDAChat Live Chat Widget - Only in production -->
     <script>
-      window.BeChatSettings = {
-        widgetDomain: "https://dds.mydetailarea.com",
-      };
+      // Only load widget in production to avoid console errors in development
+      if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        window.BeChatSettings = {
+          widgetDomain: "https://dds.mydetailarea.com",
+        };
+
+        const script = document.createElement('script');
+        script.src = 'https://support.mydetailarea.com/livechat-loader.js';
+        script.async = true;
+        script.defer = true;
+        document.body.appendChild(script);
+      } else {
+        console.log('🔇 [DEV] MDAChat widget disabled in development');
+      }
     </script>
-    <script src="https://support.mydetailarea.com/livechat-loader.js" async defer></script>
   </body>
 </html>
