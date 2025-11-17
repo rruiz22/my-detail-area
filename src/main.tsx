@@ -8,14 +8,25 @@ import "./index.css";
 import "./styles/order-animations.css";
 import "./lib/i18n";
 
-// 🔴 CRITICAL FIX: Force service worker update check on app load
-// Ensures new service worker activates immediately on new version deployment
+// 🔴 CRITICAL FIX: Clean up old service workers and update current ones
+// Unregisters legacy sw.js and keeps only sw-custom.js and firebase-messaging-sw.js
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then(registrations => {
     registrations.forEach(registration => {
-      // Force update check - don't wait for automatic check
-      registration.update();
-      console.log('🔄 Service worker update check triggered');
+      const scriptURL = registration.active?.scriptURL || registration.installing?.scriptURL || registration.waiting?.scriptURL;
+
+      // Unregister legacy sw.js (no longer exists)
+      if (scriptURL && scriptURL.includes('/sw.js')) {
+        registration.unregister();
+        console.log('🗑️ Unregistered legacy service worker: sw.js');
+      }
+      // Update current service workers (sw-custom.js, firebase-messaging-sw.js)
+      else if (scriptURL && (scriptURL.includes('sw-custom.js') || scriptURL.includes('firebase-messaging-sw.js'))) {
+        registration.update();
+        if (import.meta.env.DEV) {
+          console.log('🔄 Service worker update check triggered');
+        }
+      }
     });
   }).catch(error => {
     console.warn('Service worker update check failed:', error);
