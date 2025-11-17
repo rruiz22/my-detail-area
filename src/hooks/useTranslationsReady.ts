@@ -22,21 +22,30 @@ export function useTranslationsReady() {
     // Check if translations are already loaded
     const checkReady = () => {
       const codeSplittingEnabled = isCodeSplittingEnabled();
+      const isDev = import.meta.env.DEV;
 
       let hasTranslations = false;
 
       if (codeSplittingEnabled) {
         // With code splitting: Check for critical namespace 'common'
         hasTranslations = i18n.hasResourceBundle(i18n.language, 'common');
-        console.log(`🔍 [useTranslationsReady] Code splitting mode - checking namespace 'common': ${hasTranslations}`);
+        // Only log in development to reduce console noise
+        if (isDev && hasTranslations) {
+          console.log(`🔍 [useTranslationsReady] Code splitting - namespace 'common': ready`);
+        }
       } else {
         // Legacy monolithic: Check for 'translation' namespace
         hasTranslations = i18n.hasResourceBundle(i18n.language, 'translation');
-        console.log(`🔍 [useTranslationsReady] Monolithic mode - checking namespace 'translation': ${hasTranslations}`);
+        if (isDev && hasTranslations) {
+          console.log(`🔍 [useTranslationsReady] Monolithic - namespace 'translation': ready`);
+        }
       }
 
       if (hasTranslations && isMounted) {
-        console.log(`✅ [useTranslationsReady] Translations ready for ${i18n.language}`);
+        // Only log once when ready (not on every check)
+        if (isDev) {
+          console.log(`✅ [useTranslationsReady] Translations ready for ${i18n.language}`);
+        }
         setIsReady(true);
         return true;
       }
@@ -57,6 +66,7 @@ export function useTranslationsReady() {
           checkReady();
         }
       } catch (error) {
+        // Always log errors (even in production)
         console.error('❌ Error waiting for translations:', error);
         if (isMounted) {
           setHasError(true); // Mark as error instead of proceeding
@@ -78,9 +88,10 @@ export function useTranslationsReady() {
 
     // 🔴 CRITICAL FIX: Timeout now triggers error instead of proceeding
     // Better to show error message than render with translation keys
-    // Increased to 15 seconds for mobile networks (3G/4G) + large translation files (270KB+)
+    // Increased to 15 seconds for mobile networks (3G/4G) + large translation files
     const timeoutId = setTimeout(() => {
       if (isMounted && !checkReady()) {
+        // Always log timeout errors (even in production)
         console.error('❌ Translations not loaded after 15 seconds - translation load failure');
         setHasError(true); // Trigger error state instead of proceeding
       }

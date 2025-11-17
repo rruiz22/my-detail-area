@@ -304,7 +304,10 @@ const loadLanguageMonolithic = async (language: string) => {
 // ============================================================
 
 if (USE_CODE_SPLITTING) {
-  console.log('🚀 Code splitting ENABLED - using namespace-based translations');
+  // Only log in development
+  if (import.meta.env.DEV) {
+    console.log('🚀 Code splitting ENABLED - using namespace-based translations');
+  }
 
   // Initialize with Backend for namespace-based loading
   i18n
@@ -344,10 +347,16 @@ if (USE_CODE_SPLITTING) {
       }
     });
 
-  console.log(`⚡ Preloading namespaces: ${PRELOAD_NAMESPACES.join(', ')}`);
+  // Only log namespace list in development
+  if (import.meta.env.DEV) {
+    console.log(`⚡ Preloading ${PRELOAD_NAMESPACES.length} namespaces`);
+  }
 
 } else {
-  console.log('📦 Code splitting DISABLED - using monolithic translations');
+  // Only log in development
+  if (import.meta.env.DEV) {
+    console.log('📦 Code splitting DISABLED - using monolithic translations');
+  }
 
   // Initialize without Backend (legacy system)
   i18n
@@ -389,7 +398,10 @@ export const waitForInitialTranslations = async () => {
       const hasNavigation = i18n.hasResourceBundle(currentLang, 'navigation');
 
       if (hasCommon && hasNavigation) {
-        console.log(`✅ [CODE SPLITTING] Resources confirmed available after ${attempt * 100}ms`);
+        // Only log in development
+        if (import.meta.env.DEV) {
+          console.log(`✅ [CODE SPLITTING] Resources confirmed available after ${attempt * 100}ms`);
+        }
         return;
       }
 
