@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useOrdersAnalytics, usePerformanceTrends, type ReportsFilters } from '@/hooks/useReportsData';
+import { useOperationalOrdersList, useOrdersAnalytics, usePerformanceTrends, type ReportsFilters, type VehicleForList } from '@/hooks/useReportsData';
 import { supabase } from '@/integrations/supabase/client';
 import type { UnifiedOrderData } from '@/types/unifiedOrder';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -33,31 +33,6 @@ import { RecalculateOrderTotals } from '../RecalculateOrderTotals';
 
 interface OperationalReportsProps {
   filters: ReportsFilters;
-}
-
-interface VehicleForList {
-  id: string;
-  order_number: string;
-  custom_order_number: string | null;
-  order_type: string;
-  customer_name: string;
-  stock_number: string | null;
-  po: string | null;
-  ro: string | null;
-  tag: string | null;
-  vehicle_make: string | null;
-  vehicle_model: string | null;
-  vehicle_year: number | null;
-  vehicle_vin: string | null;
-  total_amount: number;
-  services: any[] | null;
-  status: string;
-  created_at: string;
-  completed_at: string | null;
-  due_date: string | null;
-  assigned_group_id: string | null;
-  assigned_to_name: string | null;
-  invoice_number: string | null;
 }
 
 export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters }) => {
@@ -96,153 +71,8 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
     enabled: !!selectedOrderId && showOrderModal,
   });
 
-  // Fetch vehicles for Orders tab
-  const { data: vehiclesList = [], isLoading: vehiclesLoading } = useQuery({
-    queryKey: ['operational-vehicles-list', filters.dealerId, filters.orderType, filters.startDate, filters.endDate, filters.status, filters.serviceIds],
-    queryFn: async (): Promise<VehicleForList[]> => {
-      if (!filters.dealerId) return [];
-
-      const startDateTime = filters.startDate.toISOString();
-      const endDateTime = (() => {
-        const dt = new Date(filters.endDate);
-        dt.setHours(23, 59, 59, 999);
-        return dt.toISOString();
-      })();
-
-      // Build query with proper filters - explicitly select fields we need
-      // Note: We're using RPC function for the main analytics, but for the list we need to handle dates in JS
-      // Fetch all orders and filter client-side for proper date handling
-      let ordersQuery = supabase
-        .from('orders')
-        .select(`
-          id,
-          order_number,
-          custom_order_number,
-          order_type,
-          customer_name,
-          stock_number,
-          po,
-          ro,
-          tag,
-          vehicle_make,
-          vehicle_model,
-          vehicle_year,
-          vehicle_vin,
-          total_amount,
-          services,
-          status,
-          created_at,
-          completed_at,
-          due_date,
-          assigned_group_id
-        `)
-        .eq('dealer_id', filters.dealerId)
-        .order('created_at', { ascending: false })
-        .limit(100000)
-
-      // Apply order type filter
-      if (filters.orderType !== 'all') {
-        ordersQuery = ordersQuery.eq('order_type', filters.orderType);
-      }
-
-      // Apply status filter
-      if (filters.status !== 'all') {
-        ordersQuery = ordersQuery.eq('status', filters.status);
-      }
-
-      const { data: orders, error: ordersError } = await ordersQuery;
-
-      if (ordersError) throw ordersError;
-
-      // Filter orders by the appropriate date based on order_type AND service filter
-      const filteredOrders = (orders || []).filter(order => {
-        // 1. Date filter
-        let reportDate: Date;
-
-        // Sales and Service use due_date
-        if (order.order_type === 'sales' || order.order_type === 'service') {
-          reportDate = order.due_date ? new Date(order.due_date) : new Date(order.created_at);
-        }
-        // Recon and CarWash use completed_at
-        else if (order.order_type === 'recon' || order.order_type === 'carwash') {
-          reportDate = order.completed_at ? new Date(order.completed_at) : new Date(order.created_at);
-        }
-        // Fallback to created_at for other types
-        else {
-          reportDate = new Date(order.created_at);
-        }
-
-        const start = new Date(startDateTime);
-        const end = new Date(endDateTime);
-        const dateMatch = reportDate >= start && reportDate <= end;
-
-        // 2. Service filter (if services are selected)
-        if (filters.serviceIds && filters.serviceIds.length > 0) {
-          const orderServices = order.services || [];
-
-          // Services can be stored as either array of IDs or array of objects with {id, name, price, type}
-          // The RPC function checks both 'id' and 'type' fields
-          const hasMatchingService = orderServices.some((service: any) => {
-            const serviceId = typeof service === 'string' ? service : service?.id;
-            const serviceType = typeof service === 'object' ? service?.type : null;
-            return filters.serviceIds?.includes(serviceId) ||
-                   (serviceType && filters.serviceIds?.includes(serviceType));
-          });
-          return dateMatch && hasMatchingService;
-        }
-
-        return dateMatch;
-      });
-
-      // Fetch user profiles to get assigned names (assigned_group_id actually contains user IDs)
-      const { data: userProfiles, error: profilesError } = await supabase
-        .from('profiles')
-        .select('id, first_name, last_name, email');
-
-      if (profilesError) {
-        console.error('Error fetching user profiles:', profilesError);
-      }
-
-      // Fetch invoice information for filtered orders
-      const orderIds = filteredOrders.map(o => o.id);
-      const { data: invoiceItems, error: invoiceItemsError } = await supabase
-        .from('invoice_items')
-        .select(`
-          service_reference,
-          invoice:invoices(invoice_number)
-        `)
-        .in('service_reference', orderIds);
-
-      if (invoiceItemsError) {
-        console.error('Error fetching invoice items:', invoiceItemsError);
-      }
-
-      // Create lookup map for user names
-      const userMap = new Map(userProfiles?.map(u => [
-        u.id,
-        `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
-      ]) || []);
-
-      // Create lookup map for invoice numbers (order_id -> invoice_number)
-      const invoiceMap = new Map(
-        invoiceItems?.map(item => [
-          item.service_reference,
-          (item.invoice as any)?.invoice_number || null
-        ]) || []
-      );
-
-      // Enrich filtered orders with user names and invoice numbers
-      const enrichedOrders = filteredOrders.map(order => ({
-        ...order,
-        assigned_to_name: order.assigned_group_id ? userMap.get(order.assigned_group_id) || null : null,
-        invoice_number: invoiceMap.get(order.id) || null
-      }));
-
-      return enrichedOrders as VehicleForList[];
-    },
-    enabled: !!filters.dealerId,
-    staleTime: 30 * 1000,
-  });
+  // Fetch vehicles for Orders tab using server-side filtering with timezone awareness
+  const { data: vehiclesList = [], isLoading: vehiclesLoading } = useOperationalOrdersList(filters);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -917,7 +747,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                   <span className="text-sm font-medium text-muted-foreground">Total Orders</span>
                   <FileText className="h-4 w-4 text-muted-foreground" />
                 </div>
-                <div className="text-3xl font-bold mb-1">{vehiclesList.length}</div>
+                <div className="text-3xl font-bold mb-1">{orderAnalytics?.total_orders || 0}</div>
                 <p className="text-xs text-muted-foreground">In selected period</p>
               </CardContent>
             </Card>
@@ -928,11 +758,11 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                   <AlertCircle className="h-4 w-4 text-amber-600" />
                 </div>
                 <div className="text-3xl font-bold mb-1 text-amber-600">
-                  {vehiclesList.filter(v => v.status === 'pending').length}
+                  {orderAnalytics?.pending_orders || 0}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {vehiclesList.length > 0
-                    ? `${Math.round((vehiclesList.filter(v => v.status === 'pending').length / vehiclesList.length) * 100)}%`
+                  {orderAnalytics && orderAnalytics.total_orders > 0
+                    ? `${Math.round((orderAnalytics.pending_orders / orderAnalytics.total_orders) * 100)}%`
                     : '0%'} of total
                 </p>
               </CardContent>
@@ -944,11 +774,11 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                   <Activity className="h-4 w-4 text-blue-600" />
                 </div>
                 <div className="text-3xl font-bold mb-1 text-blue-600">
-                  {vehiclesList.filter(v => v.status === 'in_progress').length}
+                  {orderAnalytics?.in_progress_orders || 0}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {vehiclesList.length > 0
-                    ? `${Math.round((vehiclesList.filter(v => v.status === 'in_progress').length / vehiclesList.length) * 100)}%`
+                  {orderAnalytics && orderAnalytics.total_orders > 0
+                    ? `${Math.round((orderAnalytics.in_progress_orders / orderAnalytics.total_orders) * 100)}%`
                     : '0%'} of total
                 </p>
               </CardContent>
@@ -960,11 +790,11 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                   <CheckCircle className="h-4 w-4 text-green-600" />
                 </div>
                 <div className="text-3xl font-bold mb-1 text-green-600">
-                  {vehiclesList.filter(v => v.status === 'completed').length}
+                  {orderAnalytics?.completed_orders || 0}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {vehiclesList.length > 0
-                    ? `${Math.round((vehiclesList.filter(v => v.status === 'completed').length / vehiclesList.length) * 100)}%`
+                  {orderAnalytics && orderAnalytics.total_orders > 0
+                    ? `${Math.round((orderAnalytics.completed_orders / orderAnalytics.total_orders) * 100)}%`
                     : '0%'} completion rate
                 </p>
               </CardContent>
@@ -976,11 +806,11 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                   <AlertCircle className="h-4 w-4 text-red-600" />
                 </div>
                 <div className="text-3xl font-bold mb-1 text-red-600">
-                  {vehiclesList.filter(v => v.status === 'cancelled').length}
+                  {orderAnalytics?.cancelled_orders || 0}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {vehiclesList.length > 0
-                    ? `${Math.round((vehiclesList.filter(v => v.status === 'cancelled').length / vehiclesList.length) * 100)}%`
+                  {orderAnalytics && orderAnalytics.total_orders > 0
+                    ? `${Math.round((orderAnalytics.cancelled_orders / orderAnalytics.total_orders) * 100)}%`
                     : '0%'} of total
                 </p>
               </CardContent>
@@ -1008,7 +838,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                     />
                   )}
                   <Badge variant="secondary" className="h-fit font-semibold">
-                    {vehiclesList.length} orders
+                    {orderAnalytics?.total_orders || 0} orders
                   </Badge>
                 </div>
               </div>

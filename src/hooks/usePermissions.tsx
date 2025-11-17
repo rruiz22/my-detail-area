@@ -818,7 +818,9 @@ export const usePermissions = () => {
   } = useQuery({
     queryKey: ['user-permissions', user?.id],
     queryFn: async () => {
-      if (!user || !profileData) return null;
+      if (!user || !profileData) {
+        return null;
+      }
 
       logger.dev('🔄 Fetching granular user permissions...');
       const userData = await fetchGranularRolePermissions();
@@ -827,7 +829,12 @@ export const usePermissions = () => {
         logger.dev('✅ Granular user permissions loaded successfully');
 
         // ✅ PHASE 2.2: Save to localStorage with proper serialization
-        cachePermissions(userData);
+        // 🔒 CRITICAL: Only cache if userId still matches (prevent race condition)
+        if (userData.id === user.id) {
+          cachePermissions(userData);
+        } else {
+          logger.dev('🚨 UserId changed during fetch - skipping cache save');
+        }
       }
 
       return userData;
@@ -836,11 +843,29 @@ export const usePermissions = () => {
     // ✅ PHASE 2.2: Load from localStorage cache for instant initial render
     initialData: () => {
       if (!user?.id) return undefined;
+
+      // 🔒 CRITICAL FIX: Validate userId BEFORE attempting to load cache
+      // This prevents race conditions where cache from previous user is used
       const cached = getCachedPermissions(user.id);
+
+      if (!cached) {
+        return undefined; // No cache - will fetch fresh data
+      }
+
+      // 🔒 CRITICAL: Double-check userId matches (defense in depth)
+      if (cached.id !== user.id) {
+        logger.dev('🚨 SECURITY: Cache userId mismatch detected, clearing cache');
+        console.error('❌ Cache userId mismatch:', {
+          cacheUserId: cached.id.substring(0, 8),
+          currentUserId: user.id.substring(0, 8)
+        });
+        clearPermissionsCache();
+        return undefined;
+      }
 
       // 🛡️ CRITICAL: Validate cached data structure
       // If cache has invalid structure (no roles despite being non-admin), force refetch
-      if (cached && profileData) {
+      if (profileData) {
         const isAdmin = profileData.role === 'system_admin';
         const hasRoles = cached.custom_roles && cached.custom_roles.length > 0;
         const hasModulePerms = cached.module_permissions && cached.module_permissions.size > 0;
@@ -851,9 +876,21 @@ export const usePermissions = () => {
           clearPermissionsCache();
           return undefined; // Force refetch
         }
+
+        // 🔒 CRITICAL: Validate email matches (additional security layer)
+        if (cached.email !== profileData.email) {
+          logger.dev('🚨 SECURITY: Cache email mismatch detected, clearing cache');
+          console.error('❌ Cache email mismatch:', {
+            cacheEmail: cached.email,
+            profileEmail: profileData.email
+          });
+          clearPermissionsCache();
+          return undefined;
+        }
       }
 
-      return cached || undefined;
+      logger.dev('✅ Cache validated successfully, using cached permissions');
+      return cached;
     },
     // ✅ PERF FIX: Keep previous data while refetching
     placeholderData: (previousData) => previousData,
