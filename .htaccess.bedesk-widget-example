@@ -1,0 +1,103 @@
+# ============================================
+# BeDesk Livechat Widget Configuration
+# For: support.mydetailarea.com (SiteGround)
+# ============================================
+#
+# INSTRUCTIONS:
+# 1. Copy this file to public_html/.htaccess on support.mydetailarea.com
+# 2. Or append these rules to existing .htaccess
+# 3. Test: https://support.mydetailarea.com/lc/widget
+# 4. Should return 200 (not 500)
+#
+
+# Enable Rewrite Engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+</IfModule>
+
+# ============================================
+# SECURITY HEADERS FOR WIDGET
+# ============================================
+
+<IfModule mod_headers.c>
+    # Allow iframe embedding from MyDetailArea
+    Header always unset X-Frame-Options
+    Header set X-Frame-Options "ALLOW-FROM https://dds.mydetailarea.com"
+
+    # Modern alternative to X-Frame-Options
+    Header set Content-Security-Policy "frame-ancestors 'self' https://dds.mydetailarea.com"
+
+    # CORS Headers for widget domain
+    Header set Access-Control-Allow-Origin "https://dds.mydetailarea.com"
+    Header set Access-Control-Allow-Credentials "true"
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+
+    # Cache control for static assets
+    <FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # No cache for HTML and API responses
+    <FilesMatch "\.(html|php|json)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+</IfModule>
+
+# ============================================
+# DISABLE ModSecurity FOR WIDGET ROUTES
+# (Only if ModSecurity is causing 500 errors)
+# ============================================
+
+<IfModule mod_security.c>
+    # Option 1: Disable completely for /lc routes
+    <LocationMatch "^/lc">
+        SecRuleEngine Off
+    </LocationMatch>
+
+    # Option 2: Disable specific rules (replace with actual rule IDs from logs)
+    # SecRuleRemoveById 950109
+    # SecRuleRemoveById 981318
+    # SecRuleRemoveById 950901
+</IfModule>
+
+# ============================================
+# HANDLE OPTIONS PREFLIGHT REQUESTS
+# ============================================
+
+<IfModule mod_rewrite.c>
+    # Handle CORS preflight
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ $1 [R=200,L]
+</IfModule>
+
+# ============================================
+# PHP SETTINGS (If needed)
+# ============================================
+
+<IfModule mod_php7.c>
+    php_value memory_limit 256M
+    php_value max_execution_time 300
+    php_value upload_max_filesize 20M
+    php_value post_max_size 20M
+</IfModule>
+
+# ============================================
+# ERROR HANDLING
+# ============================================
+
+# Custom error pages (optional)
+# ErrorDocument 500 /500.html
+# ErrorDocument 404 /404.html
+
+# Enable error reporting (temporarily for debugging)
+# php_flag display_errors on
+# php_flag display_startup_errors on
+# php_value error_reporting E_ALL
+
+# ============================================
+# End of BeDesk Widget Configuration
+# ============================================
