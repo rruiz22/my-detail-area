@@ -1,9 +1,11 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
+import { requireValidTwilioSignature } from "../_shared/twilio-validator.ts";
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const twilioAuthToken = Deno.env.get('TWILIO_AUTH_TOKEN');
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -19,6 +21,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const {
       MessageSid: messageSid,
+      MessageStatus: messageStatus,
       From: fromNumber,
       To: toNumber,
       Body: messageBody,
@@ -27,10 +30,54 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log('Received SMS webhook:', {
       messageSid,
+      messageStatus,
       fromNumber,
       toNumber,
       messageBody: messageBody?.substring(0, 100)
     });
+
+    // DELIVERY STATUS CALLBACK - Update sms_send_history
+    // Security: Delivery status callbacks are less critical - log warning but allow
+    if (messageStatus) {
+      console.log(`📬 Delivery status callback: ${messageStatus} for ${messageSid}`);
+
+      // Optional validation for delivery status (warning-only, doesn't block)
+      if (twilioAuthToken) {
+        const errorResponse = await requireValidTwilioSignature(
+          req,
+          twilioData,
+          twilioAuthToken,
+          corsHeaders
+        );
+
+        if (errorResponse) {
+          console.warn('⚠️ Delivery status callback has invalid signature - allowing anyway (less critical)');
+          // Continue processing despite invalid signature for delivery status
+        }
+      }
+
+      return await handleDeliveryStatus(messageSid as string, messageStatus as string);
+    }
+
+    // INBOUND MESSAGE - Process as customer message
+    // Security: Strict validation required for inbound messages
+    console.log('📨 Inbound message from customer');
+
+    if (twilioAuthToken) {
+      const errorResponse = await requireValidTwilioSignature(
+        req,
+        twilioData,
+        twilioAuthToken,
+        corsHeaders
+      );
+
+      if (errorResponse) {
+        console.error('🚨 Inbound message rejected - invalid signature');
+        return errorResponse; // Unauthorized - invalid signature
+      }
+    } else {
+      console.warn('⚠️ TWILIO_AUTH_TOKEN not configured - skipping signature validation');
+    }
 
     // Clean phone numbers
     const cleanFromNumber = cleanPhoneNumber(fromNumber as string);
@@ -264,6 +311,95 @@ async function processOrderMentions(conversation: any, messageBody: string) {
 function cleanPhoneNumber(phoneNumber: string): string {
   // Remove +1 and any non-digits, then format consistently
   return phoneNumber.replace(/^\+?1?/, '').replace(/\D/g, '');
+}
+
+/**
+ * Handles Twilio delivery status callbacks
+ * Called when Twilio updates us on SMS delivery status (sent, delivered, failed, undelivered)
+ * Updates sms_send_history table for tracking and retry logic
+ */
+async function handleDeliveryStatus(messageSid: string, messageStatus: string): Promise<Response> {
+  console.log(`🔄 Processing delivery status update: ${messageSid} -> ${messageStatus}`);
+
+  try {
+    // Update sms_send_history with delivery status
+    const { data, error } = await supabase
+      .from('sms_send_history')
+      .update({
+        status: messageStatus, // 'sent' | 'delivered' | 'failed' | 'undelivered'
+        webhook_received_at: new Date().toISOString(),
+        delivery_status_updated_at: new Date().toISOString()
+      })
+      .eq('twilio_sid', messageSid)
+      .select();
+
+    if (error) {
+      console.error(`❌ Failed to update sms_send_history:`, error);
+      throw new Error(`Database update failed: ${error.message}`);
+    }
+
+    if (!data || data.length === 0) {
+      console.warn(`⚠️ No sms_send_history record found for twilio_sid: ${messageSid}`);
+      // Still return 200 to prevent Twilio from retrying
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: 'No matching record found',
+          messageSid
+        }),
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders
+          }
+        }
+      );
+    }
+
+    console.log(`✅ Updated ${data.length} record(s) with status: ${messageStatus}`);
+
+    // If failed and retry_count < 3, could trigger retry logic here
+    if ((messageStatus === 'failed' || messageStatus === 'undelivered') && data[0].retry_count < 3) {
+      console.log(`🔁 SMS delivery failed, may trigger retry (current retry_count: ${data[0].retry_count})`);
+      // Retry logic will be handled by retry-failed-notifications Edge Function
+    }
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        messageSid,
+        status: messageStatus,
+        updatedRecords: data.length
+      }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
+      }
+    );
+
+  } catch (error: any) {
+    console.error('Delivery status update error:', error);
+
+    // Return 200 even on error to prevent Twilio from retrying indefinitely
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error: error.message,
+        messageSid
+      }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders
+        }
+      }
+    );
+  }
 }
 
 serve(handler);

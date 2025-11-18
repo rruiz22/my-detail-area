@@ -105,17 +105,8 @@ export function useOrderActions(): OrderActionsResult {
   const sendSMS = async (to: string, message: string, orderNumber: string): Promise<boolean> => {
     setLoading(true);
     try {
-      // Migrated from 'send-sms' to 'enhanced-sms' for better conversation tracking
-      // enhanced-sms provides: conversation management, message history, auto-responses
-      const { data, error } = await supabase.functions.invoke('enhanced-sms', {
-        body: {
-          to,
-          message: `${message}\n\nOrder: ${orderNumber}`,
-          // Optional context - enhanced-sms works without these
-          entityType: 'order',
-          entityId: null, // Not available in this context
-          dealerId: null  // Not available in this context
-        },
+      const { data, error } = await supabase.functions.invoke('send-sms', {
+        body: { to, message, orderNumber },
       });
 
       if (error) throw error;
