@@ -1,8 +1,8 @@
 {
   "scannedFiles": 861,
-  "totalStrings": 9880,
+  "totalStrings": 9891,
   "hardcodedStrings": 2049,
-  "translatedStrings": 7831,
+  "translatedStrings": 7842,
   "issues": {
     "critical": [
       {
@@ -29545,640 +29545,750 @@
         "hardcodedStrings": [
           {
             "text": "No employees found",
-            "line": 630,
-            "context": "629: <TableRow>\n630: <TableCell colSpan={7} className=\"text-center py-8 text-muted-foreground\">\n631: No employees found"
+            "line": 860,
+            "context": "859: <TableRow>\n860: <TableCell colSpan={7} className=\"text-center py-8 text-muted-foreground\">\n861: No employees found"
           },
           {
             "text": "Cancel",
-            "line": 704,
-            "context": "703: <AlertDialogFooter>\n704: <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>\n705: <AlertDialogAction"
+            "line": 934,
+            "context": "933: <AlertDialogFooter>\n934: <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>\n935: <AlertDialogAction"
           },
           {
             "text": "John",
-            "line": 328,
-            "context": "327: <FormControl>\n328: <Input placeholder=\"John\" {...field} />\n329: </FormControl>"
+            "line": 384,
+            "context": "383: <FormControl>\n384: <Input placeholder=\"John\" {...field} />\n385: </FormControl>"
           },
           {
             "text": "Smith",
-            "line": 341,
-            "context": "340: <FormControl>\n341: <Input placeholder=\"Smith\" {...field} />\n342: </FormControl>"
+            "line": 397,
+            "context": "396: <FormControl>\n397: <Input placeholder=\"Smith\" {...field} />\n398: </FormControl>"
           }
         ],
         "translationCalls": [
           {
             "key": "detail_hub.employees.${status}",
-            "line": 268,
+            "line": 324,
             "exists": false
           },
           {
             "key": "detail_hub.employees.roles.detailer",
-            "line": 275,
+            "line": 331,
             "exists": false
           },
           {
             "key": "detail_hub.employees.roles.car_wash",
-            "line": 276,
+            "line": 332,
             "exists": false
           },
           {
             "key": "detail_hub.employees.roles.supervisor",
-            "line": 277,
+            "line": 333,
             "exists": false
           },
           {
             "key": "detail_hub.employees.roles.manager",
-            "line": 278,
+            "line": 334,
             "exists": false
           },
           {
             "key": "detail_hub.employees.roles.technician",
-            "line": 279,
+            "line": 335,
             "exists": false
           },
           {
             "key": "detail_hub.employees.departments.detail",
-            "line": 286,
+            "line": 342,
             "exists": false
           },
           {
             "key": "detail_hub.employees.departments.car_wash",
-            "line": 287,
+            "line": 343,
             "exists": false
           },
           {
             "key": "detail_hub.employees.departments.service",
-            "line": 288,
+            "line": 344,
             "exists": false
           },
           {
             "key": "detail_hub.employees.departments.management",
-            "line": 289,
+            "line": 345,
             "exists": false
           },
           {
             "key": "detail_hub.employees.title",
-            "line": 298,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.subtitle",
-            "line": 299,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.add_employee",
-            "line": 305,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.edit",
-            "line": 312,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.add_employee",
-            "line": 312,
-            "exists": false
-          },
-          {
-            "key": "common.first_name",
-            "line": 326,
-            "exists": false
-          },
-          {
-            "key": "common.last_name",
-            "line": 339,
-            "exists": false
-          },
-          {
-            "key": "common.email",
             "line": 354,
             "exists": false
           },
           {
-            "key": "common.phone",
-            "line": 373,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.role",
-            "line": 393,
-            "exists": false
-          },
-          {
-            "key": "validation.option_required",
-            "line": 397,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.roles.detailer",
-            "line": 401,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.roles.technician",
-            "line": 402,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.roles.car_wash",
-            "line": 403,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.roles.supervisor",
-            "line": 404,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.roles.manager",
-            "line": 405,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.department",
-            "line": 418,
-            "exists": false
-          },
-          {
-            "key": "validation.option_required",
-            "line": 422,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.departments.detail",
-            "line": 426,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.departments.car_wash",
-            "line": 427,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.departments.service",
-            "line": 428,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.departments.management",
-            "line": 429,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.hourly_rate",
-            "line": 444,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.hire_date",
-            "line": 464,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.pick_date",
-            "line": 478,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.status",
-            "line": 507,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.active",
-            "line": 515,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.inactive",
-            "line": 516,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.suspended",
-            "line": 517,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.terminated",
-            "line": 518,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.kiosk_pin",
-            "line": 533,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.kiosk_pin_placeholder",
-            "line": 539,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.kiosk_pin_help",
-            "line": 553,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.enroll_face_id",
-            "line": 563,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.common.cancel",
-            "line": 569,
-            "exists": false
-          },
-          {
-            "key": "common.save",
-            "line": 575,
+            "key": "detail_hub.employees.subtitle",
+            "line": 355,
             "exists": false
           },
           {
             "key": "detail_hub.employees.add_employee",
-            "line": 575,
+            "line": 361,
             "exists": false
           },
           {
-            "key": "detail_hub.employees.search_employees",
-            "line": 591,
+            "key": "detail_hub.employees.edit",
+            "line": 368,
             "exists": false
           },
           {
-            "key": "detail_hub.employees.employee_list",
-            "line": 603,
+            "key": "detail_hub.employees.add_employee",
+            "line": 368,
             "exists": false
           },
           {
-            "key": "detail_hub.employees.employee_details",
-            "line": 609,
+            "key": "common.first_name",
+            "line": 382,
+            "exists": false
+          },
+          {
+            "key": "common.last_name",
+            "line": 395,
+            "exists": false
+          },
+          {
+            "key": "common.email",
+            "line": 410,
+            "exists": false
+          },
+          {
+            "key": "common.phone",
+            "line": 429,
             "exists": false
           },
           {
             "key": "detail_hub.employees.role",
-            "line": 610,
+            "line": 449,
+            "exists": false
+          },
+          {
+            "key": "validation.option_required",
+            "line": 453,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.roles.detailer",
+            "line": 457,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.roles.technician",
+            "line": 458,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.roles.car_wash",
+            "line": 459,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.roles.supervisor",
+            "line": 460,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.roles.manager",
+            "line": 461,
             "exists": false
           },
           {
             "key": "detail_hub.employees.department",
-            "line": 611,
+            "line": 474,
+            "exists": false
+          },
+          {
+            "key": "validation.option_required",
+            "line": 478,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.departments.detail",
+            "line": 482,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.departments.car_wash",
+            "line": 483,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.departments.service",
+            "line": 484,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.departments.management",
+            "line": 485,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.hourly_rate",
+            "line": 500,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.hire_date",
+            "line": 520,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.pick_date",
+            "line": 534,
             "exists": false
           },
           {
             "key": "detail_hub.employees.status",
-            "line": 612,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.hourly_rate",
-            "line": 613,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.last_punch",
-            "line": 614,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.actions",
-            "line": 615,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.common.loading",
-            "line": 624,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.stats.active_employees",
-            "line": 729,
+            "line": 563,
             "exists": false
           },
           {
             "key": "detail_hub.employees.active",
-            "line": 740,
+            "line": 571,
             "exists": false
           },
           {
-            "key": "time.today",
-            "line": 740,
+            "key": "detail_hub.employees.inactive",
+            "line": 572,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.suspended",
+            "line": 573,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.terminated",
+            "line": 574,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.kiosk_pin",
+            "line": 589,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.kiosk_pin_placeholder",
+            "line": 595,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.kiosk_pin_help",
+            "line": 609,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.schedule_template",
+            "line": 621,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.schedule_template_description",
+            "line": 624,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.auto_generate_schedules",
+            "line": 640,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.default_start_time",
+            "line": 656,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.default_end_time",
+            "line": 670,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.work_days",
+            "line": 686,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.default_break",
+            "line": 733,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.schedules.minutes",
+            "line": 737,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.paid_break",
+            "line": 759,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.days_ahead",
+            "line": 773,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.days_ahead_description",
+            "line": 778,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.enroll_face_id",
+            "line": 793,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.common.cancel",
+            "line": 799,
+            "exists": false
+          },
+          {
+            "key": "common.save",
+            "line": 805,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.add_employee",
+            "line": 805,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.search_employees",
+            "line": 821,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.employee_list",
+            "line": 833,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.employee_details",
+            "line": 839,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.role",
+            "line": 840,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.department",
+            "line": 841,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.status",
+            "line": 842,
             "exists": false
           },
           {
             "key": "detail_hub.employees.hourly_rate",
-            "line": 751,
+            "line": 843,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.last_punch",
+            "line": 844,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.actions",
+            "line": 845,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.common.loading",
+            "line": 854,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.stats.active_employees",
+            "line": 959,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.active",
+            "line": 970,
+            "exists": false
+          },
+          {
+            "key": "time.today",
+            "line": 970,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.hourly_rate",
+            "line": 981,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "detail_hub.employees.${status}",
-            "line": 268,
-            "context": "267: <Badge variant={config.variant} className={config.className}>\n268: {t(`detail_hub.employees.${status}`)}\n269: </Badge>"
+            "line": 324,
+            "context": "323: <Badge variant={config.variant} className={config.className}>\n324: {t(`detail_hub.employees.${status}`)}\n325: </Badge>"
           },
           {
             "key": "detail_hub.employees.roles.detailer",
-            "line": 275,
-            "context": "274: const roleMap: Record<string, string> = {\n275: detailer: t('detail_hub.employees.roles.detailer'),\n276: car_wash: t('detail_hub.employees.roles.car_wash'),"
+            "line": 331,
+            "context": "330: const roleMap: Record<string, string> = {\n331: detailer: t('detail_hub.employees.roles.detailer'),\n332: car_wash: t('detail_hub.employees.roles.car_wash'),"
           },
           {
             "key": "detail_hub.employees.roles.car_wash",
-            "line": 276,
-            "context": "275: detailer: t('detail_hub.employees.roles.detailer'),\n276: car_wash: t('detail_hub.employees.roles.car_wash'),\n277: supervisor: t('detail_hub.employees.roles.supervisor'),"
+            "line": 332,
+            "context": "331: detailer: t('detail_hub.employees.roles.detailer'),\n332: car_wash: t('detail_hub.employees.roles.car_wash'),\n333: supervisor: t('detail_hub.employees.roles.supervisor'),"
           },
           {
             "key": "detail_hub.employees.roles.supervisor",
-            "line": 277,
-            "context": "276: car_wash: t('detail_hub.employees.roles.car_wash'),\n277: supervisor: t('detail_hub.employees.roles.supervisor'),\n278: manager: t('detail_hub.employees.roles.manager'),"
+            "line": 333,
+            "context": "332: car_wash: t('detail_hub.employees.roles.car_wash'),\n333: supervisor: t('detail_hub.employees.roles.supervisor'),\n334: manager: t('detail_hub.employees.roles.manager'),"
           },
           {
             "key": "detail_hub.employees.roles.manager",
-            "line": 278,
-            "context": "277: supervisor: t('detail_hub.employees.roles.supervisor'),\n278: manager: t('detail_hub.employees.roles.manager'),\n279: technician: t('detail_hub.employees.roles.technician'),"
+            "line": 334,
+            "context": "333: supervisor: t('detail_hub.employees.roles.supervisor'),\n334: manager: t('detail_hub.employees.roles.manager'),\n335: technician: t('detail_hub.employees.roles.technician'),"
           },
           {
             "key": "detail_hub.employees.roles.technician",
-            "line": 279,
-            "context": "278: manager: t('detail_hub.employees.roles.manager'),\n279: technician: t('detail_hub.employees.roles.technician'),\n280: };"
+            "line": 335,
+            "context": "334: manager: t('detail_hub.employees.roles.manager'),\n335: technician: t('detail_hub.employees.roles.technician'),\n336: };"
           },
           {
             "key": "detail_hub.employees.departments.detail",
-            "line": 286,
-            "context": "285: const deptMap: Record<string, string> = {\n286: detail: t('detail_hub.employees.departments.detail'),\n287: car_wash: t('detail_hub.employees.departments.car_wash'),"
+            "line": 342,
+            "context": "341: const deptMap: Record<string, string> = {\n342: detail: t('detail_hub.employees.departments.detail'),\n343: car_wash: t('detail_hub.employees.departments.car_wash'),"
           },
           {
             "key": "detail_hub.employees.departments.car_wash",
-            "line": 287,
-            "context": "286: detail: t('detail_hub.employees.departments.detail'),\n287: car_wash: t('detail_hub.employees.departments.car_wash'),\n288: service: t('detail_hub.employees.departments.service'),"
+            "line": 343,
+            "context": "342: detail: t('detail_hub.employees.departments.detail'),\n343: car_wash: t('detail_hub.employees.departments.car_wash'),\n344: service: t('detail_hub.employees.departments.service'),"
           },
           {
             "key": "detail_hub.employees.departments.service",
-            "line": 288,
-            "context": "287: car_wash: t('detail_hub.employees.departments.car_wash'),\n288: service: t('detail_hub.employees.departments.service'),\n289: management: t('detail_hub.employees.departments.management'),"
+            "line": 344,
+            "context": "343: car_wash: t('detail_hub.employees.departments.car_wash'),\n344: service: t('detail_hub.employees.departments.service'),\n345: management: t('detail_hub.employees.departments.management'),"
           },
           {
             "key": "detail_hub.employees.departments.management",
-            "line": 289,
-            "context": "288: service: t('detail_hub.employees.departments.service'),\n289: management: t('detail_hub.employees.departments.management'),\n290: };"
+            "line": 345,
+            "context": "344: service: t('detail_hub.employees.departments.service'),\n345: management: t('detail_hub.employees.departments.management'),\n346: };"
           },
           {
             "key": "detail_hub.employees.title",
-            "line": 298,
-            "context": "297: <div>\n298: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.employees.title')}</h1>\n299: <p className=\"text-muted-foreground\">{t('detail_hub.employees.subtitle')}</p>"
+            "line": 354,
+            "context": "353: <div>\n354: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.employees.title')}</h1>\n355: <p className=\"text-muted-foreground\">{t('detail_hub.employees.subtitle')}</p>"
           },
           {
             "key": "detail_hub.employees.subtitle",
-            "line": 299,
-            "context": "298: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.employees.title')}</h1>\n299: <p className=\"text-muted-foreground\">{t('detail_hub.employees.subtitle')}</p>\n300: </div>"
+            "line": 355,
+            "context": "354: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.employees.title')}</h1>\n355: <p className=\"text-muted-foreground\">{t('detail_hub.employees.subtitle')}</p>\n356: </div>"
           },
           {
             "key": "detail_hub.employees.add_employee",
-            "line": 305,
-            "context": "304: <UserPlus className=\"w-4 h-4 mr-2\" />\n305: {t('detail_hub.employees.add_employee')}\n306: </Button>"
+            "line": 361,
+            "context": "360: <UserPlus className=\"w-4 h-4 mr-2\" />\n361: {t('detail_hub.employees.add_employee')}\n362: </Button>"
           },
           {
             "key": "detail_hub.employees.edit",
-            "line": 312,
-            "context": "311: <DialogTitle>\n312: {editingEmployee ? t('detail_hub.employees.edit') : t('detail_hub.employees.add_employee')}\n313: </DialogTitle>"
+            "line": 368,
+            "context": "367: <DialogTitle>\n368: {editingEmployee ? t('detail_hub.employees.edit') : t('detail_hub.employees.add_employee')}\n369: </DialogTitle>"
           },
           {
             "key": "detail_hub.employees.add_employee",
-            "line": 312,
-            "context": "311: <DialogTitle>\n312: {editingEmployee ? t('detail_hub.employees.edit') : t('detail_hub.employees.add_employee')}\n313: </DialogTitle>"
+            "line": 368,
+            "context": "367: <DialogTitle>\n368: {editingEmployee ? t('detail_hub.employees.edit') : t('detail_hub.employees.add_employee')}\n369: </DialogTitle>"
           },
           {
             "key": "common.first_name",
-            "line": 326,
-            "context": "325: <FormItem>\n326: <FormLabel>{t('common.first_name')}</FormLabel>\n327: <FormControl>"
+            "line": 382,
+            "context": "381: <FormItem>\n382: <FormLabel>{t('common.first_name')}</FormLabel>\n383: <FormControl>"
           },
           {
             "key": "common.last_name",
-            "line": 339,
-            "context": "338: <FormItem>\n339: <FormLabel>{t('common.last_name')}</FormLabel>\n340: <FormControl>"
+            "line": 395,
+            "context": "394: <FormItem>\n395: <FormLabel>{t('common.last_name')}</FormLabel>\n396: <FormControl>"
           },
           {
             "key": "common.email",
-            "line": 354,
-            "context": "353: <FormItem>\n354: <FormLabel>{t('common.email')}</FormLabel>\n355: <FormControl>"
+            "line": 410,
+            "context": "409: <FormItem>\n410: <FormLabel>{t('common.email')}</FormLabel>\n411: <FormControl>"
           },
           {
             "key": "common.phone",
-            "line": 373,
-            "context": "372: <FormItem>\n373: <FormLabel>{t('common.phone')}</FormLabel>\n374: <FormControl>"
+            "line": 429,
+            "context": "428: <FormItem>\n429: <FormLabel>{t('common.phone')}</FormLabel>\n430: <FormControl>"
           },
           {
             "key": "detail_hub.employees.role",
-            "line": 393,
-            "context": "392: <FormItem>\n393: <FormLabel>{t('detail_hub.employees.role')}</FormLabel>\n394: <Select onValueChange={field.onChange} value={field.value}>"
+            "line": 449,
+            "context": "448: <FormItem>\n449: <FormLabel>{t('detail_hub.employees.role')}</FormLabel>\n450: <Select onValueChange={field.onChange} value={field.value}>"
           },
           {
             "key": "validation.option_required",
-            "line": 397,
-            "context": "396: <SelectTrigger>\n397: <SelectValue placeholder={t('validation.option_required')} />\n398: </SelectTrigger>"
+            "line": 453,
+            "context": "452: <SelectTrigger>\n453: <SelectValue placeholder={t('validation.option_required')} />\n454: </SelectTrigger>"
           },
           {
             "key": "detail_hub.employees.roles.detailer",
-            "line": 401,
-            "context": "400: <SelectContent>\n401: <SelectItem value=\"detailer\">{t('detail_hub.employees.roles.detailer')}</SelectItem>\n402: <SelectItem value=\"technician\">{t('detail_hub.employees.roles.technician')}</SelectItem>"
+            "line": 457,
+            "context": "456: <SelectContent>\n457: <SelectItem value=\"detailer\">{t('detail_hub.employees.roles.detailer')}</SelectItem>\n458: <SelectItem value=\"technician\">{t('detail_hub.employees.roles.technician')}</SelectItem>"
           },
           {
             "key": "detail_hub.employees.roles.technician",
-            "line": 402,
-            "context": "401: <SelectItem value=\"detailer\">{t('detail_hub.employees.roles.detailer')}</SelectItem>\n402: <SelectItem value=\"technician\">{t('detail_hub.employees.roles.technician')}</SelectItem>\n403: <SelectItem value=\"car_wash\">{t('detail_hub.employees.roles.car_wash')}</SelectItem>"
+            "line": 458,
+            "context": "457: <SelectItem value=\"detailer\">{t('detail_hub.employees.roles.detailer')}</SelectItem>\n458: <SelectItem value=\"technician\">{t('detail_hub.employees.roles.technician')}</SelectItem>\n459: <SelectItem value=\"car_wash\">{t('detail_hub.employees.roles.car_wash')}</SelectItem>"
           },
           {
             "key": "detail_hub.employees.roles.car_wash",
-            "line": 403,
-            "context": "402: <SelectItem value=\"technician\">{t('detail_hub.employees.roles.technician')}</SelectItem>\n403: <SelectItem value=\"car_wash\">{t('detail_hub.employees.roles.car_wash')}</SelectItem>\n404: <SelectItem value=\"supervisor\">{t('detail_hub.employees.roles.supervisor')}</SelectItem>"
+            "line": 459,
+            "context": "458: <SelectItem value=\"technician\">{t('detail_hub.employees.roles.technician')}</SelectItem>\n459: <SelectItem value=\"car_wash\">{t('detail_hub.employees.roles.car_wash')}</SelectItem>\n460: <SelectItem value=\"supervisor\">{t('detail_hub.employees.roles.supervisor')}</SelectItem>"
           },
           {
             "key": "detail_hub.employees.roles.supervisor",
-            "line": 404,
-            "context": "403: <SelectItem value=\"car_wash\">{t('detail_hub.employees.roles.car_wash')}</SelectItem>\n404: <SelectItem value=\"supervisor\">{t('detail_hub.employees.roles.supervisor')}</SelectItem>\n405: <SelectItem value=\"manager\">{t('detail_hub.employees.roles.manager')}</SelectItem>"
+            "line": 460,
+            "context": "459: <SelectItem value=\"car_wash\">{t('detail_hub.employees.roles.car_wash')}</SelectItem>\n460: <SelectItem value=\"supervisor\">{t('detail_hub.employees.roles.supervisor')}</SelectItem>\n461: <SelectItem value=\"manager\">{t('detail_hub.employees.roles.manager')}</SelectItem>"
           },
           {
             "key": "detail_hub.employees.roles.manager",
-            "line": 405,
-            "context": "404: <SelectItem value=\"supervisor\">{t('detail_hub.employees.roles.supervisor')}</SelectItem>\n405: <SelectItem value=\"manager\">{t('detail_hub.employees.roles.manager')}</SelectItem>\n406: </SelectContent>"
+            "line": 461,
+            "context": "460: <SelectItem value=\"supervisor\">{t('detail_hub.employees.roles.supervisor')}</SelectItem>\n461: <SelectItem value=\"manager\">{t('detail_hub.employees.roles.manager')}</SelectItem>\n462: </SelectContent>"
           },
           {
             "key": "detail_hub.employees.department",
-            "line": 418,
-            "context": "417: <FormItem>\n418: <FormLabel>{t('detail_hub.employees.department')}</FormLabel>\n419: <Select onValueChange={field.onChange} value={field.value}>"
+            "line": 474,
+            "context": "473: <FormItem>\n474: <FormLabel>{t('detail_hub.employees.department')}</FormLabel>\n475: <Select onValueChange={field.onChange} value={field.value}>"
           },
           {
             "key": "validation.option_required",
-            "line": 422,
-            "context": "421: <SelectTrigger>\n422: <SelectValue placeholder={t('validation.option_required')} />\n423: </SelectTrigger>"
+            "line": 478,
+            "context": "477: <SelectTrigger>\n478: <SelectValue placeholder={t('validation.option_required')} />\n479: </SelectTrigger>"
           },
           {
             "key": "detail_hub.employees.departments.detail",
-            "line": 426,
-            "context": "425: <SelectContent>\n426: <SelectItem value=\"detail\">{t('detail_hub.employees.departments.detail')}</SelectItem>\n427: <SelectItem value=\"car_wash\">{t('detail_hub.employees.departments.car_wash')}</SelectItem>"
+            "line": 482,
+            "context": "481: <SelectContent>\n482: <SelectItem value=\"detail\">{t('detail_hub.employees.departments.detail')}</SelectItem>\n483: <SelectItem value=\"car_wash\">{t('detail_hub.employees.departments.car_wash')}</SelectItem>"
           },
           {
             "key": "detail_hub.employees.departments.car_wash",
-            "line": 427,
-            "context": "426: <SelectItem value=\"detail\">{t('detail_hub.employees.departments.detail')}</SelectItem>\n427: <SelectItem value=\"car_wash\">{t('detail_hub.employees.departments.car_wash')}</SelectItem>\n428: <SelectItem value=\"service\">{t('detail_hub.employees.departments.service')}</SelectItem>"
+            "line": 483,
+            "context": "482: <SelectItem value=\"detail\">{t('detail_hub.employees.departments.detail')}</SelectItem>\n483: <SelectItem value=\"car_wash\">{t('detail_hub.employees.departments.car_wash')}</SelectItem>\n484: <SelectItem value=\"service\">{t('detail_hub.employees.departments.service')}</SelectItem>"
           },
           {
             "key": "detail_hub.employees.departments.service",
-            "line": 428,
-            "context": "427: <SelectItem value=\"car_wash\">{t('detail_hub.employees.departments.car_wash')}</SelectItem>\n428: <SelectItem value=\"service\">{t('detail_hub.employees.departments.service')}</SelectItem>\n429: <SelectItem value=\"management\">{t('detail_hub.employees.departments.management')}</SelectItem>"
+            "line": 484,
+            "context": "483: <SelectItem value=\"car_wash\">{t('detail_hub.employees.departments.car_wash')}</SelectItem>\n484: <SelectItem value=\"service\">{t('detail_hub.employees.departments.service')}</SelectItem>\n485: <SelectItem value=\"management\">{t('detail_hub.employees.departments.management')}</SelectItem>"
           },
           {
             "key": "detail_hub.employees.departments.management",
-            "line": 429,
-            "context": "428: <SelectItem value=\"service\">{t('detail_hub.employees.departments.service')}</SelectItem>\n429: <SelectItem value=\"management\">{t('detail_hub.employees.departments.management')}</SelectItem>\n430: </SelectContent>"
+            "line": 485,
+            "context": "484: <SelectItem value=\"service\">{t('detail_hub.employees.departments.service')}</SelectItem>\n485: <SelectItem value=\"management\">{t('detail_hub.employees.departments.management')}</SelectItem>\n486: </SelectContent>"
           },
           {
             "key": "detail_hub.employees.hourly_rate",
-            "line": 444,
-            "context": "443: <FormItem>\n444: <FormLabel>{t('detail_hub.employees.hourly_rate')} ($)</FormLabel>\n445: <FormControl>"
+            "line": 500,
+            "context": "499: <FormItem>\n500: <FormLabel>{t('detail_hub.employees.hourly_rate')} ($)</FormLabel>\n501: <FormControl>"
           },
           {
             "key": "detail_hub.employees.hire_date",
-            "line": 464,
-            "context": "463: <FormItem className=\"flex flex-col\">\n464: <FormLabel>{t('detail_hub.employees.hire_date')}</FormLabel>\n465: <Popover>"
+            "line": 520,
+            "context": "519: <FormItem className=\"flex flex-col\">\n520: <FormLabel>{t('detail_hub.employees.hire_date')}</FormLabel>\n521: <Popover>"
           },
           {
             "key": "detail_hub.timecard.pick_date",
-            "line": 478,
-            "context": "477: ) : (\n478: <span>{t('detail_hub.timecard.pick_date')}</span>\n479: )}"
+            "line": 534,
+            "context": "533: ) : (\n534: <span>{t('detail_hub.timecard.pick_date')}</span>\n535: )}"
           },
           {
             "key": "detail_hub.employees.status",
-            "line": 507,
-            "context": "506: <FormItem>\n507: <FormLabel>{t('detail_hub.employees.status')}</FormLabel>\n508: <Select onValueChange={field.onChange} value={field.value}>"
+            "line": 563,
+            "context": "562: <FormItem>\n563: <FormLabel>{t('detail_hub.employees.status')}</FormLabel>\n564: <Select onValueChange={field.onChange} value={field.value}>"
           },
           {
             "key": "detail_hub.employees.active",
-            "line": 515,
-            "context": "514: <SelectContent>\n515: <SelectItem value=\"active\">{t('detail_hub.employees.active')}</SelectItem>\n516: <SelectItem value=\"inactive\">{t('detail_hub.employees.inactive')}</SelectItem>"
+            "line": 571,
+            "context": "570: <SelectContent>\n571: <SelectItem value=\"active\">{t('detail_hub.employees.active')}</SelectItem>\n572: <SelectItem value=\"inactive\">{t('detail_hub.employees.inactive')}</SelectItem>"
           },
           {
             "key": "detail_hub.employees.inactive",
-            "line": 516,
-            "context": "515: <SelectItem value=\"active\">{t('detail_hub.employees.active')}</SelectItem>\n516: <SelectItem value=\"inactive\">{t('detail_hub.employees.inactive')}</SelectItem>\n517: <SelectItem value=\"suspended\">{t('detail_hub.employees.suspended')}</SelectItem>"
+            "line": 572,
+            "context": "571: <SelectItem value=\"active\">{t('detail_hub.employees.active')}</SelectItem>\n572: <SelectItem value=\"inactive\">{t('detail_hub.employees.inactive')}</SelectItem>\n573: <SelectItem value=\"suspended\">{t('detail_hub.employees.suspended')}</SelectItem>"
           },
           {
             "key": "detail_hub.employees.suspended",
-            "line": 517,
-            "context": "516: <SelectItem value=\"inactive\">{t('detail_hub.employees.inactive')}</SelectItem>\n517: <SelectItem value=\"suspended\">{t('detail_hub.employees.suspended')}</SelectItem>\n518: <SelectItem value=\"terminated\">{t('detail_hub.employees.terminated')}</SelectItem>"
+            "line": 573,
+            "context": "572: <SelectItem value=\"inactive\">{t('detail_hub.employees.inactive')}</SelectItem>\n573: <SelectItem value=\"suspended\">{t('detail_hub.employees.suspended')}</SelectItem>\n574: <SelectItem value=\"terminated\">{t('detail_hub.employees.terminated')}</SelectItem>"
           },
           {
             "key": "detail_hub.employees.terminated",
-            "line": 518,
-            "context": "517: <SelectItem value=\"suspended\">{t('detail_hub.employees.suspended')}</SelectItem>\n518: <SelectItem value=\"terminated\">{t('detail_hub.employees.terminated')}</SelectItem>\n519: </SelectContent>"
+            "line": 574,
+            "context": "573: <SelectItem value=\"suspended\">{t('detail_hub.employees.suspended')}</SelectItem>\n574: <SelectItem value=\"terminated\">{t('detail_hub.employees.terminated')}</SelectItem>\n575: </SelectContent>"
           },
           {
             "key": "detail_hub.employees.kiosk_pin",
-            "line": 533,
-            "context": "532: <Shield className=\"w-4 h-4\" />\n533: {t('detail_hub.employees.kiosk_pin')}\n534: <span className=\"text-destructive\">*</span>"
+            "line": 589,
+            "context": "588: <Shield className=\"w-4 h-4\" />\n589: {t('detail_hub.employees.kiosk_pin')}\n590: <span className=\"text-destructive\">*</span>"
           },
           {
             "key": "detail_hub.employees.kiosk_pin_placeholder",
-            "line": 539,
-            "context": "538: type=\"password\"\n539: placeholder={t('detail_hub.employees.kiosk_pin_placeholder')}\n540: maxLength={6}"
+            "line": 595,
+            "context": "594: type=\"password\"\n595: placeholder={t('detail_hub.employees.kiosk_pin_placeholder')}\n596: maxLength={6}"
           },
           {
             "key": "detail_hub.employees.kiosk_pin_help",
-            "line": 553,
-            "context": "552: <p className=\"text-xs text-muted-foreground\">\n553: {t('detail_hub.employees.kiosk_pin_help')}\n554: </p>"
+            "line": 609,
+            "context": "608: <p className=\"text-xs text-muted-foreground\">\n609: {t('detail_hub.employees.kiosk_pin_help')}\n610: </p>"
+          },
+          {
+            "key": "detail_hub.employees.schedule_template",
+            "line": 621,
+            "context": "620: <h3 className=\"text-sm font-semibold text-gray-900\">\n621: {t('detail_hub.employees.schedule_template')}\n622: </h3>"
+          },
+          {
+            "key": "detail_hub.employees.schedule_template_description",
+            "line": 624,
+            "context": "623: <p className=\"text-xs text-gray-500\">\n624: {t('detail_hub.employees.schedule_template_description')}\n625: </p>"
+          },
+          {
+            "key": "detail_hub.employees.auto_generate_schedules",
+            "line": 640,
+            "context": "639: <label htmlFor=\"auto_generate\" className=\"text-sm cursor-pointer\">\n640: {t('detail_hub.employees.auto_generate_schedules')}\n641: </label>"
+          },
+          {
+            "key": "detail_hub.employees.default_start_time",
+            "line": 656,
+            "context": "655: <FormItem>\n656: <FormLabel>{t('detail_hub.employees.default_start_time')}</FormLabel>\n657: <FormControl>"
+          },
+          {
+            "key": "detail_hub.employees.default_end_time",
+            "line": 670,
+            "context": "669: <FormItem>\n670: <FormLabel>{t('detail_hub.employees.default_end_time')}</FormLabel>\n671: <FormControl>"
+          },
+          {
+            "key": "detail_hub.employees.work_days",
+            "line": 686,
+            "context": "685: <FormItem>\n686: <FormLabel>{t('detail_hub.employees.work_days')}</FormLabel>\n687: <div className=\"grid grid-cols-7 gap-2\">"
+          },
+          {
+            "key": "detail_hub.employees.default_break",
+            "line": 733,
+            "context": "732: <FormItem>\n733: <FormLabel>{t('detail_hub.employees.default_break')}</FormLabel>\n734: <FormControl>"
+          },
+          {
+            "key": "detail_hub.schedules.minutes",
+            "line": 737,
+            "context": "736: <Input type=\"number\" min=\"0\" max=\"120\" step=\"15\" {...field} className=\"w-20\" />\n737: <span className=\"text-sm text-gray-600\">{t('detail_hub.schedules.minutes')}</span>\n738: </div>"
+          },
+          {
+            "key": "detail_hub.employees.paid_break",
+            "line": 759,
+            "context": "758: <label htmlFor=\"template_break_paid\" className=\"text-sm cursor-pointer\">\n759: {t('detail_hub.employees.paid_break')}\n760: </label>"
+          },
+          {
+            "key": "detail_hub.employees.days_ahead",
+            "line": 773,
+            "context": "772: <FormItem>\n773: <FormLabel>{t('detail_hub.employees.days_ahead')}</FormLabel>\n774: <FormControl>"
+          },
+          {
+            "key": "detail_hub.employees.days_ahead_description",
+            "line": 778,
+            "context": "777: <span className=\"text-sm text-gray-600\">\n778: {t('detail_hub.employees.days_ahead_description')}\n779: </span>"
           },
           {
             "key": "detail_hub.employees.enroll_face_id",
-            "line": 563,
-            "context": "562: <Camera className=\"w-4 h-4 mr-2\" />\n563: {t('detail_hub.employees.enroll_face_id')}\n564: </Button>"
+            "line": 793,
+            "context": "792: <Camera className=\"w-4 h-4 mr-2\" />\n793: {t('detail_hub.employees.enroll_face_id')}\n794: </Button>"
           },
           {
             "key": "detail_hub.common.cancel",
-            "line": 569,
-            "context": "568: <Button type=\"button\" variant=\"outline\" onClick={handleCloseDialog}>\n569: {t('detail_hub.common.cancel')}\n570: </Button>"
+            "line": 799,
+            "context": "798: <Button type=\"button\" variant=\"outline\" onClick={handleCloseDialog}>\n799: {t('detail_hub.common.cancel')}\n800: </Button>"
           },
           {
             "key": "common.save",
-            "line": 575,
-            "context": "574: ) : null}\n575: {editingEmployee ? t('common.save') : t('detail_hub.employees.add_employee')}\n576: </Button>"
+            "line": 805,
+            "context": "804: ) : null}\n805: {editingEmployee ? t('common.save') : t('detail_hub.employees.add_employee')}\n806: </Button>"
           },
           {
             "key": "detail_hub.employees.add_employee",
-            "line": 575,
-            "context": "574: ) : null}\n575: {editingEmployee ? t('common.save') : t('detail_hub.employees.add_employee')}\n576: </Button>"
+            "line": 805,
+            "context": "804: ) : null}\n805: {editingEmployee ? t('common.save') : t('detail_hub.employees.add_employee')}\n806: </Button>"
           },
           {
             "key": "detail_hub.employees.search_employees",
-            "line": 591,
-            "context": "590: <Input\n591: placeholder={t('detail_hub.employees.search_employees')}\n592: value={searchTerm}"
+            "line": 821,
+            "context": "820: <Input\n821: placeholder={t('detail_hub.employees.search_employees')}\n822: value={searchTerm}"
           },
           {
             "key": "detail_hub.employees.employee_list",
-            "line": 603,
-            "context": "602: <CardHeader>\n603: <CardTitle>{t('detail_hub.employees.employee_list')} ({filteredEmployees.length})</CardTitle>\n604: </CardHeader>"
+            "line": 833,
+            "context": "832: <CardHeader>\n833: <CardTitle>{t('detail_hub.employees.employee_list')} ({filteredEmployees.length})</CardTitle>\n834: </CardHeader>"
           },
           {
             "key": "detail_hub.employees.employee_details",
-            "line": 609,
-            "context": "608: <TableRow>\n609: <TableHead>{t('detail_hub.employees.employee_details')}</TableHead>\n610: <TableHead>{t('detail_hub.employees.role')}</TableHead>"
+            "line": 839,
+            "context": "838: <TableRow>\n839: <TableHead>{t('detail_hub.employees.employee_details')}</TableHead>\n840: <TableHead>{t('detail_hub.employees.role')}</TableHead>"
           },
           {
             "key": "detail_hub.employees.role",
-            "line": 610,
-            "context": "609: <TableHead>{t('detail_hub.employees.employee_details')}</TableHead>\n610: <TableHead>{t('detail_hub.employees.role')}</TableHead>\n611: <TableHead>{t('detail_hub.employees.department')}</TableHead>"
+            "line": 840,
+            "context": "839: <TableHead>{t('detail_hub.employees.employee_details')}</TableHead>\n840: <TableHead>{t('detail_hub.employees.role')}</TableHead>\n841: <TableHead>{t('detail_hub.employees.department')}</TableHead>"
           },
           {
             "key": "detail_hub.employees.department",
-            "line": 611,
-            "context": "610: <TableHead>{t('detail_hub.employees.role')}</TableHead>\n611: <TableHead>{t('detail_hub.employees.department')}</TableHead>\n612: <TableHead>{t('detail_hub.employees.status')}</TableHead>"
+            "line": 841,
+            "context": "840: <TableHead>{t('detail_hub.employees.role')}</TableHead>\n841: <TableHead>{t('detail_hub.employees.department')}</TableHead>\n842: <TableHead>{t('detail_hub.employees.status')}</TableHead>"
           },
           {
             "key": "detail_hub.employees.status",
-            "line": 612,
-            "context": "611: <TableHead>{t('detail_hub.employees.department')}</TableHead>\n612: <TableHead>{t('detail_hub.employees.status')}</TableHead>\n613: <TableHead>{t('detail_hub.employees.hourly_rate')}</TableHead>"
+            "line": 842,
+            "context": "841: <TableHead>{t('detail_hub.employees.department')}</TableHead>\n842: <TableHead>{t('detail_hub.employees.status')}</TableHead>\n843: <TableHead>{t('detail_hub.employees.hourly_rate')}</TableHead>"
           },
           {
             "key": "detail_hub.employees.hourly_rate",
-            "line": 613,
-            "context": "612: <TableHead>{t('detail_hub.employees.status')}</TableHead>\n613: <TableHead>{t('detail_hub.employees.hourly_rate')}</TableHead>\n614: <TableHead>{t('detail_hub.employees.last_punch')}</TableHead>"
+            "line": 843,
+            "context": "842: <TableHead>{t('detail_hub.employees.status')}</TableHead>\n843: <TableHead>{t('detail_hub.employees.hourly_rate')}</TableHead>\n844: <TableHead>{t('detail_hub.employees.last_punch')}</TableHead>"
           },
           {
             "key": "detail_hub.employees.last_punch",
-            "line": 614,
-            "context": "613: <TableHead>{t('detail_hub.employees.hourly_rate')}</TableHead>\n614: <TableHead>{t('detail_hub.employees.last_punch')}</TableHead>\n615: <TableHead>{t('detail_hub.employees.actions')}</TableHead>"
+            "line": 844,
+            "context": "843: <TableHead>{t('detail_hub.employees.hourly_rate')}</TableHead>\n844: <TableHead>{t('detail_hub.employees.last_punch')}</TableHead>\n845: <TableHead>{t('detail_hub.employees.actions')}</TableHead>"
           },
           {
             "key": "detail_hub.employees.actions",
-            "line": 615,
-            "context": "614: <TableHead>{t('detail_hub.employees.last_punch')}</TableHead>\n615: <TableHead>{t('detail_hub.employees.actions')}</TableHead>\n616: </TableRow>"
+            "line": 845,
+            "context": "844: <TableHead>{t('detail_hub.employees.last_punch')}</TableHead>\n845: <TableHead>{t('detail_hub.employees.actions')}</TableHead>\n846: </TableRow>"
           },
           {
             "key": "detail_hub.common.loading",
-            "line": 624,
-            "context": "623: <Clock className=\"w-4 h-4 animate-spin\" />\n624: {t('detail_hub.common.loading')}\n625: </div>"
+            "line": 854,
+            "context": "853: <Clock className=\"w-4 h-4 animate-spin\" />\n854: {t('detail_hub.common.loading')}\n855: </div>"
           },
           {
             "key": "detail_hub.timecard.stats.active_employees",
-            "line": 729,
-            "context": "728: <div>\n729: <p className=\"text-sm font-medium text-muted-foreground\">{t('detail_hub.timecard.stats.active_employees')}</p>\n730: <p className=\"text-2xl font-bold\">{employees.filter(e => e.status === 'active').length}</p>"
+            "line": 959,
+            "context": "958: <div>\n959: <p className=\"text-sm font-medium text-muted-foreground\">{t('detail_hub.timecard.stats.active_employees')}</p>\n960: <p className=\"text-2xl font-bold\">{employees.filter(e => e.status === 'active').length}</p>"
           },
           {
             "key": "detail_hub.employees.active",
-            "line": 740,
-            "context": "739: <div>\n740: <p className=\"text-sm font-medium text-muted-foreground\">{t('detail_hub.employees.active')} {t('time.today')}</p>\n741: <p className=\"text-2xl font-bold\">{employees.length}</p>"
+            "line": 970,
+            "context": "969: <div>\n970: <p className=\"text-sm font-medium text-muted-foreground\">{t('detail_hub.employees.active')} {t('time.today')}</p>\n971: <p className=\"text-2xl font-bold\">{employees.length}</p>"
           },
           {
             "key": "time.today",
-            "line": 740,
-            "context": "739: <div>\n740: <p className=\"text-sm font-medium text-muted-foreground\">{t('detail_hub.employees.active')} {t('time.today')}</p>\n741: <p className=\"text-2xl font-bold\">{employees.length}</p>"
+            "line": 970,
+            "context": "969: <div>\n970: <p className=\"text-sm font-medium text-muted-foreground\">{t('detail_hub.employees.active')} {t('time.today')}</p>\n971: <p className=\"text-2xl font-bold\">{employees.length}</p>"
           },
           {
             "key": "detail_hub.employees.hourly_rate",
-            "line": 751,
-            "context": "750: <div>\n751: <p className=\"text-sm font-medium text-muted-foreground\">{t('detail_hub.employees.hourly_rate')}</p>\n752: <p className=\"text-2xl font-bold\">"
+            "line": 981,
+            "context": "980: <div>\n981: <p className=\"text-sm font-medium text-muted-foreground\">{t('detail_hub.employees.hourly_rate')}</p>\n982: <p className=\"text-2xl font-bold\">"
           }
         ],
-        "coverage": 94,
+        "coverage": 95,
         "severity": "low"
       },
       {
@@ -94780,9 +94890,9 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "7831 translation keys are referenced but missing",
+      "description": "7842 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "392 hours"
+      "estimatedEffort": "393 hours"
     }
   ],
   "coverage": 79
