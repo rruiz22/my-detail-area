@@ -2498,6 +2498,7 @@ export type Database = {
       }
       detail_hub_employees: {
         Row: {
+          auto_generate_schedules: boolean | null
           can_punch_any_kiosk: boolean
           created_at: string | null
           dealership_id: number
@@ -2520,10 +2521,13 @@ export type Database = {
           phone: string | null
           pin_code: string | null
           role: string
+          schedule_generation_days_ahead: number | null
+          schedule_template: Json | null
           status: string | null
           updated_at: string | null
         }
         Insert: {
+          auto_generate_schedules?: boolean | null
           can_punch_any_kiosk?: boolean
           created_at?: string | null
           dealership_id: number
@@ -2546,10 +2550,13 @@ export type Database = {
           phone?: string | null
           pin_code?: string | null
           role: string
+          schedule_generation_days_ahead?: number | null
+          schedule_template?: Json | null
           status?: string | null
           updated_at?: string | null
         }
         Update: {
+          auto_generate_schedules?: boolean | null
           can_punch_any_kiosk?: boolean
           created_at?: string | null
           dealership_id?: number
@@ -2572,6 +2579,8 @@ export type Database = {
           phone?: string | null
           pin_code?: string | null
           role?: string
+          schedule_generation_days_ahead?: number | null
+          schedule_template?: Json | null
           status?: string | null
           updated_at?: string | null
         }
@@ -12121,6 +12130,19 @@ export type Database = {
       }
       expire_old_password_resets: { Args: never; Returns: undefined }
       format_dh: { Args: { interval_val: unknown }; Returns: string }
+      generate_all_employee_schedules: {
+        Args: {
+          p_days_ahead?: number
+          p_dealership_id: number
+          p_start_date?: string
+        }
+        Returns: {
+          employee_id: string
+          employee_name: string
+          schedules_created: number
+          schedules_skipped: number
+        }[]
+      }
       generate_avatar_seed: { Args: { user_uuid: string }; Returns: string }
       generate_car_wash_order_number: { Args: never; Returns: string }
       generate_custom_order_number: { Args: never; Returns: string }
@@ -12131,6 +12153,19 @@ export type Database = {
       generate_employee_number: {
         Args: { p_dealer_id: number }
         Returns: string
+      }
+      generate_employee_schedules: {
+        Args: {
+          p_days_ahead?: number
+          p_employee_id: string
+          p_overwrite_existing?: boolean
+          p_start_date?: string
+        }
+        Returns: {
+          date_range: string
+          schedules_created: number
+          schedules_skipped: number
+        }[]
       }
       generate_invoice_number: {
         Args: { p_dealer_id: number }
@@ -13429,6 +13464,14 @@ export type Database = {
         }[]
       }
       refresh_dealership_stats: { Args: never; Returns: undefined }
+      regenerate_employee_schedules: {
+        Args: { p_employee_id: string; p_from_date?: string }
+        Returns: {
+          date_range: string
+          schedules_created: number
+          schedules_skipped: number
+        }[]
+      }
       reject_vehicle: {
         Args: { p_notes?: string; p_reason: string; p_vehicle_id: string }
         Returns: Json

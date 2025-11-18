@@ -49,6 +49,15 @@ const employeeFormSchema = z.object({
   pin_code: z.string()
     .min(1, "PIN code is required")
     .regex(/^\d{4,6}$/, "PIN must be 4-6 digits"),
+
+  // NEW: Schedule template fields
+  auto_generate_schedules: z.boolean().default(false),
+  template_shift_start: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).optional(),
+  template_shift_end: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).optional(),
+  template_days_of_week: z.array(z.number().min(0).max(6)).optional(),
+  template_break_minutes: z.coerce.number().min(0).max(120).optional(),
+  template_break_is_paid: z.boolean().default(false),
+  schedule_generation_days_ahead: z.coerce.number().min(7).max(90).default(30),
 });
 
 type EmployeeFormValues = z.infer<typeof employeeFormSchema>;
@@ -83,6 +92,14 @@ const EmployeePortal = () => {
       hire_date: new Date(),
       status: "active",
       pin_code: "",
+      // Schedule template defaults
+      auto_generate_schedules: false,
+      template_shift_start: "08:00",
+      template_shift_end: "17:00",
+      template_days_of_week: [1, 2, 3, 4, 5], // Mon-Fri
+      template_break_minutes: 30,
+      template_break_is_paid: false,
+      schedule_generation_days_ahead: 30,
     },
   });
 
@@ -120,6 +137,10 @@ const EmployeePortal = () => {
   const handleOpenDialog = (employee?: DetailHubEmployee) => {
     if (employee) {
       setEditingEmployee(employee);
+
+      // Parse schedule template if exists
+      const template = employee.schedule_template as any;
+
       form.reset({
         first_name: employee.first_name,
         last_name: employee.last_name,
@@ -131,6 +152,14 @@ const EmployeePortal = () => {
         hire_date: new Date(employee.hire_date),
         status: employee.status,
         pin_code: employee.pin_code || "",
+        // Load template values
+        auto_generate_schedules: employee.auto_generate_schedules || false,
+        template_shift_start: template?.shift_start_time || "08:00",
+        template_shift_end: template?.shift_end_time || "17:00",
+        template_days_of_week: template?.days_of_week || [1, 2, 3, 4, 5],
+        template_break_minutes: template?.required_break_minutes || 30,
+        template_break_is_paid: template?.break_is_paid || false,
+        schedule_generation_days_ahead: employee.schedule_generation_days_ahead || 30,
       });
     } else {
       setEditingEmployee(null);
@@ -145,6 +174,13 @@ const EmployeePortal = () => {
         hire_date: new Date(),
         status: "active",
         pin_code: "",
+        auto_generate_schedules: false,
+        template_shift_start: "08:00",
+        template_shift_end: "17:00",
+        template_days_of_week: [1, 2, 3, 4, 5],
+        template_break_minutes: 30,
+        template_break_is_paid: false,
+        schedule_generation_days_ahead: 30,
       });
     }
     setIsDialogOpen(true);
@@ -161,6 +197,18 @@ const EmployeePortal = () => {
       return;
     }
 
+    // Build schedule template JSONB if auto-generate is enabled
+    const scheduleTemplate = values.auto_generate_schedules ? {
+      shift_start_time: values.template_shift_start,
+      shift_end_time: values.template_shift_end,
+      days_of_week: values.template_days_of_week || [1,2,3,4,5],
+      required_break_minutes: values.template_break_minutes || 30,
+      break_is_paid: values.template_break_is_paid || false,
+      early_punch_allowed_minutes: 5,
+      late_punch_grace_minutes: 5,
+      assigned_kiosk_id: null,
+    } : null;
+
     if (editingEmployee) {
       // UPDATE existing employee
       updateEmployee(
@@ -176,7 +224,11 @@ const EmployeePortal = () => {
             hourly_rate: values.hourly_rate || null,
             hire_date: format(values.hire_date, 'yyyy-MM-dd'),
             status: values.status,
-            pin_code: values.pin_code, // Required field
+            pin_code: values.pin_code,
+            // Schedule template
+            schedule_template: scheduleTemplate,
+            auto_generate_schedules: values.auto_generate_schedules,
+            schedule_generation_days_ahead: values.schedule_generation_days_ahead,
           },
         },
         {
@@ -202,7 +254,11 @@ const EmployeePortal = () => {
           hourly_rate: values.hourly_rate || null,
           hire_date: format(values.hire_date, 'yyyy-MM-dd'),
           status: values.status,
-          pin_code: values.pin_code, // Required field
+          pin_code: values.pin_code,
+          // Schedule template
+          schedule_template: scheduleTemplate,
+          auto_generate_schedules: values.auto_generate_schedules,
+          schedule_generation_days_ahead: values.schedule_generation_days_ahead,
         },
         {
           onSuccess: () => {
@@ -556,6 +612,180 @@ const EmployeePortal = () => {
                     </FormItem>
                   )}
                 />
+
+                {/* Schedule Template Section */}
+                <div className="border-t pt-4 mt-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h3 className="text-sm font-semibold text-gray-900">
+                        {t('detail_hub.employees.schedule_template')}
+                      </h3>
+                      <p className="text-xs text-gray-500">
+                        {t('detail_hub.employees.schedule_template_description')}
+                      </p>
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name="auto_generate_schedules"
+                      render={({ field }) => (
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            id="auto_generate"
+                            checked={field.value}
+                            onChange={field.onChange}
+                            className="w-4 h-4 rounded border-gray-300"
+                          />
+                          <label htmlFor="auto_generate" className="text-sm cursor-pointer">
+                            {t('detail_hub.employees.auto_generate_schedules')}
+                          </label>
+                        </div>
+                      )}
+                    />
+                  </div>
+
+                  {form.watch('auto_generate_schedules') && (
+                    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      {/* Shift Times */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="template_shift_start"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{t('detail_hub.employees.default_start_time')}</FormLabel>
+                              <FormControl>
+                                <Input type="time" {...field} className="font-mono" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="template_shift_end"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{t('detail_hub.employees.default_end_time')}</FormLabel>
+                              <FormControl>
+                                <Input type="time" {...field} className="font-mono" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      {/* Days of Week */}
+                      <FormField
+                        control={form.control}
+                        name="template_days_of_week"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t('detail_hub.employees.work_days')}</FormLabel>
+                            <div className="grid grid-cols-7 gap-2">
+                              {[
+                                { value: 0, label: 'S' },
+                                { value: 1, label: 'M' },
+                                { value: 2, label: 'T' },
+                                { value: 3, label: 'W' },
+                                { value: 4, label: 'T' },
+                                { value: 5, label: 'F' },
+                                { value: 6, label: 'S' },
+                              ].map((day) => {
+                                const isSelected = (field.value || []).includes(day.value);
+                                return (
+                                  <button
+                                    key={day.value}
+                                    type="button"
+                                    onClick={() => {
+                                      const current = field.value || [];
+                                      const updated = isSelected
+                                        ? current.filter((d: number) => d !== day.value)
+                                        : [...current, day.value].sort();
+                                      field.onChange(updated);
+                                    }}
+                                    className={cn(
+                                      "h-10 w-full rounded-md border-2 font-medium transition-colors text-sm",
+                                      isSelected
+                                        ? "bg-emerald-100 border-emerald-500 text-emerald-900"
+                                        : "border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50"
+                                    )}
+                                  >
+                                    {day.label}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Break Settings */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="template_break_minutes"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{t('detail_hub.employees.default_break')}</FormLabel>
+                              <FormControl>
+                                <div className="flex items-center gap-2">
+                                  <Input type="number" min="0" max="120" step="15" {...field} className="w-20" />
+                                  <span className="text-sm text-gray-600">{t('detail_hub.schedules.minutes')}</span>
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="template_break_is_paid"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-col justify-end">
+                              <div className="flex items-center gap-2 h-10">
+                                <input
+                                  type="checkbox"
+                                  id="template_break_paid"
+                                  checked={field.value}
+                                  onChange={field.onChange}
+                                  className="w-4 h-4 rounded border-gray-300"
+                                />
+                                <label htmlFor="template_break_paid" className="text-sm cursor-pointer">
+                                  {t('detail_hub.employees.paid_break')}
+                                </label>
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      {/* Days Ahead */}
+                      <FormField
+                        control={form.control}
+                        name="schedule_generation_days_ahead"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t('detail_hub.employees.days_ahead')}</FormLabel>
+                            <FormControl>
+                              <div className="flex items-center gap-2">
+                                <Input type="number" min="7" max="90" step="1" {...field} className="w-20" />
+                                <span className="text-sm text-gray-600">
+                                  {t('detail_hub.employees.days_ahead_description')}
+                                </span>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  )}
+                </div>
 
                 <div className="flex justify-center py-2">
                   <Button type="button" variant="outline" className="w-40">
