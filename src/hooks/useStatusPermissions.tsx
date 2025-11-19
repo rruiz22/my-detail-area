@@ -173,23 +173,43 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
 
         // 📱 SMS NOTIFICATION: Send SMS to users based on their notification rules
         // This uses the new 3-level validation architecture (Follower → Custom Role → User Preferences)
-        console.log('📱 [SMS] Status changed - sending SMS notification using 3-level validation');
+        // BUSINESS RULE: Only send SMS when status changes to "completed" (for sales_orders and service_orders)
+        const shouldSendSMS = (module === 'sales_orders' || module === 'service_orders')
+          ? newStatus === 'completed'
+          : true; // Other modules: send for all status changes
 
-        void sendStatusChangedSMS({
-          orderId: orderId,
-          dealerId: parseInt(dealerId),
-          module: module as any,
-          triggeredBy: enhancedUser.id,
-          eventData: {
-            orderNumber: currentOrder.order_number,
-            newStatus: newStatus,
-            oldStatus: oldStatus,
-            vehicleInfo: vehicleInfo,
-            shortLink: shortLink,
-            stockNumber: currentOrder.stock_number,
-            tag: currentOrder.tag
+        if (shouldSendSMS) {
+          console.log(`📱 [SMS] Status changed to "${newStatus}" - sending SMS notification`);
+
+          // Await SMS result to show toast confirmation
+          const smsResult = await sendStatusChangedSMS({
+            orderId: orderId,
+            dealerId: parseInt(dealerId),
+            module: module as any,
+            triggeredBy: enhancedUser.id,
+            eventData: {
+              orderNumber: currentOrder.order_number,
+              newStatus: newStatus,
+              oldStatus: oldStatus,
+              vehicleInfo: vehicleInfo,
+              shortLink: shortLink,
+              stockNumber: currentOrder.stock_number,
+              tag: currentOrder.tag
+            }
+          });
+
+          // Show toast confirmation if SMS sent successfully
+          if (smsResult.success && smsResult.sent > 0) {
+            toast({
+              description: t('notifications.sms_sent_to_followers', {
+                count: smsResult.sent,
+                defaultValue: `SMS sent to ${smsResult.sent} follower${smsResult.sent > 1 ? 's' : ''}`
+              })
+            });
           }
-        });
+        } else {
+          console.log(`ℹ️ [SMS] Status changed to "${newStatus}" - SMS not sent (only sent for "completed" status in ${module})`);
+        }
       }
 
       return true;

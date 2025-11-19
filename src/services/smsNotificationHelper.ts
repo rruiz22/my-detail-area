@@ -111,12 +111,13 @@ export async function sendOrderAssignedSMS(
 
 /**
  * Send SMS notification for status changed event
+ * Returns result for toast notification
  */
 export async function sendStatusChangedSMS(
   params: BaseSMSParams & { eventData: StatusChangedData }
-): Promise<void> {
+): Promise<{ success: boolean; sent: number; recipients: number; error?: string }> {
   try {
-    await supabase.functions.invoke('send-order-sms-notification', {
+    const { data, error } = await supabase.functions.invoke('send-order-sms-notification', {
       body: {
         orderId: params.orderId,
         dealerId: params.dealerId,
@@ -126,8 +127,16 @@ export async function sendStatusChangedSMS(
         triggeredBy: params.triggeredBy
       }
     });
-  } catch (error) {
+
+    if (error) {
+      console.error('[SMS] Failed to send status_changed SMS:', error);
+      return { success: false, sent: 0, recipients: 0, error: error.message };
+    }
+
+    return data || { success: true, sent: 0, recipients: 0 };
+  } catch (error: any) {
     console.error('[SMS] Failed to send status_changed SMS:', error);
+    return { success: false, sent: 0, recipients: 0, error: error.message };
   }
 }
 
