@@ -96,7 +96,63 @@ registerRoute(
   })
 );
 
-// 🔴 REMOVED: Custom fetch handler that was conflicting with Workbox NavigationRoute
-// The duplicate navigation handling was causing "redirect mode is not 'follow'" errors
-// Workbox's NavigationRoute (lines 21-34) already handles SPA navigation correctly
-// with navigateFallback: 'index.html' configured in vite.config.ts
+// 🔴 CRITICAL FIX: Custom fetch handler to explicitly handle redirects
+// This ensures all fetch requests follow redirects properly
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+
+  // Only handle navigation requests explicitly to ensure redirect: 'follow'
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      (async () => {
+        try {
+          // Create a new request with explicit redirect: 'follow'
+          const fetchRequest = new Request(request.url, {
+            method: request.method,
+            headers: request.headers,
+            mode: request.mode,
+            credentials: request.credentials,
+            redirect: 'follow', // 🔴 CRITICAL: Explicitly follow redirects
+          });
+
+          // Fetch with redirect support
+          const response = await fetch(fetchRequest);
+
+          // If successful, return the response
+          if (response.ok || response.type === 'opaqueredirect') {
+            return response;
+          }
+
+          // If not found, fall back to index.html for SPA routing
+          if (response.status === 404) {
+            const cache = await caches.open('workbox-precache-v2-' + self.registration.scope);
+            const cachedResponse = await cache.match('index.html');
+            if (cachedResponse) {
+              return cachedResponse;
+            }
+          }
+
+          return response;
+        } catch (error) {
+          console.error('Navigation fetch failed:', error);
+
+          // Fall back to cached index.html
+          const cache = await caches.open('workbox-precache-v2-' + self.registration.scope);
+          const cachedResponse = await cache.match('index.html');
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+
+          // If all else fails, return a basic error response
+          return new Response('Offline', {
+            status: 503,
+            statusText: 'Service Unavailable',
+            headers: new Headers({
+              'Content-Type': 'text/plain',
+            }),
+          });
+        }
+      })()
+    );
+  }
+});
