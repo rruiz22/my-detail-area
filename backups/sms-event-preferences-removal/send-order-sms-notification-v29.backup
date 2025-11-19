@@ -1,172 +1,12 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import {
+  evaluateNotificationRule,
+  findMatchingRule,
+  type DealerNotificationRule
+} from "../_shared/rule-evaluator.ts";
 
-// =====================================================
-// Dealer Notification Rules Evaluator (INLINE)
-// =====================================================
-
-export interface DealerNotificationRule {
-  id: string;
-  dealer_id: number;
-  module: string;
-  event: string;
-  rule_name: string;
-  description: string;
-  recipients: {
-    roles?: string[];
-    users?: string[];
-    include_assigned_user?: boolean;
-    include_followers?: boolean;
-  };
-  conditions: {
-    priority?: string[];
-    status?: string[];
-    custom_fields?: Record<string, any>;
-  };
-  channels: string[];
-  priority: number;
-  enabled: boolean;
-}
-
-function evaluateRuleConditions(
-  conditions: DealerNotificationRule['conditions'],
-  eventData: any
-): boolean {
-  if (!conditions || Object.keys(conditions).length === 0) {
-    return true;
-  }
-
-  if (conditions.priority && conditions.priority.length > 0) {
-    const eventPriority = eventData.priority || eventData.newPriority;
-    if (!eventPriority || !conditions.priority.includes(eventPriority)) {
-      console.log(`❌ Priority condition not met: event=${eventPriority}, allowed=[${conditions.priority.join(', ')}]`);
-      return false;
-    }
-    console.log(`✅ Priority condition met: ${eventPriority}`);
-  }
-
-  if (conditions.status && conditions.status.length > 0) {
-    const eventStatus = eventData.status || eventData.newStatus;
-    if (!eventStatus || !conditions.status.includes(eventStatus)) {
-      console.log(`❌ Status condition not met: event=${eventStatus}, allowed=[${conditions.status.join(', ')}]`);
-      return false;
-    }
-    console.log(`✅ Status condition met: ${eventStatus}`);
-  }
-
-  if (conditions.custom_fields) {
-    for (const [fieldName, expectedValue] of Object.entries(conditions.custom_fields)) {
-      const actualValue = eventData[fieldName];
-      if (Array.isArray(expectedValue)) {
-        if (!expectedValue.includes(actualValue)) {
-          console.log(`❌ Custom field condition not met: ${fieldName}=${actualValue}, allowed=[${expectedValue.join(', ')}]`);
-          return false;
-        }
-      } else if (actualValue !== expectedValue) {
-        console.log(`❌ Custom field condition not met: ${fieldName}=${actualValue}, expected=${expectedValue}`);
-        return false;
-      }
-      console.log(`✅ Custom field condition met: ${fieldName}=${actualValue}`);
-    }
-  }
-
-  return true;
-}
-
-function filterUsersByRule(
-  rule: DealerNotificationRule,
-  users: Array<{ id: string; role_name?: string; is_assigned?: boolean }>
-): typeof users {
-  const { recipients } = rule;
-  if (!recipients || Object.keys(recipients).length === 0) {
-    return users;
-  }
-
-  return users.filter(user => {
-    if (recipients.roles && recipients.roles.length > 0) {
-      if (!user.role_name || !recipients.roles.includes(user.role_name)) {
-        console.log(`❌ User filtered out by role: ${user.id} (role: ${user.role_name})`);
-        return false;
-      }
-    }
-
-    if (recipients.users && recipients.users.length > 0) {
-      if (!recipients.users.includes(user.id)) {
-        console.log(`❌ User filtered out by user list: ${user.id}`);
-        return false;
-      }
-    }
-
-    if (recipients.include_assigned_user === false && user.is_assigned === true) {
-      console.log(`❌ User filtered out: assigned user excluded by rule`);
-      return false;
-    }
-
-    console.log(`✅ User passed rule filters: ${user.id}`);
-    return true;
-  });
-}
-
-function isChannelEnabled(rule: DealerNotificationRule, channel: string): boolean {
-  if (!rule.channels || rule.channels.length === 0) {
-    return true;
-  }
-  return rule.channels.includes(channel);
-}
-
-function findMatchingRule(
-  rules: DealerNotificationRule[],
-  module: string,
-  event: string,
-  eventData: any
-): DealerNotificationRule | null {
-  const applicableRules = rules.filter(rule =>
-    rule.enabled &&
-    rule.module === module &&
-    rule.event === event &&
-    evaluateRuleConditions(rule.conditions, eventData)
-  );
-
-  if (applicableRules.length === 0) {
-    console.log(`ℹ️ No matching dealer rules found for ${module}/${event}`);
-    return null;
-  }
-
-  applicableRules.sort((a, b) => b.priority - a.priority);
-  const topRule = applicableRules[0];
-  console.log(`✅ Found matching dealer rule: "${topRule.rule_name}" (priority: ${topRule.priority})`);
-  return topRule;
-}
-
-function evaluateNotificationRule(
-  rule: DealerNotificationRule | null,
-  users: Array<{ id: string; role_name?: string; is_assigned?: boolean }>,
-  channel: string,
-  eventData: any
-): { shouldSend: boolean; filteredUsers: typeof users; rule: DealerNotificationRule | null } {
-  if (!rule) {
-    return { shouldSend: true, filteredUsers: users, rule: null };
-  }
-
-  if (!isChannelEnabled(rule, channel)) {
-    console.log(`❌ Channel "${channel}" not enabled in dealer rule "${rule.rule_name}"`);
-    return { shouldSend: false, filteredUsers: [], rule };
-  }
-
-  const filteredUsers = filterUsersByRule(rule, users);
-  console.log(`✅ Dealer rule applied: ${users.length} users → ${filteredUsers.length} after filtering`);
-
-  return {
-    shouldSend: filteredUsers.length > 0,
-    filteredUsers,
-    rule
-  };
-}
-
-// =====================================================
-// Main SMS Notification System
-// =====================================================
-
+// CORS headers for cross-origin requests
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -180,6 +20,12 @@ const twilioAuthToken = Deno.env.get('TWILIO_AUTH_TOKEN');
 const twilioPhoneNumber = Deno.env.get('TWILIO_PHONE_NUMBER');
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+// =====================================================
+// Types - V6 Followers + Permissions Integration
+// =====================================================
+// ARCHITECTURE: Only ORDER FOLLOWERS with SMS permissions receive notifications
+// This combines: Followers + Custom Role Permissions + User Preferences + Rate Limiting
 
 type OrderSMSEvent =
   | 'order_created'
@@ -240,6 +86,14 @@ interface SMSPreferences {
   quiet_hours_end: string;
 }
 
+// =====================================================
+// Helper Functions
+// =====================================================
+
+/**
+ * Creates default SMS notification preferences for a user
+ * Called automatically when a user doesn't have preferences set
+ */
 async function createDefaultSMSPreferences(
   userId: string,
   dealerId: number,
@@ -251,9 +105,9 @@ async function createDefaultSMSPreferences(
     user_id: userId,
     dealer_id: dealerId,
     module: module,
-    sms_enabled: false,
-    phone_number: null,
-    event_preferences: {},
+    sms_enabled: false, // Opt-in by default for security
+    phone_number: null, // Will use profile.phone_number
+    event_preferences: {}, // Empty object - no events enabled by default
     max_sms_per_hour: 10,
     max_sms_per_day: 50,
     quiet_hours_enabled: false,
@@ -276,12 +130,17 @@ async function createDefaultSMSPreferences(
   return data as SMSPreferences;
 }
 
+// =====================================================
+// Main Handler
+// =====================================================
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // Validate Twilio credentials
     if (!twilioAccountSid || !twilioAuthToken || !twilioPhoneNumber) {
       throw new Error('Twilio credentials not configured');
     }
@@ -290,6 +149,14 @@ const handler = async (req: Request): Promise<Response> => {
     console.log('📱 SMS Notification Request:', request);
     console.log(`🔍 [DEBUG] Trigger user ID: ${request.triggeredBy}`);
 
+    // =========================================================================
+    // 3-LEVEL VALIDATION ARCHITECTURE:
+    // Level 1: User must be FOLLOWER of the order
+    // Level 2: Custom ROLE must allow this event
+    // Level 3: USER must have channel enabled in preferences
+    // =========================================================================
+
+    // 1. Check if this event is enabled in dealer_notification_rules (NEW SYSTEM)
     const isEventEnabled = await checkNotificationRules(
       request.dealerId,
       request.module,
@@ -310,6 +177,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    // 2. Apply 3-level validation: Follower → Custom Role → User Preferences
     console.log(`🔐 Starting 3-level validation for order ${request.orderId}`);
     const eligibleUsers = await getUsersEligibleForNotification(
       request.dealerId,
@@ -334,6 +202,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    // 3. Apply dealer notification rules (OPTIONAL - Level 4)
     const usersAfterDealerRules = await applyDealerNotificationRules(
       eligibleUsers,
       request.dealerId,
@@ -356,9 +225,14 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    // 4. Check rate limits for each eligible user
     const usersAfterRateLimit = await checkRateLimits(usersAfterDealerRules, request.dealerId, request.module);
     console.log(`⏱️ After rate limit check: ${usersAfterRateLimit.length} users`);
     console.log(`🔍 [DEBUG] Users after rate limit:`, usersAfterRateLimit.map(u => ({ id: u.id, name: u.name })));
+    if (usersAfterRateLimit.length < usersAfterDealerRules.length) {
+      const filtered = usersAfterDealerRules.filter(u => !usersAfterRateLimit.find(e => e.id === u.id));
+      console.log(`❌ [DEBUG] Filtered by rate limit:`, filtered.map(u => ({ id: u.id, name: u.name })));
+    }
 
     if (usersAfterRateLimit.length === 0) {
       return new Response(
@@ -373,8 +247,14 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    // 5. Remove the user who triggered the event (no self-notification)
     const finalUsers = usersAfterRateLimit.filter(u => u.id !== request.triggeredBy);
     console.log(`👤 After removing trigger user: ${finalUsers.length} users`);
+    console.log(`🔍 [DEBUG] Final users to notify:`, finalUsers.map(u => ({ id: u.id, name: u.name })));
+    if (finalUsers.length < usersAfterRateLimit.length) {
+      const filtered = usersAfterRateLimit.filter(u => !finalUsers.find(e => e.id === u.id));
+      console.log(`❌ [DEBUG] Filtered as trigger user:`, filtered.map(u => ({ id: u.id, name: u.name, triggeredBy: request.triggeredBy })));
+    }
 
     if (finalUsers.length === 0) {
       return new Response(
@@ -389,15 +269,18 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    // 6. Generate personalized messages
     const messages = generateMessages(finalUsers, request.eventType, request.eventData);
     console.log(`💬 Generated ${messages.length} messages`);
 
+    // 7. Send SMS via Twilio in parallel
     const results = await Promise.allSettled(
       messages.map(({ user, message }) =>
         sendSMS(user.phone_number, message, request.orderId)
       )
     );
 
+    // 8. Record in sms_send_history
     await recordSMSHistory(
       results,
       finalUsers,
@@ -410,6 +293,8 @@ const handler = async (req: Request): Promise<Response> => {
 
     const successCount = results.filter(r => r.status === 'fulfilled').length;
     const failedCount = results.filter(r => r.status === 'rejected').length;
+
+    // Include recipient names for better UX in frontend toasts
     const recipientNames = finalUsers.map(u => u.name);
 
     console.log(`✅ SMS Sent: ${successCount} successful, ${failedCount} failed to: ${recipientNames.join(', ')}`);
@@ -440,6 +325,14 @@ const handler = async (req: Request): Promise<Response> => {
   }
 };
 
+// =====================================================
+// Helper Functions
+// =====================================================
+
+/**
+ * Check if the event is enabled for SMS notifications in dealer_notification_rules
+ * Returns true if at least one rule exists for this dealer/module/event with SMS channel enabled
+ */
 async function checkNotificationRules(
   dealerId: number,
   module: string,
@@ -456,14 +349,23 @@ async function checkNotificationRules(
 
   if (error) {
     console.error('[checkNotificationRules] Error querying dealer_notification_rules:', error);
+    // Fail open: if we can't check the rules, allow the notification
     return true;
   }
 
   const isEnabled = (data && data.length > 0);
   console.log(`[checkNotificationRules] Event "${eventType}" for module "${module}": ${isEnabled ? 'ENABLED' : 'DISABLED'} (${data?.length || 0} rules found)`);
+
   return isEnabled;
 }
 
+/**
+ * NEW: 3-LEVEL VALIDATION ARCHITECTURE
+ * Gets users eligible for SMS notifications based on 3 levels:
+ * Level 1: User must be FOLLOWER of the order
+ * Level 2: User's Custom ROLE must allow this event
+ * Level 3: USER must have SMS enabled in preferences
+ */
 async function getUsersEligibleForNotification(
   dealerId: number,
   module: string,
@@ -475,6 +377,9 @@ async function getUsersEligibleForNotification(
   console.log(`\n🔍 === STARTING 3-LEVEL VALIDATION ===`);
   console.log(`Order: ${orderId}, Event: ${eventType}, Module: ${module}`);
 
+  // =========================================================================
+  // LEVEL 1: Get FOLLOWERS of this order
+  // =========================================================================
   console.log(`\n1️⃣ LEVEL 1: Fetching FOLLOWERS of order ${orderId}...`);
 
   const { data: followers, error: followersError } = await supabase
@@ -525,6 +430,9 @@ async function getUsersEligibleForNotification(
     console.log(`   - ${f.profiles.first_name} ${f.profiles.last_name} (${roleName})`);
   });
 
+  // =========================================================================
+  // LEVEL 2 & 3: Validate ROLE permissions and USER preferences
+  // =========================================================================
   console.log(`\n2️⃣ 3️⃣ LEVEL 2 & 3: Validating ROLE permissions and USER preferences...`);
 
   const eligibleUsers: SMSRecipient[] = [];
@@ -533,6 +441,7 @@ async function getUsersEligibleForNotification(
     const userId = follower.profiles.id;
     const membership = follower.profiles.dealer_memberships?.[0];
 
+    // Safety check: ensure membership exists
     if (!membership) {
       console.warn(`   ⚠️ No dealer membership found for user ${userId}, skipping`);
       continue;
@@ -544,6 +453,7 @@ async function getUsersEligibleForNotification(
 
     console.log(`\n   Checking user: ${userName} (Role: ${roleName})`);
 
+    // LEVEL 2: Check if Custom Role allows this event
     const { data: roleEventConfig, error: roleEventError } = await supabase
       .from('role_notification_events')
       .select('*')
@@ -560,6 +470,7 @@ async function getUsersEligibleForNotification(
 
     console.log(`   ✅ LEVEL 2 PASSED: Role "${roleName}" allows event "${eventType}"`);
 
+    // Validate event-specific config (e.g., status_changed → allowed_statuses)
     if (eventType === 'status_changed') {
       const allowedStatuses = roleEventConfig.event_config?.allowed_statuses || [];
 
@@ -571,6 +482,7 @@ async function getUsersEligibleForNotification(
       console.log(`   ✅ Status "${eventData.newStatus}" is allowed by role`);
     }
 
+    // LEVEL 3: Check if USER has SMS enabled in preferences
     console.log(`   3️⃣ LEVEL 3: Checking USER preferences...`);
 
     let { data: userPrefs, error: userPrefsError } = await supabase
@@ -581,6 +493,7 @@ async function getUsersEligibleForNotification(
       .eq('module', module)
       .single();
 
+    // Auto-create default preferences if they don't exist
     if (userPrefsError || !userPrefs) {
       console.log(`   ⚠️ User has no notification preferences set`);
       userPrefs = await createDefaultSMSPreferences(userId, dealerId, module);
@@ -596,11 +509,27 @@ async function getUsersEligibleForNotification(
       continue;
     }
 
-    // SIMPLIFIED VALIDATION: Only check global sms_enabled toggle
-    // event_preferences removed - events controlled exclusively by Custom Roles (Level 2)
-    // BREAKING CHANGE: Existing event_preferences are now ignored
-    console.log(`   ✅ LEVEL 3 PASSED: User has SMS globally enabled (event_preferences ignored)`);
+    // Check event-specific SMS preference
+    const eventPref = userPrefs.event_preferences?.[eventType];
 
+    if (!eventPref) {
+      console.log(`   ❌ LEVEL 3 FAILED: User has no preference for event "${eventType}"`);
+      continue;
+    }
+
+    // Support multi-channel format: check SMS specifically
+    const smsEnabled = typeof eventPref === 'boolean'
+      ? eventPref
+      : (eventPref.sms === true || eventPref.enabled === true);
+
+    if (!smsEnabled) {
+      console.log(`   ❌ LEVEL 3 FAILED: User has SMS disabled for event "${eventType}"`);
+      continue;
+    }
+
+    console.log(`   ✅ LEVEL 3 PASSED: User has SMS enabled for event "${eventType}"`);
+
+    // Additional: Check notification_level from follower
     if (follower.notification_level === 'important') {
       const importantEvents: OrderSMSEvent[] = [
         'order_assigned',
@@ -616,6 +545,7 @@ async function getUsersEligibleForNotification(
       }
     }
 
+    // User passed all 3 validations!
     eligibleUsers.push({
       id: userId,
       name: userName,
@@ -633,6 +563,34 @@ async function getUsersEligibleForNotification(
   return eligibleUsers;
 }
 
+// DEPRECATED: Old function kept for backward compatibility
+// Will be removed in future version
+// ========================================
+// LEGACY FUNCTIONS REMOVED (2025-11-08)
+// ========================================
+// The following functions have been removed and replaced by getUsersEligibleForNotification():
+// - getUsersWithSMSPermission() - Replaced by 3-level validation architecture
+// - filterByPreferences() - Now integrated into getUsersEligibleForNotification()
+//
+// New architecture implements:
+// Level 1: User must be FOLLOWER of the order (entity_followers)
+// Level 2: Custom Role must allow the event (role_notification_events)
+// Level 3: User must have SMS enabled in preferences (user_sms_notification_preferences)
+
+/**
+ * LEVEL 4 (OPTIONAL): Apply dealer-specific notification rules
+ *
+ * This is an OPTIONAL business-level filter that dealers can configure.
+ * If no rules exist, all users pass through unchanged (backward compatible).
+ * If rules exist but there's an error, all users pass through (fail-safe).
+ *
+ * @param users - Users who passed 3-level validation
+ * @param dealerId - Dealer ID
+ * @param module - Module name
+ * @param eventType - Event type
+ * @param eventData - Event data for condition evaluation
+ * @returns Filtered users (or all users if no rules/error)
+ */
 async function applyDealerNotificationRules(
   users: SMSRecipient[],
   dealerId: number,
@@ -644,6 +602,7 @@ async function applyDealerNotificationRules(
     console.log(`\n📋 === LEVEL 4 (OPTIONAL): DEALER NOTIFICATION RULES ===`);
     console.log(`Checking for dealer-configured rules for ${module}/${eventType}...`);
 
+    // Query dealer notification rules (if table exists)
     const { data: rules, error: rulesError } = await supabase
       .from('dealer_notification_rules')
       .select('*')
@@ -653,20 +612,23 @@ async function applyDealerNotificationRules(
       .eq('enabled', true)
       .order('priority', { ascending: false });
 
+    // Handle query errors gracefully (fail-safe)
     if (rulesError) {
       console.warn(`⚠️ Error querying dealer_notification_rules (continuing without rules):`, rulesError.message);
       console.log(`✅ Skipping dealer rules due to error - all ${users.length} users pass through`);
-      return users;
+      return users; // FAIL-SAFE: Continue without rules
     }
 
+    // No rules found - backward compatible
     if (!rules || rules.length === 0) {
       console.log(`ℹ️ No dealer notification rules configured for ${module}/${eventType}`);
       console.log(`✅ All ${users.length} users pass through (no rules to apply)`);
-      return users;
+      return users; // BACKWARD COMPATIBLE: No filtering
     }
 
     console.log(`📜 Found ${rules.length} dealer notification rule(s)`);
 
+    // Find the highest priority matching rule
     const matchingRule = findMatchingRule(
       rules as DealerNotificationRule[],
       module,
@@ -677,30 +639,32 @@ async function applyDealerNotificationRules(
     if (!matchingRule) {
       console.log(`ℹ️ No rules match the current event conditions`);
       console.log(`✅ All ${users.length} users pass through (conditions not met)`);
-      return users;
+      return users; // No matching rule
     }
 
     console.log(`✅ Applying dealer rule: "${matchingRule.rule_name}" (priority: ${matchingRule.priority})`);
 
+    // Evaluate the rule (check channel + filter users)
     const usersWithRoleInfo = users.map(user => ({
       id: user.id,
       role_name: user.role_name,
-      is_assigned: false
+      is_assigned: false // We could enhance this later
     }));
 
     const evaluation = evaluateNotificationRule(
       matchingRule,
       usersWithRoleInfo,
-      'sms',
+      'sms', // We're checking SMS channel
       eventData
     );
 
     if (!evaluation.shouldSend) {
       console.log(`❌ Dealer rule blocked SMS notification (channel not enabled or all users filtered)`);
       console.log(`⚠️ ${users.length} users → 0 users after dealer rule`);
-      return [];
+      return []; // Rule blocked the notification
     }
 
+    // Map filtered user IDs back to original SMSRecipient objects
     const filteredUserIds = new Set(evaluation.filteredUsers.map(u => u.id));
     const filteredUsers = users.filter(user => filteredUserIds.has(user.id));
 
@@ -714,9 +678,10 @@ async function applyDealerNotificationRules(
     return filteredUsers;
 
   } catch (error: any) {
+    // CRITICAL: If anything goes wrong, fail-safe to allow all users
     console.error(`🚨 Unexpected error in dealer rules (continuing without rules):`, error.message);
     console.log(`✅ Fail-safe: All ${users.length} users pass through due to error`);
-    return users;
+    return users; // FAIL-SAFE: Don't block notifications due to bugs
   }
 }
 
@@ -732,6 +697,7 @@ async function checkRateLimits(
   const eligible: SMSRecipient[] = [];
 
   for (const user of users) {
+    // Get user's rate limits from preferences for THIS MODULE
     const { data: prefs } = await supabase
       .from('user_sms_notification_preferences')
       .select('max_sms_per_hour, max_sms_per_day, quiet_hours_enabled, quiet_hours_start, quiet_hours_end')
@@ -748,6 +714,7 @@ async function checkRateLimits(
     const maxPerHour = prefs.max_sms_per_hour || 10;
     const maxPerDay = prefs.max_sms_per_day || 50;
 
+    // Check quiet hours
     if (prefs.quiet_hours_enabled) {
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
@@ -758,6 +725,7 @@ async function checkRateLimits(
       const quietStartMinutes = quietStartHour * 60 + quietStartMin;
       const quietEndMinutes = quietEndHour * 60 + quietEndMin;
 
+      // Handle overnight quiet hours (e.g., 22:00 to 08:00)
       const isInQuietHours = quietStartMinutes > quietEndMinutes
         ? (currentTimeMinutes >= quietStartMinutes || currentTimeMinutes <= quietEndMinutes)
         : (currentTimeMinutes >= quietStartMinutes && currentTimeMinutes <= quietEndMinutes);
@@ -768,6 +736,7 @@ async function checkRateLimits(
       }
     }
 
+    // Count SMS sent in last hour
     const { count: hourCount } = await supabase
       .from('sms_send_history')
       .select('*', { count: 'exact', head: true })
@@ -781,6 +750,7 @@ async function checkRateLimits(
       continue;
     }
 
+    // Count SMS sent today
     const { count: dayCount } = await supabase
       .from('sms_send_history')
       .select('*', { count: 'exact', head: true })
@@ -800,6 +770,7 @@ async function checkRateLimits(
   return eligible;
 }
 
+// Helper function to format status for display
 function formatStatus(status: string): string {
   if (!status) return '';
   return status
@@ -815,6 +786,7 @@ function generateMessages(
 ): Array<{ user: SMSRecipient; message: string }> {
   const shortLink = eventData.shortLink || `https://app.mydetailarea.com/orders/${eventData.orderNumber}`;
 
+  // Build order identifier with stock number (sales/recon) or tag (service)
   let orderIdentifier = `#${eventData.orderNumber}`;
   if (eventData.stockNumber) {
     orderIdentifier = `#${eventData.orderNumber} (Stock: ${eventData.stockNumber})`;
@@ -822,16 +794,21 @@ function generateMessages(
     orderIdentifier = `#${eventData.orderNumber} (Tag: ${eventData.tag})`;
   }
 
+  // Format status for better readability
   const formattedStatus = formatStatus(eventData.newStatus || '');
 
+  // Build additional details for order_created message
   let createdDetails = '';
   if (eventType === 'order_created') {
+    // Add vehicle info if available
     if (eventData.vehicleInfo && eventData.vehicleInfo.trim()) {
       createdDetails += ` ${eventData.vehicleInfo}`;
     }
+    // Add services if available
     if (eventData.services && eventData.services.trim()) {
       createdDetails += ` - ${eventData.services}`;
     }
+    // Add due date for service orders
     if (eventData.dueDateTime) {
       const dueDate = new Date(eventData.dueDateTime);
       const dueStr = dueDate.toLocaleString('en-US', {
@@ -847,20 +824,30 @@ function generateMessages(
 
   const templates: Record<OrderSMSEvent, string> = {
     order_assigned: `🚗 You've been assigned to Order ${orderIdentifier}.${eventData.vehicleInfo ? ` ${eventData.vehicleInfo}` : ''} View: ${shortLink}`,
+
     status_changed: `📋 Order ${orderIdentifier} status changed to "${formattedStatus}". View: ${shortLink}`,
+
     comment_added: `💬 ${eventData.commenterName} commented on Order ${orderIdentifier}: "${(eventData.commentText || '').substring(0, 50)}${(eventData.commentText || '').length > 50 ? '...' : ''}" View: ${shortLink}`,
+
     due_date_approaching: `⏰ REMINDER: Order ${orderIdentifier} is due in ${eventData.minutesUntilDue || 30} minutes!${eventData.vehicleInfo ? ` ${eventData.vehicleInfo}` : ''} View: ${shortLink}`,
+
     overdue: `🚨 Order ${orderIdentifier} is OVERDUE! Please update status. View: ${shortLink}`,
+
     priority_changed: `⚡ Order ${orderIdentifier} priority changed to ${eventData.newPriority || 'high'}. Check details: ${shortLink}`,
+
     attachment_added: `📎 New attachment added to Order ${orderIdentifier}. View: ${shortLink}`,
+
     order_created: createdDetails
       ? `✨ New Order ${orderIdentifier} -${createdDetails} View: ${shortLink}`
       : `✨ New Order ${orderIdentifier} created. View: ${shortLink}`,
+
     follower_added: `👁️ You're now following Order ${orderIdentifier}. View: ${shortLink}`,
+
     field_updated: `✏️ Order ${orderIdentifier} - ${eventData.fieldName} updated. View: ${shortLink}`
   };
 
   const message = templates[eventType] || `Order ${orderIdentifier} updated. View: ${shortLink}`;
+
   return users.map(user => ({ user, message }));
 }
 
@@ -919,8 +906,8 @@ async function recordSMSHistory(
         message_content: message.message,
         twilio_sid: result.value.sid,
         status: 'sent',
-        sent_day: new Date().toISOString().split('T')[0],
-        cost_cents: 7
+        sent_day: new Date().toISOString().split('T')[0], // YYYY-MM-DD format for daily rate limiting
+        cost_cents: 7 // Approximate cost: $0.0075 per SMS
       };
     } else {
       return {
@@ -932,7 +919,7 @@ async function recordSMSHistory(
         phone_number: user.phone_number,
         message_content: message.message,
         status: 'failed',
-        sent_day: new Date().toISOString().split('T')[0],
+        sent_day: new Date().toISOString().split('T')[0], // YYYY-MM-DD format for tracking
         error_message: result.reason?.message || 'Unknown error'
       };
     }
