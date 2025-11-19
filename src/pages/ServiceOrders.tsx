@@ -547,6 +547,7 @@ export default function ServiceOrders() {
                     onEdit={handleEditOrder}
                     onDelete={handleDeleteOrder}
                     onView={handleViewOrder}
+                    onStatusChange={handleStatusChange}
                     tabType="service"
                   />
                 )}
