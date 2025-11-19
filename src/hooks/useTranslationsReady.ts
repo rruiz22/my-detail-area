@@ -29,23 +29,23 @@ export function useTranslationsReady() {
       if (codeSplittingEnabled) {
         // With code splitting: Check for critical namespace 'common'
         hasTranslations = i18n.hasResourceBundle(i18n.language, 'common');
-        // Only log in development to reduce console noise
-        if (isDev && hasTranslations) {
-          console.log(`🔍 [useTranslationsReady] Code splitting - namespace 'common': ready`);
-        }
+        // Logs commented out - too verbose
+        // if (isDev && hasTranslations) {
+        //   console.log(`🔍 [useTranslationsReady] Code splitting - namespace 'common': ready`);
+        // }
       } else {
         // Legacy monolithic: Check for 'translation' namespace
         hasTranslations = i18n.hasResourceBundle(i18n.language, 'translation');
-        if (isDev && hasTranslations) {
-          console.log(`🔍 [useTranslationsReady] Monolithic - namespace 'translation': ready`);
-        }
+        // if (isDev && hasTranslations) {
+        //   console.log(`🔍 [useTranslationsReady] Monolithic - namespace 'translation': ready`);
+        // }
       }
 
       if (hasTranslations && isMounted) {
-        // Only log once when ready (not on every check)
-        if (isDev) {
-          console.log(`✅ [useTranslationsReady] Translations ready for ${i18n.language}`);
-        }
+        // Logs commented out - too verbose
+        // if (isDev) {
+        //   console.log(`✅ [useTranslationsReady] Translations ready for ${i18n.language}`);
+        // }
         setIsReady(true);
         return true;
       }

@@ -277,13 +277,8 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
       const serviceOrders = enrichedOrders.map(order => {
         const transformed = transformServiceOrder(order);
 
-        // DEBUG: Log polling assignment data
-        dev('🔄 Polling Assignment Debug:', {
-          orderId: order.id,
-          orderNumber: order.order_number,
-          assigned_group_id: order.assigned_group_id,
-          due_date: order.due_date
-        });
+        // DEBUG: Removed excessive polling logs for cleaner console
+        // dev('🔄 Polling Assignment Debug:', { orderId, orderNumber, assigned_group_id, due_date });
 
         // Enriched fields from orderEnrichment service
         transformed.dealershipName = order.dealershipName;
@@ -293,7 +288,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
         transformed.dueTime = order.dueTime;
         transformed.comments = order.comments;
 
-        dev('✅ Polling mapped:', transformed.assignedTo, 'dueDate:', transformed.dueDate);
+        // dev('✅ Polling mapped:', transformed.assignedTo, 'dueDate:', transformed.dueDate);
 
         return transformed;
       });
