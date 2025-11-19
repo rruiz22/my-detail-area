@@ -52,23 +52,11 @@ export const PermissionProvider: React.FC<PermissionProviderProps> = ({ children
   }, [permissionsHook.refreshPermissions]);
 
   // ✅ Memoize context value to prevent unnecessary re-renders
-  // ✅ FIX: Add defensive guard for unmounted state to prevent React error #310
-  const contextValue = useMemo(() => {
-    // During unmount transition, return safe no-op values
-    if (!isMountedRef.current) {
-      return {
-        hasPermission: () => false,
-        loading: true,
-        refreshPermissions: () => {}
-      };
-    }
-
-    return {
-      hasPermission: permissionsHook.hasPermission,
-      loading: permissionsHook.loading,
-      refreshPermissions: safeRefreshPermissions
-    };
-  }, [
+  const contextValue = useMemo(() => ({
+    hasPermission: permissionsHook.hasPermission,
+    loading: permissionsHook.loading,
+    refreshPermissions: safeRefreshPermissions
+  }), [
     permissionsHook.hasPermission,
     permissionsHook.loading,
     safeRefreshPermissions

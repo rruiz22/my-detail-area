@@ -51,17 +51,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // 🔒 CRITICAL: Track previous userId to detect user changes without causing re-renders
   const previousUserIdRef = React.useRef<string | null>(null);
 
-  // 🔒 FIX: Track mount state to prevent state updates after unmount (React error #310)
-  const isMountedRef = React.useRef(true);
-
-  // Track mount state for cleanup
-  React.useEffect(() => {
-    isMountedRef.current = true;
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
-
   // Load extended user profile data with timeout and fallback
   const loadUserProfile = async (authUser: User): Promise<ExtendedUser> => {
     try {
@@ -141,23 +130,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         dealership_name: cachedProfile.dealership_name,
         avatar_seed: cachedProfile.avatar_seed
       };
-
-      // ✅ Guard: Only update if component is still mounted
-      if (isMountedRef.current) {
-        setUser(cachedUser);
-      }
+      setUser(cachedUser);
 
       // 2. Sync with database in background (if needed)
       if (userProfileCache.needsRefresh(authUser.id)) {
         loadUserProfile(authUser).then(freshProfile => {
           auth('Background sync completed');
-
-          // ✅ Guard: Only update if component is still mounted
-          if (isMountedRef.current) {
-            setUser(freshProfile);
-          }
-
-          // Update cache with fresh data (safe without guard - localStorage operation)
+          setUser(freshProfile);
+          // Update cache with fresh data
           userProfileCache.cacheProfile({
             userId: freshProfile.id,
             user_type: freshProfile.user_type || 'system_admin',
@@ -175,11 +155,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       auth('No cache found, loading from database');
       // No cache - load from database and cache result
       const freshProfile = await loadUserProfile(authUser);
-
-      // ✅ Guard: Only update if component is still mounted
-      if (isMountedRef.current) {
-        setUser(freshProfile);
-      }
+      setUser(freshProfile);
 
       // Cache the loaded profile
       userProfileCache.cacheProfile({
@@ -204,18 +180,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         // This prevents race conditions where old user cache is used for new user
         if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
           previousUserIdRef.current = null;
-
-          // ✅ Guard: Only update state if component is still mounted
-          if (isMountedRef.current) {
-            setUser(null);
-            setSession(null);
-            setLoading(false);
-          }
-
-          // Cache clearing is safe without guard (localStorage operations)
+          setUser(null);
+          setSession(null);
           userProfileCache.clearCache();
           clearPermissionsCache();
+          // Invalidate ALL React Query cache to prevent stale data
           queryClient.clear();
+          setLoading(false);
           return;
         }
 
@@ -227,10 +198,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           queryClient.clear();
         }
 
-        // ✅ Guard: Only update session if component is still mounted
-        if (isMountedRef.current) {
-          setSession(session);
-        }
+        setSession(session);
 
         if (session?.user) {
           // Update ref with current userId
@@ -238,16 +206,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           // ✅ Cache is now guaranteed to be cleared before loading new user
           await loadUserWithCache(session.user);
         } else {
-          // ✅ Guard: Only update if component is still mounted
-          if (isMountedRef.current) {
-            setUser(null);
-          }
+          setUser(null);
         }
 
-        // ✅ Guard: Only update loading if component is still mounted
-        if (isMountedRef.current) {
-          setLoading(false);
-        }
+        // IMMEDIATE loading completion
+        setLoading(false);
       }
     );
 
@@ -262,36 +225,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             !navigator.onLine
           ) {
             warn('Network error during session check, will retry when online');
-
-            // ✅ Guard: Only update loading if component is still mounted
-            if (isMountedRef.current) {
-              setLoading(false);
-            }
+            setLoading(false);
             return;
           }
           logError('Error getting session:', error);
         }
 
-        // ✅ Guard: Only update session if component is still mounted
-        if (isMountedRef.current) {
-          setSession(session);
-        }
+        setSession(session);
 
         if (session?.user) {
           // Initialize ref with current userId on session restore
           previousUserIdRef.current = session.user.id;
           await loadUserWithCache(session.user);
         } else {
-          // ✅ Guard: Only update if component is still mounted
-          if (isMountedRef.current) {
-            setUser(null);
-          }
+          setUser(null);
         }
 
-        // ✅ Guard: IMMEDIATE loading completion only if mounted
-        if (isMountedRef.current) {
-          setLoading(false);
-        }
+        // IMMEDIATE loading completion
+        setLoading(false);
       })
       .catch((error) => {
         // Catch any unexpected errors

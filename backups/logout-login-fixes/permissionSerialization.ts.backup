@@ -172,15 +172,9 @@ export function getCachedPermissions(userId: string): EnhancedUserGranular | nul
   }
 }
 
-// ✅ FIX: Debounce state to prevent multiple rapid clears (13 calls → 1 call)
-let lastClearTimestamp = 0;
-const CLEAR_DEBOUNCE_MS = 100;
-
 /**
  * Clear permission cache from localStorage
  * Called on logout or when cache becomes invalid
- *
- * ✅ FIX: Now debounced to prevent multiple rapid clears during logout (max 1 per 100ms)
  *
  * @param userId - Optional user ID to clear cache for a specific user.
  *                 Note: localStorage is shared across browser, so this won't
@@ -188,16 +182,6 @@ const CLEAR_DEBOUNCE_MS = 100;
  *                 It only clears the cache in the current browser session.
  */
 export function clearPermissionsCache(userId?: string): void {
-  const now = Date.now();
-
-  // ✅ FIX: Debounce rapid clears (prevents 13 calls during logout → only 1 call)
-  if (now - lastClearTimestamp < CLEAR_DEBOUNCE_MS) {
-    console.log('🔄 Permission cache clear debounced (already cleared recently)');
-    return;
-  }
-
-  lastClearTimestamp = now;
-
   try {
     // If userId is provided, we still clear global cache since localStorage
     // doesn't support per-user storage (same browser = same localStorage)
