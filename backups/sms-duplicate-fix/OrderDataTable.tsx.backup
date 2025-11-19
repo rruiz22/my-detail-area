@@ -137,30 +137,28 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
         return;
       }
 
-      // FIX: Delegate DB update to parent to avoid duplicate SMS
-      // Parent (SalesOrders/ServiceOrders/etc) handles:
-      // - updateOrderStatus() → DB update + SMS notification
-      // - Success toast
-      // - Query invalidation
-      // Child only validates permissions and dispatches UI events
-      dev(`Delegating status update for order ${orderId} to parent handler`);
+      const success = await updateOrderStatus(orderId, newStatus, order.dealer_id?.toString() || '');
+      if (success) {
+        dev(`Status updated for order ${orderId} to ${newStatus}`);
 
-      if (onStatusChange) {
-        await onStatusChange(orderId, newStatus);
+        // Trigger immediate refresh of order data
+        // Note: Parent component (SalesOrders/ServiceOrders) will show success toast
+        if (onStatusChange) {
+          onStatusChange(orderId, newStatus);
+        }
+
+        // Dispatch custom event for real-time updates (for Sales Orders)
+        window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
+          detail: { orderId, newStatus, timestamp: Date.now() }
+        }));
+
+        // Emit to eventBus for Service/Recon/CarWash orders
+        orderEvents.emit('orderStatusUpdated', {
+          orderId,
+          newStatus,
+          timestamp: Date.now()
+        });
       }
-
-      // Dispatch custom event for real-time updates (for Sales Orders)
-      window.dispatchEvent(new CustomEvent('orderStatusUpdated', {
-        detail: { orderId, newStatus, timestamp: Date.now() }
-      }));
-
-      // Emit to eventBus for Service/Recon/CarWash orders
-      orderEvents.emit('orderStatusUpdated', {
-        orderId,
-        newStatus,
-        timestamp: Date.now()
-      });
-
     } catch (error) {
       logError('Failed to update status:', error);
       toast({
