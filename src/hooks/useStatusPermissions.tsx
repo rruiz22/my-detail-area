@@ -184,7 +184,10 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
             orderNumber: currentOrder.order_number,
             newStatus: newStatus,
             oldStatus: oldStatus,
-            vehicleInfo: vehicleInfo
+            vehicleInfo: vehicleInfo,
+            shortLink: shortLink,
+            stockNumber: currentOrder.stock_number,
+            tag: currentOrder.tag
           }
         });
       }

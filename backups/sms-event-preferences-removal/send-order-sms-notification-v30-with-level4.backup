@@ -287,19 +287,30 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const request: SMSNotificationRequest = await req.json();
-    const requestId = Date.now(); // Unique ID for tracking this request
+    console.log('📱 SMS Notification Request:', request);
+    console.log(`🔍 [DEBUG] Trigger user ID: ${request.triggeredBy}`);
 
-    console.log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
-    console.log(`🆔 [REQUEST ${requestId}] START`);
-    console.log(`📱 SMS Notification Request:`, request);
-    console.log(`🔍 Trigger user: ${request.triggeredBy}`);
-    console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`);
+    const isEventEnabled = await checkNotificationRules(
+      request.dealerId,
+      request.module,
+      request.eventType
+    );
 
-    // LEVEL 4 DISABLED: Dealer notification rules validation removed
-    // System now only uses 3-level validation (Follower → Role → Preferences)
-    // To re-enable: Uncomment checkNotificationRules() and applyDealerNotificationRules()
+    if (!isEventEnabled) {
+      console.log(`⚠️ [SMS Filter] Event "${request.eventType}" not enabled in dealer_notification_rules for module "${request.module}"`);
+      return new Response(
+        JSON.stringify({
+          success: true,
+          sent: 0,
+          failed: 0,
+          recipients: 0,
+          message: `Event "${request.eventType}" not configured for SMS in notification rules`
+        }),
+        { headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+      );
+    }
 
-    console.log(`🔐 [${requestId}] Starting 3-level validation for order ${request.orderId}`);
+    console.log(`🔐 Starting 3-level validation for order ${request.orderId}`);
     const eligibleUsers = await getUsersEligibleForNotification(
       request.dealerId,
       request.module,
@@ -307,11 +318,10 @@ const handler = async (req: Request): Promise<Response> => {
       request.eventType,
       request.eventData
     );
-    console.log(`\n✅ [${requestId}] 3-LEVEL VALIDATION COMPLETE: ${eligibleUsers.length} eligible users`);
-    console.log(`🔍 [${requestId}] Eligible users:`, eligibleUsers.map(u => ({ id: u.id, name: u.name, phone: u.phone_number })));
+    console.log(`✅ 3-level validation complete: ${eligibleUsers.length} eligible users`);
+    console.log(`🔍 [DEBUG] Eligible users:`, eligibleUsers.map(u => ({ id: u.id, name: u.name, phone: u.phone_number })));
 
     if (eligibleUsers.length === 0) {
-      console.log(`⚠️ [${requestId}] NO ELIGIBLE USERS - Returning 0 sent`);
       return new Response(
         JSON.stringify({
           success: true,
@@ -324,10 +334,27 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // LEVEL 4 DISABLED: Dealer notification rules removed
-    // Using eligibleUsers directly (skip dealer rules filtering)
-    const usersAfterDealerRules = eligibleUsers;
-    console.log(`📋 [${requestId}] LEVEL 4 SKIPPED (disabled): ${usersAfterDealerRules.length} users pass through`);
+    const usersAfterDealerRules = await applyDealerNotificationRules(
+      eligibleUsers,
+      request.dealerId,
+      request.module,
+      request.eventType,
+      request.eventData
+    );
+    console.log(`📋 After dealer rules: ${usersAfterDealerRules.length} users`);
+
+    if (usersAfterDealerRules.length === 0) {
+      return new Response(
+        JSON.stringify({
+          success: true,
+          sent: 0,
+          failed: 0,
+          recipients: 0,
+          message: 'No eligible users after dealer notification rules filter'
+        }),
+        { headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+      );
+    }
 
     const usersAfterRateLimit = await checkRateLimits(usersAfterDealerRules, request.dealerId, request.module);
     console.log(`⏱️ After rate limit check: ${usersAfterRateLimit.length} users`);
@@ -347,13 +374,9 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const finalUsers = usersAfterRateLimit.filter(u => u.id !== request.triggeredBy);
-    console.log(`\n👤 [${requestId}] SELF-EXCLUSION CHECK:`);
-    console.log(`   Before: ${usersAfterRateLimit.length} users`);
-    console.log(`   Trigger user: ${request.triggeredBy}`);
-    console.log(`   After: ${finalUsers.length} users (excluded ${usersAfterRateLimit.length - finalUsers.length})`);
+    console.log(`👤 After removing trigger user: ${finalUsers.length} users`);
 
     if (finalUsers.length === 0) {
-      console.log(`⚠️ [${requestId}] ONLY TRIGGER USER - Returning 0 sent\n`);
       return new Response(
         JSON.stringify({
           success: true,
@@ -366,21 +389,15 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    console.log(`\n💬 [${requestId}] GENERATING MESSAGES...`);
     const messages = generateMessages(finalUsers, request.eventType, request.eventData);
-    console.log(`✅ [${requestId}] Generated ${messages.length} messages`);
-    messages.forEach(({ user, message }) => {
-      console.log(`   → ${user.name} (${user.phone_number}): ${message.substring(0, 80)}...`);
-    });
+    console.log(`💬 Generated ${messages.length} messages`);
 
-    console.log(`\n📤 [${requestId}] SENDING SMS VIA TWILIO...`);
     const results = await Promise.allSettled(
       messages.map(({ user, message }) =>
         sendSMS(user.phone_number, message, request.orderId)
       )
     );
 
-    console.log(`\n💾 [${requestId}] RECORDING TO sms_send_history...`);
     await recordSMSHistory(
       results,
       finalUsers,
@@ -395,11 +412,7 @@ const handler = async (req: Request): Promise<Response> => {
     const failedCount = results.filter(r => r.status === 'rejected').length;
     const recipientNames = finalUsers.map(u => u.name);
 
-    console.log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
-    console.log(`✅ [${requestId}] REQUEST COMPLETE`);
-    console.log(`📊 Summary: ${successCount} sent, ${failedCount} failed`);
-    console.log(`👥 Recipients: ${recipientNames.join(', ')}`);
-    console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`);
+    console.log(`✅ SMS Sent: ${successCount} successful, ${failedCount} failed to: ${recipientNames.join(', ')}`);
 
     return new Response(
       JSON.stringify({
