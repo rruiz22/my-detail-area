@@ -87,7 +87,13 @@
       "Bash(then ls -la supabase/migrations)",
       "Bash(else echo \"No migrations folder found\")",
       "Bash(export:*)",
-      "Bash(ping:*)"
+      "Bash(ping:*)",
+      "Bash(npx:*)",
+      "Bash(move:*)",
+      "Bash(ren:*)",
+      "Bash(if not exist \"C:\\Users\\rudyr\\apps\\mydetailarea\\src\\components\\detail-hub\" mkdir \"C:\\Users\\rudyr\\apps\\mydetailarea\\src\\components\\detail-hub\")",
+      "Bash(supabase functions deploy:*)",
+      "Bash(git rev-parse:*)"
     ],
     "deny": [],
     "ask": []

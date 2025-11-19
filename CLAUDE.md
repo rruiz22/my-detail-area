@@ -2,7 +2,24 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## 🔒 PUERTO 8080 EXCLUSIVO - CONFIGURACIÓN CRÍTICA
+## 📑 Table of Contents
+
+1. [🔒 Puerto 8080 - Configuración Crítica](#-puerto-8080---configuración-crítica)
+2. [⚡ Performance Optimization](#-performance-optimization)
+3. [Essential Development Commands](#essential-development-commands)
+4. [Project Architecture](#project-architecture)
+5. [🌐 Translation System](#-translation-system)
+6. [Critical Development Standards](#critical-development-standards)
+7. [Component Patterns](#component-patterns)
+8. [Specialized Features](#specialized-features)
+9. [Security & Performance](#security--performance)
+10. [🔌 MCP Configuration](#-mcp-configuration)
+11. [🤖 Specialized Agents](#-specialized-agents)
+12. [💾 Cache Configuration](#-cache-configuration)
+
+---
+
+## 🔒 Puerto 8080 - Configuración Crítica
 
 **IMPORTANTE**: Este proyecto DEBE usar ÚNICAMENTE el puerto 8080 para desarrollo.
 
@@ -13,6 +30,79 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **URL de desarrollo**: http://localhost:8080 (FIJO - no cambia)
 
 Esta configuración asegura consistencia en el desarrollo y evita conflictos de puerto entre sesiones.
+
+---
+
+## ⚡ Performance Optimization
+
+### **CRITICAL: Maximum Velocity Guidelines**
+
+**Root Causes of Slow Performance**:
+1. ❌ Sequential tool execution - Running tools one at a time instead of in parallel
+2. ❌ No agent delegation - Not using specialized agents proactively
+3. ❌ Excessive verbosity - Too much explanation before action
+4. ❌ Manual searches - Not using Task tool with "Explore" agent for codebase exploration
+
+### **Mandatory Speed Optimizations**
+
+#### 1. Parallel Tool Execution (ALWAYS)
+```typescript
+// ❌ WRONG - Sequential (slow)
+1. Read file A → Wait → Read file B → Wait → Search pattern C
+
+// ✅ CORRECT - Parallel (fast)
+Read(file A) + Read(file B) + Grep(pattern C)
+```
+
+#### 2. Proactive Agent Delegation
+```typescript
+// ✅ CORRECT - Immediate agent launch
+User: "Optimize the dashboard performance"
+Assistant: *Launches performance-optimizer agent immediately*
+
+// ✅ CORRECT - Multiple agents in parallel
+Task("Design analytics schema", "database-expert")
+Task("Create dashboard UI", "react-architect")
+Task("Implement visualizations", "analytics-implementer")
+```
+
+#### 3. Action First, Explanation After
+```typescript
+// ❌ WRONG - Verbose
+"I'm going to read the button component to understand its structure..."
+*Finally executes Read tool*
+
+// ✅ CORRECT - Immediate action
+*Executes Read tool immediately*
+"Button component uses Radix UI primitives. Here's the optimization..."
+```
+
+#### 4. Use Explore Agent for Codebase Searches
+```typescript
+// ❌ WRONG - Manual search
+Assistant: *Uses Grep manually for 'error', then 'catch', then 'throw'...*
+
+// ✅ CORRECT - Delegate to Explore agent
+Assistant: Task("Find error handling patterns", "Explore", thoroughness: "medium")
+```
+
+### **Performance Checklist**
+
+Before every response, verify:
+- [ ] **Can I run tools in parallel?** → Launch all independent tools together
+- [ ] **Should I delegate this?** → Use specialized agent if applicable
+- [ ] **Am I over-explaining?** → Execute first, explain after
+- [ ] **Is this exploratory?** → Use Explore agent instead of manual search
+
+### **Speed Metrics**
+
+**Velocity multipliers:**
+- Parallel tool execution: **3-5x faster**
+- Agent delegation: **2-4x faster**
+- Action-first approach: **2x faster**
+- Explore agent: **5-10x faster** for search tasks
+
+---
 
 ## Essential Development Commands
 
@@ -28,7 +118,9 @@ npm run preview         # Preview production build
 node scripts/audit-translations.cjs  # Comprehensive translation coverage analysis
 ```
 
-## Project Architecture - My Detail Area Enterprise System
+---
+
+## Project Architecture
 
 ### Core Technology Stack
 - **Frontend**: React 18 + TypeScript + Vite
@@ -64,18 +156,6 @@ node scripts/audit-translations.cjs  # Comprehensive translation coverage analys
 <PermissionGuard module="contacts" permission="write">
   <Button>Add Contact</Button>
 </PermissionGuard>
-```
-
-#### **Translation System (Critical)**
-```typescript
-// ALL user-facing text MUST use translations
-const { t } = useTranslation();
-return <h1>{t('page.title')}</h1>; // NEVER hardcode text
-
-// Namespace organization by feature
-'contacts.add_new'
-'orders.vehicle_information'
-'reports.export.configuration'
 ```
 
 #### **Data Flow Architecture**
@@ -134,9 +214,153 @@ const [viewMode, setViewMode] = useViewModePersistence('sales_orders'); // kanba
 // Auto-restores user's last active tab/view on page refresh
 ```
 
-### Critical Development Standards
+---
 
-#### **TypeScript Best Practices (Mandatory)**
+## 🌐 Translation System
+
+### **Overview**
+
+MyDetailArea uses **code splitting for translations** to optimize load times. Translations are divided into **80 namespaces** (~3-40KB each) instead of one monolithic file (500KB).
+
+**Performance improvement**: 5-6x faster initial load (10-15s → 2-3s on 3G)
+
+### **Critical Rules**
+
+**⚠️ MANDATORY**: ALL user-facing text MUST use translations:
+- Component titles and labels
+- Button text and placeholders
+- Error messages and tooltips
+- Form validation messages
+- Modal headers and descriptions
+- Toast notifications and alerts
+
+**Status**: ✅ English (complete), ✅ Portuguese (complete), ⚠️ Spanish (partial - auto-fallback to English enabled)
+
+### **Architecture**
+
+**Hybrid Approach**: All namespaces are preloaded on init for zero-config component compatibility.
+
+```
+public/translations/
+├── en/                           # English (80 files, ~256KB total)
+│   ├── common.json              # Shared elements (3.8KB)
+│   ├── navigation.json          # Navigation menus (1.1KB)
+│   ├── dashboard.json           # Dashboard (5.5KB)
+│   ├── orders.json              # Orders general (3.2KB)
+│   ├── sales_orders.json        # Sales orders (2.8KB)
+│   ├── contacts.json            # Contacts (3.4KB)
+│   ├── reports.json             # Reports (12.6KB)
+│   ├── get_ready.json           # Get Ready module (44KB - largest)
+│   └── ... (72 more namespaces)
+├── pt-BR/                        # Portuguese (76 files, ~260KB total)
+│   └── ... (same structure)
+└── _backup_monolithic/           # Original 500KB files (backup)
+```
+
+**Configuration** (`src/lib/i18n.ts`):
+```typescript
+nsSeparator: '.'        // Enables t('namespace.key')
+keySeparator: false     // Allows dots in keys
+ns: ALL_NAMESPACES      // Preloads all 80 namespaces
+defaultNS: 'common'     // Fallback namespace
+```
+
+### **Usage Pattern**
+
+```typescript
+// ✅ CORRECT - With namespace.key notation
+import { useTranslation } from 'react-i18next';
+
+export function ComponentName() {
+  const { t } = useTranslation(); // No namespace needed!
+
+  return (
+    <div>
+      <h1>{t('reports.title')}</h1>
+      <Button>{t('reports.export_pdf_button')}</Button>
+      {/* ↑ Notation: namespace.key */}
+    </div>
+  );
+}
+
+// ❌ WRONG - Hardcoded text
+<Button>Export to PDF</Button>
+```
+
+### **Adding New Translations - Quick Guide**
+
+#### 1. Identify Correct Namespace
+
+| Feature | Namespace | File |
+|---------|-----------|------|
+| Dashboard widgets | `dashboard` | `dashboard.json` |
+| Sales orders | `sales_orders` | `sales_orders.json` |
+| Contacts CRM | `contacts` | `contacts.json` |
+| Reports/BI | `reports` | `reports.json` |
+| Admin panel | `admin` | `admin.json` |
+| Shared elements | `common` | `common.json` |
+
+**Complete list**: Run `ls public/translations/en/` (80 namespaces)
+
+#### 2. Add Key to All 3 Languages
+
+**English** (`public/translations/en/reports.json`):
+```json
+{
+  "title": "Reports",
+  "export_pdf_button": "Export to PDF"
+}
+```
+
+**Spanish** (`public/translations/es/reports.json`):
+```json
+{
+  "title": "Reportes",
+  "export_pdf_button": "Exportar a PDF"
+}
+```
+
+**Portuguese** (`public/translations/pt-BR/reports.json`):
+```json
+{
+  "title": "Relatórios",
+  "export_pdf_button": "Exportar para PDF"
+}
+```
+
+#### 3. Naming Conventions
+
+```javascript
+✅ GOOD:
+t('orders.create_new_order')
+t('contacts.import_csv_button')
+t('dashboard.total_orders_label')
+t('validation.vin_required_error')
+
+❌ BAD:
+t('orders.btn1')
+t('contacts.text')
+t('dashboard.label')
+```
+
+### **Validation Scripts**
+
+```bash
+# Translation coverage audit
+npm run translation:audit
+
+# Fix missing translations
+npm run translation:fix
+
+# Coverage report (runs in pre-commit hook)
+npm run translation:coverage
+```
+
+---
+
+## Critical Development Standards
+
+### **TypeScript Best Practices (Mandatory)**
 - **NEVER use `any` types** - Always define proper interfaces and union types
 - **Type safety first** - Use strict TypeScript configuration
 - **Proper error handling** - Type errors at compile time, not runtime
@@ -145,63 +369,17 @@ const [viewMode, setViewMode] = useViewModePersistence('sales_orders'); // kanba
 - **Generic constraints** - Prefer `<T extends SomeType>` over `<T = any>`
 - **Type guards** - Use `typeof` and `in` operators for type narrowing
 
-#### **Translation Coverage (Mandatory)**
+### **Translation Coverage (Mandatory)**
 - **Run audit**: `node scripts/audit-translations.cjs` before major changes
 - **100% coverage required** - No hardcoded user-facing text
 - **3 language support** - English (base), Spanish, Portuguese (Brazilian)
 - **Namespace structure** - Group by feature/component
 
-#### **🚨 CRITICAL TRANSLATION REMINDER**
-**ALWAYS add translations when creating/modifying UI elements:**
+---
 
-**⚠️ IMPORTANT - CODE SPLITTING ENABLED (v1.3.36+)**:
-Translations are now organized in **80 namespaces** for optimal performance.
+## Component Patterns
 
-1. **English** - `public/translations/en/{namespace}.json`
-2. **Spanish** - `public/translations/es/{namespace}.json` (needs repair)
-3. **Portuguese (Brazil)** - `public/translations/pt-BR/{namespace}.json`
-
-**Required for ALL user-facing text including:**
-- Component titles and labels
-- Button text and placeholders
-- Error messages and tooltips
-- Form validation messages
-- Modal headers and descriptions
-- Toast notifications and alerts
-
-**Example pattern:**
-```typescript
-// ✅ CORRECT - With namespace.key notation
-const { t } = useTranslation(); // No need to specify namespace!
-<Button>{t('reports.export_pdf_button')}</Button>
-// ↑ Auto-loads from 'reports' namespace
-
-// ❌ WRONG - Hardcoded text
-<Button>Export to PDF</Button>
-```
-
-**Available namespaces** (80 total):
-- `common` - Shared elements (buttons, labels, messages)
-- `navigation` - Menu items, sidebar, breadcrumbs
-- `dashboard` - Dashboard metrics and widgets
-- `orders` - General order management
-- `sales_orders` - Sales-specific orders
-- `service_orders` - Service-specific orders
-- `recon_orders` - Recon-specific orders
-- `car_wash` - Car wash orders
-- `contacts` - Contact management
-- `reports` - Business intelligence reports
-- `auth` - Authentication pages
-- `admin` - Administration panel
-- `users` - User management
-- `dealerships` - Dealership management
-- `chat` - Team communication
-- `get_ready` - Reconditioning module
-- `stock` - Inventory management
-- `profile` - User profile settings
-- ... (See `public/translations/en/` for complete list)
-
-#### **Component Creation Pattern**
+### **Component Creation Pattern**
 ```tsx
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -225,7 +403,7 @@ export function ComponentName() {
 }
 ```
 
-#### **Modal Design Pattern (Full-Screen Enterprise)**
+### **Modal Design Pattern (Full-Screen Enterprise)**
 ```tsx
 // Order detail modals use full-screen layout matching CI4/PHP design
 <DialogContent className="max-w-none w-screen h-screen">
@@ -238,275 +416,7 @@ export function ComponentName() {
 </DialogContent>
 ```
 
-### Translation Code Splitting System (v1.3.36+)
-
-#### **Overview**
-MyDetailArea uses **code splitting for translations** to optimize load times. Translations are divided into **80 namespaces** (~3-40KB each) instead of one monolithic file (500KB).
-
-**Performance improvement**: 5-6x faster initial load (10-15s → 2-3s on 3G)
-
-#### **Architecture**
-
-**Hybrid Approach**: All namespaces are preloaded on init for zero-config component compatibility.
-
-```
-public/translations/
-├── en/                           # English (80 files, ~256KB total)
-│   ├── common.json              # Shared elements (3.8KB)
-│   ├── navigation.json          # Navigation menus (1.1KB)
-│   ├── dashboard.json           # Dashboard (5.5KB)
-│   ├── orders.json              # Orders general (3.2KB)
-│   ├── sales_orders.json        # Sales orders (2.8KB)
-│   ├── service_orders.json      # Service orders (3.3KB)
-│   ├── contacts.json            # Contacts (3.4KB)
-│   ├── reports.json             # Reports (12.6KB)
-│   ├── get_ready.json           # Get Ready module (44KB - largest)
-│   └── ... (71 more namespaces)
-├── pt-BR/                        # Portuguese (76 files, ~260KB total)
-│   └── ... (same structure)
-└── _backup_monolithic/           # Original 500KB files (backup)
-    ├── en.json
-    ├── es.json
-    └── pt-BR.json
-```
-
-**Configuration** (`src/lib/i18n.ts`):
-```typescript
-// Feature flag (default: enabled)
-VITE_USE_CODE_SPLITTING=true
-
-// Critical config for namespace.key notation
-nsSeparator: '.'      // Enables t('namespace.key')
-keySeparator: false   // Allows dots in keys
-
-// All namespaces preloaded
-ns: ALL_NAMESPACES    // 80 namespaces
-```
-
-#### **Adding New Translations - Step by Step**
-
-##### **1. Identify Correct Namespace**
-
-Choose based on feature area:
-
-| Feature | Namespace | File |
-|---------|-----------|------|
-| Dashboard widgets | `dashboard` | `dashboard.json` |
-| Navigation menus | `navigation` | `navigation.json` |
-| Sales orders | `sales_orders` | `sales_orders.json` |
-| Service orders | `service_orders` | `service_orders.json` |
-| Contacts CRM | `contacts` | `contacts.json` |
-| Reports/BI | `reports` | `reports.json` |
-| Admin panel | `admin` | `admin.json` |
-| Authentication | `auth` | `auth.json` |
-| User management | `users` | `users.json` |
-| Shared elements | `common` | `common.json` |
-
-**Complete list**: Run `ls public/translations/en/` (80 namespaces)
-
-##### **2. Add Key to All 3 Languages**
-
-**Example**: Adding "Export to PDF" button in reports
-
-**English** (`public/translations/en/reports.json`):
-```json
-{
-  "title": "Reports",
-  "export_pdf_button": "Export to PDF",  // ← NEW
-  "export_excel_button": "Export to Excel"
-}
-```
-
-**Spanish** (`public/translations/es/reports.json`):
-```json
-{
-  "title": "Reportes",
-  "export_pdf_button": "Exportar a PDF",  // ← NEW
-  "export_excel_button": "Exportar a Excel"
-}
-```
-
-**Portuguese** (`public/translations/pt-BR/reports.json`):
-```json
-{
-  "title": "Relatórios",
-  "export_pdf_button": "Exportar para PDF",  // ← NEW
-  "export_excel_button": "Exportar para Excel"
-}
-```
-
-##### **3. Use in Component**
-
-```typescript
-import { useTranslation } from 'react-i18next';
-
-export function ReportComponent() {
-  const { t } = useTranslation(); // ← No namespace needed!
-
-  return (
-    <div>
-      <h1>{t('reports.title')}</h1>
-      <Button>{t('reports.export_pdf_button')}</Button>
-      {/* ↑ Notation: namespace.key */}
-    </div>
-  );
-}
-```
-
-**How it works**:
-- `t('reports.export_pdf_button')` → Looks in `'reports'` namespace for `'export_pdf_button'` key
-- No need to specify namespace in `useTranslation([])` thanks to `nsSeparator: '.'`
-- All 80 namespaces preloaded, accessible from any component
-
-##### **4. Verify and Test**
-
-```bash
-# Development - hot reload automatic
-npm run dev
-
-# Verify in browser
-# - Translation appears correctly
-# - No translation keys visible (reports.export_pdf_button)
-# - Works in all 3 languages
-
-# Audit coverage
-npm run translation:audit
-
-# Build production
-npm run build
-```
-
-#### **Naming Conventions**
-
-**Use descriptive snake_case keys**:
-```javascript
-✅ GOOD:
-t('orders.create_new_order')
-t('contacts.import_csv_button')
-t('dashboard.total_orders_label')
-t('validation.vin_required_error')
-
-❌ BAD:
-t('orders.btn1')
-t('contacts.text')
-t('dashboard.label')
-```
-
-**Hierarchical structure allowed**:
-```json
-{
-  "orders": {
-    "create_new_order": "Create New Order",
-    "buttons": {
-      "save": "Save Order",
-      "cancel": "Cancel"
-    },
-    "validation": {
-      "vin_required": "VIN is required"
-    }
-  }
-}
-```
-
-**Usage**:
-```typescript
-t('orders.create_new_order')
-t('orders.buttons.save')
-t('orders.validation.vin_required')
-```
-
-#### **Performance Benefits**
-
-**Before (Monolithic)**:
-- 1 request × 500KB
-- 10-15s on 3G
-- Cache invalidates entire file on any change
-
-**After (Code Splitting)**:
-- 80 requests × ~3KB average (parallel via HTTP/2)
-- 2-3s on 3G (5-6x faster)
-- Granular cache (only invalidates changed namespace)
-- Progressive loading
-
-#### **Troubleshooting**
-
-##### **Translation key shows instead of text**
-```
-Symptom: UI shows "reports.export_button" instead of "Export"
-Cause: Key doesn't exist in namespace file
-Fix: Add key to public/translations/{lang}/{namespace}.json
-```
-
-##### **Rollback to monolithic (if needed)**
-```bash
-# Create .env.local
-echo "VITE_USE_CODE_SPLITTING=false" > .env.local
-
-# Rebuild
-npm run build
-
-# Reverts to using public/translations/_backup_monolithic/*.json
-```
-
-##### **Spanish translations not working**
-```
-Status: Spanish namespace files have syntax error (position 58680)
-Workaround: System auto-falls back to English
-Fix: Repair public/translations/_backup_monolithic/es.json and re-run:
-  node scripts/split-translations.cjs
-```
-
-#### **Validation Scripts**
-
-```bash
-# Translation coverage audit
-npm run translation:audit
-
-# Fix missing translations
-npm run translation:fix
-
-# Coverage report (runs in pre-commit hook)
-npm run translation:coverage
-```
-
-#### **Key Technical Details**
-
-**Configuration** (`src/lib/i18n.ts`):
-```typescript
-// Critical settings for namespace.key notation
-nsSeparator: '.'        // Enables t('namespace.key')
-keySeparator: false     // Allows dots in translation keys
-ns: ALL_NAMESPACES      // Preloads all 80 namespaces
-defaultNS: 'common'     // Fallback namespace
-fallbackNS: 'common'    // If key not found
-```
-
-**Zero-config components**: No need to specify namespaces in `useTranslation()` because all namespaces are preloaded and `nsSeparator` handles routing automatically.
-
-**Feature flag**: `VITE_USE_CODE_SPLITTING=true` (default enabled)
-
-### Specialized Features
-
-#### **VIN Processing System**
-- **Camera scanning** - Tesseract.js OCR with enhanced error handling
-- **VIN validation** - 17-character validation + decode via Edge Function
-- **Auto-population** - Vehicle year/make/model from successful decode
-
-#### **QR Code Integration (mda.to)**
-- **Auto-generation** - Short links created on order creation
-- **5-digit slugs** - Random alphanumeric (ABC12, XYZ89)
-- **Analytics tracking** - Scan counts, unique visitors
-- **vCard QR** - Contact sharing with device auto-import
-
-#### **Theme Customization System**
-- **Location**: Management → Theme Studio
-- **Capabilities**: Colors, shadows, typography, Notion presets
-- **Persistence**: localStorage with CSS variable injection
-- **Live preview** - Real-time theme changes
-
-### Data Validation & Error Handling
-
-#### **Form Validation Patterns**
+### **Form Validation Patterns**
 ```typescript
 // Standard validation with translations
 const errors = {
@@ -515,7 +425,7 @@ const errors = {
 };
 ```
 
-#### **Supabase Error Handling**
+### **Supabase Error Handling**
 ```typescript
 try {
   const { data, error } = await supabase.from('table').select();
@@ -526,63 +436,68 @@ try {
 }
 ```
 
-### Mobile & Responsive Design
+---
 
-#### **Breakpoint Strategy**
+## Specialized Features
+
+### **VIN Processing System**
+- **Camera scanning** - Tesseract.js OCR with enhanced error handling
+- **VIN validation** - 17-character validation + decode via Edge Function
+- **Auto-population** - Vehicle year/make/model from successful decode
+
+### **QR Code Integration (mda.to)**
+- **Auto-generation** - Short links created on order creation
+- **5-digit slugs** - Random alphanumeric (ABC12, XYZ89)
+- **Analytics tracking** - Scan counts, unique visitors
+- **vCard QR** - Contact sharing with device auto-import
+
+### **Theme Customization System**
+- **Location**: Management → Theme Studio
+- **Capabilities**: Colors, shadows, typography, Notion presets
+- **Persistence**: localStorage with CSS variable injection
+- **Live preview** - Real-time theme changes
+
+---
+
+## Security & Performance
+
+### **Mobile & Responsive Design**
+
+**Breakpoint Strategy**:
 - **Mobile-first design** - Base styles for mobile
 - **Breakpoints**: sm(640px), md(768px), lg(1024px), xl(1280px)
 - **Grid patterns**: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`
 - **Full-screen modals** - Enterprise desktop experience
 
-#### **Component Responsiveness**
+**Component Responsiveness**:
 - **Text sizing**: `text-sm sm:text-base`
 - **Icon visibility**: `hidden sm:inline-flex`
 - **Padding adaptation**: `p-2 sm:p-4 lg:p-6`
 
-### Security & Authentication
-
-#### **Role-Based Access Control**
+### **Role-Based Access Control**
 - **Supabase Auth** - Email/password + profile creation
 - **Admin setup** - `rruiz@lima.llc` configured as system admin
 - **Permission inheritance** - Dealership-scoped data access
 - **Module permissions** - Granular feature access (contacts.view, contacts.write, etc.)
 
-### Performance & Optimization
-
-#### **localStorage Optimization**
+### **localStorage Optimization**
 - **Debounced writes** - 50ms async saves for UI responsiveness
 - **Tab persistence** - Users return to exact same state on refresh
 - **Search persistence** - Search terms saved with 1-hour expiration
 - **Error recovery** - Graceful degradation if storage fails
 
-#### **Real-time Features**
+### **Real-time Features**
 - **Order status updates** - Live status changes across users
 - **Chat system** - Real-time messaging with file attachments
 - **Presence indicators** - User activity tracking
 
-This is an enterprise-grade dealership management system with comprehensive internationalization, advanced theme customization, and sophisticated state persistence.
+---
 
-## 🔌 MCP (Model Context Protocol) Configuration
+## 🔌 MCP Configuration
 
-### **Project-Specific MCP Servers**
+### **Primary MCP Server**
 
-**Active MCP servers configured for this project** (`.claude/.claude.json`):
-
-#### **Supabase MCP Server** ⭐ PRIMARY
-```json
-{
-  "type": "stdio",
-  "command": "cmd",
-  "args": ["/c", "npx", "-y", "@supabase/mcp-server-supabase@latest",
-           "--project-ref=swfnnrpzpkdypbrzmgnr",
-           "--access-token=sbp_5b15b6025c6d9d31d0ab1701d02726a09a463f54"],
-  "env": {
-    "SUPABASE_URL": "https://swfnnrpzpkdypbrzmgnr.supabase.co",
-    "SUPABASE_SERVICE_ROLE_KEY": "[CONFIGURED]",
-    "SUPABASE_ACCESS_TOKEN": "[CONFIGURED]"
-  }
-}
-```
+#### **Supabase MCP Server** ⭐ ALWAYS USE FOR DATABASE OPERATIONS
 
 **Capabilities:**
 - Direct database query execution via `execute_sql`
@@ -595,171 +510,83 @@ This is an enterprise-grade dealership management system with comprehensive inte
 
 **Usage patterns:**
 ```typescript
-// Use Supabase MCP for database operations
 mcp__supabase__execute_sql("SELECT * FROM profiles WHERE id = 'xxx'")
 mcp__supabase__list_tables()
 mcp__supabase__apply_migration("path/to/migration.sql")
 mcp__supabase__generate_typescript_types()
 ```
 
-### **Globally Available MCP Servers** (Inherited from user config)
+### **Secondary MCP Servers** (Use when needed)
 
-The following MCP servers are available globally but should be used sparingly in this project context:
-
-| Server | Package | Primary Use Case |
-|--------|---------|------------------|
-| **memory** | `@modelcontextprotocol/server-memory` | Session memory persistence |
-| **github** | `@modelcontextprotocol/server-github` | GitHub API interactions |
-| **notion** | `notion-mcp-server` | Notion workspace integration |
-| **railway** | `@railway/mcp-server` | Railway deployment |
-| **slack** | `simple-slack-mcp-server` | Slack messaging |
-| **filesystem** | `@modelcontextprotocol/server-filesystem` | File operations (C:/Users/rudyr) |
-| **playwright-official** | `@playwright/mcp@latest` | Browser automation |
-| **context7** | `@upstash/context7-mcp` | Context management |
-| **postgresql** | `@modelcontextprotocol/server-postgres` | Generic PostgreSQL (use Supabase instead) |
-| **sqlite** | `@modelcontextprotocol/server-sqlite` | SQLite databases |
-| **gdrive** | `@modelcontextprotocol/server-gdrive` | Google Drive integration |
-| **vercel** | `mcp-vercel` | Vercel deployments |
-| **netlify** | `mcp-netlify` | Netlify deployments |
-| **sentry** | `mcp-sentry` | Error tracking |
-| **firecrawl** | `firecrawl-mcp` | Web scraping |
-| **puppeteer** | `@hisma/server-puppeteer` | Headless Chrome automation |
-
-### **MCP Server Priority for MyDetailArea**
-
-**Primary (Always use):**
-1. **Supabase MCP** - All database operations, migrations, Edge Functions
-
-**Secondary (Use when needed):**
-2. **GitHub MCP** - For git operations, PR management, issue tracking
-3. **Memory MCP** - For session context persistence
-4. **Railway MCP** - For deployment operations
-
-**Avoid in this project:**
-- **postgresql** - Use Supabase MCP instead (redundant)
-- **filesystem** - Use native tools (Read, Write, Edit) instead
-- **sqlite** - Not applicable to this project (uses PostgreSQL)
+| Server | Use Case |
+|--------|----------|
+| **github** | Git operations, PR management, issue tracking |
+| **memory** | Session context persistence |
+| **railway** | Deployment operations |
 
 ### **Best Practices**
 
 1. **Always prefer Supabase MCP** for database operations over native SQL tools
 2. **Use MCP tools** when they provide better abstraction (migrations, type generation)
 3. **Avoid redundancy** - Don't use multiple MCP servers for the same task
-4. **Check MCP availability** before using: `/mcp` command shows active servers
-5. **MCP tool naming** - All MCP tools are prefixed with `mcp__<server>__<tool>`
+4. **MCP tool naming** - All MCP tools are prefixed with `mcp__<server>__<tool>`
 
-## 🤖 Claude Code Specialized Agents & Workflows
+---
 
-### **Frontend Agents (4)**
-- **`react-architect`** - React/TypeScript architecture specialist with component composition, hooks patterns, and performance patterns
-- **`ui-designer`** - UI/UX implementation specialist enforcing Notion design system (flat colors, muted palette, no gradients)
-- **`state-manager`** - State management specialist (TanStack Query, Context API, Redux, Zustand, caching strategies)
-- **`performance-optimizer`** - Frontend performance and Core Web Vitals expert (bundle analysis, lazy loading, optimization)
+## 🤖 Specialized Agents
 
-### **Backend Agents (4)**
-- **`api-architect`** - REST/GraphQL API design and Supabase integration specialist (OpenAPI specs, middleware design)
-- **`database-expert`** - Database design, optimization, and migrations specialist (PostgreSQL, RLS, query optimization)
-- **`auth-security`** - Authentication, authorization, and security expert (Supabase Auth, JWT, RBAC, security audits)
-- **`edge-functions`** - Supabase Edge Functions and serverless specialist (Deno, cold start optimization)
+### **Agent Categories**
 
-### **Quality Assurance Agents (3)**
-- **`test-engineer`** - Comprehensive testing specialist (Vitest, Testing Library, Playwright, TDD, coverage analysis)
-- **`code-reviewer`** - Code review with automated design system validation and security review
-- **`accessibility-auditor`** - Web accessibility and WCAG 2.1 AA compliance expert (screen reader testing, keyboard navigation)
+**Frontend Agents (4)**:
+- `react-architect` - React/TypeScript architecture specialist
+- `ui-designer` - UI/UX implementation with Notion design system
+- `state-manager` - State management (TanStack Query, Context API)
+- `performance-optimizer` - Frontend performance and Core Web Vitals
 
-### **DevOps Agents (3)**
-- **`deployment-engineer`** - CI/CD pipelines and deployment automation (Railway, Vercel, GitHub Actions, blue-green deployments)
-- **`monitoring-specialist`** - Application monitoring and performance tracking (APM, log aggregation, alerting)
-- **`infrastructure-provisioner`** - Infrastructure as Code and cloud provisioning (Terraform, Docker, cloud architecture)
+**Backend Agents (4)**:
+- `api-architect` - REST/GraphQL API design and Supabase integration
+- `database-expert` - Database design, optimization, and migrations
+- `auth-security` - Authentication, authorization, and security
+- `edge-functions` - Supabase Edge Functions and serverless
 
-### **Domain-Specific Agents (3)**
-- **`dealership-expert`** - Automotive dealership business logic specialist (CRM, inventory, compliance, industry workflows)
-- **`i18n-specialist`** - Multi-language internationalization expert (EN/ES/PT-BR, translation management, locale handling)
-- **`analytics-implementer`** - Business intelligence and analytics tracking (event tracking, dashboards, funnel analysis)
+**Quality Assurance Agents (3)**:
+- `test-engineer` - Comprehensive testing (Vitest, Testing Library, Playwright)
+- `code-reviewer` - Code review with design system validation
+- `accessibility-auditor` - Web accessibility and WCAG 2.1 AA compliance
 
-### Agent Usage Patterns
+**DevOps Agents (3)**:
+- `deployment-engineer` - CI/CD pipelines and deployment automation
+- `monitoring-specialist` - Application monitoring and performance tracking
+- `infrastructure-provisioner` - Infrastructure as Code and cloud provisioning
 
-#### Single Agent Tasks
-```typescript
-// Task(description, agentType)
-Task("Analyze current translation coverage and identify optimization opportunities", "code-reviewer")
-Task("Design contact groups database schema with proper relationships", "database-expert")
-Task("Create comprehensive test suite for VIN scanner functionality", "test-engineer")
-Task("Review security patterns in authentication and permission system", "auth-security")
-Task("Implement Notion-style dashboard components", "ui-designer")
-Task("Optimize React component performance and bundle size", "performance-optimizer")
-```
+**Domain-Specific Agents (3)**:
+- `dealership-expert` - Automotive dealership business logic
+- `i18n-specialist` - Multi-language internationalization (EN/ES/PT-BR)
+- `analytics-implementer` - Business intelligence and analytics tracking
 
-#### Multi-Agent Workflows
-```typescript
-// Parallel agent coordination for complex features
-Task("Research automotive dealership requirements for theme customization", "dealership-expert")
-Task("Design theme studio architecture with real-time preview", "react-architect")
-Task("Implement theme studio with Notion design system compliance", "ui-designer")
-Task("Create test coverage for theme customization across all components", "test-engineer")
-Task("Review theme implementation for security and performance", "code-reviewer")
-```
-
-#### Coordinated Development
-```typescript
-// Business domain + technical implementation
-Task("Implement vehicle search with dealership-specific filtering", "dealership-expert,react-architect,ui-designer")
-Task("Create multilingual order management interface", "i18n-specialist,ui-designer,state-manager")
-Task("Build analytics dashboard with automotive KPIs", "analytics-implementer,react-architect,performance-optimizer")
-```
-
-### Workflow Recommendations
+### **Workflow Recommendations**
 
 #### For New Features
-1. **dealership-expert** → Business requirements and automotive workflow analysis
-2. **react-architect** → Component architecture and technical design
-3. **ui-designer** → Notion-compliant UI implementation with muted palette
-4. **test-engineer** → Comprehensive test coverage (unit, integration, e2e)
-5. **code-reviewer** → Quality assurance and design system compliance
-6. **deployment-engineer** → Production deployment and monitoring
+1. **dealership-expert** → Business requirements
+2. **react-architect** → Component architecture
+3. **ui-designer** → Notion-compliant UI implementation
+4. **test-engineer** → Comprehensive test coverage
+5. **code-reviewer** → Quality assurance
+6. **deployment-engineer** → Production deployment
 
 #### For Bug Fixes
-1. **code-reviewer** → Root cause analysis and impact assessment
-2. **react-architect** or **api-architect** → Targeted fix implementation
-3. **test-engineer** → Regression testing and validation
+1. **code-reviewer** → Root cause analysis
+2. **react-architect** or **api-architect** → Targeted fix
+3. **test-engineer** → Regression testing
 4. **accessibility-auditor** → Accessibility impact check (if UI-related)
 
 #### For Performance Optimization
-1. **performance-optimizer** → Performance bottleneck identification and Core Web Vitals analysis
-2. **react-architect** → Architecture optimization strategy
-3. **database-expert** → Query and schema optimization (if backend-related)
-4. **monitoring-specialist** → Performance monitoring and alerting setup
+1. **performance-optimizer** → Bottleneck identification
+2. **react-architect** → Architecture optimization
+3. **database-expert** → Query and schema optimization
+4. **monitoring-specialist** → Performance monitoring setup
 
-#### For API Development
-1. **api-architect** → REST/GraphQL API design and Supabase integration
-2. **database-expert** → Schema design and RLS policies
-3. **auth-security** → Authentication and authorization implementation
-4. **test-engineer** → API testing and validation
-
-#### For Internationalization
-1. **i18n-specialist** → Translation strategy and implementation (EN/ES/PT-BR)
-2. **ui-designer** → Responsive design for different locales
-3. **test-engineer** → Multi-language testing and validation
-
-#### For Analytics & Business Intelligence
-1. **analytics-implementer** → Event tracking and KPI dashboard design
-2. **dealership-expert** → Automotive-specific metrics and reporting requirements
-3. **react-architect** → Dashboard architecture and data visualization
-4. **performance-optimizer** → Analytics performance optimization
-
-### Integration with Project Standards
-
-All agents understand and follow:
-- **Translation requirements** - 100% coverage with 3-language support (EN/ES/PT-BR)
-- **Permission patterns** - Role-based access control (system_admin > dealer_admin > dealer_manager > dealer_user)
-- **Component architecture** - shadcn/ui + Radix UI primitives + feature-based organization
-- **Data flow patterns** - Supabase integration (PostgreSQL + Auth + Edge Functions + Real-time)
-- **Notion design system** - Flat colors, muted palette, NO gradients, approved color tokens
-- **State persistence** - Advanced localStorage with tab memory and debounced writes
-- **Port configuration** - Exclusive port 8080 with strictPort: true
-- **Testing standards** - Vitest + Testing Library + Playwright E2E coverage
-
-### Design System Enforcement (Automated)
+### **Design System Enforcement (Automated)**
 
 **Forbidden Patterns** (all frontend agents enforce):
 - ❌ **NO GRADIENTS**: `linear-gradient()`, `radial-gradient()`, `conic-gradient()`
@@ -784,106 +611,9 @@ All agents understand and follow:
 --indigo-500: #6366f1;   /* Info (muted) */
 ```
 
-Use these 17 specialized agents to maintain high development velocity while ensuring enterprise-grade quality, security, maintainability, and strict design system compliance throughout the My Detail Area dealership management system.
+---
 
-## ⚡ Claude Code Performance Optimization
-
-### **CRITICAL: Maximum Velocity Guidelines**
-
-**Problem Identified**: Claude Code can work slowly without proper optimization strategies.
-
-**Root Causes**:
-1. ❌ **Sequential tool execution** - Running tools one at a time instead of in parallel
-2. ❌ **No agent delegation** - Not using specialized agents proactively
-3. ❌ **Excessive verbosity** - Too much explanation before action
-4. ❌ **Manual searches** - Not using Task tool with "Explore" agent for codebase exploration
-
-### **Mandatory Speed Optimizations**
-
-#### 1. **Parallel Tool Execution (ALWAYS)**
-Execute multiple independent tools in a single response block:
-
-```typescript
-// ❌ WRONG - Sequential (slow)
-1. Read file A
-2. Wait for response
-3. Read file B
-4. Wait for response
-5. Search pattern C
-6. Wait for response
-
-// ✅ CORRECT - Parallel (fast)
-// Single response with multiple tool calls:
-Read(file A) + Read(file B) + Grep(pattern C)
-```
-
-#### 2. **Proactive Agent Delegation**
-Launch specialized agents immediately without asking:
-
-```typescript
-// ✅ CORRECT - Immediate agent launch
-User: "Optimize the dashboard performance"
-Assistant: *Launches performance-optimizer agent immediately*
-
-// ✅ CORRECT - Multiple agents in parallel
-User: "Build analytics dashboard"
-Task("Design analytics schema", "database-expert")
-Task("Create dashboard UI", "react-architect")
-Task("Implement visualizations", "analytics-implementer")
-```
-
-#### 3. **Action First, Explanation After**
-Execute first, report results concisely:
-
-```typescript
-// ❌ WRONG - Verbose
-"I'm going to read the button component to understand its structure.
-This will help me see how it's implemented and then I can analyze..."
-*Finally executes Read tool*
-
-// ✅ CORRECT - Immediate action
-*Executes Read tool immediately*
-"Button component uses Radix UI primitives. Here's the optimization..."
-```
-
-#### 4. **Use Explore Agent for Codebase Searches**
-Never do manual Grep/Glob for exploratory questions:
-
-```typescript
-// ❌ WRONG - Manual search
-User: "Where are errors handled?"
-Assistant: *Uses Grep manually for 'error', then 'catch', then 'throw'...*
-
-// ✅ CORRECT - Delegate to Explore agent
-User: "Where are errors handled?"
-Assistant: Task("Find error handling patterns", "Explore", thoroughness: "medium")
-```
-
-### **Performance Checklist**
-
-Before every response, verify:
-- [ ] **Can I run tools in parallel?** → Launch all independent tools together
-- [ ] **Should I delegate this?** → Use specialized agent if applicable
-- [ ] **Am I over-explaining?** → Execute first, explain after
-- [ ] **Is this exploratory?** → Use Explore agent instead of manual search
-
-### **Speed Metrics**
-
-**Target velocities:**
-- **Simple tasks** (read 1-3 files): < 10 seconds
-- **Medium tasks** (multi-file changes): < 30 seconds
-- **Complex features** (agent coordination): < 2 minutes
-- **Codebase exploration**: Use Explore agent, not manual searches
-
-**Velocity multipliers:**
-- Parallel tool execution: **3-5x faster**
-- Agent delegation: **2-4x faster**
-- Action-first approach: **2x faster**
-- Explore agent: **5-10x faster** for search tasks
-
-Apply these optimizations ruthlessly to every interaction.
-
-## 💾 Cache Configuration & Best Practices
+## 💾 Cache Configuration
 
 ### **Global QueryClient Configuration**
 
@@ -913,10 +643,8 @@ const queryClient = new QueryClient({
 
 **Location**: `src/constants/cacheConfig.ts`
 
-Use standardized cache times for consistency:
-
 ```typescript
-import { CACHE_TIMES, GC_TIMES, CACHE_RECOMMENDATIONS } from '@/constants/cacheConfig';
+import { CACHE_TIMES, GC_TIMES } from '@/constants/cacheConfig';
 
 // Available cache times
 CACHE_TIMES.INSTANT     // 0ms - always fetch fresh
@@ -1025,24 +753,7 @@ const { mutate } = useMutation({
 });
 ```
 
-### **Development Tools**
-
-**React Query Devtools** available in development mode:
-
-- **Location**: Bottom-right corner of screen (development only)
-- **Features**:
-  - View all active queries and their cache status
-  - Inspect query data and state
-  - Monitor refetch behavior
-  - Debug cache hits/misses
-  - Force refetch queries
-  - Clear cache manually
-
-**To toggle**: Click the TanStack Query icon in the bottom-right corner
-
 ### **localStorage Persistence**
-
-**Enterprise-grade localStorage service** with namespacing, versioning, and TTL:
 
 ```typescript
 import { usePersistedState } from '@/hooks/usePersistedState';
@@ -1074,7 +785,7 @@ const [activeTab, setActiveTab] = useTabPersistence('sales_orders');
 4. **Use refetchOnMount: 'stale'** to avoid unnecessary refetches
 5. **Invalidate queries after mutations** to keep data fresh
 6. **Use optimistic updates** for better UX in slow networks
-7. **Monitor cache behavior** with React Query Devtools in development
+7. **Monitor cache behavior** with React Query Devtools in development (bottom-right corner)
 
 ### **Common Mistakes to Avoid**
 
@@ -1117,3 +828,7 @@ useMutation({
   onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] })
 });
 ```
+
+---
+
+**This is an enterprise-grade dealership management system with comprehensive internationalization, advanced theme customization, and sophisticated state persistence.**

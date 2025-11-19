@@ -99,7 +99,7 @@ export function PhotoReviewCard({ timeEntry, onApprove, onReject }: PhotoReviewC
             loading="lazy"
           />
           <div className="absolute top-2 left-2">
-            <Badge className="bg-blue-600 text-white">
+            <Badge className="bg-indigo-500 text-white">
               {t('detail_hub.photo_review.photo_punch')}
             </Badge>
           </div>

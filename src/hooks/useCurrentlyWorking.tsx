@@ -34,6 +34,7 @@ export interface CurrentlyWorkingEmployee {
   time_entry_id: string;
   clock_in: string;
   kiosk_id: string | null;
+  photo_in_url: string | null; // Clock in photo
 
   // Elapsed time
   elapsed_hours: number;

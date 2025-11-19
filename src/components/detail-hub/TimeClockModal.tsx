@@ -1,8 +1,17 @@
 /**
  * TimeClockModal Component
  *
- * Modal version of PunchClockKiosk for inline access from Dashboard
- * Simplified layout for dialog display (not full screen)
+ * @deprecated This component is deprecated and will be removed in a future version.
+ * Use PunchClockKioskModal instead for enhanced security and features.
+ *
+ * Issues with this component:
+ * - No PIN authentication (security risk)
+ * - No schedule validation
+ * - No break management
+ * - Database toggle in production (security risk)
+ * - Uses forbidden bright blue colors
+ *
+ * Migration path: Replace with <PunchClockKioskModal />
  */
 
 import { useState, useRef, useEffect } from "react";
@@ -177,6 +186,21 @@ export function TimeClockModal({ open, onClose }: TimeClockModalProps) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl">
+        {/* Deprecation Warning */}
+        <div className="bg-amber-50 border-l-4 border-amber-500 p-4 mb-4">
+          <div className="flex items-start gap-2">
+            <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm font-medium text-amber-800">
+                {t('detail_hub.punch_clock.deprecated_warning')}
+              </p>
+              <p className="text-xs text-amber-700 mt-1">
+                {t('detail_hub.punch_clock.deprecated_message')}
+              </p>
+            </div>
+          </div>
+        </div>
+
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Clock className="w-5 h-5" />

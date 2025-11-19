@@ -25,12 +25,17 @@ import {
   type DetailHubInvoiceLineItem
 } from "@/hooks/useDetailHubInvoices";
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { generateInvoicePDF, downloadInvoicePDF, previewInvoicePDF, type InvoiceData } from "@/utils/invoicePdfGenerator";
 
 const InvoiceCenter = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [isCreatingInvoice, setIsCreatingInvoice] = useState(false);
   const [selectedTab, setSelectedTab] = useState("all");
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState<string | null>(null);
 
   // Form state
   const [clientName, setClientName] = useState("");
@@ -149,6 +154,171 @@ const InvoiceCenter = () => {
     if (confirm('Are you sure you want to delete this invoice?')) {
       deleteInvoice(id);
     }
+  };
+
+  /**
+   * Downloads invoice as PDF
+   * Fetches line items, transforms data, and generates professional PDF
+   */
+  const handleDownloadPDF = async (invoice: DetailHubInvoice) => {
+    try {
+      setIsGeneratingPDF(invoice.id);
+      toast({
+        title: t('detail_hub.invoices.generating_pdf'),
+        description: `${invoice.invoice_number}...`
+      });
+
+      // Fetch dealership information
+      const { data: dealershipData, error: dealershipError } = await supabase
+        .from('dealerships')
+        .select('name, address, phone, email')
+        .eq('id', invoice.dealership_id)
+        .single();
+
+      if (dealershipError) throw dealershipError;
+
+      // Fetch line items
+      const { data: lineItemsData, error: lineItemsError } = await supabase
+        .from('detail_hub_invoice_line_items')
+        .select('*')
+        .eq('invoice_id', invoice.id)
+        .order('line_number');
+
+      if (lineItemsError) throw lineItemsError;
+
+      // Transform to InvoiceData format
+      const invoiceData: InvoiceData = {
+        invoice_number: invoice.invoice_number,
+        invoice_date: invoice.issue_date,
+        due_date: invoice.due_date,
+
+        // Client info
+        client_name: invoice.client_name,
+        client_email: invoice.client_email || undefined,
+        client_phone: invoice.client_phone || undefined,
+        client_address: invoice.client_address || undefined,
+
+        // Dealership info
+        dealership_name: dealershipData?.name || 'DetailHub',
+        dealership_address: dealershipData?.address || undefined,
+        dealership_phone: dealershipData?.phone || undefined,
+        dealership_email: dealershipData?.email || undefined,
+
+        // Line items
+        items: (lineItemsData || []).map(item => ({
+          description: item.service_name,
+          quantity: item.quantity,
+          unit_price: item.unit_price,
+          total: item.line_total
+        })),
+
+        // Totals
+        subtotal: invoice.subtotal,
+        tax_rate: invoice.tax_rate,
+        tax_amount: invoice.tax_amount,
+        total_amount: invoice.total_amount,
+
+        // Optional
+        notes: invoice.notes || undefined,
+        payment_terms: 'Payment due upon receipt. Thank you for your business.',
+        status: invoice.status
+      };
+
+      // Generate and download PDF
+      downloadInvoicePDF(invoiceData);
+
+      toast({
+        title: t('detail_hub.invoices.pdf_downloaded'),
+        description: `${invoice.invoice_number}`
+      });
+    } catch (error) {
+      console.error('PDF generation failed:', error);
+      toast({
+        title: t('detail_hub.invoices.pdf_download_failed'),
+        description: error instanceof Error ? error.message : 'Unknown error',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsGeneratingPDF(null);
+    }
+  };
+
+  /**
+   * Opens invoice PDF in new tab for preview
+   */
+  const handlePreviewPDF = async (invoice: DetailHubInvoice) => {
+    try {
+      setIsGeneratingPDF(invoice.id);
+
+      // Fetch dealership information
+      const { data: dealershipData, error: dealershipError } = await supabase
+        .from('dealerships')
+        .select('name, address, phone, email')
+        .eq('id', invoice.dealership_id)
+        .single();
+
+      if (dealershipError) throw dealershipError;
+
+      // Fetch line items
+      const { data: lineItemsData, error: lineItemsError } = await supabase
+        .from('detail_hub_invoice_line_items')
+        .select('*')
+        .eq('invoice_id', invoice.id)
+        .order('line_number');
+
+      if (lineItemsError) throw lineItemsError;
+
+      // Transform to InvoiceData format
+      const invoiceData: InvoiceData = {
+        invoice_number: invoice.invoice_number,
+        invoice_date: invoice.issue_date,
+        due_date: invoice.due_date,
+        client_name: invoice.client_name,
+        client_email: invoice.client_email || undefined,
+        client_phone: invoice.client_phone || undefined,
+        client_address: invoice.client_address || undefined,
+        dealership_name: dealershipData?.name || 'DetailHub',
+        dealership_address: dealershipData?.address || undefined,
+        dealership_phone: dealershipData?.phone || undefined,
+        dealership_email: dealershipData?.email || undefined,
+        items: (lineItemsData || []).map(item => ({
+          description: item.service_name,
+          quantity: item.quantity,
+          unit_price: item.unit_price,
+          total: item.line_total
+        })),
+        subtotal: invoice.subtotal,
+        tax_rate: invoice.tax_rate,
+        tax_amount: invoice.tax_amount,
+        total_amount: invoice.total_amount,
+        notes: invoice.notes || undefined,
+        payment_terms: 'Payment due upon receipt. Thank you for your business.',
+        status: invoice.status
+      };
+
+      // Open preview in new tab
+      previewInvoicePDF(invoiceData);
+    } catch (error) {
+      console.error('PDF preview failed:', error);
+      toast({
+        title: 'Preview Failed',
+        description: error instanceof Error ? error.message : 'Unknown error',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsGeneratingPDF(null);
+    }
+  };
+
+  /**
+   * Email invoice (future implementation)
+   */
+  const handleEmailInvoice = (invoice: DetailHubInvoice) => {
+    toast({
+      title: 'Coming Soon',
+      description: 'Email functionality will be available soon.',
+      variant: 'default'
+    });
   };
 
   if (isLoading) {
@@ -430,13 +600,31 @@ const InvoiceCenter = () => {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-2">
-                            <Button variant="ghost" size="sm" title="View invoice">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              title={t('detail_hub.invoices.preview_pdf')}
+                              onClick={() => handlePreviewPDF(invoice)}
+                              disabled={isGeneratingPDF === invoice.id}
+                            >
                               <Eye className="w-4 h-4" />
                             </Button>
-                            <Button variant="ghost" size="sm" title="Download PDF">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              title={t('detail_hub.invoices.download_pdf')}
+                              onClick={() => handleDownloadPDF(invoice)}
+                              disabled={isGeneratingPDF === invoice.id}
+                            >
                               <Download className="w-4 h-4" />
                             </Button>
-                            <Button variant="ghost" size="sm" title="Send invoice">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              title={t('detail_hub.invoices.email_pdf')}
+                              onClick={() => handleEmailInvoice(invoice)}
+                              disabled
+                            >
                               <Send className="w-4 h-4" />
                             </Button>
                             <Button

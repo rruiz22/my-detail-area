@@ -27,7 +27,8 @@ import {
   Coffee,
   RotateCcw,
   Shield,
-  Timer
+  Timer,
+  Loader2
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -35,7 +36,7 @@ import { format } from "date-fns";
 import { capturePhotoFromVideo, uploadPhotoToStorage } from "@/utils/photoFallback";
 
 // DetailHub hooks
-import { useClockIn, useClockOut } from "@/hooks/useDetailHubDatabase";
+import { useClockIn, useClockOut, useStartBreak, useEndBreak } from "@/hooks/useDetailHubDatabase";
 import { usePunchValidation, getEmployeeTodaySchedule } from "@/hooks/useDetailHubSchedules";
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
 import { useToast } from "@/hooks/use-toast";
@@ -51,6 +52,8 @@ const PunchClockKiosk = () => {
   const { selectedDealerId } = useDealerFilter();
   const { mutateAsync: clockIn } = useClockIn();
   const { mutateAsync: clockOut } = useClockOut();
+  const { mutateAsync: startBreak } = useStartBreak();
+  const { mutateAsync: endBreak } = useEndBreak();
 
   // State
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -63,6 +66,7 @@ const PunchClockKiosk = () => {
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
   const [photoUploadStatus, setPhotoUploadStatus] = useState("");
   const [captureAction, setCaptureAction] = useState<'clock_in' | 'clock_out' | 'break_start' | 'break_end'>('clock_in');
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -178,6 +182,7 @@ const PunchClockKiosk = () => {
       return;
     }
 
+    setIsProcessing(true);
     setPhotoUploadStatus("Uploading photo...");
 
     try {
@@ -227,11 +232,18 @@ const PunchClockKiosk = () => {
           break;
 
         case 'break_start':
+          await startBreak({
+            employeeId,
+            method: 'photo_fallback',
+            photoUrl: uploadResult.publicUrl
+          });
+          break;
+
         case 'break_end':
-          // TODO: Implement break start/end with photo
-          toast({
-            title: "Break Recorded",
-            description: `Break ${captureAction === 'break_start' ? 'started' : 'ended'} successfully`
+          await endBreak({
+            employeeId,
+            method: 'photo_fallback',
+            photoUrl: uploadResult.publicUrl
           });
           break;
       }
@@ -251,6 +263,8 @@ const PunchClockKiosk = () => {
         description: error instanceof Error ? error.message : 'Unknown error occurred',
         variant: "destructive"
       });
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -390,7 +404,7 @@ const PunchClockKiosk = () => {
                   disabled={!employeeId || !pinCode}
                 >
                   <Coffee className="w-6 h-6 mr-2" />
-                  Start Break
+                  {t('detail_hub.punch_clock.start_break')}
                 </Button>
 
                 <Button
@@ -401,7 +415,7 @@ const PunchClockKiosk = () => {
                   disabled={!employeeId || !pinCode}
                 >
                   <Coffee className="w-6 h-6 mr-2" />
-                  End Break
+                  {t('detail_hub.punch_clock.end_break')}
                 </Button>
               </div>
             </CardContent>
@@ -485,9 +499,19 @@ const PunchClockKiosk = () => {
                       size="lg"
                       className="flex-1 bg-emerald-600 hover:bg-emerald-700"
                       onClick={handleConfirmPunch}
+                      disabled={isProcessing}
                     >
-                      <CheckCircle className="w-5 h-5 mr-2" />
-                      Confirm
+                      {isProcessing ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle className="w-5 h-5 mr-2" />
+                          Confirm
+                        </>
+                      )}
                     </Button>
                   </>
                 )}

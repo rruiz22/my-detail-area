@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Clock,
   Coffee,
@@ -23,12 +24,18 @@ import { cn } from "@/lib/utils";
 import {
   useCurrentlyWorking,
   useLiveDashboardStats,
-  useElapsedTime
+  useElapsedTime,
+  CurrentlyWorkingEmployee
 } from "@/hooks/useCurrentlyWorking";
+
+// Employee Detail Modal
+import { EmployeeDetailModal } from "./EmployeeDetailModal";
 
 const LiveStatusDashboard = () => {
   const { t } = useTranslation();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [selectedEmployee, setSelectedEmployee] = useState<CurrentlyWorkingEmployee | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
 
   // Real-time data (updates every 30 seconds)
   const { data: employees = [], isLoading } = useCurrentlyWorking();
@@ -176,12 +183,46 @@ const LiveStatusDashboard = () => {
         )}>
           {employees.map((employee) => (
             viewMode === 'grid' ? (
-              <EmployeeCardGrid key={employee.employee_id} employee={employee} />
+              <EmployeeCardGrid
+                key={employee.employee_id}
+                employee={employee}
+                onView={() => {
+                  setSelectedEmployee(employee);
+                  setShowDetailModal(true);
+                }}
+                onEdit={() => {
+                  setSelectedEmployee(employee);
+                  setShowDetailModal(true);
+                }}
+              />
             ) : (
-              <EmployeeCardList key={employee.employee_id} employee={employee} />
+              <EmployeeCardList
+                key={employee.employee_id}
+                employee={employee}
+                onView={() => {
+                  setSelectedEmployee(employee);
+                  setShowDetailModal(true);
+                }}
+                onEdit={() => {
+                  setSelectedEmployee(employee);
+                  setShowDetailModal(true);
+                }}
+              />
             )
           ))}
         </div>
+      )}
+
+      {/* Employee Detail Modal */}
+      {selectedEmployee && (
+        <EmployeeDetailModal
+          employee={selectedEmployee}
+          open={showDetailModal}
+          onClose={() => {
+            setShowDetailModal(false);
+            setSelectedEmployee(null);
+          }}
+        />
       )}
     </div>
   );
@@ -193,9 +234,11 @@ const LiveStatusDashboard = () => {
 
 interface EmployeeCardProps {
   employee: any;
+  onView: () => void;
+  onEdit: () => void;
 }
 
-function EmployeeCardGrid({ employee }: EmployeeCardProps) {
+function EmployeeCardGrid({ employee, onView, onEdit }: EmployeeCardProps) {
   const { t } = useTranslation();
   const elapsedTime = useElapsedTime(employee.clock_in);
 
@@ -248,9 +291,32 @@ function EmployeeCardGrid({ employee }: EmployeeCardProps) {
             <span className="text-gray-500">
               {t('detail_hub.live_dashboard.clocked_in_at')}
             </span>
-            <span className="font-medium text-gray-700">
-              {format(new Date(employee.clock_in), 'HH:mm')}
-            </span>
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="font-medium text-gray-700 hover:text-emerald-600 hover:underline cursor-pointer transition-colors">
+                  {format(new Date(employee.clock_in), 'MMM d, HH:mm')}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80">
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-sm">Clock In Photo</h4>
+                  {employee.photo_in_url ? (
+                    <img
+                      src={employee.photo_in_url}
+                      alt="Clock in verification photo"
+                      className="w-full rounded-lg border-2 border-gray-200"
+                    />
+                  ) : (
+                    <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <p className="text-sm text-gray-500">No photo available</p>
+                    </div>
+                  )}
+                  <p className="text-xs text-gray-500">
+                    Captured at {format(new Date(employee.clock_in), 'MMM d, yyyy HH:mm:ss')}
+                  </p>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-500">
@@ -278,9 +344,17 @@ function EmployeeCardGrid({ employee }: EmployeeCardProps) {
             <Building2 className="w-3 h-3 mr-1" />
             {employee.department}
           </Badge>
-          {employee.kiosk_code && (
-            <Badge variant="outline" className="text-xs bg-gray-50">
-              {employee.kiosk_code}
+          {employee.kiosk_name ? (
+            <Badge variant="outline" className="text-xs bg-indigo-50 text-indigo-700 border-indigo-200">
+              📍 {employee.kiosk_name}
+            </Badge>
+          ) : employee.kiosk_code ? (
+            <Badge variant="outline" className="text-xs bg-indigo-50 text-indigo-700 border-indigo-200">
+              📍 {employee.kiosk_code}
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="text-xs bg-gray-100 text-gray-500">
+              📍 Kiosk
             </Badge>
           )}
         </div>
@@ -313,6 +387,7 @@ function EmployeeCardGrid({ employee }: EmployeeCardProps) {
             size="sm"
             variant="outline"
             className="flex-1 text-xs"
+            onClick={onView}
           >
             <Eye className="w-3 h-3 mr-1" />
             {t('detail_hub.live_dashboard.view_details')}
@@ -321,6 +396,7 @@ function EmployeeCardGrid({ employee }: EmployeeCardProps) {
             size="sm"
             variant="outline"
             className="flex-1 text-xs"
+            onClick={onEdit}
           >
             <Edit className="w-3 h-3 mr-1" />
             {t('detail_hub.live_dashboard.edit')}
@@ -335,7 +411,7 @@ function EmployeeCardGrid({ employee }: EmployeeCardProps) {
 // EMPLOYEE CARD - LIST VIEW
 // =====================================================
 
-function EmployeeCardList({ employee }: EmployeeCardProps) {
+function EmployeeCardList({ employee, onView, onEdit }: EmployeeCardProps) {
   const { t } = useTranslation();
   const elapsedTime = useElapsedTime(employee.clock_in);
 
@@ -359,10 +435,18 @@ function EmployeeCardList({ employee }: EmployeeCardProps) {
                 <Badge variant="outline" className="text-xs bg-gray-50">
                   {employee.department}
                 </Badge>
-                {employee.kiosk_code && (
-                  <span className="text-xs text-gray-500">
-                    @ {employee.kiosk_code}
-                  </span>
+                {employee.kiosk_name ? (
+                  <Badge variant="outline" className="text-xs bg-indigo-50 text-indigo-700 border-indigo-200">
+                    📍 {employee.kiosk_name}
+                  </Badge>
+                ) : employee.kiosk_code ? (
+                  <Badge variant="outline" className="text-xs bg-indigo-50 text-indigo-700 border-indigo-200">
+                    📍 {employee.kiosk_code}
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="text-xs bg-gray-100 text-gray-500">
+                    📍 Kiosk
+                  </Badge>
                 )}
               </div>
             </div>
@@ -375,7 +459,7 @@ function EmployeeCardList({ employee }: EmployeeCardProps) {
                 {t('detail_hub.live_dashboard.clock_in')}
               </p>
               <p className="font-medium text-sm text-gray-700">
-                {format(new Date(employee.clock_in), 'HH:mm')}
+                {format(new Date(employee.clock_in), 'MMM d, HH:mm')}
               </p>
             </div>
             <div className="text-center">
@@ -411,10 +495,10 @@ function EmployeeCardList({ employee }: EmployeeCardProps) {
 
           {/* Right: Actions */}
           <div className="flex gap-2">
-            <Button size="sm" variant="ghost">
+            <Button size="sm" variant="ghost" onClick={onView}>
               <Eye className="w-4 h-4" />
             </Button>
-            <Button size="sm" variant="ghost">
+            <Button size="sm" variant="ghost" onClick={onEdit}>
               <Edit className="w-4 h-4" />
             </Button>
           </div>

@@ -154,7 +154,7 @@ export async function uploadPhotoToStorage(
   metadata?: {
     employeeId?: string;
     dealershipId?: number;
-    action?: 'clock_in' | 'clock_out';
+    action?: 'clock_in' | 'clock_out' | 'break_start' | 'break_end';
   }
 ): Promise<PhotoCaptureResult> {
   // Validate photo

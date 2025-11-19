@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Clock, Users, DollarSign, Calendar, UserCheck, TrendingUp, AlertCircle, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 // REAL DATABASE INTEGRATION
-import { useDetailHubEmployees, useDetailHubTimeEntries, usePendingReviews } from "@/hooks/useDetailHubDatabase";
+import { useDetailHubEmployees, useDetailHubTimeEntries, usePendingReviews, useRecentActivity } from "@/hooks/useDetailHubDatabase";
 // SUB-COMPONENTS (for tabs)
 import EmployeePortal from "./EmployeePortal";
 import TimecardSystem from "./TimecardSystem";
@@ -17,7 +17,7 @@ import InvoiceCenter from "./InvoiceCenter";
 import KioskManager from "./KioskManager";
 import LiveStatusDashboard from "./LiveStatusDashboard";
 import ScheduleCalendar from "./ScheduleCalendar";
-import { TimeClockModal } from "./TimeClockModal";
+import { PunchClockKioskModal } from "./PunchClockKioskModal";
 
 const DetailHubDashboard = () => {
   const { t } = useTranslation();
@@ -28,6 +28,7 @@ const DetailHubDashboard = () => {
   const { data: employees = [], isLoading: loadingEmployees } = useDetailHubEmployees();
   const { data: timeEntries = [], isLoading: loadingEntries } = useDetailHubTimeEntries();
   const { data: pendingReviews = [] } = usePendingReviews();
+  const { data: recentActivityData = [] } = useRecentActivity(5);
 
   // Calculate real stats from database
   const activeEmployees = employees.filter(e => e.status === 'active').length;
@@ -38,15 +39,15 @@ const DetailHubDashboard = () => {
   const todayHours = todayEntries.reduce((sum, e) => sum + (e.total_hours || 0), 0);
 
   const stats = [
-    { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: "+2", color: "text-blue-600" },
-    { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: "+5%", color: "text-green-600" },
-    { title: t('detail_hub.dashboard.stats.pending_reviews'), value: pendingReviews.length.toString(), icon: AlertCircle, change: "", color: "text-orange-600" },
+    { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: "+2", color: "text-gray-600" },
+    { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: "+5%", color: "text-emerald-600" },
+    { title: t('detail_hub.dashboard.stats.pending_reviews'), value: pendingReviews.length.toString(), icon: AlertCircle, change: "", color: "text-amber-600" },
     { title: "Total Employees", value: employees.length.toString(), icon: UserCheck, change: "", color: "text-emerald-600" }
   ];
 
-  // Recent activity from time entries (last 5)
-  const recentActivity = timeEntries.slice(0, 5).map(entry => ({
-    employee: entry.employee_id, // TODO: Join with employees to get name
+  // Recent activity from time entries (last 5) - now includes employee names from hook
+  const recentActivity = recentActivityData.map(entry => ({
+    employee: entry.employee_name,
     action: entry.clock_out ? t('detail_hub.toasts.clocked_out') : t('detail_hub.toasts.clocked_in'),
     time: new Date(entry.clock_in).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),
     status: entry.status === 'complete' ? 'success' : 'warning'
@@ -68,8 +69,8 @@ const DetailHubDashboard = () => {
         </div>
       </div>
 
-      {/* Time Clock Modal */}
-      <TimeClockModal open={showTimeClock} onClose={() => setShowTimeClock(false)} />
+      {/* Time Clock Modal - Enterprise Kiosk */}
+      <PunchClockKioskModal open={showTimeClock} onClose={() => setShowTimeClock(false)} />
 
       {/* Tabs for all Detail Hub functionality */}
       <Tabs defaultValue="overview" className="space-y-6">

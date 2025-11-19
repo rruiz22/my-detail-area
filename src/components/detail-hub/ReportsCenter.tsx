@@ -6,61 +6,153 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { BarChart, LineChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-import { CalendarIcon, Download, TrendingUp, Clock, DollarSign, Users, Target, FileText } from "lucide-react";
-import { format } from "date-fns";
+import { CalendarIcon, Download, FileDown, Table as TableIcon, Clock, DollarSign, Users, Target, FileText } from "lucide-react";
+import { format, addDays } from "date-fns";
+import { toast } from "sonner";
+import { useDealerFilter } from "@/contexts/DealerFilterContext";
+import {
+  useHoursByEmployee,
+  useHoursByDepartment,
+  useAttendancePatterns,
+  useProductivityMetrics,
+  getDateRanges
+} from "@/hooks/useDetailHubAnalytics";
+import {
+  exportReportToPDF,
+  exportReportToExcel
+} from "@/utils/reportExporters";
+import {
+  createPayrollReport,
+  createAttendanceReport,
+  createDepartmentReport,
+  createProductivityReport
+} from "@/utils/reportTemplates";
 
 const ReportsCenter = () => {
   const { t } = useTranslation();
+  const { selectedDealerId, selectedDealer } = useDealerFilter();
+
+  // Date range state (default: last 30 days)
+  const [dateRange, setDateRange] = useState(() => getDateRanges.last30Days());
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
 
-  const hoursData = [
-    { name: 'Mon', hours: 185, overtime: 15 },
-    { name: 'Tue', hours: 190, overtime: 12 },
-    { name: 'Wed', hours: 180, overtime: 8 },
-    { name: 'Thu', hours: 195, overtime: 18 },
-    { name: 'Fri', hours: 200, overtime: 22 },
-    { name: 'Sat', hours: 120, overtime: 5 },
-    { name: 'Sun', hours: 80, overtime: 2 }
-  ];
+  // Fetch real analytics data
+  const { data: employeeHours = [], isLoading: isLoadingEmployees } = useHoursByEmployee(dateRange);
+  const { data: departmentHours = [], isLoading: isLoadingDepartments } = useHoursByDepartment(dateRange);
+  const { data: attendanceData = [], isLoading: isLoadingAttendance } = useAttendancePatterns(dateRange);
+  const { data: productivityMetrics, isLoading: isLoadingMetrics } = useProductivityMetrics(dateRange);
 
-  const revenueData = [
-    { name: 'Jan', revenue: 15600, expenses: 8200 },
-    { name: 'Feb', revenue: 18200, expenses: 9100 },
-    { name: 'Mar', revenue: 21400, expenses: 10500 },
-    { name: 'Apr', revenue: 19800, expenses: 9800 },
-    { name: 'May', revenue: 23100, expenses: 11200 },
-    { name: 'Jun', revenue: 25400, expenses: 12100 },
-    { name: 'Jul', revenue: 22900, expenses: 11800 },
-    { name: 'Aug', revenue: 24600, expenses: 12400 },
-    { name: 'Sep', revenue: 26100, expenses: 13200 },
-    { name: 'Oct', revenue: 28400, expenses: 14100 },
-    { name: 'Nov', revenue: 30200, expenses: 15000 },
-    { name: 'Dec', revenue: 32800, expenses: 16200 }
-  ];
+  const dealershipName = selectedDealer?.name || 'All Dealerships';
 
-  const serviceDistribution = [
-    { name: 'Detail Services', value: 45, color: '#3b82f6' },
-    { name: 'Car Wash', value: 30, color: '#10b981' },
-    { name: 'Recon Services', value: 20, color: '#f59e0b' },
-    { name: 'Other', value: 5, color: '#ef4444' }
-  ];
+  // =============================
+  // EXPORT HANDLERS
+  // =============================
 
-  const employeePerformance = [
-    { name: 'John Smith', hours: 172, revenue: 4300, efficiency: 95 },
-    { name: 'Maria Garcia', hours: 168, revenue: 3900, efficiency: 92 },
-    { name: 'Mike Johnson', hours: 165, revenue: 3200, efficiency: 88 },
-    { name: 'Sarah Wilson', hours: 160, revenue: 3600, efficiency: 90 },
-    { name: 'David Brown', hours: 155, revenue: 3100, efficiency: 85 }
-  ];
-
-  const monthlyStats = {
-    totalRevenue: 32800,
-    totalHours: 1280,
-    avgEfficiency: 90,
-    customerSatisfaction: 4.7,
-    totalEmployees: 24,
-    overtimeHours: 82
+  const handleExportPayrollPDF = () => {
+    try {
+      const reportData = createPayrollReport(employeeHours, dateRange, dealershipName);
+      exportReportToPDF(reportData);
+      toast.success(t('detail_hub.reports.export_pdf'), {
+        description: t('detail_hub.reports.pdf_exported')
+      });
+    } catch (error) {
+      console.error('Failed to export payroll PDF:', error);
+      toast.error(t('detail_hub.reports.export_failed'));
+    }
   };
+
+  const handleExportPayrollExcel = () => {
+    try {
+      const reportData = createPayrollReport(employeeHours, dateRange, dealershipName);
+      exportReportToExcel(reportData);
+      toast.success(t('detail_hub.reports.export_excel'), {
+        description: t('detail_hub.reports.excel_exported')
+      });
+    } catch (error) {
+      console.error('Failed to export payroll Excel:', error);
+      toast.error(t('detail_hub.reports.export_failed'));
+    }
+  };
+
+  const handleExportAttendancePDF = () => {
+    try {
+      const reportData = createAttendanceReport(attendanceData, dateRange, dealershipName);
+      exportReportToPDF(reportData);
+      toast.success(t('detail_hub.reports.export_pdf'));
+    } catch (error) {
+      console.error('Failed to export attendance PDF:', error);
+      toast.error(t('detail_hub.reports.export_failed'));
+    }
+  };
+
+  const handleExportAttendanceExcel = () => {
+    try {
+      const reportData = createAttendanceReport(attendanceData, dateRange, dealershipName);
+      exportReportToExcel(reportData);
+      toast.success(t('detail_hub.reports.export_excel'));
+    } catch (error) {
+      console.error('Failed to export attendance Excel:', error);
+      toast.error(t('detail_hub.reports.export_failed'));
+    }
+  };
+
+  const handleExportDepartmentPDF = () => {
+    try {
+      const reportData = createDepartmentReport(departmentHours, dateRange, dealershipName);
+      exportReportToPDF(reportData);
+      toast.success(t('detail_hub.reports.export_pdf'));
+    } catch (error) {
+      console.error('Failed to export department PDF:', error);
+      toast.error(t('detail_hub.reports.export_failed'));
+    }
+  };
+
+  const handleExportDepartmentExcel = () => {
+    try {
+      const reportData = createDepartmentReport(departmentHours, dateRange, dealershipName);
+      exportReportToExcel(reportData);
+      toast.success(t('detail_hub.reports.export_excel'));
+    } catch (error) {
+      console.error('Failed to export department Excel:', error);
+      toast.error(t('detail_hub.reports.export_failed'));
+    }
+  };
+
+  const handleExportProductivityPDF = () => {
+    if (!productivityMetrics) return;
+    try {
+      const reportData = createProductivityReport(productivityMetrics, dateRange, dealershipName);
+      exportReportToPDF(reportData);
+      toast.success(t('detail_hub.reports.export_pdf'));
+    } catch (error) {
+      console.error('Failed to export productivity PDF:', error);
+      toast.error(t('detail_hub.reports.export_failed'));
+    }
+  };
+
+  const handleExportProductivityExcel = () => {
+    if (!productivityMetrics) return;
+    try {
+      const reportData = createProductivityReport(productivityMetrics, dateRange, dealershipName);
+      exportReportToExcel(reportData);
+      toast.success(t('detail_hub.reports.export_excel'));
+    } catch (error) {
+      console.error('Failed to export productivity Excel:', error);
+      toast.error(t('detail_hub.reports.export_failed'));
+    }
+  };
+
+  // Calculate monthly stats from real data
+  const monthlyStats = {
+    totalHours: productivityMetrics?.total_hours || 0,
+    totalEmployees: productivityMetrics?.total_employees || 0,
+    activeEmployees: productivityMetrics?.active_employees || 0,
+    overtimeHours: productivityMetrics?.total_overtime_hours || 0,
+    avgEfficiency: 90, // TODO: Calculate from actual data when available
+    avgHoursPerEmployee: productivityMetrics?.avg_hours_per_employee || 0
+  };
+
+  const isLoading = isLoadingEmployees || isLoadingDepartments || isLoadingAttendance || isLoadingMetrics;
 
   return (
     <div className="space-y-6">
@@ -74,22 +166,38 @@ const ReportsCenter = () => {
             <PopoverTrigger asChild>
               <Button variant="outline">
                 <CalendarIcon className="w-4 h-4 mr-2" />
-                {selectedDate ? format(selectedDate, "PPP") : "Pick a date"}
+                {format(dateRange.from, "MMM dd")} - {format(dateRange.to, "MMM dd, yyyy")}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={setSelectedDate}
-                initialFocus
-              />
+              <div className="p-4 space-y-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => setDateRange(getDateRanges.last7Days())}
+                >
+                  {t('detail_hub.analytics.last_7_days')}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => setDateRange(getDateRanges.last30Days())}
+                >
+                  {t('detail_hub.analytics.last_30_days')}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => setDateRange(getDateRanges.currentMonth())}
+                >
+                  Current Month
+                </Button>
+              </div>
             </PopoverContent>
           </Popover>
-          <Button>
-            <Download className="w-4 h-4 mr-2" />
-            {t('detail_hub.common.export')}
-          </Button>
         </div>
       </div>
 
@@ -99,32 +207,10 @@ const ReportsCenter = () => {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Monthly Revenue</p>
-                <p className="text-2xl font-bold text-green-600">${monthlyStats.totalRevenue.toLocaleString()}</p>
-              </div>
-              <DollarSign className="w-8 h-8 text-green-600" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
                 <p className="text-sm font-medium text-muted-foreground">Total Hours</p>
-                <p className="text-2xl font-bold">{monthlyStats.totalHours.toLocaleString()}</p>
+                <p className="text-2xl font-bold">{monthlyStats.totalHours.toFixed(2)}</p>
               </div>
-              <Clock className="w-8 h-8 text-blue-600" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Avg Efficiency</p>
-                <p className="text-2xl font-bold">{monthlyStats.avgEfficiency}%</p>
-              </div>
-              <Target className="w-8 h-8 text-purple-600" />
+              <Clock className="w-8 h-8 text-gray-600" />
             </div>
           </CardContent>
         </Card>
@@ -133,175 +219,222 @@ const ReportsCenter = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">{t('detail_hub.dashboard.stats.active_employees')}</p>
-                <p className="text-2xl font-bold">{monthlyStats.totalEmployees}</p>
+                <p className="text-2xl font-bold">{monthlyStats.activeEmployees}</p>
               </div>
-              <Users className="w-8 h-8 text-orange-600" />
+              <Users className="w-8 h-8 text-emerald-600" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Avg Hours/Employee</p>
+                <p className="text-2xl font-bold">{monthlyStats.avgHoursPerEmployee.toFixed(1)}</p>
+              </div>
+              <Target className="w-8 h-8 text-indigo-600" />
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Overtime Hours</p>
+                <p className="text-2xl font-bold">{monthlyStats.overtimeHours.toFixed(2)}</p>
+              </div>
+              <Clock className="w-8 h-8 text-amber-600" />
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="financial">Financial</TabsTrigger>
-          <TabsTrigger value="employee">Employee Performance</TabsTrigger>
-          <TabsTrigger value="services">Service Analysis</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            {/* Hours Chart */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Weekly Hours Breakdown</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={hoursData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="hours" fill="#3b82f6" name="Regular Hours" />
-                    <Bar dataKey="overtime" fill="#f59e0b" name="Overtime Hours" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            {/* Service Distribution */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Service Distribution</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={serviceDistribution}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={80}
-                      dataKey="value"
-                      label={({ name, value }) => `${name}: ${value}%`}
-                    >
-                      {serviceDistribution.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="financial" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Revenue vs Expenses (Monthly)</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={revenueData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip formatter={(value) => [`$${value.toLocaleString()}`, ""]} />
-                  <Line 
-                    type="monotone" 
-                    dataKey="revenue" 
-                    stroke="#10b981" 
-                    strokeWidth={3}
-                    name="Revenue"
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="expenses" 
-                    stroke="#ef4444" 
-                    strokeWidth={3}
-                    name="Expenses"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-
-          <div className="grid gap-4 md:grid-cols-3">
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <p className="text-sm font-medium text-muted-foreground">Profit Margin</p>
-                  <p className="text-3xl font-bold text-green-600">51.6%</p>
-                  <p className="text-sm text-muted-foreground">+2.3% from last month</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <p className="text-sm font-medium text-muted-foreground">Revenue Growth</p>
-                  <p className="text-3xl font-bold text-blue-600">+8.6%</p>
-                  <p className="text-sm text-muted-foreground">Year over year</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <p className="text-sm font-medium text-muted-foreground">Cost per Hour</p>
-                  <p className="text-3xl font-bold text-orange-600">$12.66</p>
-                  <p className="text-sm text-muted-foreground">-1.2% from last month</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="employee" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Top Employee Performance</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {employeePerformance.map((employee, index) => (
-                  <div key={employee.name} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center space-x-4">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
-                        index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : index === 2 ? 'bg-orange-500' : 'bg-gray-300'
-                      }`}>
-                        {index + 1}
-                      </div>
-                      <div>
-                        <p className="font-medium">{employee.name}</p>
-                        <p className="text-sm text-muted-foreground">{employee.hours} hours this month</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium">${employee.revenue.toLocaleString()}</p>
-                      <p className="text-sm text-muted-foreground">{employee.efficiency}% efficiency</p>
-                    </div>
-                  </div>
-                ))}
+      {/* Report Cards with Export */}
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* Payroll Report */}
+        <Card className="card-enhanced">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle>{t('detail_hub.reports.payroll_report')}</CardTitle>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportPayrollPDF}
+                  disabled={isLoading || employeeHours.length === 0}
+                >
+                  <FileDown className="w-4 h-4 mr-2" />
+                  {t('detail_hub.reports.export_pdf')}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportPayrollExcel}
+                  disabled={isLoading || employeeHours.length === 0}
+                >
+                  <TableIcon className="w-4 h-4 mr-2" />
+                  {t('detail_hub.reports.export_excel')}
+                </Button>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="services" className="space-y-4">
-          <Card>
-            <CardContent className="pt-6">
-              <div className="text-center py-12">
-                <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Detailed service analysis coming soon</p>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-4">
+              Employee hours breakdown with regular and overtime calculations
+            </p>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Total Employees:</span>
+                <span className="font-medium">{employeeHours.length}</span>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+              <div className="flex justify-between text-sm">
+                <span>Total Hours:</span>
+                <span className="font-medium">
+                  {employeeHours.reduce((acc, e) => acc + e.total_hours, 0).toFixed(2)}
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Attendance Report */}
+        <Card className="card-enhanced">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle>{t('detail_hub.reports.attendance_report')}</CardTitle>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportAttendancePDF}
+                  disabled={isLoading || attendanceData.length === 0}
+                >
+                  <FileDown className="w-4 h-4 mr-2" />
+                  {t('detail_hub.reports.export_pdf')}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportAttendanceExcel}
+                  disabled={isLoading || attendanceData.length === 0}
+                >
+                  <TableIcon className="w-4 h-4 mr-2" />
+                  {t('detail_hub.reports.export_excel')}
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-4">
+              Daily attendance patterns and punch tracking
+            </p>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Total Days:</span>
+                <span className="font-medium">{attendanceData.length}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Total Punches:</span>
+                <span className="font-medium">
+                  {attendanceData.reduce((acc, d) => acc + d.total_entries, 0)}
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Department Report */}
+        <Card className="card-enhanced">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle>Department Hours Report</CardTitle>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportDepartmentPDF}
+                  disabled={isLoading || departmentHours.length === 0}
+                >
+                  <FileDown className="w-4 h-4 mr-2" />
+                  {t('detail_hub.reports.export_pdf')}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportDepartmentExcel}
+                  disabled={isLoading || departmentHours.length === 0}
+                >
+                  <TableIcon className="w-4 h-4 mr-2" />
+                  {t('detail_hub.reports.export_excel')}
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-4">
+              Hours breakdown by department with employee counts
+            </p>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Departments:</span>
+                <span className="font-medium">{departmentHours.length}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Total Hours:</span>
+                <span className="font-medium">
+                  {departmentHours.reduce((acc, d) => acc + d.total_hours, 0).toFixed(2)}
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Productivity Report */}
+        <Card className="card-enhanced">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle>{t('detail_hub.reports.productivity_report')}</CardTitle>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportProductivityPDF}
+                  disabled={isLoading || !productivityMetrics}
+                >
+                  <FileDown className="w-4 h-4 mr-2" />
+                  {t('detail_hub.reports.export_pdf')}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportProductivityExcel}
+                  disabled={isLoading || !productivityMetrics}
+                >
+                  <TableIcon className="w-4 h-4 mr-2" />
+                  {t('detail_hub.reports.export_excel')}
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-4">
+              Key performance indicators and productivity metrics
+            </p>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Active Employees:</span>
+                <span className="font-medium">{productivityMetrics?.active_employees || 0}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Overtime %:</span>
+                <span className="font-medium">
+                  {productivityMetrics?.overtime_percentage.toFixed(1) || 0}%
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
