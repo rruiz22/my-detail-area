@@ -1,8 +1,8 @@
 {
   "scannedFiles": 890,
-  "totalStrings": 10128,
+  "totalStrings": 10129,
   "hardcodedStrings": 2061,
-  "translatedStrings": 8067,
+  "translatedStrings": 8068,
   "issues": {
     "critical": [
       {
@@ -8357,58 +8357,58 @@
         "hardcodedStrings": [
           {
             "text": "Vehicle",
-            "line": 328,
-            "context": "327: <div className=\"p-2 rounded\">\n328: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n329: <div className=\"text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis\">"
+            "line": 330,
+            "context": "329: <div className=\"p-2 rounded\">\n330: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">Vehicle</label>\n331: <div className=\"text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis\">"
           },
           {
             "text": "Waiter",
-            "line": 417,
-            "context": "416: <Clock className=\"w-3.5 h-3.5 text-destructive animate-pulse\" />\n417: <span className=\"text-xs font-semibold text-destructive\">Waiter</span>\n418: </span>"
+            "line": 419,
+            "context": "418: <Clock className=\"w-3.5 h-3.5 text-destructive animate-pulse\" />\n419: <span className=\"text-xs font-semibold text-destructive\">Waiter</span>\n420: </span>"
           },
           {
             "text": "Previous",
-            "line": 479,
-            "context": "478: disabled={currentPage === 1}\n479: >\n480: Previous"
+            "line": 481,
+            "context": "480: disabled={currentPage === 1}\n481: >\n482: Previous"
           },
           {
             "text": "Next",
-            "line": 490,
-            "context": "489: disabled={currentPage >= totalPages}\n490: >\n491: Next"
+            "line": 492,
+            "context": "491: disabled={currentPage >= totalPages}\n492: >\n493: Next"
           },
           {
             "text": "Order ID",
-            "line": 511,
-            "context": "510: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n511: <TableHead className=\"w-[140px] font-medium text-foreground text-center\">Order ID</TableHead>\n512: <TableHead className=\"font-medium text-foreground text-center\">"
+            "line": 513,
+            "context": "512: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n513: <TableHead className=\"w-[140px] font-medium text-foreground text-center\">Order ID</TableHead>\n514: <TableHead className=\"font-medium text-foreground text-center\">"
           },
           {
             "text": "Vehicle",
-            "line": 515,
-            "context": "514: </TableHead>\n515: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">Vehicle</TableHead>\n516: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>"
+            "line": 517,
+            "context": "516: </TableHead>\n517: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">Vehicle</TableHead>\n518: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>"
           },
           {
             "text": "Status",
-            "line": 518,
-            "context": "517: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>\n518: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n519: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
+            "line": 520,
+            "context": "519: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>\n520: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n521: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>"
           },
           {
             "text": "Actions",
-            "line": 519,
-            "context": "518: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n519: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n520: </TableRow>"
+            "line": 521,
+            "context": "520: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>\n521: <TableHead className=\"font-medium text-foreground text-center\">Actions</TableHead>\n522: </TableRow>"
           },
           {
             "text": "Waiter",
-            "line": 692,
-            "context": "691: <Clock className=\"w-3.5 h-3.5 text-destructive animate-pulse\" />\n692: <span className=\"text-xs font-semibold text-destructive\">Waiter</span>\n693: </span>"
+            "line": 694,
+            "context": "693: <Clock className=\"w-3.5 h-3.5 text-destructive animate-pulse\" />\n694: <span className=\"text-xs font-semibold text-destructive\">Waiter</span>\n695: </span>"
           },
           {
             "text": "Previous",
-            "line": 839,
-            "context": "838: disabled={currentPage === 1}\n839: >\n840: Previous"
+            "line": 841,
+            "context": "840: disabled={currentPage === 1}\n841: >\n842: Previous"
           },
           {
             "text": "Next",
-            "line": 850,
-            "context": "849: disabled={currentPage >= totalPages}\n850: >\n851: Next"
+            "line": 852,
+            "context": "851: disabled={currentPage >= totalPages}\n852: >\n853: Next"
           }
         ],
         "translationCalls": [
@@ -8419,182 +8419,182 @@
           },
           {
             "key": "errors.status_update_failed",
-            "line": 166,
+            "line": 168,
             "exists": false
           },
           {
             "key": "common.vin_copied",
-            "line": 176,
+            "line": 178,
             "exists": false
           },
           {
             "key": "errors.copy_vin_failed",
-            "line": 182,
+            "line": 184,
             "exists": false
           },
           {
             "key": "data_table.days_overdue",
-            "line": 198,
-            "exists": false
-          },
-          {
-            "key": "data_table.due_today",
             "line": 200,
             "exists": false
           },
           {
-            "key": "data_table.due_tomorrow",
+            "key": "data_table.due_today",
             "line": 202,
             "exists": false
           },
           {
-            "key": "data_table.due_in_days",
+            "key": "data_table.due_tomorrow",
             "line": 204,
             "exists": false
           },
           {
+            "key": "data_table.due_in_days",
+            "line": 206,
+            "exists": false
+          },
+          {
             "key": "data_table.unknown_dealer",
-            "line": 300,
+            "line": 302,
             "exists": false
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 351,
+            "line": 353,
             "exists": false
           },
           {
             "key": "data_table.no_stock",
-            "line": 375,
+            "line": 377,
             "exists": false
           },
           {
             "key": "recon.completion_date",
-            "line": 390,
+            "line": 392,
             "exists": false
           },
           {
             "key": "data_table.no_date_set",
-            "line": 404,
+            "line": 406,
             "exists": false
           },
           {
             "key": "car_wash_orders.waiter_priority",
-            "line": 415,
+            "line": 417,
             "exists": false
           },
           {
             "key": "data_table.view",
-            "line": 432,
+            "line": 434,
             "exists": false
           },
           {
             "key": "data_table.edit",
-            "line": 444,
+            "line": 446,
             "exists": false
           },
           {
             "key": "data_table.delete",
-            "line": 457,
+            "line": 459,
             "exists": false
           },
           {
             "key": "data_table.showing_range",
-            "line": 471,
+            "line": 473,
             "exists": false
           },
           {
             "key": "data_table.page_of",
-            "line": 483,
+            "line": 485,
             "exists": false
           },
           {
             "key": "data_table.orders_count",
-            "line": 502,
+            "line": 504,
             "exists": false
           },
           {
             "key": "orders.services",
-            "line": 516,
+            "line": 518,
             "exists": false
           },
           {
             "key": "recon.completion_date",
-            "line": 517,
+            "line": 519,
             "exists": false
           },
           {
             "key": "data_table.unknown_dealer",
-            "line": 583,
+            "line": 585,
             "exists": false
           },
           {
             "key": "data_table.no_stock",
-            "line": 606,
+            "line": 608,
             "exists": false
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 644,
+            "line": 646,
             "exists": false
           },
           {
             "key": "data_table.no_date_set",
-            "line": 684,
+            "line": 686,
             "exists": false
           },
           {
             "key": "car_wash_orders.waiter_priority",
-            "line": 690,
+            "line": 692,
             "exists": false
           },
           {
             "key": "data_table.no_time_set",
-            "line": 712,
+            "line": 714,
             "exists": false
           },
           {
             "key": "data_table.view_details",
-            "line": 741,
+            "line": 743,
             "exists": false
           },
           {
             "key": "data_table.edit_order",
-            "line": 753,
+            "line": 755,
             "exists": false
           },
           {
             "key": "data_table.print_order",
-            "line": 764,
+            "line": 766,
             "exists": false
           },
           {
             "key": "data_table.delete_order",
-            "line": 776,
+            "line": 778,
             "exists": false
           },
           {
             "key": "data_table.no_orders_found",
-            "line": 792,
+            "line": 794,
             "exists": false
           },
           {
             "key": "data_table.adjust_filters_or_create",
-            "line": 793,
+            "line": 795,
             "exists": false
           },
           {
             "key": "data_table.showing_range",
-            "line": 808,
+            "line": 810,
             "exists": false
           },
           {
             "key": "data_table.items_per_page",
-            "line": 811,
+            "line": 813,
             "exists": false
           },
           {
             "key": "data_table.page_of",
-            "line": 843,
+            "line": 845,
             "exists": false
           }
         ],
@@ -8606,183 +8606,183 @@
           },
           {
             "key": "errors.status_update_failed",
-            "line": 166,
-            "context": "165: variant: 'destructive',\n166: description: t('errors.status_update_failed', 'Failed to update order status')\n167: });"
+            "line": 168,
+            "context": "167: variant: 'destructive',\n168: description: t('errors.status_update_failed', 'Failed to update order status')\n169: });"
           },
           {
             "key": "common.vin_copied",
-            "line": 176,
-            "context": "175: toast({\n176: description: t('common.vin_copied', 'VIN copied to clipboard')\n177: });"
+            "line": 178,
+            "context": "177: toast({\n178: description: t('common.vin_copied', 'VIN copied to clipboard')\n179: });"
           },
           {
             "key": "errors.copy_vin_failed",
-            "line": 182,
-            "context": "181: variant: 'destructive',\n182: description: t('errors.copy_vin_failed', 'Failed to copy VIN')\n183: });"
+            "line": 184,
+            "context": "183: variant: 'destructive',\n184: description: t('errors.copy_vin_failed', 'Failed to copy VIN')\n185: });"
           },
           {
             "key": "data_table.days_overdue",
-            "line": 198,
-            "context": "197: if (diffDays < 0) {\n198: return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground whitespace-nowrap' };\n199: } else if (diffDays === 0) {"
+            "line": 200,
+            "context": "199: if (diffDays < 0) {\n200: return { text: t('data_table.days_overdue', { days: Math.abs(diffDays) }), variant: 'destructive' as const, className: 'bg-destructive text-destructive-foreground whitespace-nowrap' };\n201: } else if (diffDays === 0) {"
           },
           {
             "key": "data_table.due_today",
-            "line": 200,
-            "context": "199: } else if (diffDays === 0) {\n200: return { text: t('data_table.due_today'), variant: 'secondary' as const, className: 'bg-orange-100 text-orange-800' };\n201: } else if (diffDays === 1) {"
+            "line": 202,
+            "context": "201: } else if (diffDays === 0) {\n202: return { text: t('data_table.due_today'), variant: 'secondary' as const, className: 'bg-orange-100 text-orange-800' };\n203: } else if (diffDays === 1) {"
           },
           {
             "key": "data_table.due_tomorrow",
-            "line": 202,
-            "context": "201: } else if (diffDays === 1) {\n202: return { text: t('data_table.due_tomorrow'), variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };\n203: } else {"
+            "line": 204,
+            "context": "203: } else if (diffDays === 1) {\n204: return { text: t('data_table.due_tomorrow'), variant: 'secondary' as const, className: 'bg-yellow-100 text-yellow-800' };\n205: } else {"
           },
           {
             "key": "data_table.due_in_days",
-            "line": 204,
-            "context": "203: } else {\n204: return { text: t('data_table.due_in_days', { days: diffDays }), variant: 'outline' as const, className: 'border-border text-foreground' };\n205: }"
+            "line": 206,
+            "context": "205: } else {\n206: return { text: t('data_table.due_in_days', { days: diffDays }), variant: 'outline' as const, className: 'border-border text-foreground' };\n207: }"
           },
           {
             "key": "data_table.unknown_dealer",
-            "line": 300,
-            "context": "299: <Building2 className=\"w-4 h-4 mr-2 text-gray-700 flex-shrink-0\" />\n300: <span className=\"whitespace-nowrap truncate\">{order.dealershipName || t('data_table.unknown_dealer')}</span>\n301: </div>"
+            "line": 302,
+            "context": "301: <Building2 className=\"w-4 h-4 mr-2 text-gray-700 flex-shrink-0\" />\n302: <span className=\"whitespace-nowrap truncate\">{order.dealershipName || t('data_table.unknown_dealer')}</span>\n303: </div>"
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 351,
-            "context": "350: ) : (\n351: <span className=\"text-sm text-muted-foreground\">{t('data_table.vin_not_provided')}</span>\n352: )}"
+            "line": 353,
+            "context": "352: ) : (\n353: <span className=\"text-sm text-muted-foreground\">{t('data_table.vin_not_provided')}</span>\n354: )}"
           },
           {
             "key": "data_table.no_stock",
-            "line": 375,
-            "context": "374: <span className=\"text-sm font-semibold text-muted-foreground\">\n375: {t('data_table.no_stock')}\n376: </span>"
+            "line": 377,
+            "context": "376: <span className=\"text-sm font-semibold text-muted-foreground\">\n377: {t('data_table.no_stock')}\n378: </span>"
           },
           {
             "key": "recon.completion_date",
-            "line": 390,
-            "context": "389: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">\n390: {(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}\n391: </label>"
+            "line": 392,
+            "context": "391: <label className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">\n392: {(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}\n393: </label>"
           },
           {
             "key": "data_table.no_date_set",
-            "line": 404,
-            "context": "403: ) : (\n404: t('data_table.no_date_set')\n405: )"
+            "line": 406,
+            "context": "405: ) : (\n406: t('data_table.no_date_set')\n407: )"
           },
           {
             "key": "car_wash_orders.waiter_priority",
-            "line": 415,
-            "context": "414: {tabType === 'carwash' && order.isWaiter && (\n415: <span className=\"inline-flex items-center gap-0.5 bg-destructive/10 px-1.5 py-0.5 rounded\" title={t('car_wash_orders.waiter_priority')}>\n416: <Clock className=\"w-3.5 h-3.5 text-destructive animate-pulse\" />"
+            "line": 417,
+            "context": "416: {tabType === 'carwash' && order.isWaiter && (\n417: <span className=\"inline-flex items-center gap-0.5 bg-destructive/10 px-1.5 py-0.5 rounded\" title={t('car_wash_orders.waiter_priority')}>\n418: <Clock className=\"w-3.5 h-3.5 text-destructive animate-pulse\" />"
           },
           {
             "key": "data_table.view",
-            "line": 432,
-            "context": "431: <Eye className=\"h-4 w-4\" />\n432: {t('data_table.view')}\n433: </Button>"
+            "line": 434,
+            "context": "433: <Eye className=\"h-4 w-4\" />\n434: {t('data_table.view')}\n435: </Button>"
           },
           {
             "key": "data_table.edit",
-            "line": 444,
-            "context": "443: <Edit className=\"h-4 w-4\" />\n444: {t('data_table.edit')}\n445: </Button>"
+            "line": 446,
+            "context": "445: <Edit className=\"h-4 w-4\" />\n446: {t('data_table.edit')}\n447: </Button>"
           },
           {
             "key": "data_table.delete",
-            "line": 457,
-            "context": "456: <Trash2 className=\"h-4 w-4\" />\n457: {t('data_table.delete')}\n458: </Button>"
+            "line": 459,
+            "context": "458: <Trash2 className=\"h-4 w-4\" />\n459: {t('data_table.delete')}\n460: </Button>"
           },
           {
             "key": "data_table.showing_range",
-            "line": 471,
-            "context": "470: <div className=\"text-sm text-muted-foreground font-medium\">\n471: {t('data_table.showing_range', { start: startRange, end: endRange, total: orders.length })}\n472: </div>"
+            "line": 473,
+            "context": "472: <div className=\"text-sm text-muted-foreground font-medium\">\n473: {t('data_table.showing_range', { start: startRange, end: endRange, total: orders.length })}\n474: </div>"
           },
           {
             "key": "data_table.page_of",
-            "line": 483,
-            "context": "482: <span className=\"flex items-center px-3 text-sm text-muted-foreground\">\n483: {t('data_table.page_of', { current: currentPage, total: totalPages })}\n484: </span>"
+            "line": 485,
+            "context": "484: <span className=\"flex items-center px-3 text-sm text-muted-foreground\">\n485: {t('data_table.page_of', { current: currentPage, total: totalPages })}\n486: </span>"
           },
           {
             "key": "data_table.orders_count",
-            "line": 502,
-            "context": "501: <CardTitle className=\"text-lg font-semibold\">\n502: {t('data_table.orders_count', { count: orders.length })}\n503: </CardTitle>"
+            "line": 504,
+            "context": "503: <CardTitle className=\"text-lg font-semibold\">\n504: {t('data_table.orders_count', { count: orders.length })}\n505: </CardTitle>"
           },
           {
             "key": "orders.services",
-            "line": 516,
-            "context": "515: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">Vehicle</TableHead>\n516: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>\n517: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>"
+            "line": 518,
+            "context": "517: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">Vehicle</TableHead>\n518: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>\n519: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>"
           },
           {
             "key": "recon.completion_date",
-            "line": 517,
-            "context": "516: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>\n517: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>\n518: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>"
+            "line": 519,
+            "context": "518: <TableHead className=\"font-medium text-foreground text-center\">{t('orders.services')}</TableHead>\n519: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>\n520: <TableHead className=\"font-medium text-foreground text-center\">Status</TableHead>"
           },
           {
             "key": "data_table.unknown_dealer",
-            "line": 583,
-            "context": "582: <Building2 className=\"w-3 h-3 mr-1 text-gray-700 flex-shrink-0\" />\n583: <span className=\"whitespace-nowrap truncate\">{order.dealershipName || t('data_table.unknown_dealer')}</span>\n584: </div>"
+            "line": 585,
+            "context": "584: <Building2 className=\"w-3 h-3 mr-1 text-gray-700 flex-shrink-0\" />\n585: <span className=\"whitespace-nowrap truncate\">{order.dealershipName || t('data_table.unknown_dealer')}</span>\n586: </div>"
           },
           {
             "key": "data_table.no_stock",
-            "line": 606,
-            "context": "605: <span className=\"text-base font-bold text-muted-foreground\">\n606: {t('data_table.no_stock')}\n607: </span>"
+            "line": 608,
+            "context": "607: <span className=\"text-base font-bold text-muted-foreground\">\n608: {t('data_table.no_stock')}\n609: </span>"
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 644,
-            "context": "643: ) : (\n644: <span className=\"text-sm\">{t('data_table.vin_not_provided')}</span>\n645: )}"
+            "line": 646,
+            "context": "645: ) : (\n646: <span className=\"text-sm\">{t('data_table.vin_not_provided')}</span>\n647: )}"
           },
           {
             "key": "data_table.no_date_set",
-            "line": 684,
-            "context": "683: <div className=\"text-sm text-muted-foreground\">\n684: {t('data_table.no_date_set')}\n685: </div>"
+            "line": 686,
+            "context": "685: <div className=\"text-sm text-muted-foreground\">\n686: {t('data_table.no_date_set')}\n687: </div>"
           },
           {
             "key": "car_wash_orders.waiter_priority",
-            "line": 690,
-            "context": "689: {tabType === 'carwash' && order.isWaiter && (\n690: <span className=\"inline-flex items-center gap-0.5 bg-destructive/10 px-1.5 py-0.5 rounded\" title={t('car_wash_orders.waiter_priority')}>\n691: <Clock className=\"w-3.5 h-3.5 text-destructive animate-pulse\" />"
+            "line": 692,
+            "context": "691: {tabType === 'carwash' && order.isWaiter && (\n692: <span className=\"inline-flex items-center gap-0.5 bg-destructive/10 px-1.5 py-0.5 rounded\" title={t('car_wash_orders.waiter_priority')}>\n693: <Clock className=\"w-3.5 h-3.5 text-destructive animate-pulse\" />"
           },
           {
             "key": "data_table.no_time_set",
-            "line": 712,
-            "context": "711: <Calendar className=\"w-4 h-4 mr-1 text-gray-700 inline\" />\n712: {order.dueTime || t('data_table.no_time_set')}\n713: </div>"
+            "line": 714,
+            "context": "713: <Calendar className=\"w-4 h-4 mr-1 text-gray-700 inline\" />\n714: {order.dueTime || t('data_table.no_time_set')}\n715: </div>"
           },
           {
             "key": "data_table.view_details",
-            "line": 741,
-            "context": "740: className=\"h-8 w-8 p-0 transition-all hover:scale-105\"\n741: title={t('data_table.view_details')}\n742: >"
+            "line": 743,
+            "context": "742: className=\"h-8 w-8 p-0 transition-all hover:scale-105\"\n743: title={t('data_table.view_details')}\n744: >"
           },
           {
             "key": "data_table.edit_order",
-            "line": 753,
-            "context": "752: className=\"h-8 w-8 p-0 transition-all hover:scale-105\"\n753: title={t('data_table.edit_order')}\n754: >"
+            "line": 755,
+            "context": "754: className=\"h-8 w-8 p-0 transition-all hover:scale-105\"\n755: title={t('data_table.edit_order')}\n756: >"
           },
           {
             "key": "data_table.print_order",
-            "line": 764,
-            "context": "763: className=\"h-8 w-8 p-0 transition-all hover:scale-105\"\n764: title={t('data_table.print_order')}\n765: >"
+            "line": 766,
+            "context": "765: className=\"h-8 w-8 p-0 transition-all hover:scale-105\"\n766: title={t('data_table.print_order')}\n767: >"
           },
           {
             "key": "data_table.delete_order",
-            "line": 776,
-            "context": "775: className=\"h-8 w-8 p-0 transition-all hover:scale-105\"\n776: title={t('data_table.delete_order')}\n777: >"
+            "line": 778,
+            "context": "777: className=\"h-8 w-8 p-0 transition-all hover:scale-105\"\n778: title={t('data_table.delete_order')}\n779: >"
           },
           {
             "key": "data_table.no_orders_found",
-            "line": 792,
-            "context": "791: <Car className=\"w-12 h-12 text-muted-foreground/50\" />\n792: <p className=\"text-lg font-medium\">{t('data_table.no_orders_found')}</p>\n793: <p className=\"text-sm\">{t('data_table.adjust_filters_or_create')}</p>"
+            "line": 794,
+            "context": "793: <Car className=\"w-12 h-12 text-muted-foreground/50\" />\n794: <p className=\"text-lg font-medium\">{t('data_table.no_orders_found')}</p>\n795: <p className=\"text-sm\">{t('data_table.adjust_filters_or_create')}</p>"
           },
           {
             "key": "data_table.adjust_filters_or_create",
-            "line": 793,
-            "context": "792: <p className=\"text-lg font-medium\">{t('data_table.no_orders_found')}</p>\n793: <p className=\"text-sm\">{t('data_table.adjust_filters_or_create')}</p>\n794: </div>"
+            "line": 795,
+            "context": "794: <p className=\"text-lg font-medium\">{t('data_table.no_orders_found')}</p>\n795: <p className=\"text-sm\">{t('data_table.adjust_filters_or_create')}</p>\n796: </div>"
           },
           {
             "key": "data_table.showing_range",
-            "line": 808,
-            "context": "807: <div className=\"text-sm text-muted-foreground font-medium\">\n808: {t('data_table.showing_range', { start: startRange, end: endRange, total: orders.length })}\n809: </div>"
+            "line": 810,
+            "context": "809: <div className=\"text-sm text-muted-foreground font-medium\">\n810: {t('data_table.showing_range', { start: startRange, end: endRange, total: orders.length })}\n811: </div>"
           },
           {
             "key": "data_table.items_per_page",
-            "line": 811,
-            "context": "810: <div className=\"flex items-center gap-2\">\n811: <span className=\"text-sm text-muted-foreground\">{t('data_table.items_per_page', 'Items per page:')}</span>\n812: <Select"
+            "line": 813,
+            "context": "812: <div className=\"flex items-center gap-2\">\n813: <span className=\"text-sm text-muted-foreground\">{t('data_table.items_per_page', 'Items per page:')}</span>\n814: <Select"
           },
           {
             "key": "data_table.page_of",
-            "line": 843,
-            "context": "842: <span className=\"flex items-center px-3 text-sm text-muted-foreground\">\n843: {t('data_table.page_of', { current: currentPage, total: totalPages })}\n844: </span>"
+            "line": 845,
+            "context": "844: <span className=\"flex items-center px-3 text-sm text-muted-foreground\">\n845: {t('data_table.page_of', { current: currentPage, total: totalPages })}\n846: </span>"
           }
         ],
         "coverage": 77,
@@ -53998,125 +53998,125 @@
         "translationCalls": [
           {
             "key": "followers.added_successfully",
-            "line": 47,
+            "line": 48,
             "exists": false
           },
           {
             "key": "followers.add_failed",
-            "line": 50,
+            "line": 51,
             "exists": false
           },
           {
             "key": "followers.removed_successfully",
-            "line": 58,
+            "line": 59,
             "exists": false
           },
           {
             "key": "followers.remove_failed",
-            "line": 60,
+            "line": 61,
             "exists": false
           },
           {
             "key": "followers.notification_updated",
-            "line": 68,
+            "line": 69,
             "exists": false
           },
           {
             "key": "followers.notification_update_failed",
-            "line": 70,
+            "line": 71,
             "exists": false
           },
           {
             "key": "order_detail.followers",
-            "line": 111,
+            "line": 112,
             "exists": false
           },
           {
             "key": "followers.loading",
-            "line": 132,
+            "line": 133,
             "exists": false
           },
           {
             "key": "followers.no_followers",
-            "line": 139,
+            "line": 140,
             "exists": false
           },
           {
             "key": "followers.add_team_member",
-            "line": 147,
+            "line": 148,
             "exists": false
           },
           {
             "key": "followers.add_follower",
-            "line": 243,
+            "line": 244,
             "exists": false
           },
           {
             "key": "followers.view_all",
-            "line": 252,
+            "line": 253,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "followers.added_successfully",
-            "line": 47,
-            "context": "46: await addFollower(userId, 'manual', notificationLevel);\n47: toast({ description: t('followers.added_successfully', 'Follower added successfully') });\n48: setShowAddModal(false);"
+            "line": 48,
+            "context": "47: await addFollower(userId, 'manual', notificationLevel);\n48: toast({ description: t('followers.added_successfully', 'Follower added successfully') });\n49: setShowAddModal(false);"
           },
           {
             "key": "followers.add_failed",
-            "line": 50,
-            "context": "49: } catch (error) {\n50: toast({ variant: 'destructive', description: t('followers.add_failed', 'Failed to add follower') });\n51: }"
+            "line": 51,
+            "context": "50: } catch (error) {\n51: toast({ variant: 'destructive', description: t('followers.add_failed', 'Failed to add follower') });\n52: }"
           },
           {
             "key": "followers.removed_successfully",
-            "line": 58,
-            "context": "57: await removeFollower(userId);\n58: toast({ description: t('followers.removed_successfully') });\n59: } catch (error) {"
+            "line": 59,
+            "context": "58: await removeFollower(userId);\n59: toast({ description: t('followers.removed_successfully') });\n60: } catch (error) {"
           },
           {
             "key": "followers.remove_failed",
-            "line": 60,
-            "context": "59: } catch (error) {\n60: toast({ variant: 'destructive', description: t('followers.remove_failed') });\n61: }"
+            "line": 61,
+            "context": "60: } catch (error) {\n61: toast({ variant: 'destructive', description: t('followers.remove_failed') });\n62: }"
           },
           {
             "key": "followers.notification_updated",
-            "line": 68,
-            "context": "67: await updateNotificationLevel(userId, level);\n68: toast({ description: t('followers.notification_updated') });\n69: } catch (error) {"
+            "line": 69,
+            "context": "68: await updateNotificationLevel(userId, level);\n69: toast({ description: t('followers.notification_updated') });\n70: } catch (error) {"
           },
           {
             "key": "followers.notification_update_failed",
-            "line": 70,
-            "context": "69: } catch (error) {\n70: toast({ variant: 'destructive', description: t('followers.notification_update_failed') });\n71: }"
+            "line": 71,
+            "context": "70: } catch (error) {\n71: toast({ variant: 'destructive', description: t('followers.notification_update_failed') });\n72: }"
           },
           {
             "key": "order_detail.followers",
-            "line": 111,
-            "context": "110: </div>\n111: <span className=\"font-bold\">{t('order_detail.followers', 'Followers')}</span>\n112: </div>"
+            "line": 112,
+            "context": "111: </div>\n112: <span className=\"font-bold\">{t('order_detail.followers', 'Followers')}</span>\n113: </div>"
           },
           {
             "key": "followers.loading",
-            "line": 132,
-            "context": "131: <div className=\"animate-spin w-8 h-8 border-3 border-primary border-t-transparent rounded-full mx-auto mb-3\"></div>\n132: <p className=\"text-sm font-medium text-foreground\">{t('followers.loading', 'Loading team...')}</p>\n133: </div>"
+            "line": 133,
+            "context": "132: <div className=\"animate-spin w-8 h-8 border-3 border-primary border-t-transparent rounded-full mx-auto mb-3\"></div>\n133: <p className=\"text-sm font-medium text-foreground\">{t('followers.loading', 'Loading team...')}</p>\n134: </div>"
           },
           {
             "key": "followers.no_followers",
-            "line": 139,
-            "context": "138: </div>\n139: <p className=\"text-sm font-bold text-foreground mb-3\">{t('followers.no_followers', 'No followers')}</p>\n140: <Button"
+            "line": 140,
+            "context": "139: </div>\n140: <p className=\"text-sm font-bold text-foreground mb-3\">{t('followers.no_followers', 'No followers')}</p>\n141: <Button"
           },
           {
             "key": "followers.add_team_member",
-            "line": 147,
-            "context": "146: <UserPlus className=\"h-4 w-4 mr-2\" />\n147: {t('followers.add_team_member', 'Add Team Member')}\n148: </Button>"
+            "line": 148,
+            "context": "147: <UserPlus className=\"h-4 w-4 mr-2\" />\n148: {t('followers.add_team_member', 'Add Team Member')}\n149: </Button>"
           },
           {
             "key": "followers.add_follower",
-            "line": 243,
-            "context": "242: <UserPlus className=\"h-4 w-4 mr-2\" />\n243: {t('followers.add_follower', 'Add Follower')}\n244: </Button>"
+            "line": 244,
+            "context": "243: <UserPlus className=\"h-4 w-4 mr-2\" />\n244: {t('followers.add_follower', 'Add Follower')}\n245: </Button>"
           },
           {
             "key": "followers.view_all",
-            "line": 252,
-            "context": "251: >\n252: {t('followers.view_all', 'View All')} ({followersCount})\n253: </Button>"
+            "line": 253,
+            "context": "252: >\n253: {t('followers.view_all', 'View All')} ({followersCount})\n254: </Button>"
           }
         ],
         "coverage": 100,
@@ -86838,9 +86838,21 @@
             "context": "11: canUpdateStatus: (dealerId: string, currentStatus: string, newStatus: string, orderType?: string) => Promise<boolean>;\n12: updateOrderStatus: (orderId: string, newStatus: string, dealerId: string) => Promise<boolean>;\n13: loading: boolean;"
           }
         ],
-        "translationCalls": [],
-        "missingKeys": [],
-        "coverage": 0,
+        "translationCalls": [
+          {
+            "key": "notifications.sms_sent_to_followers",
+            "line": 204,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "notifications.sms_sent_to_followers",
+            "line": 204,
+            "context": "203: toast({\n204: description: t('notifications.sms_sent_to_followers', {\n205: count: smsResult.sent,"
+          }
+        ],
+        "coverage": 33,
         "severity": "low"
       },
       {
@@ -93850,8 +93862,8 @@
         "hardcodedStrings": [
           {
             "text": ", error);\r\n      toast({\r\n        variant: ",
-            "line": 534,
-            "context": "533: } catch (error) {\n534: console.error('Print error:', error);\n535: toast({"
+            "line": 535,
+            "context": "534: } catch (error) {\n535: console.error('Print error:', error);\n536: toast({"
           }
         ],
         "translationCalls": [
@@ -94012,92 +94024,92 @@
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 515,
+            "line": 516,
             "exists": false
           },
           {
             "key": "common.action_buttons.print_success",
-            "line": 531,
+            "line": 532,
             "exists": false
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 537,
+            "line": 538,
             "exists": false
           },
           {
             "key": "pages.recon_orders",
-            "line": 557,
+            "line": 558,
             "exists": false
           },
           {
             "key": "accessibility.recon_orders.refresh_button",
-            "line": 568,
+            "line": 569,
             "exists": false
           },
           {
             "key": "common.refresh",
-            "line": 572,
+            "line": 573,
             "exists": false
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 578,
-            "exists": false
-          },
-          {
-            "key": "accessibility.recon_orders.create_button",
             "line": 579,
             "exists": false
           },
           {
+            "key": "accessibility.recon_orders.create_button",
+            "line": 580,
+            "exists": false
+          },
+          {
             "key": "recon.new_recon_order",
-            "line": 582,
+            "line": 583,
             "exists": false
           },
           {
             "key": "accessibility.recon_orders.main_content",
-            "line": 606,
+            "line": 607,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 611,
+            "line": 612,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 611,
+            "line": 612,
             "exists": false
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 611,
+            "line": 612,
             "exists": false
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 611,
+            "line": 612,
             "exists": false
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 700,
+            "line": 701,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 702,
+            "line": 703,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 706,
+            "line": 707,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 711,
+            "line": 712,
             "exists": false
           }
         ],
@@ -94250,102 +94262,102 @@
           {
             "key": "recon_defaults.default_advisor",
             "line": 490,
-            "context": "489: price: order.reconCost || 0,\n490: advisor: t('recon_defaults.default_advisor'),\n491: department: t('recon_defaults.default_department')"
+            "context": "489: price: order.reconCost || 0,\n490: advisor: t('recon_defaults.default_advisor'),\n491: department: t('recon_defaults.default_department'),"
           },
           {
             "key": "recon_defaults.default_department",
             "line": 491,
-            "context": "490: advisor: t('recon_defaults.default_advisor'),\n491: department: t('recon_defaults.default_department')\n492: };"
+            "context": "490: advisor: t('recon_defaults.default_advisor'),\n491: department: t('recon_defaults.default_department'),\n492: services: order.services || []"
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 515,
-            "context": "514: variant: 'destructive',\n515: description: t('common.action_buttons.print_failed') + ': No orders to print'\n516: });"
+            "line": 516,
+            "context": "515: variant: 'destructive',\n516: description: t('common.action_buttons.print_failed') + ': No orders to print'\n517: });"
           },
           {
             "key": "common.action_buttons.print_success",
-            "line": 531,
-            "context": "530: toast({\n531: description: t('common.action_buttons.print_success')\n532: });"
+            "line": 532,
+            "context": "531: toast({\n532: description: t('common.action_buttons.print_success')\n533: });"
           },
           {
             "key": "common.action_buttons.print_failed",
-            "line": 537,
-            "context": "536: variant: 'destructive',\n537: description: t('common.action_buttons.print_failed')\n538: });"
+            "line": 538,
+            "context": "537: variant: 'destructive',\n538: description: t('common.action_buttons.print_failed')\n539: });"
           },
           {
             "key": "pages.recon_orders",
-            "line": 557,
-            "context": "556: <div className=\"flex justify-between items-center\">\n557: <h1 className=\"text-2xl font-bold\">{t('pages.recon_orders')}</h1>\n558: <div className=\"flex items-center gap-2 sm:gap-3\">"
+            "line": 558,
+            "context": "557: <div className=\"flex justify-between items-center\">\n558: <h1 className=\"text-2xl font-bold\">{t('pages.recon_orders')}</h1>\n559: <div className=\"flex items-center gap-2 sm:gap-3\">"
           },
           {
             "key": "accessibility.recon_orders.refresh_button",
-            "line": 568,
-            "context": "567: disabled={isRefreshing}\n568: aria-label={t('accessibility.recon_orders.refresh_button')}\n569: aria-busy={isRefreshing}"
+            "line": 569,
+            "context": "568: disabled={isRefreshing}\n569: aria-label={t('accessibility.recon_orders.refresh_button')}\n570: aria-busy={isRefreshing}"
           },
           {
             "key": "common.refresh",
-            "line": 572,
-            "context": "571: <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''} sm:mr-2`} />\n572: <span className=\"hidden sm:inline\">{t('common.refresh')}</span>\n573: </Button>"
+            "line": 573,
+            "context": "572: <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''} sm:mr-2`} />\n573: <span className=\"hidden sm:inline\">{t('common.refresh')}</span>\n574: </Button>"
           },
           {
             "key": "errors.no_permission_create_order",
-            "line": 578,
-            "context": "577: disabled={!canCreate}\n578: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n579: aria-label={t('accessibility.recon_orders.create_button')}"
+            "line": 579,
+            "context": "578: disabled={!canCreate}\n579: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n580: aria-label={t('accessibility.recon_orders.create_button')}"
           },
           {
             "key": "accessibility.recon_orders.create_button",
-            "line": 579,
-            "context": "578: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n579: aria-label={t('accessibility.recon_orders.create_button')}\n580: >"
+            "line": 580,
+            "context": "579: title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}\n580: aria-label={t('accessibility.recon_orders.create_button')}\n581: >"
           },
           {
             "key": "recon.new_recon_order",
-            "line": 582,
-            "context": "581: <Plus className=\"h-4 w-4 sm:mr-2\" />\n582: <span className=\"hidden sm:inline\">{t('recon.new_recon_order')}</span>\n583: </Button>"
+            "line": 583,
+            "context": "582: <Plus className=\"h-4 w-4 sm:mr-2\" />\n583: <span className=\"hidden sm:inline\">{t('recon.new_recon_order')}</span>\n584: </Button>"
           },
           {
             "key": "accessibility.recon_orders.main_content",
-            "line": 606,
-            "context": "605: {/* Main Content - Direct rendering for maximum speed */}\n606: <main aria-label={t('accessibility.recon_orders.main_content')} className=\"space-y-6\">\n607: <div className=\"space-y-4\">"
+            "line": 607,
+            "context": "606: {/* Main Content - Direct rendering for maximum speed */}\n607: <main aria-label={t('accessibility.recon_orders.main_content')} className=\"space-y-6\">\n608: <div className=\"space-y-4\">"
           },
           {
             "key": "sales_orders.tabs.today",
-            "line": 611,
-            "context": "610: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n611: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n612: </h2>"
+            "line": 612,
+            "context": "611: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n612: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n613: </h2>"
           },
           {
             "key": "sales_orders.tabs.pending",
-            "line": 611,
-            "context": "610: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n611: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n612: </h2>"
+            "line": 612,
+            "context": "611: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n612: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n613: </h2>"
           },
           {
             "key": "sales_orders.in_process_orders",
-            "line": 611,
-            "context": "610: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n611: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n612: </h2>"
+            "line": 612,
+            "context": "611: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n612: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n613: </h2>"
           },
           {
             "key": "sales_orders.tabs.all",
-            "line": 611,
-            "context": "610: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n611: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n612: </h2>"
+            "line": 612,
+            "context": "611: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n612: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n613: </h2>"
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 700,
-            "context": "699: <AlertDialogHeader>\n700: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n701: <AlertDialogDescription>"
+            "line": 701,
+            "context": "700: <AlertDialogHeader>\n701: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n702: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 702,
-            "context": "701: <AlertDialogDescription>\n702: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n703: </AlertDialogDescription>"
+            "line": 703,
+            "context": "702: <AlertDialogDescription>\n703: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n704: </AlertDialogDescription>"
           },
           {
             "key": "common.cancel",
-            "line": 706,
-            "context": "705: <AlertDialogFooter>\n706: <AlertDialogCancel>{t('common.cancel', 'Cancel')}</AlertDialogCancel>\n707: <AlertDialogAction"
+            "line": 707,
+            "context": "706: <AlertDialogFooter>\n707: <AlertDialogCancel>{t('common.cancel', 'Cancel')}</AlertDialogCancel>\n708: <AlertDialogAction"
           },
           {
             "key": "common.delete",
-            "line": 711,
-            "context": "710: >\n711: {t('common.delete', 'Delete')}\n712: </AlertDialogAction>"
+            "line": 712,
+            "context": "711: >\n712: {t('common.delete', 'Delete')}\n713: </AlertDialogAction>"
           }
         ],
         "coverage": 98,
@@ -95373,22 +95385,22 @@
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 596,
+            "line": 597,
             "exists": false
           },
           {
             "key": "orders.confirm_delete",
-            "line": 598,
+            "line": 599,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 602,
+            "line": 603,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 607,
+            "line": 608,
             "exists": false
           }
         ],
@@ -95595,23 +95607,23 @@
           },
           {
             "key": "orders.confirm_delete_title",
-            "line": 596,
-            "context": "595: <AlertDialogHeader>\n596: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n597: <AlertDialogDescription>"
+            "line": 597,
+            "context": "596: <AlertDialogHeader>\n597: <AlertDialogTitle>{t('orders.confirm_delete_title', 'Delete Order?')}</AlertDialogTitle>\n598: <AlertDialogDescription>"
           },
           {
             "key": "orders.confirm_delete",
-            "line": 598,
-            "context": "597: <AlertDialogDescription>\n598: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n599: </AlertDialogDescription>"
+            "line": 599,
+            "context": "598: <AlertDialogDescription>\n599: {t('orders.confirm_delete', 'Are you sure you want to delete this order? This action cannot be undone.')}\n600: </AlertDialogDescription>"
           },
           {
             "key": "common.cancel",
-            "line": 602,
-            "context": "601: <AlertDialogFooter>\n602: <AlertDialogCancel>{t('common.cancel', 'Cancel')}</AlertDialogCancel>\n603: <AlertDialogAction"
+            "line": 603,
+            "context": "602: <AlertDialogFooter>\n603: <AlertDialogCancel>{t('common.cancel', 'Cancel')}</AlertDialogCancel>\n604: <AlertDialogAction"
           },
           {
             "key": "common.delete",
-            "line": 607,
-            "context": "606: >\n607: {t('common.delete', 'Delete')}\n608: </AlertDialogAction>"
+            "line": 608,
+            "context": "607: >\n608: {t('common.delete', 'Delete')}\n609: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -97309,7 +97321,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "8067 translation keys are referenced but missing",
+      "description": "8068 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "404 hours"
     }
