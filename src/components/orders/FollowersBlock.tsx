@@ -26,6 +26,7 @@ interface FollowersBlockProps {
 
 export function FollowersBlock({ orderId, dealerId }: FollowersBlockProps) {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const [showAddModal, setShowAddModal] = useState(false);
 
   // Use real followers hook instead of mock data
