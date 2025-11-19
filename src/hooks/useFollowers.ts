@@ -149,26 +149,59 @@ export const useFollowers = (entityType: string = 'order', entityId: string): Fo
     try {
       console.log(`➕ Adding follower ${userId} to ${entityType}:${entityId}`);
 
-      const { error: insertError } = await supabase
+      // Check if follower already exists
+      const { data: existing } = await supabase
         .from('entity_followers')
-        .insert({
-          entity_type: entityType,
-          entity_id: entityId,
-          user_id: userId,
-          dealer_id: user.dealershipId || 5, // Default dealer
-          follow_type: followType,
-          notification_level: notificationLevel,
-          followed_at: new Date().toISOString(),
-          followed_by: user.id,
-          is_active: true
-        });
+        .select('id, is_active')
+        .eq('entity_type', entityType)
+        .eq('entity_id', entityId)
+        .eq('user_id', userId)
+        .maybeSingle();
 
-      if (insertError) {
-        console.error('❌ Error adding follower:', insertError);
-        throw insertError;
+      if (existing) {
+        // If exists but inactive, reactivate
+        if (!existing.is_active) {
+          const { error: updateError } = await supabase
+            .from('entity_followers')
+            .update({
+              is_active: true,
+              notification_level: notificationLevel,
+              followed_at: new Date().toISOString(),
+              followed_by: user.id
+            })
+            .eq('id', existing.id);
+
+          if (updateError) throw updateError;
+          console.log('✅ Follower reactivated');
+        } else {
+          console.log('ℹ️ User is already following');
+          // Refresh list anyway to show current state
+          await fetchFollowers();
+          return; // Not an error, just already following
+        }
+      } else {
+        // Insert new follower
+        const { error: insertError } = await supabase
+          .from('entity_followers')
+          .insert({
+            entity_type: entityType,
+            entity_id: entityId,
+            user_id: userId,
+            dealer_id: user.dealershipId || 5,
+            follow_type: followType,
+            notification_level: notificationLevel,
+            followed_at: new Date().toISOString(),
+            followed_by: user.id,
+            is_active: true
+          });
+
+        if (insertError) {
+          console.error('❌ Error adding follower:', insertError);
+          throw insertError;
+        }
+
+        console.log('✅ Follower added successfully');
       }
-
-      console.log('✅ Follower added successfully');
 
       // Refresh followers list
       await fetchFollowers();
