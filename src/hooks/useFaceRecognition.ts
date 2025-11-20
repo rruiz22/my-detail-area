@@ -94,10 +94,23 @@ export function useFaceRecognition(options: UseFaceRecognitionOptions = {}) {
           console.log('[FaceAPI Hook] Face-api.js ready');
         }
       } catch (err) {
-        console.error('[FaceAPI Hook] Model loading error:', err);
-        if (mounted) {
-          setError(err instanceof Error ? err.message : 'Failed to load face recognition models');
-          setIsLoading(false);
+        const errorMessage = err instanceof Error ? err.message : String(err);
+
+        // Suppress TensorFlow tensor shape errors (model incompatibility)
+        if (errorMessage.includes('tensor should have') || errorMessage.includes('values but has')) {
+          console.warn('[FaceAPI Hook] ⚠️ Face recognition models incompatible - feature disabled');
+          // Don't set error - just disable the feature silently
+          if (mounted) {
+            setIsLoaded(false);
+            setIsLoading(false);
+            // Don't set error to avoid showing Alert
+          }
+        } else {
+          console.error('[FaceAPI Hook] Model loading error:', err);
+          if (mounted) {
+            setError(err instanceof Error ? err.message : 'Failed to load face recognition models');
+            setIsLoading(false);
+          }
         }
       }
     };

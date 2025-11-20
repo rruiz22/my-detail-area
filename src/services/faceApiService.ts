@@ -156,6 +156,18 @@ export async function initializeFaceApi(modelUrl: string = '/models'): Promise<v
       isInitializing = false;
       console.log('[FaceAPI Service] ✓ All models loaded successfully');
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+
+      // Gracefully handle TensorFlow tensor shape errors (model incompatibility)
+      if (errorMessage.includes('tensor should have') || errorMessage.includes('values but has')) {
+        console.warn('[FaceAPI Service] ⚠️ Face recognition models have incompatible format - feature will be disabled');
+        console.warn('[FaceAPI Service] This is not critical - users can still use PIN/Photo fallback');
+        isInitializing = false;
+        initializationError = new Error('Face recognition unavailable');
+        // Don't throw - allow app to continue without face recognition
+        return;
+      }
+
       isInitializing = false;
       initializationError = error instanceof Error ? error : new Error('Face API initialization failed');
       console.error('[FaceAPI Service] Initialization error:', error);

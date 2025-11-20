@@ -184,7 +184,8 @@
       "face_scan_cancelled": "Face Scan Cancelled",
       "no_match_found": "No matching employee found",
       "try_again_or_search": "Please try again or use manual search",
-      "face_scan_error": "Face scan error - please try again"
+      "face_scan_error": "Face scan error - please try again",
+      "face_recognition_unavailable": "Face recognition is temporarily unavailable. Please use manual search below."
     },
     "toggles": {
       "enable_real_face_detection": "Enable Real Face Detection",

@@ -257,12 +257,12 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     }
   }, [isLocked, lockTimer]);
 
-  // Auto-start face recognition when modal opens
+  // Auto-start face recognition when modal opens (only if loaded successfully)
   useEffect(() => {
-    if (open && faceApiLoaded && currentView === 'search') {
+    if (open && faceApiLoaded && !faceApiError && currentView === 'search') {
       setShowFaceScan(true);
     }
-  }, [open, faceApiLoaded, currentView]);
+  }, [open, faceApiLoaded, faceApiError, currentView]);
 
   // Handle face-matched employee selection
   useEffect(() => {
@@ -1047,8 +1047,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                       </Alert>
                     )}
 
-                    {/* Manual Face Scan Toggle (if stopped or errored) */}
-                    {!showFaceScan && faceApiLoaded && !faceApiError && (
+                    {/* Manual Face Scan Toggle (only if models loaded successfully) */}
+                    {!showFaceScan && faceApiLoaded && !faceApiLoading && !faceApiError && (
                       <Button
                         onClick={() => setShowFaceScan(true)}
                         className="w-full h-14 bg-indigo-500 hover:bg-indigo-600 text-white"
@@ -1057,6 +1057,15 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                         <Camera className="w-5 h-5 mr-2" />
                         {t('detail_hub.punch_clock.messages.use_face_recognition')}
                       </Button>
+                    )}
+
+                    {/* Face Recognition Unavailable Message */}
+                    {!faceApiLoading && faceApiError && (
+                      <Alert>
+                        <AlertDescription className="text-center text-sm text-gray-600">
+                          {t('detail_hub.punch_clock.messages.face_recognition_unavailable')}
+                        </AlertDescription>
+                      </Alert>
                     )}
                   </CardContent>
                 </Card>

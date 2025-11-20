@@ -170,7 +170,8 @@
       "face_scan_cancelled": "Escaneamento Facial Cancelado",
       "no_match_found": "Nenhuma correspondência encontrada",
       "try_again_or_search": "Tente novamente ou use busca manual",
-      "face_scan_error": "Erro no escaneamento facial - tente novamente"
+      "face_scan_error": "Erro no escaneamento facial - tente novamente",
+      "face_recognition_unavailable": "Reconhecimento facial temporariamente indisponível. Use busca manual abaixo."
     },
     "toggles": {
       "enable_real_face_detection": "Habilitar DetecÃ§Ã£o Facial Real",
