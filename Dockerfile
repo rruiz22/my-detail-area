@@ -24,13 +24,14 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Install serve globally
-RUN npm install -g serve@14.2.4
+# Install production dependencies (express, compression)
+COPY package*.json ./
+RUN npm ci --only=production && \
+    npm cache clean --force
 
 # Copy built files from builder
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/serve.json ./serve.json
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/server.cjs ./server.cjs
 
 # Expose port (Railway will inject $PORT)
 EXPOSE 8080
