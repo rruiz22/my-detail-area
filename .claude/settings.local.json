@@ -101,7 +101,14 @@
       "WebFetch(domain:webrtchacks.com)",
       "WebFetch(domain:docs.microsoft.com)",
       "Bash(powershell -ExecutionPolicy Bypass -File download-face-models.ps1)",
-      "Bash(./monitor-railway-deploy.sh:*)"
+      "Bash(./monitor-railway-deploy.sh:*)",
+      "Bash(docker build:*)",
+      "Bash(railway logs:*)",
+      "Bash(chmod:*)",
+      "Bash(./check-railway-status.sh:*)",
+      "Bash(for i in {1..20})",
+      "Bash(break)",
+      "Bash(git mv:*)"
     ],
     "deny": [],
     "ask": []
