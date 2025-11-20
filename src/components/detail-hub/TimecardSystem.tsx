@@ -1,4 +1,5 @@
 import { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CalendarIcon, Download, Filter, Clock, User, DollarSign, AlertTriangle, Camera, Image as ImageIcon, Plus, FileText, Edit2, Ban } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { CalendarIcon, Download, Filter, Clock, User, DollarSign, AlertTriangle, Camera, Image as ImageIcon, Plus, FileText, Edit2, Ban, X, Search } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 // Real database integration (NO MOCK DATA)
@@ -17,8 +20,9 @@ import { PhotoReviewCard } from "./PhotoReviewCard";
 import { ManualTimeEntryModal } from "./ManualTimeEntryModal";
 import { TimeEntryLogsModal } from "./TimeEntryLogsModal";
 import { EditTimeEntryModal } from "./EditTimeEntryModal";
-
-type DateFilter = 'today' | 'this_week' | 'last_week' | 'custom';
+import { EmployeeTimecardDetailModal } from "./EmployeeTimecardDetailModal";
+import { useTabPersistence } from "@/hooks/useTabPersistence";
+import { useTimecardPersistence, type DateFilter } from "@/hooks/useTimecardPersistence";
 
 /**
  * Timecard System - Real Database Integration
@@ -26,8 +30,28 @@ type DateFilter = 'today' | 'this_week' | 'last_week' | 'custom';
  */
 const TimecardSystem = () => {
   const { t } = useTranslation();
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  const [dateFilter, setDateFilter] = useState<DateFilter>('today');
+
+  // Persisted state with localStorage
+  const [activeTab, setActiveTab] = useTabPersistence('detail_hub_timecard', 'daily');
+  const {
+    filters,
+    setFilters,
+    clearAdvancedFilters,
+    getActiveFiltersCount: getActiveFiltersCountFromHook
+  } = useTimecardPersistence();
+
+  // Extract filters for easier access
+  const {
+    dateFilter,
+    customDateRange,
+    searchQuery,
+    selectedEmployeeId,
+    selectedStatus,
+    selectedMethod,
+    showAdvancedFilters
+  } = filters;
+
+  // Non-persisted local state
   const [selectedPhoto, setSelectedPhoto] = useState<{
     url: string;
     employeeName: string;
@@ -43,6 +67,13 @@ const TimecardSystem = () => {
   const [selectedTimeEntry, setSelectedTimeEntry] = useState<TimeEntryWithEmployee | null>(null);
   const [showDisableDialog, setShowDisableDialog] = useState(false);
   const [entryToDisable, setEntryToDisable] = useState<string | null>(null);
+  const [showEmployeeDetailModal, setShowEmployeeDetailModal] = useState(false);
+  const [selectedEmployeeForDetail, setSelectedEmployeeForDetail] = useState<{
+    id: string;
+    name: string;
+    number: string;
+    hourlyRate: number;
+  } | null>(null);
 
   // Real database hooks (NO MOCK DATA)
   const { data: pendingReviews = [], isLoading: loadingReviews } = usePendingReviews();
@@ -58,7 +89,7 @@ const TimecardSystem = () => {
     return map;
   }, {} as Record<string, number>);
 
-  // Get date range based on filter
+  // Get date range based on filter (UTC-aware to prevent timezone issues)
   const getDateRange = () => {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -69,25 +100,36 @@ const TimecardSystem = () => {
 
       case 'this_week': {
         const dayOfWeek = now.getDay(); // 0 = Sunday, 6 = Saturday
+        const daysFromMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Sunday = 6 days back, Monday = 0 days
+
         const monday = new Date(today);
-        monday.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+        monday.setDate(today.getDate() - daysFromMonday);
+
         const sunday = new Date(monday);
         sunday.setDate(monday.getDate() + 6);
+
         return { start: monday, end: sunday };
       }
 
       case 'last_week': {
         const dayOfWeek = now.getDay();
+        const daysFromMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+        // Go to last week's Monday (current Monday - 7 days)
         const lastMonday = new Date(today);
-        lastMonday.setDate(today.getDate() - (dayOfWeek === 0 ? 13 : dayOfWeek + 6));
+        lastMonday.setDate(today.getDate() - daysFromMonday - 7);
+
         const lastSunday = new Date(lastMonday);
         lastSunday.setDate(lastMonday.getDate() + 6);
+
         return { start: lastMonday, end: lastSunday };
       }
 
       case 'custom': {
-        const selected = selectedDate || today;
-        return { start: selected, end: selected };
+        // Use custom date range (from - to)
+        const startDate = customDateRange.from || today;
+        const endDate = customDateRange.to || customDateRange.from || today;
+        return { start: startDate, end: endDate };
       }
 
       default:
@@ -116,11 +158,15 @@ const TimecardSystem = () => {
     const overtimePay = (entry.overtime_hours || 0) * hourlyRate * 1.5; // OT = 1.5x rate
     const totalPay = regularPay + overtimePay;
 
+    // Format date in local timezone (not UTC) to prevent off-by-one day errors
+    const clockInDate = new Date(entry.clock_in);
+    const localDateString = `${clockInDate.getFullYear()}-${String(clockInDate.getMonth() + 1).padStart(2, '0')}-${String(clockInDate.getDate()).padStart(2, '0')}`;
+
     return {
       id: entry.id, // Use unique time entry ID as key
       employeeId: entry.employee_number || 'N/A',
       employeeName: entry.employee_name,
-      date: new Date(entry.clock_in).toISOString().split('T')[0],
+      date: localDateString,
       clockIn: formatTime(entry.clock_in),
       clockOut: formatTime(entry.clock_out),
       breakStart: formatTime(entry.break_start),
@@ -140,14 +186,52 @@ const TimecardSystem = () => {
     };
   };
 
-  // Filter and transform time entries based on selected date range
+  // Filter and transform time entries based on selected date range AND advanced filters
   const filteredTimeEntries = (() => {
-    const startString = dateRange.start.toISOString().split('T')[0];
-    const endString = dateRange.end.toISOString().split('T')[0];
+    // Create start of day (00:00:00) and end of day (23:59:59) timestamps
+    const startOfDay = new Date(dateRange.start);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(dateRange.end);
+    endOfDay.setHours(23, 59, 59, 999);
 
     return timeEntries.filter(entry => {
-      const entryDate = new Date(entry.clock_in).toISOString().split('T')[0];
-      return entryDate >= startString && entryDate <= endString;
+      // Date filter - compare actual timestamps instead of string comparison
+      const entryTimestamp = new Date(entry.clock_in);
+      if (entryTimestamp < startOfDay || entryTimestamp > endOfDay) {
+        return false;
+      }
+
+      // Search filter (name or employee number)
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesName = entry.employee_name?.toLowerCase().includes(query);
+        const matchesNumber = entry.employee_number?.toLowerCase().includes(query);
+        if (!matchesName && !matchesNumber) {
+          return false;
+        }
+      }
+
+      // Employee filter
+      if (selectedEmployeeId !== "all" && entry.employee_id !== selectedEmployeeId) {
+        return false;
+      }
+
+      // Status filter
+      if (selectedStatus !== "all" && entry.status !== selectedStatus) {
+        return false;
+      }
+
+      // Method filter (punch_in_method or punch_out_method)
+      if (selectedMethod !== "all") {
+        const matchesInMethod = entry.punch_in_method === selectedMethod;
+        const matchesOutMethod = entry.punch_out_method === selectedMethod;
+        if (!matchesInMethod && !matchesOutMethod) {
+          return false;
+        }
+      }
+
+      return true;
     });
   })();
 
@@ -165,6 +249,11 @@ const TimecardSystem = () => {
       return sum + (entry.overtime_hours || 0);
     }, 0);
 
+    // Count unique employees (all statuses)
+    const allEmployeeIds = new Set(
+      filteredTimeEntries.map(entry => entry.employee_id)
+    );
+
     // Count unique active employees (status = 'active')
     const activeEmployeeIds = new Set(
       filteredTimeEntries
@@ -181,7 +270,8 @@ const TimecardSystem = () => {
     }, 0);
 
     return {
-      totalEmployees: activeEmployeeIds.size,
+      totalEmployees: allEmployeeIds.size, // All unique employees
+      activeEmployees: activeEmployeeIds.size, // Only active employees
       totalHours: Math.round(totalHours * 100) / 100, // Round to 2 decimals
       overtimeHours: Math.round(overtimeHours * 100) / 100,
       totalPayroll: Math.round(totalPayroll * 100) / 100,
@@ -237,6 +327,45 @@ const TimecardSystem = () => {
     }
   };
 
+  // Helper: Count active filters (use hook method)
+  const getActiveFiltersCount = getActiveFiltersCountFromHook;
+
+  // Helper: Group timecards by date (for weekly views)
+  // Uses raw time entries instead of transformed timecards to avoid parsing formatted strings
+  const groupTimecardsByDate = () => {
+    const grouped = new Map<string, typeof timecards>();
+
+    filteredTimeEntries.forEach(entry => {
+      // Validate clock_in exists
+      if (!entry.clock_in) {
+        return; // Skip invalid entries
+      }
+
+      try {
+        const clockInDate = new Date(entry.clock_in);
+        // Check if date is valid
+        if (isNaN(clockInDate.getTime())) {
+          return;
+        }
+
+        // Use local timezone date formatting (same as transformTimeEntry)
+        const localDateString = `${clockInDate.getFullYear()}-${String(clockInDate.getMonth() + 1).padStart(2, '0')}-${String(clockInDate.getDate()).padStart(2, '0')}`;
+
+        if (!grouped.has(localDateString)) {
+          grouped.set(localDateString, []);
+        }
+        // Transform and add to group
+        grouped.get(localDateString)!.push(transformTimeEntry(entry));
+      } catch (error) {
+        console.error('Error grouping time entry:', entry.id, error);
+      }
+    });
+
+    // Sort by date descending (most recent first)
+    return Array.from(grouped.entries())
+      .sort(([dateA], [dateB]) => dateB.localeCompare(dateA));
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -250,47 +379,58 @@ const TimecardSystem = () => {
             <Button
               variant={dateFilter === 'today' ? 'default' : 'ghost'}
               size="sm"
-              onClick={() => setDateFilter('today')}
+              onClick={() => setFilters({ dateFilter: 'today' })}
             >
               {t('detail_hub.timecard.filters.today')}
             </Button>
             <Button
               variant={dateFilter === 'this_week' ? 'default' : 'ghost'}
               size="sm"
-              onClick={() => setDateFilter('this_week')}
+              onClick={() => setFilters({ dateFilter: 'this_week' })}
             >
               {t('detail_hub.timecard.filters.this_week')}
             </Button>
             <Button
               variant={dateFilter === 'last_week' ? 'default' : 'ghost'}
               size="sm"
-              onClick={() => setDateFilter('last_week')}
+              onClick={() => setFilters({ dateFilter: 'last_week' })}
             >
               {t('detail_hub.timecard.filters.last_week')}
             </Button>
           </div>
 
-          {/* Custom Date Picker */}
+          {/* Custom Date Range Picker */}
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant={dateFilter === 'custom' ? 'default' : 'outline'}
-                onClick={() => setDateFilter('custom')}
+                onClick={() => setFilters({ dateFilter: 'custom' })}
               >
                 <CalendarIcon className="w-4 h-4 mr-2" />
-                {dateFilter === 'custom' && selectedDate
-                  ? format(selectedDate, "PPP")
-                  : t('detail_hub.timecard.filters.custom_date')}
+                {dateFilter === 'custom' && customDateRange.from ? (
+                  customDateRange.to ? (
+                    `${format(customDateRange.from, "MMM d")} - ${format(customDateRange.to, "MMM d, yyyy")}`
+                  ) : (
+                    format(customDateRange.from, "MMM d, yyyy")
+                  )
+                ) : (
+                  t('detail_hub.timecard.filters.custom_date')
+                )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
+            <PopoverContent className="w-auto p-0" align="start">
               <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={(date) => {
-                  setSelectedDate(date);
-                  setDateFilter('custom');
+                mode="range"
+                selected={customDateRange}
+                onSelect={(range) => {
+                  if (range) {
+                    setFilters({
+                      customDateRange: range,
+                      dateFilter: 'custom'
+                    });
+                  }
                 }}
+                numberOfMonths={2}
                 initialFocus
               />
             </PopoverContent>
@@ -301,6 +441,16 @@ const TimecardSystem = () => {
             {t('detail_hub.timecard.manual_entry.add_button')}
           </Button>
 
+          <Button variant={showAdvancedFilters ? "default" : "outline"} onClick={() => setFilters({ showAdvancedFilters: !showAdvancedFilters })}>
+            <Filter className="w-4 h-4 mr-2" />
+            {t('detail_hub.timecard.filters.advanced_filters')}
+            {getActiveFiltersCount() > 0 && (
+              <Badge variant="secondary" className="ml-2 px-1.5 py-0.5 text-xs">
+                {getActiveFiltersCount()}
+              </Badge>
+            )}
+          </Button>
+
           <Button>
             <Download className="w-4 h-4 mr-2" />
             {t('detail_hub.timecard.export')}
@@ -308,52 +458,120 @@ const TimecardSystem = () => {
         </div>
       </div>
 
+      {/* Advanced Filters Panel */}
+      {showAdvancedFilters && (
+        <Card className="border-indigo-200 bg-indigo-50/30">
+          <CardContent className="pt-4">
+            <div className="grid gap-4 md:grid-cols-4">
+              {/* Search Input */}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder={t('detail_hub.timecard.filters.search_placeholder')}
+                  value={searchQuery}
+                  onChange={(e) => setFilters({ searchQuery: e.target.value })}
+                  className="pl-10"
+                />
+              </div>
+
+              {/* Employee Filter */}
+              <Select value={selectedEmployeeId} onValueChange={(val) => setFilters({ selectedEmployeeId: val })}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('detail_hub.timecard.filters.all_employees')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('detail_hub.timecard.filters.all_employees')}</SelectItem>
+                  {employees.map((emp) => (
+                    <SelectItem key={emp.id} value={emp.id}>
+                      {emp.first_name} {emp.last_name} ({emp.employee_number})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Status Filter */}
+              <Select value={selectedStatus} onValueChange={(val) => setFilters({ selectedStatus: val })}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('detail_hub.timecard.filters.all_statuses')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('detail_hub.timecard.filters.all_statuses')}</SelectItem>
+                  <SelectItem value="active">{t('detail_hub.timecard.filters.status.active')}</SelectItem>
+                  <SelectItem value="complete">{t('detail_hub.timecard.filters.status.complete')}</SelectItem>
+                  <SelectItem value="disputed">{t('detail_hub.timecard.filters.status.disputed')}</SelectItem>
+                  <SelectItem value="approved">{t('detail_hub.timecard.filters.status.approved')}</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Method Filter */}
+              <Select value={selectedMethod} onValueChange={(val) => setFilters({ selectedMethod: val })}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('detail_hub.timecard.filters.all_methods')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('detail_hub.timecard.filters.all_methods')}</SelectItem>
+                  <SelectItem value="face">{t('detail_hub.timecard.filters.methods.face')}</SelectItem>
+                  <SelectItem value="pin">{t('detail_hub.timecard.filters.methods.pin')}</SelectItem>
+                  <SelectItem value="manual">{t('detail_hub.timecard.filters.methods.manual')}</SelectItem>
+                  <SelectItem value="photo_fallback">{t('detail_hub.timecard.filters.methods.photo_fallback')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Clear Filters Button */}
+            {getActiveFiltersCount() > 0 && (
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-indigo-200">
+                <p className="text-sm text-muted-foreground">
+                  {t('detail_hub.timecard.filters.filters_active', { count: getActiveFiltersCount() })}
+                </p>
+                <Button variant="ghost" size="sm" onClick={clearAdvancedFilters}>
+                  <X className="w-4 h-4 mr-2" />
+                  {t('detail_hub.timecard.filters.clear_all')}
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       {/* Real-time Stats from Database */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">{t('detail_hub.timecard.stats.total_hours')}</p>
-                <p className="text-2xl font-bold">{stats.totalHours.toFixed(2)}h</p>
-              </div>
-              <Clock className="w-8 h-8 text-blue-600" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">{t('detail_hub.timecard.stats.overtime_hours')}</p>
-                <p className="text-2xl font-bold">{stats.overtimeHours.toFixed(2)}h</p>
-              </div>
-              <AlertTriangle className="w-8 h-8 text-orange-600" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">{t('detail_hub.timecard.stats.active_employees')}</p>
-                <p className="text-2xl font-bold">{stats.totalEmployees}</p>
-              </div>
-              <User className="w-8 h-8 text-green-600" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">{t('detail_hub.timecard.stats.total_payroll')}</p>
-                <p className="text-2xl font-bold">${stats.totalPayroll.toFixed(2)}</p>
-              </div>
-              <DollarSign className="w-8 h-8 text-purple-600" />
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-5">
+        <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-lg">
+          <div className="flex items-center gap-2 mb-1">
+            <Clock className="w-4 h-4 text-indigo-600" />
+            <p className="text-sm font-medium text-indigo-900">{t('detail_hub.timecard.stats.total_hours')}</p>
+          </div>
+          <p className="text-2xl font-bold text-indigo-600">{stats.totalHours.toFixed(2)}h</p>
+        </div>
+        <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+          <div className="flex items-center gap-2 mb-1">
+            <AlertTriangle className="w-4 h-4 text-orange-600" />
+            <p className="text-sm font-medium text-orange-900">{t('detail_hub.timecard.stats.overtime_hours')}</p>
+          </div>
+          <p className="text-2xl font-bold text-orange-600">{stats.overtimeHours.toFixed(2)}h</p>
+        </div>
+        <div className="p-4 bg-violet-50 border border-violet-200 rounded-lg">
+          <div className="flex items-center gap-2 mb-1">
+            <User className="w-4 h-4 text-violet-600" />
+            <p className="text-sm font-medium text-violet-900">{t('detail_hub.timecard.stats.employees')}</p>
+          </div>
+          <p className="text-2xl font-bold text-violet-600">{stats.totalEmployees}</p>
+        </div>
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center gap-2 mb-1">
+            <User className="w-4 h-4 text-blue-600" />
+            <p className="text-sm font-medium text-blue-900">{t('detail_hub.timecard.stats.active_employees')}</p>
+          </div>
+          <p className="text-2xl font-bold text-blue-600">{stats.activeEmployees}</p>
+        </div>
+        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="flex items-center gap-2 mb-1">
+            <DollarSign className="w-4 h-4 text-green-600" />
+            <p className="text-sm font-medium text-green-900">{t('detail_hub.timecard.stats.total_payroll')}</p>
+          </div>
+          <p className="text-2xl font-bold text-green-600">${stats.totalPayroll.toFixed(2)}</p>
+        </div>
       </div>
 
       {/* PHASE 5: Pending Photo Reviews (NEW - only visible if there are pending reviews) */}
@@ -393,7 +611,7 @@ const TimecardSystem = () => {
         </Card>
       )}
 
-      <Tabs defaultValue="daily" className="space-y-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList>
           <TabsTrigger value="daily">{t('detail_hub.timecard.daily_view')}</TabsTrigger>
           <TabsTrigger value="weekly">{t('detail_hub.timecard.weekly_summary')}</TabsTrigger>
@@ -407,7 +625,11 @@ const TimecardSystem = () => {
                 {dateFilter === 'today' && t('detail_hub.timecard.filters.todays_timecards')}
                 {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}
                 {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}
-                {dateFilter === 'custom' && selectedDate && `${t('detail_hub.timecard.daily_timecards')} - ${format(selectedDate, "MMMM d, yyyy")}`}
+                {dateFilter === 'custom' && customDateRange.from && (
+                  customDateRange.to
+                    ? `${t('detail_hub.timecard.daily_timecards')} (${format(customDateRange.from, 'MMM d')} - ${format(customDateRange.to, 'MMM d, yyyy')})`
+                    : `${t('detail_hub.timecard.daily_timecards')} - ${format(customDateRange.from, "MMMM d, yyyy")}`
+                )}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -443,9 +665,65 @@ const TimecardSystem = () => {
                         <p className="text-muted-foreground">{t('detail_hub.timecard.no_entries')}</p>
                       </TableCell>
                     </TableRow>
-                  ) : (
-                    timecards.map((timecard) => (
-                      <TableRow key={timecard.id}>
+                  ) : (dateFilter === 'this_week' || dateFilter === 'last_week' || dateFilter === 'custom') ? (
+                    // Grouped by date for weekly views and custom ranges
+                    groupTimecardsByDate().map(([date, dateTimecards]) => {
+                      // Parse date parts to avoid timezone issues
+                      const [year, month, day] = date.split('-').map(Number);
+                      const localDate = new Date(year, month - 1, day); // Create local date
+
+                      // Calculate daily totals
+                      const dailyTotalHours = dateTimecards.reduce((sum, tc) => sum + tc.totalHours, 0);
+                      const dailyOvertimeHours = dateTimecards.reduce((sum, tc) => sum + tc.overtimeHours, 0);
+                      const dailyTotalPay = dateTimecards.reduce((sum, tc) => sum + tc.totalPay, 0);
+
+                      return (
+                      <React.Fragment key={`group-${date}`}>
+                        {/* Date Header Row with Daily Totals */}
+                        <TableRow key={`header-${date}`} className="bg-gray-200 hover:bg-gray-200 border-y border-gray-300">
+                          <TableCell colSpan={10} className="font-semibold text-gray-800 py-3">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                📅 {format(localDate, 'EEEE, MMMM d, yyyy')}
+                                <span className="ml-2 text-sm font-normal text-muted-foreground">
+                                  ({dateTimecards.length} {dateTimecards.length === 1 ? 'entry' : 'entries'})
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-6 text-sm font-normal">
+                                <div className="flex items-center gap-2">
+                                  <Clock className="w-4 h-4 text-blue-600" />
+                                  <span className="text-muted-foreground">Total:</span>
+                                  <span className="font-semibold text-blue-600">{dailyTotalHours.toFixed(2)}h</span>
+                                </div>
+                                {dailyOvertimeHours > 0 && (
+                                  <div className="flex items-center gap-2">
+                                    <AlertTriangle className="w-4 h-4 text-orange-600" />
+                                    <span className="text-muted-foreground">OT:</span>
+                                    <span className="font-semibold text-orange-600">{dailyOvertimeHours.toFixed(2)}h</span>
+                                  </div>
+                                )}
+                                <div className="flex items-center gap-2">
+                                  <DollarSign className="w-4 h-4 text-green-600" />
+                                  <span className="text-muted-foreground">Pay:</span>
+                                  <span className="font-semibold text-green-600">${dailyTotalPay.toFixed(2)}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                        {/* Entries for this date */}
+                        {dateTimecards.map((timecard) => (
+                      <TableRow
+                        key={timecard.id}
+                        onDoubleClick={() => {
+                          const fullEntry = filteredTimeEntries.find(e => e.id === timecard.id);
+                          if (fullEntry) {
+                            setSelectedTimeEntry(fullEntry);
+                            setShowEditModal(true);
+                          }
+                        }}
+                        className="cursor-pointer hover:bg-gray-50/80 transition-colors"
+                      >
                       <TableCell>
                         <div>
                           <p className="font-medium">{timecard.employeeName}</p>
@@ -538,10 +816,9 @@ const TimecardSystem = () => {
                       <TableCell>{getStatusBadge(timecard.status)}</TableCell>
                       <TableCell>
                         <div className="flex gap-1">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
                               const fullEntry = filteredTimeEntries.find(e => e.id === timecard.id);
                               if (fullEntry) {
                                 setSelectedTimeEntry(fullEntry);
@@ -549,13 +826,13 @@ const TimecardSystem = () => {
                               }
                             }}
                             title={t('detail_hub.timecard.actions.view_logs')}
+                            className="p-1 hover:bg-gray-100 rounded transition-colors"
                           >
-                            <FileText className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
+                            <FileText className="w-3.5 h-3.5 text-gray-600" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
                               const fullEntry = filteredTimeEntries.find(e => e.id === timecard.id);
                               if (fullEntry) {
                                 setSelectedTimeEntry(fullEntry);
@@ -563,25 +840,177 @@ const TimecardSystem = () => {
                               }
                             }}
                             title={t('detail_hub.timecard.actions.edit')}
+                            className="p-1 hover:bg-blue-50 rounded transition-colors"
                           >
-                            <Edit2 className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
+                            <Edit2 className="w-3.5 h-3.5 text-blue-600" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
                               setEntryToDisable(timecard.id);
                               setShowDisableDialog(true);
                             }}
                             title={t('detail_hub.timecard.actions.disable')}
-                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            className="p-1 hover:bg-red-50 rounded transition-colors"
                           >
-                            <Ban className="w-4 h-4" />
-                          </Button>
+                            <Ban className="w-3.5 h-3.5 text-red-600" />
+                          </button>
                         </div>
                       </TableCell>
                     </TableRow>
-                  ))
+                        ))}
+                      </React.Fragment>
+                      );
+                    })
+                  ) : (
+                    // Normal view for today/custom date (no grouping)
+                    timecards.map((timecard) => (
+                      <TableRow
+                        key={timecard.id}
+                        onDoubleClick={() => {
+                          const fullEntry = filteredTimeEntries.find(e => e.id === timecard.id);
+                          if (fullEntry) {
+                            setSelectedTimeEntry(fullEntry);
+                            setShowEditModal(true);
+                          }
+                        }}
+                        className="cursor-pointer hover:bg-gray-50/80 transition-colors"
+                      >
+                      <TableCell>
+                        <div>
+                          <p className="font-medium">{timecard.employeeName}</p>
+                          <p className="text-sm text-muted-foreground">{timecard.employeeId}</p>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-1">
+                          {timecard.photoInUrl ? (
+                            <button
+                              onClick={() => setSelectedPhoto({
+                                url: timecard.photoInUrl!,
+                                employeeName: timecard.employeeName,
+                                employeeNumber: timecard.employeeId,
+                                timestamp: timecard.clockIn,
+                                type: 'clock_in',
+                                method: timecard.punchInMethod || 'photo_fallback',
+                                timeEntryId: timecard.id
+                              })}
+                              className="relative group"
+                              title="View clock-in photo"
+                            >
+                              <img
+                                src={timecard.photoInUrl}
+                                alt="Clock In"
+                                className="w-10 h-10 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer"
+                                onError={(e) => {
+                                  e.currentTarget.src = '/placeholder-employee.png';
+                                }}
+                              />
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center">
+                                <ImageIcon className="w-4 h-4 text-white" />
+                              </div>
+                            </button>
+                          ) : timecard.punchInMethod === 'photo_fallback' ? (
+                            <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center border-2 border-gray-300">
+                              <Camera className="w-4 h-4 text-gray-400" />
+                            </div>
+                          ) : null}
+
+                          {timecard.photoOutUrl ? (
+                            <button
+                              onClick={() => setSelectedPhoto({
+                                url: timecard.photoOutUrl!,
+                                employeeName: timecard.employeeName,
+                                employeeNumber: timecard.employeeId,
+                                timestamp: timecard.clockOut,
+                                type: 'clock_out',
+                                method: timecard.punchOutMethod || 'photo_fallback',
+                                timeEntryId: timecard.id
+                              })}
+                              className="relative group"
+                              title="View clock-out photo"
+                            >
+                              <img
+                                src={timecard.photoOutUrl}
+                                alt="Clock Out"
+                                className="w-10 h-10 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer"
+                                onError={(e) => {
+                                  e.currentTarget.src = '/placeholder-employee.png';
+                                }}
+                              />
+                              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center">
+                                <ImageIcon className="w-4 h-4 text-white" />
+                              </div>
+                            </button>
+                          ) : timecard.punchOutMethod === 'photo_fallback' && timecard.clockOut !== '--' ? (
+                            <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center border-2 border-gray-300">
+                              <Camera className="w-4 h-4 text-gray-400" />
+                            </div>
+                          ) : null}
+                        </div>
+                      </TableCell>
+                      <TableCell>{timecard.clockIn}</TableCell>
+                      <TableCell>{timecard.clockOut}</TableCell>
+                      <TableCell>
+                        {timecard.breakStart} - {timecard.breakEnd}
+                      </TableCell>
+                      <TableCell>{timecard.totalHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}</TableCell>
+                      <TableCell>
+                        {timecard.overtimeHours > 0 ? (
+                          <span className="text-orange-600 font-medium">
+                            {timecard.overtimeHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}
+                          </span>
+                        ) : (
+                          "--"
+                        )}
+                      </TableCell>
+                      <TableCell>${timecard.totalPay.toFixed(2)}</TableCell>
+                      <TableCell>{getStatusBadge(timecard.status)}</TableCell>
+                      <TableCell>
+                        <div className="flex gap-1">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const fullEntry = filteredTimeEntries.find(e => e.id === timecard.id);
+                              if (fullEntry) {
+                                setSelectedTimeEntry(fullEntry);
+                                setShowLogsModal(true);
+                              }
+                            }}
+                            title={t('detail_hub.timecard.actions.view_logs')}
+                            className="p-1 hover:bg-gray-100 rounded transition-colors"
+                          >
+                            <FileText className="w-3.5 h-3.5 text-gray-600" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const fullEntry = filteredTimeEntries.find(e => e.id === timecard.id);
+                              if (fullEntry) {
+                                setSelectedTimeEntry(fullEntry);
+                                setShowEditModal(true);
+                              }
+                            }}
+                            title={t('detail_hub.timecard.actions.edit')}
+                            className="p-1 hover:bg-blue-50 rounded transition-colors"
+                          >
+                            <Edit2 className="w-3.5 h-3.5 text-blue-600" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEntryToDisable(timecard.id);
+                              setShowDisableDialog(true);
+                            }}
+                            title={t('detail_hub.timecard.actions.disable')}
+                            className="p-1 hover:bg-red-50 rounded transition-colors"
+                          >
+                            <Ban className="w-3.5 h-3.5 text-red-600" />
+                          </button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                    ))
                   )}
                 </TableBody>
               </Table>
@@ -592,38 +1021,172 @@ const TimecardSystem = () => {
         <TabsContent value="weekly" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>{t('detail_hub.timecard.weekly_summary')}</CardTitle>
+              <CardTitle>
+                {dateFilter === 'today' && 'Today\'s Summary'}
+                {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}
+                {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}
+                {dateFilter === 'custom' && customDateRange.from && (
+                  customDateRange.to
+                    ? `Weekly Summary (${format(customDateRange.from, 'MMM d')} - ${format(customDateRange.to, 'MMM d, yyyy')})`
+                    : `Summary - ${format(customDateRange.from, "MMMM d, yyyy")}`
+                )}
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                    <span>Regular Hours:</span>
-                    <span className="font-medium">{weeklyStats.regularHours}h</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                    <span>Overtime Hours:</span>
-                    <span className="font-medium text-orange-600">{weeklyStats.overtimeHours}h</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                    <span>Average per Employee:</span>
-                    <span className="font-medium">{weeklyStats.averageHoursPerEmployee}h</span>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                    <span>Total Employees:</span>
-                    <span className="font-medium">{weeklyStats.totalEmployees}</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                    <span>Total Hours:</span>
-                    <span className="font-medium">{weeklyStats.totalHours}h</span>
-                  </div>
-                  <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                    <span>Total Payroll:</span>
-                    <span className="font-medium text-green-600">${weeklyStats.totalPayroll.toFixed(2)}</span>
-                  </div>
-                </div>
+              {/* Employee Breakdown Table */}
+              <div className="border rounded-lg overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-gray-100">
+                      <TableHead className="font-semibold">Employee</TableHead>
+                      <TableHead className="font-semibold text-right">Days Worked</TableHead>
+                      <TableHead className="font-semibold text-right">Regular Hours</TableHead>
+                      <TableHead className="font-semibold text-right">Overtime</TableHead>
+                      <TableHead className="font-semibold text-right">Total Hours</TableHead>
+                      <TableHead className="font-semibold text-right">Hourly Rate</TableHead>
+                      <TableHead className="font-semibold text-right">Total Pay</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {(() => {
+                      // Group entries by employee
+                      const employeeMap = new Map<string, {
+                        id: string;
+                        name: string;
+                        employeeNumber: string;
+                        regularHours: number;
+                        overtimeHours: number;
+                        totalHours: number;
+                        hourlyRate: number;
+                        totalPay: number;
+                        daysWorked: number;
+                      }>();
+
+                      filteredTimeEntries.forEach(entry => {
+                        const employeeId = entry.employee_id;
+                        const existing = employeeMap.get(employeeId);
+                        const hourlyRate = employeeRates[employeeId] || 0;
+
+                        const regularPay = (entry.regular_hours || 0) * hourlyRate;
+                        const overtimePay = (entry.overtime_hours || 0) * hourlyRate * 1.5;
+
+                        if (existing) {
+                          existing.regularHours += entry.regular_hours || 0;
+                          existing.overtimeHours += entry.overtime_hours || 0;
+                          existing.totalHours += entry.total_hours || 0;
+                          existing.totalPay += regularPay + overtimePay;
+                          existing.daysWorked += 1;
+                        } else {
+                          employeeMap.set(employeeId, {
+                            id: employeeId,
+                            name: entry.employee_name,
+                            employeeNumber: entry.employee_number || 'N/A',
+                            regularHours: entry.regular_hours || 0,
+                            overtimeHours: entry.overtime_hours || 0,
+                            totalHours: entry.total_hours || 0,
+                            hourlyRate: hourlyRate,
+                            totalPay: regularPay + overtimePay,
+                            daysWorked: 1
+                          });
+                        }
+                      });
+
+                      // Convert to array and sort by total hours (descending)
+                      const employeeData = Array.from(employeeMap.values())
+                        .sort((a, b) => b.totalHours - a.totalHours);
+
+                      if (employeeData.length === 0) {
+                        return (
+                          <TableRow>
+                            <TableCell colSpan={7} className="text-center py-8">
+                              <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-2" />
+                              <p className="text-muted-foreground">No employee data for this period</p>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      }
+
+                      return employeeData.map((emp, index) => (
+                        <TableRow
+                          key={emp.id}
+                          className="hover:bg-gray-50 cursor-pointer"
+                          onDoubleClick={() => {
+                            setSelectedEmployeeForDetail({
+                              id: emp.id,
+                              name: emp.name,
+                              number: emp.employeeNumber,
+                              hourlyRate: emp.hourlyRate
+                            });
+                            setShowEmployeeDetailModal(true);
+                          }}
+                          title="Double-click to view employee details"
+                        >
+                          <TableCell>
+                            <div>
+                              <p className="font-medium">{emp.name}</p>
+                              <p className="text-sm text-muted-foreground">{emp.employeeNumber}</p>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Badge variant="outline">{emp.daysWorked}</Badge>
+                          </TableCell>
+                          <TableCell className="text-right font-medium">
+                            {emp.regularHours.toFixed(2)}h
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {emp.overtimeHours > 0 ? (
+                              <span className="font-medium text-orange-600">
+                                {emp.overtimeHours.toFixed(2)}h
+                              </span>
+                            ) : (
+                              <span className="text-muted-foreground">--</span>
+                            )}
+                          </TableCell>
+                          <TableCell className="text-right font-semibold text-blue-600">
+                            {emp.totalHours.toFixed(2)}h
+                          </TableCell>
+                          <TableCell className="text-right text-muted-foreground">
+                            ${emp.hourlyRate.toFixed(2)}/h
+                          </TableCell>
+                          <TableCell className="text-right font-semibold text-green-600">
+                            ${emp.totalPay.toFixed(2)}
+                          </TableCell>
+                        </TableRow>
+                      ));
+                    })()}
+                    {/* Totals Row */}
+                    {filteredTimeEntries.length > 0 && (
+                      <TableRow className="bg-gray-200 font-semibold border-t-2 border-gray-300">
+                        <TableCell>TOTALS</TableCell>
+                        <TableCell className="text-right">
+                          <Badge variant="secondary">
+                            {new Set(filteredTimeEntries.map(e => e.employee_id)).size} employees
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right text-gray-800">
+                          {filteredTimeEntries.reduce((sum, e) => sum + (e.regular_hours || 0), 0).toFixed(2)}h
+                        </TableCell>
+                        <TableCell className="text-right text-orange-600">
+                          {filteredTimeEntries.reduce((sum, e) => sum + (e.overtime_hours || 0), 0).toFixed(2)}h
+                        </TableCell>
+                        <TableCell className="text-right text-blue-600">
+                          {filteredTimeEntries.reduce((sum, e) => sum + (e.total_hours || 0), 0).toFixed(2)}h
+                        </TableCell>
+                        <TableCell className="text-right text-muted-foreground">
+                          --
+                        </TableCell>
+                        <TableCell className="text-right text-green-600">
+                          ${filteredTimeEntries.reduce((sum, entry) => {
+                            const hourlyRate = employeeRates[entry.employee_id] || 0;
+                            const regularPay = (entry.regular_hours || 0) * hourlyRate;
+                            const overtimePay = (entry.overtime_hours || 0) * hourlyRate * 1.5;
+                            return sum + regularPay + overtimePay;
+                          }, 0).toFixed(2)}
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
               </div>
             </CardContent>
           </Card>
@@ -665,6 +1228,21 @@ const TimecardSystem = () => {
         onOpenChange={setShowEditModal}
         timeEntry={selectedTimeEntry}
       />
+
+      {/* Employee Timecard Detail Modal */}
+      {selectedEmployeeForDetail && (
+        <EmployeeTimecardDetailModal
+          open={showEmployeeDetailModal}
+          onOpenChange={setShowEmployeeDetailModal}
+          employeeId={selectedEmployeeForDetail.id}
+          employeeName={selectedEmployeeForDetail.name}
+          employeeNumber={selectedEmployeeForDetail.number}
+          hourlyRate={selectedEmployeeForDetail.hourlyRate}
+          dateRange={dateRange}
+          timeEntries={filteredTimeEntries.filter(e => e.employee_id === selectedEmployeeForDetail.id)}
+          onPhotoClick={(photo) => setSelectedPhoto(photo)}
+        />
+      )}
 
       {/* Disable Confirmation Dialog */}
       <AlertDialog open={showDisableDialog} onOpenChange={setShowDisableDialog}>

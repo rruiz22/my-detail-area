@@ -84,6 +84,16 @@ export const TAB_CONFIGS = {
     key: 'nfc_tracking',
     defaultTab: 'dashboard',
     validTabs: ['dashboard', 'tags', 'tracker', 'heatmap', 'workflows']
+  },
+  detail_hub: {
+    key: 'detail_hub',
+    defaultTab: 'overview',
+    validTabs: ['overview', 'employees', 'schedules', 'timecards', 'analytics', 'reports', 'invoices', 'kiosks']
+  },
+  detail_hub_timecard: {
+    key: 'detail_hub_timecard',
+    defaultTab: 'daily',
+    validTabs: ['daily', 'weekly', 'monthly']
   }
 } as const;
 

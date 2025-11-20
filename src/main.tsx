@@ -1,5 +1,7 @@
 // Import network error suppressor FIRST to catch all errors
 import "./utils/networkErrorSuppressor";
+// Import WebGL blocker SECOND to force CPU-only mode for face-api.js
+import "./utils/disableWebGL";
 
 import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "next-themes";

@@ -50,6 +50,7 @@
   "save": "Save",
   "cancel": "Cancel",
   "saving": "Saving...",
+  "retake": "Retake",
   "action_buttons": {
     "save": "Save",
     "save_changes": "Save Changes",

@@ -18744,12 +18744,12 @@
             "context": "514: disabled={loading}\n515: >\n516: Clear All"
           },
           {
-            "text": "Clear All\r\n                ",
+            "text": "Clear All\n                ",
             "line": 509,
             "context": "508: </Button>\n509: <Button\n510: type=\"button\""
           },
           {
-            "text": ", response.error);\r\n      console.log(",
+            "text": ", response.error);\n      console.log(",
             "line": 237,
             "context": "236: console.log('Response data:', response.data);\n237: console.log('Response error:', response.error);\n238: console.log('Data type:', typeof response.data);"
           }
@@ -55304,7 +55304,7 @@
             "context": "1409: className={selectedVehicle ? \"border-input bg-muted/30 uppercase w-full\" : \"border-input bg-background uppercase w-full\"}\n1410: placeholder=\"ST-001\"\n1411: readOnly={!!selectedVehicle}"
           },
           {
-            "text": ", error);\r\n      toast({ variant: ",
+            "text": ", error);\n      toast({ variant: ",
             "line": 1027,
             "context": "1026: } catch (error) {\n1027: console.error('Submit error:', error);\n1028: toast({ variant: 'destructive', description: t('orders.creation_failed') });"
           }
@@ -88621,7 +88621,7 @@
         "file": "src\\pages\\Auth.tsx",
         "hardcodedStrings": [
           {
-            "text": ", error);\r\n      return true;\r\n    }\r\n  },\r\n\r\n  reset: (email: string): void => {\r\n    try {\r\n      const key = `auth_attempts_${email.toLowerCase()}`;\r\n      localStorage.removeItem(key);\r\n    } catch (error) {\r\n      console.warn(",
+            "text": ", error);\n      return true;\n    }\n  },\n\n  reset: (email: string): void => {\n    try {\n      const key = `auth_attempts_${email.toLowerCase()}`;\n      localStorage.removeItem(key);\n    } catch (error) {\n      console.warn(",
             "line": 88,
             "context": "87: // If localStorage fails, allow the attempt (fail open for UX)\n88: console.warn('[Rate Limiter] localStorage error:', error);\n89: return true;"
           }

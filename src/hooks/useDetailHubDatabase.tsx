@@ -863,6 +863,57 @@ export function useTimeEntryAuditLogs(timeEntryId: string | null) {
 }
 
 // =====================================================
+// EMPLOYEE AUDIT LOGS
+// =====================================================
+
+export interface EmployeeAuditLog {
+  id: string;
+  employee_id: string;
+  action_type: 'created' | 'updated' | 'deleted' | 'status_changed' | 'role_changed' | 'pin_reset' | 'face_enrolled';
+  field_name: string | null;
+  old_value: string | null;
+  new_value: string | null;
+  changed_by: string | null;
+  ip_address: string | null;
+  user_agent: string | null;
+  metadata: Record<string, any>;
+  created_at: string;
+  user?: {
+    first_name: string;
+    last_name: string;
+  } | null;
+}
+
+export function useEmployeeAuditLogs(employeeId: string | null) {
+  const { user } = useAuth();
+
+  return useQuery({
+    queryKey: ['employee_audit_logs', employeeId],
+    queryFn: async () => {
+      if (!user || !employeeId) return [];
+
+      const { data, error } = await supabase
+        .from('detail_hub_employee_audit')
+        .select(`
+          *,
+          user:profiles!detail_hub_employee_audit_changed_by_fkey(
+            first_name,
+            last_name
+          )
+        `)
+        .eq('employee_id', employeeId)
+        .order('created_at', { ascending: true }); // Chronological order
+
+      if (error) throw error;
+      return data as EmployeeAuditLog[];
+    },
+    enabled: !!user && !!employeeId,
+    staleTime: CACHE_TIMES.SHORT,
+    gcTime: GC_TIMES.MEDIUM,
+  });
+}
+
+// =====================================================
 // UPDATE TIME ENTRY
 // =====================================================
 

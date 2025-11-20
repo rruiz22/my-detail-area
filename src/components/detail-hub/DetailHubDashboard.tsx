@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Clock, Users, DollarSign, Calendar, UserCheck, TrendingUp, AlertCircle, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useTabPersistence } from "@/hooks/useTabPersistence";
 // REAL DATABASE INTEGRATION
 import { useDetailHubEmployees, useDetailHubTimeEntries, usePendingReviews, useRecentActivity } from "@/hooks/useDetailHubDatabase";
 // SUB-COMPONENTS (for tabs)
@@ -23,6 +24,9 @@ const DetailHubDashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [showTimeClock, setShowTimeClock] = useState(false); // Modal state
+
+  // Persisted tab state
+  const [activeTab, setActiveTab] = useTabPersistence('detail_hub', 'overview');
 
   // REAL DATABASE INTEGRATION
   const { data: employees = [], isLoading: loadingEmployees } = useDetailHubEmployees();
@@ -73,7 +77,7 @@ const DetailHubDashboard = () => {
       <PunchClockKioskModal open={showTimeClock} onClose={() => setShowTimeClock(false)} />
 
       {/* Tabs for all Detail Hub functionality */}
-      <Tabs defaultValue="overview" className="space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="overview">{t('detail_hub.tabs.overview')}</TabsTrigger>
           <TabsTrigger value="employees">{t('detail_hub.tabs.employees')}</TabsTrigger>

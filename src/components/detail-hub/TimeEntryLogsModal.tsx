@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -216,9 +216,9 @@ export function TimeEntryLogsModal({
       <DialogContent className="max-w-2xl max-h-[80vh]">
         <DialogHeader>
           <DialogTitle>{t('detail_hub.timecard.logs.title')}</DialogTitle>
-          <p className="text-sm text-muted-foreground">
+          <DialogDescription>
             {employeeName}
-          </p>
+          </DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="h-[500px] pr-4">
