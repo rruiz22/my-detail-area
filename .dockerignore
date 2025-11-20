@@ -29,8 +29,8 @@ test-results/
 
 # Misc
 docs/
-scripts/
 .github/
+# Keep scripts/ - needed for prebuild (generate-version.js)
 
 # Backups
 backups/
