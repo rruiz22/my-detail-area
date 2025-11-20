@@ -27,10 +27,10 @@ interface EmployeeHeaderProps {
 export function EmployeeHeader({ employee, compact = false, statusBadge }: EmployeeHeaderProps) {
   return (
     <Card className="card-enhanced">
-      <CardContent className={compact ? "py-4" : "py-6"}>
-        <div className="flex items-center gap-4">
+      <CardContent className={compact ? "py-3" : "py-4"}>
+        <div className="flex items-center gap-3">
           {/* Photo or Avatar */}
-          <div className={compact ? "w-16 h-16" : "w-20 h-20"}>
+          <div className={compact ? "w-14 h-14" : "w-16 h-16"}>
             {employee.fallback_photo_url ? (
               <img
                 src={employee.fallback_photo_url}
@@ -39,14 +39,14 @@ export function EmployeeHeader({ employee, compact = false, statusBadge }: Emplo
               />
             ) : (
               <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center border-2 border-gray-300">
-                <User className={compact ? "w-8 h-8" : "w-10 h-10"} />
+                <User className={compact ? "w-6 h-6" : "w-7 h-7"} />
               </div>
             )}
           </div>
 
           {/* Info */}
           <div className="flex-1">
-            <h2 className={compact ? "text-xl font-bold text-gray-900" : "text-2xl font-bold text-gray-900"}>
+            <h2 className={compact ? "text-lg font-bold text-gray-900" : "text-xl font-bold text-gray-900"}>
               {employee.first_name} {employee.last_name}
             </h2>
             <div className="flex gap-2 mt-1">

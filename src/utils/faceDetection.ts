@@ -1,7 +1,7 @@
 /**
  * Face Detection Utilities
  *
- * Provides face detection and quality validation using face-api.js
+ * Provides face detection and quality validation using @vladmandic/face-api
  * Used by Detail Hub for facial recognition time clock system
  *
  * Features:
@@ -11,7 +11,7 @@
  * - Model loading and caching
  */
 
-import * as faceapi from 'face-api.js';
+import * as faceapi from '@vladmandic/face-api';
 
 // =====================================================
 // CONFIGURATION

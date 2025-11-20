@@ -22,6 +22,7 @@ import { OnlineUsersIndicator } from "./presence/OnlineUsersIndicator";
 import { GlobalSearch } from "./search/GlobalSearch";
 import { ThemeToggle } from "./ThemeToggle";
 import { UserDropdown } from "./ui/user-dropdown";
+import { TimeClockButton } from "./detail-hub/TimeClockButton";
 import * as logger from "@/utils/logger";
 
 interface ProtectedLayoutProps {
@@ -81,6 +82,7 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
               <ThemeToggle />
               {currentDealership?.id && <OnlineUsersIndicator dealerId={currentDealership.id} />}
               {currentDealership?.id && <NotificationBell dealerId={currentDealership.id} />}
+              {currentDealership?.id && <TimeClockButton dealerId={currentDealership.id} />}
               <UserDropdown />
             </div>
 

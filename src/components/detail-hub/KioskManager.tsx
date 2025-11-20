@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Monitor, Settings, Camera, AlertTriangle, CheckCircle, Plus, Edit, Trash2, Activity } from "lucide-react";
 import { format } from "date-fns";
 
@@ -231,6 +231,12 @@ const KioskManager = () => {
               <DialogTitle>
                 {editingKiosk ? 'Edit Kiosk' : t('detail_hub.kiosk_manager.add_kiosk')}
               </DialogTitle>
+              <DialogDescription>
+                {editingKiosk
+                  ? t('detail_hub.kiosk_manager.edit_description')
+                  : t('detail_hub.kiosk_manager.add_description')
+                }
+              </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-2 gap-4">

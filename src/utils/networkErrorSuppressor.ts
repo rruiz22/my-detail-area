@@ -50,6 +50,17 @@ const POLYFILL_WARNING_PATTERNS = [
   'require(\'buffer\')',
 ];
 
+// TensorFlow.js warnings to suppress (double registration of backends/kernels)
+const TENSORFLOW_WARNING_PATTERNS = [
+  'backend was already registered',
+  'The kernel \'',
+  'for backend \'cpu\'',
+  'for backend \'webgl\'',
+  'Platform browser has already been set',
+  '[WebGL Blocker] Blocked webgl context creation', // Intentional WebGL blocking
+  'WebGL Blocker'
+];
+
 // Check if message contains network error patterns
 function isNetworkError(message: string): boolean {
   return NETWORK_ERROR_PATTERNS.some((pattern) =>
@@ -103,6 +114,11 @@ console.error = (...args: any[]) => {
     return;
   }
 
+  // ✅ Suppress WebGL Blocker errors (intentional blocking, not real errors)
+  if (TENSORFLOW_WARNING_PATTERNS.some(pattern => message.includes(pattern))) {
+    return;
+  }
+
   // Pass through other errors
   originalError.apply(console, args);
 };
@@ -118,6 +134,11 @@ console.warn = (...args: any[]) => {
 
   // ✅ Suppress Node.js polyfill warnings (from Excel/CSV libraries)
   if (isPolyfillWarning(message)) {
+    return;
+  }
+
+  // ✅ Suppress TensorFlow.js backend/kernel warnings
+  if (TENSORFLOW_WARNING_PATTERNS.some(pattern => message.includes(pattern))) {
     return;
   }
 

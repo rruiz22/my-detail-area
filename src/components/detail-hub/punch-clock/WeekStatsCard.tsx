@@ -32,54 +32,54 @@ export function WeekStatsCard({ totalHours, regularHours, overtimeHours, daysWor
 
   return (
     <Card className="card-enhanced">
-      <CardHeader>
+      <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{t('detail_hub.punch_clock.week_stats')}</CardTitle>
-          <span className="text-sm text-gray-500">{weekRange}</span>
+          <CardTitle className="text-base">{t('detail_hub.punch_clock.week_stats')}</CardTitle>
+          <span className="text-xs text-gray-500">{weekRange}</span>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 gap-4">
+      <CardContent className="pt-0">
+        <div className="grid grid-cols-2 gap-3">
           {/* Total Hours */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <div className="flex items-center gap-2 text-gray-600 text-sm mb-1">
-              <Clock className="w-4 h-4" />
+          <div className="bg-gray-50 rounded-lg p-3">
+            <div className="flex items-center gap-1 text-gray-600 text-xs mb-1">
+              <Clock className="w-3 h-3" />
               <span>{t('detail_hub.punch_clock.total_hours')}</span>
             </div>
-            <div className="text-2xl font-bold text-gray-900">
+            <div className="text-xl font-bold text-gray-900">
               {totalHours.toFixed(1)}h
             </div>
           </div>
 
           {/* Regular Hours */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <div className="flex items-center gap-2 text-gray-600 text-sm mb-1">
-              <Clock className="w-4 h-4" />
+          <div className="bg-gray-50 rounded-lg p-3">
+            <div className="flex items-center gap-1 text-gray-600 text-xs mb-1">
+              <Clock className="w-3 h-3" />
               <span>{t('detail_hub.punch_clock.regular_hours')}</span>
             </div>
-            <div className="text-2xl font-bold text-gray-900">
+            <div className="text-xl font-bold text-gray-900">
               {regularHours.toFixed(1)}h
             </div>
           </div>
 
           {/* Overtime Hours */}
-          <div className="bg-amber-50 rounded-lg p-4">
-            <div className="flex items-center gap-2 text-amber-700 text-sm mb-1">
-              <TrendingUp className="w-4 h-4" />
+          <div className="bg-amber-50 rounded-lg p-3">
+            <div className="flex items-center gap-1 text-amber-700 text-xs mb-1">
+              <TrendingUp className="w-3 h-3" />
               <span>{t('detail_hub.punch_clock.overtime_hours')}</span>
             </div>
-            <div className="text-2xl font-bold text-amber-800">
+            <div className="text-xl font-bold text-amber-800">
               {overtimeHours.toFixed(1)}h
             </div>
           </div>
 
           {/* Days Worked */}
-          <div className="bg-emerald-50 rounded-lg p-4">
-            <div className="flex items-center gap-2 text-emerald-700 text-sm mb-1">
-              <Calendar className="w-4 h-4" />
+          <div className="bg-emerald-50 rounded-lg p-3">
+            <div className="flex items-center gap-1 text-emerald-700 text-xs mb-1">
+              <Calendar className="w-3 h-3" />
               <span>{t('detail_hub.punch_clock.days_worked')}</span>
             </div>
-            <div className="text-2xl font-bold text-emerald-800">
+            <div className="text-xl font-bold text-emerald-800">
               {daysWorked}
             </div>
           </div>

@@ -299,34 +299,33 @@ export function useKioskStatistics() {
     queryKey: QUERY_KEYS.kioskStats(selectedDealerId),
     queryFn: async () => {
       if (!user) throw new Error('User not authenticated');
-      if (selectedDealerId === 'all') {
-        // Aggregate stats from all kiosks
-        const { data: kiosks, error } = await supabase
-          .from('detail_hub_kiosks')
-          .select('status, punches_today');
 
-        if (error) throw error;
+      // Build query for kiosks
+      let query = supabase
+        .from('detail_hub_kiosks')
+        .select('status, punches_today');
 
-        const stats: KioskStatistics = {
-          total_kiosks: kiosks.length,
-          online_kiosks: kiosks.filter(k => k.status === 'online').length,
-          offline_kiosks: kiosks.filter(k => k.status === 'offline').length,
-          total_punches_today: kiosks.reduce((sum, k) => sum + (k.punches_today || 0), 0),
-          average_uptime: kiosks.length > 0
-            ? (kiosks.filter(k => k.status === 'online').length / kiosks.length) * 100
-            : 0
-        };
-
-        return stats;
+      // Filter by dealership if not 'all'
+      if (selectedDealerId !== 'all') {
+        query = query.eq('dealership_id', selectedDealerId);
       }
 
-      // Use RPC function for specific dealership
-      const { data, error } = await supabase.rpc('get_kiosk_statistics', {
-        p_dealership_id: selectedDealerId
-      });
+      const { data: kiosks, error } = await query;
 
       if (error) throw error;
-      return data[0] as KioskStatistics;
+
+      // Aggregate stats client-side
+      const stats: KioskStatistics = {
+        total_kiosks: kiosks.length,
+        online_kiosks: kiosks.filter(k => k.status === 'online').length,
+        offline_kiosks: kiosks.filter(k => k.status === 'offline').length,
+        total_punches_today: kiosks.reduce((sum, k) => sum + (k.punches_today || 0), 0),
+        average_uptime: kiosks.length > 0
+          ? (kiosks.filter(k => k.status === 'online').length / kiosks.length) * 100
+          : 0
+      };
+
+      return stats;
     },
     enabled: !!user,
     staleTime: CACHE_TIMES.SHORT, // 1 minute

@@ -93,7 +93,13 @@
       "Bash(ren:*)",
       "Bash(if not exist \"C:\\Users\\rudyr\\apps\\mydetailarea\\src\\components\\detail-hub\" mkdir \"C:\\Users\\rudyr\\apps\\mydetailarea\\src\\components\\detail-hub\")",
       "Bash(supabase functions deploy:*)",
-      "Bash(git rev-parse:*)"
+      "Bash(git rev-parse:*)",
+      "Bash(del srccomponentsdetail-hubPunchClockKiosk.ENHANCED.tsx)",
+      "Bash(pwsh -ExecutionPolicy Bypass -File download-models.ps1)",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File download-models.ps1)",
+      "Bash(tasklist:*)",
+      "WebFetch(domain:webrtchacks.com)",
+      "WebFetch(domain:docs.microsoft.com)"
     ],
     "deny": [],
     "ask": []
