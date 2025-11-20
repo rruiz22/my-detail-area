@@ -24,6 +24,9 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+# Install curl for healthcheck
+RUN apk add --no-cache curl
+
 # Install production dependencies (express, compression)
 COPY package*.json ./
 RUN npm ci --only=production && \
@@ -38,7 +41,7 @@ EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-8080}/ || exit 1
+  CMD curl -f http://localhost:${PORT:-8080}/health || exit 1
 
 # Start server
 CMD ["node", "server.cjs"]
