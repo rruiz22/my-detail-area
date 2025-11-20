@@ -99786,13 +99786,13 @@
         "hardcodedStrings": [
           {
             "text": ", error);\n      throw initializationError;\n    }\n  })();\n\n  return initializationPromise;\n}\n\n/**\n * Check if face-api.js is ready to use\n */\nexport function isFaceApiReady(): boolean {\n  return isInitialized;\n}\n\n/**\n * Get initialization status with detailed diagnostics\n */\nexport function getFaceApiStatus() {\n  const currentBackend = backendInitialized ? tf.getBackend() : ",
-            "line": 173,
-            "context": "172: initializationError = error instanceof Error ? error : new Error('Face API initialization failed');\n173: console.error('[FaceAPI Service] Initialization error:', error);\n174: throw initializationError;"
+            "line": 218,
+            "context": "217: initializationError = error instanceof Error ? error : new Error('Face API initialization failed');\n218: console.error('[FaceAPI Service] Initialization error:', error);\n219: throw initializationError;"
           },
           {
             "text": ", error);\n    return null;\n  }\n}\n\n/**\n * Reset initialization state (for testing or error recovery)\n * WARNING: Only use if you need to reinitialize after catastrophic failure\n */\nexport function resetFaceApi() {\n  console.warn(",
-            "line": 223,
-            "context": "222: } catch (error) {\n223: console.error('[FaceAPI Service] Error getting TensorFlow backend info:', error);\n224: return null;"
+            "line": 268,
+            "context": "267: } catch (error) {\n268: console.error('[FaceAPI Service] Error getting TensorFlow backend info:', error);\n269: return null;"
           }
         ],
         "translationCalls": [],
