@@ -159,6 +159,27 @@ export default defineConfig(({ mode }) => ({
                 maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
               }
             }
+          },
+          {
+            // 🎯 PRODUCTION FIX: Cache face-api.js models (binary files)
+            // CRITICAL: Use CacheFirst to avoid re-downloading large files
+            // Models are immutable and rarely change (tied to @vladmandic/face-api version)
+            urlPattern: /\/models\/.*\.(?:bin|json)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'face-api-models',
+              expiration: {
+                maxEntries: 10, // 7 model files max
+                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              },
+              // IMPORTANT: matchOptions for query params (?v=1.7.12)
+              matchOptions: {
+                ignoreSearch: false // Respect cache-busting query params
+              }
+            }
           }
         ],
 

@@ -1,85 +1,41 @@
 {
+  "public": "dist",
+  "rewrites": [
+    { "source": "**", "destination": "/index.html" }
+  ],
   "headers": [
     {
-      "source": "index.html",
+      "source": "**/*.bin",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
-        },
-        {
-          "key": "Pragma",
-          "value": "no-cache"
-        },
-        {
-          "key": "Expires",
-          "value": "0"
-        }
-      ]
-    },
-    {
-      "source": "version.json",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, must-revalidate"
-        }
-      ]
-    },
-    {
-      "source": "manifest.webmanifest",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, must-revalidate"
-        }
-      ]
-    },
-    {
-      "source": "sw-custom.js",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, must-revalidate"
-        },
-        {
-          "key": "Service-Worker-Allowed",
-          "value": "/"
-        },
         {
           "key": "Content-Type",
-          "value": "application/javascript; charset=utf-8"
-        }
-      ]
-    },
-    {
-      "source": "firebase-messaging-sw.js",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, must-revalidate"
+          "value": "application/octet-stream"
         },
         {
-          "key": "Service-Worker-Allowed",
-          "value": "/"
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
         },
         {
-          "key": "Content-Type",
-          "value": "application/javascript; charset=utf-8"
+          "key": "Content-Encoding",
+          "value": "identity"
         }
       ]
     },
     {
-      "source": "registerSW.js",
+      "source": "models/**/*",
       "headers": [
         {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
           "key": "Cache-Control",
-          "value": "no-cache, must-revalidate"
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     },
     {
-      "source": "assets/**/*.@(js|css)",
+      "source": "**/*.@(jpg|jpeg|gif|png|webp|svg|ico)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -88,7 +44,7 @@
       ]
     },
     {
-      "source": "**/*.@(png|jpg|jpeg|gif|svg|webp|ico|woff|woff2|ttf|otf)",
+      "source": "**/*.@(js|css)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -96,5 +52,12 @@
         }
       ]
     }
-  ]
+  ],
+  "directoryListing": false,
+  "unlisted": [],
+  "trailingSlash": false,
+  "renderSingle": true,
+  "cleanUrls": false,
+  "etag": true,
+  "symlinks": true
 }

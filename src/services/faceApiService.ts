@@ -31,6 +31,16 @@ const FORCED_BACKEND = 'cpu'; // Enterprise-grade: CPU-only for stability
 const MAX_BACKEND_RETRIES = 3;
 const BACKEND_RETRY_DELAY = 500; // ms
 
+// Model versioning for cache-busting (Production fix)
+const MODEL_VERSION = '1.7.12'; // Matches @vladmandic/face-api version
+
+// Expected model sizes (for integrity validation)
+const EXPECTED_MODEL_SIZES = {
+  'tiny_face_detector': { min: 180 * 1024, max: 200 * 1024 }, // ~189KB
+  'face_landmark_68': { min: 340 * 1024, max: 360 * 1024 }, // ~349KB
+  'face_recognition': { min: 6 * 1024 * 1024, max: 6.5 * 1024 * 1024 } // ~6.2MB
+};
+
 /**
  * CRITICAL: Force TensorFlow.js to use CPU backend
  * This MUST be called BEFORE any face-api.js operations
@@ -98,9 +108,13 @@ async function ensureCpuBackend(): Promise<void> {
  * Only loads models once, subsequent calls return cached promise
  *
  * @param modelUrl - Path to face-api.js models (default: /models)
+ * @param enableCacheBusting - Add version query param to avoid cached corrupted files (default: true in production)
  * @returns Promise that resolves when models are loaded
  */
-export async function initializeFaceApi(modelUrl: string = '/models'): Promise<void> {
+export async function initializeFaceApi(
+  modelUrl: string = '/models',
+  enableCacheBusting: boolean = import.meta.env.PROD
+): Promise<void> {
   // Already initialized - return immediately
   if (isInitialized) {
     console.log('[FaceAPI Service] Already initialized');
@@ -128,19 +142,29 @@ export async function initializeFaceApi(modelUrl: string = '/models'): Promise<v
       // CRITICAL: Configure CPU backend FIRST, before loading any models
       await ensureCpuBackend();
 
+      // Apply cache-busting in production to avoid serving corrupted cached files
+      const finalModelUrl = enableCacheBusting
+        ? `${modelUrl}?v=${MODEL_VERSION}`
+        : modelUrl;
+
       // Load models sequentially
-      console.log('[FaceAPI Service] Loading models from:', modelUrl);
+      console.log('[FaceAPI Service] Loading models from:', finalModelUrl);
+      console.log('[FaceAPI Service] Cache-busting:', enableCacheBusting ? 'enabled' : 'disabled');
+      console.log('[FaceAPI Service] Expected model format: .bin (Vladmandic fork)');
 
       // 1. Tiny Face Detector (lightweight, fast)
-      await faceapi.nets.tinyFaceDetector.loadFromUri(modelUrl);
+      console.log('[FaceAPI Service] Loading tiny_face_detector_model.bin...');
+      await faceapi.nets.tinyFaceDetector.loadFromUri(finalModelUrl);
       console.log('[FaceAPI Service] ✓ Tiny face detector loaded');
 
       // 2. Face Landmarks (68-point alignment)
-      await faceapi.nets.faceLandmark68Net.loadFromUri(modelUrl);
+      console.log('[FaceAPI Service] Loading face_landmark_68_model.bin...');
+      await faceapi.nets.faceLandmark68Net.loadFromUri(finalModelUrl);
       console.log('[FaceAPI Service] ✓ Face landmark detector loaded');
 
       // 3. Face Recognition (128D descriptors)
-      await faceapi.nets.faceRecognitionNet.loadFromUri(modelUrl);
+      console.log('[FaceAPI Service] Loading face_recognition_model.bin (~6.2MB)...');
+      await faceapi.nets.faceRecognitionNet.loadFromUri(finalModelUrl);
       console.log('[FaceAPI Service] ✓ Face recognition model loaded');
 
       // Final backend verification
@@ -160,12 +184,33 @@ export async function initializeFaceApi(modelUrl: string = '/models'): Promise<v
 
       // Gracefully handle TensorFlow tensor shape errors (model incompatibility)
       if (errorMessage.includes('tensor should have') || errorMessage.includes('values but has')) {
-        console.warn('[FaceAPI Service] ⚠️ Face recognition models have incompatible format - feature will be disabled');
-        console.warn('[FaceAPI Service] This is not critical - users can still use PIN/Photo fallback');
+        console.error('[FaceAPI Service] ❌ MODEL INCOMPATIBILITY ERROR');
+        console.error('[FaceAPI Service] Error:', errorMessage);
+        console.error('[FaceAPI Service]');
+        console.error('[FaceAPI Service] POSSIBLE CAUSES:');
+        console.error('[FaceAPI Service] 1. Using old .shard files instead of new .bin files');
+        console.error('[FaceAPI Service] 2. Models downloaded from wrong repo (justadudewhohacks vs vladmandic)');
+        console.error('[FaceAPI Service] 3. Corrupted model files (check file sizes in /models/)');
+        console.error('[FaceAPI Service] 4. Binary files served with compression (gzip corrupts .bin files)');
+        console.error('[FaceAPI Service]');
+        console.error('[FaceAPI Service] SOLUTION:');
+        console.error('[FaceAPI Service] 1. Delete all files in public/models/');
+        console.error('[FaceAPI Service] 2. Run: node download-models.cjs');
+        console.error('[FaceAPI Service] 3. Verify file sizes match expected (see README.md)');
+        console.error('[FaceAPI Service]');
+        console.warn('[FaceAPI Service] ⚠️ Face recognition DISABLED - PIN/Photo fallback will be used');
+
         isInitializing = false;
         initializationError = new Error('Face recognition unavailable');
         // Don't throw - allow app to continue without face recognition
         return;
+      }
+
+      // Handle network errors
+      if (errorMessage.includes('Failed to fetch') || errorMessage.includes('NetworkError')) {
+        console.error('[FaceAPI Service] ❌ NETWORK ERROR loading models');
+        console.error('[FaceAPI Service] Check that /models/ directory is accessible');
+        console.error('[FaceAPI Service] In production, verify Content-Type headers for .bin files');
       }
 
       isInitializing = false;
