@@ -1,45 +1,43 @@
-# ============================================
-# Stage 1: Build the application
-# ============================================
+# Dockerfile para MyDetailArea - Railway Deployment
+# Optimizado para face-api.js models (.bin files)
+
+# Stage 1: Build
 FROM node:20-alpine AS builder
 
-# Set working directory
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
-COPY .npmrc ./
 
-# Install dependencies (with timeout protection)
-RUN npm ci --include=optional --legacy-peer-deps --no-audit --no-fund --prefer-offline || \
-    npm ci --include=optional --legacy-peer-deps --no-audit --no-fund
+# Install dependencies
+RUN npm ci --only=production && \
+    npm cache clean --force
 
-# Copy source code
+# Copy source files
 COPY . .
 
-# Build the application
+# Build application
 RUN npm run build
 
-# ============================================
-# Stage 2: Production image
-# ============================================
+# Stage 2: Production
 FROM node:20-alpine
 
-# Install serve globally
-RUN npm install -g serve
-
-# Set working directory
 WORKDIR /app
 
-# Copy built files from builder stage
+# Install serve globally
+RUN npm install -g serve@14.2.4
+
+# Copy built files from builder
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/serve.json ./dist/
+COPY --from=builder /app/serve.json ./serve.json
+COPY --from=builder /app/package.json ./package.json
 
-# Set default port
-ENV PORT=3000
+# Expose port (Railway will inject $PORT)
+EXPOSE 8080
 
-# Expose port
-EXPOSE $PORT
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT:-8080}/ || exit 1
 
-# Start the application with serve.json configuration
-CMD ["sh", "-c", "serve -s dist -l $PORT -c serve.json"]
+# Start server
+CMD ["sh", "-c", "serve dist -l ${PORT:-8080} -c serve.json --no-port-switching --no-clipboard"]

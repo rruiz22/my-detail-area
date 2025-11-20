@@ -1,15 +1,45 @@
-node_modules
-npm-debug.log
-.git
-.gitignore
-README.md
-.env
-.nyc_output
-coverage
-.nyc_output
-.coverage
-.vscode
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# Build output
+dist/
+.vite/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
 .DS_Store
-dist
-.cache
-.parcel-cache
+
+# Git
+.git/
+.gitignore
+
+# Environment
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Testing
+coverage/
+test-results/
+
+# Misc
+docs/
+scripts/
+.github/
+
+# Backups
+backups/
+.backups/
+*.backup
+*.BACKUP.*
+*.OLD.*
+
+# Temporary
+temp/
+tmp/
+download-models.*
