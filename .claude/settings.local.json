@@ -108,7 +108,9 @@
       "Bash(./check-railway-status.sh:*)",
       "Bash(for i in {1..20})",
       "Bash(break)",
-      "Bash(git mv:*)"
+      "Bash(git mv:*)",
+      "Bash(for i in {1..15})",
+      "Bash(exit 0)"
     ],
     "deny": [],
     "ask": []
