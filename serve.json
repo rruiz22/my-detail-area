@@ -1,7 +1,14 @@
 {
   "public": "dist",
   "rewrites": [
-    { "source": "**", "destination": "/index.html" }
+    {
+      "source": "**",
+      "destination": "/index.html"
+    }
+  ],
+  "redirects": [],
+  "ignore": [
+    "**/models/**"
   ],
   "headers": [
     {
