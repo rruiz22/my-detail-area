@@ -107,13 +107,17 @@ async function ensureCpuBackend(): Promise<void> {
  * Initialize face-api.js models (singleton)
  * Only loads models once, subsequent calls return cached promise
  *
- * @param modelUrl - Path to face-api.js models (default: /models)
+ * @param modelUrl - Path to face-api.js models
+ *   - Production: Uses CDN (jsDelivr) for reliability
+ *   - Development: Uses local /models for offline development
  * @param enableCacheBusting - Add version query param to avoid cached corrupted files (default: true in production)
  * @returns Promise that resolves when models are loaded
  */
 export async function initializeFaceApi(
-  modelUrl: string = '/models',
-  enableCacheBusting: boolean = import.meta.env.PROD
+  modelUrl: string = import.meta.env.PROD
+    ? 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/model'
+    : '/models',
+  enableCacheBusting: boolean = false // Not needed with CDN (has versioned URLs)
 ): Promise<void> {
   // Already initialized - return immediately
   if (isInitialized) {
