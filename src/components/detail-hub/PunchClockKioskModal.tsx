@@ -669,23 +669,51 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
       console.log(`[FaceScan] Found ${enrolledEmployees.length} enrolled employees`);
 
-      // Step 2: Initialize face matcher
-      const employeesForMatcher = enrolledEmployees.map(emp => ({
-        id: emp.id,
-        name: `${emp.first_name} ${emp.last_name}`,
-        descriptor: emp.face_descriptor as number[]
-      }));
+      // Step 2: Initialize face matcher with validation
+      const employeesForMatcher = enrolledEmployees
+        .filter(emp => {
+          // Validate descriptor exists and is array
+          if (!emp.face_descriptor || !Array.isArray(emp.face_descriptor)) {
+            console.warn(`[FaceScan] ⚠️ Invalid descriptor for ${emp.first_name} ${emp.last_name}`);
+            return false;
+          }
+          // Validate descriptor length (should be 128)
+          if (emp.face_descriptor.length !== 128) {
+            console.warn(`[FaceScan] ⚠️ Invalid descriptor length for ${emp.first_name} ${emp.last_name}: ${emp.face_descriptor.length}, expected 128`);
+            return false;
+          }
+          return true;
+        })
+        .map(emp => ({
+          id: emp.id,
+          name: `${emp.first_name} ${emp.last_name}`,
+          descriptor: emp.face_descriptor as number[]
+        }));
+
+      if (employeesForMatcher.length === 0) {
+        console.error('[FaceScan] ❌ No valid face descriptors found (all employees have corrupted data)');
+        setFaceScanMessage(t('detail_hub.punch_clock.messages.no_enrolled_faces'));
+        toast({
+          title: t('detail_hub.punch_clock.messages.face_scan_error'),
+          description: 'Face recognition data is corrupted. Please re-enroll employees.',
+          variant: "destructive"
+        });
+        setFaceScanning(false);
+        setShowFaceScan(false);
+        return;
+      }
+
+      console.log(`[FaceScan] ✓ ${employeesForMatcher.length} valid face descriptors`);
 
       const matcherInitialized = await initializeMatcher(employeesForMatcher);
 
       if (!matcherInitialized) {
-        console.error('[FaceScan] Failed to initialize face matcher');
-        toast({
-          title: t('detail_hub.punch_clock.messages.face_scan_error'),
-          description: 'Failed to initialize face recognition',
-          variant: "destructive"
-        });
+        console.error('[FaceScan] ❌ Failed to initialize face matcher - stopping scan');
+        setFaceScanMessage('Face recognition unavailable');
+
+        // Don't show toast - just hide face scan UI
         setFaceScanning(false);
+        setShowFaceScan(false);
         return;
       }
 
@@ -714,9 +742,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
         // Start continuous scanning every 2 seconds
         const scanInterval = setInterval(async () => {
           if (videoRef.current && findBestMatch) {
-            setFaceScanMessage(t('detail_hub.punch_clock.messages.detecting_face'));
-
             try {
+              setFaceScanMessage(t('detail_hub.punch_clock.messages.detecting_face'));
+
               const match = await findBestMatch(videoRef.current);
 
               if (match) {
@@ -758,8 +786,16 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                 setFaceScanMessage(t('detail_hub.punch_clock.messages.no_face_detected'));
               }
             } catch (err) {
-              console.error('[FaceScan] ❌ Error during scan:', err);
-              setFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'));
+              const errorMessage = err instanceof Error ? err.message : String(err);
+
+              // Suppress TensorFlow tensor shape errors (corrupted descriptors)
+              if (errorMessage.includes('tensor should have') || errorMessage.includes('values but has')) {
+                console.warn('[FaceScan] ⚠️ Corrupted face descriptor detected, skipping this scan');
+                // Don't update UI - let scanning continue
+              } else {
+                console.error('[FaceScan] ❌ Error during scan:', err);
+                setFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'));
+              }
             }
           }
         }, 2000);
@@ -768,6 +804,17 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
         return () => clearInterval(scanInterval);
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+
+      // Suppress TensorFlow internal errors (validation already handled above)
+      if (errorMessage.includes('tensor should have') || errorMessage.includes('values but has')) {
+        console.warn('[FaceScan] ⚠️ TensorFlow internal error (likely corrupted descriptor), stopping scan');
+        setFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'));
+        setFaceScanning(false);
+        setShowFaceScan(false);
+        return;
+      }
+
       console.error('Camera access error:', error);
       setFaceScanMessage(t('detail_hub.punch_clock.messages.camera_denied'));
       toast({
@@ -991,8 +1038,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                       </div>
                     )}
 
-                    {/* Face API Error */}
-                    {faceApiError && (
+                    {/* Face API Error (filter out TensorFlow internal errors) */}
+                    {faceApiError && !faceApiError.includes('tensor should have') && !faceApiError.includes('values but has') && (
                       <Alert variant="destructive">
                         <AlertDescription>
                           {faceApiError}

@@ -234,29 +234,59 @@ export function useFaceRecognition(options: UseFaceRecognitionOptions = {}) {
     try {
       console.log(`[FaceAPI] Initializing matcher with ${enrolledEmployees.length} employees`);
 
-      const labeledDescriptors = enrolledEmployees.map(employee => {
-        // Convert number[] to Float32Array if needed
-        const descriptor = Array.isArray(employee.descriptor)
-          ? new Float32Array(employee.descriptor)
-          : employee.descriptor;
+      // Validate and filter descriptors
+      const validDescriptors: faceapi.LabeledFaceDescriptors[] = [];
+      const invalidCount = 0;
 
-        // Label format: "employeeId|employeeName"
-        const label = `${employee.id}|${employee.name}`;
+      for (const employee of enrolledEmployees) {
+        try {
+          // Convert number[] to Float32Array if needed
+          const descriptor = Array.isArray(employee.descriptor)
+            ? new Float32Array(employee.descriptor)
+            : employee.descriptor;
 
-        return new faceapi.LabeledFaceDescriptors(
-          label,
-          [descriptor]
-        );
-      });
+          // Validate descriptor length (should be 128 for face-api.js)
+          if (descriptor.length !== 128) {
+            console.warn(`[FaceAPI] ⚠️ Invalid descriptor for ${employee.name} - length ${descriptor.length}, expected 128`);
+            continue;
+          }
+
+          // Label format: "employeeId|employeeName"
+          const label = `${employee.id}|${employee.name}`;
+
+          validDescriptors.push(new faceapi.LabeledFaceDescriptors(
+            label,
+            [descriptor]
+          ));
+        } catch (descError) {
+          console.warn(`[FaceAPI] ⚠️ Failed to process descriptor for ${employee.name}:`, descError);
+        }
+      }
+
+      if (validDescriptors.length === 0) {
+        console.error('[FaceAPI] ❌ No valid face descriptors found');
+        return false;
+      }
+
+      console.log(`[FaceAPI] ✓ ${validDescriptors.length} valid descriptors (${invalidCount} invalid skipped)`);
 
       faceMatcher.current = new faceapi.FaceMatcher(
-        labeledDescriptors,
+        validDescriptors,
         minConfidence
       );
 
       console.log('[FaceAPI] ✓ Face matcher initialized');
       return true;
     } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+
+      // Gracefully handle TensorFlow tensor shape errors
+      if (errorMessage.includes('tensor should have') || errorMessage.includes('values but has')) {
+        console.error('[FaceAPI] ❌ TensorFlow tensor error - face descriptors may be incompatible with current model version');
+        console.error('[FaceAPI] Suggested fix: Re-enroll all employees to regenerate face descriptors');
+        return false;
+      }
+
       console.error('[FaceAPI] Failed to initialize face matcher:', err);
       return false;
     }

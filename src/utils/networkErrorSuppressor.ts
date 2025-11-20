@@ -58,7 +58,9 @@ const TENSORFLOW_WARNING_PATTERNS = [
   'for backend \'webgl\'',
   'Platform browser has already been set',
   '[WebGL Blocker] Blocked webgl context creation', // Intentional WebGL blocking
-  'WebGL Blocker'
+  'WebGL Blocker',
+  'tensor should have', // Corrupted face descriptors
+  'values but has' // Tensor shape mismatch
 ];
 
 // Check if message contains network error patterns
