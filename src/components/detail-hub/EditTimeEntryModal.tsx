@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Clock, Save, X } from "lucide-react";
 import { useUpdateTimeEntry, TimeEntryWithEmployee } from "@/hooks/useDetailHubDatabase";
 import { format } from "date-fns";
+import { handleUnknownError } from "@/utils/errorHandling";
 
 interface EditTimeEntryModalProps {
   open: boolean;
@@ -110,9 +111,9 @@ export function EditTimeEntryModal({
       });
 
       onOpenChange(false);
-    } catch (error) {
+    } catch (error: unknown) {
       // Error handled by mutation's onError
-      console.error('Failed to update entry:', error);
+      handleUnknownError(error, 'EditTimeEntry.handleSubmit');
     }
   };
 
