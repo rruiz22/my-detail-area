@@ -31,6 +31,7 @@ interface QuickFilterBarProps {
   onWeekChange?: (offset: number) => void;
   onPrintList?: () => void;
   isPrinting?: boolean;
+  excludeFilters?: string[]; // Filters to exclude (e.g., ['dashboard', 'tomorrow'])
 }
 
 export const QuickFilterBar = memo(function QuickFilterBar({
@@ -46,7 +47,8 @@ export const QuickFilterBar = memo(function QuickFilterBar({
   weekOffset = 0,
   onWeekChange,
   onPrintList,
-  isPrinting = false
+  isPrinting = false,
+  excludeFilters = []
 }: QuickFilterBarProps) {
   const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(false);
@@ -117,7 +119,9 @@ export const QuickFilterBar = memo(function QuickFilterBar({
 
   // Filter to only show options that exist in tabCounts (or are always visible like dashboard/all)
   const filterOptions = allFilterOptions.filter(option => {
-    // Always show dashboard and all
+    // Exclude filters that are explicitly excluded
+    if (excludeFilters.includes(option.id)) return false;
+    // Always show dashboard and all (unless excluded)
     if (option.id === 'dashboard' || option.id === 'all') return true;
     // Show only if the field exists in tabCounts (not undefined)
     return tabCounts[option.id] !== undefined;

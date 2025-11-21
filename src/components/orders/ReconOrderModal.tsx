@@ -938,10 +938,8 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                       value={formData.notes}
                       onChange={(e) => handleInputChange('notes', e.target.value)}
                       rows={4}
-                      className="border-input bg-muted/50 resize-none cursor-not-allowed"
-                      placeholder={t('orders.notes_instruction', 'To add notes or instructions, use the Comments section in the order details view')}
-                      readOnly
-                      disabled
+                      className="border-input bg-background resize-none"
+                      placeholder={t('orders.notesPlaceholder', 'Add any special instructions or details about this order...')}
                     />
                   </div>
                       </div>

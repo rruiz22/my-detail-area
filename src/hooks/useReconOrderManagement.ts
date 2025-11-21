@@ -85,6 +85,7 @@ export interface ReconOrder {
   dealershipName?: string;
   assignedGroupName?: string;
   createdByGroupName?: string;
+  createdByName?: string; // User who created the order
   assignedTo?: string;
   dueTime?: string;
 }
@@ -128,6 +129,7 @@ const transformReconOrder = (supabaseOrder: SupabaseOrder): ReconOrder => ({
   dealershipName: 'Unknown Dealer',
   assignedGroupName: undefined,
   createdByGroupName: undefined,
+  createdByName: undefined,
   assignedTo: 'Unassigned',
   dueTime: supabaseOrder.sla_deadline ? new Date(supabaseOrder.sla_deadline).toLocaleTimeString('en-US', {
     hour: '2-digit',
@@ -229,27 +231,34 @@ export const useReconOrderManagement = () => {
       const { data: orders, error } = await ordersQuery;
       if (error) throw error;
 
-      // Fetch dealerships data separately
-      const { data: dealerships, error: dealershipsError } = await supabase
-        .from('dealerships')
-        .select('id, name');
+      // Fetch all related data in parallel (carwash pattern)
+      const [
+        { data: dealerships, error: dealershipsError },
+        { data: dealerGroups, error: groupsError },
+        { data: userProfiles, error: profilesError }
+      ] = await Promise.all([
+        supabase.from('dealerships').select('id, name'),
+        supabase.from('dealer_groups').select('id, name'),
+        supabase.from('profiles').select('id, first_name, last_name, email')
+      ]);
 
       if (dealershipsError) {
         console.error('Error fetching dealerships:', dealershipsError);
       }
-
-      // Fetch dealer groups data separately
-      const { data: dealerGroups, error: groupsError } = await supabase
-        .from('dealer_groups')
-        .select('id, name');
-
       if (groupsError) {
         console.error('Error fetching dealer groups:', groupsError);
       }
+      if (profilesError) {
+        console.error('Error fetching user profiles:', profilesError);
+      }
 
-      // Create lookup maps for better performance
+      // Create lookup maps for better performance (carwash pattern)
       const dealershipMap = new Map(dealerships?.map(d => [d.id, d.name]) || []);
       const groupMap = new Map(dealerGroups?.map(g => [g.id, g.name]) || []);
+      const userMap = new Map(userProfiles?.map(u => [
+        u.id,
+        `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.email
+      ]) || []);
 
       // Transform orders with joined data
       const transformedOrders = (orders || []).map(order => {
@@ -258,6 +267,10 @@ export const useReconOrderManagement = () => {
         transformedOrder.dealershipName = dealershipMap.get(order.dealer_id) || 'Unknown Dealer';
         transformedOrder.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
         transformedOrder.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
+
+        // Get creator name from userMap (carwash pattern)
+        transformedOrder.createdByName = order.created_by ? userMap.get(order.created_by) : undefined;
+
         transformedOrder.assignedTo = transformedOrder.assignedGroupName || 'Unassigned';
         return transformedOrder;
       });

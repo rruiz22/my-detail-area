@@ -110,7 +110,11 @@
       "Bash(break)",
       "Bash(git mv:*)",
       "Bash(for i in {1..15})",
-      "Bash(exit 0)"
+      "Bash(exit 0)",
+      "Bash(if not exist \"backups\\timeclock-fixes-20251121\" mkdir \"backups\\timeclock-fixes-20251121\")",
+      "Bash(git checkout:*)",
+      "Bash(git rm:*)",
+      "Bash(gh pr create:*)"
     ],
     "deny": [],
     "ask": []

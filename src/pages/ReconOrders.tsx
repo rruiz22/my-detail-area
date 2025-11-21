@@ -86,7 +86,7 @@ export default function ReconOrders() {
   // Hook for status permissions and updates
   const { canUpdateStatus, updateOrderStatus } = useStatusPermissions();
 
-  // Reset week offset when changing to a different filter
+  // Reset week offset when changing to a different filter (only week, today, all for recon)
   useEffect(() => {
     if (activeFilter !== 'week') {
       setWeekOffset(0);
@@ -149,7 +149,7 @@ export default function ReconOrders() {
     };
   }, []);
 
-  // Calculate tab counts from all orders (excluding tomorrow for Recon)
+  // Calculate tab counts from all orders (only today, week for Recon)
   const tabCounts = useMemo(() => {
     const { today, weekStart, weekEnd } = getSystemTimezoneDates(weekOffset);
 
@@ -158,8 +158,6 @@ export default function ReconOrders() {
         const orderDate = new Date(order.dueDate || order.completedAt || order.createdAt);
         return orderDate.toDateString() === today.toDateString();
       }).length,
-      pending: allOrders.filter(order => order.status === 'pending').length,
-      in_process: allOrders.filter(order => order.status === 'in_progress').length,
       week: allOrders.filter(order => {
         const orderDate = new Date(order.dueDate || order.completedAt || order.createdAt);
         const orderDateNormalized = new Date(orderDate);
@@ -171,7 +169,7 @@ export default function ReconOrders() {
 
   // Filter orders based on active filter and week offset (excluding tomorrow for Recon)
   const filteredOrdersByTab = useMemo(() => {
-    if (activeFilter === 'dashboard' || activeFilter === 'all') {
+    if (activeFilter === 'all') {
       return allOrders;
     }
 
@@ -183,10 +181,6 @@ export default function ReconOrders() {
           const orderDate = new Date(order.dueDate || order.completedAt || order.createdAt);
           return orderDate.toDateString() === today.toDateString();
         });
-      case 'pending':
-        return allOrders.filter(order => order.status === 'pending');
-      case 'in_process':
-        return allOrders.filter(order => order.status === 'in_progress');
       case 'week':
         return allOrders.filter(order => {
           const orderDate = new Date(order.dueDate || order.completedAt || order.createdAt);
@@ -436,14 +430,9 @@ export default function ReconOrders() {
   // Get dynamic title based on active filter
   const getFilterTitle = (filter: string): string => {
     const titleMap: Record<string, string> = {
-      dashboard: t('sales_orders.tabs.dashboard'),
       today: t('sales_orders.tabs.today'),
-      tomorrow: t('sales_orders.tabs.tomorrow'),
-      pending: t('sales_orders.tabs.pending'),
-      in_process: t('sales_orders.in_process_orders'),
       week: t('sales_orders.tabs.week'),
-      all: t('sales_orders.tabs.all'),
-      deleted: t('sales_orders.tabs.deleted')
+      all: t('sales_orders.tabs.all')
     };
     return titleMap[filter] || filter;
   };
@@ -489,7 +478,8 @@ export default function ReconOrders() {
       price: order.reconCost || 0,
       advisor: t('recon_defaults.default_advisor'),
       department: t('recon_defaults.default_department'),
-      services: order.services || []
+      services: order.services || [],
+      createdByName: order.createdByName // Pass creator name for display in table
     };
   }), [filteredOrdersByTab, t]);
 
@@ -601,6 +591,7 @@ export default function ReconOrders() {
           onWeekChange={setWeekOffset}
           onPrintList={handlePrintList}
           isPrinting={isPrinting}
+          excludeFilters={['dashboard', 'tomorrow', 'queued', 'pending', 'in_process']}
         />
 
         {/* Main Content - Direct rendering for maximum speed */}
@@ -609,7 +600,7 @@ export default function ReconOrders() {
             {/* Responsive Table Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2">
               <h2 className="text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight">
-                {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}
+                {activeFilter === 'week' ? t('sales_orders.tabs.week') : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}
               </h2>
               <Badge variant="secondary" className="text-base sm:text-lg font-bold self-center sm:self-auto px-2 sm:px-3 py-1">
                 {filteredOrders.length}

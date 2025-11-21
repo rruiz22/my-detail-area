@@ -377,8 +377,12 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                           {t('data_table.no_stock')}
                         </span>
                       )}
-                      {/* Assigned To */}
-                      {order.assignedTo && (
+                      {/* Assigned To / Created By (for recon) */}
+                      {tabType === 'recon' && (order as any).createdByName ? (
+                        <div className="text-sm font-semibold text-foreground mt-2">
+                          {(order as any).createdByName}
+                        </div>
+                      ) : order.assignedTo && (
                         <div className="text-sm font-semibold text-foreground mt-2">
                           {order.assignedTo}
                         </div>
@@ -608,8 +612,12 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                             {t('data_table.no_stock')}
                           </span>
                         )}
-                        {/* Assigned To */}
-                        {order.assignedTo && (
+                        {/* Assigned To / Created By (for recon) */}
+                        {tabType === 'recon' && (order as any).createdByName ? (
+                          <div className="text-sm text-muted-foreground font-semibold whitespace-nowrap">
+                            {(order as any).createdByName}
+                          </div>
+                        ) : order.assignedTo && (
                           <div className="text-sm text-muted-foreground font-semibold whitespace-nowrap">
                             {order.assignedTo}
                           </div>
