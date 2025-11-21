@@ -45,7 +45,9 @@ interface BestMatch {
 
 export function useFaceRecognition(options: UseFaceRecognitionOptions = {}) {
   const {
-    modelUrl = '/models',
+    modelUrl = import.meta.env.PROD
+      ? 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/model'
+      : '/models',
     minConfidence = 0.6
   } = options;
 
