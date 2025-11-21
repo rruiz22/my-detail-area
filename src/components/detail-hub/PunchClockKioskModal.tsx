@@ -50,6 +50,9 @@ import { useFaceRecognition } from "@/hooks/useFaceRecognition";
 // Security utilities
 import { constantTimeCompare } from "@/utils/securityUtils";
 
+// Error handling utilities
+import { handleUnknownError } from "@/utils/errorHandling";
+
 // Supabase
 import { supabase } from "@/integrations/supabase/client";
 
@@ -568,12 +571,12 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       setCapturedPhoto(null);
       setPhotoUploadStatus("");
 
-    } catch (error) {
-      console.error('Punch error:', error);
+    } catch (error: unknown) {
+      const errorMessage = handleUnknownError(error, 'PunchClockKiosk.handleConfirmPunch');
       setPhotoUploadStatus(t('detail_hub.punch_clock.messages.punch_failed'));
       toast({
         title: t('detail_hub.punch_clock.punch_failed'),
-        description: error instanceof Error ? error.message : t('detail_hub.punch_clock.messages.unknown_error'),
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -788,15 +791,14 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                 console.log('[FaceScan] ❌ No match found this scan');
                 setFaceScanMessage(t('detail_hub.punch_clock.messages.no_face_detected'));
               }
-            } catch (err) {
-              const errorMessage = err instanceof Error ? err.message : String(err);
+            } catch (error: unknown) {
+              const errorMessage = handleUnknownError(error, 'PunchClockKiosk.handleStartFaceScan.scanInterval');
 
               // Suppress TensorFlow tensor shape errors (corrupted descriptors)
               if (errorMessage.includes('tensor should have') || errorMessage.includes('values but has')) {
                 console.warn('[FaceScan] ⚠️ Corrupted face descriptor detected, skipping this scan');
                 // Don't update UI - let scanning continue
               } else {
-                console.error('[FaceScan] ❌ Error during scan:', err);
                 setFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'));
               }
             }
@@ -806,8 +808,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
         // Store interval to clear on unmount
         return () => clearInterval(scanInterval);
       }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
+    } catch (error: unknown) {
+      const errorMessage = handleUnknownError(error, 'PunchClockKiosk.handleStartFaceScan');
 
       // Suppress TensorFlow internal errors (validation already handled above)
       if (errorMessage.includes('tensor should have') || errorMessage.includes('values but has')) {
@@ -818,7 +820,6 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
         return;
       }
 
-      console.error('Camera access error:', error);
       setFaceScanMessage(t('detail_hub.punch_clock.messages.camera_denied'));
       toast({
         title: t('detail_hub.punch_clock.camera_error'),
