@@ -47,6 +47,9 @@ import { capturePhotoFromVideo, uploadPhotoToStorage } from "@/utils/photoFallba
 // Face recognition
 import { useFaceRecognition } from "@/hooks/useFaceRecognition";
 
+// Security utilities
+import { constantTimeCompare } from "@/utils/securityUtils";
+
 // Supabase
 import { supabase } from "@/integrations/supabase/client";
 
@@ -234,11 +237,11 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     }
   }, [employeeState?.state, employeeState?.currentEntry?.break_start]);
 
-  const formatBreakTimer = (seconds: number) => {
+  const formatBreakTimer = useCallback((seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
+  }, []);
 
   // Update clock every second
   useEffect(() => {
@@ -335,24 +338,24 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   }, []);
 
   // Format helpers
-  const formatTime = (date: Date) => date.toLocaleTimeString('en-US', {
+  const formatTime = useCallback((date: Date) => date.toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
     hour12: true
-  });
+  }), []);
 
-  const formatElapsedTime = (minutes: number) => {
+  const formatElapsedTime = useCallback((minutes: number) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     return `${hours}h ${mins}m`;
-  };
+  }, []);
 
   // PIN validation (useCallback to avoid re-creating function) - MUST BE BEFORE useEffect that uses it
   const handlePinSubmit = useCallback(() => {
     if (!selectedEmployee || pin.length < 4) return;
 
-    if (pin === selectedEmployee.pin_code) {
+    if (constantTimeCompare(pin, selectedEmployee.pin_code || '')) {
       // PIN correct
       setCurrentView('employee_detail');
       setPin("");
