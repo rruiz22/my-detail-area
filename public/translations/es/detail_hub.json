@@ -199,7 +199,8 @@
     "start_your_shift": "Iniciar su Turno",
     "entry_count": "registro",
     "entry_count_plural": "registros",
-    "view_clock_in_photo": "Ver foto de entrada"
+    "view_clock_in_photo": "Ver foto de entrada",
+    "view_clock_out_photo": "Ver foto de salida"
   },
   "live_dashboard": {
     "title": "Quién Está Trabajando Ahora",
@@ -417,6 +418,9 @@
     "loading": "Cargando tarjetas de tiempo...",
     "no_entries": "No se encontraron registros para esta fecha",
     "no_entries_for_date": "Sin registros para esta fecha",
+    "todays_summary": "Resumen de Hoy",
+    "no_employee_data": "No hay datos de empleados para este período",
+    "double_click_to_view_details": "Doble clic para ver detalles del empleado",
     "filters": {
       "today": "Hoy",
       "this_week": "Esta Semana",
@@ -563,7 +567,8 @@
         "break_end_required": "La hora de fin de descanso es requerida si se establece el inicio",
         "break_end_after_start": "El fin de descanso debe ser después del inicio",
         "break_minimum_30": "El descanso debe ser de al menos 30 minutos",
-        "break_within_shift": "Los tiempos de descanso deben estar dentro del turno"
+        "break_within_shift": "Los tiempos de descanso deben estar dentro del turno",
+        "dealership_required": "Por favor seleccione un concesionario específico"
       }
     }
   },

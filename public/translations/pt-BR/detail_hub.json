@@ -199,7 +199,8 @@
     "start_your_shift": "Iniciar seu Turno",
     "entry_count": "registro",
     "entry_count_plural": "registros",
-    "view_clock_in_photo": "Ver foto de entrada"
+    "view_clock_in_photo": "Ver foto de entrada",
+    "view_clock_out_photo": "Ver foto de saída"
   },
   "live_dashboard": {
     "title": "Quem Está Trabalhando Agora",
@@ -420,6 +421,9 @@
     "loading": "Carregando cartões de ponto...",
     "no_entries": "Nenhum registro encontrado para esta data",
     "no_entries_for_date": "Nenhum registro para esta data",
+    "todays_summary": "Resumo de Hoje",
+    "no_employee_data": "Nenhum dado de funcionário para este período",
+    "double_click_to_view_details": "Clique duas vezes para ver detalhes do funcionário",
     "filters": {
       "today": "Hoje",
       "this_week": "Esta Semana",
@@ -566,7 +570,8 @@
         "break_end_required": "A hora de fim do intervalo é obrigatória se o início for definido",
         "break_end_after_start": "O fim do intervalo deve ser depois do início",
         "break_minimum_30": "O intervalo deve ser de pelo menos 30 minutos",
-        "break_within_shift": "Os horários de intervalo devem estar dentro do turno"
+        "break_within_shift": "Os horários de intervalo devem estar dentro do turno",
+        "dealership_required": "Por favor selecione uma concessionária específica"
       }
     }
   },

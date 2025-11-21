@@ -213,7 +213,8 @@
     "start_your_shift": "Start Your Shift",
     "entry_count": "entry",
     "entry_count_plural": "entries",
-    "view_clock_in_photo": "View clock-in photo"
+    "view_clock_in_photo": "View clock-in photo",
+    "view_clock_out_photo": "View clock-out photo"
   },
   "employees": {
     "title": "Employee Portal",
@@ -411,6 +412,9 @@
     "loading": "Loading timecards...",
     "no_entries": "No time entries found for this date",
     "no_entries_for_date": "No entries for this date",
+    "todays_summary": "Today's Summary",
+    "no_employee_data": "No employee data for this period",
+    "double_click_to_view_details": "Double-click to view employee details",
     "filters": {
       "today": "Today",
       "this_week": "This Week",
@@ -557,7 +561,8 @@
         "break_end_required": "Break end time is required if break start is set",
         "break_end_after_start": "Break end must be after break start",
         "break_minimum_30": "Break must be at least 30 minutes",
-        "break_within_shift": "Break times must be within the shift"
+        "break_within_shift": "Break times must be within the shift",
+        "dealership_required": "Please select a specific dealership"
       }
     }
   },
