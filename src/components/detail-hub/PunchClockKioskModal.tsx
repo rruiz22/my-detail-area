@@ -634,6 +634,17 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     }
   }, [showFaceScan]);
 
+  // BUGFIX: Clear face scan timeout when view changes away from search
+  // Prevents timeout toast from showing after employee is already selected
+  useEffect(() => {
+    if (currentView !== 'search' && faceScanTimeout) {
+      console.log('[FaceScan] 🧹 Clearing timeout - view changed to:', currentView);
+      clearTimeout(faceScanTimeout);
+      setFaceScanTimeout(null);
+      setShowFaceScan(false); // Also stop face scan UI
+    }
+  }, [currentView, faceScanTimeout]);
+
   const handleStartFaceScan = async () => {
     setFaceScanning(true);
     setFaceScanSecondsLeft(15);
