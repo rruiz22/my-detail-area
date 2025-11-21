@@ -12,6 +12,7 @@ import { CalendarIcon, Clock, Save, X } from "lucide-react";
 import { format } from "date-fns";
 import { useCreateManualTimeEntry, DetailHubEmployee } from "@/hooks/useDetailHubDatabase";
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
+import { handleUnknownError } from "@/utils/errorHandling";
 
 interface ManualTimeEntryModalProps {
   open: boolean;
@@ -126,9 +127,9 @@ export function ManualTimeEntryModal({ open, onOpenChange, employees }: ManualTi
       // Reset form and close
       resetForm();
       onOpenChange(false);
-    } catch (error) {
+    } catch (error: unknown) {
       // Error handled by mutation's onError
-      console.error('Failed to create manual entry:', error);
+      handleUnknownError(error, 'ManualTimeEntry.handleSubmit');
     }
   };
 
