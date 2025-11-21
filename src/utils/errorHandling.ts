@@ -1,7 +1,8 @@
 /**
  * Centralized Error Handling Utilities
  *
- * Provides consistent error handling patterns across the application.
+ * Enterprise-grade error handling with strict TypeScript type safety.
+ * NO `any` types allowed - all errors properly typed as `unknown`.
  *
  * Features:
  * - Typed error classes
@@ -9,6 +10,7 @@
  * - User-friendly error messages
  * - Error logging integration
  * - Retry logic helpers
+ * - Type guards for error detection
  */
 
 import { logger } from './logger';
@@ -22,7 +24,7 @@ export class AppError extends Error {
     public code: string,
     public statusCode: number = 500,
     public isOperational: boolean = true,
-    public context?: Record<string, any>
+    public context?: Record<string, unknown>
   ) {
     super(message);
     this.name = this.constructor.name;
@@ -34,7 +36,7 @@ export class AppError extends Error {
  * Permission-related errors
  */
 export class PermissionError extends AppError {
-  constructor(message: string = 'Insufficient permissions', context?: Record<string, any>) {
+  constructor(message: string = 'Insufficient permissions', context?: Record<string, unknown>) {
     super(message, 'PERMISSION_DENIED', 403, true, context);
   }
 }
@@ -43,7 +45,7 @@ export class PermissionError extends AppError {
  * Authentication errors
  */
 export class AuthenticationError extends AppError {
-  constructor(message: string = 'Authentication required', context?: Record<string, any>) {
+  constructor(message: string = 'Authentication required', context?: Record<string, unknown>) {
     super(message, 'AUTH_REQUIRED', 401, true, context);
   }
 }
@@ -55,7 +57,7 @@ export class ValidationError extends AppError {
   constructor(
     message: string = 'Validation failed',
     public fields?: Record<string, string[]>,
-    context?: Record<string, any>
+    context?: Record<string, unknown>
   ) {
     super(message, 'VALIDATION_ERROR', 400, true, { ...context, fields });
   }
@@ -68,7 +70,7 @@ export class NotFoundError extends AppError {
   constructor(
     resource: string,
     identifier?: string | number,
-    context?: Record<string, any>
+    context?: Record<string, unknown>
   ) {
     const message = identifier
       ? `${resource} with ID "${identifier}" not found`
@@ -81,7 +83,7 @@ export class NotFoundError extends AppError {
  * Database/API errors
  */
 export class DatabaseError extends AppError {
-  constructor(message: string = 'Database operation failed', context?: Record<string, any>) {
+  constructor(message: string = 'Database operation failed', context?: Record<string, unknown>) {
     super(message, 'DATABASE_ERROR', 500, true, context);
   }
 }
@@ -93,7 +95,7 @@ export class RateLimitError extends AppError {
   constructor(
     message: string = 'Rate limit exceeded',
     public retryAfter?: number,
-    context?: Record<string, any>
+    context?: Record<string, unknown>
   ) {
     super(message, 'RATE_LIMIT_EXCEEDED', 429, true, { ...context, retryAfter });
   }
@@ -103,7 +105,7 @@ export class RateLimitError extends AppError {
  * Network/connectivity errors
  */
 export class NetworkError extends AppError {
-  constructor(message: string = 'Network request failed', context?: Record<string, any>) {
+  constructor(message: string = 'Network request failed', context?: Record<string, unknown>) {
     super(message, 'NETWORK_ERROR', 0, true, context);
   }
 }
@@ -274,11 +276,186 @@ export async function retryWithBackoff<T>(
 }
 
 /**
+ * Type guard: Check if error is an Error instance
+ */
+export function isError(error: unknown): error is Error {
+  return error instanceof Error;
+}
+
+/**
+ * Type guard: Check if error has a message property
+ */
+export function isErrorWithMessage(error: unknown): error is { message: string } {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof (error as Record<string, unknown>).message === 'string'
+  );
+}
+
+/**
+ * Type guard: Check if error has a code property
+ */
+export function isErrorWithCode(error: unknown): error is { code: string | number } {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    (typeof (error as Record<string, unknown>).code === 'string' ||
+      typeof (error as Record<string, unknown>).code === 'number')
+  );
+}
+
+/**
+ * Type guard: Check if error is a Supabase error
+ */
+export function isSupabaseError(error: unknown): error is {
+  message: string;
+  code?: string;
+  details?: string;
+  hint?: string;
+} {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof (error as Record<string, unknown>).message === 'string'
+  );
+}
+
+/**
+ * Extract error message from unknown error with type safety
+ */
+export function getErrorMessage(error: unknown): string {
+  // Error instance
+  if (isError(error)) {
+    return error.message;
+  }
+
+  // Object with message property
+  if (isErrorWithMessage(error)) {
+    return error.message;
+  }
+
+  // String error
+  if (typeof error === 'string') {
+    return error;
+  }
+
+  // Number error (rare but possible)
+  if (typeof error === 'number') {
+    return `Error code: ${error}`;
+  }
+
+  // Boolean error (very rare)
+  if (typeof error === 'boolean') {
+    return error ? 'Operation failed' : 'Operation returned false';
+  }
+
+  // Null or undefined
+  if (error === null || error === undefined) {
+    return 'Unknown error occurred';
+  }
+
+  // Try to stringify object errors
+  try {
+    return JSON.stringify(error);
+  } catch {
+    return 'Unknown error occurred';
+  }
+}
+
+/**
+ * Handle unknown error with context logging and message extraction
+ *
+ * @param error - Unknown error object
+ * @param context - Context string for logging (e.g., 'UserService.createUser')
+ * @returns Human-readable error message
+ *
+ * @example
+ * ```typescript
+ * try {
+ *   await supabase.from('users').insert(data);
+ * } catch (error) {
+ *   const message = handleUnknownError(error, 'UserService.createUser');
+ *   toast.error(message);
+ * }
+ * ```
+ */
+export function handleUnknownError(error: unknown, context: string): string {
+  const message = getErrorMessage(error);
+
+  // Enhanced logging with context
+  if (isError(error)) {
+    console.error(`[${context}] Error:`, {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    });
+  } else if (isSupabaseError(error)) {
+    console.error(`[${context}] Supabase Error:`, {
+      message: error.message,
+      code: error.code,
+      details: error.details,
+      hint: error.hint,
+    });
+  } else {
+    console.error(`[${context}] Unknown error:`, error);
+  }
+
+  return message;
+}
+
+/**
+ * Extract detailed error information for debugging
+ */
+export function getErrorDetails(error: unknown): {
+  message: string;
+  name?: string;
+  code?: string | number;
+  details?: string;
+  hint?: string;
+  stack?: string;
+} {
+  const details: {
+    message: string;
+    name?: string;
+    code?: string | number;
+    details?: string;
+    hint?: string;
+    stack?: string;
+  } = {
+    message: getErrorMessage(error),
+  };
+
+  if (isError(error)) {
+    details.name = error.name;
+    details.stack = error.stack;
+  }
+
+  if (isErrorWithCode(error)) {
+    details.code = error.code;
+  }
+
+  if (isSupabaseError(error)) {
+    const supabaseError = error as { code?: string; details?: string; hint?: string };
+    details.code = supabaseError.code;
+    details.details = supabaseError.details;
+    details.hint = supabaseError.hint;
+  }
+
+  return details;
+}
+
+/**
  * Parse Supabase errors into AppError types
  */
-export function parseSupabaseError(error: any): AppError {
-  const message = error?.message || 'Database operation failed';
-  const code = error?.code || 'UNKNOWN';
+export function parseSupabaseError(error: unknown): AppError {
+  const message = isErrorWithMessage(error) ? error.message : 'Database operation failed';
+  const code = isErrorWithCode(error)
+    ? String(error.code)
+    : 'UNKNOWN';
 
   // Map Supabase error codes to app errors
   if (code === 'PGRST116' || code === 'PGRST301') {
