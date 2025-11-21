@@ -143,6 +143,29 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   const { data: employeeState, refetch: refetchEmployeeState } = useEmployeeCurrentState(selectedEmployee?.id || null);
   const { data: faceMatchedEmployee, isLoading: loadingFaceEmployee } = useEmployeeById(faceMatchedEmployeeId);
 
+  // =================================================================
+  // Camera Cleanup - Centralized Function (SINGLE SOURCE OF TRUTH)
+  // =================================================================
+  // Used in 7 locations to prevent camera resource leaks
+  const cleanupCamera = useCallback((context: string = 'unknown') => {
+    if (videoRef.current?.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      const tracks = stream.getTracks();
+
+      console.log(`[Camera] 🧹 Cleanup from ${context} - tracks:`, tracks.length);
+
+      tracks.forEach(track => {
+        track.stop();
+        console.log(`[Camera] ✓ Stopped ${track.kind} track`);
+      });
+
+      videoRef.current.srcObject = null;
+      console.log(`[Camera] ✓ srcObject cleared (${context})`);
+    } else {
+      console.log(`[Camera] No cleanup needed (${context}) - no active stream`);
+    }
+  }, []);
+
   // Live break timer (updates every second)
   const [breakSecondsRemaining, setBreakSecondsRemaining] = useState<number | null>(null);
 
@@ -284,22 +307,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   // Cleanup camera stream on unmount or modal close
   useEffect(() => {
     if (!open) {
-      // CRITICAL: Stop ALL camera tracks and clear srcObject
-      if (videoRef.current?.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        const tracks = stream.getTracks();
-
-        console.log('[Kiosk] Stopping camera - tracks:', tracks.length);
-
-        tracks.forEach(track => {
-          track.stop();
-          console.log('[Kiosk] Stopped track:', track.kind, track.label);
-        });
-
-        // CRITICAL: Clear the srcObject to release the camera
-        videoRef.current.srcObject = null;
-        console.log('[Kiosk] ✓ Camera released and srcObject cleared');
-      }
+      cleanupCamera('modal-close');
 
       // Clear any pending timeout
       if (faceScanTimeout) {
@@ -325,20 +333,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   // Cleanup on unmount (backup safety)
   useEffect(() => {
     return () => {
-      if (videoRef.current?.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        const tracks = stream.getTracks();
-
-        console.log('[Kiosk] Component unmounting - stopping camera');
-
-        tracks.forEach(track => {
-          track.stop();
-        });
-
-        videoRef.current.srcObject = null;
-      }
+      cleanupCamera('unmount');
     };
-  }, []);
+  }, [cleanupCamera]);
 
   // Format helpers
   const formatTime = useCallback((date: Date) => date.toLocaleTimeString('en-US', {
@@ -458,10 +455,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     setPhotoUploadStatus(t('detail_hub.punch_clock.messages.photo_captured'));
 
     // Stop camera stream
-    if (videoRef.current?.srcObject) {
-      const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
-      tracks.forEach(track => track.stop());
-    }
+    cleanupCamera('photo-captured');
   };
 
   // Retake photo
@@ -586,10 +580,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
   // Cancel photo capture
   const handleCancelCapture = () => {
-    if (videoRef.current?.srcObject) {
-      const tracks = (videoRef.current.srcObject as MediaStream).getTracks();
-      tracks.forEach(track => track.stop());
-    }
+    cleanupCamera('cancel-capture');
     setCurrentView('employee_detail');
     setCapturedPhoto(null);
     setPhotoUploadStatus("");
@@ -776,13 +767,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                 }
 
                 // Stop camera and clear srcObject
-                if (videoRef.current?.srcObject) {
-                  const stream = videoRef.current.srcObject as MediaStream;
-                  const tracks = stream.getTracks();
-                  tracks.forEach(track => track.stop());
-                  videoRef.current.srcObject = null;
-                  console.log('[FaceScan] ✓ Camera stopped after match');
-                }
+                cleanupCamera('face-match-success');
 
                 // Show success message
                 toast({
@@ -843,20 +828,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
   const handleStopFaceScan = () => {
     // Stop camera and clear srcObject
-    if (videoRef.current?.srcObject) {
-      const stream = videoRef.current.srcObject as MediaStream;
-      const tracks = stream.getTracks();
-
-      console.log('[FaceScan] Manually stopping face scan - tracks:', tracks.length);
-
-      tracks.forEach(track => {
-        track.stop();
-        console.log('[FaceScan] Stopped track:', track.kind);
-      });
-
-      videoRef.current.srcObject = null;
-      console.log('[FaceScan] ✓ Camera stopped and srcObject cleared');
-    }
+    cleanupCamera('stop-face-scan');
 
     setFaceScanning(false);
     setFaceScanMessage("");
