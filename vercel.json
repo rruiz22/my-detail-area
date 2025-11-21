@@ -13,7 +13,7 @@
   ],
   "headers": [
     {
-      "source": "/models/(.*\\.bin)",
+      "source": "/models/*.bin",
       "headers": [
         {
           "key": "Content-Type",
@@ -30,7 +30,7 @@
       ]
     },
     {
-      "source": "/models/(.*)",
+      "source": "/models/**",
       "headers": [
         {
           "key": "Cache-Control",
@@ -43,20 +43,19 @@
       ]
     },
     {
-      "source": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot))",
+      "source": "/(.*)",
       "headers": [
         {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/index.html",
-      "headers": [
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
         {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
         }
       ]
     }
