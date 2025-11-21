@@ -62,7 +62,5 @@
     }
   ],
   "trailingSlash": false,
-  "cleanUrls": false,
-  "functions": {},
-  "crons": []
+  "cleanUrls": false
 }
