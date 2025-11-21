@@ -896,18 +896,24 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                       </div>
 
                       {/* Video Feed with Face Guide Overlay */}
-                      <div className="relative rounded-xl overflow-hidden bg-black" style={{ maxHeight: '500px' }}>
+                      <div
+                        className="relative rounded-xl overflow-hidden bg-black"
+                        style={{ maxHeight: '500px' }}
+                        role="region"
+                        aria-label={t('detail_hub.punch_clock.face_recognition')}
+                      >
                         <video
                           ref={videoRef}
                           autoPlay
                           playsInline
                           muted
                           className="w-full h-full object-cover"
+                          aria-label={t('detail_hub.punch_clock.messages.position_face')}
                         />
 
                         {/* Face Guide Overlay */}
                         {faceScanning && (
-                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
                             <div className="relative">
                               {/* Face outline guide */}
                               <div className="w-64 h-80 border-4 border-emerald-500 rounded-2xl animate-pulse-border" />
@@ -922,16 +928,24 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
                         {/* Scanning Indicator with Countdown */}
                         {faceScanning && (
-                          <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+                          <div
+                            className="absolute bottom-4 left-0 right-0 flex justify-center gap-2"
+                            role="status"
+                            aria-live="polite"
+                            aria-atomic="true"
+                          >
                             <div className="bg-black/70 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2">
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                              {t('detail_hub.punch_clock.scanning')}
+                              <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                              <span>{t('detail_hub.punch_clock.scanning')}</span>
                             </div>
-                            <div className={`px-3 py-2 rounded-full text-sm font-mono font-bold transition-all duration-300 ${
-                              faceScanSecondsLeft <= 5
-                                ? 'bg-red-500 text-white animate-pulse'
-                                : 'bg-emerald-500 text-white'
-                            }`}>
+                            <div
+                              className={`px-3 py-2 rounded-full text-sm font-mono font-bold transition-all duration-300 ${
+                                faceScanSecondsLeft <= 5
+                                  ? 'bg-red-500 text-white animate-pulse'
+                                  : 'bg-emerald-500 text-white'
+                              }`}
+                              aria-label={`${faceScanSecondsLeft} ${t('detail_hub.schedules.filters.status.all')} ${t('detail_hub.punch_clock.remaining')}`}
+                            >
                               {faceScanSecondsLeft}s
                             </div>
                           </div>
@@ -974,8 +988,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                           variant="destructive"
                           className="w-full h-12"
                           size="lg"
+                          aria-label={`${t('detail_hub.punch_clock.cancel_face_scan')} - ${faceScanSecondsLeft} seconds remaining`}
                         >
-                          <X className="w-5 h-5 mr-2" />
+                          <X className="w-5 h-5 mr-2" aria-hidden="true" />
                           {t('detail_hub.punch_clock.cancel_face_scan')}
                         </Button>
                       )}
@@ -987,6 +1002,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                           variant="outline"
                           className="w-full h-12 text-gray-700"
                           size="lg"
+                          aria-label={t('detail_hub.punch_clock.messages.use_search_instead')}
                         >
                           {t('detail_hub.punch_clock.messages.use_search_instead')}
                         </Button>
@@ -1016,7 +1032,13 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="text-xl h-16"
+                      aria-label={t('detail_hub.punch_clock.search_placeholder')}
+                      aria-describedby="search-instructions"
+                      autoComplete="off"
                     />
+                    <span id="search-instructions" className="sr-only">
+                      {t('detail_hub.punch_clock.search_by_name_or_id')}
+                    </span>
 
                     {/* Face API Loading Status */}
                     {faceApiLoading && (
@@ -1040,8 +1062,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                         onClick={() => setShowFaceScan(true)}
                         className="w-full h-14 bg-indigo-500 hover:bg-indigo-600 text-white"
                         size="lg"
+                        aria-label={`${t('detail_hub.punch_clock.messages.use_face_recognition')} - ${t('detail_hub.punch_clock.messages.instant_identification')}`}
                       >
-                        <Camera className="w-5 h-5 mr-2" />
+                        <Camera className="w-5 h-5 mr-2" aria-hidden="true" />
                         {t('detail_hub.punch_clock.messages.use_face_recognition')}
                       </Button>
                     )}
@@ -1070,7 +1093,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                           {t('detail_hub.punch_clock.no_results')}
                         </div>
                       ) : (
-                        <div className="space-y-2">
+                        <div className="space-y-2" role="list" aria-label={t('detail_hub.employees.employee_list')}>
                           {searchResults.map(employee => (
                             <button
                               key={employee.id}
@@ -1079,10 +1102,13 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                                 setCurrentView('pin_auth');
                               }}
                               className="w-full p-4 rounded-lg border-2 border-gray-200 hover:border-emerald-500 hover:bg-emerald-50 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-emerald-100 text-left"
+                              role="listitem"
+                              aria-label={`${t('detail_hub.punch_clock.select_employee')}: ${employee.first_name} ${employee.last_name}, ${t('detail_hub.employees.employee_number')}: ${employee.employee_number}, ${t('detail_hub.employees.department')}: ${employee.department}`}
+                              tabIndex={0}
                             >
                               <div className="flex items-center gap-3">
                                 {/* Photo or Avatar */}
-                                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
+                                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center" aria-hidden="true">
                                   {employee.fallback_photo_url ? (
                                     <img src={employee.fallback_photo_url} alt="" className="w-full h-full object-cover rounded-full" />
                                   ) : (
@@ -1096,8 +1122,12 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                                     {employee.first_name} {employee.last_name}
                                   </div>
                                   <div className="flex gap-2 mt-1">
-                                    <Badge variant="outline" className="text-xs">{employee.employee_number}</Badge>
-                                    <Badge variant="secondary" className="text-xs">{employee.department}</Badge>
+                                    <Badge variant="outline" className="text-xs" aria-label={`${t('detail_hub.employees.employee_number')}: ${employee.employee_number}`}>
+                                      {employee.employee_number}
+                                    </Badge>
+                                    <Badge variant="secondary" className="text-xs" aria-label={`${t('detail_hub.employees.department')}: ${employee.department}`}>
+                                      {employee.department}
+                                    </Badge>
                                   </div>
                                 </div>
                               </div>
@@ -1122,12 +1152,17 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                 {/* PIN Entry */}
                 <Card className="card-enhanced">
                   <CardContent className="py-8 space-y-6">
-                    <h2 className="text-2xl font-bold text-center">
+                    <h2 className="text-2xl font-bold text-center" id="pin-entry-heading">
                       {t('detail_hub.punch_clock.enter_pin')}
                     </h2>
 
                     {/* PIN Display */}
-                    <PinInputDisplay pin={pin} length={6} error={pinAttempts > 0 && pin.length >= 4} />
+                    <div role="status" aria-live="polite" aria-atomic="true">
+                      <PinInputDisplay pin={pin} length={6} error={pinAttempts > 0 && pin.length >= 4} />
+                      <span className="sr-only">
+                        {pin.length > 0 ? `${pin.length} ${t('detail_hub.employees.department')} entered` : t('detail_hub.punch_clock.enter_pin')}
+                      </span>
+                    </div>
 
                     {/* Error Message */}
                     {pinAttempts > 0 && !isLocked && (
@@ -1178,7 +1213,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
             {currentView === 'employee_detail' && selectedEmployee && employeeState && (
               <>
                 {/* Inactivity Timer Badge - Bottom Right */}
-                <div className="fixed bottom-6 right-6 z-50 animate-fade-in">
+                <div className="fixed bottom-6 right-6 z-50 animate-fade-in" role="timer" aria-live="polite" aria-atomic="true">
                   <div className={`px-4 py-2 rounded-full text-sm font-medium shadow-lg transition-all duration-300 ${
                     inactivitySecondsLeft <= 3
                       ? 'bg-red-500 text-white animate-pulse'
@@ -1187,8 +1222,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                       : 'bg-gray-800/90 text-white'
                   }`}>
                     <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      <span>{inactivitySecondsLeft}s</span>
+                      <Clock className="w-4 h-4" aria-hidden="true" />
+                      <span aria-label={`${inactivitySecondsLeft} seconds until session timeout`}>{inactivitySecondsLeft}s</span>
                     </div>
                   </div>
                 </div>
@@ -1325,8 +1360,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                           size="lg"
                           className="h-24 text-xl font-semibold bg-emerald-600 hover:bg-emerald-700 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-emerald-200 col-span-2"
                           onClick={() => handleStartPhotoCapture('clock_in')}
+                          aria-label={`${t('detail_hub.live_dashboard.clock_in')} - ${t('detail_hub.kiosk_id_label')}`}
                         >
-                          <LogIn className="w-8 h-8 mr-3" />
+                          <LogIn className="w-8 h-8 mr-3" aria-hidden="true" />
                           <div className="text-left">
                             <div>{t('detail_hub.live_dashboard.clock_in')}</div>
                             <div className="text-xs font-normal opacity-90">Start Your Shift</div>
@@ -1342,8 +1378,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                             variant="outline"
                             className="h-24 text-xl font-semibold border-2 border-amber-500 text-amber-700 hover:bg-amber-50"
                             onClick={() => handleStartPhotoCapture('break_start')}
+                            aria-label={`${t('detail_hub.punch_clock.start_break')} - ${t('detail_hub.schedules.break_duration')}: 30 ${t('detail_hub.schedules.minutes')}`}
                           >
-                            <Coffee className="w-8 h-8 mr-2" />
+                            <Coffee className="w-8 h-8 mr-2" aria-hidden="true" />
                             {t('detail_hub.punch_clock.start_break')}
                           </Button>
 
@@ -1351,8 +1388,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                             size="lg"
                             className="h-24 text-xl font-semibold bg-red-600 hover:bg-red-700"
                             onClick={() => handleStartPhotoCapture('clock_out')}
+                            aria-label={`${t('detail_hub.punch_clock.messages.clock_out')} - ${t('detail_hub.live_dashboard.elapsed_time')}: ${formatElapsedTime(employeeState.currentEntry?.elapsed_minutes || 0)}`}
                           >
-                            <LogOut className="w-8 h-8 mr-2" />
+                            <LogOut className="w-8 h-8 mr-2" aria-hidden="true" />
                             {t('detail_hub.punch_clock.messages.clock_out')}
                           </Button>
                         </>
@@ -1366,15 +1404,17 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                             className="h-24 text-xl font-semibold bg-amber-600 hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed"
                             onClick={() => handleStartPhotoCapture('break_end')}
                             disabled={breakSecondsRemaining !== null && breakSecondsRemaining > 0}
-                            title={breakSecondsRemaining !== null && breakSecondsRemaining > 0
-                              ? `Break must be at least 30 minutes. ${formatBreakTimer(breakSecondsRemaining)} remaining.`
-                              : undefined
+                            aria-label={
+                              breakSecondsRemaining !== null && breakSecondsRemaining > 0
+                                ? `${t('detail_hub.punch_clock.end_break')} - ${t('detail_hub.schedules.break_duration')}: ${formatBreakTimer(breakSecondsRemaining)} ${t('detail_hub.punch_clock.remaining')}`
+                                : `${t('detail_hub.punch_clock.end_break')} - ${t('detail_hub.schedules.break_duration')}: ${formatElapsedTime(employeeState.currentEntry?.break_elapsed_minutes || 0)}`
                             }
+                            aria-disabled={breakSecondsRemaining !== null && breakSecondsRemaining > 0}
                           >
-                            <Coffee className="w-8 h-8 mr-2" />
+                            <Coffee className="w-8 h-8 mr-2" aria-hidden="true" />
                             <span>{t('detail_hub.punch_clock.end_break')}</span>
                             {breakSecondsRemaining !== null && breakSecondsRemaining > 0 && (
-                              <span className="ml-2 font-mono">
+                              <span className="ml-2 font-mono" aria-hidden="true">
                                 {formatBreakTimer(breakSecondsRemaining)}
                               </span>
                             )}
@@ -1384,8 +1424,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                             size="lg"
                             className="h-24 text-xl font-semibold bg-red-600 hover:bg-red-700"
                             onClick={() => handleStartPhotoCapture('clock_out')}
+                            aria-label={`${t('detail_hub.punch_clock.messages.clock_out')} - ${t('detail_hub.live_dashboard.on_break')}`}
                           >
-                            <LogOut className="w-8 h-8 mr-2" />
+                            <LogOut className="w-8 h-8 mr-2" aria-hidden="true" />
                             {t('detail_hub.punch_clock.messages.clock_out')}
                           </Button>
                         </>
@@ -1457,7 +1498,11 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                   </div>
 
                   {/* Camera preview or captured photo */}
-                  <div className="relative bg-black rounded-lg overflow-hidden aspect-video">
+                  <div
+                    className="relative bg-black rounded-lg overflow-hidden aspect-video"
+                    role="region"
+                    aria-label={capturedPhoto ? t('detail_hub.punch_clock.captured_photo_alt') : t('detail_hub.punch_clock.photo_capture')}
+                  >
                     {!capturedPhoto ? (
                       <>
                         <video
@@ -1465,9 +1510,10 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                           autoPlay
                           playsInline
                           className="w-full h-full object-cover"
+                          aria-label={t('detail_hub.punch_clock.messages.position_and_capture')}
                         />
                         {/* Face guide overlay - ENHANCED */}
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
                           <div className="relative">
                             <div className="w-64 h-80 border-4 border-emerald-500 rounded-2xl animate-pulse-border" />
                             <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg animate-fade-in whitespace-nowrap">
@@ -1486,14 +1532,14 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                   </div>
 
                   {/* Status message */}
-                  <Alert>
+                  <Alert role="status" aria-live="polite" aria-atomic="true">
                     <AlertDescription className="text-center">
                       {photoUploadStatus}
                     </AlertDescription>
                   </Alert>
 
                   {/* Action buttons */}
-                  <div className="flex gap-3">
+                  <div className="flex gap-3" role="group" aria-label={t('detail_hub.punch_clock.quick_actions')}>
                     {!capturedPhoto ? (
                       <>
                         <Button
@@ -1501,6 +1547,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                           size="lg"
                           className="flex-1"
                           onClick={handleCancelCapture}
+                          aria-label={`${t('detail_hub.punch_clock.cancel')} ${t('detail_hub.punch_clock.photo_capture')}`}
                         >
                           {t('detail_hub.punch_clock.cancel')}
                         </Button>
@@ -1508,8 +1555,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                           size="lg"
                           className="flex-1 bg-emerald-600 hover:bg-emerald-700"
                           onClick={handleCapturePhoto}
+                          aria-label={`${t('detail_hub.punch_clock.capture')} ${t('detail_hub.punch_clock.photo_capture')}`}
                         >
-                          <Camera className="w-5 h-5 mr-2" />
+                          <Camera className="w-5 h-5 mr-2" aria-hidden="true" />
                           {t('detail_hub.punch_clock.capture')}
                         </Button>
                       </>
@@ -1520,8 +1568,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                           size="lg"
                           className="flex-1"
                           onClick={handleRetake}
+                          aria-label={t('detail_hub.punch_clock.retake_photo')}
                         >
-                          <RotateCcw className="w-5 h-5 mr-2" />
+                          <RotateCcw className="w-5 h-5 mr-2" aria-hidden="true" />
                           {t('detail_hub.punch_clock.retake_photo')}
                         </Button>
                         <Button
@@ -1529,15 +1578,21 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                           className="flex-1 bg-emerald-600 hover:bg-emerald-700"
                           onClick={handleConfirmPunch}
                           disabled={isProcessing}
+                          aria-label={
+                            isProcessing
+                              ? t('detail_hub.punch_clock.messages.processing')
+                              : `${t('detail_hub.punch_clock.confirm')} ${captureAction.replace('_', ' ')}`
+                          }
+                          aria-busy={isProcessing}
                         >
                           {isProcessing ? (
                             <>
-                              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                              <Loader2 className="w-5 h-5 mr-2 animate-spin" aria-hidden="true" />
                               {t('detail_hub.punch_clock.messages.processing')}
                             </>
                           ) : (
                             <>
-                              <CheckCircle className="w-5 h-5 mr-2" />
+                              <CheckCircle className="w-5 h-5 mr-2" aria-hidden="true" />
                               {t('detail_hub.punch_clock.confirm')}
                             </>
                           )}
