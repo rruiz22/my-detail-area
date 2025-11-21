@@ -189,7 +189,17 @@
     },
     "recent_activity": "Atividade Recente",
     "last_action": "Última Ação",
-    "kiosk_settings": "Configurações do Quiosque"
+    "kiosk_settings": "Configurações do Quiosque",
+    "failed_load_employees": "Falha ao carregar funcionários cadastrados",
+    "face_data_corrupted": "Os dados de reconhecimento facial estão corrompidos. Por favor, cadastre seu rosto novamente.",
+    "time_clock_title": "Relógio de Ponto",
+    "search_by_name_or_id": "Buscar funcionários por nome ou ID",
+    "use_search_instead_button": "Usar busca",
+    "kiosk_id_label": "ID do Quiosque",
+    "start_your_shift": "Iniciar seu Turno",
+    "entry_count": "registro",
+    "entry_count_plural": "registros",
+    "view_clock_in_photo": "Ver foto de entrada"
   },
   "live_dashboard": {
     "title": "Quem Está Trabalhando Agora",

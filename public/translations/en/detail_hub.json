@@ -203,7 +203,17 @@
     },
     "recent_activity": "Recent Activity",
     "last_action": "Last Action",
-    "kiosk_settings": "Kiosk Settings"
+    "kiosk_settings": "Kiosk Settings",
+    "failed_load_employees": "Failed to load enrolled employees",
+    "face_data_corrupted": "Face recognition data is corrupted. Please re-enroll your face.",
+    "time_clock_title": "Time Clock",
+    "search_by_name_or_id": "Search employees by name or ID",
+    "use_search_instead_button": "Use search instead",
+    "kiosk_id_label": "Kiosk ID",
+    "start_your_shift": "Start Your Shift",
+    "entry_count": "entry",
+    "entry_count_plural": "entries",
+    "view_clock_in_photo": "View clock-in photo"
   },
   "employees": {
     "title": "Employee Portal",
