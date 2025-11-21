@@ -54,9 +54,14 @@ app.use(express.static(DIST_DIR, {
   }
 }));
 
+// Health check endpoint (MUST be before catch-all route)
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // SPA fallback - serve index.html for all non-static routes
-// This MUST be after static file handling
-app.get('*', (req, res) => {
+// This MUST be after static file handling and specific routes
+app.use((req, res, next) => {
   // Don't serve index.html for API calls or files with extensions
   if (req.path.startsWith('/api/') || req.path.match(/\.[a-zA-Z0-9]+$/)) {
     return res.status(404).send('Not Found');
@@ -67,11 +72,6 @@ app.get('*', (req, res) => {
       'Cache-Control': 'no-cache, no-store, must-revalidate'
     }
   });
-});
-
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 // Error handling
