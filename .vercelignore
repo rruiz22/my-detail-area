@@ -1,0 +1,60 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+.vite
+
+# Development
+.env.local
+.env.development.local
+
+# Testing
+coverage
+test-results
+playwright-report
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backups
+backups
+.backups
+*.backup
+*.BACKUP.*
+*.OLD.*
+*.ENHANCED.*
+
+# Documentation (not needed for build)
+docs
+*.md
+!README.md
+
+# Scripts (not needed for runtime)
+scripts
+
+# Git
+.git
+.gitignore
+
+# Temporary
+temp
+tmp
+download-models.*
+server.log
+docker-build.log
+
+# Railway specific (not needed in Vercel)
+railway.json
+nixpacks.toml
+Dockerfile*
+serve.json
+server.cjs
+
+# Claude Code
+.claude
