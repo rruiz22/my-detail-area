@@ -35,8 +35,7 @@ docs
 *.md
 !README.md
 
-# Scripts (not needed for runtime)
-scripts
+# Keep scripts/ - needed for prebuild hook (generate-version.js)
 
 # Git
 .git
