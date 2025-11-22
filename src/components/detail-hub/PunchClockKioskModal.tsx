@@ -109,10 +109,12 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     face_recognition_enabled: boolean;
     allow_manual_entry: boolean;
     sleep_timeout_minutes: number;
+    kiosk_code: string | null;
   }>({
     face_recognition_enabled: true,
     allow_manual_entry: true,
     sleep_timeout_minutes: 10, // Default 10 seconds
+    kiosk_code: null,
   });
 
   // Fetch kiosk configuration from database
@@ -121,7 +123,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       console.log('[Kiosk] Fetching configuration for kiosk ID:', KIOSK_ID);
       supabase
         .from('detail_hub_kiosks')
-        .select('face_recognition_enabled, allow_manual_entry, sleep_timeout_minutes')
+        .select('face_recognition_enabled, allow_manual_entry, sleep_timeout_minutes, kiosk_code')
         .eq('id', KIOSK_ID)
         .single()
         .then(({ data, error }) => {
@@ -135,6 +137,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
               face_recognition_enabled: data.face_recognition_enabled ?? true,
               allow_manual_entry: data.allow_manual_entry ?? true,
               sleep_timeout_minutes: data.sleep_timeout_minutes ?? 10,
+              kiosk_code: data.kiosk_code,
             });
           }
         });
@@ -300,6 +303,41 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       setTimeout(() => onClose(), 100);
     }
   }, [open, KIOSK_ID, toast, t, onClose]);
+
+  // Kiosk Heartbeat System - Updates kiosk status to "online" and sends periodic heartbeats
+  useEffect(() => {
+    if (open && kioskConfig.kiosk_code) {
+      console.log('[Kiosk] 💓 Starting heartbeat system for kiosk:', kioskConfig.kiosk_code);
+
+      // Send initial heartbeat immediately
+      const sendHeartbeat = async () => {
+        try {
+          const { error } = await supabase.rpc('update_kiosk_heartbeat', {
+            p_kiosk_code: kioskConfig.kiosk_code
+          });
+
+          if (error) {
+            console.error('[Kiosk] ❌ Heartbeat failed:', error);
+          } else {
+            console.log('[Kiosk] ✅ Heartbeat sent successfully');
+          }
+        } catch (err) {
+          console.error('[Kiosk] ❌ Heartbeat error:', err);
+        }
+      };
+
+      // Send initial heartbeat
+      sendHeartbeat();
+
+      // Send heartbeat every 30 seconds while modal is open
+      const heartbeatInterval = setInterval(sendHeartbeat, 30000);
+
+      return () => {
+        console.log('[Kiosk] 🛑 Stopping heartbeat system');
+        clearInterval(heartbeatInterval);
+      };
+    }
+  }, [open, kioskConfig.kiosk_code]);
 
   // Update clock every second
   useEffect(() => {
@@ -623,6 +661,20 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
             description: t('detail_hub.punch_clock.messages.processing')
           });
           break;
+      }
+
+      // Increment kiosk punch counter
+      if (kioskConfig.kiosk_code) {
+        try {
+          console.log('[Kiosk] 📊 Incrementing punch counter for:', kioskConfig.kiosk_code);
+          await supabase.rpc('increment_kiosk_punch_counter', {
+            p_kiosk_code: kioskConfig.kiosk_code
+          });
+          console.log('[Kiosk] ✅ Punch counter incremented');
+        } catch (counterError) {
+          console.error('[Kiosk] ❌ Failed to increment punch counter:', counterError);
+          // Don't fail the entire operation if counter update fails
+        }
       }
 
       // Refresh employee state and return to employee detail view
