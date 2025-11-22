@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { Monitor, Settings, Camera, AlertTriangle, CheckCircle, Plus, Edit, Trash2, Activity } from "lucide-react";
+import { Monitor, Settings, Camera, AlertTriangle, CheckCircle, Plus, Edit, Trash2, Activity, Info } from "lucide-react";
 import { format } from "date-fns";
 
 // REAL DATABASE INTEGRATION
@@ -23,11 +23,13 @@ import {
   type DetailHubKiosk
 } from "@/hooks/useDetailHubKiosks";
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
+import { KioskDetailModal } from "./KioskDetailModal";
 
 const KioskManager = () => {
   const { t } = useTranslation();
   const [isAddingKiosk, setIsAddingKiosk] = useState(false);
   const [editingKiosk, setEditingKiosk] = useState<DetailHubKiosk | null>(null);
+  const [viewingKiosk, setViewingKiosk] = useState<DetailHubKiosk | null>(null);
 
   // Form state - Simplified (removed unused fields: IP, MAC, brightness, volume, kioskMode)
   const [name, setName] = useState("");
@@ -399,11 +401,20 @@ const KioskManager = () => {
                     </TableCell>
                     <TableCell className="font-medium">{kiosk.punches_today}</TableCell>
                     <TableCell>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setViewingKiosk(kiosk)}
+                          title="View Details"
+                        >
+                          <Info className="w-4 h-4 text-blue-600" />
+                        </Button>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleEdit(kiosk)}
+                          title="Edit Configuration"
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
@@ -411,6 +422,7 @@ const KioskManager = () => {
                           variant="ghost"
                           size="sm"
                           onClick={() => handleDeleteKiosk(kiosk.id)}
+                          title="Delete Kiosk"
                         >
                           <Trash2 className="w-4 h-4 text-destructive" />
                         </Button>
@@ -423,6 +435,13 @@ const KioskManager = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Kiosk Detail Modal */}
+      <KioskDetailModal
+        kiosk={viewingKiosk}
+        open={!!viewingKiosk}
+        onClose={() => setViewingKiosk(null)}
+      />
     </div>
   );
 };
