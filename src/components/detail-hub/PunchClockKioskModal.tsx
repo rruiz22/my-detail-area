@@ -285,22 +285,45 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   const hasShownErrorRef = useRef(false);
 
   useEffect(() => {
-    if (open && !isValidUUID(KIOSK_ID)) {
-      console.error('[Kiosk] ❌ Invalid or missing kiosk ID:', KIOSK_ID);
+    if (open) {
+      // Case 1: kioskId is null (never configured)
+      if (KIOSK_ID === null) {
+        console.error('[Kiosk] ❌ No kiosk configured on this device');
 
-      // Only show toast once per session
-      if (!hasShownErrorRef.current) {
-        toast({
-          title: t('detail_hub.punch_clock.error'),
-          description: 'This device is not configured as a kiosk. Please contact your administrator.',
-          variant: "destructive",
-          duration: 5000
-        });
-        hasShownErrorRef.current = true;
+        if (!hasShownErrorRef.current) {
+          toast({
+            title: t('detail_hub.punch_clock.error'),
+            description: 'This device is not configured as a kiosk. Please configure it in the Kiosk Manager.',
+            variant: "destructive",
+            duration: 5000
+          });
+          hasShownErrorRef.current = true;
+        }
+
+        setTimeout(() => onClose(), 100);
+        return;
       }
 
-      // Close modal immediately
-      setTimeout(() => onClose(), 100);
+      // Case 2: kioskId is invalid UUID
+      if (!isValidUUID(KIOSK_ID)) {
+        console.error('[Kiosk] ❌ Invalid kiosk ID format:', KIOSK_ID);
+
+        if (!hasShownErrorRef.current) {
+          toast({
+            title: t('detail_hub.punch_clock.error'),
+            description: 'Corrupted kiosk configuration detected. Please reconfigure this device.',
+            variant: "destructive",
+            duration: 5000
+          });
+          hasShownErrorRef.current = true;
+        }
+
+        setTimeout(() => onClose(), 100);
+        return;
+      }
+
+      // Valid UUID - proceed normally
+      console.log('[Kiosk] ✅ Valid kiosk ID:', KIOSK_ID);
     }
   }, [open, KIOSK_ID, toast, t, onClose]);
 

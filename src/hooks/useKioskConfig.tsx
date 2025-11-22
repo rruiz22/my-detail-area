@@ -74,7 +74,7 @@ export function useKioskConfig() {
 
   return {
     // State
-    kioskId: kioskId || DEFAULT_KIOSK_ID,
+    kioskId: kioskId || null, // ✅ FIX: Return null instead of 'default-kiosk'
     isConfigured,
     fingerprint,
     username,
@@ -96,4 +96,39 @@ export function isKioskConfigured(): boolean {
 export function getConfiguredKioskId(): string | null {
   const kioskId = localStorage.getItem(KIOSK_ID_KEY);
   return kioskId && kioskId !== DEFAULT_KIOSK_ID ? kioskId : null;
+}
+
+/**
+ * Clear invalid or corrupted kiosk configurations
+ * Removes 'default-kiosk' fallback values and invalid UUIDs
+ */
+export function clearInvalidKioskConfig(): void {
+  const kioskId = localStorage.getItem(KIOSK_ID_KEY);
+
+  // UUID validation regex
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+  // Clear if:
+  // 1. kioskId is 'default-kiosk' (old fallback)
+  // 2. kioskId is not a valid UUID
+  // 3. kioskId exists but fingerprint is missing (incomplete config)
+  if (
+    kioskId === DEFAULT_KIOSK_ID ||
+    (kioskId && !uuidRegex.test(kioskId)) ||
+    (kioskId && !localStorage.getItem(KIOSK_FINGERPRINT_KEY))
+  ) {
+    console.log('[KioskConfig] 🧹 Clearing invalid configuration:', {
+      kioskId,
+      reason: kioskId === DEFAULT_KIOSK_ID
+        ? 'default-kiosk fallback'
+        : !uuidRegex.test(kioskId || '')
+          ? 'invalid UUID'
+          : 'missing fingerprint'
+    });
+
+    localStorage.removeItem(KIOSK_ID_KEY);
+    localStorage.removeItem(KIOSK_FINGERPRINT_KEY);
+    localStorage.removeItem(KIOSK_CONFIGURED_AT_KEY);
+    localStorage.removeItem(KIOSK_USERNAME_KEY);
+  }
 }

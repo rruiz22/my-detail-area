@@ -21,6 +21,8 @@ import ScheduleCalendar from "./ScheduleCalendar";
 import { PunchClockKioskModal } from "./PunchClockKioskModal";
 // KIOSK SETUP WIZARD
 import { KioskSetupWizard, isKioskConfigured, getConfiguredKioskId, generateDeviceFingerprint, getSystemUsername } from "./KioskSetupWizard";
+// KIOSK CONFIG CLEANUP
+import { clearInvalidKioskConfig } from "@/hooks/useKioskConfig";
 
 const DetailHubDashboard = () => {
   const { t } = useTranslation();
@@ -36,11 +38,14 @@ const DetailHubDashboard = () => {
   // Persisted tab state
   const [activeTab, setActiveTab] = useTabPersistence('detail_hub', 'overview');
 
-  // Initialize kiosk ID on mount
+  // Initialize kiosk ID on mount + Clean invalid configurations
   useEffect(() => {
+    // ✅ FIX: Auto-clean invalid kiosk configs on mount
+    clearInvalidKioskConfig();
+
     const configuredId = getConfiguredKioskId();
     setKioskId(configuredId);
-    console.log('[DetailHub] Kiosk configured:', configuredId ? 'YES' : 'NO', configuredId);
+    console.log('[DetailHub] 🧹 Cleanup complete. Kiosk configured:', configuredId ? 'YES' : 'NO', configuredId);
   }, []);
 
   // REAL DATABASE INTEGRATION
