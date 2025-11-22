@@ -29,13 +29,8 @@ interface TimeClockButtonProps {
 export function TimeClockButton({ dealerId }: TimeClockButtonProps) {
   const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState(false);
-  const { kioskId, isConfigured } = useKioskConfig();
+  const { kioskId } = useKioskConfig();
   const { data: activeCount = 0 } = useActiveClockedInCount();
-
-  // Don't render button if kiosk is not configured
-  if (!isConfigured) {
-    return null;
-  }
 
   return (
     <>
