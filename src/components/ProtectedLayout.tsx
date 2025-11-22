@@ -155,8 +155,8 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
           {/* Announcement Banner */}
           {!location.pathname.startsWith('/chat') && <AnnouncementBanner />}
 
-          {/* Breadcrumbs */}
-          {!location.pathname.startsWith('/chat') && <Breadcrumbs />}
+          {/* Breadcrumbs - Disabled globally */}
+          {/* {!location.pathname.startsWith('/chat') && <Breadcrumbs />} */}
 
           {/* Main Content */}
           <main className={`flex-1 ${location.pathname.startsWith('/chat') ? 'relative overflow-hidden' : 'p-6 mb-24'}`}>

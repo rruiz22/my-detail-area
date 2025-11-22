@@ -43,7 +43,7 @@ export const TAB_CONFIGS = {
   settings: {
     key: 'settings',
     defaultTab: 'profile',
-    validTabs: ['platform', 'profile', 'notifications', 'dealership', 'integrations']
+    validTabs: ['platform', 'profile', 'notifications', 'sms-history', 'dealership', 'integrations', 'security']
   },
   dealer_view: {
     key: 'dealer',

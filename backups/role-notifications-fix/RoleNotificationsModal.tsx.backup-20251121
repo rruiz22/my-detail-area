@@ -171,10 +171,6 @@ export function RoleNotificationsModal({
 
   /**
    * Save all changes
-   *
-   * CRITICAL FIX (2025-11-21): When user clicks Save with all toggles OFF,
-   * we must create disabled records in role_notification_events.
-   * Otherwise, Edge Function treats absence as "allow all" (security bug).
    */
   const handleSave = async () => {
     // Validate role exists
@@ -188,44 +184,9 @@ export function RoleNotificationsModal({
       return;
     }
 
-    // FIX: If no local changes but user clicked Save, they want to persist current state
-    // This happens when user disables all events on first-time setup
+    // Check if there are changes to save
     if (localChanges.size === 0) {
-      console.log('[RoleNotificationsModal] No local changes detected');
-
-      // Check if ANY events exist in database for this role
-      if (events.length === 0) {
-        console.warn('[RoleNotificationsModal] SECURITY FIX: No events in DB, creating disabled defaults');
-
-        // Generate ALL possible events with enabled=false
-        const allEventsDisabled: RoleNotificationEvent[] = [];
-        MODULES.forEach(module => {
-          EVENTS.forEach(event => {
-            allEventsDisabled.push({
-              role_id: role.id,
-              module: module.value,
-              event_type: event.value,
-              enabled: false,
-              event_config: {},
-            });
-          });
-        });
-
-        console.log(`[RoleNotificationsModal] Creating ${allEventsDisabled.length} disabled events`);
-        const success = await bulkSaveEvents(allEventsDisabled);
-
-        if (success) {
-          toast({
-            title: t('common.success'),
-            description: `All notifications disabled for ${role.display_name}`,
-          });
-          onClose();
-        }
-        return;
-      }
-
-      // Events exist but no changes - just close
-      console.log('[RoleNotificationsModal] Events exist, no changes to save');
+      console.log('[RoleNotificationsModal] No changes to save, closing modal');
       toast({
         title: t('common.info'),
         description: 'No notification settings were modified.',

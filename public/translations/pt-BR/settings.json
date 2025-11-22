@@ -6,7 +6,8 @@
   "notifications": "NotificaÃ§Ãµes",
   "dealership": "ConcessionÃ¡ria",
   "integrations": "IntegraÃ§Ãµes",
-  "security": {
+  "security": "Segurança",
+  "security_settings": {
     "audit": {
       "title": "Registro de Auditoria de SeguranÃ§a",
       "description": "Visualizar e monitorar eventos de seguranÃ§a do sistema",

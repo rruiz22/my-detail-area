@@ -1,0 +1,10 @@
+{
+  "title": "Configuración",
+  "description": "Administra tus preferencias y configuraciones del sistema",
+  "platform": "Plataforma",
+  "profile": "Perfil",
+  "notifications": "Notificaciones",
+  "dealership": "Concesionario",
+  "integrations": "Integraciones",
+  "security": "Seguridad"
+}

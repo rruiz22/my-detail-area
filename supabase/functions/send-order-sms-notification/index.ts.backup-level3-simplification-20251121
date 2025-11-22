@@ -240,9 +240,41 @@ interface SMSPreferences {
   quiet_hours_end: string;
 }
 
-// REMOVED (2025-11-21): createDefaultSMSPreferences function
-// Reason: Simplified Level 3 validation no longer uses user_sms_notification_preferences
-// New architecture: Only validates user_preferences.notification_sms (global toggle)
+async function createDefaultSMSPreferences(
+  userId: string,
+  dealerId: number,
+  module: string
+): Promise<SMSPreferences | null> {
+  console.log(`   🆕 Auto-creating default SMS preferences for user ${userId}`);
+
+  const defaultPreferences = {
+    user_id: userId,
+    dealer_id: dealerId,
+    module: module,
+    sms_enabled: false,
+    phone_number: null,
+    event_preferences: {},
+    max_sms_per_hour: 10,
+    max_sms_per_day: 50,
+    quiet_hours_enabled: false,
+    quiet_hours_start: '22:00',
+    quiet_hours_end: '08:00'
+  };
+
+  const { data, error } = await supabase
+    .from('user_sms_notification_preferences')
+    .insert(defaultPreferences)
+    .select()
+    .single();
+
+  if (error) {
+    console.error(`   ❌ Failed to create default preferences:`, error);
+    return null;
+  }
+
+  console.log(`   ✅ Default preferences created successfully`);
+  return data as SMSPreferences;
+}
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === 'OPTIONS') {
@@ -528,30 +560,33 @@ async function getUsersEligibleForNotification(
 
     console.log(`   3️⃣ LEVEL 3: Checking USER preferences...`);
 
-    // SIMPLIFIED VALIDATION (2025-11-21): Only check global SMS toggle
-    // Removed: user_sms_notification_preferences table validation
-    // Removed: event_preferences granular control
-    // New architecture: Level 3 = phone + global SMS toggle only
-
-    const { data: userGlobalPrefs, error: globalPrefsError } = await supabase
-      .from('user_preferences')
-      .select('notification_sms')
+    let { data: userPrefs, error: userPrefsError } = await supabase
+      .from('user_sms_notification_preferences')
+      .select('*')
       .eq('user_id', userId)
+      .eq('dealer_id', dealerId)
+      .eq('module', module)
       .single();
 
-    if (globalPrefsError || !userGlobalPrefs) {
-      console.log(`   ❌ LEVEL 3 FAILED: No user preferences found`);
+    if (userPrefsError || !userPrefs) {
+      console.log(`   ⚠️ User has no notification preferences set`);
+      userPrefs = await createDefaultSMSPreferences(userId, dealerId, module);
+
+      if (!userPrefs) {
+        console.log(`   ❌ Failed to create default preferences, skipping user`);
+        continue;
+      }
+    }
+
+    if (!userPrefs.sms_enabled) {
+      console.log(`   ❌ LEVEL 3 FAILED: User has SMS globally disabled`);
       continue;
     }
 
-    if (!userGlobalPrefs.notification_sms) {
-      console.log(`   ❌ LEVEL 3 FAILED: User has SMS notifications globally disabled`);
-      console.log(`   → User must enable SMS in Profile → Notifications`);
-      continue;
-    }
-
-    console.log(`   ✅ LEVEL 3 PASSED: User has SMS globally enabled`);
-    console.log(`   → Phone: ${follower.profiles.phone_number}`);
+    // SIMPLIFIED VALIDATION: Only check global sms_enabled toggle
+    // event_preferences removed - events controlled exclusively by Custom Roles (Level 2)
+    // BREAKING CHANGE: Existing event_preferences are now ignored
+    console.log(`   ✅ LEVEL 3 PASSED: User has SMS globally enabled (event_preferences ignored)`);
 
     if (follower.notification_level === 'important') {
       const importantEvents: OrderSMSEvent[] = [

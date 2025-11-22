@@ -483,16 +483,34 @@ export function NotificationsPreferencesTab() {
         </CardContent>
       </Card>
 
-      {/* Granular Event Notifications */}
-      <Card className="card-enhanced">
-        <CardHeader>
+      {/* Granular Event Notifications - DISABLED (Implementing Soon) */}
+      <Card className="card-enhanced relative">
+        {/* Overlay for "Implementing Soon" */}
+        <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm z-10 rounded-lg flex items-center justify-center">
+          <div className="bg-white dark:bg-gray-800 px-8 py-6 rounded-lg shadow-xl border-2 border-amber-500 text-center">
+            <div className="flex items-center gap-3 mb-3">
+              <Clock className="h-8 w-8 text-amber-500 animate-pulse" />
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                Implementing Soon
+              </h3>
+            </div>
+            <p className="text-gray-600 dark:text-gray-400 text-sm max-w-md">
+              Event-based notification preferences are being redesigned for a better user experience.
+            </p>
+            <p className="text-gray-500 dark:text-gray-500 text-xs mt-2">
+              Use the global SMS toggle above to control notifications.
+            </p>
+          </div>
+        </div>
+
+        <CardHeader className="pointer-events-none">
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 opacity-50">
               <Bell className="h-5 w-5" />
               {t('notifications.granular_settings', 'Event-Based Notifications')}
             </CardTitle>
-            <div className="flex items-center gap-2">
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <div className="flex items-center gap-2 opacity-50">
+              <Select value={categoryFilter} onValueChange={setCategoryFilter} disabled>
                 <SelectTrigger className="w-[160px]">
                   <SelectValue />
                 </SelectTrigger>
@@ -508,17 +526,17 @@ export function NotificationsPreferencesTab() {
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pointer-events-none">
           <Tabs value={activeModule} onValueChange={setActiveModule}>
-            <TabsList className="grid w-full grid-cols-5 mb-4">
-              <TabsTrigger value="sales_orders">{t('notifications.modules.sales', 'Sales')}</TabsTrigger>
-              <TabsTrigger value="service_orders">{t('notifications.modules.service', 'Service')}</TabsTrigger>
-              <TabsTrigger value="recon_orders">{t('notifications.modules.recon', 'Recon')}</TabsTrigger>
-              <TabsTrigger value="car_wash">{t('notifications.modules.car_wash', 'Car Wash')}</TabsTrigger>
-              <TabsTrigger value="get_ready">{t('notifications.modules.get_ready', 'Get Ready')}</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-5 mb-4 opacity-50">
+              <TabsTrigger value="sales_orders" disabled>{t('notifications.modules.sales', 'Sales')}</TabsTrigger>
+              <TabsTrigger value="service_orders" disabled>{t('notifications.modules.service', 'Service')}</TabsTrigger>
+              <TabsTrigger value="recon_orders" disabled>{t('notifications.modules.recon', 'Recon')}</TabsTrigger>
+              <TabsTrigger value="car_wash" disabled>{t('notifications.modules.car_wash', 'Car Wash')}</TabsTrigger>
+              <TabsTrigger value="get_ready" disabled>{t('notifications.modules.get_ready', 'Get Ready')}</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="sales_orders">
+            <TabsContent value="sales_orders" className="opacity-50">
               <NotificationEventsTable
                 events={filteredEvents}
                 preferences={eventPreferences}
@@ -526,7 +544,7 @@ export function NotificationsPreferencesTab() {
               />
             </TabsContent>
 
-            <TabsContent value="service_orders">
+            <TabsContent value="service_orders" className="opacity-50">
               <NotificationEventsTable
                 events={filteredEvents}
                 preferences={eventPreferences}
@@ -534,7 +552,7 @@ export function NotificationsPreferencesTab() {
               />
             </TabsContent>
 
-            <TabsContent value="recon_orders">
+            <TabsContent value="recon_orders" className="opacity-50">
               <NotificationEventsTable
                 events={filteredEvents}
                 preferences={eventPreferences}
@@ -542,7 +560,7 @@ export function NotificationsPreferencesTab() {
               />
             </TabsContent>
 
-            <TabsContent value="car_wash">
+            <TabsContent value="car_wash" className="opacity-50">
               <NotificationEventsTable
                 events={filteredEvents}
                 preferences={eventPreferences}
@@ -550,7 +568,7 @@ export function NotificationsPreferencesTab() {
               />
             </TabsContent>
 
-            <TabsContent value="get_ready">
+            <TabsContent value="get_ready" className="opacity-50">
               <NotificationEventsTable
                 events={filteredEvents}
                 preferences={eventPreferences}

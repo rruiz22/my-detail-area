@@ -6,7 +6,8 @@
   "notifications": "Notifications",
   "dealership": "Dealership",
   "integrations": "Integrations",
-  "security": {
+  "security": "Security",
+  "security_settings": {
     "audit": {
       "title": "Security Audit Log",
       "description": "View and monitor system security events",

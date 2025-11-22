@@ -7,6 +7,7 @@ import { DealerChannelMatrix } from '@/components/settings/notifications/DealerC
 import { PlatformBrandingSettings } from '@/components/settings/platform/PlatformBrandingSettings';
 import { PlatformGeneralSettings } from '@/components/settings/platform/PlatformGeneralSettings';
 import { SecurityAuditLogViewer } from '@/components/settings/security/SecurityAuditLogViewer';
+import { SMSHistoryTab } from '@/components/settings/SMSHistoryTab';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,7 +22,7 @@ import { usePermissions } from '@/hooks/usePermissions';
 import { useSettingsPermissions } from '@/hooks/useSettingsPermissions';
 import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { supabase } from '@/integrations/supabase/client';
-import { Bell, Building2, Database, Mail, Palette, Save, Settings as SettingsIcon, Shield, User, Volume2 } from "lucide-react";
+import { Bell, Building2, Database, Mail, MessageSquare, Palette, Save, Settings as SettingsIcon, Shield, User, Volume2 } from "lucide-react";
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -297,15 +298,9 @@ export default function Settings() {
 
   return (
     <div className="space-y-6 w-full">
-      {/* Header */}
-      <div className="border-b pb-6">
-        <h1 className="text-3xl font-bold tracking-tight">{t('settings.title')}</h1>
-        <p className="text-muted-foreground">{t('settings.description')}</p>
-      </div>
-
       {/* Settings Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           {perms.canManagePlatform && (
             <TabsTrigger value="platform" className="flex items-center gap-2">
               <SettingsIcon className="h-4 w-4" />
@@ -319,6 +314,10 @@ export default function Settings() {
           <TabsTrigger value="notifications" className="flex items-center gap-2">
             <Bell className="h-4 w-4" />
             <span className="hidden sm:inline">{t('settings.notifications')}</span>
+          </TabsTrigger>
+          <TabsTrigger value="sms-history" className="flex items-center gap-2">
+            <MessageSquare className="h-4 w-4" />
+            <span className="hidden sm:inline">SMS History</span>
           </TabsTrigger>
           <TabsTrigger value="dealership" className="flex items-center gap-2">
             <Building2 className="h-4 w-4" />
@@ -528,6 +527,11 @@ export default function Settings() {
               </TabsContent>
             )}
           </Tabs>
+        </TabsContent>
+
+        {/* SMS History */}
+        <TabsContent value="sms-history" className="space-y-6">
+          <SMSHistoryTab />
         </TabsContent>
 
         {/* Sender Information Settings */}

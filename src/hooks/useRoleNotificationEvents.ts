@@ -40,8 +40,12 @@ export const useRoleNotificationEvents = (roleId: string | null, dealerId: numbe
    * Fetch all notification events for a specific role
    */
   const fetchEvents = useCallback(async () => {
-    if (!roleId) return;
+    if (!roleId) {
+      console.warn('[useRoleNotificationEvents] fetchEvents called without roleId');
+      return;
+    }
 
+    console.log('[useRoleNotificationEvents] Fetching events for role:', roleId);
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -52,6 +56,15 @@ export const useRoleNotificationEvents = (roleId: string | null, dealerId: numbe
         .order('event_type');
 
       if (error) throw error;
+
+      console.log(`[useRoleNotificationEvents] Fetched ${data?.length || 0} events`);
+      if (data && data.length > 0) {
+        const enabledCount = data.filter(e => e.enabled).length;
+        console.log(`[useRoleNotificationEvents] ${enabledCount} of ${data.length} events are enabled`);
+        console.log('[useRoleNotificationEvents] Sample event:', data[0]);
+      } else {
+        console.warn('[useRoleNotificationEvents] No events found for this role - defaults will be shown');
+      }
 
       setEvents(data || []);
     } catch (error) {

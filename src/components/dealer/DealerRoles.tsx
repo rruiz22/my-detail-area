@@ -201,6 +201,15 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
                     variant="outline"
                     size="sm"
                     onClick={() => {
+                      if (!role.id) {
+                        console.error('[DealerRoles] Cannot open notifications modal: role.id is missing', role);
+                        toast({
+                          variant: 'destructive',
+                          description: 'Cannot open notification settings: Invalid role selected',
+                        });
+                        return;
+                      }
+                      console.log('[DealerRoles] Opening notifications for role:', role.display_name, role.id);
                       setSelectedRole(role);
                       setShowNotificationsModal(true);
                     }}
