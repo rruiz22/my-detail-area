@@ -1,0 +1,14 @@
+{
+  "search_placeholder": "Pesquisar pedidos...",
+  "mobile_menu": "Menu",
+  "tools": "Ferramentas",
+  "preferences": "PreferÃªncias",
+  "footer": {
+    "copyright": "Â© {{year}} My Detail Area",
+    "tagline": "GestÃ£o Empresarial para ConcessionÃ¡rias",
+    "privacy_policy": "PolÃ­tica de Privacidade",
+    "terms_of_service": "Termos de ServiÃ§o",
+    "support": "Suporte",
+    "version": "v{{version}}"
+  }
+}

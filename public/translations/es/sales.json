@@ -1,0 +1,28 @@
+{
+  "views": {
+    "kanban": "Kanban",
+    "table": "Tabela",
+    "calendar": "CalendÃ¡rio"
+  },
+  "tabs": {
+    "overview": "VisÃ£o Geral",
+    "dashboard": "Painel",
+    "today": "Hoje",
+    "tomorrow": "AmanhÃ£",
+    "pending": "Pendentes",
+    "in_process": "Em Processo",
+    "week": "Semana",
+    "all_orders": "Todos os Pedidos",
+    "all": "Todos os Pedidos",
+    "services": "ServiÃ§os",
+    "deleted": "ExcluÃ­dos"
+  },
+  "metrics": {
+    "completion_rate": "Taxa de ConclusÃ£o",
+    "progress": "Progresso",
+    "revenue_potential": "Potencial de Receita",
+    "avg_processing_time": "Tempo MÃ©dio de Processamento",
+    "orders_this_month": "Pedidos Este MÃªs",
+    "sla_compliance": "Conformidade SLA"
+  }
+}

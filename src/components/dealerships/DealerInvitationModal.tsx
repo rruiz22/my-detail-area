@@ -60,7 +60,7 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
   const { t } = useTranslation();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { dealerships, loading: dealershipsLoading } = useAccessibleDealerships();
+  const { dealerships, loading: dealershipsLoading, refreshDealerships } = useAccessibleDealerships();
   
   const [email, setEmail] = useState('');
   const [selectedRole, setSelectedRole] = useState<string>('');
@@ -78,11 +78,18 @@ export const DealerInvitationModal: React.FC<DealerInvitationModalProps> = ({
         dealershipsLoading,
         dealershipsNames: dealerships.map(d => d.name)
       });
+
+      // If dealerId is provided but not found in dealerships list, refresh
+      if (dealerId && !dealerships.find(d => d.id === dealerId) && !dealershipsLoading) {
+        console.log('⚠️ [INVITE MODAL] Dealership not found in list, refreshing...');
+        refreshDealerships();
+      }
+
       setEmail('');
       setSelectedRole('');
       setSelectedDealerId(dealerId || null);
     }
-  }, [isOpen, dealerId, dealerships, dealershipsLoading]);
+  }, [isOpen, dealerId, dealerships, dealershipsLoading, refreshDealerships]);
 
   // Fetch custom roles for the selected dealership
   const fetchCustomRoles = useCallback(async () => {

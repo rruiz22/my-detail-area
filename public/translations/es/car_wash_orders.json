@@ -1,0 +1,22 @@
+{
+  "quick_order": "Novo Pedido RÃ¡pido",
+  "quick_car_wash_order": "Pedido RÃ¡pido de Lavagem",
+  "edit_order": "Editar Pedido de Lavagem",
+  "dealership": "ConcessionÃ¡ria",
+  "select_dealership": "Selecionar concessionÃ¡ria",
+  "vehicle_display": "InformaÃ§Ãµes do VeÃ­culo",
+  "stock_number": "Stock/Tag",
+  "tag": "TAG",
+  "waiter_priority": "Espera - Cliente Aguardando",
+  "waiter_description": "Este pedido serÃ¡ marcado com prioridade urgente (cliente estÃ¡ aguardando)",
+  "notes_placeholder": "Adicionar instruÃ§Ãµes especiais ou detalhes sobre este serviÃ§o de lavagem...",
+  "decoded": "Decodificado",
+  "auto_populated": "Preenchido automaticamente pelo VIN",
+  "car_wash_information": "InformaÃ§Ãµes de Lavagem",
+  "service_performer": "ResponsÃ¡vel pelo ServiÃ§o",
+  "service_type": "Tipo de ServiÃ§o",
+  "waiter": "Espera",
+  "standard_wash": "Lavagem PadrÃ£o",
+  "max_one_service": "Pedidos de lavagem sÃ³ podem ter um serviÃ§o",
+  "one_service_limit": "Pedidos de lavagem sÃ³ podem ter um serviÃ§o. Desmarque para selecionar outro."
+}

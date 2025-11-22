@@ -1,0 +1,21 @@
+{
+  "title": "AÃ§Ãµes RÃ¡pidas",
+  "new_sales_order": "Novo Pedido de Venda",
+  "new_service_order": "Novo Pedido de ServiÃ§o",
+  "new_recon_order": "Novo Pedido de Recondicionamento",
+  "new_car_wash": "Nova Lavagem",
+  "new_contact": "Novo Contato",
+  "new_user": "Adicionar UsuÃ¡rio",
+  "invite_user": "Convidar UsuÃ¡rio",
+  "new_dealership": "Nova ConcessionÃ¡ria",
+  "view_reports": "Ver RelatÃ³rios",
+  "export_sales": "Exportar Vendas",
+  "export": "Exportar",
+  "import": "Importar",
+  "filter": "Filtrar",
+  "settings": "ConfiguraÃ§Ãµes",
+  "scan_vin": "Escanear VIN",
+  "scheduler": "Abrir Agendador",
+  "more": "Mais AÃ§Ãµes",
+  "more_actions": "Mais AÃ§Ãµes"
+}

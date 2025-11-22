@@ -373,12 +373,31 @@ export const DealershipProvider: React.FC<DealershipProviderProps> = ({ children
 
   /**
    * Invalidate and refetch dealerships
+   * Clears BOTH localStorage cache AND TanStack Query cache for immediate refresh
    */
-  const refreshDealerships = useCallback(() => {
+  const refreshDealerships = useCallback(async () => {
     if (!isMountedRef.current) return;
 
     logger.dev('🔄 [DealershipContext] Refreshing dealerships');
-    queryClient.invalidateQueries({ queryKey: ['accessible_dealerships', user?.id] });
+
+    // Clear localStorage cache first
+    try {
+      localStorage.removeItem('dealerships-cache');
+      logger.dev('🗑️ [DealershipContext] Cleared localStorage cache');
+    } catch (error) {
+      console.warn('⚠️ [DealershipContext] Failed to clear localStorage cache:', error);
+    }
+
+    // Remove query data entirely to force fresh fetch
+    queryClient.removeQueries({ queryKey: ['accessible_dealerships', user?.id] });
+
+    // FORCE immediate refetch
+    await queryClient.refetchQueries({
+      queryKey: ['accessible_dealerships', user?.id],
+      exact: true
+    });
+
+    logger.dev('✅ [DealershipContext] Dealerships refreshed');
   }, [queryClient, user?.id]);
 
   /**

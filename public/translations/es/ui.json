@@ -1,0 +1,19 @@
+{
+  "headers": {
+    "welcome": "Bem-vindo",
+    "overview": "VisÃ£o Geral",
+    "details": "Detalhes",
+    "settings": "ConfiguraÃ§Ãµes",
+    "advanced": "AvanÃ§ado",
+    "summary": "Resumo"
+  },
+  "buttons": {
+    "get_started": "ComeÃ§ar",
+    "learn_more": "Saiba Mais",
+    "try_again": "Tentar Novamente",
+    "go_back": "Voltar",
+    "view_details": "Ver Detalhes",
+    "show_more": "Mostrar Mais",
+    "show_less": "Mostrar Menos"
+  }
+}

@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { useDealershipContext } from '@/contexts/DealershipContext';
 import {
     Building2,
     Edit,
@@ -48,6 +49,7 @@ export const DealershipManagement: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { refreshDealerships } = useDealershipContext();
 
   const [dealerships, setDealerships] = useState<Dealership[]>([]);
   const [loading, setLoading] = useState(true);
@@ -168,8 +170,13 @@ export const DealershipManagement: React.FC = () => {
     setEditingDealership(null);
   };
 
-  const handleModalSuccess = () => {
-    fetchDealerships();
+  const handleModalSuccess = async () => {
+    // IMPORTANT: Refresh global context FIRST to invalidate cache and refetch
+    await refreshDealerships();
+
+    // Then fetch local dealerships for admin table
+    await fetchDealerships();
+
     handleModalClose();
   };
 

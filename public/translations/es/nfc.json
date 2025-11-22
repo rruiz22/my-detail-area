@@ -1,0 +1,57 @@
+{
+  "writer": {
+    "title": "Gravador de Tag NFC",
+    "preparing": "Preparando...",
+    "writing": "Gravando em Tag...",
+    "success": "GravaÃ§Ã£o Bem-Sucedida!",
+    "error": "Erro de GravaÃ§Ã£o",
+    "ready": "Pronto para Gravar",
+    "write_tag": "Gravar Tag",
+    "retry": "Tentar Novamente",
+    "instructions": {
+      "ready": "Clique em 'Gravar Tag' e entÃ£o aproxime a tag NFC fÃ­sica do seu dispositivo.",
+      "preparing": "Preparando tag para gravaÃ§Ã£o...",
+      "writing": "Mantenha a tag prÃ³xima ao dispositivo atÃ© que a gravaÃ§Ã£o seja concluÃ­da.",
+      "success": "Tag gravada com sucesso! Agora vocÃª pode usÃ¡-la para rastreamento.",
+      "error": "Falha ao gravar na tag. Verifique a conexÃ£o e tente novamente."
+    }
+  },
+  "reader": {
+    "title": "Leitor de Tag NFC",
+    "scanning": "Lendo Tag...",
+    "success": "Tag Lida com Sucesso!",
+    "error": "Erro de Leitura",
+    "ready": "Pronto para Ler",
+    "start_scanning": "Iniciar Leitura",
+    "stop_scanning": "Parar Leitura",
+    "scan_another": "Ler Outra Tag",
+    "retry": "Tentar Novamente",
+    "tag_data": "Dados da Tag",
+    "instructions": {
+      "ready": "Clique em 'Iniciar Leitura' e entÃ£o aproxime uma tag NFC do seu dispositivo.",
+      "scanning": "Aproxime uma tag NFC do seu dispositivo...",
+      "success": "Tag lida com sucesso! Dados exibidos abaixo.",
+      "error": "Falha ao ler a tag. Verifique a conexÃ£o e tente novamente."
+    }
+  },
+  "tag_info": {
+    "id": "ID da Tag",
+    "name": "Nome",
+    "type": "Tipo",
+    "vin": "VIN",
+    "location": "LocalizaÃ§Ã£o",
+    "url": "URL"
+  },
+  "templates": {
+    "quick_create": "CriaÃ§Ã£o RÃ¡pida",
+    "vehicle_tag": "Tag de VeÃ­culo",
+    "location_tag": "Tag de LocalizaÃ§Ã£o",
+    "generic_tag": "Tag GenÃ©rica"
+  },
+  "errors": {
+    "not_supported": "Tecnologia NFC nÃ£o Ã© suportada neste dispositivo ou navegador.",
+    "permission_denied": "PermissÃ£o NFC negada. Verifique as configuraÃ§Ãµes do seu dispositivo.",
+    "read_failed": "Falha ao ler a tag NFC. Por favor, tente novamente.",
+    "write_failed": "Falha ao gravar na tag NFC. Por favor, tente novamente."
+  }
+}

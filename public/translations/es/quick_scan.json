@@ -1,0 +1,18 @@
+{
+  "title": "DigitalizaÃ§Ã£o RÃ¡pida",
+  "description": "DigitalizaÃ§Ã£o VIN rÃ¡pida com detecÃ§Ã£o automÃ¡tica",
+  "start_scan": "Iniciar DigitalizaÃ§Ã£o",
+  "stop_scan": "Parar DigitalizaÃ§Ã£o",
+  "scanning": "Digitalizando...",
+  "position_vin": "Posicione o VIN no quadro da cÃ¢mera",
+  "hold_steady": "Mantenha firme...",
+  "detecting": "Detectando VIN...",
+  "vin_found": "VIN Encontrado!",
+  "processing": "Processando...",
+  "scan_complete": "DigitalizaÃ§Ã£o Completa",
+  "use_this_vin": "Usar Este VIN",
+  "scan_another": "Digitalizar Outro",
+  "tips": "Dicas para melhores resultados",
+  "tip_lighting": "Garanta boa iluminaÃ§Ã£o",
+  "tip_focus": "Mantenha o VIN focado e claro"
+}

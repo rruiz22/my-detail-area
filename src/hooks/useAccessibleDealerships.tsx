@@ -16,7 +16,7 @@ interface UseAccessibleDealershipsReturn {
   currentDealership: Dealership | null;
   loading: boolean;
   error: string | null;
-  refreshDealerships: () => void;
+  refreshDealerships: () => Promise<void>;
   filterByModule: (moduleName: AppModule) => Promise<Dealership[]>;
 }
 

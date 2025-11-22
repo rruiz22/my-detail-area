@@ -124,10 +124,43 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership, onRefr
     try {
       setLoading(true);
 
+      // Check for duplicate tax_number if provided
+      if (formData.tax_number?.trim()) {
+        const { data: existingDealership, error: checkError } = await supabase
+          .from('dealerships')
+          .select('id, name')
+          .eq('tax_number', formData.tax_number.trim())
+          .is('deleted_at', null)
+          .maybeSingle();
+
+        if (checkError) {
+          console.error('Error checking tax_number:', checkError);
+        }
+
+        // If found, check if it's not the current dealership being edited
+        if (existingDealership && (!isEditing || existingDealership.id !== dealership?.id)) {
+          toast({
+            variant: 'destructive',
+            title: t('dealerships.duplicate_tax_number_title'),
+            description: t('dealerships.duplicate_tax_number_description', {
+              name: existingDealership.name,
+              tax_number: formData.tax_number
+            })
+          });
+          return;
+        }
+      }
+
+      // Prepare data - set empty tax_number to null to avoid UNIQUE constraint issues
+      const dataToSave = {
+        ...formData,
+        tax_number: formData.tax_number?.trim() || null
+      };
+
       if (isEditing && dealership) {
         const { error } = await supabase
           .from('dealerships')
-          .update(formData)
+          .update(dataToSave)
           .eq('id', dealership.id);
 
         if (error) throw error;
@@ -135,16 +168,40 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership, onRefr
       } else {
         const { error } = await supabase
           .from('dealerships')
-          .insert(formData);
+          .insert(dataToSave);
 
         if (error) throw error;
         toast({ description: t('messages.saved') });
       }
 
       onSuccess();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving dealership:', error);
-      toast({ variant: 'destructive', description: t('messages.error') });
+
+      // Handle PostgreSQL constraint violations
+      if (error?.code === '23505') {
+        if (error.message?.includes('dealerships_tax_number_key')) {
+          toast({
+            variant: 'destructive',
+            title: t('dealerships.duplicate_tax_number_title'),
+            description: t('dealerships.duplicate_tax_number_error')
+          });
+        } else if (error.message?.includes('dealerships_email_key')) {
+          toast({
+            variant: 'destructive',
+            title: t('dealerships.duplicate_email_title'),
+            description: t('dealerships.duplicate_email_error')
+          });
+        } else {
+          toast({
+            variant: 'destructive',
+            title: t('common.error'),
+            description: t('dealerships.duplicate_field_error')
+          });
+        }
+      } else {
+        toast({ variant: 'destructive', description: t('messages.error') });
+      }
     } finally {
       setLoading(false);
     }

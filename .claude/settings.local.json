@@ -20,7 +20,20 @@
       "Bash(node scripts/apply-kiosks-migration-simple.mjs:*)",
       "Bash(node scripts/apply-kiosks-migration-mgmt-api.mjs:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(cd:*)",
+      "Bash(node scripts/split-monolithic-spanish.js:*)",
+      "Bash(move:*)",
+      "Bash(node scripts/split-monolithic-spanish.cjs:*)",
+      "Bash(node scripts/copy-from-portuguese.cjs:*)",
+      "Bash(git push:*)",
+      "Bash(node scripts/audit-translations.cjs:*)",
+      "Bash(node scripts/fix-bom-spanish.cjs:*)",
+      "Bash(findstr:*)",
+      "Bash(git reset:*)",
+      "Bash(cat:*)",
+      "Bash(npm run dev:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []

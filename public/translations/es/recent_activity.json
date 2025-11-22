@@ -1,0 +1,58 @@
+{
+  "title": "Atividade Recente",
+  "loading": "Carregando atividade...",
+  "no_activity": "Sem atividade recente",
+  "no_activity_description": "A atividade aparecerÃ¡ aqui",
+  "error_loading": "Falha ao carregar atividade. Por favor, tente novamente.",
+  "retry": "Clique para tentar novamente",
+  "last_activity": "Ãšltima atividade",
+  "none": "Nenhuma",
+  "debug_mode": "Modo Debug",
+  "show_debug": "Mostrar Detalhes TÃ©cnicos",
+  "hide_debug": "Ocultar Detalhes TÃ©cnicos",
+  "actions": {
+    "added_comment": "Adicionou comentÃ¡rio",
+    "added_internal_note": "Adicionou nota interna",
+    "replied_to_comment": "Respondeu ao comentÃ¡rio",
+    "replied_to_internal_note": "Respondeu Ã  nota interna",
+    "comment_deleted": "Excluiu comentÃ¡rio",
+    "internal_note_deleted": "Excluiu nota interna",
+    "reaction_added": "Reagiu ao comentÃ¡rio",
+    "reaction_removed": "Removeu reaÃ§Ã£o",
+    "uploaded_file": "Enviou arquivo",
+    "order_updated": "Pedido atualizado",
+    "order_info_modified": "InformaÃ§Ãµes do pedido modificadas",
+    "status_changed": "Status alterado",
+    "assignment_changed": "AtribuiÃ§Ã£o alterada",
+    "due_date_changed": "Data de vencimento alterada",
+    "notes_updated": "Notas atualizadas",
+    "order_created": "Pedido criado",
+    "priority_changed": "Prioridade alterada",
+    "customer_updated": "Cliente atualizado",
+    "services_updated": "ServiÃ§os atualizados",
+    "amount_updated": "Valor atualizado",
+    "changed_field": "Alterou {{field}}",
+    "initial_creation": "CriaÃ§Ã£o inicial do pedido"
+  },
+  "files": {
+    "attached": "Anexou: {{filename}}"
+  },
+  "user": {
+    "by": "por {{name}}",
+    "system": "Sistema",
+    "team_member": "Membro da Equipe",
+    "creator": "Criador do Pedido"
+  },
+  "time": {
+    "just_now": "Agora mesmo",
+    "minutes_ago": "{{count}}m atrÃ¡s",
+    "hours_ago": "{{count}}h atrÃ¡s",
+    "days_ago": "{{count}}d atrÃ¡s"
+  },
+  "sources": {
+    "comments": "ComentÃ¡rios",
+    "attachments": "Anexos",
+    "activity_log": "Registro de Atividade",
+    "order_data": "Dados do Pedido"
+  }
+}

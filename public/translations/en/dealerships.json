@@ -91,5 +91,11 @@
   "logo_upload_error_description": "An error occurred while uploading the logo. Please try again",
   "logo_upload_after_creation": "Logo can be uploaded after creating the dealership",
   "primary_color": "Primary Color",
-  "notes": "Notes"
+  "notes": "Notes",
+  "duplicate_tax_number_title": "Duplicate Tax Number",
+  "duplicate_tax_number_description": "A dealership named \"{{name}}\" already exists with tax number {{tax_number}}",
+  "duplicate_tax_number_error": "This tax number is already registered to another dealership",
+  "duplicate_email_title": "Duplicate Email",
+  "duplicate_email_error": "This email address is already registered to another dealership",
+  "duplicate_field_error": "A dealership with this information already exists"
 }
