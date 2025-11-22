@@ -110,11 +110,13 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     allow_manual_entry: boolean;
     sleep_timeout_minutes: number;
     kiosk_code: string | null;
+    name: string | null;
   }>({
     face_recognition_enabled: true,
     allow_manual_entry: true,
     sleep_timeout_minutes: 10, // Default 10 seconds
     kiosk_code: null,
+    name: null,
   });
 
   // Fetch kiosk configuration from database
@@ -123,7 +125,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       console.log('[Kiosk] Fetching configuration for kiosk ID:', KIOSK_ID);
       supabase
         .from('detail_hub_kiosks')
-        .select('face_recognition_enabled, allow_manual_entry, sleep_timeout_minutes, kiosk_code')
+        .select('face_recognition_enabled, allow_manual_entry, sleep_timeout_minutes, kiosk_code, name')
         .eq('id', KIOSK_ID)
         .single()
         .then(({ data, error }) => {
@@ -138,6 +140,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
               allow_manual_entry: data.allow_manual_entry ?? true,
               sleep_timeout_minutes: data.sleep_timeout_minutes ?? 10,
               kiosk_code: data.kiosk_code,
+              name: data.name,
             });
           }
         });
@@ -358,7 +361,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
           const { error } = await supabase.rpc('update_kiosk_heartbeat', {
             p_kiosk_code: kioskConfig.kiosk_code,
-            p_ip_address: ip
+            p_ip_address: ip || null
           });
 
           if (error) {
@@ -1441,7 +1444,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                                 })}
                               </p>
                               <p className="text-xs text-gray-500">
-                                📍 {KIOSK_ID || 'Not Configured'}
+                                📍 {kioskConfig.name || KIOSK_ID || 'Not Configured'}
                               </p>
                             </div>
 
@@ -1465,7 +1468,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                                 })}
                               </p>
                               <p className="text-xs text-gray-500">
-                                📍 {KIOSK_ID || 'Not Configured'}
+                                📍 {kioskConfig.name || KIOSK_ID || 'Not Configured'}
                               </p>
                               {(employeeState.currentEntry.break_elapsed_minutes || 0) < 30 && (
                                 <p className="text-xs text-amber-600 mt-1">
@@ -1630,7 +1633,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                       <span>{selectedEmployee.employee_number}</span>
                       <span>•</span>
                       <Badge variant="outline" className="text-xs">
-                        📍 {KIOSK_ID || 'Not Configured'}
+                        📍 {kioskConfig.name || KIOSK_ID || 'Not Configured'}
                       </Badge>
                       <span>•</span>
                       <span className="text-gray-500">{format(new Date(), 'MMM d, HH:mm')}</span>
@@ -1736,7 +1739,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
               <CardContent className="py-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <Badge variant="outline">{KIOSK_ID || 'Not Configured'}</Badge>
+                    <Badge variant="outline">{kioskConfig.name || KIOSK_ID || 'Not Configured'}</Badge>
                     <span>{t('detail_hub.punch_clock.kiosk_mode_active')}</span>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-gray-600">

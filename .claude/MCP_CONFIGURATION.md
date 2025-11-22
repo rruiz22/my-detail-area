@@ -265,7 +265,129 @@ Luego actualizar `mcp.json`:
 - [Claude Code MCP Guide](https://docs.anthropic.com/claude/docs/mcp)
 - [Supabase API Reference](https://supabase.com/docs/reference)
 
+## Configuración Actual (2025-11-22)
+
+### Estado del MCP
+✅ **Configurado y funcionando**
+
+### Configuración Activa
+
+**Archivo**: `.claude/mcp.json`
+
+```json
+{
+  "$schema": "https://modelcontextprotocol.io/schemas/mcp.json",
+  "mcpServers": {
+    "supabase": {
+      "command": "C:\\Program Files\\nodejs\\npx.cmd",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--project-ref=swfnnrpzpkdypbrzmgnr",
+        "--access-token=[CONFIGURADO_EN_ENV]"
+      ],
+      "disabled": false,
+      "description": "Supabase MCP Server for MyDetailArea - provides database queries, edge functions, storage, and auth management",
+      "env": {
+        "SUPABASE_URL": "https://swfnnrpzpkdypbrzmgnr.supabase.co",
+        "SUPABASE_SERVICE_ROLE_KEY": "[CONFIGURADO_EN_ENV]",
+        "SUPABASE_ACCESS_TOKEN": "[CONFIGURADO_EN_ENV]"
+      }
+    }
+  },
+  "defaults": {
+    "timeout": 30000,
+    "retries": 2
+  }
+}
+```
+
+### Variables de Entorno (.env)
+
+```bash
+# Supabase Project Reference
+SUPABASE_PROJECT_REF=swfnnrpzpkdypbrzmgnr
+
+# Supabase URL
+SUPABASE_URL=https://swfnnrpzpkdypbrzmgnr.supabase.co
+
+# Service Role Keys
+SUPABASE_ACCESS_TOKEN=[CONFIGURADO]
+SUPABASE_SERVICE_ROLE_KEY=[CONFIGURADO]
+```
+
+### Cómo Usar el MCP
+
+#### Verificar Conexión
+```bash
+# Claude Code puede verificar la conexión ejecutando:
+/mcp
+```
+
+#### Comandos Disponibles
+
+1. **Listar tablas**
+   ```typescript
+   mcp__supabase__list_tables()
+   ```
+
+2. **Ejecutar SQL**
+   ```typescript
+   mcp__supabase__execute_sql("SELECT * FROM profiles LIMIT 5")
+   ```
+
+3. **Aplicar migración**
+   ```typescript
+   mcp__supabase__apply_migration("supabase/migrations/tu_migracion.sql")
+   ```
+
+4. **Listar migraciones**
+   ```typescript
+   mcp__supabase__list_migrations()
+   ```
+
+5. **Generar tipos TypeScript**
+   ```typescript
+   mcp__supabase__generate_typescript_types()
+   ```
+
+6. **Deploy Edge Function**
+   ```typescript
+   mcp__supabase__deploy_edge_function("nombre-funcion")
+   ```
+
+7. **Ver logs**
+   ```typescript
+   mcp__supabase__get_logs()
+   ```
+
+### Notas Importantes
+
+- ✅ Usando formato `--project-ref` y `--access-token` (recomendado por Supabase MCP v2+)
+- ✅ Variables de entorno configuradas para seguridad
+- ✅ Timeout configurado en 30 segundos
+- ✅ Reintentos automáticos (2 veces)
+- ⚠️ El MCP server se instala automáticamente vía `npx -y` al ejecutar
+
+### Troubleshooting Común
+
+**Problema**: MCP no responde
+**Solución**: Reiniciar Claude Code o VSCode
+
+**Problema**: Error de autenticación
+**Solución**: Verificar que el service_role_key en .env sea correcto
+
+**Problema**: Timeout
+**Solución**: Aumentar timeout en mcp.json defaults
+
 ## Changelog
+
+### 2025-11-22
+- ✅ Actualización a formato `--project-ref` y `--access-token` (Supabase MCP v2+)
+- ✅ Agregada variable SUPABASE_URL al .env
+- ✅ Configuradas todas las variables de entorno necesarias
+- ✅ Documentada configuración actual y comandos disponibles
+- ✅ Agregadas instrucciones de uso práctico
 
 ### 2025-01-15
 - Configuración inicial de MCP para MyDetailArea
@@ -276,4 +398,4 @@ Luego actualizar `mcp.json`:
 ---
 
 **Mantenido por**: Development Team
-**Última actualización**: 2025-01-15
+**Última actualización**: 2025-11-22
