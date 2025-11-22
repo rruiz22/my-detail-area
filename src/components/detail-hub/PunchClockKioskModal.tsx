@@ -304,22 +304,44 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     }
   }, [open, KIOSK_ID, toast, t, onClose]);
 
-  // Kiosk Heartbeat System - Updates kiosk status to "online" and sends periodic heartbeats
+  // Kiosk Heartbeat System - Updates kiosk status to "online" and sends periodic heartbeats with IP
   useEffect(() => {
     if (open && kioskConfig.kiosk_code) {
       console.log('[Kiosk] 💓 Starting heartbeat system for kiosk:', kioskConfig.kiosk_code);
 
-      // Send initial heartbeat immediately
+      // Detect IP once at the start
+      let detectedIP: string | null = null;
+
+      const detectAndCacheIP = async () => {
+        if (detectedIP) return detectedIP; // Use cached IP
+
+        try {
+          // Try to import network detection utility
+          const { detectBestIP } = await import('@/utils/networkDetection');
+          const { ip } = await detectBestIP();
+          detectedIP = ip;
+          console.log('[Kiosk] 🌐 IP detected:', ip || 'none');
+          return ip;
+        } catch (error) {
+          console.error('[Kiosk] ⚠️ IP detection failed:', error);
+          return null;
+        }
+      };
+
+      // Send heartbeat with IP
       const sendHeartbeat = async () => {
         try {
+          const ip = await detectAndCacheIP();
+
           const { error } = await supabase.rpc('update_kiosk_heartbeat', {
-            p_kiosk_code: kioskConfig.kiosk_code
+            p_kiosk_code: kioskConfig.kiosk_code,
+            p_ip_address: ip
           });
 
           if (error) {
             console.error('[Kiosk] ❌ Heartbeat failed:', error);
           } else {
-            console.log('[Kiosk] ✅ Heartbeat sent successfully');
+            console.log('[Kiosk] ✅ Heartbeat sent successfully', ip ? `(IP: ${ip})` : '');
           }
         } catch (err) {
           console.error('[Kiosk] ❌ Heartbeat error:', err);

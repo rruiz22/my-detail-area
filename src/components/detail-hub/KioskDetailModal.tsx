@@ -302,11 +302,22 @@ export function KioskDetailModal({ kiosk, open, onClose }: KioskDetailModalProps
               <CardContent className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-xs text-muted-foreground">IP Address</p>
-                  <p className="text-sm font-mono">{kiosk.ip_address || 'Not available'}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-mono">{kiosk.ip_address || 'Not detected'}</p>
+                    {kiosk.ip_address && (
+                      <Badge variant="outline" className="text-[10px] px-1 py-0">
+                        {kiosk.ip_address.startsWith('192.') ||
+                         kiosk.ip_address.startsWith('10.') ||
+                         kiosk.ip_address.startsWith('172.')
+                          ? 'Local'
+                          : 'Public'}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">MAC Address</p>
-                  <p className="text-sm font-mono">{kiosk.mac_address || 'Not available'}</p>
+                  <p className="text-sm font-mono">{kiosk.mac_address || 'Not configured'}</p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Last Ping</p>
