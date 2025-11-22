@@ -1,7 +1,7 @@
 {
   "scannedFiles": 911,
-  "totalStrings": 10591,
-  "hardcodedStrings": 2155,
+  "totalStrings": 10592,
+  "hardcodedStrings": 2156,
   "translatedStrings": 8436,
   "issues": {
     "critical": [
@@ -20617,345 +20617,345 @@
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 110,
+            "line": 112,
             "exists": false
           },
           {
             "key": "dealerships.fetch_error",
-            "line": 111,
+            "line": 113,
             "exists": false
           },
           {
             "key": "dealerships.confirm_delete",
-            "line": 129,
+            "line": 131,
             "exists": false
           },
           {
             "key": "common.success",
-            "line": 142,
+            "line": 144,
             "exists": false
           },
           {
             "key": "dealerships.deleted_successfully",
-            "line": 143,
+            "line": 145,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 150,
+            "line": 152,
             "exists": false
           },
           {
             "key": "dealerships.delete_error",
-            "line": 151,
+            "line": 153,
             "exists": false
           },
           {
             "key": "common.success",
-            "line": 196,
+            "line": 203,
             "exists": false
           },
           {
             "key": "dealerships.invitation_sent",
-            "line": 197,
+            "line": 204,
             "exists": false
           },
           {
             "key": "dealerships.add_dealership",
-            "line": 240,
+            "line": 247,
             "exists": false
           },
           {
             "key": "dealerships.filters",
-            "line": 249,
+            "line": 256,
             "exists": false
           },
           {
             "key": "dealerships.search_placeholder",
-            "line": 258,
+            "line": 265,
             "exists": false
           },
           {
             "key": "dealerships.status_filter",
-            "line": 268,
+            "line": 275,
             "exists": false
           },
           {
             "key": "dealerships.all_statuses",
-            "line": 271,
+            "line": 278,
             "exists": false
           },
           {
             "key": "dealerships.active",
-            "line": 272,
+            "line": 279,
             "exists": false
           },
           {
             "key": "dealerships.inactive",
-            "line": 273,
+            "line": 280,
             "exists": false
           },
           {
             "key": "dealerships.suspended",
-            "line": 274,
+            "line": 281,
             "exists": false
           },
           {
             "key": "dealerships.dealership_list",
-            "line": 286,
-            "exists": false
-          },
-          {
-            "key": "common.loading",
             "line": 293,
             "exists": false
           },
           {
-            "key": "dealerships.dealership",
-            "line": 299,
-            "exists": false
-          },
-          {
-            "key": "dealerships.location",
+            "key": "common.loading",
             "line": 300,
             "exists": false
           },
           {
+            "key": "dealerships.dealership",
+            "line": 306,
+            "exists": false
+          },
+          {
+            "key": "dealerships.location",
+            "line": 307,
+            "exists": false
+          },
+          {
             "key": "dealerships.status",
-            "line": 301,
+            "line": 308,
             "exists": false
           },
           {
             "key": "dealerships.plan",
-            "line": 302,
+            "line": 309,
             "exists": false
           },
           {
             "key": "dealerships.stats",
-            "line": 303,
+            "line": 310,
             "exists": false
           },
           {
             "key": "common.actions",
-            "line": 304,
+            "line": 311,
             "exists": false
           },
           {
             "key": "dealerships.no_location",
-            "line": 334,
+            "line": 341,
             "exists": false
           },
           {
             "key": "dealerships.${dealership.status}",
-            "line": 340,
+            "line": 347,
             "exists": false
           },
           {
             "key": "dealerships.${dealership.subscription_plan}",
-            "line": 345,
+            "line": 352,
             "exists": false
           },
           {
             "key": "dealerships.view_details",
-            "line": 370,
+            "line": 377,
             "exists": false
           },
           {
             "key": "common.edit",
-            "line": 374,
+            "line": 381,
             "exists": false
           },
           {
             "key": "dealerships.invite_user",
-            "line": 378,
-            "exists": false
-          },
-          {
-            "key": "common.delete",
             "line": 385,
             "exists": false
           },
           {
+            "key": "common.delete",
+            "line": 392,
+            "exists": false
+          },
+          {
             "key": "dealerships.no_results",
-            "line": 400,
+            "line": 407,
             "exists": false
           },
           {
             "key": "dealerships.no_dealerships",
-            "line": 400,
+            "line": 407,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.error",
-            "line": 110,
-            "context": "109: toast({\n110: title: t('common.error'),\n111: description: t('dealerships.fetch_error'),"
+            "line": 112,
+            "context": "111: toast({\n112: title: t('common.error'),\n113: description: t('dealerships.fetch_error'),"
           },
           {
             "key": "dealerships.fetch_error",
-            "line": 111,
-            "context": "110: title: t('common.error'),\n111: description: t('dealerships.fetch_error'),\n112: variant: 'destructive'"
+            "line": 113,
+            "context": "112: title: t('common.error'),\n113: description: t('dealerships.fetch_error'),\n114: variant: 'destructive'"
           },
           {
             "key": "dealerships.confirm_delete",
-            "line": 129,
-            "context": "128: const handleDeleteDealership = async (dealership: Dealership) => {\n129: if (!confirm(t('dealerships.confirm_delete', { name: dealership.name }))) {\n130: return;"
+            "line": 131,
+            "context": "130: const handleDeleteDealership = async (dealership: Dealership) => {\n131: if (!confirm(t('dealerships.confirm_delete', { name: dealership.name }))) {\n132: return;"
           },
           {
             "key": "common.success",
-            "line": 142,
-            "context": "141: toast({\n142: title: t('common.success'),\n143: description: t('dealerships.deleted_successfully')"
+            "line": 144,
+            "context": "143: toast({\n144: title: t('common.success'),\n145: description: t('dealerships.deleted_successfully')"
           },
           {
             "key": "dealerships.deleted_successfully",
-            "line": 143,
-            "context": "142: title: t('common.success'),\n143: description: t('dealerships.deleted_successfully')\n144: });"
+            "line": 145,
+            "context": "144: title: t('common.success'),\n145: description: t('dealerships.deleted_successfully')\n146: });"
           },
           {
             "key": "common.error",
-            "line": 150,
-            "context": "149: toast({\n150: title: t('common.error'),\n151: description: t('dealerships.delete_error'),"
+            "line": 152,
+            "context": "151: toast({\n152: title: t('common.error'),\n153: description: t('dealerships.delete_error'),"
           },
           {
             "key": "dealerships.delete_error",
-            "line": 151,
-            "context": "150: title: t('common.error'),\n151: description: t('dealerships.delete_error'),\n152: variant: 'destructive'"
+            "line": 153,
+            "context": "152: title: t('common.error'),\n153: description: t('dealerships.delete_error'),\n154: variant: 'destructive'"
           },
           {
             "key": "common.success",
-            "line": 196,
-            "context": "195: toast({\n196: title: t('common.success'),\n197: description: t('dealerships.invitation_sent')"
+            "line": 203,
+            "context": "202: toast({\n203: title: t('common.success'),\n204: description: t('dealerships.invitation_sent')"
           },
           {
             "key": "dealerships.invitation_sent",
-            "line": 197,
-            "context": "196: title: t('common.success'),\n197: description: t('dealerships.invitation_sent')\n198: });"
+            "line": 204,
+            "context": "203: title: t('common.success'),\n204: description: t('dealerships.invitation_sent')\n205: });"
           },
           {
             "key": "dealerships.add_dealership",
-            "line": 240,
-            "context": "239: <Plus className=\"h-4 w-4\" />\n240: {t('dealerships.add_dealership')}\n241: </Button>"
+            "line": 247,
+            "context": "246: <Plus className=\"h-4 w-4\" />\n247: {t('dealerships.add_dealership')}\n248: </Button>"
           },
           {
             "key": "dealerships.filters",
-            "line": 249,
-            "context": "248: <Filter className=\"h-5 w-5\" />\n249: {t('dealerships.filters')}\n250: </CardTitle>"
+            "line": 256,
+            "context": "255: <Filter className=\"h-5 w-5\" />\n256: {t('dealerships.filters')}\n257: </CardTitle>"
           },
           {
             "key": "dealerships.search_placeholder",
-            "line": 258,
-            "context": "257: <Input\n258: placeholder={t('dealerships.search_placeholder')}\n259: value={search}"
+            "line": 265,
+            "context": "264: <Input\n265: placeholder={t('dealerships.search_placeholder')}\n266: value={search}"
           },
           {
             "key": "dealerships.status_filter",
-            "line": 268,
-            "context": "267: <SelectTrigger className=\"w-40\">\n268: <SelectValue placeholder={t('dealerships.status_filter')} />\n269: </SelectTrigger>"
+            "line": 275,
+            "context": "274: <SelectTrigger className=\"w-40\">\n275: <SelectValue placeholder={t('dealerships.status_filter')} />\n276: </SelectTrigger>"
           },
           {
             "key": "dealerships.all_statuses",
-            "line": 271,
-            "context": "270: <SelectContent>\n271: <SelectItem value=\"all\">{t('dealerships.all_statuses')}</SelectItem>\n272: <SelectItem value=\"active\">{t('dealerships.active')}</SelectItem>"
+            "line": 278,
+            "context": "277: <SelectContent>\n278: <SelectItem value=\"all\">{t('dealerships.all_statuses')}</SelectItem>\n279: <SelectItem value=\"active\">{t('dealerships.active')}</SelectItem>"
           },
           {
             "key": "dealerships.active",
-            "line": 272,
-            "context": "271: <SelectItem value=\"all\">{t('dealerships.all_statuses')}</SelectItem>\n272: <SelectItem value=\"active\">{t('dealerships.active')}</SelectItem>\n273: <SelectItem value=\"inactive\">{t('dealerships.inactive')}</SelectItem>"
+            "line": 279,
+            "context": "278: <SelectItem value=\"all\">{t('dealerships.all_statuses')}</SelectItem>\n279: <SelectItem value=\"active\">{t('dealerships.active')}</SelectItem>\n280: <SelectItem value=\"inactive\">{t('dealerships.inactive')}</SelectItem>"
           },
           {
             "key": "dealerships.inactive",
-            "line": 273,
-            "context": "272: <SelectItem value=\"active\">{t('dealerships.active')}</SelectItem>\n273: <SelectItem value=\"inactive\">{t('dealerships.inactive')}</SelectItem>\n274: <SelectItem value=\"suspended\">{t('dealerships.suspended')}</SelectItem>"
+            "line": 280,
+            "context": "279: <SelectItem value=\"active\">{t('dealerships.active')}</SelectItem>\n280: <SelectItem value=\"inactive\">{t('dealerships.inactive')}</SelectItem>\n281: <SelectItem value=\"suspended\">{t('dealerships.suspended')}</SelectItem>"
           },
           {
             "key": "dealerships.suspended",
-            "line": 274,
-            "context": "273: <SelectItem value=\"inactive\">{t('dealerships.inactive')}</SelectItem>\n274: <SelectItem value=\"suspended\">{t('dealerships.suspended')}</SelectItem>\n275: </SelectContent>"
+            "line": 281,
+            "context": "280: <SelectItem value=\"inactive\">{t('dealerships.inactive')}</SelectItem>\n281: <SelectItem value=\"suspended\">{t('dealerships.suspended')}</SelectItem>\n282: </SelectContent>"
           },
           {
             "key": "dealerships.dealership_list",
-            "line": 286,
-            "context": "285: <Building2 className=\"h-5 w-5\" />\n286: {t('dealerships.dealership_list')} ({filteredDealerships.length})\n287: </CardTitle>"
+            "line": 293,
+            "context": "292: <Building2 className=\"h-5 w-5\" />\n293: {t('dealerships.dealership_list')} ({filteredDealerships.length})\n294: </CardTitle>"
           },
           {
             "key": "common.loading",
-            "line": 293,
-            "context": "292: <div className=\"animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto\"></div>\n293: <p className=\"text-muted-foreground mt-4\">{t('common.loading')}</p>\n294: </div>"
+            "line": 300,
+            "context": "299: <div className=\"animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto\"></div>\n300: <p className=\"text-muted-foreground mt-4\">{t('common.loading')}</p>\n301: </div>"
           },
           {
             "key": "dealerships.dealership",
-            "line": 299,
-            "context": "298: <TableRow>\n299: <TableHead>{t('dealerships.dealership')}</TableHead>\n300: <TableHead>{t('dealerships.location')}</TableHead>"
+            "line": 306,
+            "context": "305: <TableRow>\n306: <TableHead>{t('dealerships.dealership')}</TableHead>\n307: <TableHead>{t('dealerships.location')}</TableHead>"
           },
           {
             "key": "dealerships.location",
-            "line": 300,
-            "context": "299: <TableHead>{t('dealerships.dealership')}</TableHead>\n300: <TableHead>{t('dealerships.location')}</TableHead>\n301: <TableHead>{t('dealerships.status')}</TableHead>"
+            "line": 307,
+            "context": "306: <TableHead>{t('dealerships.dealership')}</TableHead>\n307: <TableHead>{t('dealerships.location')}</TableHead>\n308: <TableHead>{t('dealerships.status')}</TableHead>"
           },
           {
             "key": "dealerships.status",
-            "line": 301,
-            "context": "300: <TableHead>{t('dealerships.location')}</TableHead>\n301: <TableHead>{t('dealerships.status')}</TableHead>\n302: <TableHead>{t('dealerships.plan')}</TableHead>"
+            "line": 308,
+            "context": "307: <TableHead>{t('dealerships.location')}</TableHead>\n308: <TableHead>{t('dealerships.status')}</TableHead>\n309: <TableHead>{t('dealerships.plan')}</TableHead>"
           },
           {
             "key": "dealerships.plan",
-            "line": 302,
-            "context": "301: <TableHead>{t('dealerships.status')}</TableHead>\n302: <TableHead>{t('dealerships.plan')}</TableHead>\n303: <TableHead>{t('dealerships.stats')}</TableHead>"
+            "line": 309,
+            "context": "308: <TableHead>{t('dealerships.status')}</TableHead>\n309: <TableHead>{t('dealerships.plan')}</TableHead>\n310: <TableHead>{t('dealerships.stats')}</TableHead>"
           },
           {
             "key": "dealerships.stats",
-            "line": 303,
-            "context": "302: <TableHead>{t('dealerships.plan')}</TableHead>\n303: <TableHead>{t('dealerships.stats')}</TableHead>\n304: <TableHead className=\"text-right\">{t('common.actions')}</TableHead>"
+            "line": 310,
+            "context": "309: <TableHead>{t('dealerships.plan')}</TableHead>\n310: <TableHead>{t('dealerships.stats')}</TableHead>\n311: <TableHead className=\"text-right\">{t('common.actions')}</TableHead>"
           },
           {
             "key": "common.actions",
-            "line": 304,
-            "context": "303: <TableHead>{t('dealerships.stats')}</TableHead>\n304: <TableHead className=\"text-right\">{t('common.actions')}</TableHead>\n305: </TableRow>"
+            "line": 311,
+            "context": "310: <TableHead>{t('dealerships.stats')}</TableHead>\n311: <TableHead className=\"text-right\">{t('common.actions')}</TableHead>\n312: </TableRow>"
           },
           {
             "key": "dealerships.no_location",
-            "line": 334,
-            "context": "333: ) : (\n334: <span className=\"text-muted-foreground\">{t('dealerships.no_location')}</span>\n335: )}"
+            "line": 341,
+            "context": "340: ) : (\n341: <span className=\"text-muted-foreground\">{t('dealerships.no_location')}</span>\n342: )}"
           },
           {
             "key": "dealerships.${dealership.status}",
-            "line": 340,
-            "context": "339: <Badge variant={getStatusBadgeVariant(dealership.status)}>\n340: {t(`dealerships.${dealership.status}`)}\n341: </Badge>"
+            "line": 347,
+            "context": "346: <Badge variant={getStatusBadgeVariant(dealership.status)}>\n347: {t(`dealerships.${dealership.status}`)}\n348: </Badge>"
           },
           {
             "key": "dealerships.${dealership.subscription_plan}",
-            "line": 345,
-            "context": "344: <Badge variant={getPlanBadgeVariant(dealership.subscription_plan)}>\n345: {t(`dealerships.${dealership.subscription_plan}`)}\n346: </Badge>"
+            "line": 352,
+            "context": "351: <Badge variant={getPlanBadgeVariant(dealership.subscription_plan)}>\n352: {t(`dealerships.${dealership.subscription_plan}`)}\n353: </Badge>"
           },
           {
             "key": "dealerships.view_details",
-            "line": 370,
-            "context": "369: <Eye className=\"mr-2 h-4 w-4\" />\n370: {t('dealerships.view_details')}\n371: </DropdownMenuItem>"
+            "line": 377,
+            "context": "376: <Eye className=\"mr-2 h-4 w-4\" />\n377: {t('dealerships.view_details')}\n378: </DropdownMenuItem>"
           },
           {
             "key": "common.edit",
-            "line": 374,
-            "context": "373: <Edit className=\"mr-2 h-4 w-4\" />\n374: {t('common.edit')}\n375: </DropdownMenuItem>"
+            "line": 381,
+            "context": "380: <Edit className=\"mr-2 h-4 w-4\" />\n381: {t('common.edit')}\n382: </DropdownMenuItem>"
           },
           {
             "key": "dealerships.invite_user",
-            "line": 378,
-            "context": "377: <UserPlus className=\"mr-2 h-4 w-4\" />\n378: {t('dealerships.invite_user')}\n379: </DropdownMenuItem>"
+            "line": 385,
+            "context": "384: <UserPlus className=\"mr-2 h-4 w-4\" />\n385: {t('dealerships.invite_user')}\n386: </DropdownMenuItem>"
           },
           {
             "key": "common.delete",
-            "line": 385,
-            "context": "384: <Trash2 className=\"mr-2 h-4 w-4\" />\n385: {t('common.delete')}\n386: </DropdownMenuItem>"
+            "line": 392,
+            "context": "391: <Trash2 className=\"mr-2 h-4 w-4\" />\n392: {t('common.delete')}\n393: </DropdownMenuItem>"
           },
           {
             "key": "dealerships.no_results",
-            "line": 400,
-            "context": "399: <p className=\"text-muted-foreground\">\n400: {search ? t('dealerships.no_results') : t('dealerships.no_dealerships')}\n401: </p>"
+            "line": 407,
+            "context": "406: <p className=\"text-muted-foreground\">\n407: {search ? t('dealerships.no_results') : t('dealerships.no_dealerships')}\n408: </p>"
           },
           {
             "key": "dealerships.no_dealerships",
-            "line": 400,
-            "context": "399: <p className=\"text-muted-foreground\">\n400: {search ? t('dealerships.no_results') : t('dealerships.no_dealerships')}\n401: </p>"
+            "line": 407,
+            "context": "406: <p className=\"text-muted-foreground\">\n407: {search ? t('dealerships.no_results') : t('dealerships.no_dealerships')}\n408: </p>"
           }
         ],
         "coverage": 100,
@@ -29759,39 +29759,29 @@
         "hardcodedStrings": [
           {
             "text": ", emailResult);\n        toast({\n          title: t(",
-            "line": 242,
-            "context": "241: } else if (!emailResult?.success) {\n242: console.error('❌ [EMAIL] Email function returned non-success:', emailResult);\n243: toast({"
+            "line": 249,
+            "context": "248: } else if (!emailResult?.success) {\n249: console.error('❌ [EMAIL] Email function returned non-success:', emailResult);\n250: toast({"
           }
         ],
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 129,
+            "line": 136,
             "exists": false
           },
           {
             "key": "messages.required_field",
-            "line": 130,
+            "line": 137,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 138,
+            "line": 145,
             "exists": false
           },
           {
             "key": "invitations.accept.auth_required_desc",
-            "line": 139,
-            "exists": false
-          },
-          {
-            "key": "invitations.invitation_created",
-            "line": 237,
-            "exists": false
-          },
-          {
-            "key": "invitations.invitation_created_email_failed",
-            "line": 238,
+            "line": 146,
             "exists": false
           },
           {
@@ -29805,43 +29795,48 @@
             "exists": false
           },
           {
-            "key": "common.success",
+            "key": "invitations.invitation_created",
             "line": 251,
             "exists": false
           },
           {
-            "key": "invitations.invitation_sent",
+            "key": "invitations.invitation_created_email_failed",
             "line": 252,
             "exists": false
           },
           {
+            "key": "common.success",
+            "line": 258,
+            "exists": false
+          },
+          {
+            "key": "invitations.invitation_sent",
+            "line": 259,
+            "exists": false
+          },
+          {
             "key": "common.error",
-            "line": 265,
+            "line": 272,
             "exists": false
           },
           {
             "key": "messages.error",
-            "line": 266,
+            "line": 273,
             "exists": false
           },
           {
             "key": "invitations.send_invitation",
-            "line": 298,
+            "line": 305,
             "exists": false
           },
           {
             "key": "invitations.invite_user_to",
-            "line": 302,
+            "line": 309,
             "exists": false
           },
           {
             "key": "dealerships.dealership",
-            "line": 312,
-            "exists": false
-          },
-          {
-            "key": "dealerships.select_dealership",
-            "line": 320,
+            "line": 319,
             "exists": false
           },
           {
@@ -29850,181 +29845,186 @@
             "exists": false
           },
           {
+            "key": "dealerships.select_dealership",
+            "line": 334,
+            "exists": false
+          },
+          {
             "key": "invitations.email",
-            "line": 341,
+            "line": 348,
             "exists": false
           },
           {
             "key": "invitations.email_placeholder",
-            "line": 347,
+            "line": 354,
             "exists": false
           },
           {
             "key": "invitations.role",
-            "line": 361,
+            "line": 368,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 370,
+            "line": 377,
             "exists": false
           },
           {
             "key": "invitations.select_role",
-            "line": 373,
-            "exists": false
-          },
-          {
-            "key": "common.loading",
             "line": 380,
             "exists": false
           },
           {
+            "key": "common.loading",
+            "line": 387,
+            "exists": false
+          },
+          {
             "key": "common.cancel",
-            "line": 419,
+            "line": 426,
             "exists": false
           },
           {
             "key": "invitations.sending",
-            "line": 425,
+            "line": 432,
             "exists": false
           },
           {
             "key": "invitations.send",
-            "line": 430,
+            "line": 437,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "common.error",
-            "line": 129,
-            "context": "128: toast({\n129: title: t('common.error'),\n130: description: t('messages.required_field'),"
+            "line": 136,
+            "context": "135: toast({\n136: title: t('common.error'),\n137: description: t('messages.required_field'),"
           },
           {
             "key": "messages.required_field",
-            "line": 130,
-            "context": "129: title: t('common.error'),\n130: description: t('messages.required_field'),\n131: variant: 'destructive',"
+            "line": 137,
+            "context": "136: title: t('common.error'),\n137: description: t('messages.required_field'),\n138: variant: 'destructive',"
           },
           {
             "key": "common.error",
-            "line": 138,
-            "context": "137: toast({\n138: title: t('common.error'),\n139: description: t('invitations.accept.auth_required_desc'),"
+            "line": 145,
+            "context": "144: toast({\n145: title: t('common.error'),\n146: description: t('invitations.accept.auth_required_desc'),"
           },
           {
             "key": "invitations.accept.auth_required_desc",
-            "line": 139,
-            "context": "138: title: t('common.error'),\n139: description: t('invitations.accept.auth_required_desc'),\n140: variant: 'destructive',"
-          },
-          {
-            "key": "invitations.invitation_created",
-            "line": 237,
-            "context": "236: toast({\n237: title: t('invitations.invitation_created'),\n238: description: t('invitations.invitation_created_email_failed') + ': ' + (emailError.message || 'Unknown error'),"
-          },
-          {
-            "key": "invitations.invitation_created_email_failed",
-            "line": 238,
-            "context": "237: title: t('invitations.invitation_created'),\n238: description: t('invitations.invitation_created_email_failed') + ': ' + (emailError.message || 'Unknown error'),\n239: variant: 'default',"
+            "line": 146,
+            "context": "145: title: t('common.error'),\n146: description: t('invitations.accept.auth_required_desc'),\n147: variant: 'destructive',"
           },
           {
             "key": "invitations.invitation_created",
             "line": 244,
-            "context": "243: toast({\n244: title: t('invitations.invitation_created'),\n245: description: t('invitations.invitation_created_email_failed') + ': ' + (emailResult?.error || 'Unknown error'),"
+            "context": "243: toast({\n244: title: t('invitations.invitation_created'),\n245: description: t('invitations.invitation_created_email_failed') + ': ' + (emailError.message || 'Unknown error'),"
           },
           {
             "key": "invitations.invitation_created_email_failed",
             "line": 245,
-            "context": "244: title: t('invitations.invitation_created'),\n245: description: t('invitations.invitation_created_email_failed') + ': ' + (emailResult?.error || 'Unknown error'),\n246: variant: 'default',"
+            "context": "244: title: t('invitations.invitation_created'),\n245: description: t('invitations.invitation_created_email_failed') + ': ' + (emailError.message || 'Unknown error'),\n246: variant: 'default',"
+          },
+          {
+            "key": "invitations.invitation_created",
+            "line": 251,
+            "context": "250: toast({\n251: title: t('invitations.invitation_created'),\n252: description: t('invitations.invitation_created_email_failed') + ': ' + (emailResult?.error || 'Unknown error'),"
+          },
+          {
+            "key": "invitations.invitation_created_email_failed",
+            "line": 252,
+            "context": "251: title: t('invitations.invitation_created'),\n252: description: t('invitations.invitation_created_email_failed') + ': ' + (emailResult?.error || 'Unknown error'),\n253: variant: 'default',"
           },
           {
             "key": "common.success",
-            "line": 251,
-            "context": "250: toast({\n251: title: t('common.success'),\n252: description: t('invitations.invitation_sent'),"
+            "line": 258,
+            "context": "257: toast({\n258: title: t('common.success'),\n259: description: t('invitations.invitation_sent'),"
           },
           {
             "key": "invitations.invitation_sent",
-            "line": 252,
-            "context": "251: title: t('common.success'),\n252: description: t('invitations.invitation_sent'),\n253: });"
+            "line": 259,
+            "context": "258: title: t('common.success'),\n259: description: t('invitations.invitation_sent'),\n260: });"
           },
           {
             "key": "common.error",
-            "line": 265,
-            "context": "264: toast({\n265: title: t('common.error'),\n266: description: error.message || t('messages.error'),"
+            "line": 272,
+            "context": "271: toast({\n272: title: t('common.error'),\n273: description: error.message || t('messages.error'),"
           },
           {
             "key": "messages.error",
-            "line": 266,
-            "context": "265: title: t('common.error'),\n266: description: error.message || t('messages.error'),\n267: variant: 'destructive',"
+            "line": 273,
+            "context": "272: title: t('common.error'),\n273: description: error.message || t('messages.error'),\n274: variant: 'destructive',"
           },
           {
             "key": "invitations.send_invitation",
-            "line": 298,
-            "context": "297: <UserPlus className=\"h-5 w-5\" />\n298: {t('invitations.send_invitation')}\n299: </DialogTitle>"
+            "line": 305,
+            "context": "304: <UserPlus className=\"h-5 w-5\" />\n305: {t('invitations.send_invitation')}\n306: </DialogTitle>"
           },
           {
             "key": "invitations.invite_user_to",
-            "line": 302,
-            "context": "301: {selectedDealerId\n302: ? t('invitations.invite_user_to', { dealership: getDealershipName() })\n303: : 'Invite a user to join a dealership'"
+            "line": 309,
+            "context": "308: {selectedDealerId\n309: ? t('invitations.invite_user_to', { dealership: getDealershipName() })\n310: : 'Invite a user to join a dealership'"
           },
           {
             "key": "dealerships.dealership",
-            "line": 312,
-            "context": "311: <div className=\"space-y-2\">\n312: <Label>{t('dealerships.dealership')} *</Label>\n313: <div className=\"flex items-center gap-2 p-3 bg-muted/50 rounded-lg\">"
-          },
-          {
-            "key": "dealerships.select_dealership",
-            "line": 320,
-            "context": "319: <div className=\"space-y-2\">\n320: <Label htmlFor=\"dealership\">{t('dealerships.select_dealership')} *</Label>\n321: <Select"
+            "line": 319,
+            "context": "318: <div className=\"space-y-2\">\n319: <Label>{t('dealerships.dealership')} *</Label>\n320: <div className=\"flex items-center gap-2 p-3 bg-muted/50 rounded-lg\">"
           },
           {
             "key": "dealerships.select_dealership",
             "line": 327,
-            "context": "326: <SelectTrigger>\n327: <SelectValue placeholder={t('dealerships.select_dealership')} />\n328: </SelectTrigger>"
+            "context": "326: <div className=\"space-y-2\">\n327: <Label htmlFor=\"dealership\">{t('dealerships.select_dealership')} *</Label>\n328: <Select"
+          },
+          {
+            "key": "dealerships.select_dealership",
+            "line": 334,
+            "context": "333: <SelectTrigger>\n334: <SelectValue placeholder={t('dealerships.select_dealership')} />\n335: </SelectTrigger>"
           },
           {
             "key": "invitations.email",
-            "line": 341,
-            "context": "340: <div className=\"space-y-2\">\n341: <Label htmlFor=\"email\">{t('invitations.email')} *</Label>\n342: <div className=\"relative\">"
+            "line": 348,
+            "context": "347: <div className=\"space-y-2\">\n348: <Label htmlFor=\"email\">{t('invitations.email')} *</Label>\n349: <div className=\"relative\">"
           },
           {
             "key": "invitations.email_placeholder",
-            "line": 347,
-            "context": "346: type=\"email\"\n347: placeholder={t('invitations.email_placeholder')}\n348: value={email}"
+            "line": 354,
+            "context": "353: type=\"email\"\n354: placeholder={t('invitations.email_placeholder')}\n355: value={email}"
           },
           {
             "key": "invitations.role",
-            "line": 361,
-            "context": "360: <div className=\"space-y-2\">\n361: <Label htmlFor=\"role\">{t('invitations.role')} *</Label>\n362: <Select"
+            "line": 368,
+            "context": "367: <div className=\"space-y-2\">\n368: <Label htmlFor=\"role\">{t('invitations.role')} *</Label>\n369: <Select"
           },
           {
             "key": "common.loading",
-            "line": 370,
-            "context": "369: loadingRoles\n370: ? t('common.loading')\n371: : customRoles.length === 0"
+            "line": 377,
+            "context": "376: loadingRoles\n377: ? t('common.loading')\n378: : customRoles.length === 0"
           },
           {
             "key": "invitations.select_role",
-            "line": 373,
-            "context": "372: ? 'No custom roles available'\n373: : t('invitations.select_role')\n374: } />"
+            "line": 380,
+            "context": "379: ? 'No custom roles available'\n380: : t('invitations.select_role')\n381: } />"
           },
           {
             "key": "common.loading",
-            "line": 380,
-            "context": "379: <Loader2 className=\"h-4 w-4 animate-spin mx-auto mb-2\" />\n380: {t('common.loading')}\n381: </div>"
+            "line": 387,
+            "context": "386: <Loader2 className=\"h-4 w-4 animate-spin mx-auto mb-2\" />\n387: {t('common.loading')}\n388: </div>"
           },
           {
             "key": "common.cancel",
-            "line": 419,
-            "context": "418: >\n419: {t('common.cancel')}\n420: </Button>"
+            "line": 426,
+            "context": "425: >\n426: {t('common.cancel')}\n427: </Button>"
           },
           {
             "key": "invitations.sending",
-            "line": 425,
-            "context": "424: <Loader2 className=\"mr-2 h-4 w-4 animate-spin\" />\n425: {t('invitations.sending')}\n426: </>"
+            "line": 432,
+            "context": "431: <Loader2 className=\"mr-2 h-4 w-4 animate-spin\" />\n432: {t('invitations.sending')}\n433: </>"
           },
           {
             "key": "invitations.send",
-            "line": 430,
-            "context": "429: <Send className=\"mr-2 h-4 w-4\" />\n430: {t('invitations.send')}\n431: </>"
+            "line": 437,
+            "context": "436: <Send className=\"mr-2 h-4 w-4\" />\n437: {t('invitations.send')}\n438: </>"
           }
         ],
         "coverage": 96,
@@ -88279,8 +88279,13 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
+            "line": 19,
+            "context": "18: error: string | null;\n19: refreshDealerships: () => Promise<void>;\n20: filterByModule: (moduleName: AppModule) => Promise<Dealership[]>;"
+          },
+          {
+            "text": "Promise",
             "line": 20,
-            "context": "19: refreshDealerships: () => void;\n20: filterByModule: (moduleName: AppModule) => Promise<Dealership[]>;\n21: }"
+            "context": "19: refreshDealerships: () => Promise<void>;\n20: filterByModule: (moduleName: AppModule) => Promise<Dealership[]>;\n21: }"
           }
         ],
         "translationCalls": [],
@@ -101272,6 +101277,7 @@
         "src\\components\\ui\\carousel.tsx",
         "src\\components\\ui\\user-dropdown.tsx",
         "src\\config\\firebase.ts",
+        "src\\hooks\\useAccessibleDealerships.tsx",
         "src\\hooks\\useAdvancedVinScanner.tsx",
         "src\\hooks\\useDealershipModules.tsx",
         "src\\hooks\\useNotificationRetry.tsx",
@@ -101341,7 +101347,6 @@
         "src\\contexts\\DealershipContext.tsx",
         "src\\contexts\\GlobalChatProvider.tsx",
         "src\\contexts\\ServicesContext.tsx",
-        "src\\hooks\\useAccessibleDealerships.tsx",
         "src\\hooks\\useAuthBranding.ts",
         "src\\hooks\\useDealerActiveModules.ts",
         "src\\hooks\\useDeliveryTracking.tsx",
