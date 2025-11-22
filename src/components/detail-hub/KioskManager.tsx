@@ -29,18 +29,12 @@ const KioskManager = () => {
   const [isAddingKiosk, setIsAddingKiosk] = useState(false);
   const [editingKiosk, setEditingKiosk] = useState<DetailHubKiosk | null>(null);
 
-  // Form state
+  // Form state - Simplified (removed unused fields: IP, MAC, brightness, volume, kioskMode)
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
-  const [ipAddress, setIpAddress] = useState("");
-  const [macAddress, setMacAddress] = useState("");
-  const [brightness, setBrightness] = useState(80);
-  const [volume, setVolume] = useState(75);
   const [faceRecognition, setFaceRecognition] = useState(true);
-  const [kioskMode, setKioskMode] = useState(true);
   const [allowManualEntry, setAllowManualEntry] = useState(true);
-  const [autoSleep, setAutoSleep] = useState(true);
-  const [sleepTimeout, setSleepTimeout] = useState(30);
+  const [sleepTimeout, setSleepTimeout] = useState(10); // Changed default from 30 to 10 seconds
 
   const { selectedDealerId } = useDealerFilter();
 
@@ -93,15 +87,9 @@ const KioskManager = () => {
   const resetForm = () => {
     setName("");
     setLocation("");
-    setIpAddress("");
-    setMacAddress("");
-    setBrightness(80);
-    setVolume(75);
     setFaceRecognition(true);
-    setKioskMode(true);
     setAllowManualEntry(true);
-    setAutoSleep(true);
-    setSleepTimeout(30);
+    setSleepTimeout(10);
     setEditingKiosk(null);
   };
 
@@ -119,15 +107,11 @@ const KioskManager = () => {
       kiosk_code: kioskCode,
       name,
       location: location || null,
-      ip_address: ipAddress || null,
-      mac_address: macAddress || null,
-      screen_brightness: brightness,
-      volume,
+      // Functional toggles that are actually used by PunchClockKioskModal
       face_recognition_enabled: faceRecognition,
-      kiosk_mode: kioskMode,
       allow_manual_entry: allowManualEntry,
-      auto_sleep: autoSleep,
       sleep_timeout_minutes: sleepTimeout,
+      // Status fields
       status: 'offline', // Default to offline until first heartbeat
       camera_status: 'inactive'
     }, {
@@ -146,14 +130,9 @@ const KioskManager = () => {
       updates: {
         name,
         location: location || null,
-        ip_address: ipAddress || null,
-        mac_address: macAddress || null,
-        screen_brightness: brightness,
-        volume,
+        // Functional toggles
         face_recognition_enabled: faceRecognition,
-        kiosk_mode: kioskMode,
         allow_manual_entry: allowManualEntry,
-        auto_sleep: autoSleep,
         sleep_timeout_minutes: sleepTimeout
       }
     }, {
@@ -168,14 +147,8 @@ const KioskManager = () => {
     setEditingKiosk(kiosk);
     setName(kiosk.name);
     setLocation(kiosk.location || "");
-    setIpAddress(kiosk.ip_address || "");
-    setMacAddress(kiosk.mac_address || "");
-    setBrightness(kiosk.screen_brightness);
-    setVolume(kiosk.volume);
     setFaceRecognition(kiosk.face_recognition_enabled);
-    setKioskMode(kiosk.kiosk_mode);
     setAllowManualEntry(kiosk.allow_manual_entry);
-    setAutoSleep(kiosk.auto_sleep);
     setSleepTimeout(kiosk.sleep_timeout_minutes);
   };
 
@@ -265,53 +238,14 @@ const KioskManager = () => {
                   onChange={(e) => setLocation(e.target.value)}
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="ipAddress">IP Address</Label>
-                  <Input
-                    id="ipAddress"
-                    placeholder="192.168.1.104"
-                    value={ipAddress}
-                    onChange={(e) => setIpAddress(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="macAddress">MAC Address</Label>
-                  <Input
-                    id="macAddress"
-                    placeholder="00:1A:2B:3C:4D:5E"
-                    value={macAddress}
-                    onChange={(e) => setMacAddress(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="brightness">Screen Brightness ({brightness}%)</Label>
-                  <Input
-                    id="brightness"
-                    type="range"
-                    min="10"
-                    max="100"
-                    value={brightness}
-                    onChange={(e) => setBrightness(parseInt(e.target.value))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="volume">Volume ({volume}%)</Label>
-                  <Input
-                    id="volume"
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={volume}
-                    onChange={(e) => setVolume(parseInt(e.target.value))}
-                  />
-                </div>
-              </div>
-              <div className="space-y-4">
+
+              {/* Functional Configuration Toggles */}
+              <div className="space-y-4 border-t pt-4">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="faceRecognition">{t('detail_hub.kiosk_manager.features.face_recognition_enabled')}</Label>
+                  <div className="space-y-1">
+                    <Label htmlFor="faceRecognition">{t('detail_hub.kiosk_manager.features.face_recognition_enabled')}</Label>
+                    <p className="text-xs text-muted-foreground">Enable facial recognition for employee login</p>
+                  </div>
                   <Switch
                     id="faceRecognition"
                     checked={faceRecognition}
@@ -319,42 +253,30 @@ const KioskManager = () => {
                   />
                 </div>
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="kioskMode">Kiosk Mode (Locked)</Label>
-                  <Switch
-                    id="kioskMode"
-                    checked={kioskMode}
-                    onCheckedChange={setKioskMode}
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="allowManual">Allow Manual Entry</Label>
+                  <div className="space-y-1">
+                    <Label htmlFor="allowManual">Allow Manual Entry</Label>
+                    <p className="text-xs text-muted-foreground">Allow employees to search and login manually</p>
+                  </div>
                   <Switch
                     id="allowManual"
                     checked={allowManualEntry}
                     onCheckedChange={setAllowManualEntry}
                   />
                 </div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="autoSleep">Auto Sleep</Label>
-                  <Switch
-                    id="autoSleep"
-                    checked={autoSleep}
-                    onCheckedChange={setAutoSleep}
+                <div className="space-y-2">
+                  <Label htmlFor="sleepTimeout">Auto-Logout Timeout (seconds)</Label>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Automatically return to search after employee action (10 seconds recommended)
+                  </p>
+                  <Input
+                    id="sleepTimeout"
+                    type="number"
+                    min="5"
+                    max="60"
+                    value={sleepTimeout}
+                    onChange={(e) => setSleepTimeout(parseInt(e.target.value))}
                   />
                 </div>
-                {autoSleep && (
-                  <div className="space-y-2">
-                    <Label htmlFor="sleepTimeout">Sleep Timeout (minutes)</Label>
-                    <Input
-                      id="sleepTimeout"
-                      type="number"
-                      min="1"
-                      max="120"
-                      value={sleepTimeout}
-                      onChange={(e) => setSleepTimeout(parseInt(e.target.value))}
-                    />
-                  </div>
-                )}
               </div>
             </div>
             <DialogFooter>
@@ -465,7 +387,6 @@ const KioskManager = () => {
                     </TableCell>
                     <TableCell>
                       <p>{kiosk.location || 'Not set'}</p>
-                      <p className="text-sm text-muted-foreground">{kiosk.ip_address || 'No IP'}</p>
                     </TableCell>
                     <TableCell>{getStatusBadge(kiosk.status)}</TableCell>
                     <TableCell>{getCameraStatusBadge(kiosk.camera_status)}</TableCell>

@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Clock, Users, DollarSign, Calendar, UserCheck, TrendingUp, AlertCircle, CheckCircle } from "lucide-react";
+import { Clock, Users, DollarSign, Calendar, UserCheck, TrendingUp, AlertCircle, CheckCircle, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTabPersistence } from "@/hooks/useTabPersistence";
 // REAL DATABASE INTEGRATION
@@ -19,14 +19,29 @@ import KioskManager from "./KioskManager";
 import LiveStatusDashboard from "./LiveStatusDashboard";
 import ScheduleCalendar from "./ScheduleCalendar";
 import { PunchClockKioskModal } from "./PunchClockKioskModal";
+// KIOSK SETUP WIZARD
+import { KioskSetupWizard, isKioskConfigured, getConfiguredKioskId, generateDeviceFingerprint, getSystemUsername } from "./KioskSetupWizard";
 
 const DetailHubDashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [showTimeClock, setShowTimeClock] = useState(false); // Modal state
 
+  // KIOSK SETUP WIZARD STATE
+  const [showKioskSetup, setShowKioskSetup] = useState(false);
+  const [kioskId, setKioskId] = useState<string | null>(null);
+  const [deviceFingerprint] = useState(generateDeviceFingerprint());
+  const [systemUsername] = useState(getSystemUsername());
+
   // Persisted tab state
   const [activeTab, setActiveTab] = useTabPersistence('detail_hub', 'overview');
+
+  // Initialize kiosk ID on mount
+  useEffect(() => {
+    const configuredId = getConfiguredKioskId();
+    setKioskId(configuredId);
+    console.log('[DetailHub] Kiosk configured:', configuredId ? 'YES' : 'NO', configuredId);
+  }, []);
 
   // REAL DATABASE INTEGRATION
   const { data: employees = [], isLoading: loadingEmployees } = useDetailHubEmployees();
@@ -66,15 +81,65 @@ const DetailHubDashboard = () => {
           <p className="text-muted-foreground">{t('detail_hub.subtitle')}</p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={() => setShowTimeClock(true)}>
+          {/* Kiosk Configuration Button */}
+          <Button
+            variant="outline"
+            onClick={() => {
+              console.log('[DetailHub] Opening kiosk setup wizard (manual)');
+              setShowKioskSetup(true);
+            }}
+            title={isKioskConfigured() ? "Reconfigure Kiosk" : "Configure Kiosk"}
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            {isKioskConfigured() ? 'Kiosk Settings' : 'Setup Kiosk'}
+          </Button>
+
+          {/* Time Clock Button */}
+          <Button
+            onClick={() => {
+              // Check if kiosk is configured before opening time clock
+              if (!isKioskConfigured()) {
+                console.log('[DetailHub] Kiosk not configured - showing setup wizard');
+                setShowKioskSetup(true);
+              } else {
+                console.log('[DetailHub] Kiosk configured - opening time clock');
+                setShowTimeClock(true);
+              }
+            }}
+          >
             <Clock className="w-4 h-4 mr-2" />
             {t('detail_hub.dashboard.quick_actions.time_clock')}
+            {!isKioskConfigured() && (
+              <Badge variant="outline" className="ml-2 text-xs">Setup Required</Badge>
+            )}
           </Button>
         </div>
       </div>
 
-      {/* Time Clock Modal - Enterprise Kiosk */}
-      <PunchClockKioskModal open={showTimeClock} onClose={() => setShowTimeClock(false)} />
+      {/* Kiosk Setup Wizard (First-Run Configuration) */}
+      <KioskSetupWizard
+        open={showKioskSetup}
+        onClose={() => {
+          console.log('[DetailHub] Kiosk setup wizard closed');
+          setShowKioskSetup(false);
+        }}
+        fingerprint={deviceFingerprint}
+        username={systemUsername}
+        onConfigured={(newKioskId) => {
+          console.log('[DetailHub] Kiosk configured successfully:', newKioskId);
+          setKioskId(newKioskId);
+          setShowKioskSetup(false);
+          // Auto-open time clock after configuration
+          setShowTimeClock(true);
+        }}
+      />
+
+      {/* Time Clock Modal - Enterprise Kiosk (only if configured) */}
+      <PunchClockKioskModal
+        open={showTimeClock && isKioskConfigured()}
+        onClose={() => setShowTimeClock(false)}
+        kioskId={kioskId || undefined}
+      />
 
       {/* Tabs for all Detail Hub functionality */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">

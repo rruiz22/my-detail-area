@@ -316,7 +316,11 @@ export function KioskSetupWizard({
  */
 export function isKioskConfigured(): boolean {
   const kioskId = localStorage.getItem("kiosk_id");
-  return !!kioskId;
+  if (!kioskId) return false;
+
+  // Validate that it's a valid UUID (not 'default-kiosk' or corrupted value)
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(kioskId);
 }
 
 /**

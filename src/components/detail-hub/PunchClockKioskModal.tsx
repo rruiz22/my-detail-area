@@ -94,14 +94,52 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     initializeMatcher
   } = useFaceRecognition();
 
-  // Kiosk ID from props or localStorage
-  const KIOSK_ID = kioskId || localStorage.getItem('kiosk_id') || 'default-kiosk';
+  // Kiosk ID from props or localStorage (NO FALLBACK - must be configured)
+  const KIOSK_ID = kioskId || localStorage.getItem('kiosk_id') || null;
 
   // Helper to check if string is valid UUID
-  const isValidUUID = (str: string) => {
+  const isValidUUID = (str: string | null): str is string => {
+    if (!str) return false;
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     return uuidRegex.test(str);
   };
+
+  // Kiosk Configuration (loaded from database)
+  const [kioskConfig, setKioskConfig] = useState<{
+    face_recognition_enabled: boolean;
+    allow_manual_entry: boolean;
+    sleep_timeout_minutes: number;
+  }>({
+    face_recognition_enabled: true,
+    allow_manual_entry: true,
+    sleep_timeout_minutes: 10, // Default 10 seconds
+  });
+
+  // Fetch kiosk configuration from database
+  useEffect(() => {
+    if (isValidUUID(KIOSK_ID)) {
+      console.log('[Kiosk] Fetching configuration for kiosk ID:', KIOSK_ID);
+      supabase
+        .from('detail_hub_kiosks')
+        .select('face_recognition_enabled, allow_manual_entry, sleep_timeout_minutes')
+        .eq('id', KIOSK_ID)
+        .single()
+        .then(({ data, error }) => {
+          if (error) {
+            console.error('[Kiosk] Error fetching configuration:', error);
+            return;
+          }
+          if (data) {
+            console.log('[Kiosk] Configuration loaded:', data);
+            setKioskConfig({
+              face_recognition_enabled: data.face_recognition_enabled ?? true,
+              allow_manual_entry: data.allow_manual_entry ?? true,
+              sleep_timeout_minutes: data.sleep_timeout_minutes ?? 10,
+            });
+          }
+        });
+    }
+  }, [KIOSK_ID]);
 
   // State machine
   const [currentView, setCurrentView] = useState<KioskView>('search');
@@ -114,12 +152,12 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
   // Face scan toggle (auto-starts when modal opens)
   const [showFaceScan, setShowFaceScan] = useState(false);
-  const [faceScanTimeout, setFaceScanTimeout] = useState<number | null>(null);
+  const faceScanTimeoutRef = useRef<number | null>(null); // Changed from useState to useRef to fix timeout cleanup
   const [faceMatchedEmployeeId, setFaceMatchedEmployeeId] = useState<string | null>(null);
 
-  // Inactivity timer for employee detail view
+  // Inactivity timer for employee detail view (uses kiosk config)
   const inactivityTimeoutRef = useRef<number | null>(null);
-  const [inactivitySecondsLeft, setInactivitySecondsLeft] = useState<number>(10);
+  const [inactivitySecondsLeft, setInactivitySecondsLeft] = useState<number>(kioskConfig.sleep_timeout_minutes);
 
   // Photo capture
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
@@ -145,8 +183,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     if (currentView === 'employee_detail' || currentView === 'photo_capture') {
       console.log('[Kiosk] 🚀 Starting 10-second inactivity timer');
 
-      // Reset countdown to 10 seconds
-      setInactivitySecondsLeft(10);
+      // Reset countdown to configured timeout
+      setInactivitySecondsLeft(kioskConfig.sleep_timeout_minutes);
 
       // Countdown interval
       const countdownInterval = setInterval(() => {
@@ -175,8 +213,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
       // Reset timer on user activity
       const resetTimer = (event: Event) => {
-        console.log('[Kiosk] 🔄 Activity detected:', event.type, '- resetting to 10s');
-        setInactivitySecondsLeft(10);
+        console.log('[Kiosk] 🔄 Activity detected:', event.type, `- resetting to ${kioskConfig.sleep_timeout_minutes}s`);
+        setInactivitySecondsLeft(kioskConfig.sleep_timeout_minutes);
       };
 
       // Listen for user activity (including scroll on modal container)
@@ -208,9 +246,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       };
     } else {
       // Reset countdown when leaving employee_detail view
-      setInactivitySecondsLeft(10);
+      setInactivitySecondsLeft(kioskConfig.sleep_timeout_minutes);
     }
-  }, [currentView, t, toast]);
+  }, [currentView, t, toast, kioskConfig.sleep_timeout_minutes]);
 
   useEffect(() => {
     if (employeeState?.state === 'on_break' && employeeState.currentEntry?.break_start) {
@@ -240,6 +278,29 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // CRITICAL: Validate kiosk configuration on modal open (with ref to prevent duplicate toasts)
+  const hasShownErrorRef = useRef(false);
+
+  useEffect(() => {
+    if (open && !isValidUUID(KIOSK_ID)) {
+      console.error('[Kiosk] ❌ Invalid or missing kiosk ID:', KIOSK_ID);
+
+      // Only show toast once per session
+      if (!hasShownErrorRef.current) {
+        toast({
+          title: t('detail_hub.punch_clock.error'),
+          description: 'This device is not configured as a kiosk. Please contact your administrator.',
+          variant: "destructive",
+          duration: 5000
+        });
+        hasShownErrorRef.current = true;
+      }
+
+      // Close modal immediately
+      setTimeout(() => onClose(), 100);
+    }
+  }, [open, KIOSK_ID, toast, t, onClose]);
+
   // Update clock every second
   useEffect(() => {
     const interval = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -257,12 +318,15 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     }
   }, [isLocked, lockTimer]);
 
-  // Auto-start face recognition when modal opens (only if loaded successfully)
+  // Auto-start face recognition when modal opens (only if enabled and loaded successfully)
   useEffect(() => {
-    if (open && faceApiLoaded && !faceApiError && currentView === 'search') {
+    if (open && faceApiLoaded && !faceApiError && currentView === 'search' && kioskConfig.face_recognition_enabled) {
+      console.log('[Kiosk] Auto-starting face scan (enabled in config)');
       setShowFaceScan(true);
+    } else if (open && currentView === 'search' && !kioskConfig.face_recognition_enabled) {
+      console.log('[Kiosk] Face recognition disabled in kiosk config - skipping auto-start');
     }
-  }, [open, faceApiLoaded, faceApiError, currentView]);
+  }, [open, faceApiLoaded, faceApiError, currentView, kioskConfig.face_recognition_enabled]);
 
   // Handle face-matched employee selection
   useEffect(() => {
@@ -295,10 +359,11 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
         console.log('[Kiosk] ✓ Camera released and srcObject cleared');
       }
 
-      // Clear any pending timeout
-      if (faceScanTimeout) {
-        clearTimeout(faceScanTimeout);
-        setFaceScanTimeout(null);
+      // Clear any pending timeout using ref
+      if (faceScanTimeoutRef.current !== null) {
+        console.log('[Kiosk] Clearing face scan timeout on modal close');
+        clearTimeout(faceScanTimeoutRef.current);
+        faceScanTimeoutRef.current = null;
       }
 
       // Reset state when modal closes
@@ -314,7 +379,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       setFaceScanning(false);
       setFaceScanMessage("");
     }
-  }, [open, faceScanTimeout]);
+  }, [open]);
 
   // Cleanup on unmount (backup safety)
   useEffect(() => {
@@ -616,14 +681,16 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
         }, 0);
       }, 15000); // 15 seconds
 
-      setFaceScanTimeout(timeout);
+      faceScanTimeoutRef.current = timeout; // Store in ref instead of state
+      console.log('[FaceScan] ✓ Timeout set (ID:', timeout, ')');
     } else if (!showFaceScan && faceScanning) {
       handleStopFaceScan();
 
-      // Clear timeout if manually stopped
-      if (faceScanTimeout) {
-        clearTimeout(faceScanTimeout);
-        setFaceScanTimeout(null);
+      // Clear timeout if manually stopped using ref
+      if (faceScanTimeoutRef.current !== null) {
+        console.log('[FaceScan] Clearing timeout (manual stop)');
+        clearTimeout(faceScanTimeoutRef.current);
+        faceScanTimeoutRef.current = null;
       }
     }
   }, [showFaceScan]);
@@ -752,10 +819,11 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                 console.log('[FaceScan] ✅ Match found:', match.employeeName);
                 clearInterval(scanInterval);
 
-                // Clear the auto-stop timeout since we found a match
-                if (faceScanTimeout) {
-                  clearTimeout(faceScanTimeout);
-                  setFaceScanTimeout(null);
+                // CRITICAL: Clear the auto-stop timeout since we found a match (using ref)
+                if (faceScanTimeoutRef.current !== null) {
+                  console.log('[FaceScan] ✅ Clearing timeout after successful match (ID:', faceScanTimeoutRef.current, ')');
+                  clearTimeout(faceScanTimeoutRef.current);
+                  faceScanTimeoutRef.current = null;
                 }
 
                 // Stop camera and clear srcObject
@@ -888,8 +956,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                   </CardContent>
                 </Card>
 
-                {/* Face Scan Section - Auto-starts when modal opens */}
-                {showFaceScan && (
+                {/* Face Scan Section - Only if enabled in kiosk config */}
+                {kioskConfig.face_recognition_enabled && showFaceScan && (
                   <Card className="card-enhanced">
                     <CardContent className="py-6 space-y-4">
                       {/* Header with Dynamic Status */}
@@ -1008,28 +1076,29 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                   </Card>
                 )}
 
-                {/* Manual Search - Fallback option below face scan */}
-                <Card className="card-enhanced">
-                  <CardContent className="py-6 space-y-4">
-                    {!showFaceScan && (
-                      <div className="text-center text-sm text-gray-600 mb-2">
-                        {t('detail_hub.punch_clock.search_placeholder')}
-                      </div>
-                    )}
+                {/* Manual Search - Only if enabled in kiosk config */}
+                {kioskConfig.allow_manual_entry && (
+                  <Card className="card-enhanced">
+                    <CardContent className="py-6 space-y-4">
+                      {!showFaceScan && (
+                        <div className="text-center text-sm text-gray-600 mb-2">
+                          {t('detail_hub.punch_clock.search_placeholder')}
+                        </div>
+                      )}
 
-                    {showFaceScan && (
-                      <div className="text-center text-sm text-gray-600 mb-2">
-                        {t('detail_hub.punch_clock.messages.use_search_instead')}
-                      </div>
-                    )}
+                      {showFaceScan && (
+                        <div className="text-center text-sm text-gray-600 mb-2">
+                          {t('detail_hub.punch_clock.messages.use_search_instead')}
+                        </div>
+                      )}
 
-                    <Input
-                      type="text"
-                      placeholder={t('detail_hub.punch_clock.search_placeholder')}
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="text-xl h-16"
-                    />
+                      <Input
+                        type="text"
+                        placeholder={t('detail_hub.punch_clock.search_placeholder')}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="text-xl h-16"
+                      />
 
                     {/* Face API Loading Status */}
                     {faceApiLoading && (
@@ -1047,8 +1116,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                       </Alert>
                     )}
 
-                    {/* Manual Face Scan Toggle (only if models loaded successfully) */}
-                    {!showFaceScan && faceApiLoaded && !faceApiLoading && !faceApiError && (
+                    {/* Manual Face Scan Toggle (only if enabled and models loaded successfully) */}
+                    {kioskConfig.face_recognition_enabled && !showFaceScan && faceApiLoaded && !faceApiLoading && !faceApiError && (
                       <Button
                         onClick={() => setShowFaceScan(true)}
                         className="w-full h-14 bg-indigo-500 hover:bg-indigo-600 text-white"
@@ -1067,11 +1136,12 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                         </AlertDescription>
                       </Alert>
                     )}
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                )}
 
-                {/* Search Results */}
-                {searchQuery.length >= 2 && (
+                {/* Search Results - Only if manual entry is allowed */}
+                {kioskConfig.allow_manual_entry && searchQuery.length >= 2 && (
                   <Card className="card-enhanced">
                     <CardContent className="py-4">
                       {searching ? (
@@ -1273,7 +1343,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                                 })}
                               </p>
                               <p className="text-xs text-gray-500">
-                                📍 {KIOSK_ID}
+                                📍 {KIOSK_ID || 'Not Configured'}
                               </p>
                             </div>
 
@@ -1297,7 +1367,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                                 })}
                               </p>
                               <p className="text-xs text-gray-500">
-                                📍 {KIOSK_ID}
+                                📍 {KIOSK_ID || 'Not Configured'}
                               </p>
                               {(employeeState.currentEntry.break_elapsed_minutes || 0) < 30 && (
                                 <p className="text-xs text-amber-600 mt-1">
@@ -1462,7 +1532,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                       <span>{selectedEmployee.employee_number}</span>
                       <span>•</span>
                       <Badge variant="outline" className="text-xs">
-                        📍 {KIOSK_ID}
+                        📍 {KIOSK_ID || 'Not Configured'}
                       </Badge>
                       <span>•</span>
                       <span className="text-gray-500">{format(new Date(), 'MMM d, HH:mm')}</span>
@@ -1568,7 +1638,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
               <CardContent className="py-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <Badge variant="outline">{KIOSK_ID}</Badge>
+                    <Badge variant="outline">{KIOSK_ID || 'Not Configured'}</Badge>
                     <span>{t('detail_hub.punch_clock.kiosk_mode_active')}</span>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-gray-600">
