@@ -190,22 +190,22 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       const countdownInterval = setInterval(() => {
         setInactivitySecondsLeft(prev => {
           if (prev <= 1) {
-            console.log('[Kiosk] ⏰ 10-second timeout reached - returning to search');
+            console.log('[Kiosk] ⏰ Timeout reached - closing modal');
             clearInterval(countdownInterval);
 
-            // Schedule state updates for next tick to avoid setState during render
+            // Schedule modal close for next tick to avoid setState during render
             setTimeout(() => {
-              setCurrentView('search');
-              setSelectedEmployee(null);
-
               toast({
                 title: t('detail_hub.punch_clock.messages.session_timeout'),
                 description: t('detail_hub.punch_clock.messages.please_try_again'),
                 variant: "default"
               });
+
+              // Close modal completely instead of returning to search
+              onClose();
             }, 0);
 
-            return 10;
+            return kioskConfig.sleep_timeout_minutes;
           }
           return prev - 1;
         });
@@ -439,6 +439,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
           variant: "destructive"
         });
       } else {
+        setPin(""); // Clear PIN automatically for new attempt
         toast({
           title: t('detail_hub.punch_clock.error'),
           description: t('detail_hub.punch_clock.pin_incorrect', { attempts: 3 - newAttempts }),
