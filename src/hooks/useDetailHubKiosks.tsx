@@ -2,10 +2,12 @@
  * Detail Hub Kiosks Database Integration
  *
  * Real Supabase queries using TanStack Query for kiosk device management.
+ * Now with Real-time subscriptions for live status updates.
  *
- * PHASE: Real Database Integration
+ * PHASE: Real Database Integration + Real-time
  */
 
+import { useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -80,8 +82,9 @@ const QUERY_KEYS = {
 export function useDetailHubKiosks() {
   const { selectedDealerId } = useDealerFilter();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
-  return useQuery({
+  const query = useQuery({
     queryKey: QUERY_KEYS.kiosks(selectedDealerId),
     queryFn: async () => {
       if (!user) throw new Error('User not authenticated');
@@ -105,6 +108,41 @@ export function useDetailHubKiosks() {
     staleTime: CACHE_TIMES.SHORT, // 1 minute (kiosk status changes frequently)
     gcTime: GC_TIMES.MEDIUM,
   });
+
+  // Real-time subscription for live updates
+  useEffect(() => {
+    if (!user) return;
+
+    console.log('[Kiosks] 🔴 Subscribing to real-time updates for dealership:', selectedDealerId);
+
+    const channel = supabase
+      .channel('detail_hub_kiosks_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to INSERT, UPDATE, DELETE
+          schema: 'public',
+          table: 'detail_hub_kiosks',
+          filter: selectedDealerId !== 'all' ? `dealership_id=eq.${selectedDealerId}` : undefined
+        },
+        (payload) => {
+          console.log('[Kiosks] 📡 Real-time update received:', payload);
+
+          // Invalidate and refetch kiosks on any change
+          queryClient.invalidateQueries({ queryKey: QUERY_KEYS.kiosks(selectedDealerId) });
+          queryClient.invalidateQueries({ queryKey: QUERY_KEYS.kioskStats(selectedDealerId) });
+        }
+      )
+      .subscribe();
+
+    // Cleanup subscription on unmount
+    return () => {
+      console.log('[Kiosks] 🔴 Unsubscribing from real-time updates');
+      supabase.removeChannel(channel);
+    };
+  }, [user, selectedDealerId, queryClient]);
+
+  return query;
 }
 
 export function useDetailHubKioskById(kioskId: string) {
