@@ -59968,972 +59968,972 @@
         "hardcodedStrings": [
           {
             "text": "Vehicle",
-            "line": 1065,
-            "context": "1064: src={selectedVehicle.data.imageUrl}\n1065: alt=\"Vehicle\"\n1066: className=\"w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-blue-300\""
+            "line": 1066,
+            "context": "1065: src={selectedVehicle.data.imageUrl}\n1066: alt=\"Vehicle\"\n1067: className=\"w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-blue-300\""
           },
           {
             "text": "ST-001",
-            "line": 1410,
-            "context": "1409: className={selectedVehicle ? \"border-input bg-muted/30 uppercase w-full\" : \"border-input bg-background uppercase w-full\"}\n1410: placeholder=\"ST-001\"\n1411: readOnly={!!selectedVehicle}"
+            "line": 1411,
+            "context": "1410: className={selectedVehicle ? \"border-input bg-muted/30 uppercase w-full\" : \"border-input bg-background uppercase w-full\"}\n1411: placeholder=\"ST-001\"\n1412: readOnly={!!selectedVehicle}"
           },
           {
             "text": ", error);\r\n      toast({ variant: ",
-            "line": 1027,
-            "context": "1026: } catch (error) {\n1027: console.error('Submit error:', error);\n1028: toast({ variant: 'destructive', description: t('orders.creation_failed') });"
+            "line": 1028,
+            "context": "1027: } catch (error) {\n1028: console.error('Submit error:', error);\n1029: toast({ variant: 'destructive', description: t('orders.creation_failed') });"
           }
         ],
         "translationCalls": [
           {
             "key": "stock.days",
-            "line": 588,
+            "line": 589,
             "exists": false
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 592,
+            "line": 593,
             "exists": false
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 596,
+            "line": 597,
             "exists": false
           },
           {
             "key": "stock.autopop.cleared",
-            "line": 615,
+            "line": 616,
             "exists": false
           },
           {
             "key": "orders.max_services_reached",
-            "line": 675,
+            "line": 676,
             "exists": false
           },
           {
             "key": "validation.vinRequired",
-            "line": 811,
+            "line": 812,
             "exists": false
           },
           {
             "key": "validation.vinInvalidLength",
-            "line": 815,
+            "line": 816,
             "exists": false
           },
           {
             "key": "validation.dealershipRequired",
-            "line": 821,
+            "line": 822,
             "exists": false
           },
           {
             "key": "validation.stockNumberRequired",
-            "line": 827,
+            "line": 828,
             "exists": false
           },
           {
             "key": "validation.assignedToRequired",
-            "line": 833,
+            "line": 834,
             "exists": false
           },
           {
             "key": "validation.dueDateRequired",
-            "line": 844,
+            "line": 845,
             "exists": false
           },
           {
             "key": "validation.dueDateTooFar",
-            "line": 853,
+            "line": 854,
             "exists": false
           },
           {
             "key": "validation.dueDateTooSoon",
-            "line": 862,
+            "line": 863,
             "exists": false
           },
           {
             "key": "validation.slotNotAvailable",
-            "line": 877,
+            "line": 878,
             "exists": false
           },
           {
             "key": "validation.capacityCheckFailed",
-            "line": 882,
+            "line": 883,
             "exists": false
           },
           {
             "key": "validation.newSlotNotAvailable",
-            "line": 905,
+            "line": 906,
             "exists": false
           },
           {
             "key": "validation.capacityCheckFailed",
-            "line": 912,
+            "line": 913,
             "exists": false
           },
           {
             "key": "orders.servicesNotLoaded",
-            "line": 947,
+            "line": 948,
             "exists": false
           },
           {
             "key": "orders.servicesNotLoaded",
-            "line": 958,
+            "line": 959,
             "exists": false
           },
           {
             "key": "validation.failedToReserveSlot",
-            "line": 980,
+            "line": 981,
             "exists": false
           },
           {
             "key": "validation.slotReservationWarning",
-            "line": 985,
+            "line": 986,
             "exists": false
           },
           {
             "key": "orders.creating_multiple_orders",
-            "line": 1012,
+            "line": 1013,
             "exists": false
           },
           {
             "key": "orders.creating_order",
-            "line": 1021,
+            "line": 1022,
             "exists": false
           },
           {
             "key": "orders.creation_failed",
-            "line": 1028,
+            "line": 1029,
             "exists": false
           },
           {
             "key": "orders.edit",
-            "line": 1050,
+            "line": 1051,
             "exists": false
           },
           {
             "key": "orders.create",
-            "line": 1050,
+            "line": 1051,
             "exists": false
           },
           {
             "key": "orders.edit_order_description",
-            "line": 1053,
+            "line": 1054,
             "exists": false
           },
           {
             "key": "orders.create_order_description",
-            "line": 1053,
+            "line": 1054,
             "exists": false
           },
           {
             "key": "stock.autopop.fromInventory",
-            "line": 1073,
+            "line": 1074,
             "exists": false
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 1073,
+            "line": 1074,
             "exists": false
           },
           {
             "key": "common.clear",
-            "line": 1081,
+            "line": 1082,
             "exists": false
           },
           {
             "key": "stock.autopop.quickSearch",
-            "line": 1090,
+            "line": 1091,
             "exists": false
           },
           {
             "key": "stock.filters.search_placeholder",
-            "line": 1099,
+            "line": 1100,
             "exists": false
           },
           {
             "key": "sales_orders.dealership",
-            "line": 1121,
+            "line": 1122,
             "exists": false
           },
           {
             "key": "sales_orders.assignment",
-            "line": 1121,
+            "line": 1122,
             "exists": false
           },
           {
             "key": "service_orders.dealership_assignment",
-            "line": 1130,
+            "line": 1131,
             "exists": false
           },
           {
             "key": "sales_orders.dealership",
-            "line": 1137,
+            "line": 1138,
             "exists": false
           },
           {
             "key": "dealerships.auto_selected",
-            "line": 1141,
+            "line": 1142,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 1151,
+            "line": 1152,
             "exists": false
           },
           {
             "key": "sales_orders.select_dealership",
-            "line": 1151,
+            "line": 1152,
             "exists": false
           },
           {
             "key": "sales_orders.assigned_to",
-            "line": 1165,
+            "line": 1166,
             "exists": false
           },
           {
             "key": "sales_orders.select_assignee",
-            "line": 1180,
+            "line": 1181,
             "exists": false
           },
           {
             "key": "sales_orders.select_dealership_first",
-            "line": 1214,
+            "line": 1215,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 1216,
-            "exists": false
-          },
-          {
-            "key": "sales_orders.select_assignee",
             "line": 1217,
             "exists": false
           },
           {
+            "key": "sales_orders.select_assignee",
+            "line": 1218,
+            "exists": false
+          },
+          {
             "key": "common.search_users",
-            "line": 1227,
+            "line": 1228,
             "exists": false
           },
           {
             "key": "common.no_users_found",
-            "line": 1231,
+            "line": 1232,
             "exists": false
           },
           {
             "key": "service_orders.customer_details",
-            "line": 1312,
+            "line": 1313,
             "exists": false
           },
           {
             "key": "orders.customerName",
-            "line": 1319,
+            "line": 1320,
             "exists": false
           },
           {
             "key": "common.optional",
-            "line": 1319,
+            "line": 1320,
             "exists": false
           },
           {
             "key": "orders.customerNamePlaceholder",
-            "line": 1326,
+            "line": 1327,
             "exists": false
           },
           {
             "key": "forms.labels.phone",
-            "line": 1332,
+            "line": 1333,
             "exists": false
           },
           {
             "key": "common.optional",
-            "line": 1332,
+            "line": 1333,
             "exists": false
           },
           {
             "key": "forms.labels.email",
-            "line": 1346,
+            "line": 1347,
             "exists": false
           },
           {
             "key": "common.optional",
-            "line": 1346,
+            "line": 1347,
             "exists": false
           },
           {
             "key": "orders.priority",
-            "line": 1359,
+            "line": 1360,
             "exists": false
           },
           {
             "key": "orders.priority_normal",
-            "line": 1368,
-            "exists": false
-          },
-          {
-            "key": "orders.priority_high",
             "line": 1369,
             "exists": false
           },
           {
-            "key": "orders.priority_urgent",
+            "key": "orders.priority_high",
             "line": 1370,
             "exists": false
           },
           {
+            "key": "orders.priority_urgent",
+            "line": 1371,
+            "exists": false
+          },
+          {
             "key": "orders.vehicleInfo",
-            "line": 1384,
+            "line": 1385,
             "exists": false
           },
           {
             "key": "sales_orders.vin_decoded_successfully",
-            "line": 1387,
+            "line": 1388,
             "exists": false
           },
           {
             "key": "service_orders.vehicle_identification",
-            "line": 1397,
+            "line": 1398,
             "exists": false
           },
           {
             "key": "sales_orders.stock_number",
-            "line": 1403,
+            "line": 1404,
             "exists": false
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 1415,
+            "line": 1416,
             "exists": false
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 1415,
+            "line": 1416,
             "exists": false
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 1415,
+            "line": 1416,
             "exists": false
           },
           {
             "key": "orders.vin",
-            "line": 1422,
+            "line": 1423,
             "exists": false
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 1448,
+            "line": 1449,
             "exists": false
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 1448,
+            "line": 1449,
             "exists": false
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 1448,
+            "line": 1449,
             "exists": false
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 1460,
+            "line": 1461,
             "exists": false
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 1466,
+            "line": 1467,
             "exists": false
           },
           {
             "key": "sales_orders.manual_vehicle_entry",
-            "line": 1478,
+            "line": 1479,
             "exists": false
           },
           {
             "key": "due_date.title",
-            "line": 1490,
+            "line": 1491,
             "exists": false
           },
           {
             "key": "due_date.date_placeholder",
-            "line": 1498,
+            "line": 1499,
             "exists": false
           },
           {
             "key": "orders.servicesAndNotes",
-            "line": 1513,
+            "line": 1514,
             "exists": false
           },
           {
             "key": "service_orders.service_selection",
-            "line": 1522,
+            "line": 1523,
             "exists": false
           },
           {
             "key": "orders.services",
-            "line": 1529,
+            "line": 1530,
             "exists": false
           },
           {
             "key": "orders.available",
-            "line": 1532,
+            "line": 1533,
             "exists": false
           },
           {
             "key": "orders.max_services_info",
-            "line": 1544,
+            "line": 1545,
             "exists": false
           },
           {
             "key": "orders.selectDealershipFirst",
-            "line": 1550,
+            "line": 1551,
             "exists": false
           },
           {
             "key": "common.loading",
-            "line": 1555,
+            "line": 1556,
             "exists": false
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 1562,
+            "line": 1563,
             "exists": false
           },
           {
             "key": "services.duration_label",
-            "line": 1597,
-            "exists": false
-          },
-          {
-            "key": "services.minutes",
             "line": 1598,
             "exists": false
           },
           {
+            "key": "services.minutes",
+            "line": 1599,
+            "exists": false
+          },
+          {
             "key": "services.price",
-            "line": 1603,
+            "line": 1604,
             "exists": false
           },
           {
             "key": "orders.total",
-            "line": 1624,
+            "line": 1625,
             "exists": false
           },
           {
             "key": "orders.servicesSelected",
-            "line": 1630,
+            "line": 1631,
             "exists": false
           },
           {
             "key": "service_orders.additional_notes",
-            "line": 1643,
+            "line": 1644,
             "exists": false
           },
           {
             "key": "orders.notes_placeholder",
-            "line": 1654,
+            "line": 1655,
             "exists": false
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1710,
+            "line": 1711,
             "exists": false
           },
           {
             "key": "orders.updating",
-            "line": 1730,
+            "line": 1731,
             "exists": false
           },
           {
             "key": "orders.creating",
-            "line": 1730,
+            "line": 1731,
             "exists": false
           },
           {
             "key": "common.action_buttons.update",
-            "line": 1733,
+            "line": 1734,
             "exists": false
           },
           {
             "key": "common.action_buttons.create",
-            "line": 1733,
+            "line": 1734,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "stock.days",
-            "line": 588,
-            "context": "587: if (result.data.price) details.push(`$${result.data.price.toLocaleString()}`);\n588: if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);\n589: if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);"
+            "line": 589,
+            "context": "588: if (result.data.price) details.push(`$${result.data.price.toLocaleString()}`);\n589: if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);\n590: if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);"
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 592,
-            "context": "591: toast({\n592: description: `${t('stock.autopop.localInventory')}${details.length > 0 ? ': ' + details.join(' • ') : ''}`,\n593: duration: 4000"
+            "line": 593,
+            "context": "592: toast({\n593: description: `${t('stock.autopop.localInventory')}${details.length > 0 ? ': ' + details.join(' • ') : ''}`,\n594: duration: 4000"
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 596,
-            "context": "595: } else if (result.source === 'vin_api') {\n596: toast({ description: t('stock.autopop.vinDecoded'), duration: 3000 });\n597: }"
+            "line": 597,
+            "context": "596: } else if (result.source === 'vin_api') {\n597: toast({ description: t('stock.autopop.vinDecoded'), duration: 3000 });\n598: }"
           },
           {
             "key": "stock.autopop.cleared",
-            "line": 615,
-            "context": "614: \n615: toast({ description: t('stock.autopop.cleared', 'Vehicle cleared - you can now enter manually') });\n616: };"
+            "line": 616,
+            "context": "615: \n616: toast({ description: t('stock.autopop.cleared', 'Vehicle cleared - you can now enter manually') });\n617: };"
           },
           {
             "key": "orders.max_services_reached",
-            "line": 675,
-            "context": "674: if (selectedServices.length >= 2) {\n675: toast({ description: t('orders.max_services_reached', 'Maximum 2 services per order') });\n676: return;"
+            "line": 676,
+            "context": "675: if (selectedServices.length >= 2) {\n676: toast({ description: t('orders.max_services_reached', 'Maximum 2 services per order') });\n677: return;"
           },
           {
             "key": "validation.vinRequired",
-            "line": 811,
-            "context": "810: if (!formData.vehicleVin.trim()) {\n811: toast({ variant: 'destructive', description: t('validation.vinRequired') });\n812: return false;"
+            "line": 812,
+            "context": "811: if (!formData.vehicleVin.trim()) {\n812: toast({ variant: 'destructive', description: t('validation.vinRequired') });\n813: return false;"
           },
           {
             "key": "validation.vinInvalidLength",
-            "line": 815,
-            "context": "814: if (formData.vehicleVin.length !== 17) {\n815: toast({ variant: 'destructive', description: t('validation.vinInvalidLength') });\n816: return false;"
+            "line": 816,
+            "context": "815: if (formData.vehicleVin.length !== 17) {\n816: toast({ variant: 'destructive', description: t('validation.vinInvalidLength') });\n817: return false;"
           },
           {
             "key": "validation.dealershipRequired",
-            "line": 821,
-            "context": "820: if (!selectedDealership) {\n821: toast({ variant: 'destructive', description: t('validation.dealershipRequired') });\n822: return false;"
+            "line": 822,
+            "context": "821: if (!selectedDealership) {\n822: toast({ variant: 'destructive', description: t('validation.dealershipRequired') });\n823: return false;"
           },
           {
             "key": "validation.stockNumberRequired",
-            "line": 827,
-            "context": "826: if (!formData.stockNumber.trim()) {\n827: toast({ variant: 'destructive', description: t('validation.stockNumberRequired') });\n828: return false;"
+            "line": 828,
+            "context": "827: if (!formData.stockNumber.trim()) {\n828: toast({ variant: 'destructive', description: t('validation.stockNumberRequired') });\n829: return false;"
           },
           {
             "key": "validation.assignedToRequired",
-            "line": 833,
-            "context": "832: if (!selectedAssignedTo) {\n833: toast({ variant: 'destructive', description: t('validation.assignedToRequired') });\n834: return false;"
+            "line": 834,
+            "context": "833: if (!selectedAssignedTo) {\n834: toast({ variant: 'destructive', description: t('validation.assignedToRequired') });\n835: return false;"
           },
           {
             "key": "validation.dueDateRequired",
-            "line": 844,
-            "context": "843: if (!formData.dueDate) {\n844: toast({ variant: 'destructive', description: t('validation.dueDateRequired') });\n845: return false;"
+            "line": 845,
+            "context": "844: if (!formData.dueDate) {\n845: toast({ variant: 'destructive', description: t('validation.dueDateRequired') });\n846: return false;"
           },
           {
             "key": "validation.dueDateTooFar",
-            "line": 853,
-            "context": "852: if (formData.dueDate > oneWeekFromNow) {\n853: toast({ variant: 'destructive', description: t('validation.dueDateTooFar') });\n854: return false;"
+            "line": 854,
+            "context": "853: if (formData.dueDate > oneWeekFromNow) {\n854: toast({ variant: 'destructive', description: t('validation.dueDateTooFar') });\n855: return false;"
           },
           {
             "key": "validation.dueDateTooSoon",
-            "line": 862,
-            "context": "861: if (formData.dueDate < minimumTime) {\n862: toast({ variant: 'destructive', description: t('validation.dueDateTooSoon') });\n863: return false;"
+            "line": 863,
+            "context": "862: if (formData.dueDate < minimumTime) {\n863: toast({ variant: 'destructive', description: t('validation.dueDateTooSoon') });\n864: return false;"
           },
           {
             "key": "validation.slotNotAvailable",
-            "line": 877,
-            "context": "876: //     if (slot && !slot.is_available) {\n877: //       toast({ variant: 'destructive', description: t('validation.slotNotAvailable') });\n878: //       return false;"
+            "line": 878,
+            "context": "877: //     if (slot && !slot.is_available) {\n878: //       toast({ variant: 'destructive', description: t('validation.slotNotAvailable') });\n879: //       return false;"
           },
           {
             "key": "validation.capacityCheckFailed",
-            "line": 882,
-            "context": "881: //     // Continue with order creation even if capacity check fails\n882: //     toast({ description: t('validation.capacityCheckFailed') });\n883: //   }"
+            "line": 883,
+            "context": "882: //     // Continue with order creation even if capacity check fails\n883: //     toast({ description: t('validation.capacityCheckFailed') });\n884: //   }"
           },
           {
             "key": "validation.newSlotNotAvailable",
-            "line": 905,
-            "context": "904: //           variant: 'destructive',\n905: //           description: t('validation.newSlotNotAvailable')\n906: //         });"
+            "line": 906,
+            "context": "905: //           variant: 'destructive',\n906: //           description: t('validation.newSlotNotAvailable')\n907: //         });"
           },
           {
             "key": "validation.capacityCheckFailed",
-            "line": 912,
-            "context": "911: //       console.warn('Failed to validate new slot during edit:', capacityError);\n912: //       toast({ description: t('validation.capacityCheckFailed') });\n913: //     }"
+            "line": 913,
+            "context": "912: //       console.warn('Failed to validate new slot during edit:', capacityError);\n913: //       toast({ description: t('validation.capacityCheckFailed') });\n914: //     }"
           },
           {
             "key": "orders.servicesNotLoaded",
-            "line": 947,
-            "context": "946: variant: 'destructive',\n947: description: t('orders.servicesNotLoaded') || 'Services are still loading. Please wait a moment and try again.'\n948: });"
+            "line": 948,
+            "context": "947: variant: 'destructive',\n948: description: t('orders.servicesNotLoaded') || 'Services are still loading. Please wait a moment and try again.'\n949: });"
           },
           {
             "key": "orders.servicesNotLoaded",
-            "line": 958,
-            "context": "957: variant: 'destructive',\n958: description: t('orders.servicesNotLoaded') || 'Services data is not available. Please refresh and try again.'\n959: });"
+            "line": 959,
+            "context": "958: variant: 'destructive',\n959: description: t('orders.servicesNotLoaded') || 'Services data is not available. Please refresh and try again.'\n960: });"
           },
           {
             "key": "validation.failedToReserveSlot",
-            "line": 980,
-            "context": "979: //     if (!slotReserved) {\n980: //       toast({ variant: 'destructive', description: t('validation.failedToReserveSlot') });\n981: //       setSubmitting(false);"
+            "line": 981,
+            "context": "980: //     if (!slotReserved) {\n981: //       toast({ variant: 'destructive', description: t('validation.failedToReserveSlot') });\n982: //       setSubmitting(false);"
           },
           {
             "key": "validation.slotReservationWarning",
-            "line": 985,
-            "context": "984: //   } catch (slotError) {\n985: //     toast({ description: t('validation.slotReservationWarning') });\n986: //     // Continue with order creation even if slot reservation fails"
+            "line": 986,
+            "context": "985: //   } catch (slotError) {\n986: //     toast({ description: t('validation.slotReservationWarning') });\n987: //     // Continue with order creation even if slot reservation fails"
           },
           {
             "key": "orders.creating_multiple_orders",
-            "line": 1012,
-            "context": "1011: // Show immediate success feedback\n1012: toast({ description: t('orders.creating_multiple_orders', { count: selectedServices.length }) || `Creating ${selectedServices.length} orders...` });\n1013: "
+            "line": 1013,
+            "context": "1012: // Show immediate success feedback\n1013: toast({ description: t('orders.creating_multiple_orders', { count: selectedServices.length }) || `Creating ${selectedServices.length} orders...` });\n1014: "
           },
           {
             "key": "orders.creating_order",
-            "line": 1021,
-            "context": "1020: // Show immediate success feedback\n1021: toast({ description: t('orders.creating_order') });\n1022: "
+            "line": 1022,
+            "context": "1021: // Show immediate success feedback\n1022: toast({ description: t('orders.creating_order') });\n1023: "
           },
           {
             "key": "orders.creation_failed",
-            "line": 1028,
-            "context": "1027: console.error('Submit error:', error);\n1028: toast({ variant: 'destructive', description: t('orders.creation_failed') });\n1029: } finally {"
+            "line": 1029,
+            "context": "1028: console.error('Submit error:', error);\n1029: toast({ variant: 'destructive', description: t('orders.creation_failed') });\n1030: } finally {"
           },
           {
             "key": "orders.edit",
-            "line": 1050,
-            "context": "1049: <DialogTitle className=\"text-base sm:text-lg font-semibold truncate\">\n1050: {order ? t('orders.edit') : t('orders.create')}\n1051: </DialogTitle>"
+            "line": 1051,
+            "context": "1050: <DialogTitle className=\"text-base sm:text-lg font-semibold truncate\">\n1051: {order ? t('orders.edit') : t('orders.create')}\n1052: </DialogTitle>"
           },
           {
             "key": "orders.create",
-            "line": 1050,
-            "context": "1049: <DialogTitle className=\"text-base sm:text-lg font-semibold truncate\">\n1050: {order ? t('orders.edit') : t('orders.create')}\n1051: </DialogTitle>"
+            "line": 1051,
+            "context": "1050: <DialogTitle className=\"text-base sm:text-lg font-semibold truncate\">\n1051: {order ? t('orders.edit') : t('orders.create')}\n1052: </DialogTitle>"
           },
           {
             "key": "orders.edit_order_description",
-            "line": 1053,
-            "context": "1052: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground truncate\">\n1053: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n1054: </div>"
+            "line": 1054,
+            "context": "1053: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground truncate\">\n1054: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n1055: </div>"
           },
           {
             "key": "orders.create_order_description",
-            "line": 1053,
-            "context": "1052: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground truncate\">\n1053: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n1054: </div>"
+            "line": 1054,
+            "context": "1053: <div id=\"order-modal-description\" className=\"text-xs sm:text-sm text-muted-foreground truncate\">\n1054: {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}\n1055: </div>"
           },
           {
             "key": "stock.autopop.fromInventory",
-            "line": 1073,
-            "context": "1072: <span className=\"truncate\">\n1073: {selectedVehicle.source === 'inventory' ? t('stock.autopop.fromInventory', 'From Inventory') : t('stock.autopop.vinDecoded', 'VIN Decoded')}\n1074: </span>"
+            "line": 1074,
+            "context": "1073: <span className=\"truncate\">\n1074: {selectedVehicle.source === 'inventory' ? t('stock.autopop.fromInventory', 'From Inventory') : t('stock.autopop.vinDecoded', 'VIN Decoded')}\n1075: </span>"
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 1073,
-            "context": "1072: <span className=\"truncate\">\n1073: {selectedVehicle.source === 'inventory' ? t('stock.autopop.fromInventory', 'From Inventory') : t('stock.autopop.vinDecoded', 'VIN Decoded')}\n1074: </span>"
+            "line": 1074,
+            "context": "1073: <span className=\"truncate\">\n1074: {selectedVehicle.source === 'inventory' ? t('stock.autopop.fromInventory', 'From Inventory') : t('stock.autopop.vinDecoded', 'VIN Decoded')}\n1075: </span>"
           },
           {
             "key": "common.clear",
-            "line": 1081,
-            "context": "1080: className=\"absolute right-1 top-1/2 -translate-y-1/2 p-1 hover:bg-blue-200 rounded-full transition-colors\"\n1081: aria-label={t('common.clear', 'Clear')}\n1082: >"
+            "line": 1082,
+            "context": "1081: className=\"absolute right-1 top-1/2 -translate-y-1/2 p-1 hover:bg-blue-200 rounded-full transition-colors\"\n1082: aria-label={t('common.clear', 'Clear')}\n1083: >"
           },
           {
             "key": "stock.autopop.quickSearch",
-            "line": 1090,
-            "context": "1089: <Search className=\"h-2.5 w-2.5\" />\n1090: {t('stock.autopop.quickSearch')}\n1091: </Label>"
+            "line": 1091,
+            "context": "1090: <Search className=\"h-2.5 w-2.5\" />\n1091: {t('stock.autopop.quickSearch')}\n1092: </Label>"
           },
           {
             "key": "stock.filters.search_placeholder",
-            "line": 1099,
-            "context": "1098: label=\"\"\n1099: placeholder={t('stock.filters.search_placeholder', 'Search by stock, VIN, make or model')}\n1100: />"
+            "line": 1100,
+            "context": "1099: label=\"\"\n1100: placeholder={t('stock.filters.search_placeholder', 'Search by stock, VIN, make or model')}\n1101: />"
           },
           {
             "key": "sales_orders.dealership",
-            "line": 1121,
-            "context": "1120: <Building2 className=\"h-4 w-4 text-primary\" />\n1121: {t('sales_orders.dealership')} & {t('sales_orders.assignment')}\n1122: </CardTitle>"
+            "line": 1122,
+            "context": "1121: <Building2 className=\"h-4 w-4 text-primary\" />\n1122: {t('sales_orders.dealership')} & {t('sales_orders.assignment')}\n1123: </CardTitle>"
           },
           {
             "key": "sales_orders.assignment",
-            "line": 1121,
-            "context": "1120: <Building2 className=\"h-4 w-4 text-primary\" />\n1121: {t('sales_orders.dealership')} & {t('sales_orders.assignment')}\n1122: </CardTitle>"
+            "line": 1122,
+            "context": "1121: <Building2 className=\"h-4 w-4 text-primary\" />\n1122: {t('sales_orders.dealership')} & {t('sales_orders.assignment')}\n1123: </CardTitle>"
           },
           {
             "key": "service_orders.dealership_assignment",
-            "line": 1130,
-            "context": "1129: <Building2 className=\"h-3 w-3\" />\n1130: {t('service_orders.dealership_assignment')}\n1131: </Badge>"
+            "line": 1131,
+            "context": "1130: <Building2 className=\"h-3 w-3\" />\n1131: {t('service_orders.dealership_assignment')}\n1132: </Badge>"
           },
           {
             "key": "sales_orders.dealership",
-            "line": 1137,
-            "context": "1136: <Label htmlFor=\"dealership\" className=\"text-sm flex-shrink-0\">\n1137: {t('sales_orders.dealership')} <span className=\"text-destructive\">*</span>\n1138: </Label>"
+            "line": 1138,
+            "context": "1137: <Label htmlFor=\"dealership\" className=\"text-sm flex-shrink-0\">\n1138: {t('sales_orders.dealership')} <span className=\"text-destructive\">*</span>\n1139: </Label>"
           },
           {
             "key": "dealerships.auto_selected",
-            "line": 1141,
-            "context": "1140: <Badge variant=\"secondary\" className=\"text-xs flex-shrink-0\">\n1141: {t('dealerships.auto_selected')}\n1142: </Badge>"
+            "line": 1142,
+            "context": "1141: <Badge variant=\"secondary\" className=\"text-xs flex-shrink-0\">\n1142: {t('dealerships.auto_selected')}\n1143: </Badge>"
           },
           {
             "key": "common.loading",
-            "line": 1151,
-            "context": "1150: <SelectTrigger className=\"border-input bg-background w-full\">\n1151: <SelectValue placeholder={loading ? t('common.loading') : t('sales_orders.select_dealership')} />\n1152: </SelectTrigger>"
+            "line": 1152,
+            "context": "1151: <SelectTrigger className=\"border-input bg-background w-full\">\n1152: <SelectValue placeholder={loading ? t('common.loading') : t('sales_orders.select_dealership')} />\n1153: </SelectTrigger>"
           },
           {
             "key": "sales_orders.select_dealership",
-            "line": 1151,
-            "context": "1150: <SelectTrigger className=\"border-input bg-background w-full\">\n1151: <SelectValue placeholder={loading ? t('common.loading') : t('sales_orders.select_dealership')} />\n1152: </SelectTrigger>"
+            "line": 1152,
+            "context": "1151: <SelectTrigger className=\"border-input bg-background w-full\">\n1152: <SelectValue placeholder={loading ? t('common.loading') : t('sales_orders.select_dealership')} />\n1153: </SelectTrigger>"
           },
           {
             "key": "sales_orders.assigned_to",
-            "line": 1165,
-            "context": "1164: <Label htmlFor=\"assignedTo\" className=\"text-sm\">\n1165: {t('sales_orders.assigned_to')} <span className=\"text-destructive\">*</span>\n1166: </Label>"
+            "line": 1166,
+            "context": "1165: <Label htmlFor=\"assignedTo\" className=\"text-sm\">\n1166: {t('sales_orders.assigned_to')} <span className=\"text-destructive\">*</span>\n1167: </Label>"
           },
           {
             "key": "sales_orders.select_assignee",
-            "line": 1180,
-            "context": "1179: const selectedUser = assignedUsers.find(u => u.id === selectedAssignedTo);\n1180: if (!selectedUser) return <span className=\"text-muted-foreground\">{t('sales_orders.select_assignee')}</span>;\n1181: "
+            "line": 1181,
+            "context": "1180: const selectedUser = assignedUsers.find(u => u.id === selectedAssignedTo);\n1181: if (!selectedUser) return <span className=\"text-muted-foreground\">{t('sales_orders.select_assignee')}</span>;\n1182: "
           },
           {
             "key": "sales_orders.select_dealership_first",
-            "line": 1214,
-            "context": "1213: {!selectedDealership\n1214: ? t('sales_orders.select_dealership_first')\n1215: : loading"
+            "line": 1215,
+            "context": "1214: {!selectedDealership\n1215: ? t('sales_orders.select_dealership_first')\n1216: : loading"
           },
           {
             "key": "common.loading",
-            "line": 1216,
-            "context": "1215: : loading\n1216: ? t('common.loading')\n1217: : t('sales_orders.select_assignee')}"
+            "line": 1217,
+            "context": "1216: : loading\n1217: ? t('common.loading')\n1218: : t('sales_orders.select_assignee')}"
           },
           {
             "key": "sales_orders.select_assignee",
-            "line": 1217,
-            "context": "1216: ? t('common.loading')\n1217: : t('sales_orders.select_assignee')}\n1218: </span>"
+            "line": 1218,
+            "context": "1217: ? t('common.loading')\n1218: : t('sales_orders.select_assignee')}\n1219: </span>"
           },
           {
             "key": "common.search_users",
-            "line": 1227,
-            "context": "1226: <CommandInput\n1227: placeholder={t('common.search_users', 'Search users...')}\n1228: className=\"h-9\""
+            "line": 1228,
+            "context": "1227: <CommandInput\n1228: placeholder={t('common.search_users', 'Search users...')}\n1229: className=\"h-9\""
           },
           {
             "key": "common.no_users_found",
-            "line": 1231,
-            "context": "1230: <CommandList className=\"max-h-[300px]\">\n1231: <CommandEmpty>{t('common.no_users_found', 'No users found')}</CommandEmpty>\n1232: "
+            "line": 1232,
+            "context": "1231: <CommandList className=\"max-h-[300px]\">\n1232: <CommandEmpty>{t('common.no_users_found', 'No users found')}</CommandEmpty>\n1233: "
           },
           {
             "key": "service_orders.customer_details",
-            "line": 1312,
-            "context": "1311: <User className=\"h-3 w-3\" />\n1312: {t('service_orders.customer_details')}\n1313: </Badge>"
+            "line": 1313,
+            "context": "1312: <User className=\"h-3 w-3\" />\n1313: {t('service_orders.customer_details')}\n1314: </Badge>"
           },
           {
             "key": "orders.customerName",
-            "line": 1319,
-            "context": "1318: <Label htmlFor=\"customerName\" className=\"text-sm\">\n1319: {t('orders.customerName')} <span className=\"text-muted-foreground text-xs\">({t('common.optional')})</span>\n1320: </Label>"
+            "line": 1320,
+            "context": "1319: <Label htmlFor=\"customerName\" className=\"text-sm\">\n1320: {t('orders.customerName')} <span className=\"text-muted-foreground text-xs\">({t('common.optional')})</span>\n1321: </Label>"
           },
           {
             "key": "common.optional",
-            "line": 1319,
-            "context": "1318: <Label htmlFor=\"customerName\" className=\"text-sm\">\n1319: {t('orders.customerName')} <span className=\"text-muted-foreground text-xs\">({t('common.optional')})</span>\n1320: </Label>"
+            "line": 1320,
+            "context": "1319: <Label htmlFor=\"customerName\" className=\"text-sm\">\n1320: {t('orders.customerName')} <span className=\"text-muted-foreground text-xs\">({t('common.optional')})</span>\n1321: </Label>"
           },
           {
             "key": "orders.customerNamePlaceholder",
-            "line": 1326,
-            "context": "1325: className=\"border-input bg-background w-full\"\n1326: placeholder={t('orders.customerNamePlaceholder')}\n1327: />"
+            "line": 1327,
+            "context": "1326: className=\"border-input bg-background w-full\"\n1327: placeholder={t('orders.customerNamePlaceholder')}\n1328: />"
           },
           {
             "key": "forms.labels.phone",
-            "line": 1332,
-            "context": "1331: <Label htmlFor=\"customerPhone\" className=\"text-sm\">\n1332: {t('forms.labels.phone')} <span className=\"text-muted-foreground text-xs\">({t('common.optional')})</span>\n1333: </Label>"
+            "line": 1333,
+            "context": "1332: <Label htmlFor=\"customerPhone\" className=\"text-sm\">\n1333: {t('forms.labels.phone')} <span className=\"text-muted-foreground text-xs\">({t('common.optional')})</span>\n1334: </Label>"
           },
           {
             "key": "common.optional",
-            "line": 1332,
-            "context": "1331: <Label htmlFor=\"customerPhone\" className=\"text-sm\">\n1332: {t('forms.labels.phone')} <span className=\"text-muted-foreground text-xs\">({t('common.optional')})</span>\n1333: </Label>"
+            "line": 1333,
+            "context": "1332: <Label htmlFor=\"customerPhone\" className=\"text-sm\">\n1333: {t('forms.labels.phone')} <span className=\"text-muted-foreground text-xs\">({t('common.optional')})</span>\n1334: </Label>"
           },
           {
             "key": "forms.labels.email",
-            "line": 1346,
-            "context": "1345: <Label htmlFor=\"customerEmail\" className=\"text-sm\">\n1346: {t('forms.labels.email')} <span className=\"text-muted-foreground text-xs\">({t('common.optional')})</span>\n1347: </Label>"
+            "line": 1347,
+            "context": "1346: <Label htmlFor=\"customerEmail\" className=\"text-sm\">\n1347: {t('forms.labels.email')} <span className=\"text-muted-foreground text-xs\">({t('common.optional')})</span>\n1348: </Label>"
           },
           {
             "key": "common.optional",
-            "line": 1346,
-            "context": "1345: <Label htmlFor=\"customerEmail\" className=\"text-sm\">\n1346: {t('forms.labels.email')} <span className=\"text-muted-foreground text-xs\">({t('common.optional')})</span>\n1347: </Label>"
+            "line": 1347,
+            "context": "1346: <Label htmlFor=\"customerEmail\" className=\"text-sm\">\n1347: {t('forms.labels.email')} <span className=\"text-muted-foreground text-xs\">({t('common.optional')})</span>\n1348: </Label>"
           },
           {
             "key": "orders.priority",
-            "line": 1359,
-            "context": "1358: <div className=\"hidden\">\n1359: <Label htmlFor=\"priority\">{t('orders.priority')}</Label>\n1360: <Select"
+            "line": 1360,
+            "context": "1359: <div className=\"hidden\">\n1360: <Label htmlFor=\"priority\">{t('orders.priority')}</Label>\n1361: <Select"
           },
           {
             "key": "orders.priority_normal",
-            "line": 1368,
-            "context": "1367: <SelectContent className=\"z-50 bg-popover border-border\">\n1368: <SelectItem value=\"normal\">{t('orders.priority_normal')}</SelectItem>\n1369: <SelectItem value=\"high\">{t('orders.priority_high')}</SelectItem>"
+            "line": 1369,
+            "context": "1368: <SelectContent className=\"z-50 bg-popover border-border\">\n1369: <SelectItem value=\"normal\">{t('orders.priority_normal')}</SelectItem>\n1370: <SelectItem value=\"high\">{t('orders.priority_high')}</SelectItem>"
           },
           {
             "key": "orders.priority_high",
-            "line": 1369,
-            "context": "1368: <SelectItem value=\"normal\">{t('orders.priority_normal')}</SelectItem>\n1369: <SelectItem value=\"high\">{t('orders.priority_high')}</SelectItem>\n1370: <SelectItem value=\"urgent\">{t('orders.priority_urgent')}</SelectItem>"
+            "line": 1370,
+            "context": "1369: <SelectItem value=\"normal\">{t('orders.priority_normal')}</SelectItem>\n1370: <SelectItem value=\"high\">{t('orders.priority_high')}</SelectItem>\n1371: <SelectItem value=\"urgent\">{t('orders.priority_urgent')}</SelectItem>"
           },
           {
             "key": "orders.priority_urgent",
-            "line": 1370,
-            "context": "1369: <SelectItem value=\"high\">{t('orders.priority_high')}</SelectItem>\n1370: <SelectItem value=\"urgent\">{t('orders.priority_urgent')}</SelectItem>\n1371: </SelectContent>"
+            "line": 1371,
+            "context": "1370: <SelectItem value=\"high\">{t('orders.priority_high')}</SelectItem>\n1371: <SelectItem value=\"urgent\">{t('orders.priority_urgent')}</SelectItem>\n1372: </SelectContent>"
           },
           {
             "key": "orders.vehicleInfo",
-            "line": 1384,
-            "context": "1383: <Car className=\"h-4 w-4 text-emerald-600\" />\n1384: {t('orders.vehicleInfo')}\n1385: {vinDecoded && <Badge variant=\"secondary\" className=\"bg-success text-success-foreground text-xs\">"
+            "line": 1385,
+            "context": "1384: <Car className=\"h-4 w-4 text-emerald-600\" />\n1385: {t('orders.vehicleInfo')}\n1386: {vinDecoded && <Badge variant=\"secondary\" className=\"bg-success text-success-foreground text-xs\">"
           },
           {
             "key": "sales_orders.vin_decoded_successfully",
-            "line": 1387,
-            "context": "1386: <Zap className=\"w-3 h-3 mr-1\" />\n1387: {t('sales_orders.vin_decoded_successfully')}\n1388: </Badge>}"
+            "line": 1388,
+            "context": "1387: <Zap className=\"w-3 h-3 mr-1\" />\n1388: {t('sales_orders.vin_decoded_successfully')}\n1389: </Badge>}"
           },
           {
             "key": "service_orders.vehicle_identification",
-            "line": 1397,
-            "context": "1396: <Scan className=\"h-3 w-3\" />\n1397: {t('service_orders.vehicle_identification')}\n1398: </Badge>"
+            "line": 1398,
+            "context": "1397: <Scan className=\"h-3 w-3\" />\n1398: {t('service_orders.vehicle_identification')}\n1399: </Badge>"
           },
           {
             "key": "sales_orders.stock_number",
-            "line": 1403,
-            "context": "1402: <Label htmlFor=\"stockNumber\" className=\"text-sm\">\n1403: {t('sales_orders.stock_number')} <span className=\"text-destructive\">*</span>\n1404: </Label>"
+            "line": 1404,
+            "context": "1403: <Label htmlFor=\"stockNumber\" className=\"text-sm\">\n1404: {t('sales_orders.stock_number')} <span className=\"text-destructive\">*</span>\n1405: </Label>"
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 1415,
-            "context": "1414: <p className=\"text-xs text-muted-foreground mt-1 truncate\">\n1415: {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}\n1416: </p>"
+            "line": 1416,
+            "context": "1415: <p className=\"text-xs text-muted-foreground mt-1 truncate\">\n1416: {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}\n1417: </p>"
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 1415,
-            "context": "1414: <p className=\"text-xs text-muted-foreground mt-1 truncate\">\n1415: {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}\n1416: </p>"
+            "line": 1416,
+            "context": "1415: <p className=\"text-xs text-muted-foreground mt-1 truncate\">\n1416: {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}\n1417: </p>"
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 1415,
-            "context": "1414: <p className=\"text-xs text-muted-foreground mt-1 truncate\">\n1415: {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}\n1416: </p>"
+            "line": 1416,
+            "context": "1415: <p className=\"text-xs text-muted-foreground mt-1 truncate\">\n1416: {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}\n1417: </p>"
           },
           {
             "key": "orders.vin",
-            "line": 1422,
-            "context": "1421: <Label htmlFor=\"vehicleVin\" className=\"flex items-center gap-2 text-sm\">\n1422: {t('orders.vin')} <span className=\"text-destructive\">*</span>\n1423: {vinLoading && <Loader2 className=\"w-4 h-4 animate-spin\" />}"
+            "line": 1423,
+            "context": "1422: <Label htmlFor=\"vehicleVin\" className=\"flex items-center gap-2 text-sm\">\n1423: {t('orders.vin')} <span className=\"text-destructive\">*</span>\n1424: {vinLoading && <Loader2 className=\"w-4 h-4 animate-spin\" />}"
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 1448,
-            "context": "1447: <p className=\"text-xs text-muted-foreground mt-1 truncate\">\n1448: {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}\n1449: </p>"
+            "line": 1449,
+            "context": "1448: <p className=\"text-xs text-muted-foreground mt-1 truncate\">\n1449: {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}\n1450: </p>"
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 1448,
-            "context": "1447: <p className=\"text-xs text-muted-foreground mt-1 truncate\">\n1448: {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}\n1449: </p>"
+            "line": 1449,
+            "context": "1448: <p className=\"text-xs text-muted-foreground mt-1 truncate\">\n1449: {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}\n1450: </p>"
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 1448,
-            "context": "1447: <p className=\"text-xs text-muted-foreground mt-1 truncate\">\n1448: {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}\n1449: </p>"
+            "line": 1449,
+            "context": "1448: <p className=\"text-xs text-muted-foreground mt-1 truncate\">\n1449: {t('stock.autopop.autoPopulated', 'Auto-populated from')} {selectedVehicle.source === 'inventory' ? t('stock.autopop.localInventory') : t('stock.autopop.vinDecoded')}\n1450: </p>"
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 1460,
-            "context": "1459: <Car className=\"h-3 w-3\" />\n1460: {t('sales_orders.vehicle')}\n1461: </Badge>"
+            "line": 1461,
+            "context": "1460: <Car className=\"h-3 w-3\" />\n1461: {t('sales_orders.vehicle')}\n1462: </Badge>"
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 1466,
-            "context": "1465: <Label htmlFor=\"vehicleInfo\" className=\"text-sm\">\n1466: {t('sales_orders.vehicle')} <span className=\"text-destructive\">*</span>\n1467: </Label>"
+            "line": 1467,
+            "context": "1466: <Label htmlFor=\"vehicleInfo\" className=\"text-sm\">\n1467: {t('sales_orders.vehicle')} <span className=\"text-destructive\">*</span>\n1468: </Label>"
           },
           {
             "key": "sales_orders.manual_vehicle_entry",
-            "line": 1478,
-            "context": "1477: <div className=\"text-xs text-muted-foreground mt-1 truncate\">\n1478: {t('sales_orders.manual_vehicle_entry')}\n1479: </div>"
+            "line": 1479,
+            "context": "1478: <div className=\"text-xs text-muted-foreground mt-1 truncate\">\n1479: {t('sales_orders.manual_vehicle_entry')}\n1480: </div>"
           },
           {
             "key": "due_date.title",
-            "line": 1490,
-            "context": "1489: <CalendarClock className=\"h-3 w-3\" />\n1490: {t('due_date.title')}\n1491: </Badge>"
+            "line": 1491,
+            "context": "1490: <CalendarClock className=\"h-3 w-3\" />\n1491: {t('due_date.title')}\n1492: </Badge>"
           },
           {
             "key": "due_date.date_placeholder",
-            "line": 1498,
-            "context": "1497: onChange={(date) => handleInputChange('dueDate', date)}\n1498: placeholder={t('due_date.date_placeholder')}\n1499: dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}"
+            "line": 1499,
+            "context": "1498: onChange={(date) => handleInputChange('dueDate', date)}\n1499: placeholder={t('due_date.date_placeholder')}\n1500: dealerId={selectedDealership ? parseInt(selectedDealership) : undefined}"
           },
           {
             "key": "orders.servicesAndNotes",
-            "line": 1513,
-            "context": "1512: <ClipboardList className=\"h-4 w-4 text-muted-foreground\" />\n1513: {t('orders.servicesAndNotes')}\n1514: </CardTitle>"
+            "line": 1514,
+            "context": "1513: <ClipboardList className=\"h-4 w-4 text-muted-foreground\" />\n1514: {t('orders.servicesAndNotes')}\n1515: </CardTitle>"
           },
           {
             "key": "service_orders.service_selection",
-            "line": 1522,
-            "context": "1521: <Wrench className=\"h-3 w-3\" />\n1522: {t('service_orders.service_selection')}\n1523: </Badge>"
+            "line": 1523,
+            "context": "1522: <Wrench className=\"h-3 w-3\" />\n1523: {t('service_orders.service_selection')}\n1524: </Badge>"
           },
           {
             "key": "orders.services",
-            "line": 1529,
-            "context": "1528: <Label className=\"text-sm font-medium flex-1 min-w-0\">\n1529: <span className=\"truncate\">{t('orders.services')}</span>\n1530: {selectedDealership && assignedUsers.length > 0 && ("
+            "line": 1530,
+            "context": "1529: <Label className=\"text-sm font-medium flex-1 min-w-0\">\n1530: <span className=\"truncate\">{t('orders.services')}</span>\n1531: {selectedDealership && assignedUsers.length > 0 && ("
           },
           {
             "key": "orders.available",
-            "line": 1532,
-            "context": "1531: <span className=\"text-muted-foreground ml-1 text-xs\">\n1532: ({services.length} {t('orders.available')})\n1533: </span>"
+            "line": 1533,
+            "context": "1532: <span className=\"text-muted-foreground ml-1 text-xs\">\n1533: ({services.length} {t('orders.available')})\n1534: </span>"
           },
           {
             "key": "orders.max_services_info",
-            "line": 1544,
-            "context": "1543: <div className=\"p-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800\">\n1544: {t('orders.max_services_info', 'Maximum 2 services reached. Uncheck a service to select another.')}\n1545: </div>"
+            "line": 1545,
+            "context": "1544: <div className=\"p-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800\">\n1545: {t('orders.max_services_info', 'Maximum 2 services reached. Uncheck a service to select another.')}\n1546: </div>"
           },
           {
             "key": "orders.selectDealershipFirst",
-            "line": 1550,
-            "context": "1549: <div className=\"p-4 border border-dashed border-border rounded-lg text-center text-muted-foreground\">\n1550: {t('orders.selectDealershipFirst')}\n1551: </div>"
+            "line": 1551,
+            "context": "1550: <div className=\"p-4 border border-dashed border-border rounded-lg text-center text-muted-foreground\">\n1551: {t('orders.selectDealershipFirst')}\n1552: </div>"
           },
           {
             "key": "common.loading",
-            "line": 1555,
-            "context": "1554: <Loader2 className=\"w-4 h-4 animate-spin mx-auto mb-2\" />\n1555: <div className=\"text-sm text-muted-foreground\">{t('common.loading')}</div>\n1556: </div>"
+            "line": 1556,
+            "context": "1555: <Loader2 className=\"w-4 h-4 animate-spin mx-auto mb-2\" />\n1556: <div className=\"text-sm text-muted-foreground\">{t('common.loading')}</div>\n1557: </div>"
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 1562,
-            "context": "1561: <div className=\"text-center text-muted-foreground py-8\">\n1562: {t('orders.noServicesAvailable')}\n1563: </div>"
+            "line": 1563,
+            "context": "1562: <div className=\"text-center text-muted-foreground py-8\">\n1563: {t('orders.noServicesAvailable')}\n1564: </div>"
           },
           {
             "key": "services.duration_label",
-            "line": 1597,
-            "context": "1596: <div className=\"flex items-center gap-1.5\">\n1597: <span className=\"font-medium\">{t('services.duration_label')}:</span>\n1598: <span className=\"text-muted-foreground\">{service.duration} {t('services.minutes')}</span>"
+            "line": 1598,
+            "context": "1597: <div className=\"flex items-center gap-1.5\">\n1598: <span className=\"font-medium\">{t('services.duration_label')}:</span>\n1599: <span className=\"text-muted-foreground\">{service.duration} {t('services.minutes')}</span>"
           },
           {
             "key": "services.minutes",
-            "line": 1598,
-            "context": "1597: <span className=\"font-medium\">{t('services.duration_label')}:</span>\n1598: <span className=\"text-muted-foreground\">{service.duration} {t('services.minutes')}</span>\n1599: </div>"
+            "line": 1599,
+            "context": "1598: <span className=\"font-medium\">{t('services.duration_label')}:</span>\n1599: <span className=\"text-muted-foreground\">{service.duration} {t('services.minutes')}</span>\n1600: </div>"
           },
           {
             "key": "services.price",
-            "line": 1603,
-            "context": "1602: <div className=\"flex items-center gap-1.5\">\n1603: <span className=\"font-medium\">{t('services.price')}:</span>\n1604: <span className=\"font-semibold text-emerald-600\">${service.price.toFixed(2)}</span>"
+            "line": 1604,
+            "context": "1603: <div className=\"flex items-center gap-1.5\">\n1604: <span className=\"font-medium\">{t('services.price')}:</span>\n1605: <span className=\"font-semibold text-emerald-600\">${service.price.toFixed(2)}</span>"
           },
           {
             "key": "orders.total",
-            "line": 1624,
-            "context": "1623: <div className=\"flex justify-between items-center\">\n1624: <span className=\"text-sm font-medium text-emerald-900\">{t('orders.total')}</span>\n1625: <span className=\"text-lg font-bold text-emerald-600\">"
+            "line": 1625,
+            "context": "1624: <div className=\"flex justify-between items-center\">\n1625: <span className=\"text-sm font-medium text-emerald-900\">{t('orders.total')}</span>\n1626: <span className=\"text-lg font-bold text-emerald-600\">"
           },
           {
             "key": "orders.servicesSelected",
-            "line": 1630,
-            "context": "1629: <div className=\"text-xs text-emerald-700 mt-1\">\n1630: {selectedServices.length} {t('orders.servicesSelected')}\n1631: </div>"
+            "line": 1631,
+            "context": "1630: <div className=\"text-xs text-emerald-700 mt-1\">\n1631: {selectedServices.length} {t('orders.servicesSelected')}\n1632: </div>"
           },
           {
             "key": "service_orders.additional_notes",
-            "line": 1643,
-            "context": "1642: <FileText className=\"h-3 w-3\" />\n1643: {t('service_orders.additional_notes')}\n1644: </Badge>"
+            "line": 1644,
+            "context": "1643: <FileText className=\"h-3 w-3\" />\n1644: {t('service_orders.additional_notes')}\n1645: </Badge>"
           },
           {
             "key": "orders.notes_placeholder",
-            "line": 1654,
-            "context": "1653: className=\"border-input bg-background resize-none w-full\"\n1654: placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this sales order...')}\n1655: />"
+            "line": 1655,
+            "context": "1654: className=\"border-input bg-background resize-none w-full\"\n1655: placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this sales order...')}\n1656: />"
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1710,
-            "context": "1709: >\n1710: {t('common.action_buttons.cancel')}\n1711: </Button>"
+            "line": 1711,
+            "context": "1710: >\n1711: {t('common.action_buttons.cancel')}\n1712: </Button>"
           },
           {
             "key": "orders.updating",
-            "line": 1730,
-            "context": "1729: <Loader2 className=\"w-4 h-4 mr-2 animate-spin\" />\n1730: {order ? t('orders.updating') : t('orders.creating')}\n1731: </>"
+            "line": 1731,
+            "context": "1730: <Loader2 className=\"w-4 h-4 mr-2 animate-spin\" />\n1731: {order ? t('orders.updating') : t('orders.creating')}\n1732: </>"
           },
           {
             "key": "orders.creating",
-            "line": 1730,
-            "context": "1729: <Loader2 className=\"w-4 h-4 mr-2 animate-spin\" />\n1730: {order ? t('orders.updating') : t('orders.creating')}\n1731: </>"
+            "line": 1731,
+            "context": "1730: <Loader2 className=\"w-4 h-4 mr-2 animate-spin\" />\n1731: {order ? t('orders.updating') : t('orders.creating')}\n1732: </>"
           },
           {
             "key": "common.action_buttons.update",
-            "line": 1733,
-            "context": "1732: ) : (\n1733: order ? t('common.action_buttons.update') : t('common.action_buttons.create')\n1734: )}"
+            "line": 1734,
+            "context": "1733: ) : (\n1734: order ? t('common.action_buttons.update') : t('common.action_buttons.create')\n1735: )}"
           },
           {
             "key": "common.action_buttons.create",
-            "line": 1733,
-            "context": "1732: ) : (\n1733: order ? t('common.action_buttons.update') : t('common.action_buttons.create')\n1734: )}"
+            "line": 1734,
+            "context": "1733: ) : (\n1734: order ? t('common.action_buttons.update') : t('common.action_buttons.create')\n1735: )}"
           }
         ],
         "coverage": 97,

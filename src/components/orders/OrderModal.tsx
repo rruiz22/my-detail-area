@@ -1,4 +1,5 @@
 import { VehicleAutoPopulationField } from '@/components/orders/VehicleAutoPopulationField';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -208,6 +209,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const [submitting, setSubmitting] = useState(false);
   const [vinDecoded, setVinDecoded] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [currentLocation, setCurrentLocation] = useState<{
     lat?: number;
     lng?: number;
@@ -921,6 +923,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     e.preventDefault();
 
     setSubmitting(true);
+    setSubmitError(null);
 
     try {
       // Validate form first
@@ -1008,19 +1011,43 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           };
         });
 
-        // Show immediate success feedback
-        toast({ description: t('orders.creating_multiple_orders', { count: selectedServices.length }) || `Creating ${selectedServices.length} orders...` });
+        try {
+          // Show immediate success feedback
+          toast({ description: t('orders.creating_multiple_orders', { count: selectedServices.length }) || `Creating ${selectedServices.length} orders...` });
 
-        // Pass array of orders to onSave - cast to OrderData type
-        onSave(ordersData as unknown as OrderData);
+          // Pass array of orders to onSave - cast to OrderData type
+          await onSave(ordersData as unknown as OrderData);
+          onClose(); // Only close if successful
+        } catch (error: unknown) {
+          console.error('Error saving orders:', error);
+          const errorMessage = error instanceof Error ? error.message : t('orders.save_error') || 'Failed to save orders';
+          setSubmitError(errorMessage);
+          toast({
+            title: t('common.error'),
+            description: errorMessage,
+            variant: 'destructive'
+          });
+        }
       } else {
         // Single service or editing - proceed as normal
-      const dbData = transformToDbFormat(formData);
+        const dbData = transformToDbFormat(formData);
 
-      // Show immediate success feedback
-      toast({ description: t('orders.creating_order') });
+        try {
+          // Show immediate success feedback
+          toast({ description: t('orders.creating_order') });
 
-      onSave(dbData);
+          await onSave(dbData);
+          onClose(); // Only close if successful
+        } catch (error: unknown) {
+          console.error('Error saving order:', error);
+          const errorMessage = error instanceof Error ? error.message : t('orders.save_error') || 'Failed to save order';
+          setSubmitError(errorMessage);
+          toast({
+            title: t('common.error'),
+            description: errorMessage,
+            variant: 'destructive'
+          });
+        }
       }
 
     } catch (error) {
@@ -1105,6 +1132,16 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
             )}
           </div>
         </DialogHeader>
+
+        {/* Error Alert */}
+        {submitError && (
+          <div className="px-3 sm:px-6 pt-3">
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{submitError}</AlertDescription>
+            </Alert>
+          </div>
+        )}
 
         <ScrollArea className="flex-1 px-3 sm:px-6 overflow-y-auto">
           <form onSubmit={handleSubmit} className="py-4 sm:py-3 pb-6 space-y-2 sm:space-y-3">
