@@ -1,7 +1,7 @@
 {
-  "scannedFiles": 913,
-  "totalStrings": 10660,
-  "hardcodedStrings": 2162,
+  "scannedFiles": 915,
+  "totalStrings": 10664,
+  "hardcodedStrings": 2166,
   "translatedStrings": 8498,
   "issues": {
     "critical": [
@@ -2595,292 +2595,292 @@
         "hardcodedStrings": [
           {
             "text": "Invoice",
-            "line": 475,
-            "context": "474: <div class=\"sender-name\">${senderName}</div>\n475: <div class=\"doc-title\">Invoice</div>\n476: ${servicePeriod ? `"
+            "line": 478,
+            "context": "477: <div class=\"sender-name\">${senderName}</div>\n478: <div class=\"doc-title\">Invoice</div>\n479: ${servicePeriod ? `"
           },
           {
             "text": "Bill To",
-            "line": 487,
-            "context": "486: <div class=\"bill-to\">\n487: <h3>Bill To</h3>\n488: <div class=\"company\">${dealerName}</div>"
+            "line": 490,
+            "context": "489: <div class=\"bill-to\">\n490: <h3>Bill To</h3>\n491: <div class=\"company\">${dealerName}</div>"
           },
           {
             "text": "Invoice Date",
-            "line": 501,
-            "context": "500: <div class=\"detail-row\">\n501: <span class=\"label\">Invoice Date</span>\n502: <div class=\"value\">${formatDate(invoice.issueDate)}</div>"
+            "line": 504,
+            "context": "503: <div class=\"detail-row\">\n504: <span class=\"label\">Invoice Date</span>\n505: <div class=\"value\">${formatDate(invoice.issueDate)}</div>"
           },
           {
             "text": "Due Date",
-            "line": 505,
-            "context": "504: <div class=\"detail-row\">\n505: <span class=\"label\">Due Date</span>\n506: <div class=\"value\">${formatDate(invoice.dueDate)}</div>"
+            "line": 508,
+            "context": "507: <div class=\"detail-row\">\n508: <span class=\"label\">Due Date</span>\n509: <div class=\"value\">${formatDate(invoice.dueDate)}</div>"
           },
           {
             "text": "Invoice Number",
-            "line": 509,
-            "context": "508: <div class=\"detail-row\">\n509: <span class=\"label\">Invoice Number</span>\n510: <div class=\"value font-mono\">${invoice.invoiceNumber}</div>"
+            "line": 512,
+            "context": "511: <div class=\"detail-row\">\n512: <span class=\"label\">Invoice Number</span>\n513: <div class=\"value font-mono\">${invoice.invoiceNumber}</div>"
           },
           {
             "text": "Total Amount",
-            "line": 513,
-            "context": "512: <div class=\"detail-row\" style=\"margin-top: 12px;\">\n513: <span class=\"label\">Total Amount</span>\n514: <div class=\"value\" style=\"font-size: 14pt; font-weight: 700; color: #6B7280;\">${formatCurrency(invoice.totalAmount)}</div>"
+            "line": 516,
+            "context": "515: <div class=\"detail-row\" style=\"margin-top: 12px;\">\n516: <span class=\"label\">Total Amount</span>\n517: <div class=\"value\" style=\"font-size: 14pt; font-weight: 700; color: #6B7280;\">${formatCurrency(invoice.totalAmount)}</div>"
           },
           {
             "text": "Date",
-            "line": 527,
-            "context": "526: <th style=\"width: 4%;\">#</th>\n527: <th style=\"width: 7%;\">Date</th>\n528: <th style=\"width: 9%;\">Order</th>"
+            "line": 530,
+            "context": "529: <th style=\"width: 4%;\">#</th>\n530: <th style=\"width: 7%;\">Date</th>\n531: <th style=\"width: 9%;\">Order</th>"
           },
           {
             "text": "Order",
-            "line": 528,
-            "context": "527: <th style=\"width: 7%;\">Date</th>\n528: <th style=\"width: 9%;\">Order</th>\n529: <th style=\"width: 17%;\">PO | RO | Tag</th>"
+            "line": 531,
+            "context": "530: <th style=\"width: 7%;\">Date</th>\n531: <th style=\"width: 9%;\">Order</th>\n532: <th style=\"width: 17%;\">PO | RO | Tag</th>"
           },
           {
             "text": "Vehicle",
-            "line": 530,
-            "context": "529: <th style=\"width: 17%;\">PO | RO | Tag</th>\n530: <th style=\"width: 15%;\">Vehicle</th>\n531: <th style=\"width: 13%;\">VIN</th>"
+            "line": 533,
+            "context": "532: <th style=\"width: 17%;\">PO | RO | Tag</th>\n533: <th style=\"width: 15%;\">Vehicle</th>\n534: <th style=\"width: 13%;\">VIN</th>"
           },
           {
             "text": "Services",
-            "line": 532,
-            "context": "531: <th style=\"width: 13%;\">VIN</th>\n532: <th style=\"width: 23%;\" class=\"text-left\">Services</th>\n533: <th style=\"width: 12%;\">Amount</th>"
+            "line": 535,
+            "context": "534: <th style=\"width: 13%;\">VIN</th>\n535: <th style=\"width: 23%;\" class=\"text-left\">Services</th>\n536: <th style=\"width: 12%;\">Amount</th>"
           },
           {
             "text": "Amount",
-            "line": 533,
-            "context": "532: <th style=\"width: 23%;\" class=\"text-left\">Services</th>\n533: <th style=\"width: 12%;\">Amount</th>\n534: </tr>"
+            "line": 536,
+            "context": "535: <th style=\"width: 23%;\" class=\"text-left\">Services</th>\n536: <th style=\"width: 12%;\">Amount</th>\n537: </tr>"
           },
           {
             "text": "Loading Invoice",
-            "line": 699,
-            "context": "698: <DialogHeader>\n699: <DialogTitle>Loading Invoice</DialogTitle>\n700: <DialogDescription>"
+            "line": 702,
+            "context": "701: <DialogHeader>\n702: <DialogTitle>Loading Invoice</DialogTitle>\n703: <DialogDescription>"
           },
           {
             "text": "Invoice Not Found",
-            "line": 717,
-            "context": "716: <DialogHeader>\n717: <DialogTitle>Invoice Not Found</DialogTitle>\n718: <DialogDescription>"
+            "line": 720,
+            "context": "719: <DialogHeader>\n720: <DialogTitle>Invoice Not Found</DialogTitle>\n721: <DialogDescription>"
           },
           {
             "text": "Invoice not found",
-            "line": 723,
-            "context": "722: <div className=\"flex items-center justify-center py-12\">\n723: <p className=\"text-muted-foreground\">Invoice not found</p>\n724: </div>"
+            "line": 726,
+            "context": "725: <div className=\"flex items-center justify-center py-12\">\n726: <p className=\"text-muted-foreground\">Invoice not found</p>\n727: </div>"
           },
           {
             "text": "Download PDF",
-            "line": 814,
-            "context": "813: <DropdownMenuItem onClick={handleDownloadPDF}>\n814: <FileText className=\"h-4 w-4 mr-2\" />\n815: Download PDF"
+            "line": 818,
+            "context": "817: <DropdownMenuItem onClick={handleDownloadPDF}>\n818: <FileText className=\"h-4 w-4 mr-2\" />\n819: Download PDF"
           },
           {
             "text": "Download Excel",
-            "line": 818,
-            "context": "817: <DropdownMenuItem onClick={handleDownloadExcel}>\n818: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n819: Download Excel"
+            "line": 822,
+            "context": "821: <DropdownMenuItem onClick={handleDownloadExcel}>\n822: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n823: Download Excel"
           },
           {
             "text": "Total Amount",
-            "line": 887,
-            "context": "886: <div className=\"pt-2 border-t\">\n887: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Total Amount</span>\n888: <p className=\"text-2xl font-bold text-primary\">{formatCurrency(invoice.totalAmount)}</p>"
+            "line": 891,
+            "context": "890: <div className=\"pt-2 border-t\">\n891: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Total Amount</span>\n892: <p className=\"text-2xl font-bold text-primary\">{formatCurrency(invoice.totalAmount)}</p>"
           },
           {
             "text": "Amount Due",
-            "line": 892,
-            "context": "891: <div className=\"pt-2\">\n892: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Amount Due</span>\n893: <p className=\"text-xl font-bold text-amber-600\">{formatCurrency(invoice.amountDue)}</p>"
+            "line": 896,
+            "context": "895: <div className=\"pt-2\">\n896: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Amount Due</span>\n897: <p className=\"text-xl font-bold text-amber-600\">{formatCurrency(invoice.amountDue)}</p>"
           },
           {
             "text": "Vehicles",
-            "line": 917,
-            "context": "916: <div className=\"flex items-center justify-between mb-4\">\n917: <h3 className=\"font-bold text-lg text-gray-900\">\n918: Vehicles"
+            "line": 921,
+            "context": "920: <div className=\"flex items-center justify-between mb-4\">\n921: <h3 className=\"font-bold text-lg text-gray-900\">\n922: Vehicles"
           },
           {
             "text": "Date",
-            "line": 935,
-            "context": "934: </TableHead>\n935: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n936: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>"
+            "line": 939,
+            "context": "938: </TableHead>\n939: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n940: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>"
           },
           {
             "text": "Order",
-            "line": 936,
-            "context": "935: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n936: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>\n937: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>"
+            "line": 940,
+            "context": "939: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n940: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>\n941: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>"
           },
           {
             "text": "Vehicle",
-            "line": 938,
-            "context": "937: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>\n938: <TableHead className=\"font-bold text-center text-white\">Vehicle</TableHead>\n939: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>"
+            "line": 942,
+            "context": "941: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>\n942: <TableHead className=\"font-bold text-center text-white\">Vehicle</TableHead>\n943: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>"
           },
           {
             "text": "Services",
-            "line": 940,
-            "context": "939: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>\n940: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n941: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>"
+            "line": 944,
+            "context": "943: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>\n944: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n945: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 941,
-            "context": "940: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n941: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>\n942: </TableRow>"
+            "line": 945,
+            "context": "944: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n945: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>\n946: </TableRow>"
           },
           {
             "text": "No items found",
-            "line": 1044,
-            "context": "1043: <TableRow>\n1044: <TableCell colSpan={8} className=\"text-center py-8 text-muted-foreground\">\n1045: No items found"
+            "line": 1057,
+            "context": "1056: <TableRow>\n1057: <TableCell colSpan={8} className=\"text-center py-8 text-muted-foreground\">\n1058: No items found"
           },
           {
             "text": "Cancel",
-            "line": 1219,
-            "context": "1218: <AlertDialogFooter>\n1219: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1220: <AlertDialogAction"
+            "line": 1242,
+            "context": "1241: <AlertDialogFooter>\n1242: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1243: <AlertDialogAction"
           },
           {
             "text": "Service names from current dealer services",
-            "line": 1247,
-            "context": "1246: <ul className=\"list-disc list-inside ml-2 space-y-1 text-sm\">\n1247: <li>Service names from current dealer services</li>\n1248: <li>Order totals and prices</li>"
+            "line": 1270,
+            "context": "1269: <ul className=\"list-disc list-inside ml-2 space-y-1 text-sm\">\n1270: <li>Service names from current dealer services</li>\n1271: <li>Order totals and prices</li>"
           },
           {
             "text": "Order totals and prices",
-            "line": 1248,
-            "context": "1247: <li>Service names from current dealer services</li>\n1248: <li>Order totals and prices</li>\n1249: <li>Customer and vehicle information</li>"
+            "line": 1271,
+            "context": "1270: <li>Service names from current dealer services</li>\n1271: <li>Order totals and prices</li>\n1272: <li>Customer and vehicle information</li>"
           },
           {
             "text": "Customer and vehicle information",
-            "line": 1249,
-            "context": "1248: <li>Order totals and prices</li>\n1249: <li>Customer and vehicle information</li>\n1250: <li>Invoice totals and tax calculations</li>"
+            "line": 1272,
+            "context": "1271: <li>Order totals and prices</li>\n1272: <li>Customer and vehicle information</li>\n1273: <li>Invoice totals and tax calculations</li>"
           },
           {
             "text": "Invoice totals and tax calculations",
-            "line": 1250,
-            "context": "1249: <li>Customer and vehicle information</li>\n1250: <li>Invoice totals and tax calculations</li>\n1251: </ul>"
+            "line": 1273,
+            "context": "1272: <li>Customer and vehicle information</li>\n1273: <li>Invoice totals and tax calculations</li>\n1274: </ul>"
           },
           {
             "text": "Cancel",
-            "line": 1259,
-            "context": "1258: <AlertDialogFooter>\n1259: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1260: <AlertDialogAction"
+            "line": 1282,
+            "context": "1281: <AlertDialogFooter>\n1282: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1283: <AlertDialogAction"
           },
           {
             "text": "Loading Invoice",
-            "line": 699,
-            "context": "698: <DialogHeader>\n699: <DialogTitle>Loading Invoice</DialogTitle>\n700: <DialogDescription>"
+            "line": 702,
+            "context": "701: <DialogHeader>\n702: <DialogTitle>Loading Invoice</DialogTitle>\n703: <DialogDescription>"
           },
           {
             "text": "Invoice Not Found",
-            "line": 717,
-            "context": "716: <DialogHeader>\n717: <DialogTitle>Invoice Not Found</DialogTitle>\n718: <DialogDescription>"
+            "line": 720,
+            "context": "719: <DialogHeader>\n720: <DialogTitle>Invoice Not Found</DialogTitle>\n721: <DialogDescription>"
           }
         ],
         "translationCalls": [
           {
             "key": "reports.invoices.delete",
-            "line": 770,
+            "line": 774,
             "exists": false
           },
           {
             "key": "reports.invoices.send_email",
-            "line": 792,
+            "line": 796,
             "exists": false
           },
           {
             "key": "common.action_buttons.print",
-            "line": 800,
+            "line": 804,
             "exists": false
           },
           {
             "key": "common.action_buttons.download",
-            "line": 809,
+            "line": 813,
             "exists": false
           },
           {
             "key": "common.action_buttons.close",
-            "line": 829,
+            "line": 833,
             "exists": false
           },
           {
             "key": "reports.invoices.delete_confirm_title",
-            "line": 1172,
+            "line": 1195,
             "exists": false
           },
           {
             "key": "reports.invoices.delete_confirm_message",
-            "line": 1177,
+            "line": 1200,
             "exists": false
           },
           {
             "key": "reports.invoices.vehicles_available_again",
-            "line": 1180,
+            "line": 1203,
             "exists": false
           },
           {
             "key": "reports.invoices.has_payments_warning",
-            "line": 1184,
+            "line": 1207,
             "exists": false
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1191,
+            "line": 1214,
             "exists": false
           },
           {
             "key": "reports.invoices.deleting",
-            "line": 1202,
+            "line": 1225,
             "exists": false
           },
           {
             "key": "reports.invoices.delete_invoice",
-            "line": 1203,
+            "line": 1226,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "reports.invoices.delete",
-            "line": 770,
-            "context": "769: <Trash2 className=\"h-4 w-4 mr-2\" />\n770: {t('reports.invoices.delete')}\n771: </Button>"
+            "line": 774,
+            "context": "773: <Trash2 className=\"h-4 w-4 mr-2\" />\n774: {t('reports.invoices.delete')}\n775: </Button>"
           },
           {
             "key": "reports.invoices.send_email",
-            "line": 792,
-            "context": "791: <Mail className=\"h-4 w-4 mr-2\" />\n792: {t('reports.invoices.send_email')}\n793: </Button>"
+            "line": 796,
+            "context": "795: <Mail className=\"h-4 w-4 mr-2\" />\n796: {t('reports.invoices.send_email')}\n797: </Button>"
           },
           {
             "key": "common.action_buttons.print",
-            "line": 800,
-            "context": "799: <Printer className=\"h-4 w-4 mr-2\" />\n800: {t('common.action_buttons.print')}\n801: </Button>"
+            "line": 804,
+            "context": "803: <Printer className=\"h-4 w-4 mr-2\" />\n804: {t('common.action_buttons.print')}\n805: </Button>"
           },
           {
             "key": "common.action_buttons.download",
-            "line": 809,
-            "context": "808: <Download className=\"h-4 w-4 mr-2\" />\n809: {t('common.action_buttons.download')}\n810: </Button>"
+            "line": 813,
+            "context": "812: <Download className=\"h-4 w-4 mr-2\" />\n813: {t('common.action_buttons.download')}\n814: </Button>"
           },
           {
             "key": "common.action_buttons.close",
-            "line": 829,
-            "context": "828: <X className=\"h-4 w-4 mr-2\" />\n829: {t('common.action_buttons.close')}\n830: </Button>"
+            "line": 833,
+            "context": "832: <X className=\"h-4 w-4 mr-2\" />\n833: {t('common.action_buttons.close')}\n834: </Button>"
           },
           {
             "key": "reports.invoices.delete_confirm_title",
-            "line": 1172,
-            "context": "1171: <AlertDialogTitle>\n1172: {t('reports.invoices.delete_confirm_title', { number: invoice.invoiceNumber })}\n1173: </AlertDialogTitle>"
+            "line": 1195,
+            "context": "1194: <AlertDialogTitle>\n1195: {t('reports.invoices.delete_confirm_title', { number: invoice.invoiceNumber })}\n1196: </AlertDialogTitle>"
           },
           {
             "key": "reports.invoices.delete_confirm_message",
-            "line": 1177,
-            "context": "1176: <p>\n1177: {t('reports.invoices.delete_confirm_message', { count: invoice.items?.length || 0 })}\n1178: </p>"
+            "line": 1200,
+            "context": "1199: <p>\n1200: {t('reports.invoices.delete_confirm_message', { count: invoice.items?.length || 0 })}\n1201: </p>"
           },
           {
             "key": "reports.invoices.vehicles_available_again",
-            "line": 1180,
-            "context": "1179: <p className=\"text-sm text-gray-600\">\n1180: {t('reports.invoices.vehicles_available_again')}\n1181: </p>"
+            "line": 1203,
+            "context": "1202: <p className=\"text-sm text-gray-600\">\n1203: {t('reports.invoices.vehicles_available_again')}\n1204: </p>"
           },
           {
             "key": "reports.invoices.has_payments_warning",
-            "line": 1184,
-            "context": "1183: <p className=\"text-red-600 font-semibold mt-2\">\n1184: {t('reports.invoices.has_payments_warning', { count: invoice.payments.length })}\n1185: </p>"
+            "line": 1207,
+            "context": "1206: <p className=\"text-red-600 font-semibold mt-2\">\n1207: {t('reports.invoices.has_payments_warning', { count: invoice.payments.length })}\n1208: </p>"
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1191,
-            "context": "1190: <AlertDialogFooter>\n1191: <AlertDialogCancel>{t('common.action_buttons.cancel')}</AlertDialogCancel>\n1192: <AlertDialogAction"
+            "line": 1214,
+            "context": "1213: <AlertDialogFooter>\n1214: <AlertDialogCancel>{t('common.action_buttons.cancel')}</AlertDialogCancel>\n1215: <AlertDialogAction"
           },
           {
             "key": "reports.invoices.deleting",
-            "line": 1202,
-            "context": "1201: {deleteMutation.isPending\n1202: ? t('reports.invoices.deleting')\n1203: : t('reports.invoices.delete_invoice')}"
+            "line": 1225,
+            "context": "1224: {deleteMutation.isPending\n1225: ? t('reports.invoices.deleting')\n1226: : t('reports.invoices.delete_invoice')}"
           },
           {
             "key": "reports.invoices.delete_invoice",
-            "line": 1203,
-            "context": "1202: ? t('reports.invoices.deleting')\n1203: : t('reports.invoices.delete_invoice')}\n1204: </AlertDialogAction>"
+            "line": 1226,
+            "context": "1225: ? t('reports.invoices.deleting')\n1226: : t('reports.invoices.delete_invoice')}\n1227: </AlertDialogAction>"
           }
         ],
         "coverage": 27,
@@ -73574,6 +73574,44 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\reports\\invoices\\ReinvoiceButton.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "This will create a new invoice containing only the",
+            "line": 70,
+            "context": "69: <div className=\"space-y-3\">\n70: <p>\n71: This will create a new invoice containing only the <strong>{unpaidCount} unpaid item(s)</strong> from this invoice."
+          },
+          {
+            "text": "The original invoice will be marked as",
+            "line": 93,
+            "context": "92: \n93: <p className=\"text-sm text-gray-600\">\n94: The original invoice will be marked as <span className=\"font-medium text-amber-600\">\"Partially Paid\"</span>."
+          },
+          {
+            "text": "Cancel",
+            "line": 101,
+            "context": "100: <AlertDialogFooter>\n101: <AlertDialogCancel disabled={createReinvoiceMutation.isPending}>\n102: Cancel"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\reports\\invoices\\ReinvoiceHistoryTimeline.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Current",
+            "line": 54,
+            "context": "53: {isCurrentInvoice && (\n54: <Badge variant=\"outline\" className=\"bg-emerald-50 text-emerald-700 border-emerald-200\">\n55: Current"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\reports\\RecalculateOrderTotals.tsx",
         "hardcodedStrings": [
           {
@@ -101762,7 +101800,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "516 Component components need translation",
+      "description": "518 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\OperationalReports.tsx",
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
@@ -101903,6 +101941,7 @@
         "src\\components\\orders\\OrderViewErrorBoundary.tsx",
         "src\\components\\permissions\\PermissionBoundary.tsx",
         "src\\components\\recon-hub\\analytics\\ReportExportCenter.tsx",
+        "src\\components\\reports\\invoices\\ReinvoiceButton.tsx",
         "src\\components\\sales\\QuickFilterBar.tsx",
         "src\\components\\settings\\platform\\PlatformBrandingSettings.tsx",
         "src\\components\\ui\\comments-tooltip.tsx",
@@ -101997,6 +102036,7 @@
         "src\\components\\profile\\NotificationsPreferencesTab_OLD.tsx",
         "src\\components\\qr\\QRCodeCard.tsx",
         "src\\components\\recon-hub\\analytics\\BottleneckAnalysis.tsx",
+        "src\\components\\reports\\invoices\\ReinvoiceHistoryTimeline.tsx",
         "src\\components\\sales\\OrderCard.tsx",
         "src\\components\\scanner\\engines\\StickerImageProcessor.tsx",
         "src\\components\\scanner\\engines\\StickerTemplateEngine.tsx",
@@ -102281,7 +102321,7 @@
         "src\\utils\\stockCSVHelpers.ts",
         "src\\utils\\translationAudit.ts"
       ],
-      "estimatedEffort": "258 hours"
+      "estimatedEffort": "259 hours"
     },
     {
       "priority": "MEDIUM",
