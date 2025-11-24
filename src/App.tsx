@@ -53,6 +53,7 @@ import Settings from "./pages/Settings";
 import Stock from "./pages/Stock";
 import VehicleDetailsPage from "./pages/VehicleDetailsPage";
 import VinScanner from "./pages/VinScanner";
+import RemoteKiosk from "./pages/RemoteKiosk";
 
     console.log('🚀 App starting up with improved navigation');
     console.log('📱 Current URL:', window.location.href);
@@ -109,6 +110,7 @@ const AppRoutes = () => {
         <Route path="/s/:slug" element={<QRRedirect />} />
         <Route path="/invitation/:token" element={<InvitationAccept />} />
         <Route path="/landing" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+        <Route path="/remote-kiosk" element={<RemoteKiosk />} />
 
         {/* Nueva ruta pública para datos de recon */}
         <Route path="/public/recon-data" element={<PublicReconData />} />

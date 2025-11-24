@@ -994,7 +994,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           const dbData = transformToDbFormat(formData);
           // Calculate total amount for THIS service only
           const service = services.find((s: { id: string; price?: number; name?: string; description?: string }) => s.id === serviceId);
-          const individualAmount = canViewPrices ? (service?.price || 0) : 0;
+          const individualAmount = service?.price || 0;
 
           return {
             ...dbData,

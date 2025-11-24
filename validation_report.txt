@@ -1,0 +1,386 @@
+🔍 Spanish Translation Validator
+============================================================
+
+Found 76 Spanish translation files
+
+
+Checking: public\translations\es\accessibility.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 1 unique words
+        Examples: Buscar
+
+Checking: public\translations\es\admin.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 3 unique words
+        Examples: Nenhum, Visualizar, Painel
+
+Checking: public\translations\es\announcements.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 5 unique words
+        Examples: certeza, Sucesso, Ativo, Inativo, Alerta
+
+Checking: public\translations\es\auth.json
+  ✅ No issues found
+
+Checking: public\translations\es\batch_vin.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 4 unique words
+        Examples: Nenhum, Pendente, Imagem, Arquivo
+
+Checking: public\translations\es\breadcrumbs.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 2 unique words
+        Examples: pedido, pedidos
+
+Checking: public\translations\es\cache.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 4 unique words
+        Examples: Sucesso, Ativo, Voltar, Painel
+
+Checking: public\translations\es\calendar.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 4 unique words
+        Examples: pedido, Nenhum, Novo, hoje
+
+Checking: public\translations\es\car_wash.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 2 unique words
+        Examples: pedido, Sucesso
+
+Checking: public\translations\es\car_wash_orders.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 4 unique words
+        Examples: pedido, pedidos, Detalhes, Novo
+
+Checking: public\translations\es\chat.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 15 unique words
+        Examples: mensagem, mensagens, certeza, Sucesso, Nenhum, Buscar, Novo, Nova, Salvar, Voltar
+
+Checking: public\translations\es\cloud_sync.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 5 unique words
+        Examples: Sucesso, Nenhum, Pendente, Detalhes, Painel
+
+Checking: public\translations\es\common.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 1 unique words
+        Examples: Buscar
+
+Checking: public\translations\es\completion_date.json
+  ✅ No issues found
+
+Checking: public\translations\es\contacts.json
+  ✅ No issues found
+
+Checking: public\translations\es\dashboard.json
+  ✅ No issues found
+
+Checking: public\translations\es\data_table.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 7 unique words
+        Examples: pedido, pedidos, Nenhum, Detalhes, Novo, hoje, estoque
+
+Checking: public\translations\es\dealer.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 10 unique words
+        Examples: pedidos, Sucesso, Nenhum, Ativo, Visualizar, Nova, Voltar, Painel, hoje, estoque
+
+Checking: public\translations\es\dealerships.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 1 unique words
+        Examples: Buscar
+
+Checking: public\translations\es\detail_hub.json
+  ⚠️  Found 2 issue type(s):
+     🇵🇹 Portuguese words: 1 unique words
+        Examples: Buscar
+     🇬🇧 English text: 9 phrases
+        Examples: Loading..., Access Denied, Filter, Edit, Delete
+
+Checking: public\translations\es\due_date.json
+  ✅ No issues found
+
+Checking: public\translations\es\error_screens.json
+  ✅ No issues found
+
+Checking: public\translations\es\forms.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 2 unique words
+        Examples: mensagem, Pesquisar
+
+Checking: public\translations\es\get_ready.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 25 unique words
+        Examples: sim, pedido, certeza, Sucesso, Nenhum, Buscar, Pesquisar, Ativo, Inativo, Pendente
+
+Checking: public\translations\es\groups.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 7 unique words
+        Examples: pedidos, certeza, Sucesso, Nenhum, Buscar, Pesquisar, Salvar
+
+Checking: public\translations\es\integrations.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 3 unique words
+        Examples: pedidos, certeza, Detalhes
+
+Checking: public\translations\es\invitations.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 3 unique words
+        Examples: certeza, Sucesso, Nenhum
+
+Checking: public\translations\es\layout.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 2 unique words
+        Examples: pedidos, Pesquisar
+
+Checking: public\translations\es\legal.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 1 unique words
+        Examples: mensagens
+
+Checking: public\translations\es\management.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 4 unique words
+        Examples: Sucesso, Salvar, Imagem, Arquivo
+
+Checking: public\translations\es\messages.json
+  ✅ No issues found
+
+Checking: public\translations\es\modern_vin_scanner.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 3 unique words
+        Examples: Nenhum, Imagem, Arquivo
+
+Checking: public\translations\es\navigation.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 4 unique words
+        Examples: pedidos, Detalhes, Painel, estoque
+
+Checking: public\translations\es\nfc.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 2 unique words
+        Examples: Sucesso, agora
+
+Checking: public\translations\es\nfc_tracking.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 8 unique words
+        Examples: certeza, Sucesso, Nenhum, Buscar, Primeira, Detalhes, Nova, Painel
+
+Checking: public\translations\es\notifications.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 8 unique words
+        Examples: mensagem, pedidos, Sucesso, Nenhum, Detalhes, Nova, Salvar, agora
+
+Checking: public\translations\es\order_comments.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 7 unique words
+        Examples: pedido, pedidos, certeza, Sucesso, Nova, Arquivo, hoje
+
+Checking: public\translations\es\order_detail.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 1 unique words
+        Examples: Sucesso
+
+Checking: public\translations\es\orders.json
+  ✅ No issues found
+
+Checking: public\translations\es\pages.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 4 unique words
+        Examples: pedidos, Sucesso, Nenhum, Buscar
+
+Checking: public\translations\es\password_management.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 4 unique words
+        Examples: Sucesso, Buscar, Pesquisar, Painel
+
+Checking: public\translations\es\permissions.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 10 unique words
+        Examples: mensagens, pedido, pedidos, Sucesso, Pendente, Detalhes, Visualizar, Salvar, Painel, estoque
+
+Checking: public\translations\es\presence.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 3 unique words
+        Examples: Nenhum, Buscar, agora
+
+Checking: public\translations\es\productivity.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 15 unique words
+        Examples: pedido, pedidos, certeza, Sucesso, Nenhum, Buscar, Pendente, Primeira, Detalhes, Novo
+
+Checking: public\translations\es\profile.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 3 unique words
+        Examples: Sucesso, Primeira, Salvar
+
+Checking: public\translations\es\quick_actions.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 3 unique words
+        Examples: pedido, Novo, Nova
+
+Checking: public\translations\es\quick_scan.json
+  ✅ No issues found
+
+Checking: public\translations\es\recent_activity.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 4 unique words
+        Examples: pedido, Detalhes, Arquivo, agora
+
+Checking: public\translations\es\recon.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 9 unique words
+        Examples: pedido, pedidos, Sucesso, Buscar, Detalhes, Novo, Painel, ano, estoque
+
+Checking: public\translations\es\recon_defaults.json
+  ✅ No issues found
+
+Checking: public\translations\es\recon_orders.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 3 unique words
+        Examples: pedido, pedidos, Sucesso
+
+Checking: public\translations\es\reports.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 12 unique words
+        Examples: pedido, pedidos, certeza, Sucesso, Nenhum, Buscar, Pendente, Primeira, Detalhes, hoje
+
+Checking: public\translations\es\roles.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 6 unique words
+        Examples: certeza, Sucesso, Ativo, Primeira, Nova, Salvar
+
+Checking: public\translations\es\sales.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 4 unique words
+        Examples: pedidos, Painel, Tabela, hoje
+
+Checking: public\translations\es\sales_orders.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 11 unique words
+        Examples: pedido, pedidos, Sucesso, Ativo, Pendente, Detalhes, Painel, Tabela, Etiqueta, hoje
+
+Checking: public\translations\es\schedule_view.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 1 unique words
+        Examples: pedido
+
+Checking: public\translations\es\search.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 8 unique words
+        Examples: pedidos, Nenhum, Pesquisar, Ativo, Pendente, Novo, Fechar, estoque
+
+Checking: public\translations\es\service_orders.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 10 unique words
+        Examples: pedido, pedidos, Ativo, Pendente, Detalhes, Painel, Tabela, Etiqueta, hoje, reparo
+
+Checking: public\translations\es\services.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 9 unique words
+        Examples: certeza, Sucesso, Buscar, Ativo, Inativo, Detalhes, Novo, Salvar, Etiqueta
+
+Checking: public\translations\es\settings.json
+  ✅ No issues found
+
+Checking: public\translations\es\stock.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 12 unique words
+        Examples: Sucesso, Nenhum, Buscar, Pesquisar, Ativo, Pendente, Detalhes, Imagem, Arquivo, agora
+
+Checking: public\translations\es\sweetalert.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 3 unique words
+        Examples: sim, pedido, Sucesso
+
+Checking: public\translations\es\system_update.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 2 unique words
+        Examples: Nova, agora
+
+Checking: public\translations\es\time.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 3 unique words
+        Examples: hoje, ontem, ano
+
+Checking: public\translations\es\ui.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 3 unique words
+        Examples: Bem-vindo, Detalhes, Voltar
+
+Checking: public\translations\es\user_management.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 3 unique words
+        Examples: Sucesso, Nenhum, Buscar
+
+Checking: public\translations\es\users.json
+  ✅ No issues found
+
+Checking: public\translations\es\validation.json
+  ✅ No issues found
+
+Checking: public\translations\es\vehicle_info.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 2 unique words
+        Examples: Visualizar, Imagem
+
+Checking: public\translations\es\vin_analyzer.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 2 unique words
+        Examples: Nenhum, Detalhes
+
+Checking: public\translations\es\vin_input.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 1 unique words
+        Examples: Nenhum
+
+Checking: public\translations\es\vin_integration.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 1 unique words
+        Examples: Imagem
+
+Checking: public\translations\es\vin_scanner.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 3 unique words
+        Examples: Nenhum, Imagem, agora
+
+Checking: public\translations\es\vin_scanner_errors.json
+  ✅ No issues found
+
+Checking: public\translations\es\vin_scanner_history.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 2 unique words
+        Examples: certeza, Detalhes
+
+Checking: public\translations\es\vin_scanner_hub.json
+  ⚠️  Found 1 issue type(s):
+     🇵🇹 Portuguese words: 4 unique words
+        Examples: Sucesso, Detalhes, Fechar, Imagem
+
+============================================================
+📊 VALIDATION SUMMARY
+============================================================
+Files checked: 76
+Files with issues: 62
+Total issues found: 318
+
+Issues by type:
+  🔤 Encoding errors: 0
+  🇵🇹 Portuguese words: 309
+  🇬🇧 English text: 9
+
+⚠️  Files needing correction:
+  1. public\translations\es\get_ready.json (25 issues)
+  2. public\translations\es\chat.json (15 issues)
+  3. public\translations\es\productivity.json (15 issues)
+  4. public\translations\es\reports.json (12 issues)
+  5. public\translations\es\stock.json (12 issues)
+  6. public\translations\es\sales_orders.json (11 issues)
+  7. public\translations\es\dealer.json (10 issues)
+  8. public\translations\es\detail_hub.json (10 issues)
+  9. public\translations\es\permissions.json (10 issues)
+  10. public\translations\es\service_orders.json (10 issues)
+  ... and 52 more files
+
+============================================================

@@ -627,8 +627,9 @@
   },
   "kiosk_manager": {
     "title": "Gerenciador de Quiosques",
-    "subtitle": "Configurar e monitorar estaÃ§Ãµes de relÃ³gio de ponto",
+    "subtitle": "Configurar e monitorar estações de ponto",
     "add_kiosk": "Adicionar Quiosque",
+    "generate_remote_access": "Gerar Acesso Remoto",
     "add_description": "Criar nova configuração de quiosque para operações de ponto",
     "edit_kiosk": "Editar Quiosque",
     "edit_description": "Atualizar configurações e ajustes do quiosque",

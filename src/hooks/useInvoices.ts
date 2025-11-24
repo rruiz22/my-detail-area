@@ -520,3 +520,85 @@ export const useDeletePayment = () => {
     }
   });
 };
+
+// =====================================================
+// INVOICE ITEM PAYMENT STATUS
+// =====================================================
+
+/**
+ * Update paid status of an individual invoice item
+ */
+export const useUpdateInvoiceItemPaid = () => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async ({ itemId, isPaid }: { itemId: string; isPaid: boolean }) => {
+      const { data, error } = await supabase
+        .from('invoice_items')
+        .update({ is_paid: isPaid })
+        .eq('id', itemId)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return data as InvoiceItemRow;
+    },
+    onSuccess: (data) => {
+      // Invalidate invoice queries to refresh the UI
+      queryClient.invalidateQueries({ queryKey: ['invoice', data.invoice_id] });
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      toast({
+        description: data.is_paid ? 'Item marked as paid' : 'Item marked as unpaid'
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        variant: 'destructive',
+        description: error.message || 'Failed to update item payment status'
+      });
+    }
+  });
+};
+
+/**
+ * Bulk update paid status for multiple invoice items
+ */
+export const useBulkUpdateInvoiceItemsPaid = () => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async ({ itemIds, isPaid, invoiceId }: {
+      itemIds: string[];
+      isPaid: boolean;
+      invoiceId: string;
+    }) => {
+      const { data, error } = await supabase
+        .from('invoice_items')
+        .update({ is_paid: isPaid })
+        .in('id', itemIds)
+        .eq('invoice_id', invoiceId)
+        .select();
+
+      if (error) throw error;
+
+      return { count: data?.length || 0, invoiceId };
+    },
+    onSuccess: (result) => {
+      // Invalidate invoice queries to refresh the UI
+      queryClient.invalidateQueries({ queryKey: ['invoice', result.invoiceId] });
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      toast({
+        description: `${result.count} item(s) updated successfully`
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        variant: 'destructive',
+        description: error.message || 'Failed to update items payment status'
+      });
+    }
+  });
+};

@@ -184,7 +184,7 @@
     "at_risk": "At Risk",
     "critical": "Critical",
     "by_days": "By Days",
-    "fresh": "â‰¤1d",
+    "fresh": "<1d",
     "normal": "2-3d",
     "sla_hours": "SLA",
     "cost_per_day": "Cost/day",

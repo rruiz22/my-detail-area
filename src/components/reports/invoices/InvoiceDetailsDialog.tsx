@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
     Dialog,
     DialogContent,
@@ -39,7 +40,7 @@ import {
 } from '@/components/ui/table';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { useDeleteInvoice, useDeletePayment, useInvoice } from '@/hooks/useInvoices';
+import { useDeleteInvoice, useDeletePayment, useInvoice, useUpdateInvoiceItemPaid, useBulkUpdateInvoiceItemsPaid } from '@/hooks/useInvoices';
 import { useRecalculateInvoice } from '@/hooks/useRecalculateInvoice';
 import type { InvoiceStatus } from '@/types/invoices';
 import { generateInvoiceExcel } from '@/utils/generateInvoiceExcel';
@@ -88,6 +89,8 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
   const deleteMutation = useDeleteInvoice();
   const deletePaymentMutation = useDeletePayment();
   const recalculateMutation = useRecalculateInvoice();
+  const updateItemPaidMutation = useUpdateInvoiceItemPaid();
+  const bulkUpdateItemsPaidMutation = useBulkUpdateInvoiceItemsPaid();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showRecalculateConfirm, setShowRecalculateConfirm] = useState(false);
   const [paymentToDelete, setPaymentToDelete] = useState<string | null>(null);
@@ -158,6 +161,28 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
     }
 
     return description;
+  };
+
+  // Handle toggle individual item paid status
+  const handleToggleItemPaid = (itemId: string, currentPaidStatus: boolean) => {
+    updateItemPaidMutation.mutate({
+      itemId,
+      isPaid: !currentPaidStatus
+    });
+  };
+
+  // Handle toggle all items paid status
+  const handleToggleAllItemsPaid = () => {
+    if (!invoice?.items || invoice.items.length === 0) return;
+
+    const allPaid = invoice.items.every(item => item.isPaid);
+    const itemIds = invoice.items.map(item => item.id);
+
+    bulkUpdateItemsPaidMutation.mutate({
+      itemIds,
+      isPaid: !allPaid,
+      invoiceId: invoice.id
+    });
   };
 
   const handlePrint = async () => {
@@ -900,6 +925,13 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               <Table>
                 <TableHeader>
                   <TableRow className="bg-gray-500 hover:bg-gray-500">
+                    <TableHead className="font-bold text-center text-white w-[50px]">
+                      <Checkbox
+                        checked={invoice.items?.every(item => item.isPaid) && invoice.items.length > 0}
+                        onCheckedChange={handleToggleAllItemsPaid}
+                        className="border-white data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
+                      />
+                    </TableHead>
                     <TableHead className="font-bold text-center text-white">Date</TableHead>
                     <TableHead className="font-bold text-center text-white">Order</TableHead>
                     <TableHead className="font-bold text-center text-white">PO | RO | Tag</TableHead>
@@ -943,7 +975,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                         if (itemDate !== lastDate && index > 0) {
                           rows.push(
                             <TableRow key={`separator-${index}`} className="bg-gray-200 hover:bg-gray-200">
-                              <TableCell colSpan={7} className="text-center font-bold text-gray-600 py-2">
+                              <TableCell colSpan={8} className="text-center font-bold text-gray-600 py-2">
                                 {itemDate}
                               </TableCell>
                             </TableRow>
@@ -954,8 +986,15 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                         rows.push(
                           <TableRow
                             key={item.id}
-                            className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50/50 transition-colors`}
+                            className={`${item.isPaid ? 'bg-emerald-50' : index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50/50 transition-colors`}
                           >
+                          <TableCell className="text-center">
+                            <Checkbox
+                              checked={item.isPaid}
+                              onCheckedChange={() => handleToggleItemPaid(item.id, item.isPaid)}
+                              className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
+                            />
+                          </TableCell>
                           <TableCell className="text-sm text-center font-medium text-gray-700">
                             {format(parseISO(getCorrectItemDate(item)), 'MM/dd')}
                           </TableCell>
@@ -1002,7 +1041,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                     })()
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                         No items found
                       </TableCell>
                     </TableRow>

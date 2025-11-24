@@ -33,7 +33,8 @@ dist-ssr
 .claude/mcp.json
 .clauderc
 
-# Supabase
+# Supabase - Local Docker (NOT USED - only remote connection)
+.supabase/
 .branches
 .temp
 

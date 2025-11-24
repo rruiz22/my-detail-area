@@ -1,45 +1,45 @@
 {
   "success": {
-    "status_updated": "Status do pedido atualizado com sucesso"
+    "status_updated": "Estado de la orden actualizado con éxito"
   },
   "error": {
-    "something_went_wrong": "Algo deu errado",
-    "please_try_again": "Por favor, tente novamente",
-    "operation_failed": "A operaÃ§Ã£o falhou",
-    "network_error": "Erro de rede",
-    "server_error": "Erro do servidor",
-    "invalid_request": "SolicitaÃ§Ã£o invÃ¡lida",
-    "access_denied": "Acesso negado",
-    "insufficient_permissions": "VocÃª nÃ£o tem permissÃ£o para acessar este recurso",
-    "back_to_dashboard": "Voltar ao Painel",
-    "not_found": "NÃ£o encontrado",
-    "forbidden": "Proibido",
-    "unauthorized": "NÃ£o autorizado",
-    "session_expired": "SessÃ£o expirada",
-    "connection_failed": "ConexÃ£o falhou",
-    "timeout": "Erro de timeout",
-    "fix_validation_errors": "Por favor, corrija os erros de validaÃ§Ã£o"
+    "something_went_wrong": "Algo salió mal",
+    "please_try_again": "Por favor, inténtalo de nuevo",
+    "operation_failed": "La operación falló",
+    "network_error": "Error de red",
+    "server_error": "Error del servidor",
+    "invalid_request": "Solicitud inválida",
+    "access_denied": "Acceso denegado",
+    "insufficient_permissions": "No tienes permiso para acceder a este recurso",
+    "back_to_dashboard": "Volver al Panel",
+    "not_found": "No encontrado",
+    "forbidden": "Prohibido",
+    "unauthorized": "No autorizado",
+    "session_expired": "Sesión expirada",
+    "connection_failed": "Conexión fallida",
+    "timeout": "Error de timeout",
+    "fix_validation_errors": "Por favor, corrige los errores de validación"
   },
   "errors": {
-    "no_permission": "Sem PermissÃ£o",
-    "no_permission_create_order": "VocÃª nÃ£o tem permissÃ£o para criar pedidos",
-    "no_permission_status_change": "VocÃª nÃ£o tem permissÃ£o para alterar o status do pedido",
-    "status_update_failed": "Falha ao atualizar o status do pedido",
-    "permission_system_error": "Erro no Sistema de PermissÃµes",
-    "permission_system_error_description": "Houve um erro ao carregar suas permissÃµes. Isso pode ser temporÃ¡rio.",
-    "what_you_can_do": "O que vocÃª pode fazer:",
-    "try_refresh": "Tente atualizar a pÃ¡gina",
-    "clear_cache": "Limpe o cache do seu navegador",
-    "contact_admin": "Entre em contato com o administrador do sistema se o problema persistir"
+    "no_permission": "Sin Permiso",
+    "no_permission_create_order": "No tienes permiso para crear órdenes",
+    "no_permission_status_change": "No tienes permiso para cambiar el estado de la orden",
+    "status_update_failed": "Error al actualizar el estado de la orden",
+    "permission_system_error": "Error en el Sistema de Permisos",
+    "permission_system_error_description": "Hubo un error al cargar tus permisos. Esto puede ser temporal.",
+    "what_you_can_do": "Lo que puedes hacer:",
+    "try_refresh": "Intenta actualizar la página",
+    "clear_cache": "Limpia el caché de tu navegador",
+    "contact_admin": "Contacta al administrador del sistema si el problema persiste"
   },
   "info": {
-    "loading": "Carregando...",
-    "no_data": "Nenhum dado disponÃ­vel",
-    "processing": "Processando..."
+    "loading": "Cargando...",
+    "no_data": "No hay datos disponibles",
+    "processing": "Procesando..."
   },
   "descriptions": {
-    "network_error": "Verifique sua conexÃ£o com a internet e tente novamente",
-    "server_error": "Nossos servidores estÃ£o enfrentando problemas. Por favor, tente novamente mais tarde."
+    "network_error": "Verifica tu conexión a internet e inténtalo de nuevo",
+    "server_error": "Nuestros servidores están experimentando problemas. Por favor, inténtalo de nuevo más tarde."
   },
-  "confirm_delete_order": "Tem certeza que deseja excluir este pedido?"
+  "confirm_delete_order": "¿Estás seguro de que deseas eliminar esta orden?"
 }

@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "supabase": {
-      "type": "http",
-      "url": "https://mcp.supabase.com/mcp?project_ref=swfnnrpzpkdypbrzmgnr",
+      "type": "npx",
+      "package": "@supabase/mcp-server-supabase",
       "description": "Supabase MCP server for MyDetailArea dealership management system",
       "capabilities": [
         "Database queries and mutations",
@@ -11,7 +11,9 @@
         "Real-time subscriptions",
         "Storage operations",
         "Auth management"
-      ]
+      ],
+      "configured": true,
+      "configLocation": "%APPDATA%\\Claude\\claude_desktop_config.json"
     }
   },
   "project": {
@@ -29,5 +31,10 @@
       "state": "TanStack Query + React Context",
       "i18n": "react-i18next (EN, ES, PT-BR)"
     }
+  },
+  "cli": {
+    "version": "2.58.5",
+    "installed": true,
+    "linked": true
   }
 }

@@ -622,6 +622,7 @@
     "add_kiosk": "Add Kiosk",
     "add_description": "Create a new kiosk configuration for time clock operations",
     "edit_kiosk": "Edit Kiosk",
+    "generate_remote_access": "Generate Remote Access",
     "edit_description": "Update kiosk settings and configuration",
     "update_kiosk": "Update Kiosk",
     "creating": "Creating...",

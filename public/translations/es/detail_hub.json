@@ -623,9 +623,10 @@
     "info_message": "Esta configuración se guardará en este navegador y persistirá entre sesiones."
   },
   "kiosk_manager": {
-    "title": "Kiosk Manager",
-    "subtitle": "Configure and monitor time clock stations",
-    "add_kiosk": "Add Kiosk",
+    "title": "Administrador de Kioscos",
+    "subtitle": "Configurar y monitorear estaciones de reloj",
+    "add_kiosk": "Agregar Kiosco",
+    "generate_remote_access": "Generar Acceso Remoto",
     "add_description": "Crear nueva configuración de kiosco para reloj de tiempo",
     "edit_kiosk": "Edit Kiosk",
     "edit_description": "Actualizar configuración y ajustes del kiosco",

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { useRoleNotificationEvents, RoleNotificationEvent } from '@/hooks/useRoleNotificationEvents';
 import {
   Card,
   CardContent,
@@ -21,31 +22,14 @@ import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Bell, Mail, MessageSquare, Save, Smartphone } from 'lucide-react';
+import { Bell, Save, AlertCircle } from 'lucide-react';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 interface CustomRole {
   id: string;
   role_name: string;
   description: string | null;
-}
-
-interface NotificationRule {
-  id?: string;
-  dealer_id: number;
-  module: string;
-  event: string;
-  rule_name: string;
-  description: string;
-  recipients: {
-    roles: string[];
-    users: string[];
-    include_assigned_user: boolean;
-  };
-  conditions: any;
-  channels: string[];
-  priority: number;
-  enabled: boolean;
 }
 
 const MODULES = [
@@ -61,15 +45,12 @@ const EVENTS = [
   { value: 'order_assigned', label: 'Order Assigned', description: 'When an order is assigned to someone' },
   { value: 'status_changed', label: 'Status Changed', description: 'When order status changes' },
   { value: 'field_updated', label: 'Field Updated', description: 'When important fields are updated' },
+  { value: 'comment_added', label: 'Comment Added', description: 'When someone adds a comment' },
+  { value: 'attachment_added', label: 'Attachment Added', description: 'When a file is attached' },
   { value: 'due_date_approaching', label: 'Due Date Approaching', description: 'When due date is near' },
   { value: 'overdue', label: 'Overdue', description: 'When order is overdue' },
-];
-
-const CHANNELS = [
-  { value: 'in_app', label: 'In-App', icon: Bell },
-  { value: 'sms', label: 'SMS', icon: MessageSquare },
-  { value: 'email', label: 'Email', icon: Mail },
-  { value: 'push', label: 'Push', icon: Smartphone },
+  { value: 'priority_changed', label: 'Priority Changed', description: 'When priority is updated' },
+  { value: 'follower_added', label: 'Follower Added', description: 'When user is added as follower' },
 ];
 
 export function RoleNotificationSettings() {
@@ -80,11 +61,18 @@ export function RoleNotificationSettings() {
 
   const [customRoles, setCustomRoles] = useState<CustomRole[]>([]);
   const [selectedRole, setSelectedRole] = useState<string>('');
-  const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
 
-  // Notification rules by module and event
-  const [rules, setRules] = useState<Record<string, Record<string, NotificationRule>>>({});
+  // Use the role notification events hook
+  const {
+    events,
+    loading,
+    saving,
+    bulkSaveEvents,
+    getEventsSummary,
+  } = useRoleNotificationEvents(selectedRole || null, currentDealerId || null);
+
+  // Local state for UI changes (before saving)
+  const [localEvents, setLocalEvents] = useState<Record<string, Record<string, RoleNotificationEvent>>>({});
 
   // Fetch custom roles for current dealer
   useEffect(() => {
@@ -109,80 +97,50 @@ export function RoleNotificationSettings() {
     fetchRoles();
   }, [currentDealerId]);
 
-  // Fetch existing notification rules for selected role
+  // Initialize local events from hook data
   useEffect(() => {
-    if (!selectedRole || !currentDealerId) return;
+    if (!selectedRole) return;
 
-    const fetchRules = async () => {
-      setLoading(true);
-      try {
-        const { data, error } = await supabase
-          .from('dealer_notification_rules')
-          .select('*')
-          .eq('dealer_id', currentDealerId)
-          .contains('recipients', { roles: [selectedRole] });
+    const organized: Record<string, Record<string, RoleNotificationEvent>> = {};
 
-        if (error) throw error;
+    // Create structure for all modules and events
+    MODULES.forEach(module => {
+      organized[module.value] = {};
+      EVENTS.forEach(event => {
+        // Find existing event from database
+        const existingEvent = events.find(
+          e => e.module === module.value && e.event_type === event.value
+        );
 
-        // Organize rules by module and event
-        const organized: Record<string, Record<string, NotificationRule>> = {};
-        MODULES.forEach(module => {
-          organized[module.value] = {};
-          EVENTS.forEach(event => {
-            organized[module.value][event.value] = {
-              dealer_id: currentDealerId,
-              module: module.value,
-              event: event.value,
-              rule_name: `${module.label} - ${event.label} - ${customRoles.find(r => r.id === selectedRole)?.role_name}`,
-              description: `Send notifications to ${customRoles.find(r => r.id === selectedRole)?.role_name} when ${event.label}`,
-              recipients: {
-                roles: [selectedRole],
-                users: [],
-                include_assigned_user: false,
-              },
-              conditions: {},
-              channels: ['in_app'], // Default
-              priority: 50,
-              enabled: false,
-            };
-          });
-        });
+        // Use existing or create default
+        organized[module.value][event.value] = existingEvent || {
+          role_id: selectedRole,
+          module: module.value,
+          event_type: event.value,
+          enabled: false,
+          event_config: {},
+        };
+      });
+    });
 
-        // Override with existing rules
-        data?.forEach(rule => {
-          if (organized[rule.module]?.[rule.event]) {
-            organized[rule.module][rule.event] = rule;
-          }
-        });
-
-        setRules(organized);
-      } catch (error) {
-        console.error('Error fetching rules:', error);
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-          description: 'Failed to load notification rules',
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRules();
-  }, [selectedRole, currentDealerId, customRoles, toast]);
+    setLocalEvents(organized);
+  }, [events, selectedRole]);
 
   const toggleModuleEnabled = (moduleValue: string, enabled: boolean) => {
-    setRules(prev => {
+    setLocalEvents(prev => {
       const updated = { ...prev };
       Object.keys(updated[moduleValue] || {}).forEach(eventKey => {
-        updated[moduleValue][eventKey].enabled = enabled;
+        updated[moduleValue][eventKey] = {
+          ...updated[moduleValue][eventKey],
+          enabled,
+        };
       });
       return updated;
     });
   };
 
   const toggleEventEnabled = (moduleValue: string, eventValue: string, enabled: boolean) => {
-    setRules(prev => ({
+    setLocalEvents(prev => ({
       ...prev,
       [moduleValue]: {
         ...prev[moduleValue],
@@ -194,84 +152,34 @@ export function RoleNotificationSettings() {
     }));
   };
 
-  const toggleChannel = (moduleValue: string, eventValue: string, channel: string) => {
-    setRules(prev => {
-      const rule = prev[moduleValue]?.[eventValue];
-      if (!rule) return prev;
-
-      const channels = rule.channels || [];
-      const newChannels = channels.includes(channel)
-        ? channels.filter(c => c !== channel)
-        : [...channels, channel];
-
-      return {
-        ...prev,
-        [moduleValue]: {
-          ...prev[moduleValue],
-          [eventValue]: {
-            ...rule,
-            channels: newChannels,
-          },
-        },
-      };
-    });
-  };
-
   const handleSave = async () => {
     if (!selectedRole || !currentDealerId) return;
 
-    setSaving(true);
-    try {
-      // Collect all enabled rules
-      const rulesToSave: NotificationRule[] = [];
-      Object.values(rules).forEach(moduleRules => {
-        Object.values(moduleRules).forEach(rule => {
-          if (rule.enabled && rule.channels.length > 0) {
-            rulesToSave.push(rule);
-          }
-        });
+    // Collect all events (both enabled and disabled for complete record)
+    const eventsToSave: RoleNotificationEvent[] = [];
+    Object.values(localEvents).forEach(moduleRules => {
+      Object.values(moduleRules).forEach(event => {
+        eventsToSave.push(event);
       });
+    });
 
-      // Delete existing rules for this role and dealer
-      const { error: deleteError } = await supabase
-        .from('dealer_notification_rules')
-        .delete()
-        .eq('dealer_id', currentDealerId)
-        .contains('recipients', { roles: [selectedRole] });
+    console.log(`[RoleNotificationSettings] Saving ${eventsToSave.length} events for role ${selectedRole}`);
+    console.log(`[RoleNotificationSettings] Enabled events:`, eventsToSave.filter(e => e.enabled).length);
 
-      if (deleteError) throw deleteError;
+    const success = await bulkSaveEvents(eventsToSave);
 
-      // Insert new rules
-      if (rulesToSave.length > 0) {
-        const { error: insertError } = await supabase
-          .from('dealer_notification_rules')
-          .insert(rulesToSave.map(rule => {
-            const { id, ...ruleWithoutId } = rule; // Remove id for insert
-            return {
-              ...ruleWithoutId,
-              created_by: user?.id,
-              updated_by: user?.id,
-            };
-          }));
-
-        if (insertError) throw insertError;
-      }
+    if (success) {
+      const roleName = customRoles.find(r => r.id === selectedRole)?.role_name;
+      const enabledCount = eventsToSave.filter(e => e.enabled).length;
 
       toast({
         title: 'Success',
-        description: `Notification rules saved for ${customRoles.find(r => r.id === selectedRole)?.role_name}`,
+        description: `Saved ${enabledCount} enabled notification events for ${roleName}`,
       });
-    } catch (error) {
-      console.error('Error saving rules:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to save notification rules',
-      });
-    } finally {
-      setSaving(false);
     }
   };
+
+  const summary = getEventsSummary();
 
   return (
     <Card>
@@ -281,10 +189,27 @@ export function RoleNotificationSettings() {
           Role-Based Notification Settings
         </CardTitle>
         <CardDescription>
-          Configure which custom roles receive notifications for different modules and events
+          Configure which events trigger SMS notifications for each custom role (Level 2 Validation)
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        {/* Info Alert */}
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>How SMS Notifications Work</AlertTitle>
+          <AlertDescription className="text-xs space-y-1">
+            <p>3-Level Validation System:</p>
+            <ol className="list-decimal list-inside space-y-1 ml-2">
+              <li><strong>Level 1:</strong> User must be a follower of the order</li>
+              <li><strong>Level 2 (This Page):</strong> User's role must allow the event type</li>
+              <li><strong>Level 3:</strong> User must have SMS globally enabled in their profile</li>
+            </ol>
+            <p className="mt-2 text-muted-foreground">
+              All 3 levels must pass for SMS to be sent. Changes here affect all users with this role.
+            </p>
+          </AlertDescription>
+        </Alert>
+
         {/* Role Selector */}
         <div className="space-y-2">
           <Label>Select Custom Role</Label>
@@ -311,11 +236,24 @@ export function RoleNotificationSettings() {
           <>
             <Separator />
 
+            {/* Summary Stats */}
+            <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+              <div className="text-sm">
+                <span className="font-medium">{summary.enabled}</span> of{' '}
+                <span className="font-medium">{summary.total}</span> events enabled
+              </div>
+              <Badge variant={summary.enabled > 0 ? 'default' : 'secondary'}>
+                {summary.enabled > 0 ? 'Active' : 'Inactive'}
+              </Badge>
+            </div>
+
             {/* Modules Configuration */}
             <div className="space-y-6">
               {MODULES.map(module => {
-                const moduleRules = rules[module.value] || {};
-                const anyEnabled = Object.values(moduleRules).some(r => r.enabled);
+                const moduleRules = localEvents[module.value] || {};
+                const moduleEventsArray = Object.values(moduleRules);
+                const anyEnabled = moduleEventsArray.some(r => r.enabled);
+                const enabledCount = moduleEventsArray.filter(r => r.enabled).length;
 
                 return (
                   <Card key={module.value} className="border-2">
@@ -326,7 +264,7 @@ export function RoleNotificationSettings() {
                           <div>
                             <CardTitle className="text-base">{module.label}</CardTitle>
                             <CardDescription className="text-xs">
-                              {Object.values(moduleRules).filter(r => r.enabled).length} of {EVENTS.length} events enabled
+                              {enabledCount} of {EVENTS.length} events enabled
                             </CardDescription>
                           </div>
                         </div>
@@ -358,27 +296,26 @@ export function RoleNotificationSettings() {
                                 <Label className="font-medium text-sm cursor-pointer">
                                   {event.label}
                                 </Label>
+                                {rule.enabled && (
+                                  <Badge variant="default" className="text-xs">
+                                    SMS Enabled
+                                  </Badge>
+                                )}
                               </div>
                               <p className="text-xs text-muted-foreground pl-10">
                                 {event.description}
                               </p>
-                              {rule.enabled && (
-                                <div className="flex gap-2 pl-10 pt-2">
-                                  {CHANNELS.map(channel => {
-                                    const Icon = channel.icon;
-                                    const isActive = rule.channels?.includes(channel.value);
-                                    return (
-                                      <Badge
-                                        key={channel.value}
-                                        variant={isActive ? 'default' : 'outline'}
-                                        className="cursor-pointer hover:opacity-80 transition-opacity"
-                                        onClick={() => toggleChannel(module.value, event.value, channel.value)}
-                                      >
-                                        <Icon className="h-3 w-3 mr-1" />
-                                        {channel.label}
-                                      </Badge>
-                                    );
-                                  })}
+
+                              {/* Show special config for status_changed */}
+                              {rule.enabled && event.value === 'status_changed' && (
+                                <div className="pl-10 pt-2">
+                                  <p className="text-xs text-muted-foreground mb-1">
+                                    Allowed statuses: {
+                                      rule.event_config?.allowed_statuses?.length
+                                        ? rule.event_config.allowed_statuses.join(', ')
+                                        : 'All statuses'
+                                    }
+                                  </p>
                                 </div>
                               )}
                             </div>

@@ -34,7 +34,21 @@
       "Bash(cat:*)",
       "Bash(npm run dev:*)",
       "Bash(node:*)",
-      "Bash(npx:*)"
+      "Bash(npx:*)",
+      "Bash(for file in get_ready reports sales_orders service_orders chat)",
+      "Bash(do echo \"=== $file.json ===\")",
+      "Bash(done)",
+      "Bash(echo:*)",
+      "Bash(set PGPASSWORD=gTPuTjUnJgeLWHht0tyAjOTunbXkEVUprnXBGn1bL7M=:*)",
+      "Bash(test:*)",
+      "Bash(curl:*)",
+      "Bash(temp_dealers.json)",
+      "Bash(supabase/migrations/20251124171040_apply_detail_hub_cleanup_duplicates.sql)",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File open_sql_editor.ps1)",
+      "Bash(supabase db execute:*)",
+      "Bash(where.exe:*)",
+      "Bash(supabase migration:*)",
+      "Bash(supabase db push:*)"
     ],
     "deny": [],
     "ask": []

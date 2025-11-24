@@ -493,10 +493,10 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
           description: service?.description
         };
       }),
-      totalAmount: canViewPrices ? selectedServices.reduce((total, serviceId) => {
+      totalAmount: selectedServices.reduce((total, serviceId) => {
         const service = services.find((s: DealerService) => s.id === serviceId);
         return total + (service?.price || 0);
-      }, 0) : 0
+      }, 0)
     };
   };
 
@@ -547,7 +547,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
           const dbData = transformToDbFormat(formData);
           // Calculate total amount for THIS service only
           const service = services.find((s: DealerService) => s.id === serviceId);
-          const individualAmount = canViewPrices ? (service?.price || 0) : 0;
+          const individualAmount = service?.price || 0;
 
           return {
             ...dbData,

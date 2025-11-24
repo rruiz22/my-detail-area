@@ -109,6 +109,9 @@ export interface InvoiceItem {
   // Ordering
   sortOrder: number;
 
+  // Payment status
+  isPaid: boolean;
+
   // Metadata
   metadata: Record<string, any>;
 
@@ -361,6 +364,7 @@ export interface InvoiceItemRow {
   total_amount: number;
   service_reference: string | null;
   sort_order: number;
+  is_paid: boolean;
   metadata: any;
   created_at: string;
   updated_at: string | null;

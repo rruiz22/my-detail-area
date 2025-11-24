@@ -516,6 +516,92 @@ mcp__supabase__apply_migration("path/to/migration.sql")
 mcp__supabase__generate_typescript_types()
 ```
 
+### **Supabase CLI Configuration** 🔧
+
+**IMPORTANT**: Este proyecto usa **EXCLUSIVAMENTE conexión remota** a Supabase. No se usa Docker local.
+
+#### Configuración Actual
+```toml
+# supabase/config.toml
+project_id = "swfnnrpzpkdypbrzmgnr"
+```
+
+#### Variables de Entorno Requeridas
+```bash
+# .env
+SUPABASE_PROJECT_REF=swfnnrpzpkdypbrzmgnr
+SUPABASE_URL=https://swfnnrpzpkdypbrzmgnr.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGci... # Service role key
+```
+
+#### Comandos CLI (SIEMPRE con --linked)
+
+**✅ CORRECTO** - Usar siempre `--linked` para conexión remota:
+```bash
+# Ver migraciones
+supabase migration list --linked
+
+# Aplicar migraciones pendientes
+supabase db push
+
+# Crear nueva migración
+supabase migration new nombre_descripcion
+
+# Ejecutar SQL en remoto
+supabase db execute --linked -f archivo.sql
+
+# Ver diferencias de esquema
+supabase db diff --linked
+
+# Resetear migración local (si hay desincronización)
+supabase db reset --linked
+```
+
+**❌ INCORRECTO** - NO usar comandos locales:
+```bash
+supabase start        # ❌ Intenta iniciar Docker local (no usado)
+supabase status       # ❌ Verifica Docker local (no existe)
+supabase db reset     # ❌ Sin --linked resetea local
+```
+
+#### Setup Inicial CLI
+
+Si es primera vez configurando:
+```bash
+# 1. Login a Supabase (una sola vez)
+supabase login
+
+# 2. Vincular proyecto remoto
+supabase link --project-ref swfnnrpzpkdypbrzmgnr
+
+# 3. Verificar conexión
+supabase migration list --linked
+```
+
+#### Estructura de Migraciones
+
+**Formato obligatorio**: `YYYYMMDDHHMMSS_descripcion.sql`
+
+Ejemplos válidos:
+- ✅ `20251124171040_add_users_table.sql`
+- ✅ `20251125000000_fix_permissions.sql`
+- ❌ `fix_permissions.sql` (falta timestamp)
+- ❌ `README.md` (no es SQL)
+
+**Archivos ignorados por CLI**:
+- Archivos `.md` en `supabase/migrations/`
+- Archivos SQL sin formato timestamp
+- Prefijos como `URGENT_`, `APPLY_`, `TEST_`
+
+#### Sincronización de Migraciones
+
+**Estado actual** (Nov 2024):
+- ~380 migraciones solo locales
+- ~500+ migraciones aplicadas en remoto
+- **Estrategia**: Usar siempre `--linked` para trabajar con estado remoto
+
+**No intentar sincronizar todo** - Trabajar con el estado remoto como fuente de verdad.
+
 ### **Secondary MCP Servers** (Use when needed)
 
 | Server | Use Case |
@@ -530,6 +616,8 @@ mcp__supabase__generate_typescript_types()
 2. **Use MCP tools** when they provide better abstraction (migrations, type generation)
 3. **Avoid redundancy** - Don't use multiple MCP servers for the same task
 4. **MCP tool naming** - All MCP tools are prefixed with `mcp__<server>__<tool>`
+5. **ALWAYS use `--linked`** cuando uses Supabase CLI para operaciones remotas
+6. **Never use local Docker** - Este proyecto NO usa `supabase start`
 
 ---
 

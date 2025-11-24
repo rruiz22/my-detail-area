@@ -7,13 +7,12 @@
  * PHASE: Opción A - Real Database Integration
  */
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { CACHE_TIMES, GC_TIMES } from '@/constants/cacheConfig';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDealerFilter } from '@/contexts/DealerFilterContext';
 import { useToast } from '@/hooks/use-toast';
-import { CACHE_TIMES, GC_TIMES } from '@/constants/cacheConfig';
+import { supabase } from '@/integrations/supabase/client';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 // =====================================================
 // TYPES (matching database schema)
@@ -68,7 +67,7 @@ export interface DetailHubTimeEntry {
 
   // Punch Methods
   punch_in_method: 'face' | 'pin' | 'manual' | 'photo_fallback' | null;
-  punch_out_method: 'face' | 'pin' | 'manual' | 'photo_fallback' | null;
+  punch_out_method: 'face' | 'pin' | 'manual' | 'photo_fallback' | 'auto_close' | null;
   face_confidence_in: number | null;
   face_confidence_out: number | null;
 
@@ -305,20 +304,66 @@ export function useClockIn() {
       photoUrl?: string;
       faceConfidence?: number;
       kioskId?: string;
+      ipAddress?: string;
       scheduleId?: string; // NEW: Link to schedule
     }) => {
       if (!user) throw new Error('User not authenticated');
 
-      // Check if already clocked in
-      const { data: existing } = await supabase
+      // ========================================
+      // CRITICAL: Auto-close any open time entries
+      // ========================================
+      // This prevents duplicate active records when employee forgets to clock out
+      const { data: existingEntries, error: checkError } = await supabase
         .from('detail_hub_time_entries')
-        .select('id')
+        .select('id, clock_in, status')
         .eq('employee_id', params.employeeId)
-        .eq('status', 'active')
-        .maybeSingle();
+        .is('clock_out', null) // No clock out recorded
+        .order('clock_in', { ascending: false });
 
-      if (existing) {
-        throw new Error('Employee is already clocked in');
+      if (checkError) {
+        console.error('[ClockIn] Error checking existing entries:', checkError);
+      }
+
+      if (existingEntries && existingEntries.length > 0) {
+        console.warn(`[ClockIn] Found ${existingEntries.length} open time entries for employee ${params.employeeId}`);
+
+        // Auto-close all open entries older than 30 minutes
+        const now = new Date();
+        const thirtyMinutesAgo = new Date(now.getTime() - 30 * 60 * 1000);
+
+        const entriesToClose = existingEntries.filter(entry => {
+          const clockInTime = new Date(entry.clock_in);
+          return clockInTime < thirtyMinutesAgo;
+        });
+
+        if (entriesToClose.length > 0) {
+          console.warn(`[ClockIn] Auto-closing ${entriesToClose.length} old entries`);
+
+          // Close old entries with current timestamp
+          const { error: closeError } = await supabase
+            .from('detail_hub_time_entries')
+            .update({
+              clock_out: now.toISOString(),
+              punch_out_method: 'auto_close',
+              status: 'completed',
+              notes: 'Auto-closed by system when new clock-in was attempted'
+            })
+            .in('id', entriesToClose.map(e => e.id));
+
+          if (closeError) {
+            console.error('[ClockIn] Error auto-closing entries:', closeError);
+          }
+        }
+
+        // Check if there's still an active entry (created in last 30 min)
+        const recentActiveEntry = existingEntries.find(entry => {
+          const clockInTime = new Date(entry.clock_in);
+          return clockInTime >= thirtyMinutesAgo && entry.status === 'active';
+        });
+
+        if (recentActiveEntry) {
+          throw new Error('Employee clocked in less than 30 minutes ago. Please clock out first or contact supervisor.');
+        }
       }
 
       // Create time entry
@@ -333,6 +378,7 @@ export function useClockIn() {
           face_confidence_in: params.faceConfidence,
           requires_manual_verification: params.method === 'photo_fallback' || (params.faceConfidence ? params.faceConfidence < 80 : false),
           kiosk_id: params.kioskId,
+          ip_address: params.ipAddress,
           schedule_id: params.scheduleId, // NEW: Link to schedule (triggers auto-calculate variance)
           status: 'active'
         })
@@ -340,6 +386,8 @@ export function useClockIn() {
         .single();
 
       if (error) throw error;
+
+      console.log('[ClockIn] Successfully created new time entry:', data.id);
       return data as DetailHubTimeEntry;
     },
     onSuccess: (data) => {
@@ -376,6 +424,8 @@ export function useClockOut() {
       method?: 'face' | 'pin' | 'manual' | 'photo_fallback';
       photoUrl?: string;
       faceConfidence?: number;
+      kioskId?: string;
+      ipAddress?: string;
     }) => {
       // Find active time entry
       const { data: activeEntry, error: fetchError } = await supabase
@@ -396,6 +446,8 @@ export function useClockOut() {
           punch_out_method: params.method || 'manual',
           photo_out_url: params.photoUrl,
           face_confidence_out: params.faceConfidence,
+          kiosk_id: params.kioskId || activeEntry.kiosk_id, // Update if provided, keep existing if not
+          ip_address: params.ipAddress || activeEntry.ip_address, // Update if provided, keep existing if not
           // Hours and status will be auto-calculated by database trigger
         })
         .eq('id', activeEntry.id)
@@ -438,6 +490,8 @@ export function useStartBreak() {
       method?: 'face' | 'pin' | 'manual' | 'photo_fallback';
       photoUrl?: string;
       faceConfidence?: number;
+      kioskId?: string;
+      ipAddress?: string;
     }) => {
       // Find active time entry
       const { data: activeEntry, error: fetchError } = await supabase
@@ -459,6 +513,8 @@ export function useStartBreak() {
         .update({
           break_start: new Date().toISOString(),
           break_end: null, // Reset break_end for new break
+          kiosk_id: params.kioskId || activeEntry.kiosk_id, // Update if provided, keep existing if not
+          ip_address: params.ipAddress || activeEntry.ip_address, // Update if provided, keep existing if not
         })
         .eq('id', activeEntry.id)
         .select()
@@ -497,6 +553,8 @@ export function useEndBreak() {
       method?: 'face' | 'pin' | 'manual' | 'photo_fallback';
       photoUrl?: string;
       faceConfidence?: number;
+      kioskId?: string;
+      ipAddress?: string;
     }) => {
       // Find active time entry
       const { data: activeEntry, error: fetchError } = await supabase
@@ -531,7 +589,9 @@ export function useEndBreak() {
         .from('detail_hub_time_entries')
         .update({
           break_end: breakEnd.toISOString(),
-          break_duration_minutes: breakDurationMinutes
+          break_duration_minutes: breakDurationMinutes,
+          kiosk_id: params.kioskId || activeEntry.kiosk_id,
+          ip_address: params.ipAddress || activeEntry.ip_address,
         })
         .eq('id', activeEntry.id)
         .select()

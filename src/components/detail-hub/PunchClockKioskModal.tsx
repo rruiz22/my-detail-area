@@ -330,29 +330,24 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     }
   }, [open, KIOSK_ID, toast, t, onClose]);
 
+  // IP Detection - Shared utility for heartbeat and punch operations
+  const detectAndCacheIP = useCallback(async () => {
+    try {
+      // Try to import network detection utility
+      const { detectBestIP } = await import('@/utils/networkDetection');
+      const { ip } = await detectBestIP();
+      console.log('[Kiosk] 🌐 IP detected:', ip || 'none');
+      return ip;
+    } catch (error) {
+      console.error('[Kiosk] ⚠️ IP detection failed:', error);
+      return null;
+    }
+  }, []);
+
   // Kiosk Heartbeat System - Updates kiosk status to "online" and sends periodic heartbeats with IP
   useEffect(() => {
     if (open && kioskConfig.kiosk_code) {
       console.log('[Kiosk] 💓 Starting heartbeat system for kiosk:', kioskConfig.kiosk_code);
-
-      // Detect IP once at the start
-      let detectedIP: string | null = null;
-
-      const detectAndCacheIP = async () => {
-        if (detectedIP) return detectedIP; // Use cached IP
-
-        try {
-          // Try to import network detection utility
-          const { detectBestIP } = await import('@/utils/networkDetection');
-          const { ip } = await detectBestIP();
-          detectedIP = ip;
-          console.log('[Kiosk] 🌐 IP detected:', ip || 'none');
-          return ip;
-        } catch (error) {
-          console.error('[Kiosk] ⚠️ IP detection failed:', error);
-          return null;
-        }
-      };
 
       // Send heartbeat with IP
       const sendHeartbeat = async () => {
@@ -640,6 +635,13 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     setPhotoUploadStatus(t('detail_hub.punch_clock.messages.uploading'));
 
     try {
+      // Get current IP address for audit trail
+      const currentIp = await detectAndCacheIP();
+
+      // Debug: Log kiosk info before punch
+      console.log('[Punch Debug] Kiosk Code:', kioskConfig.kiosk_code);
+      console.log('[Punch Debug] IP Address:', currentIp);
+
       // Upload photo to Supabase Storage
       const uploadResult = await uploadPhotoToStorage(capturedPhoto, {
         employeeId: selectedEmployee.id,
@@ -665,7 +667,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
             dealershipId: selectedDealerId as number,
             method: 'photo_fallback',
             photoUrl: uploadResult.photoUrl,
-            kioskId: isValidUUID(KIOSK_ID) ? KIOSK_ID : undefined
+            kioskId: kioskConfig.kiosk_code || undefined,
+            ipAddress: currentIp || undefined
             // scheduleId: schedule?.id // Disabled until trigger is fixed
           });
           toast({
@@ -678,7 +681,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
           await clockOut({
             employeeId: selectedEmployee.id,
             method: 'photo_fallback',
-            photoUrl: uploadResult.photoUrl
+            photoUrl: uploadResult.photoUrl,
+            kioskId: kioskConfig.kiosk_code || undefined,
+            ipAddress: currentIp || undefined
           });
           toast({
             title: t('detail_hub.toasts.clocked_out'),
@@ -690,7 +695,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
           await startBreak({
             employeeId: selectedEmployee.id,
             method: 'photo_fallback',
-            photoUrl: uploadResult.photoUrl
+            photoUrl: uploadResult.photoUrl,
+            kioskId: kioskConfig.kiosk_code || undefined,
+            ipAddress: currentIp || undefined
           });
           toast({
             title: t('detail_hub.toasts.break_started'),
@@ -702,7 +709,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
           await endBreak({
             employeeId: selectedEmployee.id,
             method: 'photo_fallback',
-            photoUrl: uploadResult.photoUrl
+            photoUrl: uploadResult.photoUrl,
+            kioskId: kioskConfig.kiosk_code || undefined,
+            ipAddress: currentIp || undefined
           });
           toast({
             title: t('detail_hub.toasts.break_ended'),

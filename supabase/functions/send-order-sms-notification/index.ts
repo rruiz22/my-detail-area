@@ -684,29 +684,24 @@ async function checkRateLimits(
   const eligible: SMSRecipient[] = [];
 
   for (const user of users) {
-    const { data: prefs } = await supabase
-      .from('user_sms_notification_preferences')
-      .select('max_sms_per_hour, max_sms_per_day, quiet_hours_enabled, quiet_hours_start, quiet_hours_end')
-      .eq('user_id', user.id)
-      .eq('dealer_id', dealerId)
-      .eq('module', module)
-      .single();
+    // SIMPLIFIED ARCHITECTURE (2025-11-22): Use system-wide defaults
+    // Removed: user_sms_notification_preferences table lookup
+    // Reason: Level 3 already validated phone + global SMS toggle
+    // Rate limits now apply uniformly to all users
+    const maxPerHour = 10;
+    const maxPerDay = 50;
+    const quietHoursEnabled = false;
 
-    if (!prefs) {
-      console.log(`⚠️ No preferences found for user ${user.id}, skipping`);
-      continue;
-    }
+    console.log(`✅ User ${user.id} - using default rate limits (${maxPerHour}/hr, ${maxPerDay}/day)`);
 
-    const maxPerHour = prefs.max_sms_per_hour || 10;
-    const maxPerDay = prefs.max_sms_per_day || 50;
-
-    if (prefs.quiet_hours_enabled) {
+    // Quiet hours removed - users can configure DND on their devices
+    if (quietHoursEnabled) {
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
       const currentTimeMinutes = currentHour * 60 + currentMinute;
 
-      const [quietStartHour, quietStartMin] = (prefs.quiet_hours_start || '22:00').split(':').map(Number);
-      const [quietEndHour, quietEndMin] = (prefs.quiet_hours_end || '08:00').split(':').map(Number);
+      const [quietStartHour, quietStartMin] = '22:00'.split(':').map(Number);
+      const [quietEndHour, quietEndMin] = '08:00'.split(':').map(Number);
       const quietStartMinutes = quietStartHour * 60 + quietStartMin;
       const quietEndMinutes = quietEndHour * 60 + quietEndMin;
 

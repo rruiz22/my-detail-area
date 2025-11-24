@@ -78,10 +78,11 @@ export function KioskDetailModal({ kiosk, open, onClose }: KioskDetailModalProps
           clock_out,
           break_start,
           break_end,
-          method,
+          punch_in_method,
+          punch_out_method,
           employees:detail_hub_employees(first_name, last_name, employee_number)
         `)
-        .eq('kiosk_id', kiosk.id)
+        .eq('kiosk_id', kiosk.kiosk_code)
         .order('clock_in', { ascending: false })
         .limit(20);
 
@@ -98,7 +99,29 @@ export function KioskDetailModal({ kiosk, open, onClose }: KioskDetailModalProps
             employee_number: entry.employees?.employee_number || 'N/A',
             action: 'clock_in',
             timestamp: entry.clock_in,
-            method: entry.method || 'unknown',
+            method: entry.punch_in_method || 'unknown',
+          });
+        }
+        if (entry.break_start) {
+          activities.push({
+            id: `${entry.id}-break-start`,
+            employee_id: entry.employee_id,
+            employee_name: `${entry.employees?.first_name} ${entry.employees?.last_name}`,
+            employee_number: entry.employees?.employee_number || 'N/A',
+            action: 'break_start',
+            timestamp: entry.break_start,
+            method: entry.punch_in_method || 'unknown',
+          });
+        }
+        if (entry.break_end) {
+          activities.push({
+            id: `${entry.id}-break-end`,
+            employee_id: entry.employee_id,
+            employee_name: `${entry.employees?.first_name} ${entry.employees?.last_name}`,
+            employee_number: entry.employees?.employee_number || 'N/A',
+            action: 'break_end',
+            timestamp: entry.break_end,
+            method: entry.punch_out_method || 'unknown',
           });
         }
         if (entry.clock_out) {
@@ -109,7 +132,7 @@ export function KioskDetailModal({ kiosk, open, onClose }: KioskDetailModalProps
             employee_number: entry.employees?.employee_number || 'N/A',
             action: 'clock_out',
             timestamp: entry.clock_out,
-            method: entry.method || 'unknown',
+            method: entry.punch_out_method || 'unknown',
           });
         }
       });
@@ -131,9 +154,9 @@ export function KioskDetailModal({ kiosk, open, onClose }: KioskDetailModalProps
         .from('detail_hub_time_entries')
         .select(`
           employee_id,
-          employees:detail_hub_employees(first_name, last_name, employee_number, photo_url)
+          employees:detail_hub_employees(first_name, last_name, employee_number)
         `)
-        .eq('kiosk_id', kiosk.id);
+        .eq('kiosk_id', kiosk.kiosk_code);
 
       if (error) throw error;
 
@@ -145,7 +168,6 @@ export function KioskDetailModal({ kiosk, open, onClose }: KioskDetailModalProps
             id: entry.employee_id,
             name: `${entry.employees?.first_name} ${entry.employees?.last_name}`,
             employee_number: entry.employees?.employee_number,
-            photo_url: entry.employees?.photo_url,
           });
         }
       });
@@ -211,7 +233,10 @@ export function KioskDetailModal({ kiosk, open, onClose }: KioskDetailModalProps
               <Monitor className="w-6 h-6 text-gray-700" />
               <div>
                 <DialogTitle className="text-2xl">{kiosk.name}</DialogTitle>
-                <DialogDescription className="flex items-center gap-2 mt-1">
+                <DialogDescription className="sr-only">
+                  View detailed information, activity logs, and settings for {kiosk.name}
+                </DialogDescription>
+                <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
                   <Badge variant="outline" className="font-mono">
                     {kiosk.kiosk_code}
                   </Badge>
@@ -219,7 +244,7 @@ export function KioskDetailModal({ kiosk, open, onClose }: KioskDetailModalProps
                     <div className={`w-2 h-2 rounded-full ${getStatusColor(kiosk.status)} animate-pulse`} />
                     <span className="text-xs capitalize">{kiosk.status}</span>
                   </div>
-                </DialogDescription>
+                </div>
               </div>
             </div>
           </div>

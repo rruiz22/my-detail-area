@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { Monitor, Settings, Camera, AlertTriangle, CheckCircle, Plus, Edit, Trash2, Activity, Info } from "lucide-react";
+import { Monitor, Settings, Camera, AlertTriangle, CheckCircle, Plus, Edit, Trash2, Activity, Info, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 
 // REAL DATABASE INTEGRATION
@@ -22,14 +22,17 @@ import {
   generateKioskCode,
   type DetailHubKiosk
 } from "@/hooks/useDetailHubKiosks";
+import { useDetailHubEmployees } from "@/hooks/useDetailHubDatabase";
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
 import { KioskDetailModal } from "./KioskDetailModal";
+import { GenerateRemoteKioskModal } from "./GenerateRemoteKioskModal";
 
 const KioskManager = () => {
   const { t } = useTranslation();
   const [isAddingKiosk, setIsAddingKiosk] = useState(false);
   const [editingKiosk, setEditingKiosk] = useState<DetailHubKiosk | null>(null);
   const [viewingKiosk, setViewingKiosk] = useState<DetailHubKiosk | null>(null);
+  const [remoteKioskModalOpen, setRemoteKioskModalOpen] = useState(false);
 
   // Form state - Simplified (removed unused fields: IP, MAC, brightness, volume, kioskMode)
   const [name, setName] = useState("");
@@ -43,6 +46,7 @@ const KioskManager = () => {
   // REAL DATABASE INTEGRATION
   const { data: kiosks = [], isLoading, error } = useDetailHubKiosks();
   const { data: stats } = useKioskStatistics();
+  const { data: employees = [] } = useDetailHubEmployees();
   const { mutate: createKiosk, isPending: isCreating } = useCreateKiosk();
   const { mutate: updateKiosk, isPending: isUpdating } = useUpdateKiosk();
   const { mutate: deleteKiosk } = useDeleteKiosk();
@@ -188,19 +192,28 @@ const KioskManager = () => {
           <h1 className="text-3xl font-bold tracking-tight">{t('detail_hub.kiosk_manager.title')}</h1>
           <p className="text-muted-foreground">{t('detail_hub.kiosk_manager.subtitle')}</p>
         </div>
-        <Dialog open={isAddingKiosk || !!editingKiosk} onOpenChange={(open) => {
-          if (!open) {
-            setIsAddingKiosk(false);
-            setEditingKiosk(null);
-            resetForm();
-          }
-        }}>
-          <DialogTrigger asChild>
-            <Button onClick={() => setIsAddingKiosk(true)} disabled={selectedDealerId === 'all'}>
-              <Plus className="w-4 h-4 mr-2" />
-              {t('detail_hub.kiosk_manager.add_kiosk')}
-            </Button>
-          </DialogTrigger>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => setRemoteKioskModalOpen(true)}
+            variant="outline"
+            disabled={selectedDealerId === 'all'}
+          >
+            <ExternalLink className="w-4 h-4 mr-2" />
+            {t('detail_hub.kiosk_manager.generate_remote_access')}
+          </Button>
+          <Dialog open={isAddingKiosk || !!editingKiosk} onOpenChange={(open) => {
+            if (!open) {
+              setIsAddingKiosk(false);
+              setEditingKiosk(null);
+              resetForm();
+            }
+          }}>
+            <DialogTrigger asChild>
+              <Button onClick={() => setIsAddingKiosk(true)} disabled={selectedDealerId === 'all'}>
+                <Plus className="w-4 h-4 mr-2" />
+                {t('detail_hub.kiosk_manager.add_kiosk')}
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
@@ -301,6 +314,7 @@ const KioskManager = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {/* System Overview */}
@@ -441,6 +455,22 @@ const KioskManager = () => {
         kiosk={viewingKiosk}
         open={!!viewingKiosk}
         onClose={() => setViewingKiosk(null)}
+      />
+
+      {/* Remote Kiosk Access Generator */}
+      <GenerateRemoteKioskModal
+        open={remoteKioskModalOpen}
+        onClose={() => setRemoteKioskModalOpen(false)}
+        dealershipId={selectedDealerId === 'all' ? 0 : Number(selectedDealerId)}
+        employees={employees
+          .filter((emp) => emp.status === 'active')
+          .map((emp) => ({
+            id: emp.id,
+            first_name: emp.first_name,
+            last_name: emp.last_name,
+            employee_number: emp.employee_number,
+          }))
+        }
       />
     </div>
   );
