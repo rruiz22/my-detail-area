@@ -214,6 +214,7 @@ export const useInvoice = (invoiceId: string) => {
           totalAmount: parseFloat(item.total_amount),
           serviceReference: item.service_reference,
           sortOrder: item.sort_order,
+          isPaid: item.is_paid || false,
           metadata: {
             ...(item.metadata || {}),
             // Add order info from RPC

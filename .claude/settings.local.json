@@ -48,7 +48,8 @@
       "Bash(supabase db execute:*)",
       "Bash(where.exe:*)",
       "Bash(supabase migration:*)",
-      "Bash(supabase db push:*)"
+      "Bash(supabase db push:*)",
+      "Bash(supabase projects:*)"
     ],
     "deny": [],
     "ask": []

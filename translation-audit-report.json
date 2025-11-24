@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 911,
-  "totalStrings": 10592,
-  "hardcodedStrings": 2156,
-  "translatedStrings": 8436,
+  "scannedFiles": 913,
+  "totalStrings": 10660,
+  "hardcodedStrings": 2162,
+  "translatedStrings": 8498,
   "issues": {
     "critical": [
       {
@@ -418,158 +418,158 @@
         "hardcodedStrings": [
           {
             "text": "Overview",
-            "line": 230,
-            "context": "229: <TabsList className=\"grid w-full grid-cols-4\">\n230: <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n231: <TabsTrigger value=\"activity\">Activity</TabsTrigger>"
+            "line": 255,
+            "context": "254: <TabsList className=\"grid w-full grid-cols-4\">\n255: <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n256: <TabsTrigger value=\"activity\">Activity</TabsTrigger>"
           },
           {
             "text": "Activity",
-            "line": 231,
-            "context": "230: <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n231: <TabsTrigger value=\"activity\">Activity</TabsTrigger>\n232: <TabsTrigger value=\"employees\">Employees</TabsTrigger>"
+            "line": 256,
+            "context": "255: <TabsTrigger value=\"overview\">Overview</TabsTrigger>\n256: <TabsTrigger value=\"activity\">Activity</TabsTrigger>\n257: <TabsTrigger value=\"employees\">Employees</TabsTrigger>"
           },
           {
             "text": "Employees",
-            "line": 232,
-            "context": "231: <TabsTrigger value=\"activity\">Activity</TabsTrigger>\n232: <TabsTrigger value=\"employees\">Employees</TabsTrigger>\n233: <TabsTrigger value=\"settings\">Settings</TabsTrigger>"
+            "line": 257,
+            "context": "256: <TabsTrigger value=\"activity\">Activity</TabsTrigger>\n257: <TabsTrigger value=\"employees\">Employees</TabsTrigger>\n258: <TabsTrigger value=\"settings\">Settings</TabsTrigger>"
           },
           {
             "text": "Settings",
-            "line": 233,
-            "context": "232: <TabsTrigger value=\"employees\">Employees</TabsTrigger>\n233: <TabsTrigger value=\"settings\">Settings</TabsTrigger>\n234: </TabsList>"
+            "line": 258,
+            "context": "257: <TabsTrigger value=\"employees\">Employees</TabsTrigger>\n258: <TabsTrigger value=\"settings\">Settings</TabsTrigger>\n259: </TabsList>"
           },
           {
             "text": "Location",
-            "line": 249,
-            "context": "248: <div>\n249: <p className=\"text-xs text-muted-foreground\">Location</p>\n250: <p className=\"text-sm font-medium\">{kiosk.location || 'Not set'}</p>"
+            "line": 274,
+            "context": "273: <div>\n274: <p className=\"text-xs text-muted-foreground\">Location</p>\n275: <p className=\"text-sm font-medium\">{kiosk.location || 'Not set'}</p>"
           },
           {
             "text": "Status",
-            "line": 253,
-            "context": "252: <div>\n253: <p className=\"text-xs text-muted-foreground\">Status</p>\n254: <Badge"
+            "line": 278,
+            "context": "277: <div>\n278: <p className=\"text-xs text-muted-foreground\">Status</p>\n279: <Badge"
           },
           {
             "text": "Camera",
-            "line": 262,
-            "context": "261: <div>\n262: <p className=\"text-xs text-muted-foreground\">Camera</p>\n263: <Badge"
+            "line": 287,
+            "context": "286: <div>\n287: <p className=\"text-xs text-muted-foreground\">Camera</p>\n288: <Badge"
           },
           {
             "text": "Statistics",
-            "line": 277,
-            "context": "276: <CardTitle className=\"text-sm font-medium flex items-center gap-2\">\n277: <BarChart3 className=\"w-4 h-4\" />\n278: Statistics"
+            "line": 302,
+            "context": "301: <CardTitle className=\"text-sm font-medium flex items-center gap-2\">\n302: <BarChart3 className=\"w-4 h-4\" />\n303: Statistics"
           },
           {
             "text": "Total Punches",
-            "line": 283,
-            "context": "282: <div>\n283: <p className=\"text-xs text-muted-foreground\">Total Punches</p>\n284: <p className=\"text-2xl font-bold\">{kiosk.total_punches}</p>"
+            "line": 308,
+            "context": "307: <div>\n308: <p className=\"text-xs text-muted-foreground\">Total Punches</p>\n309: <p className=\"text-2xl font-bold\">{kiosk.total_punches}</p>"
           },
           {
             "text": "Punches Today",
-            "line": 287,
-            "context": "286: <div>\n287: <p className=\"text-xs text-muted-foreground\">Punches Today</p>\n288: <p className=\"text-xl font-semibold text-emerald-600\">{kiosk.punches_today}</p>"
+            "line": 312,
+            "context": "311: <div>\n312: <p className=\"text-xs text-muted-foreground\">Punches Today</p>\n313: <p className=\"text-xl font-semibold text-emerald-600\">{kiosk.punches_today}</p>"
           },
           {
             "text": "IP Address",
-            "line": 304,
-            "context": "303: <div>\n304: <p className=\"text-xs text-muted-foreground\">IP Address</p>\n305: <div className=\"flex items-center gap-2\">"
+            "line": 329,
+            "context": "328: <div>\n329: <p className=\"text-xs text-muted-foreground\">IP Address</p>\n330: <div className=\"flex items-center gap-2\">"
           },
           {
             "text": "MAC Address",
-            "line": 319,
-            "context": "318: <div>\n319: <p className=\"text-xs text-muted-foreground\">MAC Address</p>\n320: <p className=\"text-sm font-mono\">{kiosk.mac_address || 'Not configured'}</p>"
+            "line": 344,
+            "context": "343: <div>\n344: <p className=\"text-xs text-muted-foreground\">MAC Address</p>\n345: <p className=\"text-sm font-mono\">{kiosk.mac_address || 'Not configured'}</p>"
           },
           {
             "text": "Last Ping",
-            "line": 323,
-            "context": "322: <div>\n323: <p className=\"text-xs text-muted-foreground\">Last Ping</p>\n324: <p className=\"text-sm\">"
+            "line": 348,
+            "context": "347: <div>\n348: <p className=\"text-xs text-muted-foreground\">Last Ping</p>\n349: <p className=\"text-sm\">"
           },
           {
             "text": "Last Heartbeat",
-            "line": 331,
-            "context": "330: <div>\n331: <p className=\"text-xs text-muted-foreground\">Last Heartbeat</p>\n332: <p className=\"text-sm\">"
+            "line": 356,
+            "context": "355: <div>\n356: <p className=\"text-xs text-muted-foreground\">Last Heartbeat</p>\n357: <p className=\"text-sm\">"
           },
           {
             "text": "Last Activity",
-            "line": 345,
-            "context": "344: <CardTitle className=\"text-sm font-medium flex items-center gap-2\">\n345: <Clock className=\"w-4 h-4\" />\n346: Last Activity"
+            "line": 370,
+            "context": "369: <CardTitle className=\"text-sm font-medium flex items-center gap-2\">\n370: <Clock className=\"w-4 h-4\" />\n371: Last Activity"
           },
           {
             "text": "Last Punch",
-            "line": 352,
-            "context": "351: <div>\n352: <p className=\"text-xs text-muted-foreground\">Last Punch</p>\n353: <p className=\"text-sm font-medium\">"
+            "line": 377,
+            "context": "376: <div>\n377: <p className=\"text-xs text-muted-foreground\">Last Punch</p>\n378: <p className=\"text-sm font-medium\">"
           },
           {
             "text": "Created",
-            "line": 360,
-            "context": "359: <div>\n360: <p className=\"text-xs text-muted-foreground\">Created</p>\n361: <p className=\"text-sm\">"
+            "line": 385,
+            "context": "384: <div>\n385: <p className=\"text-xs text-muted-foreground\">Created</p>\n386: <p className=\"text-sm\">"
           },
           {
             "text": "No activity yet",
-            "line": 383,
-            "context": "382: ) : recentActivity.length === 0 ? (\n383: <p className=\"text-sm text-muted-foreground text-center py-8\">No activity yet</p>\n384: ) : ("
+            "line": 408,
+            "context": "407: ) : recentActivity.length === 0 ? (\n408: <p className=\"text-sm text-muted-foreground text-center py-8\">No activity yet</p>\n409: ) : ("
           },
           {
             "text": "No employees have used this kiosk yet",
-            "line": 429,
-            "context": "428: ) : uniqueEmployees.length === 0 ? (\n429: <p className=\"text-sm text-muted-foreground text-center py-8\">No employees have used this kiosk yet</p>\n430: ) : ("
+            "line": 454,
+            "context": "453: ) : uniqueEmployees.length === 0 ? (\n454: <p className=\"text-sm text-muted-foreground text-center py-8\">No employees have used this kiosk yet</p>\n455: ) : ("
           },
           {
             "text": "Kiosk Configuration",
-            "line": 457,
-            "context": "456: <CardTitle className=\"text-sm font-medium flex items-center gap-2\">\n457: <Settings className=\"w-4 h-4\" />\n458: Kiosk Configuration"
+            "line": 482,
+            "context": "481: <CardTitle className=\"text-sm font-medium flex items-center gap-2\">\n482: <Settings className=\"w-4 h-4\" />\n483: Kiosk Configuration"
           },
           {
             "text": "Face Recognition",
-            "line": 467,
-            "context": "466: <div>\n467: <p className=\"text-sm font-medium\">Face Recognition</p>\n468: <p className=\"text-xs text-muted-foreground\">Enable facial recognition login</p>"
+            "line": 492,
+            "context": "491: <div>\n492: <p className=\"text-sm font-medium\">Face Recognition</p>\n493: <p className=\"text-xs text-muted-foreground\">Enable facial recognition login</p>"
           },
           {
             "text": "Enable facial recognition login",
-            "line": 468,
-            "context": "467: <p className=\"text-sm font-medium\">Face Recognition</p>\n468: <p className=\"text-xs text-muted-foreground\">Enable facial recognition login</p>\n469: </div>"
+            "line": 493,
+            "context": "492: <p className=\"text-sm font-medium\">Face Recognition</p>\n493: <p className=\"text-xs text-muted-foreground\">Enable facial recognition login</p>\n494: </div>"
           },
           {
             "text": "Manual Entry",
-            "line": 483,
-            "context": "482: <div>\n483: <p className=\"text-sm font-medium\">Manual Entry</p>\n484: <p className=\"text-xs text-muted-foreground\">Allow manual employee search</p>"
+            "line": 508,
+            "context": "507: <div>\n508: <p className=\"text-sm font-medium\">Manual Entry</p>\n509: <p className=\"text-xs text-muted-foreground\">Allow manual employee search</p>"
           },
           {
             "text": "Allow manual employee search",
-            "line": 484,
-            "context": "483: <p className=\"text-sm font-medium\">Manual Entry</p>\n484: <p className=\"text-xs text-muted-foreground\">Allow manual employee search</p>\n485: </div>"
+            "line": 509,
+            "context": "508: <p className=\"text-sm font-medium\">Manual Entry</p>\n509: <p className=\"text-xs text-muted-foreground\">Allow manual employee search</p>\n510: </div>"
           },
           {
             "text": "Session timeout duration",
-            "line": 500,
-            "context": "499: <p className=\"text-sm font-medium\">Auto-Logout Timeout</p>\n500: <p className=\"text-xs text-muted-foreground\">Session timeout duration</p>\n501: </div>"
+            "line": 525,
+            "context": "524: <p className=\"text-sm font-medium\">Auto-Logout Timeout</p>\n525: <p className=\"text-xs text-muted-foreground\">Session timeout duration</p>\n526: </div>"
           },
           {
             "text": "Display Settings",
-            "line": 509,
-            "context": "508: <div className=\"space-y-3\">\n509: <p className=\"text-sm font-medium text-gray-700\">Display Settings</p>\n510: <div className=\"grid grid-cols-2 gap-3\">"
+            "line": 534,
+            "context": "533: <div className=\"space-y-3\">\n534: <p className=\"text-sm font-medium text-gray-700\">Display Settings</p>\n535: <div className=\"grid grid-cols-2 gap-3\">"
           },
           {
             "text": "Brightness",
-            "line": 512,
-            "context": "511: <div className=\"p-3 border rounded-lg\">\n512: <p className=\"text-xs text-muted-foreground\">Brightness</p>\n513: <p className=\"text-sm font-medium\">{kiosk.screen_brightness}%</p>"
+            "line": 537,
+            "context": "536: <div className=\"p-3 border rounded-lg\">\n537: <p className=\"text-xs text-muted-foreground\">Brightness</p>\n538: <p className=\"text-sm font-medium\">{kiosk.screen_brightness}%</p>"
           },
           {
             "text": "Volume",
-            "line": 516,
-            "context": "515: <div className=\"p-3 border rounded-lg\">\n516: <p className=\"text-xs text-muted-foreground\">Volume</p>\n517: <p className=\"text-sm font-medium\">{kiosk.volume}%</p>"
+            "line": 541,
+            "context": "540: <div className=\"p-3 border rounded-lg\">\n541: <p className=\"text-xs text-muted-foreground\">Volume</p>\n542: <p className=\"text-sm font-medium\">{kiosk.volume}%</p>"
           },
           {
             "text": "Theme",
-            "line": 524,
-            "context": "523: <div className=\"p-3 border rounded-lg\">\n524: <p className=\"text-xs text-muted-foreground\">Theme</p>\n525: <p className=\"text-sm font-medium capitalize\">{kiosk.theme || 'Default'}</p>"
+            "line": 549,
+            "context": "548: <div className=\"p-3 border rounded-lg\">\n549: <p className=\"text-xs text-muted-foreground\">Theme</p>\n550: <p className=\"text-sm font-medium capitalize\">{kiosk.theme || 'Default'}</p>"
           },
           {
             "text": "Close",
-            "line": 533,
-            "context": "532: <div className=\"flex justify-end gap-2 mt-4\">\n533: <Button variant=\"outline\" onClick={onClose}>\n534: Close"
+            "line": 558,
+            "context": "557: <div className=\"flex justify-end gap-2 mt-4\">\n558: <Button variant=\"outline\" onClick={onClose}>\n559: Close"
           },
           {
             "text": "Close\r\n          ",
-            "line": 533,
-            "context": "532: <div className=\"flex justify-end gap-2 mt-4\">\n533: <Button variant=\"outline\" onClick={onClose}>\n534: Close"
+            "line": 558,
+            "context": "557: <div className=\"flex justify-end gap-2 mt-4\">\n558: <Button variant=\"outline\" onClick={onClose}>\n559: Close"
           }
         ],
         "translationCalls": [],
@@ -901,295 +901,305 @@
         "hardcodedStrings": [
           {
             "text": "Maintenance",
-            "line": 59,
-            "context": "58: case \"maintenance\":\n59: return <Badge variant=\"secondary\">Maintenance</Badge>;\n60: default:"
+            "line": 63,
+            "context": "62: case \"maintenance\":\n63: return <Badge variant=\"secondary\">Maintenance</Badge>;\n64: default:"
           },
           {
             "text": "Active",
-            "line": 79,
-            "context": "78: case \"active\":\n79: return <Badge className=\"bg-green-100 text-green-800\">Active</Badge>;\n80: case \"inactive\":"
+            "line": 83,
+            "context": "82: case \"active\":\n83: return <Badge className=\"bg-green-100 text-green-800\">Active</Badge>;\n84: case \"inactive\":"
           },
           {
             "text": "Inactive",
-            "line": 81,
-            "context": "80: case \"inactive\":\n81: return <Badge variant=\"secondary\">Inactive</Badge>;\n82: case \"error\":"
+            "line": 85,
+            "context": "84: case \"inactive\":\n85: return <Badge variant=\"secondary\">Inactive</Badge>;\n86: case \"error\":"
           },
           {
             "text": "Error",
-            "line": 83,
-            "context": "82: case \"error\":\n83: return <Badge variant=\"destructive\">Error</Badge>;\n84: default:"
+            "line": 87,
+            "context": "86: case \"error\":\n87: return <Badge variant=\"destructive\">Error</Badge>;\n88: default:"
           },
           {
             "text": "Error loading kiosks",
-            "line": 178,
-            "context": "177: <AlertTriangle className=\"w-12 h-12 text-destructive mx-auto mb-4\" />\n178: <p className=\"text-destructive\">Error loading kiosks</p>\n179: </div>"
+            "line": 182,
+            "context": "181: <AlertTriangle className=\"w-12 h-12 text-destructive mx-auto mb-4\" />\n182: <p className=\"text-destructive\">Error loading kiosks</p>\n183: </div>"
           },
           {
             "text": "Enable facial recognition for employee login",
-            "line": 249,
-            "context": "248: <Label htmlFor=\"faceRecognition\">{t('detail_hub.kiosk_manager.features.face_recognition_enabled')}</Label>\n249: <p className=\"text-xs text-muted-foreground\">Enable facial recognition for employee login</p>\n250: </div>"
+            "line": 262,
+            "context": "261: <Label htmlFor=\"faceRecognition\">{t('detail_hub.kiosk_manager.features.face_recognition_enabled')}</Label>\n262: <p className=\"text-xs text-muted-foreground\">Enable facial recognition for employee login</p>\n263: </div>"
           },
           {
             "text": "Allow Manual Entry",
-            "line": 259,
-            "context": "258: <div className=\"space-y-1\">\n259: <Label htmlFor=\"allowManual\">Allow Manual Entry</Label>\n260: <p className=\"text-xs text-muted-foreground\">Allow employees to search and login manually</p>"
+            "line": 272,
+            "context": "271: <div className=\"space-y-1\">\n272: <Label htmlFor=\"allowManual\">Allow Manual Entry</Label>\n273: <p className=\"text-xs text-muted-foreground\">Allow employees to search and login manually</p>"
           },
           {
             "text": "Allow employees to search and login manually",
-            "line": 260,
-            "context": "259: <Label htmlFor=\"allowManual\">Allow Manual Entry</Label>\n260: <p className=\"text-xs text-muted-foreground\">Allow employees to search and login manually</p>\n261: </div>"
+            "line": 273,
+            "context": "272: <Label htmlFor=\"allowManual\">Allow Manual Entry</Label>\n273: <p className=\"text-xs text-muted-foreground\">Allow employees to search and login manually</p>\n274: </div>"
           },
           {
             "text": "Total Kiosks",
-            "line": 312,
-            "context": "311: <div>\n312: <p className=\"text-sm font-medium text-muted-foreground\">Total Kiosks</p>\n313: <p className=\"text-2xl font-bold\">{stats?.total_kiosks || 0}</p>"
+            "line": 326,
+            "context": "325: <div>\n326: <p className=\"text-sm font-medium text-muted-foreground\">Total Kiosks</p>\n327: <p className=\"text-2xl font-bold\">{stats?.total_kiosks || 0}</p>"
           },
           {
             "text": "Online Kiosks",
-            "line": 323,
-            "context": "322: <div>\n323: <p className=\"text-sm font-medium text-muted-foreground\">Online Kiosks</p>\n324: <p className=\"text-2xl font-bold text-green-600\">{stats?.online_kiosks || 0}</p>"
+            "line": 337,
+            "context": "336: <div>\n337: <p className=\"text-sm font-medium text-muted-foreground\">Online Kiosks</p>\n338: <p className=\"text-2xl font-bold text-green-600\">{stats?.online_kiosks || 0}</p>"
           },
           {
             "text": "Punches Today",
-            "line": 334,
-            "context": "333: <div>\n334: <p className=\"text-sm font-medium text-muted-foreground\">Punches Today</p>\n335: <p className=\"text-2xl font-bold\">{stats?.total_punches_today || 0}</p>"
+            "line": 348,
+            "context": "347: <div>\n348: <p className=\"text-sm font-medium text-muted-foreground\">Punches Today</p>\n349: <p className=\"text-2xl font-bold\">{stats?.total_punches_today || 0}</p>"
           },
           {
             "text": "Average Uptime",
-            "line": 345,
-            "context": "344: <div>\n345: <p className=\"text-sm font-medium text-muted-foreground\">Average Uptime</p>\n346: <p className=\"text-2xl font-bold\">{(stats?.average_uptime || 0).toFixed(1)}%</p>"
+            "line": 359,
+            "context": "358: <div>\n359: <p className=\"text-sm font-medium text-muted-foreground\">Average Uptime</p>\n360: <p className=\"text-2xl font-bold\">{(stats?.average_uptime || 0).toFixed(1)}%</p>"
           },
           {
             "text": "No kiosks configured",
-            "line": 363,
-            "context": "362: <Monitor className=\"w-12 h-12 text-muted-foreground mx-auto mb-4\" />\n363: <p className=\"text-muted-foreground\">No kiosks configured</p>\n364: </div>"
+            "line": 377,
+            "context": "376: <Monitor className=\"w-12 h-12 text-muted-foreground mx-auto mb-4\" />\n377: <p className=\"text-muted-foreground\">No kiosks configured</p>\n378: </div>"
           },
           {
             "text": "Kiosk",
-            "line": 369,
-            "context": "368: <TableRow>\n369: <TableHead>Kiosk</TableHead>\n370: <TableHead>Location</TableHead>"
+            "line": 383,
+            "context": "382: <TableRow>\n383: <TableHead>Kiosk</TableHead>\n384: <TableHead>Location</TableHead>"
           },
           {
             "text": "Location",
-            "line": 370,
-            "context": "369: <TableHead>Kiosk</TableHead>\n370: <TableHead>Location</TableHead>\n371: <TableHead>Status</TableHead>"
+            "line": 384,
+            "context": "383: <TableHead>Kiosk</TableHead>\n384: <TableHead>Location</TableHead>\n385: <TableHead>Status</TableHead>"
           },
           {
             "text": "Status",
-            "line": 371,
-            "context": "370: <TableHead>Location</TableHead>\n371: <TableHead>Status</TableHead>\n372: <TableHead>Camera</TableHead>"
+            "line": 385,
+            "context": "384: <TableHead>Location</TableHead>\n385: <TableHead>Status</TableHead>\n386: <TableHead>Camera</TableHead>"
           },
           {
             "text": "Camera",
-            "line": 372,
-            "context": "371: <TableHead>Status</TableHead>\n372: <TableHead>Camera</TableHead>\n373: <TableHead>Last Ping</TableHead>"
+            "line": 386,
+            "context": "385: <TableHead>Status</TableHead>\n386: <TableHead>Camera</TableHead>\n387: <TableHead>Last Ping</TableHead>"
           },
           {
             "text": "Last Ping",
-            "line": 373,
-            "context": "372: <TableHead>Camera</TableHead>\n373: <TableHead>Last Ping</TableHead>\n374: <TableHead>Today's Punches</TableHead>"
+            "line": 387,
+            "context": "386: <TableHead>Camera</TableHead>\n387: <TableHead>Last Ping</TableHead>\n388: <TableHead>Today's Punches</TableHead>"
           },
           {
             "text": "Actions",
-            "line": 375,
-            "context": "374: <TableHead>Today's Punches</TableHead>\n375: <TableHead>Actions</TableHead>\n376: </TableRow>"
+            "line": 389,
+            "context": "388: <TableHead>Today's Punches</TableHead>\n389: <TableHead>Actions</TableHead>\n390: </TableRow>"
           },
           {
             "text": "Main Entrance",
-            "line": 222,
-            "context": "221: id=\"kioskName\"\n222: placeholder=\"Main Entrance\"\n223: value={name}"
+            "line": 235,
+            "context": "234: id=\"kioskName\"\n235: placeholder=\"Main Entrance\"\n236: value={name}"
           },
           {
             "text": "Detail Department - Front Door",
-            "line": 238,
-            "context": "237: id=\"location\"\n238: placeholder=\"Detail Department - Front Door\"\n239: value={location}"
+            "line": 251,
+            "context": "250: id=\"location\"\n251: placeholder=\"Detail Department - Front Door\"\n252: value={location}"
           },
           {
             "text": "View Details",
-            "line": 409,
-            "context": "408: onClick={() => setViewingKiosk(kiosk)}\n409: title=\"View Details\"\n410: >"
+            "line": 423,
+            "context": "422: onClick={() => setViewingKiosk(kiosk)}\n423: title=\"View Details\"\n424: >"
           },
           {
             "text": "Edit Configuration",
-            "line": 417,
-            "context": "416: onClick={() => handleEdit(kiosk)}\n417: title=\"Edit Configuration\"\n418: >"
+            "line": 431,
+            "context": "430: onClick={() => handleEdit(kiosk)}\n431: title=\"Edit Configuration\"\n432: >"
           },
           {
             "text": "Delete Kiosk",
-            "line": 425,
-            "context": "424: onClick={() => handleDeleteKiosk(kiosk.id)}\n425: title=\"Delete Kiosk\"\n426: >"
+            "line": 439,
+            "context": "438: onClick={() => handleDeleteKiosk(kiosk.id)}\n439: title=\"Delete Kiosk\"\n440: >"
           },
           {
             "text": "Allow Manual Entry",
-            "line": 259,
-            "context": "258: <div className=\"space-y-1\">\n259: <Label htmlFor=\"allowManual\">Allow Manual Entry</Label>\n260: <p className=\"text-xs text-muted-foreground\">Allow employees to search and login manually</p>"
+            "line": 272,
+            "context": "271: <div className=\"space-y-1\">\n272: <Label htmlFor=\"allowManual\">Allow Manual Entry</Label>\n273: <p className=\"text-xs text-muted-foreground\">Allow employees to search and login manually</p>"
           },
           {
             "text": "Please select a specific dealership",
-            "line": 100,
-            "context": "99: if (selectedDealerId === 'all') {\n100: alert('Please select a specific dealership');\n101: return;"
+            "line": 104,
+            "context": "103: if (selectedDealerId === 'all') {\n104: alert('Please select a specific dealership');\n105: return;"
           },
           {
             "text": "Are you sure you want to delete this kiosk?",
-            "line": 158,
-            "context": "157: const handleDeleteKiosk = (id: string) => {\n158: if (confirm('Are you sure you want to delete this kiosk?')) {\n159: deleteKiosk(id);"
+            "line": 162,
+            "context": "161: const handleDeleteKiosk = (id: string) => {\n162: if (confirm('Are you sure you want to delete this kiosk?')) {\n163: deleteKiosk(id);"
           }
         ],
         "translationCalls": [
           {
             "key": "detail_hub.kiosk_manager.status_values.online",
-            "line": 53,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.kiosk_manager.status_values.offline",
-            "line": 55,
-            "exists": false
-          },
-          {
-            "key": "common.status.warning",
             "line": 57,
             "exists": false
           },
           {
+            "key": "detail_hub.kiosk_manager.status_values.offline",
+            "line": 59,
+            "exists": false
+          },
+          {
+            "key": "common.status.warning",
+            "line": 61,
+            "exists": false
+          },
+          {
             "key": "detail_hub.kiosk_manager.title",
-            "line": 188,
+            "line": 192,
             "exists": false
           },
           {
             "key": "detail_hub.kiosk_manager.subtitle",
-            "line": 189,
+            "line": 193,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.kiosk_manager.generate_remote_access",
+            "line": 202,
             "exists": false
           },
           {
             "key": "detail_hub.kiosk_manager.add_kiosk",
-            "line": 201,
+            "line": 214,
             "exists": false
           },
           {
             "key": "detail_hub.kiosk_manager.add_kiosk",
-            "line": 207,
+            "line": 220,
             "exists": false
           },
           {
             "key": "detail_hub.kiosk_manager.edit_description",
-            "line": 211,
+            "line": 224,
             "exists": false
           },
           {
             "key": "detail_hub.kiosk_manager.add_description",
-            "line": 212,
+            "line": 225,
             "exists": false
           },
           {
             "key": "detail_hub.kiosk_manager.kiosk_name",
-            "line": 219,
+            "line": 232,
             "exists": false
           },
           {
             "key": "detail_hub.kiosk_manager.kiosk_code",
-            "line": 229,
+            "line": 242,
             "exists": false
           },
           {
             "key": "detail_hub.kiosk_manager.location",
-            "line": 235,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.kiosk_manager.features.face_recognition_enabled",
             "line": 248,
             "exists": false
           },
           {
+            "key": "detail_hub.kiosk_manager.features.face_recognition_enabled",
+            "line": 261,
+            "exists": false
+          },
+          {
             "key": "detail_hub.common.cancel",
-            "line": 290,
+            "line": 303,
             "exists": false
           },
           {
             "key": "detail_hub.kiosk_manager.add_kiosk",
-            "line": 298,
+            "line": 311,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "detail_hub.kiosk_manager.status_values.online",
-            "line": 53,
-            "context": "52: case \"online\":\n53: return <Badge className=\"bg-green-100 text-green-800\">{t('detail_hub.kiosk_manager.status_values.online')}</Badge>;\n54: case \"offline\":"
+            "line": 57,
+            "context": "56: case \"online\":\n57: return <Badge className=\"bg-green-100 text-green-800\">{t('detail_hub.kiosk_manager.status_values.online')}</Badge>;\n58: case \"offline\":"
           },
           {
             "key": "detail_hub.kiosk_manager.status_values.offline",
-            "line": 55,
-            "context": "54: case \"offline\":\n55: return <Badge className=\"bg-red-100 text-red-800\">{t('detail_hub.kiosk_manager.status_values.offline')}</Badge>;\n56: case \"warning\":"
+            "line": 59,
+            "context": "58: case \"offline\":\n59: return <Badge className=\"bg-red-100 text-red-800\">{t('detail_hub.kiosk_manager.status_values.offline')}</Badge>;\n60: case \"warning\":"
           },
           {
             "key": "common.status.warning",
-            "line": 57,
-            "context": "56: case \"warning\":\n57: return <Badge className=\"bg-yellow-100 text-yellow-800\">{t('common.status.warning')}</Badge>;\n58: case \"maintenance\":"
+            "line": 61,
+            "context": "60: case \"warning\":\n61: return <Badge className=\"bg-yellow-100 text-yellow-800\">{t('common.status.warning')}</Badge>;\n62: case \"maintenance\":"
           },
           {
             "key": "detail_hub.kiosk_manager.title",
-            "line": 188,
-            "context": "187: <div>\n188: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.kiosk_manager.title')}</h1>\n189: <p className=\"text-muted-foreground\">{t('detail_hub.kiosk_manager.subtitle')}</p>"
+            "line": 192,
+            "context": "191: <div>\n192: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.kiosk_manager.title')}</h1>\n193: <p className=\"text-muted-foreground\">{t('detail_hub.kiosk_manager.subtitle')}</p>"
           },
           {
             "key": "detail_hub.kiosk_manager.subtitle",
-            "line": 189,
-            "context": "188: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.kiosk_manager.title')}</h1>\n189: <p className=\"text-muted-foreground\">{t('detail_hub.kiosk_manager.subtitle')}</p>\n190: </div>"
+            "line": 193,
+            "context": "192: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.kiosk_manager.title')}</h1>\n193: <p className=\"text-muted-foreground\">{t('detail_hub.kiosk_manager.subtitle')}</p>\n194: </div>"
+          },
+          {
+            "key": "detail_hub.kiosk_manager.generate_remote_access",
+            "line": 202,
+            "context": "201: <ExternalLink className=\"w-4 h-4 mr-2\" />\n202: {t('detail_hub.kiosk_manager.generate_remote_access')}\n203: </Button>"
           },
           {
             "key": "detail_hub.kiosk_manager.add_kiosk",
-            "line": 201,
-            "context": "200: <Plus className=\"w-4 h-4 mr-2\" />\n201: {t('detail_hub.kiosk_manager.add_kiosk')}\n202: </Button>"
+            "line": 214,
+            "context": "213: <Plus className=\"w-4 h-4 mr-2\" />\n214: {t('detail_hub.kiosk_manager.add_kiosk')}\n215: </Button>"
           },
           {
             "key": "detail_hub.kiosk_manager.add_kiosk",
-            "line": 207,
-            "context": "206: <DialogTitle>\n207: {editingKiosk ? 'Edit Kiosk' : t('detail_hub.kiosk_manager.add_kiosk')}\n208: </DialogTitle>"
+            "line": 220,
+            "context": "219: <DialogTitle>\n220: {editingKiosk ? 'Edit Kiosk' : t('detail_hub.kiosk_manager.add_kiosk')}\n221: </DialogTitle>"
           },
           {
             "key": "detail_hub.kiosk_manager.edit_description",
-            "line": 211,
-            "context": "210: {editingKiosk\n211: ? t('detail_hub.kiosk_manager.edit_description')\n212: : t('detail_hub.kiosk_manager.add_description')"
+            "line": 224,
+            "context": "223: {editingKiosk\n224: ? t('detail_hub.kiosk_manager.edit_description')\n225: : t('detail_hub.kiosk_manager.add_description')"
           },
           {
             "key": "detail_hub.kiosk_manager.add_description",
-            "line": 212,
-            "context": "211: ? t('detail_hub.kiosk_manager.edit_description')\n212: : t('detail_hub.kiosk_manager.add_description')\n213: }"
+            "line": 225,
+            "context": "224: ? t('detail_hub.kiosk_manager.edit_description')\n225: : t('detail_hub.kiosk_manager.add_description')\n226: }"
           },
           {
             "key": "detail_hub.kiosk_manager.kiosk_name",
-            "line": 219,
-            "context": "218: <div className=\"space-y-2\">\n219: <Label htmlFor=\"kioskName\">{t('detail_hub.kiosk_manager.kiosk_name')}</Label>\n220: <Input"
+            "line": 232,
+            "context": "231: <div className=\"space-y-2\">\n232: <Label htmlFor=\"kioskName\">{t('detail_hub.kiosk_manager.kiosk_name')}</Label>\n233: <Input"
           },
           {
             "key": "detail_hub.kiosk_manager.kiosk_code",
-            "line": 229,
-            "context": "228: <div className=\"space-y-2\">\n229: <Label>{t('detail_hub.kiosk_manager.kiosk_code')}</Label>\n230: <Input value={editingKiosk.kiosk_code} disabled className=\"bg-muted\" />"
+            "line": 242,
+            "context": "241: <div className=\"space-y-2\">\n242: <Label>{t('detail_hub.kiosk_manager.kiosk_code')}</Label>\n243: <Input value={editingKiosk.kiosk_code} disabled className=\"bg-muted\" />"
           },
           {
             "key": "detail_hub.kiosk_manager.location",
-            "line": 235,
-            "context": "234: <div className=\"space-y-2\">\n235: <Label htmlFor=\"location\">{t('detail_hub.kiosk_manager.location')}</Label>\n236: <Input"
+            "line": 248,
+            "context": "247: <div className=\"space-y-2\">\n248: <Label htmlFor=\"location\">{t('detail_hub.kiosk_manager.location')}</Label>\n249: <Input"
           },
           {
             "key": "detail_hub.kiosk_manager.features.face_recognition_enabled",
-            "line": 248,
-            "context": "247: <div className=\"space-y-1\">\n248: <Label htmlFor=\"faceRecognition\">{t('detail_hub.kiosk_manager.features.face_recognition_enabled')}</Label>\n249: <p className=\"text-xs text-muted-foreground\">Enable facial recognition for employee login</p>"
+            "line": 261,
+            "context": "260: <div className=\"space-y-1\">\n261: <Label htmlFor=\"faceRecognition\">{t('detail_hub.kiosk_manager.features.face_recognition_enabled')}</Label>\n262: <p className=\"text-xs text-muted-foreground\">Enable facial recognition for employee login</p>"
           },
           {
             "key": "detail_hub.common.cancel",
-            "line": 290,
-            "context": "289: }}>\n290: {t('detail_hub.common.cancel')}\n291: </Button>"
+            "line": 303,
+            "context": "302: }}>\n303: {t('detail_hub.common.cancel')}\n304: </Button>"
           },
           {
             "key": "detail_hub.kiosk_manager.add_kiosk",
-            "line": 298,
-            "context": "297: ? (isUpdating ? 'Updating...' : 'Update Kiosk')\n298: : (isCreating ? 'Creating...' : t('detail_hub.kiosk_manager.add_kiosk'))\n299: }"
+            "line": 311,
+            "context": "310: ? (isUpdating ? 'Updating...' : 'Update Kiosk')\n311: : (isCreating ? 'Creating...' : t('detail_hub.kiosk_manager.add_kiosk'))\n312: }"
           }
         ],
-        "coverage": 36,
+        "coverage": 37,
         "severity": "critical"
       },
       {
@@ -2585,292 +2595,292 @@
         "hardcodedStrings": [
           {
             "text": "Invoice",
-            "line": 450,
-            "context": "449: <div class=\"sender-name\">${senderName}</div>\n450: <div class=\"doc-title\">Invoice</div>\n451: ${servicePeriod ? `"
+            "line": 475,
+            "context": "474: <div class=\"sender-name\">${senderName}</div>\n475: <div class=\"doc-title\">Invoice</div>\n476: ${servicePeriod ? `"
           },
           {
             "text": "Bill To",
-            "line": 462,
-            "context": "461: <div class=\"bill-to\">\n462: <h3>Bill To</h3>\n463: <div class=\"company\">${dealerName}</div>"
+            "line": 487,
+            "context": "486: <div class=\"bill-to\">\n487: <h3>Bill To</h3>\n488: <div class=\"company\">${dealerName}</div>"
           },
           {
             "text": "Invoice Date",
-            "line": 476,
-            "context": "475: <div class=\"detail-row\">\n476: <span class=\"label\">Invoice Date</span>\n477: <div class=\"value\">${formatDate(invoice.issueDate)}</div>"
+            "line": 501,
+            "context": "500: <div class=\"detail-row\">\n501: <span class=\"label\">Invoice Date</span>\n502: <div class=\"value\">${formatDate(invoice.issueDate)}</div>"
           },
           {
             "text": "Due Date",
-            "line": 480,
-            "context": "479: <div class=\"detail-row\">\n480: <span class=\"label\">Due Date</span>\n481: <div class=\"value\">${formatDate(invoice.dueDate)}</div>"
+            "line": 505,
+            "context": "504: <div class=\"detail-row\">\n505: <span class=\"label\">Due Date</span>\n506: <div class=\"value\">${formatDate(invoice.dueDate)}</div>"
           },
           {
             "text": "Invoice Number",
-            "line": 484,
-            "context": "483: <div class=\"detail-row\">\n484: <span class=\"label\">Invoice Number</span>\n485: <div class=\"value font-mono\">${invoice.invoiceNumber}</div>"
+            "line": 509,
+            "context": "508: <div class=\"detail-row\">\n509: <span class=\"label\">Invoice Number</span>\n510: <div class=\"value font-mono\">${invoice.invoiceNumber}</div>"
           },
           {
             "text": "Total Amount",
-            "line": 488,
-            "context": "487: <div class=\"detail-row\" style=\"margin-top: 12px;\">\n488: <span class=\"label\">Total Amount</span>\n489: <div class=\"value\" style=\"font-size: 14pt; font-weight: 700; color: #6B7280;\">${formatCurrency(invoice.totalAmount)}</div>"
+            "line": 513,
+            "context": "512: <div class=\"detail-row\" style=\"margin-top: 12px;\">\n513: <span class=\"label\">Total Amount</span>\n514: <div class=\"value\" style=\"font-size: 14pt; font-weight: 700; color: #6B7280;\">${formatCurrency(invoice.totalAmount)}</div>"
           },
           {
             "text": "Date",
-            "line": 502,
-            "context": "501: <th style=\"width: 4%;\">#</th>\n502: <th style=\"width: 7%;\">Date</th>\n503: <th style=\"width: 9%;\">Order</th>"
+            "line": 527,
+            "context": "526: <th style=\"width: 4%;\">#</th>\n527: <th style=\"width: 7%;\">Date</th>\n528: <th style=\"width: 9%;\">Order</th>"
           },
           {
             "text": "Order",
-            "line": 503,
-            "context": "502: <th style=\"width: 7%;\">Date</th>\n503: <th style=\"width: 9%;\">Order</th>\n504: <th style=\"width: 17%;\">PO | RO | Tag</th>"
+            "line": 528,
+            "context": "527: <th style=\"width: 7%;\">Date</th>\n528: <th style=\"width: 9%;\">Order</th>\n529: <th style=\"width: 17%;\">PO | RO | Tag</th>"
           },
           {
             "text": "Vehicle",
-            "line": 505,
-            "context": "504: <th style=\"width: 17%;\">PO | RO | Tag</th>\n505: <th style=\"width: 15%;\">Vehicle</th>\n506: <th style=\"width: 13%;\">VIN</th>"
+            "line": 530,
+            "context": "529: <th style=\"width: 17%;\">PO | RO | Tag</th>\n530: <th style=\"width: 15%;\">Vehicle</th>\n531: <th style=\"width: 13%;\">VIN</th>"
           },
           {
             "text": "Services",
-            "line": 507,
-            "context": "506: <th style=\"width: 13%;\">VIN</th>\n507: <th style=\"width: 23%;\" class=\"text-left\">Services</th>\n508: <th style=\"width: 12%;\">Amount</th>"
+            "line": 532,
+            "context": "531: <th style=\"width: 13%;\">VIN</th>\n532: <th style=\"width: 23%;\" class=\"text-left\">Services</th>\n533: <th style=\"width: 12%;\">Amount</th>"
           },
           {
             "text": "Amount",
-            "line": 508,
-            "context": "507: <th style=\"width: 23%;\" class=\"text-left\">Services</th>\n508: <th style=\"width: 12%;\">Amount</th>\n509: </tr>"
+            "line": 533,
+            "context": "532: <th style=\"width: 23%;\" class=\"text-left\">Services</th>\n533: <th style=\"width: 12%;\">Amount</th>\n534: </tr>"
           },
           {
             "text": "Loading Invoice",
-            "line": 674,
-            "context": "673: <DialogHeader>\n674: <DialogTitle>Loading Invoice</DialogTitle>\n675: <DialogDescription>"
+            "line": 699,
+            "context": "698: <DialogHeader>\n699: <DialogTitle>Loading Invoice</DialogTitle>\n700: <DialogDescription>"
           },
           {
             "text": "Invoice Not Found",
-            "line": 692,
-            "context": "691: <DialogHeader>\n692: <DialogTitle>Invoice Not Found</DialogTitle>\n693: <DialogDescription>"
+            "line": 717,
+            "context": "716: <DialogHeader>\n717: <DialogTitle>Invoice Not Found</DialogTitle>\n718: <DialogDescription>"
           },
           {
             "text": "Invoice not found",
-            "line": 698,
-            "context": "697: <div className=\"flex items-center justify-center py-12\">\n698: <p className=\"text-muted-foreground\">Invoice not found</p>\n699: </div>"
+            "line": 723,
+            "context": "722: <div className=\"flex items-center justify-center py-12\">\n723: <p className=\"text-muted-foreground\">Invoice not found</p>\n724: </div>"
           },
           {
             "text": "Download PDF",
-            "line": 789,
-            "context": "788: <DropdownMenuItem onClick={handleDownloadPDF}>\n789: <FileText className=\"h-4 w-4 mr-2\" />\n790: Download PDF"
+            "line": 814,
+            "context": "813: <DropdownMenuItem onClick={handleDownloadPDF}>\n814: <FileText className=\"h-4 w-4 mr-2\" />\n815: Download PDF"
           },
           {
             "text": "Download Excel",
-            "line": 793,
-            "context": "792: <DropdownMenuItem onClick={handleDownloadExcel}>\n793: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n794: Download Excel"
+            "line": 818,
+            "context": "817: <DropdownMenuItem onClick={handleDownloadExcel}>\n818: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n819: Download Excel"
           },
           {
             "text": "Total Amount",
-            "line": 862,
-            "context": "861: <div className=\"pt-2 border-t\">\n862: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Total Amount</span>\n863: <p className=\"text-2xl font-bold text-primary\">{formatCurrency(invoice.totalAmount)}</p>"
+            "line": 887,
+            "context": "886: <div className=\"pt-2 border-t\">\n887: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Total Amount</span>\n888: <p className=\"text-2xl font-bold text-primary\">{formatCurrency(invoice.totalAmount)}</p>"
           },
           {
             "text": "Amount Due",
-            "line": 867,
-            "context": "866: <div className=\"pt-2\">\n867: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Amount Due</span>\n868: <p className=\"text-xl font-bold text-amber-600\">{formatCurrency(invoice.amountDue)}</p>"
+            "line": 892,
+            "context": "891: <div className=\"pt-2\">\n892: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Amount Due</span>\n893: <p className=\"text-xl font-bold text-amber-600\">{formatCurrency(invoice.amountDue)}</p>"
           },
           {
             "text": "Vehicles",
-            "line": 892,
-            "context": "891: <div className=\"flex items-center justify-between mb-4\">\n892: <h3 className=\"font-bold text-lg text-gray-900\">\n893: Vehicles"
+            "line": 917,
+            "context": "916: <div className=\"flex items-center justify-between mb-4\">\n917: <h3 className=\"font-bold text-lg text-gray-900\">\n918: Vehicles"
           },
           {
             "text": "Date",
-            "line": 903,
-            "context": "902: <TableRow className=\"bg-gray-500 hover:bg-gray-500\">\n903: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n904: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>"
+            "line": 935,
+            "context": "934: </TableHead>\n935: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n936: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>"
           },
           {
             "text": "Order",
-            "line": 904,
-            "context": "903: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n904: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>\n905: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>"
+            "line": 936,
+            "context": "935: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n936: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>\n937: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>"
           },
           {
             "text": "Vehicle",
-            "line": 906,
-            "context": "905: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>\n906: <TableHead className=\"font-bold text-center text-white\">Vehicle</TableHead>\n907: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>"
+            "line": 938,
+            "context": "937: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>\n938: <TableHead className=\"font-bold text-center text-white\">Vehicle</TableHead>\n939: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>"
           },
           {
             "text": "Services",
-            "line": 908,
-            "context": "907: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>\n908: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n909: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>"
+            "line": 940,
+            "context": "939: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>\n940: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n941: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 909,
-            "context": "908: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n909: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>\n910: </TableRow>"
+            "line": 941,
+            "context": "940: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n941: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>\n942: </TableRow>"
           },
           {
             "text": "No items found",
-            "line": 1005,
-            "context": "1004: <TableRow>\n1005: <TableCell colSpan={7} className=\"text-center py-8 text-muted-foreground\">\n1006: No items found"
+            "line": 1044,
+            "context": "1043: <TableRow>\n1044: <TableCell colSpan={8} className=\"text-center py-8 text-muted-foreground\">\n1045: No items found"
           },
           {
             "text": "Cancel",
-            "line": 1180,
-            "context": "1179: <AlertDialogFooter>\n1180: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1181: <AlertDialogAction"
+            "line": 1219,
+            "context": "1218: <AlertDialogFooter>\n1219: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1220: <AlertDialogAction"
           },
           {
             "text": "Service names from current dealer services",
-            "line": 1208,
-            "context": "1207: <ul className=\"list-disc list-inside ml-2 space-y-1 text-sm\">\n1208: <li>Service names from current dealer services</li>\n1209: <li>Order totals and prices</li>"
+            "line": 1247,
+            "context": "1246: <ul className=\"list-disc list-inside ml-2 space-y-1 text-sm\">\n1247: <li>Service names from current dealer services</li>\n1248: <li>Order totals and prices</li>"
           },
           {
             "text": "Order totals and prices",
-            "line": 1209,
-            "context": "1208: <li>Service names from current dealer services</li>\n1209: <li>Order totals and prices</li>\n1210: <li>Customer and vehicle information</li>"
+            "line": 1248,
+            "context": "1247: <li>Service names from current dealer services</li>\n1248: <li>Order totals and prices</li>\n1249: <li>Customer and vehicle information</li>"
           },
           {
             "text": "Customer and vehicle information",
-            "line": 1210,
-            "context": "1209: <li>Order totals and prices</li>\n1210: <li>Customer and vehicle information</li>\n1211: <li>Invoice totals and tax calculations</li>"
+            "line": 1249,
+            "context": "1248: <li>Order totals and prices</li>\n1249: <li>Customer and vehicle information</li>\n1250: <li>Invoice totals and tax calculations</li>"
           },
           {
             "text": "Invoice totals and tax calculations",
-            "line": 1211,
-            "context": "1210: <li>Customer and vehicle information</li>\n1211: <li>Invoice totals and tax calculations</li>\n1212: </ul>"
+            "line": 1250,
+            "context": "1249: <li>Customer and vehicle information</li>\n1250: <li>Invoice totals and tax calculations</li>\n1251: </ul>"
           },
           {
             "text": "Cancel",
-            "line": 1220,
-            "context": "1219: <AlertDialogFooter>\n1220: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1221: <AlertDialogAction"
+            "line": 1259,
+            "context": "1258: <AlertDialogFooter>\n1259: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1260: <AlertDialogAction"
           },
           {
             "text": "Loading Invoice",
-            "line": 674,
-            "context": "673: <DialogHeader>\n674: <DialogTitle>Loading Invoice</DialogTitle>\n675: <DialogDescription>"
+            "line": 699,
+            "context": "698: <DialogHeader>\n699: <DialogTitle>Loading Invoice</DialogTitle>\n700: <DialogDescription>"
           },
           {
             "text": "Invoice Not Found",
-            "line": 692,
-            "context": "691: <DialogHeader>\n692: <DialogTitle>Invoice Not Found</DialogTitle>\n693: <DialogDescription>"
+            "line": 717,
+            "context": "716: <DialogHeader>\n717: <DialogTitle>Invoice Not Found</DialogTitle>\n718: <DialogDescription>"
           }
         ],
         "translationCalls": [
           {
             "key": "reports.invoices.delete",
-            "line": 745,
+            "line": 770,
             "exists": false
           },
           {
             "key": "reports.invoices.send_email",
-            "line": 767,
+            "line": 792,
             "exists": false
           },
           {
             "key": "common.action_buttons.print",
-            "line": 775,
+            "line": 800,
             "exists": false
           },
           {
             "key": "common.action_buttons.download",
-            "line": 784,
+            "line": 809,
             "exists": false
           },
           {
             "key": "common.action_buttons.close",
-            "line": 804,
+            "line": 829,
             "exists": false
           },
           {
             "key": "reports.invoices.delete_confirm_title",
-            "line": 1133,
+            "line": 1172,
             "exists": false
           },
           {
             "key": "reports.invoices.delete_confirm_message",
-            "line": 1138,
+            "line": 1177,
             "exists": false
           },
           {
             "key": "reports.invoices.vehicles_available_again",
-            "line": 1141,
+            "line": 1180,
             "exists": false
           },
           {
             "key": "reports.invoices.has_payments_warning",
-            "line": 1145,
+            "line": 1184,
             "exists": false
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1152,
+            "line": 1191,
             "exists": false
           },
           {
             "key": "reports.invoices.deleting",
-            "line": 1163,
+            "line": 1202,
             "exists": false
           },
           {
             "key": "reports.invoices.delete_invoice",
-            "line": 1164,
+            "line": 1203,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "reports.invoices.delete",
-            "line": 745,
-            "context": "744: <Trash2 className=\"h-4 w-4 mr-2\" />\n745: {t('reports.invoices.delete')}\n746: </Button>"
+            "line": 770,
+            "context": "769: <Trash2 className=\"h-4 w-4 mr-2\" />\n770: {t('reports.invoices.delete')}\n771: </Button>"
           },
           {
             "key": "reports.invoices.send_email",
-            "line": 767,
-            "context": "766: <Mail className=\"h-4 w-4 mr-2\" />\n767: {t('reports.invoices.send_email')}\n768: </Button>"
+            "line": 792,
+            "context": "791: <Mail className=\"h-4 w-4 mr-2\" />\n792: {t('reports.invoices.send_email')}\n793: </Button>"
           },
           {
             "key": "common.action_buttons.print",
-            "line": 775,
-            "context": "774: <Printer className=\"h-4 w-4 mr-2\" />\n775: {t('common.action_buttons.print')}\n776: </Button>"
+            "line": 800,
+            "context": "799: <Printer className=\"h-4 w-4 mr-2\" />\n800: {t('common.action_buttons.print')}\n801: </Button>"
           },
           {
             "key": "common.action_buttons.download",
-            "line": 784,
-            "context": "783: <Download className=\"h-4 w-4 mr-2\" />\n784: {t('common.action_buttons.download')}\n785: </Button>"
+            "line": 809,
+            "context": "808: <Download className=\"h-4 w-4 mr-2\" />\n809: {t('common.action_buttons.download')}\n810: </Button>"
           },
           {
             "key": "common.action_buttons.close",
-            "line": 804,
-            "context": "803: <X className=\"h-4 w-4 mr-2\" />\n804: {t('common.action_buttons.close')}\n805: </Button>"
+            "line": 829,
+            "context": "828: <X className=\"h-4 w-4 mr-2\" />\n829: {t('common.action_buttons.close')}\n830: </Button>"
           },
           {
             "key": "reports.invoices.delete_confirm_title",
-            "line": 1133,
-            "context": "1132: <AlertDialogTitle>\n1133: {t('reports.invoices.delete_confirm_title', { number: invoice.invoiceNumber })}\n1134: </AlertDialogTitle>"
+            "line": 1172,
+            "context": "1171: <AlertDialogTitle>\n1172: {t('reports.invoices.delete_confirm_title', { number: invoice.invoiceNumber })}\n1173: </AlertDialogTitle>"
           },
           {
             "key": "reports.invoices.delete_confirm_message",
-            "line": 1138,
-            "context": "1137: <p>\n1138: {t('reports.invoices.delete_confirm_message', { count: invoice.items?.length || 0 })}\n1139: </p>"
+            "line": 1177,
+            "context": "1176: <p>\n1177: {t('reports.invoices.delete_confirm_message', { count: invoice.items?.length || 0 })}\n1178: </p>"
           },
           {
             "key": "reports.invoices.vehicles_available_again",
-            "line": 1141,
-            "context": "1140: <p className=\"text-sm text-gray-600\">\n1141: {t('reports.invoices.vehicles_available_again')}\n1142: </p>"
+            "line": 1180,
+            "context": "1179: <p className=\"text-sm text-gray-600\">\n1180: {t('reports.invoices.vehicles_available_again')}\n1181: </p>"
           },
           {
             "key": "reports.invoices.has_payments_warning",
-            "line": 1145,
-            "context": "1144: <p className=\"text-red-600 font-semibold mt-2\">\n1145: {t('reports.invoices.has_payments_warning', { count: invoice.payments.length })}\n1146: </p>"
+            "line": 1184,
+            "context": "1183: <p className=\"text-red-600 font-semibold mt-2\">\n1184: {t('reports.invoices.has_payments_warning', { count: invoice.payments.length })}\n1185: </p>"
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1152,
-            "context": "1151: <AlertDialogFooter>\n1152: <AlertDialogCancel>{t('common.action_buttons.cancel')}</AlertDialogCancel>\n1153: <AlertDialogAction"
+            "line": 1191,
+            "context": "1190: <AlertDialogFooter>\n1191: <AlertDialogCancel>{t('common.action_buttons.cancel')}</AlertDialogCancel>\n1192: <AlertDialogAction"
           },
           {
             "key": "reports.invoices.deleting",
-            "line": 1163,
-            "context": "1162: {deleteMutation.isPending\n1163: ? t('reports.invoices.deleting')\n1164: : t('reports.invoices.delete_invoice')}"
+            "line": 1202,
+            "context": "1201: {deleteMutation.isPending\n1202: ? t('reports.invoices.deleting')\n1203: : t('reports.invoices.delete_invoice')}"
           },
           {
             "key": "reports.invoices.delete_invoice",
-            "line": 1164,
-            "context": "1163: ? t('reports.invoices.deleting')\n1164: : t('reports.invoices.delete_invoice')}\n1165: </AlertDialogAction>"
+            "line": 1203,
+            "context": "1202: ? t('reports.invoices.deleting')\n1203: : t('reports.invoices.delete_invoice')}\n1204: </AlertDialogAction>"
           }
         ],
         "coverage": 27,
@@ -18300,6 +18310,55 @@
           }
         ],
         "coverage": 83,
+        "severity": "medium"
+      },
+      {
+        "file": "src\\components\\settings\\RoleNotificationSettings.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "How SMS Notifications Work",
+            "line": 199,
+            "context": "198: <AlertCircle className=\"h-4 w-4\" />\n199: <AlertTitle>How SMS Notifications Work</AlertTitle>\n200: <AlertDescription className=\"text-xs space-y-1\">"
+          },
+          {
+            "text": "User must be a follower of the order",
+            "line": 203,
+            "context": "202: <ol className=\"list-decimal list-inside space-y-1 ml-2\">\n203: <li><strong>Level 1:</strong> User must be a follower of the order</li>\n204: <li><strong>Level 2 (This Page):</strong> User's role must allow the event type</li>"
+          },
+          {
+            "text": "User must have SMS globally enabled in their profile",
+            "line": 205,
+            "context": "204: <li><strong>Level 2 (This Page):</strong> User's role must allow the event type</li>\n205: <li><strong>Level 3:</strong> User must have SMS globally enabled in their profile</li>\n206: </ol>"
+          },
+          {
+            "text": "Select Custom Role",
+            "line": 215,
+            "context": "214: <div className=\"space-y-2\">\n215: <Label>Select Custom Role</Label>\n216: <Select value={selectedRole} onValueChange={setSelectedRole}>"
+          },
+          {
+            "text": "SMS Enabled",
+            "line": 300,
+            "context": "299: {rule.enabled && (\n300: <Badge variant=\"default\" className=\"text-xs\">\n301: SMS Enabled"
+          },
+          {
+            "text": "Select a custom role to configure notification settings",
+            "line": 355,
+            "context": "354: <Bell className=\"h-12 w-12 mx-auto mb-4 opacity-20\" />\n355: <p>Select a custom role to configure notification settings</p>\n356: </div>"
+          },
+          {
+            "text": "Choose a custom role...",
+            "line": 218,
+            "context": "217: <SelectTrigger>\n218: <SelectValue placeholder=\"Choose a custom role...\" />\n219: </SelectTrigger>"
+          },
+          {
+            "text": "Select Custom Role",
+            "line": 215,
+            "context": "214: <div className=\"space-y-2\">\n215: <Label>Select Custom Role</Label>\n216: <Select value={selectedRole} onValueChange={setSelectedRole}>"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
         "severity": "medium"
       },
       {
@@ -34725,6 +34784,372 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\detail-hub\\GenerateRemoteKioskModal.tsx",
+        "hardcodedStrings": [
+          {
+            "text": ", functionError);\r\n        // Try to extract more details from the error\r\n        if (functionError.context && typeof functionError.context.json === ",
+            "line": 91,
+            "context": "90: if (functionError) {\n91: console.error('[Remote Kiosk Generator] Function error:', functionError);\n92: // Try to extract more details from the error"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "remote_kiosk_generator.error_select_employee",
+            "line": 68,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.success_title",
+            "line": 116,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.success_description",
+            "line": 117,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.error_generation_failed",
+            "line": 120,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.error_unknown",
+            "line": 130,
+            "exists": false
+          },
+          {
+            "key": "common.error",
+            "line": 133,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.copied_title",
+            "line": 149,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.copied_description",
+            "line": 150,
+            "exists": false
+          },
+          {
+            "key": "common.error",
+            "line": 157,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.error_copy_failed",
+            "line": 158,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.title",
+            "line": 186,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.description",
+            "line": 188,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.select_employee",
+            "line": 206,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.choose_employee",
+            "line": 209,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.expiration_hours",
+            "line": 223,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.hour",
+            "line": 232,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.hours",
+            "line": 233,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.hours",
+            "line": 234,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.hours",
+            "line": 235,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.expiration_hint",
+            "line": 239,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.max_uses",
+            "line": 245,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.max_uses_hint",
+            "line": 254,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.generating",
+            "line": 267,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.generate_url",
+            "line": 272,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.generated_for",
+            "line": 283,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.expires_at",
+            "line": 297,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.max_uses",
+            "line": 305,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.use",
+            "line": 308,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.uses",
+            "line": 308,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.generated_url",
+            "line": 315,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.scan_qr",
+            "line": 335,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.instructions",
+            "line": 352,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.copied",
+            "line": 362,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_generator.copy_url",
+            "line": 367,
+            "exists": false
+          },
+          {
+            "key": "common.close",
+            "line": 372,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "remote_kiosk_generator.error_select_employee",
+            "line": 68,
+            "context": "67: if (!selectedEmployeeId || !user) {\n68: setError(t('remote_kiosk_generator.error_select_employee'));\n69: return;"
+          },
+          {
+            "key": "remote_kiosk_generator.success_title",
+            "line": 116,
+            "context": "115: toast({\n116: title: t('remote_kiosk_generator.success_title'),\n117: description: t('remote_kiosk_generator.success_description'),"
+          },
+          {
+            "key": "remote_kiosk_generator.success_description",
+            "line": 117,
+            "context": "116: title: t('remote_kiosk_generator.success_title'),\n117: description: t('remote_kiosk_generator.success_description'),\n118: });"
+          },
+          {
+            "key": "remote_kiosk_generator.error_generation_failed",
+            "line": 120,
+            "context": "119: } else {\n120: throw new Error(data.error || t('remote_kiosk_generator.error_generation_failed'));\n121: }"
+          },
+          {
+            "key": "remote_kiosk_generator.error_unknown",
+            "line": 130,
+            "context": "129: \n130: const errorMessage = err.message || t('remote_kiosk_generator.error_unknown');\n131: setError(errorMessage);"
+          },
+          {
+            "key": "common.error",
+            "line": 133,
+            "context": "132: toast({\n133: title: t('common.error'),\n134: description: errorMessage,"
+          },
+          {
+            "key": "remote_kiosk_generator.copied_title",
+            "line": 149,
+            "context": "148: toast({\n149: title: t('remote_kiosk_generator.copied_title'),\n150: description: t('remote_kiosk_generator.copied_description'),"
+          },
+          {
+            "key": "remote_kiosk_generator.copied_description",
+            "line": 150,
+            "context": "149: title: t('remote_kiosk_generator.copied_title'),\n150: description: t('remote_kiosk_generator.copied_description'),\n151: });"
+          },
+          {
+            "key": "common.error",
+            "line": 157,
+            "context": "156: toast({\n157: title: t('common.error'),\n158: description: t('remote_kiosk_generator.error_copy_failed'),"
+          },
+          {
+            "key": "remote_kiosk_generator.error_copy_failed",
+            "line": 158,
+            "context": "157: title: t('common.error'),\n158: description: t('remote_kiosk_generator.error_copy_failed'),\n159: variant: 'destructive',"
+          },
+          {
+            "key": "remote_kiosk_generator.title",
+            "line": 186,
+            "context": "185: <DialogHeader>\n186: <DialogTitle>{t('remote_kiosk_generator.title')}</DialogTitle>\n187: <DialogDescription>"
+          },
+          {
+            "key": "remote_kiosk_generator.description",
+            "line": 188,
+            "context": "187: <DialogDescription>\n188: {t('remote_kiosk_generator.description')}\n189: </DialogDescription>"
+          },
+          {
+            "key": "remote_kiosk_generator.select_employee",
+            "line": 206,
+            "context": "205: <div className=\"space-y-2\">\n206: <Label>{t('remote_kiosk_generator.select_employee')}</Label>\n207: <Select value={selectedEmployeeId} onValueChange={setSelectedEmployeeId}>"
+          },
+          {
+            "key": "remote_kiosk_generator.choose_employee",
+            "line": 209,
+            "context": "208: <SelectTrigger>\n209: <SelectValue placeholder={t('remote_kiosk_generator.choose_employee')} />\n210: </SelectTrigger>"
+          },
+          {
+            "key": "remote_kiosk_generator.expiration_hours",
+            "line": 223,
+            "context": "222: <div className=\"space-y-2\">\n223: <Label>{t('remote_kiosk_generator.expiration_hours')}</Label>\n224: <Select"
+          },
+          {
+            "key": "remote_kiosk_generator.hour",
+            "line": 232,
+            "context": "231: <SelectContent>\n232: <SelectItem value=\"1\">1 {t('remote_kiosk_generator.hour')}</SelectItem>\n233: <SelectItem value=\"2\">2 {t('remote_kiosk_generator.hours')}</SelectItem>"
+          },
+          {
+            "key": "remote_kiosk_generator.hours",
+            "line": 233,
+            "context": "232: <SelectItem value=\"1\">1 {t('remote_kiosk_generator.hour')}</SelectItem>\n233: <SelectItem value=\"2\">2 {t('remote_kiosk_generator.hours')}</SelectItem>\n234: <SelectItem value=\"4\">4 {t('remote_kiosk_generator.hours')}</SelectItem>"
+          },
+          {
+            "key": "remote_kiosk_generator.hours",
+            "line": 234,
+            "context": "233: <SelectItem value=\"2\">2 {t('remote_kiosk_generator.hours')}</SelectItem>\n234: <SelectItem value=\"4\">4 {t('remote_kiosk_generator.hours')}</SelectItem>\n235: <SelectItem value=\"8\">8 {t('remote_kiosk_generator.hours')}</SelectItem>"
+          },
+          {
+            "key": "remote_kiosk_generator.hours",
+            "line": 235,
+            "context": "234: <SelectItem value=\"4\">4 {t('remote_kiosk_generator.hours')}</SelectItem>\n235: <SelectItem value=\"8\">8 {t('remote_kiosk_generator.hours')}</SelectItem>\n236: </SelectContent>"
+          },
+          {
+            "key": "remote_kiosk_generator.expiration_hint",
+            "line": 239,
+            "context": "238: <p className=\"text-xs text-muted-foreground\">\n239: {t('remote_kiosk_generator.expiration_hint')}\n240: </p>"
+          },
+          {
+            "key": "remote_kiosk_generator.max_uses",
+            "line": 245,
+            "context": "244: <div className=\"space-y-2\">\n245: <Label>{t('remote_kiosk_generator.max_uses')}</Label>\n246: <Input"
+          },
+          {
+            "key": "remote_kiosk_generator.max_uses_hint",
+            "line": 254,
+            "context": "253: <p className=\"text-xs text-muted-foreground\">\n254: {t('remote_kiosk_generator.max_uses_hint')}\n255: </p>"
+          },
+          {
+            "key": "remote_kiosk_generator.generating",
+            "line": 267,
+            "context": "266: <Loader2 className=\"h-4 w-4 mr-2 animate-spin\" />\n267: {t('remote_kiosk_generator.generating')}\n268: </>"
+          },
+          {
+            "key": "remote_kiosk_generator.generate_url",
+            "line": 272,
+            "context": "271: <ExternalLink className=\"h-4 w-4 mr-2\" />\n272: {t('remote_kiosk_generator.generate_url')}\n273: </>"
+          },
+          {
+            "key": "remote_kiosk_generator.generated_for",
+            "line": 283,
+            "context": "282: <div className=\"text-sm text-muted-foreground\">\n283: {t('remote_kiosk_generator.generated_for')}\n284: </div>"
+          },
+          {
+            "key": "remote_kiosk_generator.expires_at",
+            "line": 297,
+            "context": "296: <span className=\"text-muted-foreground\">\n297: {t('remote_kiosk_generator.expires_at')}:\n298: </span>"
+          },
+          {
+            "key": "remote_kiosk_generator.max_uses",
+            "line": 305,
+            "context": "304: <span className=\"text-muted-foreground\">\n305: {t('remote_kiosk_generator.max_uses')}:\n306: </span>"
+          },
+          {
+            "key": "remote_kiosk_generator.use",
+            "line": 308,
+            "context": "307: <span className=\"font-medium\">\n308: {maxUses} {maxUses === 1 ? t('remote_kiosk_generator.use') : t('remote_kiosk_generator.uses')}\n309: </span>"
+          },
+          {
+            "key": "remote_kiosk_generator.uses",
+            "line": 308,
+            "context": "307: <span className=\"font-medium\">\n308: {maxUses} {maxUses === 1 ? t('remote_kiosk_generator.use') : t('remote_kiosk_generator.uses')}\n309: </span>"
+          },
+          {
+            "key": "remote_kiosk_generator.generated_url",
+            "line": 315,
+            "context": "314: <div className=\"space-y-2\">\n315: <Label>{t('remote_kiosk_generator.generated_url')}</Label>\n316: <div className=\"flex gap-2\">"
+          },
+          {
+            "key": "remote_kiosk_generator.scan_qr",
+            "line": 335,
+            "context": "334: <div className=\"mb-4 text-sm font-medium text-muted-foreground\">\n335: {t('remote_kiosk_generator.scan_qr')}\n336: </div>"
+          },
+          {
+            "key": "remote_kiosk_generator.instructions",
+            "line": 352,
+            "context": "351: <AlertDescription className=\"text-sm\">\n352: {t('remote_kiosk_generator.instructions')}\n353: </AlertDescription>"
+          },
+          {
+            "key": "remote_kiosk_generator.copied",
+            "line": 362,
+            "context": "361: <Check className=\"h-4 w-4 mr-2 text-green-600\" />\n362: {t('remote_kiosk_generator.copied')}\n363: </>"
+          },
+          {
+            "key": "remote_kiosk_generator.copy_url",
+            "line": 367,
+            "context": "366: <Copy className=\"h-4 w-4 mr-2\" />\n367: {t('remote_kiosk_generator.copy_url')}\n368: </>"
+          },
+          {
+            "key": "common.close",
+            "line": 372,
+            "context": "371: <Button onClick={handleClose} className=\"flex-1\">\n372: {t('common.close')}\n373: </Button>"
+          }
+        ],
+        "coverage": 97,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\detail-hub\\KioskPinExample.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -37269,28 +37694,28 @@
         "hardcodedStrings": [
           {
             "text": "Start Your Shift",
-            "line": 1516,
-            "context": "1515: <div>{t('detail_hub.live_dashboard.clock_in')}</div>\n1516: <div className=\"text-xs font-normal opacity-90\">Start Your Shift</div>\n1517: </div>"
+            "line": 1525,
+            "context": "1524: <div>{t('detail_hub.live_dashboard.clock_in')}</div>\n1525: <div className=\"text-xs font-normal opacity-90\">Start Your Shift</div>\n1526: </div>"
           },
           {
             "text": ", err);\r\n        }\r\n      };\r\n\r\n      // Send initial heartbeat\r\n      sendHeartbeat();\r\n\r\n      // Send heartbeat every 30 seconds while modal is open\r\n      const heartbeatInterval = setInterval(sendHeartbeat, 30000);\r\n\r\n      return () => {\r\n        console.log(",
-            "line": 373,
-            "context": "372: } catch (err) {\n373: console.error('[Kiosk] ❌ Heartbeat error:', err);\n374: }"
+            "line": 368,
+            "context": "367: } catch (err) {\n368: console.error('[Kiosk] ❌ Heartbeat error:', err);\n369: }"
           },
           {
             "text": ", error);\r\n      setPhotoUploadStatus(t(",
-            "line": 581,
-            "context": "580: .catch(error => {\n581: console.error('Camera access error:', error);\n582: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.camera_denied'));"
+            "line": 576,
+            "context": "575: .catch(error => {\n576: console.error('Camera access error:', error);\n577: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.camera_denied'));"
           },
           {
             "text": ", error);\r\n      setPhotoUploadStatus(t(",
-            "line": 735,
-            "context": "734: } catch (error) {\n735: console.error('Punch error:', error);\n736: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.punch_failed'));"
+            "line": 744,
+            "context": "743: } catch (error) {\n744: console.error('Punch error:', error);\n745: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.punch_failed'));"
           },
           {
             "text": ", error);\r\n      setFaceScanMessage(t(",
-            "line": 987,
-            "context": "986: \n987: console.error('Camera access error:', error);\n988: setFaceScanMessage(t('detail_hub.punch_clock.messages.camera_denied'));"
+            "line": 996,
+            "context": "995: \n996: console.error('Camera access error:', error);\n997: setFaceScanMessage(t('detail_hub.punch_clock.messages.camera_denied'));"
           }
         ],
         "translationCalls": [
@@ -37316,512 +37741,512 @@
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 523,
+            "line": 518,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.pin_locked",
-            "line": 524,
+            "line": 519,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 530,
+            "line": 525,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.pin_incorrect",
-            "line": 531,
+            "line": 526,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.preparing_camera",
-            "line": 569,
+            "line": 564,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.position_and_capture",
+            "line": 572,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.camera_denied",
             "line": 577,
             "exists": false
           },
           {
-            "key": "detail_hub.punch_clock.messages.camera_denied",
-            "line": 582,
-            "exists": false
-          },
-          {
             "key": "detail_hub.punch_clock.camera_error",
-            "line": 584,
+            "line": 579,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.camera_denied",
-            "line": 585,
+            "line": 580,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.capturing_photo",
-            "line": 595,
+            "line": 590,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.photo_capture_failed",
-            "line": 599,
+            "line": 594,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.photo_captured",
-            "line": 604,
+            "line": 599,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 623,
+            "line": 618,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.id_and_photo_required",
-            "line": 624,
+            "line": 619,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 632,
+            "line": 627,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.select_dealership",
-            "line": 633,
+            "line": 628,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.uploading",
-            "line": 640,
+            "line": 635,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.upload_failed",
-            "line": 651,
+            "line": 653,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.processing",
-            "line": 654,
+            "line": 656,
             "exists": false
           },
           {
             "key": "detail_hub.toasts.clocked_in",
-            "line": 672,
+            "line": 675,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.clock_in_success",
-            "line": 673,
+            "line": 676,
             "exists": false
           },
           {
             "key": "detail_hub.toasts.clocked_out",
-            "line": 684,
+            "line": 689,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.clock_out_success",
-            "line": 685,
+            "line": 690,
             "exists": false
           },
           {
             "key": "detail_hub.toasts.break_started",
-            "line": 696,
+            "line": 703,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.processing",
-            "line": 697,
+            "line": 704,
             "exists": false
           },
           {
             "key": "detail_hub.toasts.break_ended",
-            "line": 708,
+            "line": 717,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.processing",
-            "line": 709,
+            "line": 718,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.punch_failed",
-            "line": 736,
+            "line": 745,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.punch_failed",
-            "line": 738,
+            "line": 747,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.unknown_error",
-            "line": 739,
+            "line": 748,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.face_not_recognized_timeout",
-            "line": 771,
+            "line": 780,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_timeout_title",
-            "line": 778,
+            "line": 787,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_timeout_description",
-            "line": 779,
+            "line": 788,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.preparing_camera",
-            "line": 802,
+            "line": 811,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 817,
+            "line": 826,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.no_enrolled_faces",
-            "line": 827,
+            "line": 836,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.no_enrolled_employees",
-            "line": 829,
+            "line": 838,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.try_again_or_search",
-            "line": 830,
+            "line": 839,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.no_enrolled_faces",
-            "line": 863,
+            "line": 872,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 865,
+            "line": 874,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.position_face",
-            "line": 897,
+            "line": 906,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.detecting_face",
-            "line": 914,
+            "line": 923,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.employee_recognized",
-            "line": 941,
+            "line": 950,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.welcome_back",
-            "line": 942,
+            "line": 951,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.no_face_detected",
-            "line": 955,
+            "line": 964,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 966,
+            "line": 975,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 981,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.camera_denied",
-            "line": 988,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.camera_error",
             "line": 990,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.camera_denied",
-            "line": 991,
+            "line": 997,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.camera_error",
+            "line": 999,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.camera_denied",
+            "line": 1000,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.title",
-            "line": 1024,
+            "line": 1033,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.kiosk_description",
-            "line": 1026,
+            "line": 1035,
             "exists": false
           },
           {
             "key": "common.close",
-            "line": 1036,
+            "line": 1045,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.title",
-            "line": 1052,
+            "line": 1061,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.use_face_recognition",
-            "line": 1067,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.position_face",
             "line": 1076,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.position_face",
-            "line": 1099,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.scanning",
-            "line": 1110,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.loading_models",
-            "line": 1127,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.no_enrolled_faces",
-            "line": 1136,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1138,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.face_scan_cancelled",
-            "line": 1151,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1152,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.cancel_face_scan",
-            "line": 1161,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1173,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.search_placeholder",
-            "line": 1186,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1192,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.search_placeholder",
-            "line": 1198,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.loading_models",
-            "line": 1207,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.use_face_recognition",
-            "line": 1228,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.face_recognition_unavailable",
-            "line": 1236,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.loading_employees",
-            "line": 1250,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.no_results",
-            "line": 1254,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.enter_pin",
-            "line": 1310,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.pin_incorrect",
-            "line": 1319,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.pin_locked",
-            "line": 1326,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.back_to_search",
-            "line": 1352,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.active",
-            "line": 1426,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.on_break",
-            "line": 1427,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.status.online",
-            "line": 1428,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.clocked_in_at",
-            "line": 1442,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.elapsed",
-            "line": 1453,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.on_break_since",
-            "line": 1466,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.until_minimum",
-            "line": 1475,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.break_time",
-            "line": 1482,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.clock_in",
-            "line": 1515,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.start_break",
-            "line": 1531,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.clock_out",
-            "line": 1540,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.end_break",
-            "line": 1559,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.clock_out",
-            "line": 1573,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.back_to_search",
-            "line": 1588,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.photo_capture",
-            "line": 1628,
+            "line": 1085,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.position_face",
-            "line": 1658,
+            "line": 1108,
             "exists": false
           },
           {
-            "key": "detail_hub.punch_clock.captured_photo_alt",
-            "line": 1666,
+            "key": "detail_hub.punch_clock.scanning",
+            "line": 1119,
             "exists": false
           },
           {
-            "key": "detail_hub.punch_clock.cancel",
-            "line": 1689,
+            "key": "detail_hub.punch_clock.messages.loading_models",
+            "line": 1136,
             "exists": false
           },
           {
-            "key": "detail_hub.punch_clock.capture",
-            "line": 1697,
+            "key": "detail_hub.punch_clock.messages.no_enrolled_faces",
+            "line": 1145,
             "exists": false
           },
           {
-            "key": "detail_hub.punch_clock.retake_photo",
-            "line": 1709,
+            "key": "detail_hub.punch_clock.messages.use_search_instead",
+            "line": 1147,
             "exists": false
           },
           {
-            "key": "detail_hub.punch_clock.messages.processing",
-            "line": 1720,
+            "key": "detail_hub.punch_clock.messages.face_scan_cancelled",
+            "line": 1160,
             "exists": false
           },
           {
-            "key": "detail_hub.punch_clock.confirm",
-            "line": 1725,
+            "key": "detail_hub.punch_clock.messages.use_search_instead",
+            "line": 1161,
             "exists": false
           },
           {
-            "key": "detail_hub.punch_clock.kiosk_mode_active",
-            "line": 1743,
+            "key": "detail_hub.punch_clock.cancel_face_scan",
+            "line": 1170,
             "exists": false
           },
           {
-            "key": "detail_hub.punch_clock.camera_ready",
-            "line": 1748,
+            "key": "detail_hub.punch_clock.messages.use_search_instead",
+            "line": 1182,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.search_placeholder",
+            "line": 1195,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.use_search_instead",
+            "line": 1201,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.search_placeholder",
+            "line": 1207,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.loading_models",
+            "line": 1216,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.use_face_recognition",
+            "line": 1237,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.face_recognition_unavailable",
+            "line": 1245,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.loading_employees",
+            "line": 1259,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.no_results",
+            "line": 1263,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.enter_pin",
+            "line": 1319,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.pin_incorrect",
+            "line": 1328,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.pin_locked",
+            "line": 1335,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.back_to_search",
+            "line": 1361,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.active",
+            "line": 1435,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.on_break",
+            "line": 1436,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.status.online",
+            "line": 1437,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.clocked_in_at",
+            "line": 1451,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.elapsed",
+            "line": 1462,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.on_break_since",
+            "line": 1475,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.until_minimum",
+            "line": 1484,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.break_time",
+            "line": 1491,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.clock_in",
+            "line": 1524,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.start_break",
+            "line": 1540,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.clock_out",
+            "line": 1549,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.end_break",
+            "line": 1568,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.clock_out",
+            "line": 1582,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.back_to_search",
+            "line": 1597,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.photo_capture",
+            "line": 1637,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.position_face",
+            "line": 1667,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.captured_photo_alt",
+            "line": 1675,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.cancel",
+            "line": 1698,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.capture",
+            "line": 1706,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.retake_photo",
+            "line": 1718,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.processing",
+            "line": 1729,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.confirm",
+            "line": 1734,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.kiosk_mode_active",
             "line": 1752,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.camera_ready",
+            "line": 1757,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.status.online",
+            "line": 1761,
             "exists": false
           }
         ],
@@ -37848,513 +38273,513 @@
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 523,
-            "context": "522: toast({\n523: title: t('detail_hub.punch_clock.error'),\n524: description: t('detail_hub.punch_clock.pin_locked', { seconds: 30 }),"
+            "line": 518,
+            "context": "517: toast({\n518: title: t('detail_hub.punch_clock.error'),\n519: description: t('detail_hub.punch_clock.pin_locked', { seconds: 30 }),"
           },
           {
             "key": "detail_hub.punch_clock.pin_locked",
-            "line": 524,
-            "context": "523: title: t('detail_hub.punch_clock.error'),\n524: description: t('detail_hub.punch_clock.pin_locked', { seconds: 30 }),\n525: variant: \"destructive\""
+            "line": 519,
+            "context": "518: title: t('detail_hub.punch_clock.error'),\n519: description: t('detail_hub.punch_clock.pin_locked', { seconds: 30 }),\n520: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 530,
-            "context": "529: toast({\n530: title: t('detail_hub.punch_clock.error'),\n531: description: t('detail_hub.punch_clock.pin_incorrect', { attempts: 3 - newAttempts }),"
+            "line": 525,
+            "context": "524: toast({\n525: title: t('detail_hub.punch_clock.error'),\n526: description: t('detail_hub.punch_clock.pin_incorrect', { attempts: 3 - newAttempts }),"
           },
           {
             "key": "detail_hub.punch_clock.pin_incorrect",
-            "line": 531,
-            "context": "530: title: t('detail_hub.punch_clock.error'),\n531: description: t('detail_hub.punch_clock.pin_incorrect', { attempts: 3 - newAttempts }),\n532: variant: \"destructive\""
+            "line": 526,
+            "context": "525: title: t('detail_hub.punch_clock.error'),\n526: description: t('detail_hub.punch_clock.pin_incorrect', { attempts: 3 - newAttempts }),\n527: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.messages.preparing_camera",
-            "line": 569,
-            "context": "568: setCapturedPhoto(null); // Clear any previous photo (including from facial recognition)\n569: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.preparing_camera'));\n570: "
+            "line": 564,
+            "context": "563: setCapturedPhoto(null); // Clear any previous photo (including from facial recognition)\n564: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.preparing_camera'));\n565: "
           },
           {
             "key": "detail_hub.punch_clock.messages.position_and_capture",
-            "line": 577,
-            "context": "576: videoRef.current.srcObject = stream;\n577: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.position_and_capture'));\n578: }"
+            "line": 572,
+            "context": "571: videoRef.current.srcObject = stream;\n572: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.position_and_capture'));\n573: }"
           },
           {
             "key": "detail_hub.punch_clock.messages.camera_denied",
-            "line": 582,
-            "context": "581: console.error('Camera access error:', error);\n582: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.camera_denied'));\n583: toast({"
+            "line": 577,
+            "context": "576: console.error('Camera access error:', error);\n577: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.camera_denied'));\n578: toast({"
           },
           {
             "key": "detail_hub.punch_clock.camera_error",
-            "line": 584,
-            "context": "583: toast({\n584: title: t('detail_hub.punch_clock.camera_error'),\n585: description: t('detail_hub.punch_clock.messages.camera_denied'),"
+            "line": 579,
+            "context": "578: toast({\n579: title: t('detail_hub.punch_clock.camera_error'),\n580: description: t('detail_hub.punch_clock.messages.camera_denied'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.camera_denied",
-            "line": 585,
-            "context": "584: title: t('detail_hub.punch_clock.camera_error'),\n585: description: t('detail_hub.punch_clock.messages.camera_denied'),\n586: variant: \"destructive\""
+            "line": 580,
+            "context": "579: title: t('detail_hub.punch_clock.camera_error'),\n580: description: t('detail_hub.punch_clock.messages.camera_denied'),\n581: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.messages.capturing_photo",
-            "line": 595,
-            "context": "594: \n595: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.capturing_photo'));\n596: const photoData = capturePhotoFromVideo(videoRef.current, 0.9);"
+            "line": 590,
+            "context": "589: \n590: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.capturing_photo'));\n591: const photoData = capturePhotoFromVideo(videoRef.current, 0.9);"
           },
           {
             "key": "detail_hub.punch_clock.messages.photo_capture_failed",
-            "line": 599,
-            "context": "598: if (!photoData) {\n599: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.photo_capture_failed'));\n600: return;"
+            "line": 594,
+            "context": "593: if (!photoData) {\n594: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.photo_capture_failed'));\n595: return;"
           },
           {
             "key": "detail_hub.punch_clock.messages.photo_captured",
-            "line": 604,
-            "context": "603: setCapturedPhoto(photoData);\n604: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.photo_captured'));\n605: "
+            "line": 599,
+            "context": "598: setCapturedPhoto(photoData);\n599: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.photo_captured'));\n600: "
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 623,
-            "context": "622: toast({\n623: title: t('detail_hub.punch_clock.error'),\n624: description: t('detail_hub.punch_clock.messages.id_and_photo_required'),"
+            "line": 618,
+            "context": "617: toast({\n618: title: t('detail_hub.punch_clock.error'),\n619: description: t('detail_hub.punch_clock.messages.id_and_photo_required'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.id_and_photo_required",
-            "line": 624,
-            "context": "623: title: t('detail_hub.punch_clock.error'),\n624: description: t('detail_hub.punch_clock.messages.id_and_photo_required'),\n625: variant: \"destructive\""
+            "line": 619,
+            "context": "618: title: t('detail_hub.punch_clock.error'),\n619: description: t('detail_hub.punch_clock.messages.id_and_photo_required'),\n620: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 632,
-            "context": "631: toast({\n632: title: t('detail_hub.punch_clock.error'),\n633: description: t('detail_hub.punch_clock.messages.select_dealership'),"
+            "line": 627,
+            "context": "626: toast({\n627: title: t('detail_hub.punch_clock.error'),\n628: description: t('detail_hub.punch_clock.messages.select_dealership'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.select_dealership",
-            "line": 633,
-            "context": "632: title: t('detail_hub.punch_clock.error'),\n633: description: t('detail_hub.punch_clock.messages.select_dealership'),\n634: variant: \"destructive\""
+            "line": 628,
+            "context": "627: title: t('detail_hub.punch_clock.error'),\n628: description: t('detail_hub.punch_clock.messages.select_dealership'),\n629: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.messages.uploading",
-            "line": 640,
-            "context": "639: setIsProcessing(true);\n640: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.uploading'));\n641: "
+            "line": 635,
+            "context": "634: setIsProcessing(true);\n635: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.uploading'));\n636: "
           },
           {
             "key": "detail_hub.punch_clock.messages.upload_failed",
-            "line": 651,
-            "context": "650: if (!uploadResult.success) {\n651: throw new Error(uploadResult.storageError || t('detail_hub.punch_clock.messages.upload_failed'));\n652: }"
+            "line": 653,
+            "context": "652: if (!uploadResult.success) {\n653: throw new Error(uploadResult.storageError || t('detail_hub.punch_clock.messages.upload_failed'));\n654: }"
           },
           {
             "key": "detail_hub.punch_clock.messages.processing",
-            "line": 654,
-            "context": "653: \n654: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.processing'));\n655: "
+            "line": 656,
+            "context": "655: \n656: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.processing'));\n657: "
           },
           {
             "key": "detail_hub.toasts.clocked_in",
-            "line": 672,
-            "context": "671: toast({\n672: title: t('detail_hub.toasts.clocked_in'),\n673: description: t('detail_hub.punch_clock.messages.clock_in_success', { time: formatTime(currentTime) })"
+            "line": 675,
+            "context": "674: toast({\n675: title: t('detail_hub.toasts.clocked_in'),\n676: description: t('detail_hub.punch_clock.messages.clock_in_success', { time: formatTime(currentTime) })"
           },
           {
             "key": "detail_hub.punch_clock.messages.clock_in_success",
-            "line": 673,
-            "context": "672: title: t('detail_hub.toasts.clocked_in'),\n673: description: t('detail_hub.punch_clock.messages.clock_in_success', { time: formatTime(currentTime) })\n674: });"
+            "line": 676,
+            "context": "675: title: t('detail_hub.toasts.clocked_in'),\n676: description: t('detail_hub.punch_clock.messages.clock_in_success', { time: formatTime(currentTime) })\n677: });"
           },
           {
             "key": "detail_hub.toasts.clocked_out",
-            "line": 684,
-            "context": "683: toast({\n684: title: t('detail_hub.toasts.clocked_out'),\n685: description: t('detail_hub.punch_clock.messages.clock_out_success')"
+            "line": 689,
+            "context": "688: toast({\n689: title: t('detail_hub.toasts.clocked_out'),\n690: description: t('detail_hub.punch_clock.messages.clock_out_success')"
           },
           {
             "key": "detail_hub.punch_clock.messages.clock_out_success",
-            "line": 685,
-            "context": "684: title: t('detail_hub.toasts.clocked_out'),\n685: description: t('detail_hub.punch_clock.messages.clock_out_success')\n686: });"
+            "line": 690,
+            "context": "689: title: t('detail_hub.toasts.clocked_out'),\n690: description: t('detail_hub.punch_clock.messages.clock_out_success')\n691: });"
           },
           {
             "key": "detail_hub.toasts.break_started",
-            "line": 696,
-            "context": "695: toast({\n696: title: t('detail_hub.toasts.break_started'),\n697: description: t('detail_hub.punch_clock.messages.processing')"
+            "line": 703,
+            "context": "702: toast({\n703: title: t('detail_hub.toasts.break_started'),\n704: description: t('detail_hub.punch_clock.messages.processing')"
           },
           {
             "key": "detail_hub.punch_clock.messages.processing",
-            "line": 697,
-            "context": "696: title: t('detail_hub.toasts.break_started'),\n697: description: t('detail_hub.punch_clock.messages.processing')\n698: });"
+            "line": 704,
+            "context": "703: title: t('detail_hub.toasts.break_started'),\n704: description: t('detail_hub.punch_clock.messages.processing')\n705: });"
           },
           {
             "key": "detail_hub.toasts.break_ended",
-            "line": 708,
-            "context": "707: toast({\n708: title: t('detail_hub.toasts.break_ended'),\n709: description: t('detail_hub.punch_clock.messages.processing')"
+            "line": 717,
+            "context": "716: toast({\n717: title: t('detail_hub.toasts.break_ended'),\n718: description: t('detail_hub.punch_clock.messages.processing')"
           },
           {
             "key": "detail_hub.punch_clock.messages.processing",
-            "line": 709,
-            "context": "708: title: t('detail_hub.toasts.break_ended'),\n709: description: t('detail_hub.punch_clock.messages.processing')\n710: });"
+            "line": 718,
+            "context": "717: title: t('detail_hub.toasts.break_ended'),\n718: description: t('detail_hub.punch_clock.messages.processing')\n719: });"
           },
           {
             "key": "detail_hub.punch_clock.messages.punch_failed",
-            "line": 736,
-            "context": "735: console.error('Punch error:', error);\n736: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.punch_failed'));\n737: toast({"
+            "line": 745,
+            "context": "744: console.error('Punch error:', error);\n745: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.punch_failed'));\n746: toast({"
           },
           {
             "key": "detail_hub.punch_clock.punch_failed",
-            "line": 738,
-            "context": "737: toast({\n738: title: t('detail_hub.punch_clock.punch_failed'),\n739: description: error instanceof Error ? error.message : t('detail_hub.punch_clock.messages.unknown_error'),"
+            "line": 747,
+            "context": "746: toast({\n747: title: t('detail_hub.punch_clock.punch_failed'),\n748: description: error instanceof Error ? error.message : t('detail_hub.punch_clock.messages.unknown_error'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.unknown_error",
-            "line": 739,
-            "context": "738: title: t('detail_hub.punch_clock.punch_failed'),\n739: description: error instanceof Error ? error.message : t('detail_hub.punch_clock.messages.unknown_error'),\n740: variant: \"destructive\""
+            "line": 748,
+            "context": "747: title: t('detail_hub.punch_clock.punch_failed'),\n748: description: error instanceof Error ? error.message : t('detail_hub.punch_clock.messages.unknown_error'),\n749: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.messages.face_not_recognized_timeout",
-            "line": 771,
-            "context": "770: console.log('[FaceScan] ⏰ 15-second timeout - no face recognized');\n771: setFaceScanMessage(t('detail_hub.punch_clock.messages.face_not_recognized_timeout'));\n772: handleStopFaceScan();"
+            "line": 780,
+            "context": "779: console.log('[FaceScan] ⏰ 15-second timeout - no face recognized');\n780: setFaceScanMessage(t('detail_hub.punch_clock.messages.face_not_recognized_timeout'));\n781: handleStopFaceScan();"
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_timeout_title",
-            "line": 778,
-            "context": "777: toast({\n778: title: t('detail_hub.punch_clock.messages.face_scan_timeout_title'),\n779: description: t('detail_hub.punch_clock.messages.face_scan_timeout_description'),"
+            "line": 787,
+            "context": "786: toast({\n787: title: t('detail_hub.punch_clock.messages.face_scan_timeout_title'),\n788: description: t('detail_hub.punch_clock.messages.face_scan_timeout_description'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_timeout_description",
-            "line": 779,
-            "context": "778: title: t('detail_hub.punch_clock.messages.face_scan_timeout_title'),\n779: description: t('detail_hub.punch_clock.messages.face_scan_timeout_description'),\n780: variant: \"destructive\""
+            "line": 788,
+            "context": "787: title: t('detail_hub.punch_clock.messages.face_scan_timeout_title'),\n788: description: t('detail_hub.punch_clock.messages.face_scan_timeout_description'),\n789: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.messages.preparing_camera",
-            "line": 802,
-            "context": "801: setFaceScanSecondsLeft(15);\n802: setFaceScanMessage(t('detail_hub.punch_clock.messages.preparing_camera'));\n803: "
+            "line": 811,
+            "context": "810: setFaceScanSecondsLeft(15);\n811: setFaceScanMessage(t('detail_hub.punch_clock.messages.preparing_camera'));\n812: "
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 817,
-            "context": "816: toast({\n817: title: t('detail_hub.punch_clock.messages.face_scan_error'),\n818: description: 'Failed to load enrolled employees',"
+            "line": 826,
+            "context": "825: toast({\n826: title: t('detail_hub.punch_clock.messages.face_scan_error'),\n827: description: 'Failed to load enrolled employees',"
           },
           {
             "key": "detail_hub.punch_clock.messages.no_enrolled_faces",
-            "line": 827,
-            "context": "826: console.warn('[FaceScan] ❌ No enrolled employees found');\n827: setFaceScanMessage(t('detail_hub.punch_clock.messages.no_enrolled_faces'));\n828: toast({"
+            "line": 836,
+            "context": "835: console.warn('[FaceScan] ❌ No enrolled employees found');\n836: setFaceScanMessage(t('detail_hub.punch_clock.messages.no_enrolled_faces'));\n837: toast({"
           },
           {
             "key": "detail_hub.punch_clock.messages.no_enrolled_employees",
-            "line": 829,
-            "context": "828: toast({\n829: title: t('detail_hub.punch_clock.messages.no_enrolled_employees'),\n830: description: t('detail_hub.punch_clock.messages.try_again_or_search'),"
+            "line": 838,
+            "context": "837: toast({\n838: title: t('detail_hub.punch_clock.messages.no_enrolled_employees'),\n839: description: t('detail_hub.punch_clock.messages.try_again_or_search'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.try_again_or_search",
-            "line": 830,
-            "context": "829: title: t('detail_hub.punch_clock.messages.no_enrolled_employees'),\n830: description: t('detail_hub.punch_clock.messages.try_again_or_search'),\n831: variant: \"destructive\""
+            "line": 839,
+            "context": "838: title: t('detail_hub.punch_clock.messages.no_enrolled_employees'),\n839: description: t('detail_hub.punch_clock.messages.try_again_or_search'),\n840: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.messages.no_enrolled_faces",
-            "line": 863,
-            "context": "862: console.error('[FaceScan] ❌ No valid face descriptors found (all employees have corrupted data)');\n863: setFaceScanMessage(t('detail_hub.punch_clock.messages.no_enrolled_faces'));\n864: toast({"
+            "line": 872,
+            "context": "871: console.error('[FaceScan] ❌ No valid face descriptors found (all employees have corrupted data)');\n872: setFaceScanMessage(t('detail_hub.punch_clock.messages.no_enrolled_faces'));\n873: toast({"
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 865,
-            "context": "864: toast({\n865: title: t('detail_hub.punch_clock.messages.face_scan_error'),\n866: description: 'Face recognition data is corrupted. Please re-enroll employees.',"
+            "line": 874,
+            "context": "873: toast({\n874: title: t('detail_hub.punch_clock.messages.face_scan_error'),\n875: description: 'Face recognition data is corrupted. Please re-enroll employees.',"
           },
           {
             "key": "detail_hub.punch_clock.messages.position_face",
-            "line": 897,
-            "context": "896: videoRef.current.srcObject = stream;\n897: setFaceScanMessage(t('detail_hub.punch_clock.messages.position_face'));\n898: "
+            "line": 906,
+            "context": "905: videoRef.current.srcObject = stream;\n906: setFaceScanMessage(t('detail_hub.punch_clock.messages.position_face'));\n907: "
           },
           {
             "key": "detail_hub.punch_clock.messages.detecting_face",
-            "line": 914,
-            "context": "913: try {\n914: setFaceScanMessage(t('detail_hub.punch_clock.messages.detecting_face'));\n915: "
+            "line": 923,
+            "context": "922: try {\n923: setFaceScanMessage(t('detail_hub.punch_clock.messages.detecting_face'));\n924: "
           },
           {
             "key": "detail_hub.punch_clock.messages.employee_recognized",
-            "line": 941,
-            "context": "940: toast({\n941: title: t('detail_hub.punch_clock.messages.employee_recognized'),\n942: description: t('detail_hub.punch_clock.messages.welcome_back', { name: match.employeeName }),"
+            "line": 950,
+            "context": "949: toast({\n950: title: t('detail_hub.punch_clock.messages.employee_recognized'),\n951: description: t('detail_hub.punch_clock.messages.welcome_back', { name: match.employeeName }),"
           },
           {
             "key": "detail_hub.punch_clock.messages.welcome_back",
-            "line": 942,
-            "context": "941: title: t('detail_hub.punch_clock.messages.employee_recognized'),\n942: description: t('detail_hub.punch_clock.messages.welcome_back', { name: match.employeeName }),\n943: className: \"bg-emerald-50 border-emerald-500\""
+            "line": 951,
+            "context": "950: title: t('detail_hub.punch_clock.messages.employee_recognized'),\n951: description: t('detail_hub.punch_clock.messages.welcome_back', { name: match.employeeName }),\n952: className: \"bg-emerald-50 border-emerald-500\""
           },
           {
             "key": "detail_hub.punch_clock.messages.no_face_detected",
-            "line": 955,
-            "context": "954: console.log('[FaceScan] ❌ No match found this scan');\n955: setFaceScanMessage(t('detail_hub.punch_clock.messages.no_face_detected'));\n956: }"
+            "line": 964,
+            "context": "963: console.log('[FaceScan] ❌ No match found this scan');\n964: setFaceScanMessage(t('detail_hub.punch_clock.messages.no_face_detected'));\n965: }"
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 966,
-            "context": "965: console.error('[FaceScan] ❌ Error during scan:', err);\n966: setFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'));\n967: }"
+            "line": 975,
+            "context": "974: console.error('[FaceScan] ❌ Error during scan:', err);\n975: setFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'));\n976: }"
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 981,
-            "context": "980: console.warn('[FaceScan] ⚠️ TensorFlow internal error (likely corrupted descriptor), stopping scan');\n981: setFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'));\n982: setFaceScanning(false);"
+            "line": 990,
+            "context": "989: console.warn('[FaceScan] ⚠️ TensorFlow internal error (likely corrupted descriptor), stopping scan');\n990: setFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'));\n991: setFaceScanning(false);"
           },
           {
             "key": "detail_hub.punch_clock.messages.camera_denied",
-            "line": 988,
-            "context": "987: console.error('Camera access error:', error);\n988: setFaceScanMessage(t('detail_hub.punch_clock.messages.camera_denied'));\n989: toast({"
+            "line": 997,
+            "context": "996: console.error('Camera access error:', error);\n997: setFaceScanMessage(t('detail_hub.punch_clock.messages.camera_denied'));\n998: toast({"
           },
           {
             "key": "detail_hub.punch_clock.camera_error",
-            "line": 990,
-            "context": "989: toast({\n990: title: t('detail_hub.punch_clock.camera_error'),\n991: description: t('detail_hub.punch_clock.messages.camera_denied'),"
+            "line": 999,
+            "context": "998: toast({\n999: title: t('detail_hub.punch_clock.camera_error'),\n1000: description: t('detail_hub.punch_clock.messages.camera_denied'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.camera_denied",
-            "line": 991,
-            "context": "990: title: t('detail_hub.punch_clock.camera_error'),\n991: description: t('detail_hub.punch_clock.messages.camera_denied'),\n992: variant: \"destructive\""
+            "line": 1000,
+            "context": "999: title: t('detail_hub.punch_clock.camera_error'),\n1000: description: t('detail_hub.punch_clock.messages.camera_denied'),\n1001: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.title",
-            "line": 1024,
-            "context": "1023: <VisuallyHidden>\n1024: <DialogTitle>{t('detail_hub.punch_clock.title')}</DialogTitle>\n1025: <DialogDescription>"
+            "line": 1033,
+            "context": "1032: <VisuallyHidden>\n1033: <DialogTitle>{t('detail_hub.punch_clock.title')}</DialogTitle>\n1034: <DialogDescription>"
           },
           {
             "key": "detail_hub.punch_clock.kiosk_description",
-            "line": 1026,
-            "context": "1025: <DialogDescription>\n1026: {t('detail_hub.punch_clock.kiosk_description')}\n1027: </DialogDescription>"
+            "line": 1035,
+            "context": "1034: <DialogDescription>\n1035: {t('detail_hub.punch_clock.kiosk_description')}\n1036: </DialogDescription>"
           },
           {
             "key": "common.close",
-            "line": 1036,
-            "context": "1035: <X className=\"h-4 w-4\" />\n1036: <span className=\"sr-only\">{t('common.close')}</span>\n1037: </button>"
+            "line": 1045,
+            "context": "1044: <X className=\"h-4 w-4\" />\n1045: <span className=\"sr-only\">{t('common.close')}</span>\n1046: </button>"
           },
           {
             "key": "detail_hub.punch_clock.title",
-            "line": 1052,
-            "context": "1051: <h1 className=\"text-2xl font-bold text-gray-900 text-center\">\n1052: {t('detail_hub.punch_clock.title')}\n1053: </h1>"
+            "line": 1061,
+            "context": "1060: <h1 className=\"text-2xl font-bold text-gray-900 text-center\">\n1061: {t('detail_hub.punch_clock.title')}\n1062: </h1>"
           },
           {
             "key": "detail_hub.punch_clock.messages.use_face_recognition",
-            "line": 1067,
-            "context": "1066: <h2 className=\"text-xl font-bold text-gray-900\">\n1067: {t('detail_hub.punch_clock.messages.use_face_recognition')}\n1068: </h2>"
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.position_face",
             "line": 1076,
-            "context": "1075: }`}>\n1076: {faceScanMessage || t('detail_hub.punch_clock.messages.position_face')}\n1077: </p>"
+            "context": "1075: <h2 className=\"text-xl font-bold text-gray-900\">\n1076: {t('detail_hub.punch_clock.messages.use_face_recognition')}\n1077: </h2>"
           },
           {
             "key": "detail_hub.punch_clock.messages.position_face",
-            "line": 1099,
-            "context": "1098: <div className=\"absolute -top-8 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg animate-fade-in whitespace-nowrap\">\n1099: {t('detail_hub.punch_clock.messages.position_face')}\n1100: </div>"
+            "line": 1085,
+            "context": "1084: }`}>\n1085: {faceScanMessage || t('detail_hub.punch_clock.messages.position_face')}\n1086: </p>"
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.position_face",
+            "line": 1108,
+            "context": "1107: <div className=\"absolute -top-8 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg animate-fade-in whitespace-nowrap\">\n1108: {t('detail_hub.punch_clock.messages.position_face')}\n1109: </div>"
           },
           {
             "key": "detail_hub.punch_clock.scanning",
-            "line": 1110,
-            "context": "1109: <Loader2 className=\"w-4 h-4 animate-spin\" />\n1110: {t('detail_hub.punch_clock.scanning')}\n1111: </div>"
+            "line": 1119,
+            "context": "1118: <Loader2 className=\"w-4 h-4 animate-spin\" />\n1119: {t('detail_hub.punch_clock.scanning')}\n1120: </div>"
           },
           {
             "key": "detail_hub.punch_clock.messages.loading_models",
-            "line": 1127,
-            "context": "1126: <AlertDescription className=\"text-center\">\n1127: {t('detail_hub.punch_clock.messages.loading_models')} ({faceApiProgress}%)\n1128: </AlertDescription>"
+            "line": 1136,
+            "context": "1135: <AlertDescription className=\"text-center\">\n1136: {t('detail_hub.punch_clock.messages.loading_models')} ({faceApiProgress}%)\n1137: </AlertDescription>"
           },
           {
             "key": "detail_hub.punch_clock.messages.no_enrolled_faces",
-            "line": 1136,
-            "context": "1135: <AlertDescription className=\"text-center\">\n1136: {t('detail_hub.punch_clock.messages.no_enrolled_faces')}\n1137: <br />"
+            "line": 1145,
+            "context": "1144: <AlertDescription className=\"text-center\">\n1145: {t('detail_hub.punch_clock.messages.no_enrolled_faces')}\n1146: <br />"
           },
           {
             "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1138,
-            "context": "1137: <br />\n1138: {t('detail_hub.punch_clock.messages.use_search_instead')}\n1139: </AlertDescription>"
+            "line": 1147,
+            "context": "1146: <br />\n1147: {t('detail_hub.punch_clock.messages.use_search_instead')}\n1148: </AlertDescription>"
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_cancelled",
-            "line": 1151,
-            "context": "1150: toast({\n1151: title: t('detail_hub.punch_clock.messages.face_scan_cancelled'),\n1152: description: t('detail_hub.punch_clock.messages.use_search_instead'),"
+            "line": 1160,
+            "context": "1159: toast({\n1160: title: t('detail_hub.punch_clock.messages.face_scan_cancelled'),\n1161: description: t('detail_hub.punch_clock.messages.use_search_instead'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1152,
-            "context": "1151: title: t('detail_hub.punch_clock.messages.face_scan_cancelled'),\n1152: description: t('detail_hub.punch_clock.messages.use_search_instead'),\n1153: variant: \"default\""
+            "line": 1161,
+            "context": "1160: title: t('detail_hub.punch_clock.messages.face_scan_cancelled'),\n1161: description: t('detail_hub.punch_clock.messages.use_search_instead'),\n1162: variant: \"default\""
           },
           {
             "key": "detail_hub.punch_clock.cancel_face_scan",
-            "line": 1161,
-            "context": "1160: <X className=\"w-5 h-5 mr-2\" />\n1161: {t('detail_hub.punch_clock.cancel_face_scan')}\n1162: </Button>"
+            "line": 1170,
+            "context": "1169: <X className=\"w-5 h-5 mr-2\" />\n1170: {t('detail_hub.punch_clock.cancel_face_scan')}\n1171: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1173,
-            "context": "1172: >\n1173: {t('detail_hub.punch_clock.messages.use_search_instead')}\n1174: </Button>"
+            "line": 1182,
+            "context": "1181: >\n1182: {t('detail_hub.punch_clock.messages.use_search_instead')}\n1183: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.search_placeholder",
-            "line": 1186,
-            "context": "1185: <div className=\"text-center text-sm text-gray-600 mb-2\">\n1186: {t('detail_hub.punch_clock.search_placeholder')}\n1187: </div>"
+            "line": 1195,
+            "context": "1194: <div className=\"text-center text-sm text-gray-600 mb-2\">\n1195: {t('detail_hub.punch_clock.search_placeholder')}\n1196: </div>"
           },
           {
             "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1192,
-            "context": "1191: <div className=\"text-center text-sm text-gray-600 mb-2\">\n1192: {t('detail_hub.punch_clock.messages.use_search_instead')}\n1193: </div>"
+            "line": 1201,
+            "context": "1200: <div className=\"text-center text-sm text-gray-600 mb-2\">\n1201: {t('detail_hub.punch_clock.messages.use_search_instead')}\n1202: </div>"
           },
           {
             "key": "detail_hub.punch_clock.search_placeholder",
-            "line": 1198,
-            "context": "1197: type=\"text\"\n1198: placeholder={t('detail_hub.punch_clock.search_placeholder')}\n1199: value={searchQuery}"
+            "line": 1207,
+            "context": "1206: type=\"text\"\n1207: placeholder={t('detail_hub.punch_clock.search_placeholder')}\n1208: value={searchQuery}"
           },
           {
             "key": "detail_hub.punch_clock.messages.loading_models",
-            "line": 1207,
-            "context": "1206: <div className=\"text-center text-sm text-gray-600\">\n1207: {t('detail_hub.punch_clock.messages.loading_models')} ({faceApiProgress}%)\n1208: </div>"
+            "line": 1216,
+            "context": "1215: <div className=\"text-center text-sm text-gray-600\">\n1216: {t('detail_hub.punch_clock.messages.loading_models')} ({faceApiProgress}%)\n1217: </div>"
           },
           {
             "key": "detail_hub.punch_clock.messages.use_face_recognition",
-            "line": 1228,
-            "context": "1227: <Camera className=\"w-5 h-5 mr-2\" />\n1228: {t('detail_hub.punch_clock.messages.use_face_recognition')}\n1229: </Button>"
+            "line": 1237,
+            "context": "1236: <Camera className=\"w-5 h-5 mr-2\" />\n1237: {t('detail_hub.punch_clock.messages.use_face_recognition')}\n1238: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.messages.face_recognition_unavailable",
-            "line": 1236,
-            "context": "1235: <AlertDescription className=\"text-center text-sm text-gray-600\">\n1236: {t('detail_hub.punch_clock.messages.face_recognition_unavailable')}\n1237: </AlertDescription>"
+            "line": 1245,
+            "context": "1244: <AlertDescription className=\"text-center text-sm text-gray-600\">\n1245: {t('detail_hub.punch_clock.messages.face_recognition_unavailable')}\n1246: </AlertDescription>"
           },
           {
             "key": "detail_hub.punch_clock.loading_employees",
-            "line": 1250,
-            "context": "1249: <div className=\"text-center py-8 text-gray-500\">\n1250: {t('detail_hub.punch_clock.loading_employees')}\n1251: </div>"
+            "line": 1259,
+            "context": "1258: <div className=\"text-center py-8 text-gray-500\">\n1259: {t('detail_hub.punch_clock.loading_employees')}\n1260: </div>"
           },
           {
             "key": "detail_hub.punch_clock.no_results",
-            "line": 1254,
-            "context": "1253: <div className=\"text-center py-8 text-gray-500\">\n1254: {t('detail_hub.punch_clock.no_results')}\n1255: </div>"
+            "line": 1263,
+            "context": "1262: <div className=\"text-center py-8 text-gray-500\">\n1263: {t('detail_hub.punch_clock.no_results')}\n1264: </div>"
           },
           {
             "key": "detail_hub.punch_clock.enter_pin",
-            "line": 1310,
-            "context": "1309: <h2 className=\"text-2xl font-bold text-center\">\n1310: {t('detail_hub.punch_clock.enter_pin')}\n1311: </h2>"
+            "line": 1319,
+            "context": "1318: <h2 className=\"text-2xl font-bold text-center\">\n1319: {t('detail_hub.punch_clock.enter_pin')}\n1320: </h2>"
           },
           {
             "key": "detail_hub.punch_clock.pin_incorrect",
-            "line": 1319,
-            "context": "1318: <p className=\"text-center text-red-600 text-sm\">\n1319: {t('detail_hub.punch_clock.pin_incorrect', { attempts: 3 - pinAttempts })}\n1320: </p>"
+            "line": 1328,
+            "context": "1327: <p className=\"text-center text-red-600 text-sm\">\n1328: {t('detail_hub.punch_clock.pin_incorrect', { attempts: 3 - pinAttempts })}\n1329: </p>"
           },
           {
             "key": "detail_hub.punch_clock.pin_locked",
-            "line": 1326,
-            "context": "1325: <p className=\"text-center text-red-600 text-sm font-semibold\">\n1326: {t('detail_hub.punch_clock.pin_locked', { seconds: lockTimer })}\n1327: </p>"
+            "line": 1335,
+            "context": "1334: <p className=\"text-center text-red-600 text-sm font-semibold\">\n1335: {t('detail_hub.punch_clock.pin_locked', { seconds: lockTimer })}\n1336: </p>"
           },
           {
             "key": "detail_hub.punch_clock.back_to_search",
-            "line": 1352,
-            "context": "1351: >\n1352: {t('detail_hub.punch_clock.back_to_search')}\n1353: </Button>"
+            "line": 1361,
+            "context": "1360: >\n1361: {t('detail_hub.punch_clock.back_to_search')}\n1362: </Button>"
           },
           {
             "key": "detail_hub.live_dashboard.active",
-            "line": 1426,
-            "context": "1425: >\n1426: {employeeState.state === 'clocked_in' ? t('detail_hub.live_dashboard.active') :\n1427: employeeState.state === 'on_break' ? t('detail_hub.live_dashboard.on_break') :"
+            "line": 1435,
+            "context": "1434: >\n1435: {employeeState.state === 'clocked_in' ? t('detail_hub.live_dashboard.active') :\n1436: employeeState.state === 'on_break' ? t('detail_hub.live_dashboard.on_break') :"
           },
           {
             "key": "detail_hub.live_dashboard.on_break",
-            "line": 1427,
-            "context": "1426: {employeeState.state === 'clocked_in' ? t('detail_hub.live_dashboard.active') :\n1427: employeeState.state === 'on_break' ? t('detail_hub.live_dashboard.on_break') :\n1428: t('detail_hub.punch_clock.status.online')}"
+            "line": 1436,
+            "context": "1435: {employeeState.state === 'clocked_in' ? t('detail_hub.live_dashboard.active') :\n1436: employeeState.state === 'on_break' ? t('detail_hub.live_dashboard.on_break') :\n1437: t('detail_hub.punch_clock.status.online')}"
           },
           {
             "key": "detail_hub.punch_clock.status.online",
-            "line": 1428,
-            "context": "1427: employeeState.state === 'on_break' ? t('detail_hub.live_dashboard.on_break') :\n1428: t('detail_hub.punch_clock.status.online')}\n1429: </Badge>"
+            "line": 1437,
+            "context": "1436: employeeState.state === 'on_break' ? t('detail_hub.live_dashboard.on_break') :\n1437: t('detail_hub.punch_clock.status.online')}\n1438: </Badge>"
           },
           {
             "key": "detail_hub.punch_clock.clocked_in_at",
-            "line": 1442,
-            "context": "1441: <p className=\"text-xs text-gray-500 mb-1\">\n1442: {t('detail_hub.punch_clock.clocked_in_at', {\n1443: time: formatTime(new Date(employeeState.currentEntry.clock_in))"
+            "line": 1451,
+            "context": "1450: <p className=\"text-xs text-gray-500 mb-1\">\n1451: {t('detail_hub.punch_clock.clocked_in_at', {\n1452: time: formatTime(new Date(employeeState.currentEntry.clock_in))"
           },
           {
             "key": "detail_hub.punch_clock.elapsed",
-            "line": 1453,
-            "context": "1452: <div className=\"text-right\">\n1453: <p className=\"text-xs text-gray-500 mb-1\">{t('detail_hub.punch_clock.elapsed')}</p>\n1454: <p className=\"text-2xl font-bold text-gray-900\">"
+            "line": 1462,
+            "context": "1461: <div className=\"text-right\">\n1462: <p className=\"text-xs text-gray-500 mb-1\">{t('detail_hub.punch_clock.elapsed')}</p>\n1463: <p className=\"text-2xl font-bold text-gray-900\">"
           },
           {
             "key": "detail_hub.punch_clock.on_break_since",
-            "line": 1466,
-            "context": "1465: <p className=\"text-xs text-amber-600 mb-1\">\n1466: {t('detail_hub.punch_clock.on_break_since', {\n1467: time: formatTime(new Date(employeeState.currentEntry.break_start!))"
+            "line": 1475,
+            "context": "1474: <p className=\"text-xs text-amber-600 mb-1\">\n1475: {t('detail_hub.punch_clock.on_break_since', {\n1476: time: formatTime(new Date(employeeState.currentEntry.break_start!))"
           },
           {
             "key": "detail_hub.punch_clock.until_minimum",
-            "line": 1475,
-            "context": "1474: <p className=\"text-xs text-amber-600 mt-1\">\n1475: {30 - (employeeState.currentEntry.break_elapsed_minutes || 0)} min {t('detail_hub.punch_clock.until_minimum')}\n1476: </p>"
+            "line": 1484,
+            "context": "1483: <p className=\"text-xs text-amber-600 mt-1\">\n1484: {30 - (employeeState.currentEntry.break_elapsed_minutes || 0)} min {t('detail_hub.punch_clock.until_minimum')}\n1485: </p>"
           },
           {
             "key": "detail_hub.punch_clock.break_time",
-            "line": 1482,
-            "context": "1481: <div className=\"text-right\">\n1482: <p className=\"text-xs text-amber-600 mb-1\">{t('detail_hub.punch_clock.break_time')}</p>\n1483: <p className=\"text-2xl font-bold text-amber-700\">"
+            "line": 1491,
+            "context": "1490: <div className=\"text-right\">\n1491: <p className=\"text-xs text-amber-600 mb-1\">{t('detail_hub.punch_clock.break_time')}</p>\n1492: <p className=\"text-2xl font-bold text-amber-700\">"
           },
           {
             "key": "detail_hub.live_dashboard.clock_in",
-            "line": 1515,
-            "context": "1514: <div className=\"text-left\">\n1515: <div>{t('detail_hub.live_dashboard.clock_in')}</div>\n1516: <div className=\"text-xs font-normal opacity-90\">Start Your Shift</div>"
+            "line": 1524,
+            "context": "1523: <div className=\"text-left\">\n1524: <div>{t('detail_hub.live_dashboard.clock_in')}</div>\n1525: <div className=\"text-xs font-normal opacity-90\">Start Your Shift</div>"
           },
           {
             "key": "detail_hub.punch_clock.start_break",
-            "line": 1531,
-            "context": "1530: <Coffee className=\"w-8 h-8 mr-2\" />\n1531: {t('detail_hub.punch_clock.start_break')}\n1532: </Button>"
+            "line": 1540,
+            "context": "1539: <Coffee className=\"w-8 h-8 mr-2\" />\n1540: {t('detail_hub.punch_clock.start_break')}\n1541: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.messages.clock_out",
-            "line": 1540,
-            "context": "1539: <LogOut className=\"w-8 h-8 mr-2\" />\n1540: {t('detail_hub.punch_clock.messages.clock_out')}\n1541: </Button>"
+            "line": 1549,
+            "context": "1548: <LogOut className=\"w-8 h-8 mr-2\" />\n1549: {t('detail_hub.punch_clock.messages.clock_out')}\n1550: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.end_break",
-            "line": 1559,
-            "context": "1558: <Coffee className=\"w-8 h-8 mr-2\" />\n1559: <span>{t('detail_hub.punch_clock.end_break')}</span>\n1560: {breakSecondsRemaining !== null && breakSecondsRemaining > 0 && ("
+            "line": 1568,
+            "context": "1567: <Coffee className=\"w-8 h-8 mr-2\" />\n1568: <span>{t('detail_hub.punch_clock.end_break')}</span>\n1569: {breakSecondsRemaining !== null && breakSecondsRemaining > 0 && ("
           },
           {
             "key": "detail_hub.punch_clock.messages.clock_out",
-            "line": 1573,
-            "context": "1572: <LogOut className=\"w-8 h-8 mr-2\" />\n1573: {t('detail_hub.punch_clock.messages.clock_out')}\n1574: </Button>"
+            "line": 1582,
+            "context": "1581: <LogOut className=\"w-8 h-8 mr-2\" />\n1582: {t('detail_hub.punch_clock.messages.clock_out')}\n1583: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.back_to_search",
-            "line": 1588,
-            "context": "1587: >\n1588: {t('detail_hub.punch_clock.back_to_search')}\n1589: </Button>"
+            "line": 1597,
+            "context": "1596: >\n1597: {t('detail_hub.punch_clock.back_to_search')}\n1598: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.photo_capture",
-            "line": 1628,
-            "context": "1627: <Camera className=\"w-6 h-6 inline mr-2\" />\n1628: {t('detail_hub.punch_clock.photo_capture')}\n1629: </h2>"
+            "line": 1637,
+            "context": "1636: <Camera className=\"w-6 h-6 inline mr-2\" />\n1637: {t('detail_hub.punch_clock.photo_capture')}\n1638: </h2>"
           },
           {
             "key": "detail_hub.punch_clock.messages.position_face",
-            "line": 1658,
-            "context": "1657: <div className=\"absolute -top-8 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg animate-fade-in whitespace-nowrap\">\n1658: {t('detail_hub.punch_clock.messages.position_face')}\n1659: </div>"
+            "line": 1667,
+            "context": "1666: <div className=\"absolute -top-8 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg animate-fade-in whitespace-nowrap\">\n1667: {t('detail_hub.punch_clock.messages.position_face')}\n1668: </div>"
           },
           {
             "key": "detail_hub.punch_clock.captured_photo_alt",
-            "line": 1666,
-            "context": "1665: src={capturedPhoto}\n1666: alt={t('detail_hub.punch_clock.captured_photo_alt')}\n1667: className=\"w-full h-full object-cover\""
+            "line": 1675,
+            "context": "1674: src={capturedPhoto}\n1675: alt={t('detail_hub.punch_clock.captured_photo_alt')}\n1676: className=\"w-full h-full object-cover\""
           },
           {
             "key": "detail_hub.punch_clock.cancel",
-            "line": 1689,
-            "context": "1688: >\n1689: {t('detail_hub.punch_clock.cancel')}\n1690: </Button>"
+            "line": 1698,
+            "context": "1697: >\n1698: {t('detail_hub.punch_clock.cancel')}\n1699: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.capture",
-            "line": 1697,
-            "context": "1696: <Camera className=\"w-5 h-5 mr-2\" />\n1697: {t('detail_hub.punch_clock.capture')}\n1698: </Button>"
+            "line": 1706,
+            "context": "1705: <Camera className=\"w-5 h-5 mr-2\" />\n1706: {t('detail_hub.punch_clock.capture')}\n1707: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.retake_photo",
-            "line": 1709,
-            "context": "1708: <RotateCcw className=\"w-5 h-5 mr-2\" />\n1709: {t('detail_hub.punch_clock.retake_photo')}\n1710: </Button>"
+            "line": 1718,
+            "context": "1717: <RotateCcw className=\"w-5 h-5 mr-2\" />\n1718: {t('detail_hub.punch_clock.retake_photo')}\n1719: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.messages.processing",
-            "line": 1720,
-            "context": "1719: <Loader2 className=\"w-5 h-5 mr-2 animate-spin\" />\n1720: {t('detail_hub.punch_clock.messages.processing')}\n1721: </>"
+            "line": 1729,
+            "context": "1728: <Loader2 className=\"w-5 h-5 mr-2 animate-spin\" />\n1729: {t('detail_hub.punch_clock.messages.processing')}\n1730: </>"
           },
           {
             "key": "detail_hub.punch_clock.confirm",
-            "line": 1725,
-            "context": "1724: <CheckCircle className=\"w-5 h-5 mr-2\" />\n1725: {t('detail_hub.punch_clock.confirm')}\n1726: </>"
+            "line": 1734,
+            "context": "1733: <CheckCircle className=\"w-5 h-5 mr-2\" />\n1734: {t('detail_hub.punch_clock.confirm')}\n1735: </>"
           },
           {
             "key": "detail_hub.punch_clock.kiosk_mode_active",
-            "line": 1743,
-            "context": "1742: <Badge variant=\"outline\">{kioskConfig.name || KIOSK_ID || 'Not Configured'}</Badge>\n1743: <span>{t('detail_hub.punch_clock.kiosk_mode_active')}</span>\n1744: </div>"
+            "line": 1752,
+            "context": "1751: <Badge variant=\"outline\">{kioskConfig.name || KIOSK_ID || 'Not Configured'}</Badge>\n1752: <span>{t('detail_hub.punch_clock.kiosk_mode_active')}</span>\n1753: </div>"
           },
           {
             "key": "detail_hub.punch_clock.camera_ready",
-            "line": 1748,
-            "context": "1747: <CheckCircle className=\"w-4 h-4 text-emerald-500\" />\n1748: <span>{t('detail_hub.punch_clock.camera_ready')}</span>\n1749: </div>"
+            "line": 1757,
+            "context": "1756: <CheckCircle className=\"w-4 h-4 text-emerald-500\" />\n1757: <span>{t('detail_hub.punch_clock.camera_ready')}</span>\n1758: </div>"
           },
           {
             "key": "detail_hub.punch_clock.status.online",
-            "line": 1752,
-            "context": "1751: <CheckCircle className=\"w-4 h-4 text-emerald-500\" />\n1752: <span>{t('detail_hub.punch_clock.status.online')}</span>\n1753: </div>"
+            "line": 1761,
+            "context": "1760: <CheckCircle className=\"w-4 h-4 text-emerald-500\" />\n1761: <span>{t('detail_hub.punch_clock.status.online')}</span>\n1762: </div>"
           }
         ],
         "coverage": 95,
@@ -79736,40 +80161,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\settings\\RoleNotificationSettings.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Configure which custom roles receive notifications for different modules and events",
-            "line": 283,
-            "context": "282: </CardTitle>\n283: <CardDescription>\n284: Configure which custom roles receive notifications for different modules and events"
-          },
-          {
-            "text": "Select Custom Role",
-            "line": 290,
-            "context": "289: <div className=\"space-y-2\">\n290: <Label>Select Custom Role</Label>\n291: <Select value={selectedRole} onValueChange={setSelectedRole}>"
-          },
-          {
-            "text": "Select a custom role to configure notification settings",
-            "line": 418,
-            "context": "417: <Bell className=\"h-12 w-12 mx-auto mb-4 opacity-20\" />\n418: <p>Select a custom role to configure notification settings</p>\n419: </div>"
-          },
-          {
-            "text": "Choose a custom role...",
-            "line": 293,
-            "context": "292: <SelectTrigger>\n293: <SelectValue placeholder=\"Choose a custom role...\" />\n294: </SelectTrigger>"
-          },
-          {
-            "text": "Select Custom Role",
-            "line": 290,
-            "context": "289: <div className=\"space-y-2\">\n290: <Label>Select Custom Role</Label>\n291: <Select value={selectedRole} onValueChange={setSelectedRole}>"
-          }
-        ],
-        "translationCalls": [],
-        "missingKeys": [],
-        "coverage": 0,
-        "severity": "low"
-      },
-      {
         "file": "src\\components\\settings\\security\\SecurityAuditLogViewer.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -98622,6 +99013,287 @@
         "severity": "low"
       },
       {
+        "file": "src\\pages\\RemoteKiosk.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Captured",
+            "line": 335,
+            "context": "334: <div className=\"relative rounded-lg overflow-hidden border\">\n335: <img src={photoData} alt=\"Captured\" className=\"w-full\" />\n336: </div>"
+          },
+          {
+            "text": ", error);\r\n        throw error;\r\n      }\r\n\r\n      if (data) {\r\n        console.log(",
+            "line": 143,
+            "context": "142: if (error) {\n143: console.error('[Remote Kiosk] Query error:', error);\n144: throw error;"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "remote_kiosk.error_no_token",
+            "line": 51,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.error_invalid_token_type",
+            "line": 72,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.error_token_expired",
+            "line": 79,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.error_invalid_token",
+            "line": 91,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.expired",
+            "line": 104,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.error_token_expired",
+            "line": 105,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.error_employee_not_found",
+            "line": 161,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.error_no_token",
+            "line": 175,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.error_pin_required",
+            "line": 180,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.error_photo_required",
+            "line": 186,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.success_${action}",
+            "line": 218,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.error_unknown",
+            "line": 227,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.error_punch_failed",
+            "line": 231,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.title",
+            "line": 265,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.loading_employee",
+            "line": 279,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.expires_in",
+            "line": 284,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.capture_photo",
+            "line": 325,
+            "exists": false
+          },
+          {
+            "key": "common.cancel",
+            "line": 328,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.retake_photo",
+            "line": 342,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.enter_pin",
+            "line": 350,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.clock_in",
+            "line": 376,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.clock_out",
+            "line": 392,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.start_break",
+            "line": 408,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.end_break",
+            "line": 424,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.take_photo",
+            "line": 438,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk.powered_by",
+            "line": 444,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "remote_kiosk.error_no_token",
+            "line": 51,
+            "context": "50: if (!tokenParam) {\n51: setError(t('remote_kiosk.error_no_token'));\n52: return;"
+          },
+          {
+            "key": "remote_kiosk.error_invalid_token_type",
+            "line": 72,
+            "context": "71: if (payload.type !== 'remote_kiosk') {\n72: setError(t('remote_kiosk.error_invalid_token_type'));\n73: return;"
+          },
+          {
+            "key": "remote_kiosk.error_token_expired",
+            "line": 79,
+            "context": "78: if (payload.exp < now) {\n79: setError(t('remote_kiosk.error_token_expired'));\n80: return;"
+          },
+          {
+            "key": "remote_kiosk.error_invalid_token",
+            "line": 91,
+            "context": "90: console.error('[Remote Kiosk] Token parsing failed:', err);\n91: setError(t('remote_kiosk.error_invalid_token'));\n92: }"
+          },
+          {
+            "key": "remote_kiosk.expired",
+            "line": 104,
+            "context": "103: if (remaining <= 0) {\n104: setTimeRemaining(t('remote_kiosk.expired'));\n105: setError(t('remote_kiosk.error_token_expired'));"
+          },
+          {
+            "key": "remote_kiosk.error_token_expired",
+            "line": 105,
+            "context": "104: setTimeRemaining(t('remote_kiosk.expired'));\n105: setError(t('remote_kiosk.error_token_expired'));\n106: } else {"
+          },
+          {
+            "key": "remote_kiosk.error_employee_not_found",
+            "line": 161,
+            "context": "160: console.error('[Remote Kiosk] Failed to fetch employee:', err);\n161: setError(t('remote_kiosk.error_employee_not_found'));\n162: }"
+          },
+          {
+            "key": "remote_kiosk.error_no_token",
+            "line": 175,
+            "context": "174: if (!token || !tokenPayload) {\n175: setError(t('remote_kiosk.error_no_token'));\n176: return;"
+          },
+          {
+            "key": "remote_kiosk.error_pin_required",
+            "line": 180,
+            "context": "179: if (!pin || pin.length !== 4) {\n180: setError(t('remote_kiosk.error_pin_required'));\n181: return;"
+          },
+          {
+            "key": "remote_kiosk.error_photo_required",
+            "line": 186,
+            "context": "185: if ((action === 'clock_in' || action === 'clock_out') && !photoData) {\n186: setError(t('remote_kiosk.error_photo_required'));\n187: setShowCamera(true);"
+          },
+          {
+            "key": "remote_kiosk.success_${action}",
+            "line": 218,
+            "context": "217: if (data.success) {\n218: setSuccess(data.message || t(`remote_kiosk.success_${action}`));\n219: setPin(''); // Clear PIN"
+          },
+          {
+            "key": "remote_kiosk.error_unknown",
+            "line": 227,
+            "context": "226: } else {\n227: throw new Error(data.error || t('remote_kiosk.error_unknown'));\n228: }"
+          },
+          {
+            "key": "remote_kiosk.error_punch_failed",
+            "line": 231,
+            "context": "230: console.error('[Remote Kiosk] Punch failed:', err);\n231: setError(err.message || t('remote_kiosk.error_punch_failed'));\n232: } finally {"
+          },
+          {
+            "key": "remote_kiosk.title",
+            "line": 265,
+            "context": "264: <CardTitle className=\"text-2xl font-bold\">\n265: {t('remote_kiosk.title')}\n266: </CardTitle>"
+          },
+          {
+            "key": "remote_kiosk.loading_employee",
+            "line": 279,
+            "context": "278: ) : (\n279: t('remote_kiosk.loading_employee')\n280: )}"
+          },
+          {
+            "key": "remote_kiosk.expires_in",
+            "line": 284,
+            "context": "283: <div className=\"text-sm text-muted-foreground mt-2\">\n284: {t('remote_kiosk.expires_in')}: <span className=\"font-medium\">{timeRemaining}</span>\n285: </div>"
+          },
+          {
+            "key": "remote_kiosk.capture_photo",
+            "line": 325,
+            "context": "324: <Camera className=\"h-4 w-4 mr-2\" />\n325: {t('remote_kiosk.capture_photo')}\n326: </Button>"
+          },
+          {
+            "key": "common.cancel",
+            "line": 328,
+            "context": "327: <Button variant=\"outline\" onClick={() => setShowCamera(false)}>\n328: {t('common.cancel')}\n329: </Button>"
+          },
+          {
+            "key": "remote_kiosk.retake_photo",
+            "line": 342,
+            "context": "341: >\n342: {t('remote_kiosk.retake_photo')}\n343: </Button>"
+          },
+          {
+            "key": "remote_kiosk.enter_pin",
+            "line": 350,
+            "context": "349: <label className=\"text-sm font-medium\">\n350: {t('remote_kiosk.enter_pin')}\n351: </label>"
+          },
+          {
+            "key": "remote_kiosk.clock_in",
+            "line": 376,
+            "context": "375: <Clock className=\"h-5 w-5\" />\n376: <span className=\"text-xs\">{t('remote_kiosk.clock_in')}</span>\n377: </>"
+          },
+          {
+            "key": "remote_kiosk.clock_out",
+            "line": 392,
+            "context": "391: <LogOut className=\"h-5 w-5\" />\n392: <span className=\"text-xs\">{t('remote_kiosk.clock_out')}</span>\n393: </>"
+          },
+          {
+            "key": "remote_kiosk.start_break",
+            "line": 408,
+            "context": "407: <Coffee className=\"h-5 w-5\" />\n408: <span className=\"text-xs\">{t('remote_kiosk.start_break')}</span>\n409: </>"
+          },
+          {
+            "key": "remote_kiosk.end_break",
+            "line": 424,
+            "context": "423: <Coffee className=\"h-5 w-5\" />\n424: <span className=\"text-xs\">{t('remote_kiosk.end_break')}</span>\n425: </>"
+          },
+          {
+            "key": "remote_kiosk.take_photo",
+            "line": 438,
+            "context": "437: <Camera className=\"h-4 w-4 mr-2\" />\n438: {t('remote_kiosk.take_photo')}\n439: </Button>"
+          },
+          {
+            "key": "remote_kiosk.powered_by",
+            "line": 444,
+            "context": "443: <div className=\"text-center text-xs text-muted-foreground pt-4 border-t\">\n444: {t('remote_kiosk.powered_by')}\n445: </div>"
+          }
+        ],
+        "coverage": 93,
+        "severity": "low"
+      },
+      {
         "file": "src\\pages\\Reports.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -101002,7 +101674,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Modal Components",
-      "description": "50 Modal components need translation",
+      "description": "51 Modal components need translation",
       "files": [
         "src\\components\\stock\\VehicleDetailsModal.tsx",
         "src\\components\\detail-hub\\KioskDetailModal.tsx",
@@ -101034,6 +101706,7 @@
         "src\\components\\orders\\ReconOrderModal.tsx",
         "src\\components\\attachments\\ImagePreviewModal.tsx",
         "src\\components\\dealerships\\DealerInvitationModal.tsx",
+        "src\\components\\detail-hub\\GenerateRemoteKioskModal.tsx",
         "src\\components\\followers\\AddFollowerModal.tsx",
         "src\\components\\notifications\\NotificationPreferencesModal.tsx",
         "src\\components\\orders\\OptimizedEnhancedOrderDetailModal.tsx",
@@ -101055,7 +101728,7 @@
         "src\\components\\orders\\ServiceOrderModal.tsx",
         "src\\components\\permissions\\ManageCustomRolesModal.tsx"
       ],
-      "estimatedEffort": "25 hours"
+      "estimatedEffort": "26 hours"
     },
     {
       "priority": "MEDIUM",
@@ -101089,7 +101762,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "515 Component components need translation",
+      "description": "516 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\OperationalReports.tsx",
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
@@ -101152,6 +101825,7 @@
         "src\\components\\productivity\\AssignUserDialog.tsx",
         "src\\components\\sales\\OrderPreviewPanel.tsx",
         "src\\components\\sales\\SmartDashboard.tsx",
+        "src\\components\\settings\\RoleNotificationSettings.tsx",
         "src\\hooks\\useChatMessages.tsx",
         "src\\hooks\\useChatPermissions.tsx",
         "src\\components\\ErrorBoundary.tsx",
@@ -101182,7 +101856,6 @@
         "src\\components\\invitations\\InvitationManagement.tsx",
         "src\\components\\orders\\ScheduleViewBlock.tsx",
         "src\\components\\productivity\\ProductivityMetrics.tsx",
-        "src\\components\\settings\\RoleNotificationSettings.tsx",
         "src\\components\\ui\\pagination.tsx",
         "src\\components\\ui\\sidebar.tsx",
         "src\\components\\users\\UserActivityFeed.tsx",
@@ -101289,6 +101962,7 @@
         "src\\hooks\\useStockManagement.ts",
         "src\\hooks\\useTypingIndicators.tsx",
         "src\\pages\\DealerView.tsx",
+        "src\\pages\\RemoteKiosk.tsx",
         "src\\services\\faceApiService.ts",
         "src\\services\\PUSH_NOTIFICATION_INTEGRATION_EXAMPLES.tsx",
         "src\\services\\pushNotificationHelper.ts",
@@ -101612,9 +102286,9 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "8436 translation keys are referenced but missing",
+      "description": "8498 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "422 hours"
+      "estimatedEffort": "425 hours"
     }
   ],
   "coverage": 80

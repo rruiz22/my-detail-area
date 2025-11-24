@@ -2,7 +2,7 @@
   "$schema": "https://modelcontextprotocol.io/schemas/mcp.json",
   "mcpServers": {
     "supabase": {
-      "command": "C:\\Program Files\\nodejs\\npx.cmd",
+      "command": "C:\\nvm4w\\nodejs\\npx.cmd",
       "args": [
         "-y",
         "@supabase/mcp-server-supabase@latest",
@@ -18,7 +18,7 @@
       }
     },
     "firebase": {
-      "command": "C:\\Program Files\\nodejs\\npx.cmd",
+      "command": "C:\\nvm4w\\nodejs\\npx.cmd",
       "args": [
         "-y",
         "firebase-tools@latest",
