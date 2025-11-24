@@ -40,7 +40,7 @@ import {
 } from '@/components/ui/table';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { useDeleteInvoice, useDeletePayment, useInvoice, useUpdateInvoiceItemPaid, useBulkUpdateInvoiceItemsPaid } from '@/hooks/useInvoices';
+import { useDeleteInvoice, useDeletePayment, useInvoice, useUpdateInvoiceItemPaid, useBulkUpdateInvoiceItemsPaid, useInvoiceHierarchy } from '@/hooks/useInvoices';
 import { useRecalculateInvoice } from '@/hooks/useRecalculateInvoice';
 import type { InvoiceStatus } from '@/types/invoices';
 import { generateInvoiceExcel } from '@/utils/generateInvoiceExcel';
@@ -52,6 +52,8 @@ import { useTranslation } from 'react-i18next';
 import { SendInvoiceEmailDialog } from './email/SendInvoiceEmailDialog';
 import { InvoiceComments } from './InvoiceComments';
 import { InvoiceEmailLog } from './InvoiceEmailLog';
+import { ReinvoiceButton } from './ReinvoiceButton';
+import { ReinvoiceHistoryTimeline } from './ReinvoiceHistoryTimeline';
 
 interface InvoiceDetailsDialogProps {
   open: boolean;
@@ -86,6 +88,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
   const { user } = useAuth();
   const { toast } = useToast();
   const { data: invoice, isLoading } = useInvoice(invoiceId);
+  const { data: hierarchy } = useInvoiceHierarchy(invoiceId);
   const deleteMutation = useDeleteInvoice();
   const deletePaymentMutation = useDeletePayment();
   const recalculateMutation = useRecalculateInvoice();
@@ -760,6 +763,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
 
             {/* Action Buttons - Right side */}
             <div className="flex gap-2">
+              <ReinvoiceButton invoice={invoice} />
               <Button
                 size="sm"
                 variant="destructive"
@@ -1011,24 +1015,33 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                             {item.metadata?.vehicle_vin || 'N/A'}
                           </TableCell>
                           <TableCell className="text-sm text-left text-gray-600">
-                            {(() => {
-                              // Extract service names with fallback logic
-                              if (item.metadata?.service_names) {
-                                return item.metadata.service_names;
-                              }
-                              if (item.metadata?.services && Array.isArray(item.metadata.services)) {
-                                const names = item.metadata.services.map((s: any) => {
-                                  if (s && typeof s === 'object' && s.name) return s.name;
-                                  if (s && typeof s === 'object' && s.service_name) return s.service_name;
-                                  if (s && typeof s === 'object' && s.type) return s.type;
-                                  if (s && typeof s === 'object' && s.id) return s.id;
-                                  if (typeof s === 'string') return s;
-                                  return 'Service';
-                                }).filter(Boolean).join(', ');
-                                if (names) return names;
-                              }
-                              return item.serviceReference || 'N/A';
-                            })()}
+                            <div className="flex flex-col gap-1">
+                              <span>
+                                {(() => {
+                                  // Extract service names with fallback logic
+                                  if (item.metadata?.service_names) {
+                                    return item.metadata.service_names;
+                                  }
+                                  if (item.metadata?.services && Array.isArray(item.metadata.services)) {
+                                    const names = item.metadata.services.map((s: any) => {
+                                      if (s && typeof s === 'object' && s.name) return s.name;
+                                      if (s && typeof s === 'object' && s.service_name) return s.service_name;
+                                      if (s && typeof s === 'object' && s.type) return s.type;
+                                      if (s && typeof s === 'object' && s.id) return s.id;
+                                      if (typeof s === 'string') return s;
+                                      return 'Service';
+                                    }).filter(Boolean).join(', ');
+                                    if (names) return names;
+                                  }
+                                  return item.serviceReference || 'N/A';
+                                })()}
+                              </span>
+                              {item.metadata?.copied_from_invoice && (
+                                <Badge variant="outline" className="text-xs w-fit bg-blue-50 text-blue-700 border-blue-200">
+                                  Re-invoiced from {item.metadata.copied_from_invoice}
+                                </Badge>
+                              )}
+                            </div>
                           </TableCell>
                           <TableCell className="text-center font-semibold text-base text-gray-900">
                             {formatCurrency(item.totalAmount)}
@@ -1150,6 +1163,16 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* Re-Invoice History */}
+          {hierarchy && hierarchy.history.length > 0 && (
+            <div className="pt-6 border-t">
+              <ReinvoiceHistoryTimeline
+                history={hierarchy.history}
+                currentInvoiceId={invoiceId}
+              />
             </div>
           )}
 

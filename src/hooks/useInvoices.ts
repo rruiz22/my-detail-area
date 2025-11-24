@@ -49,6 +49,10 @@ const transformInvoice = (row: any): Invoice => ({
   updatedAt: row.updated_at,
   paidAt: row.paid_at,
   cancelledAt: row.cancelled_at,
+  parentInvoiceId: row.parent_invoice_id,
+  reinvoiceSequence: row.reinvoice_sequence,
+  isReinvoice: row.is_reinvoice || false,
+  originalInvoiceId: row.original_invoice_id,
   order: row.orders ? {
     orderNumber: row.orders.order_number || row.orders.custom_order_number,
     orderType: row.orders.order_type,
@@ -601,5 +605,109 @@ export const useBulkUpdateInvoiceItemsPaid = () => {
         description: error.message || 'Failed to update items payment status'
       });
     }
+  });
+};
+
+// =====================================================
+// RE-INVOICING HOOKS
+// =====================================================
+
+/**
+ * Create a re-invoice from unpaid items
+ */
+export const useCreateReinvoice = () => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async ({ parentInvoiceId }: { parentInvoiceId: string }) => {
+      const { data, error } = await supabase
+        .rpc('create_reinvoice_from_unpaid', {
+          p_parent_invoice_id: parentInvoiceId
+        });
+
+      if (error) throw error;
+      return data as string; // Returns new invoice ID
+    },
+    onSuccess: (newInvoiceId, variables) => {
+      // Invalidate related queries
+      queryClient.invalidateQueries({ queryKey: ['invoice', variables.parentInvoiceId] });
+      queryClient.invalidateQueries({ queryKey: ['invoice', newInvoiceId] });
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      queryClient.invalidateQueries({ queryKey: ['invoice-hierarchy', variables.parentInvoiceId] });
+
+      toast({
+        title: 'Re-invoice created successfully',
+        description: 'A new invoice has been created with unpaid items'
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        variant: 'destructive',
+        title: 'Failed to create re-invoice',
+        description: error.message || 'Could not create re-invoice. Please try again.'
+      });
+    }
+  });
+};
+
+/**
+ * Get invoice hierarchy (parent, children, and re-invoice history)
+ */
+export const useInvoiceHierarchy = (invoiceId: string | undefined) => {
+  return useQuery({
+    queryKey: ['invoice-hierarchy', invoiceId],
+    queryFn: async () => {
+      if (!invoiceId) throw new Error('Invoice ID is required');
+
+      // Get the main invoice
+      const { data: invoice, error: invoiceError } = await supabase
+        .from('invoices')
+        .select('*')
+        .eq('id', invoiceId)
+        .single();
+
+      if (invoiceError) throw invoiceError;
+
+      // Determine root invoice ID (for finding all related invoices)
+      const rootInvoiceId = invoice.original_invoice_id || invoice.id;
+
+      // Get all child invoices
+      const { data: childInvoices, error: childError } = await supabase
+        .from('invoices')
+        .select('*')
+        .or(`parent_invoice_id.eq.${rootInvoiceId},original_invoice_id.eq.${rootInvoiceId}`)
+        .order('created_at', { ascending: true });
+
+      if (childError) throw childError;
+
+      // Get re-invoice history
+      const { data: history, error: historyError } = await supabase
+        .from('invoice_reinvoice_history')
+        .select('*')
+        .or(`parent_invoice_id.eq.${rootInvoiceId},child_invoice_id.eq.${rootInvoiceId}`)
+        .order('created_at', { ascending: false });
+
+      if (historyError) throw historyError;
+
+      return {
+        invoice: transformInvoice(invoice),
+        childInvoices: (childInvoices || []).map(transformInvoice),
+        history: (history || []).map((h: any) => ({
+          id: h.id,
+          parentInvoiceId: h.parent_invoice_id,
+          childInvoiceId: h.child_invoice_id,
+          reinvoiceSequence: h.reinvoice_sequence,
+          unpaidItemsCount: h.unpaid_items_count,
+          unpaidAmount: parseFloat(h.unpaid_amount),
+          reason: h.reason,
+          notes: h.notes,
+          metadata: h.metadata || {},
+          createdBy: h.created_by,
+          createdAt: h.created_at
+        }))
+      };
+    },
+    enabled: !!invoiceId
   });
 };

@@ -10,6 +10,33 @@ export type PaymentMethod = 'cash' | 'check' | 'credit_card' | 'debit_card' | 'b
 export type ItemType = 'service' | 'product' | 'labor' | 'other';
 
 // =====================================================
+// RE-INVOICE HISTORY (declared early for Invoice interface)
+// =====================================================
+export interface ReinvoiceHistory {
+  id: string;
+  parentInvoiceId: string;
+  childInvoiceId: string;
+  reinvoiceSequence: string;
+  unpaidItemsCount: number;
+  unpaidAmount: number;
+  reason: string;
+  notes?: string | null;
+  metadata: Record<string, any>;
+  createdBy?: string | null;
+  createdAt: string;
+
+  // Populated data (circular reference resolved by declaration order)
+  childInvoice?: any;
+  parentInvoice?: any;
+  createdByUser?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+}
+
+// =====================================================
 // INVOICE
 // =====================================================
 export interface Invoice {
@@ -56,6 +83,12 @@ export interface Invoice {
   paidAt: string | null;
   cancelledAt: string | null;
 
+  // Re-invoicing relationships
+  parentInvoiceId?: string | null;
+  reinvoiceSequence?: string | null;
+  isReinvoice: boolean;
+  originalInvoiceId?: string | null;
+
   // Related data (populated via joins)
   order?: {
     orderNumber: string;
@@ -82,6 +115,8 @@ export interface Invoice {
   };
   items?: InvoiceItem[];
   payments?: Payment[];
+  childInvoices?: Invoice[];
+  reinvoiceHistory?: ReinvoiceHistory[];
 
   // Comments count (from RPC query)
   commentsCount?: number;
@@ -114,6 +149,10 @@ export interface InvoiceItem {
 
   // Metadata
   metadata: Record<string, any>;
+
+  // Re-invoice tracking
+  originalItemId?: string | null;
+  copiedFromInvoice?: string | null;
 
   // Timestamps
   createdAt: string;
@@ -345,6 +384,10 @@ export interface InvoiceRow {
   email_sent_at: string | null;
   email_sent_count: number;
   last_email_recipient: string | null;
+  parent_invoice_id: string | null;
+  reinvoice_sequence: string | null;
+  is_reinvoice: boolean;
+  original_invoice_id: string | null;
   metadata: any;
   created_at: string;
   updated_at: string | null;
@@ -386,6 +429,20 @@ export interface PaymentRow {
   created_at: string;
   updated_at: string | null;
   refunded_at: string | null;
+}
+
+export interface ReinvoiceHistoryRow {
+  id: string;
+  parent_invoice_id: string;
+  child_invoice_id: string;
+  reinvoice_sequence: string;
+  unpaid_items_count: number;
+  unpaid_amount: number;
+  reason: string;
+  notes: string | null;
+  metadata: any;
+  created_by: string | null;
+  created_at: string;
 }
 
 // =====================================================

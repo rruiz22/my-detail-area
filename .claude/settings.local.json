@@ -49,7 +49,10 @@
       "Bash(where.exe:*)",
       "Bash(supabase migration:*)",
       "Bash(supabase db push:*)",
-      "Bash(supabase projects:*)"
+      "Bash(supabase projects:*)",
+      "Bash(taskkill:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File open-sql-editor.ps1)"
     ],
     "deny": [],
     "ask": []
