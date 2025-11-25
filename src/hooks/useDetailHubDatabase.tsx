@@ -448,7 +448,8 @@ export function useClockOut() {
           face_confidence_out: params.faceConfidence,
           kiosk_id: params.kioskId || activeEntry.kiosk_id, // Update if provided, keep existing if not
           ip_address: params.ipAddress || activeEntry.ip_address, // Update if provided, keep existing if not
-          // Hours and status will be auto-calculated by database trigger
+          status: 'complete', // ✅ FIX: Explicitly set status to complete (trigger doesn't do this)
+          // Hours will be auto-calculated by database trigger
         })
         .eq('id', activeEntry.id)
         .select()
