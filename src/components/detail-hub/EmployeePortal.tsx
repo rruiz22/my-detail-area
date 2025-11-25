@@ -81,6 +81,9 @@ const EmployeePortal = () => {
   const [faceEnrollmentOpen, setFaceEnrollmentOpen] = useState(false);
   const [employeeForFaceEnrollment, setEmployeeForFaceEnrollment] = useState<DetailHubEmployee | null>(null);
 
+  // 🔒 PRIVACY: Track which employees have hourly rate visible
+  const [visibleSalaries, setVisibleSalaries] = useState<Set<string>>(new Set());
+
   const { selectedDealerId } = useDealerFilter();
 
   // Persistent filters with localStorage
@@ -1204,7 +1207,37 @@ const EmployeePortal = () => {
                   <TableCell>{getRoleLabel(employee.role)}</TableCell>
                   <TableCell>{getDepartmentLabel(employee.department)}</TableCell>
                   <TableCell>{getStatusBadge(employee.status)}</TableCell>
-                  <TableCell>${employee.hourlyRate.toFixed(2)}/hr</TableCell>
+                  <TableCell>
+                    <button
+                      onClick={() => {
+                        setVisibleSalaries(prev => {
+                          const updated = new Set(prev);
+                          if (updated.has(employee.id)) {
+                            updated.delete(employee.id);
+                          } else {
+                            updated.add(employee.id);
+                          }
+                          return updated;
+                        });
+                      }}
+                      className="flex items-center gap-2 hover:bg-gray-100 px-2 py-1 rounded transition-colors cursor-pointer group"
+                      title={visibleSalaries.has(employee.id) ? "Click to hide salary" : "Click to reveal salary"}
+                    >
+                      {visibleSalaries.has(employee.id) ? (
+                        <>
+                          <span className="font-medium text-emerald-600">
+                            ${employee.hourlyRate.toFixed(2)}/hr
+                          </span>
+                          <EyeOff className="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-600" />
+                        </>
+                      ) : (
+                        <>
+                          <span className="font-mono text-gray-400">••••••</span>
+                          <Eye className="w-3.5 h-3.5 text-gray-400 group-hover:text-emerald-600" />
+                        </>
+                      )}
+                    </button>
+                  </TableCell>
                   <TableCell className="text-sm">
                     {employee.lastPunch ? (
                       <div className="flex flex-col">
