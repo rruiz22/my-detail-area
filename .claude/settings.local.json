@@ -56,7 +56,8 @@
       "Bash(supabase db pull:*)",
       "Bash(nul)",
       "mcp__supabase__execute_sql",
-      "mcp__supabase__apply_migration"
+      "mcp__supabase__apply_migration",
+      "Bash(timeout /t 8)"
     ],
     "deny": [],
     "ask": []

@@ -321,13 +321,13 @@ const TimecardSystem = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Complete":
-        return <Badge className="bg-green-100 text-green-800">{t('detail_hub.timecard.status_badges.complete')}</Badge>;
+        return <Badge className="bg-green-100 text-green-800 text-xs py-0">{t('detail_hub.timecard.status_badges.complete')}</Badge>;
       case "Clocked In":
-        return <Badge className="bg-blue-100 text-blue-800">{t('detail_hub.timecard.status_badges.active')}</Badge>;
+        return <Badge className="bg-blue-100 text-blue-800 text-xs py-0">{t('detail_hub.timecard.status_badges.active')}</Badge>;
       case "Late":
-        return <Badge className="bg-red-100 text-red-800">{t('detail_hub.timecard.status_badges.late')}</Badge>;
+        return <Badge className="bg-red-100 text-red-800 text-xs py-0">{t('detail_hub.timecard.status_badges.late')}</Badge>;
       default:
-        return <Badge variant="secondary">{status}</Badge>;
+        return <Badge variant="secondary" className="text-xs py-0">{status}</Badge>;
     }
   };
 
@@ -851,10 +851,10 @@ const TimecardSystem = () => {
                         }}
                         className="cursor-pointer hover:bg-gray-50/80 transition-colors"
                       >
-                      <TableCell>
-                        <div>
-                          <p className="font-medium">{timecard.employeeName}</p>
-                          <p className="text-sm text-muted-foreground">{timecard.employeeId}</p>
+                      <TableCell className="py-2">
+                        <div className="leading-tight">
+                          <p className="font-medium text-sm">{timecard.employeeName}</p>
+                          <p className="text-xs text-muted-foreground">{timecard.employeeId}</p>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -876,18 +876,18 @@ const TimecardSystem = () => {
                               <img
                                 src={timecard.photoInUrl}
                                 alt="Clock In"
-                                className="w-10 h-10 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer"
+                                className="w-8 h-8 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer"
                                 onError={(e) => {
                                   e.currentTarget.src = '/placeholder-employee.png';
                                 }}
                               />
                               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center">
-                                <ImageIcon className="w-4 h-4 text-white" />
+                                <ImageIcon className="w-3 h-3 text-white" />
                               </div>
                             </button>
                           ) : timecard.punchInMethod === 'photo_fallback' ? (
-                            <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center border-2 border-gray-300">
-                              <Camera className="w-4 h-4 text-gray-400" />
+                            <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center border-2 border-gray-300">
+                              <Camera className="w-3 h-3 text-gray-400" />
                             </div>
                           ) : null}
 
@@ -908,41 +908,41 @@ const TimecardSystem = () => {
                               <img
                                 src={timecard.photoOutUrl}
                                 alt="Clock Out"
-                                className="w-10 h-10 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer"
+                                className="w-8 h-8 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer"
                                 onError={(e) => {
                                   e.currentTarget.src = '/placeholder-employee.png';
                                 }}
                               />
                               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center">
-                                <ImageIcon className="w-4 h-4 text-white" />
+                                <ImageIcon className="w-3 h-3 text-white" />
                               </div>
                             </button>
                           ) : timecard.punchOutMethod === 'photo_fallback' && timecard.clockOut !== '--' ? (
-                            <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center border-2 border-gray-300">
-                              <Camera className="w-4 h-4 text-gray-400" />
+                            <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center border-2 border-gray-300">
+                              <Camera className="w-3 h-3 text-gray-400" />
                             </div>
                           ) : null}
                         </div>
                       </TableCell>
-                      <TableCell>{timecard.clockIn}</TableCell>
-                      <TableCell>{timecard.clockOut}</TableCell>
-                      <TableCell>
+                      <TableCell className="py-2 text-sm">{timecard.clockIn}</TableCell>
+                      <TableCell className="py-2 text-sm">{timecard.clockOut}</TableCell>
+                      <TableCell className="py-2 text-sm">
                         {timecard.breakStart} - {timecard.breakEnd}
                       </TableCell>
-                      <TableCell>{timecard.totalHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}</TableCell>
-                      <TableCell>
+                      <TableCell className="py-2 text-sm">{timecard.totalHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}</TableCell>
+                      <TableCell className="py-2">
                         {timecard.overtimeHours > 0 ? (
-                          <span className="text-orange-600 font-medium">
+                          <span className="text-orange-600 font-medium text-sm">
                             {timecard.overtimeHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}
                           </span>
                         ) : (
-                          "--"
+                          <span className="text-sm">--</span>
                         )}
                       </TableCell>
-                      <TableCell>${timecard.totalPay.toFixed(2)}</TableCell>
-                      <TableCell>{getStatusBadge(timecard.status)}</TableCell>
-                      <TableCell>
-                        <div className="flex gap-1">
+                      <TableCell className="py-2 text-sm">${timecard.totalPay.toFixed(2)}</TableCell>
+                      <TableCell className="py-2">{getStatusBadge(timecard.status)}</TableCell>
+                      <TableCell className="py-1">
+                        <div className="flex gap-0.5">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -955,7 +955,7 @@ const TimecardSystem = () => {
                             title={t('detail_hub.timecard.actions.view_logs')}
                             className="p-1 hover:bg-gray-100 rounded transition-colors"
                           >
-                            <FileText className="w-3.5 h-3.5 text-gray-600" />
+                            <FileText className="w-3 h-3 text-gray-600" />
                           </button>
                           <button
                             onClick={(e) => {
@@ -969,7 +969,7 @@ const TimecardSystem = () => {
                             title={t('detail_hub.timecard.actions.edit')}
                             className="p-1 hover:bg-blue-50 rounded transition-colors"
                           >
-                            <Edit2 className="w-3.5 h-3.5 text-blue-600" />
+                            <Edit2 className="w-3 h-3 text-blue-600" />
                           </button>
                           <button
                             onClick={(e) => {
@@ -980,7 +980,7 @@ const TimecardSystem = () => {
                             title={t('detail_hub.timecard.actions.disable')}
                             className="p-1 hover:bg-red-50 rounded transition-colors"
                           >
-                            <Ban className="w-3.5 h-3.5 text-red-600" />
+                            <Ban className="w-3 h-3 text-red-600" />
                           </button>
                         </div>
                       </TableCell>
@@ -1003,10 +1003,10 @@ const TimecardSystem = () => {
                         }}
                         className="cursor-pointer hover:bg-gray-50/80 transition-colors"
                       >
-                      <TableCell>
-                        <div>
-                          <p className="font-medium">{timecard.employeeName}</p>
-                          <p className="text-sm text-muted-foreground">{timecard.employeeId}</p>
+                      <TableCell className="py-2">
+                        <div className="leading-tight">
+                          <p className="font-medium text-sm">{timecard.employeeName}</p>
+                          <p className="text-xs text-muted-foreground">{timecard.employeeId}</p>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -1028,18 +1028,18 @@ const TimecardSystem = () => {
                               <img
                                 src={timecard.photoInUrl}
                                 alt="Clock In"
-                                className="w-10 h-10 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer"
+                                className="w-8 h-8 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer"
                                 onError={(e) => {
                                   e.currentTarget.src = '/placeholder-employee.png';
                                 }}
                               />
                               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center">
-                                <ImageIcon className="w-4 h-4 text-white" />
+                                <ImageIcon className="w-3 h-3 text-white" />
                               </div>
                             </button>
                           ) : timecard.punchInMethod === 'photo_fallback' ? (
-                            <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center border-2 border-gray-300">
-                              <Camera className="w-4 h-4 text-gray-400" />
+                            <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center border-2 border-gray-300">
+                              <Camera className="w-3 h-3 text-gray-400" />
                             </div>
                           ) : null}
 
@@ -1060,41 +1060,41 @@ const TimecardSystem = () => {
                               <img
                                 src={timecard.photoOutUrl}
                                 alt="Clock Out"
-                                className="w-10 h-10 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer"
+                                className="w-8 h-8 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer"
                                 onError={(e) => {
                                   e.currentTarget.src = '/placeholder-employee.png';
                                 }}
                               />
                               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center">
-                                <ImageIcon className="w-4 h-4 text-white" />
+                                <ImageIcon className="w-3 h-3 text-white" />
                               </div>
                             </button>
                           ) : timecard.punchOutMethod === 'photo_fallback' && timecard.clockOut !== '--' ? (
-                            <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center border-2 border-gray-300">
-                              <Camera className="w-4 h-4 text-gray-400" />
+                            <div className="w-8 h-8 rounded bg-gray-100 flex items-center justify-center border-2 border-gray-300">
+                              <Camera className="w-3 h-3 text-gray-400" />
                             </div>
                           ) : null}
                         </div>
                       </TableCell>
-                      <TableCell>{timecard.clockIn}</TableCell>
-                      <TableCell>{timecard.clockOut}</TableCell>
-                      <TableCell>
+                      <TableCell className="py-2 text-sm">{timecard.clockIn}</TableCell>
+                      <TableCell className="py-2 text-sm">{timecard.clockOut}</TableCell>
+                      <TableCell className="py-2 text-sm">
                         {timecard.breakStart} - {timecard.breakEnd}
                       </TableCell>
-                      <TableCell>{timecard.totalHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}</TableCell>
-                      <TableCell>
+                      <TableCell className="py-2 text-sm">{timecard.totalHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}</TableCell>
+                      <TableCell className="py-2">
                         {timecard.overtimeHours > 0 ? (
-                          <span className="text-orange-600 font-medium">
+                          <span className="text-orange-600 font-medium text-sm">
                             {timecard.overtimeHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}
                           </span>
                         ) : (
-                          "--"
+                          <span className="text-sm">--</span>
                         )}
                       </TableCell>
-                      <TableCell>${timecard.totalPay.toFixed(2)}</TableCell>
-                      <TableCell>{getStatusBadge(timecard.status)}</TableCell>
-                      <TableCell>
-                        <div className="flex gap-1">
+                      <TableCell className="py-2 text-sm">${timecard.totalPay.toFixed(2)}</TableCell>
+                      <TableCell className="py-2">{getStatusBadge(timecard.status)}</TableCell>
+                      <TableCell className="py-1">
+                        <div className="flex gap-0.5">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -1107,7 +1107,7 @@ const TimecardSystem = () => {
                             title={t('detail_hub.timecard.actions.view_logs')}
                             className="p-1 hover:bg-gray-100 rounded transition-colors"
                           >
-                            <FileText className="w-3.5 h-3.5 text-gray-600" />
+                            <FileText className="w-3 h-3 text-gray-600" />
                           </button>
                           <button
                             onClick={(e) => {
@@ -1121,7 +1121,7 @@ const TimecardSystem = () => {
                             title={t('detail_hub.timecard.actions.edit')}
                             className="p-1 hover:bg-blue-50 rounded transition-colors"
                           >
-                            <Edit2 className="w-3.5 h-3.5 text-blue-600" />
+                            <Edit2 className="w-3 h-3 text-blue-600" />
                           </button>
                           <button
                             onClick={(e) => {
@@ -1132,7 +1132,7 @@ const TimecardSystem = () => {
                             title={t('detail_hub.timecard.actions.disable')}
                             className="p-1 hover:bg-red-50 rounded transition-colors"
                           >
-                            <Ban className="w-3.5 h-3.5 text-red-600" />
+                            <Ban className="w-3 h-3 text-red-600" />
                           </button>
                         </div>
                       </TableCell>

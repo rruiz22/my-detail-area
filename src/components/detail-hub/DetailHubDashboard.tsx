@@ -23,6 +23,8 @@ import { PunchClockKioskModal } from "./PunchClockKioskModal";
 import { KioskSetupWizard, isKioskConfigured, getConfiguredKioskId, generateDeviceFingerprint, getSystemUsername } from "./KioskSetupWizard";
 // KIOSK CONFIG CLEANUP
 import { clearInvalidKioskConfig } from "@/hooks/useKioskConfig";
+// KIOSK DIAGNOSTICS (loads utility functions into window.kioskDiagnostics)
+import "@/utils/kioskDiagnostics";
 
 const DetailHubDashboard = () => {
   const { t } = useTranslation();
