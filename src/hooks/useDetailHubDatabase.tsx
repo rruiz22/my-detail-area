@@ -815,12 +815,14 @@ export function useCreateManualTimeEntry() {
         throw new Error('Employee already has an active time entry. Please clock them out first.');
       }
 
-      // Validation: Check for overlapping entries
+      // Validation: Check for overlapping entries (EXCLUDE disabled and deleted entries)
       if (params.clockOut) {
         const { data: overlapping } = await supabase
           .from('detail_hub_time_entries')
-          .select('id')
+          .select('id, status, deleted_at')
           .eq('employee_id', params.employeeId)
+          .neq('status', 'disabled') // ✅ CRITICAL FIX: Exclude disabled entries
+          .is('deleted_at', null) // ✅ CRITICAL FIX: Exclude soft-deleted entries
           .or(`and(clock_in.lte.${params.clockOut},clock_out.gte.${params.clockIn})`)
           .limit(1);
 

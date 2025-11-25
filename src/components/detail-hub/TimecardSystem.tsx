@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CalendarIcon, Download, Filter, Clock, User, DollarSign, AlertTriangle, Camera, Image as ImageIcon, Plus, FileText, Edit2, Ban, X, Search, FileSpreadsheet } from "lucide-react";
+import { CalendarIcon, Download, Filter, Clock, User, DollarSign, AlertTriangle, Camera, Image as ImageIcon, Plus, FileText, Edit2, Ban, X, Search, FileSpreadsheet, Trash2 } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
@@ -23,6 +23,7 @@ import { ManualTimeEntryModal } from "./ManualTimeEntryModal";
 import { TimeEntryLogsModal } from "./TimeEntryLogsModal";
 import { EditTimeEntryModal } from "./EditTimeEntryModal";
 import { EmployeeTimecardDetailModal } from "./EmployeeTimecardDetailModal";
+import { DisabledEntriesModal } from "./DisabledEntriesModal";
 import { useTabPersistence } from "@/hooks/useTabPersistence";
 import { useTimecardPersistence, type DateFilter } from "@/hooks/useTimecardPersistence";
 import { exportReportToPDF, exportReportToExcel } from "@/utils/reportExporters";
@@ -72,6 +73,7 @@ const TimecardSystem = () => {
   const [showDisableDialog, setShowDisableDialog] = useState(false);
   const [entryToDisable, setEntryToDisable] = useState<string | null>(null);
   const [showEmployeeDetailModal, setShowEmployeeDetailModal] = useState(false);
+  const [showDisabledEntriesModal, setShowDisabledEntriesModal] = useState(false);
   const [selectedEmployeeForDetail, setSelectedEmployeeForDetail] = useState<{
     id: string;
     name: string;
@@ -552,6 +554,16 @@ const TimecardSystem = () => {
           <Button variant="outline" onClick={() => setShowManualEntryModal(true)}>
             <Plus className="w-4 h-4 mr-2" />
             {t('detail_hub.timecard.manual_entry.add_button')}
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={() => setShowDisabledEntriesModal(true)}
+            className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+            title="Manage disabled entries to prevent overlap errors"
+          >
+            <Trash2 className="w-4 h-4 mr-2" />
+            Disabled Entries
           </Button>
 
           <Button variant={showAdvancedFilters ? "default" : "outline"} onClick={() => setFilters({ showAdvancedFilters: !showAdvancedFilters })}>
@@ -1339,6 +1351,16 @@ const TimecardSystem = () => {
         open={showManualEntryModal}
         onOpenChange={setShowManualEntryModal}
         employees={employees}
+      />
+
+      {/* Disabled Entries Management Modal */}
+      <DisabledEntriesModal
+        open={showDisabledEntriesModal}
+        onClose={() => setShowDisabledEntriesModal(false)}
+        onEntriesDeleted={() => {
+          // Refresh time entries after deletion
+          // This will be handled by TanStack Query refetch
+        }}
       />
 
       {/* Audit Logs Modal */}

@@ -1,8 +1,8 @@
 {
   "scannedFiles": 917,
-  "totalStrings": 10678,
+  "totalStrings": 10679,
   "hardcodedStrings": 2168,
-  "translatedStrings": 8510,
+  "translatedStrings": 8511,
   "issues": {
     "critical": [
       {
@@ -7021,137 +7021,137 @@
         "hardcodedStrings": [
           {
             "text": "On Break",
-            "line": 151,
-            "context": "150: <>\n151: <Coffee className=\"w-3 h-3 mr-1\" />\n152: On Break"
+            "line": 152,
+            "context": "151: <>\n152: <Coffee className=\"w-3 h-3 mr-1\" />\n153: On Break"
           },
           {
             "text": "Active",
-            "line": 156,
-            "context": "155: <>\n156: <div className=\"w-2 h-2 rounded-full bg-emerald-500 mr-1 animate-pulse\" />\n157: Active"
+            "line": 157,
+            "context": "156: <>\n157: <div className=\"w-2 h-2 rounded-full bg-emerald-500 mr-1 animate-pulse\" />\n158: Active"
           },
           {
             "text": "Clocked In",
-            "line": 174,
-            "context": "173: <Clock className=\"w-4 h-4\" />\n174: <span>Clocked In</span>\n175: </div>"
+            "line": 175,
+            "context": "174: <Clock className=\"w-4 h-4\" />\n175: <span>Clocked In</span>\n176: </div>"
           },
           {
             "text": "Clock In Verification Photo",
-            "line": 202,
-            "context": "201: <div className=\"space-y-3\">\n202: <h4 className=\"font-semibold text-sm\">Clock In Verification Photo</h4>\n203: {employee.photo_in_url ? ("
+            "line": 203,
+            "context": "202: <div className=\"space-y-3\">\n203: <h4 className=\"font-semibold text-sm\">Clock In Verification Photo</h4>\n204: {employee.photo_in_url ? ("
           },
           {
             "text": "No photo available",
-            "line": 213,
-            "context": "212: <Camera className=\"w-12 h-12 text-gray-400 mx-auto mb-2\" />\n213: <p className=\"text-sm text-gray-500\">No photo available</p>\n214: <p className=\"text-xs text-gray-400 mt-1\">Manual punch or legacy entry</p>"
+            "line": 214,
+            "context": "213: <Camera className=\"w-12 h-12 text-gray-400 mx-auto mb-2\" />\n214: <p className=\"text-sm text-gray-500\">No photo available</p>\n215: <p className=\"text-xs text-gray-400 mt-1\">Manual punch or legacy entry</p>"
           },
           {
             "text": "Manual punch or legacy entry",
-            "line": 214,
-            "context": "213: <p className=\"text-sm text-gray-500\">No photo available</p>\n214: <p className=\"text-xs text-gray-400 mt-1\">Manual punch or legacy entry</p>\n215: </div>"
+            "line": 215,
+            "context": "214: <p className=\"text-sm text-gray-500\">No photo available</p>\n215: <p className=\"text-xs text-gray-400 mt-1\">Manual punch or legacy entry</p>\n216: </div>"
           },
           {
             "text": "Elapsed Time",
-            "line": 234,
-            "context": "233: <Clock className=\"w-4 h-4\" />\n234: <span>Elapsed Time</span>\n235: </div>"
+            "line": 235,
+            "context": "234: <Clock className=\"w-4 h-4\" />\n235: <span>Elapsed Time</span>\n236: </div>"
           },
           {
             "text": "Break Started",
-            "line": 249,
-            "context": "248: <Coffee className=\"w-4 h-4\" />\n249: <span>Break Started</span>\n250: </div>"
+            "line": 250,
+            "context": "249: <Coffee className=\"w-4 h-4\" />\n250: <span>Break Started</span>\n251: </div>"
           },
           {
             "text": "Break Duration",
-            "line": 261,
-            "context": "260: <Coffee className=\"w-4 h-4\" />\n261: <span>Break Duration</span>\n262: </div>"
+            "line": 262,
+            "context": "261: <Coffee className=\"w-4 h-4\" />\n262: <span>Break Duration</span>\n263: </div>"
           },
           {
             "text": "Kiosk",
-            "line": 281,
-            "context": "280: <MapPin className=\"w-4 h-4\" />\n281: <span>Kiosk</span>\n282: </div>"
+            "line": 282,
+            "context": "281: <MapPin className=\"w-4 h-4\" />\n282: <span>Kiosk</span>\n283: </div>"
           },
           {
             "text": "Schedule",
-            "line": 295,
-            "context": "294: <Calendar className=\"w-4 h-4\" />\n295: <span>Schedule</span>\n296: </div>"
+            "line": 296,
+            "context": "295: <Calendar className=\"w-4 h-4\" />\n296: <span>Schedule</span>\n297: </div>"
           },
           {
             "text": "On Time",
-            "line": 301,
-            "context": "300: <CheckCircle className=\"w-5 h-5 text-emerald-500\" />\n301: <span className=\"text-emerald-600 font-semibold\">On Time</span>\n302: </>"
+            "line": 302,
+            "context": "301: <CheckCircle className=\"w-5 h-5 text-emerald-500\" />\n302: <span className=\"text-emerald-600 font-semibold\">On Time</span>\n303: </>"
           },
           {
             "text": "Quick Actions",
-            "line": 324,
-            "context": "323: <div className=\"space-y-3\">\n324: <h4 className=\"font-semibold text-gray-900 mb-4\">Quick Actions</h4>\n325: "
+            "line": 325,
+            "context": "324: <div className=\"space-y-3\">\n325: <h4 className=\"font-semibold text-gray-900 mb-4\">Quick Actions</h4>\n326: "
           },
           {
             "text": "Start Break",
-            "line": 334,
-            "context": "333: >\n334: <Coffee className=\"w-4 h-4 mr-2\" />\n335: Start Break"
+            "line": 335,
+            "context": "334: >\n335: <Coffee className=\"w-4 h-4 mr-2\" />\n336: Start Break"
           },
           {
             "text": "End Break",
-            "line": 350,
-            "context": "349: <Coffee className=\"w-4 h-4 mr-2\" />\n350: <span>End Break</span>\n351: {!breakTimer.isComplete && ("
+            "line": 351,
+            "context": "350: <Coffee className=\"w-4 h-4 mr-2\" />\n351: <span>End Break</span>\n352: {!breakTimer.isComplete && ("
           },
           {
             "text": "Clock Out",
-            "line": 364,
-            "context": "363: >\n364: <LogOut className=\"w-4 h-4 mr-2\" />\n365: Clock Out"
+            "line": 365,
+            "context": "364: >\n365: <LogOut className=\"w-4 h-4 mr-2\" />\n366: Clock Out"
           },
           {
             "text": "Clock in photo",
-            "line": 184,
-            "context": "183: src={employee.photo_in_url}\n184: alt=\"Clock in photo\"\n185: className=\"w-full h-full object-cover\""
+            "line": 185,
+            "context": "184: src={employee.photo_in_url}\n185: alt=\"Clock in photo\"\n186: className=\"w-full h-full object-cover\""
           },
           {
             "text": "Clock in verification photo",
-            "line": 206,
-            "context": "205: src={employee.photo_in_url}\n206: alt=\"Clock in verification photo\"\n207: className=\"w-full rounded-lg border-2 border-gray-200\""
+            "line": 207,
+            "context": "206: src={employee.photo_in_url}\n207: alt=\"Clock in verification photo\"\n208: className=\"w-full rounded-lg border-2 border-gray-200\""
           }
         ],
         "translationCalls": [
           {
             "key": "detail_hub.toasts.clocked_out",
-            "line": 58,
+            "line": 59,
             "exists": false
           },
           {
             "key": "detail_hub.toasts.break_started",
-            "line": 78,
+            "line": 79,
             "exists": false
           },
           {
             "key": "detail_hub.toasts.break_ended",
-            "line": 98,
+            "line": 99,
             "exists": false
           },
           {
             "key": "detail_hub.live_dashboard.view_details",
-            "line": 116,
+            "line": 117,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "detail_hub.toasts.clocked_out",
-            "line": 58,
-            "context": "57: toast({\n58: title: t('detail_hub.toasts.clocked_out'),\n59: description: `${employee.employee_name} has been clocked out successfully`"
+            "line": 59,
+            "context": "58: toast({\n59: title: t('detail_hub.toasts.clocked_out'),\n60: description: `${employee.employee_name} has been clocked out successfully`"
           },
           {
             "key": "detail_hub.toasts.break_started",
-            "line": 78,
-            "context": "77: toast({\n78: title: t('detail_hub.toasts.break_started'),\n79: description: \"Break started successfully\""
+            "line": 79,
+            "context": "78: toast({\n79: title: t('detail_hub.toasts.break_started'),\n80: description: \"Break started successfully\""
           },
           {
             "key": "detail_hub.toasts.break_ended",
-            "line": 98,
-            "context": "97: toast({\n98: title: t('detail_hub.toasts.break_ended'),\n99: description: \"Break ended successfully\""
+            "line": 99,
+            "context": "98: toast({\n99: title: t('detail_hub.toasts.break_ended'),\n100: description: \"Break ended successfully\""
           },
           {
             "key": "detail_hub.live_dashboard.view_details",
-            "line": 116,
-            "context": "115: <DialogTitle className=\"text-2xl font-bold\">\n116: {t('detail_hub.live_dashboard.view_details')}\n117: </DialogTitle>"
+            "line": 117,
+            "context": "116: <DialogTitle className=\"text-2xl font-bold\">\n117: {t('detail_hub.live_dashboard.view_details')}\n118: </DialogTitle>"
           }
         ],
         "coverage": 18,
@@ -35750,78 +35750,83 @@
             "exists": false
           },
           {
-            "key": "detail_hub.timecard.manual_entry.employee",
-            "line": 164,
+            "key": "detail_hub.timecard.manual_entry.description",
+            "line": 160,
             "exists": false
           },
           {
-            "key": "detail_hub.timecard.manual_entry.select_employee",
+            "key": "detail_hub.timecard.manual_entry.employee",
             "line": 167,
             "exists": false
           },
           {
+            "key": "detail_hub.timecard.manual_entry.select_employee",
+            "line": 170,
+            "exists": false
+          },
+          {
             "key": "detail_hub.timecard.manual_entry.date",
-            "line": 182,
+            "line": 185,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.clock_in",
-            "line": 205,
+            "line": 208,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.clock_out",
-            "line": 221,
+            "line": 224,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.optional",
-            "line": 230,
+            "line": 233,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.break_start",
-            "line": 241,
+            "line": 244,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.optional",
-            "line": 250,
+            "line": 253,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.break_end",
-            "line": 258,
+            "line": 261,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.optional",
-            "line": 267,
+            "line": 270,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.notes",
-            "line": 277,
+            "line": 280,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.notes_placeholder",
-            "line": 282,
+            "line": 285,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.cancel",
-            "line": 298,
+            "line": 301,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.saving",
-            "line": 302,
+            "line": 305,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.save",
-            "line": 302,
+            "line": 305,
             "exists": false
           }
         ],
@@ -35869,82 +35874,87 @@
           {
             "key": "detail_hub.timecard.manual_entry.title",
             "line": 158,
-            "context": "157: <DialogHeader>\n158: <DialogTitle>{t('detail_hub.timecard.manual_entry.title')}</DialogTitle>\n159: </DialogHeader>"
+            "context": "157: <DialogHeader>\n158: <DialogTitle>{t('detail_hub.timecard.manual_entry.title')}</DialogTitle>\n159: <DialogDescription>"
+          },
+          {
+            "key": "detail_hub.timecard.manual_entry.description",
+            "line": 160,
+            "context": "159: <DialogDescription>\n160: {t('detail_hub.timecard.manual_entry.description')}\n161: </DialogDescription>"
           },
           {
             "key": "detail_hub.timecard.manual_entry.employee",
-            "line": 164,
-            "context": "163: <div className=\"space-y-2\">\n164: <Label htmlFor=\"employee\">{t('detail_hub.timecard.manual_entry.employee')}</Label>\n165: <Select value={selectedEmployee} onValueChange={setSelectedEmployee}>"
+            "line": 167,
+            "context": "166: <div className=\"space-y-2\">\n167: <Label htmlFor=\"employee\">{t('detail_hub.timecard.manual_entry.employee')}</Label>\n168: <Select value={selectedEmployee} onValueChange={setSelectedEmployee}>"
           },
           {
             "key": "detail_hub.timecard.manual_entry.select_employee",
-            "line": 167,
-            "context": "166: <SelectTrigger id=\"employee\" className={errors.employee ? 'border-red-500' : ''}>\n167: <SelectValue placeholder={t('detail_hub.timecard.manual_entry.select_employee')} />\n168: </SelectTrigger>"
+            "line": 170,
+            "context": "169: <SelectTrigger id=\"employee\" className={errors.employee ? 'border-red-500' : ''}>\n170: <SelectValue placeholder={t('detail_hub.timecard.manual_entry.select_employee')} />\n171: </SelectTrigger>"
           },
           {
             "key": "detail_hub.timecard.manual_entry.date",
-            "line": 182,
-            "context": "181: <div className=\"space-y-2\">\n182: <Label>{t('detail_hub.timecard.manual_entry.date')}</Label>\n183: <Popover>"
+            "line": 185,
+            "context": "184: <div className=\"space-y-2\">\n185: <Label>{t('detail_hub.timecard.manual_entry.date')}</Label>\n186: <Popover>"
           },
           {
             "key": "detail_hub.timecard.manual_entry.clock_in",
-            "line": 205,
-            "context": "204: <div className=\"space-y-2\">\n205: <Label htmlFor=\"clockIn\">{t('detail_hub.timecard.manual_entry.clock_in')}</Label>\n206: <div className=\"relative\">"
+            "line": 208,
+            "context": "207: <div className=\"space-y-2\">\n208: <Label htmlFor=\"clockIn\">{t('detail_hub.timecard.manual_entry.clock_in')}</Label>\n209: <div className=\"relative\">"
           },
           {
             "key": "detail_hub.timecard.manual_entry.clock_out",
-            "line": 221,
-            "context": "220: <div className=\"space-y-2\">\n221: <Label htmlFor=\"clockOut\">{t('detail_hub.timecard.manual_entry.clock_out')}</Label>\n222: <div className=\"relative\">"
+            "line": 224,
+            "context": "223: <div className=\"space-y-2\">\n224: <Label htmlFor=\"clockOut\">{t('detail_hub.timecard.manual_entry.clock_out')}</Label>\n225: <div className=\"relative\">"
           },
           {
             "key": "detail_hub.timecard.manual_entry.optional",
-            "line": 230,
-            "context": "229: className={`pl-10 ${errors.clockOut ? 'border-red-500' : ''}`}\n230: placeholder={t('detail_hub.timecard.manual_entry.optional')}\n231: />"
+            "line": 233,
+            "context": "232: className={`pl-10 ${errors.clockOut ? 'border-red-500' : ''}`}\n233: placeholder={t('detail_hub.timecard.manual_entry.optional')}\n234: />"
           },
           {
             "key": "detail_hub.timecard.manual_entry.break_start",
-            "line": 241,
-            "context": "240: <div className=\"space-y-2\">\n241: <Label htmlFor=\"breakStart\">{t('detail_hub.timecard.manual_entry.break_start')}</Label>\n242: <div className=\"relative\">"
+            "line": 244,
+            "context": "243: <div className=\"space-y-2\">\n244: <Label htmlFor=\"breakStart\">{t('detail_hub.timecard.manual_entry.break_start')}</Label>\n245: <div className=\"relative\">"
           },
           {
             "key": "detail_hub.timecard.manual_entry.optional",
-            "line": 250,
-            "context": "249: className={`pl-10 ${errors.breakStart ? 'border-red-500' : ''}`}\n250: placeholder={t('detail_hub.timecard.manual_entry.optional')}\n251: />"
+            "line": 253,
+            "context": "252: className={`pl-10 ${errors.breakStart ? 'border-red-500' : ''}`}\n253: placeholder={t('detail_hub.timecard.manual_entry.optional')}\n254: />"
           },
           {
             "key": "detail_hub.timecard.manual_entry.break_end",
-            "line": 258,
-            "context": "257: <div className=\"space-y-2\">\n258: <Label htmlFor=\"breakEnd\">{t('detail_hub.timecard.manual_entry.break_end')}</Label>\n259: <div className=\"relative\">"
+            "line": 261,
+            "context": "260: <div className=\"space-y-2\">\n261: <Label htmlFor=\"breakEnd\">{t('detail_hub.timecard.manual_entry.break_end')}</Label>\n262: <div className=\"relative\">"
           },
           {
             "key": "detail_hub.timecard.manual_entry.optional",
-            "line": 267,
-            "context": "266: className={`pl-10 ${errors.breakEnd ? 'border-red-500' : ''}`}\n267: placeholder={t('detail_hub.timecard.manual_entry.optional')}\n268: disabled={!breakStart}"
+            "line": 270,
+            "context": "269: className={`pl-10 ${errors.breakEnd ? 'border-red-500' : ''}`}\n270: placeholder={t('detail_hub.timecard.manual_entry.optional')}\n271: disabled={!breakStart}"
           },
           {
             "key": "detail_hub.timecard.manual_entry.notes",
-            "line": 277,
-            "context": "276: <div className=\"space-y-2\">\n277: <Label htmlFor=\"notes\">{t('detail_hub.timecard.manual_entry.notes')}</Label>\n278: <Textarea"
+            "line": 280,
+            "context": "279: <div className=\"space-y-2\">\n280: <Label htmlFor=\"notes\">{t('detail_hub.timecard.manual_entry.notes')}</Label>\n281: <Textarea"
           },
           {
             "key": "detail_hub.timecard.manual_entry.notes_placeholder",
-            "line": 282,
-            "context": "281: onChange={(e) => setNotes(e.target.value)}\n282: placeholder={t('detail_hub.timecard.manual_entry.notes_placeholder')}\n283: rows={3}"
+            "line": 285,
+            "context": "284: onChange={(e) => setNotes(e.target.value)}\n285: placeholder={t('detail_hub.timecard.manual_entry.notes_placeholder')}\n286: rows={3}"
           },
           {
             "key": "detail_hub.timecard.manual_entry.cancel",
-            "line": 298,
-            "context": "297: <X className=\"w-4 h-4 mr-2\" />\n298: {t('detail_hub.timecard.manual_entry.cancel')}\n299: </Button>"
+            "line": 301,
+            "context": "300: <X className=\"w-4 h-4 mr-2\" />\n301: {t('detail_hub.timecard.manual_entry.cancel')}\n302: </Button>"
           },
           {
             "key": "detail_hub.timecard.manual_entry.saving",
-            "line": 302,
-            "context": "301: <Save className=\"w-4 h-4 mr-2\" />\n302: {isPending ? t('detail_hub.timecard.manual_entry.saving') : t('detail_hub.timecard.manual_entry.save')}\n303: </Button>"
+            "line": 305,
+            "context": "304: <Save className=\"w-4 h-4 mr-2\" />\n305: {isPending ? t('detail_hub.timecard.manual_entry.saving') : t('detail_hub.timecard.manual_entry.save')}\n306: </Button>"
           },
           {
             "key": "detail_hub.timecard.manual_entry.save",
-            "line": 302,
-            "context": "301: <Save className=\"w-4 h-4 mr-2\" />\n302: {isPending ? t('detail_hub.timecard.manual_entry.saving') : t('detail_hub.timecard.manual_entry.save')}\n303: </Button>"
+            "line": 305,
+            "context": "304: <Save className=\"w-4 h-4 mr-2\" />\n305: {isPending ? t('detail_hub.timecard.manual_entry.saving') : t('detail_hub.timecard.manual_entry.save')}\n306: </Button>"
           }
         ],
         "coverage": 100,
@@ -102457,7 +102467,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "8510 translation keys are referenced but missing",
+      "description": "8511 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "426 hours"
     }
