@@ -1,0 +1,49 @@
+# Enterprise Improvement Plan - ESLint Ignore Configuration
+# Updated: 2024-11-24
+
+# Build outputs
+dist/
+dev-dist/
+build/
+
+# Backups y archivos obsoletos
+backups/
+.backups/
+*.backup
+*.old
+
+# Documentación
+docs/
+*.md
+
+# Migraciones y scripts SQL
+migrations/
+scripts/database/
+*.sql
+
+# Node modules
+node_modules/
+
+# Generated files
+.vscode/
+.idea/
+*.log
+coverage/
+public/version.json
+src/version.json
+
+# Test fixtures
+**/__fixtures__/
+**/__mocks__/
+
+# Service worker
+sw-custom.js
+workbox-*.js
+
+# Supabase
+.supabase/
+supabase/functions/
+
+# Environment files
+.env
+.env.*
