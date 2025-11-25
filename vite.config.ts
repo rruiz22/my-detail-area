@@ -105,33 +105,26 @@ export default defineConfig(({ mode }) => ({
         // Runtime caching rules for offline support
         runtimeCaching: [
           {
-            // 🔴 CRITICAL FIX: Cache translation JSON files with NetworkFirst
-            // ALWAYS tries network first (fresh translations)
-            // Falls back to cache only if network fails
-            // Short 5-minute cache expiration
+            // 🔴 CRITICAL FIX: Translation files NEVER cached by Service Worker
+            // Always fetches fresh from network to prevent stale translations
+            // This eliminates "Translation Loading Failed" errors caused by cache poisoning
             urlPattern: /\/translations\/.*\.json$/,
-            handler: 'NetworkFirst',
+            handler: 'NetworkOnly',
             options: {
-              cacheName: 'translations-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 5 // 5 minutes only - fresh translations
-              },
-              networkTimeoutSeconds: 20, // 🔴 CRITICAL FIX: Increased to 20s for mobile (3G/4G) + large translation files (~500KB)
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
+              cacheName: 'translations-cache' // Name kept for compatibility, but not used
             }
           },
           {
-            // Cache API responses from Supabase
+            // 🔴 CRITICAL FIX: Cache API responses from Supabase with SHORT expiration
+            // Reduced from 24h to 5 minutes to match TanStack Query cache
+            // Prevents stale data in Sales/Service Orders modules
             urlPattern: ({ url }) => url.origin === 'https://swfnnrpzpkdypbrzmgnr.supabase.co',
             handler: 'NetworkFirst',
             options: {
               cacheName: 'supabase-api-cache',
               expiration: {
                 maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 // 24 hours
+                maxAgeSeconds: 60 * 5 // 5 minutes (matches TanStack Query staleTime)
               },
               networkTimeoutSeconds: 10
             }
