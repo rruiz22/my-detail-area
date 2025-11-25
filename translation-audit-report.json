@@ -1,7 +1,7 @@
 {
   "scannedFiles": 915,
-  "totalStrings": 10669,
-  "hardcodedStrings": 2167,
+  "totalStrings": 10670,
+  "hardcodedStrings": 2168,
   "translatedStrings": 8502,
   "issues": {
     "critical": [
@@ -2591,299 +2591,403 @@
         "severity": "critical"
       },
       {
+        "file": "src\\components\\reports\\invoices\\email\\SendInvoiceEmailDialog.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Send Invoice Email",
+            "line": 196,
+            "context": "195: <div>\n196: <DialogTitle className=\"text-2xl\">Send Invoice Email</DialogTitle>\n197: <DialogDescription>"
+          },
+          {
+            "text": "Recipients",
+            "line": 208,
+            "context": "207: <div className=\"flex items-center justify-between mb-3\">\n208: <Label>Recipients</Label>\n209: <Button"
+          },
+          {
+            "text": "Manage Contacts",
+            "line": 214,
+            "context": "213: >\n214: <Settings className=\"h-4 w-4 mr-2\" />\n215: Manage Contacts"
+          },
+          {
+            "text": "Add your first contact",
+            "line": 225,
+            "context": "224: onClick={() => setShowManageContacts(true)}\n225: >\n226: Add your first contact"
+          },
+          {
+            "text": "Default",
+            "line": 253,
+            "context": "252: {contact.is_default && (\n253: <Badge variant=\"secondary\" className=\"ml-2\">Default</Badge>\n254: )}"
+          },
+          {
+            "text": "Replies will be sent to this email address",
+            "line": 310,
+            "context": "309: />\n310: <p className=\"text-xs text-muted-foreground mt-1\">\n311: Replies will be sent to this email address"
+          },
+          {
+            "text": "Separate multiple emails with commas",
+            "line": 326,
+            "context": "325: />\n326: <p className=\"text-xs text-muted-foreground mt-1\">\n327: Separate multiple emails with commas"
+          },
+          {
+            "text": "Subject",
+            "line": 333,
+            "context": "332: <div>\n333: <Label htmlFor=\"subject\">Subject</Label>\n334: <Input"
+          },
+          {
+            "text": "Message",
+            "line": 344,
+            "context": "343: <div>\n344: <Label htmlFor=\"message\">Message</Label>\n345: <Textarea"
+          },
+          {
+            "text": "Attachments",
+            "line": 356,
+            "context": "355: <div>\n356: <Label className=\"mb-3 block\">Attachments</Label>\n357: <div className=\"space-y-2\">"
+          },
+          {
+            "text": "Invoice PDF",
+            "line": 365,
+            "context": "364: <Label htmlFor=\"attach-pdf\" className=\"flex items-center gap-2 cursor-pointer font-normal\">\n365: <FileText className=\"h-4 w-4 text-red-500\" />\n366: Invoice PDF"
+          },
+          {
+            "text": "Detailed Excel Report",
+            "line": 376,
+            "context": "375: <Label htmlFor=\"attach-excel\" className=\"flex items-center gap-2 cursor-pointer font-normal\">\n376: <FileSpreadsheet className=\"h-4 w-4 text-green-600\" />\n377: Detailed Excel Report"
+          },
+          {
+            "text": "Cancel",
+            "line": 389,
+            "context": "388: <div className=\"flex gap-2\">\n389: <Button variant=\"outline\" onClick={() => onOpenChange(false)}>\n390: Cancel"
+          },
+          {
+            "text": "email1@example.com, email2@example.com",
+            "line": 323,
+            "context": "322: onChange={(e) => setCc(e.target.value)}\n323: placeholder=\"email1@example.com, email2@example.com\"\n324: className=\"mt-2\""
+          },
+          {
+            "text": "Invoice subject...",
+            "line": 338,
+            "context": "337: onChange={(e) => setSubject(e.target.value)}\n338: placeholder=\"Invoice subject...\"\n339: />"
+          },
+          {
+            "text": "Email message...",
+            "line": 350,
+            "context": "349: rows={6}\n350: placeholder=\"Email message...\"\n351: />"
+          },
+          {
+            "text": "Recipients",
+            "line": 208,
+            "context": "207: <div className=\"flex items-center justify-between mb-3\">\n208: <Label>Recipients</Label>\n209: <Button"
+          },
+          {
+            "text": "Subject",
+            "line": 333,
+            "context": "332: <div>\n333: <Label htmlFor=\"subject\">Subject</Label>\n334: <Input"
+          },
+          {
+            "text": "Message",
+            "line": 344,
+            "context": "343: <div>\n344: <Label htmlFor=\"message\">Message</Label>\n345: <Textarea"
+          },
+          {
+            "text": "Attachments",
+            "line": 356,
+            "context": "355: <div>\n356: <Label className=\"mb-3 block\">Attachments</Label>\n357: <div className=\"space-y-2\">"
+          },
+          {
+            "text": "Send Invoice Email",
+            "line": 196,
+            "context": "195: <div>\n196: <DialogTitle className=\"text-2xl\">Send Invoice Email</DialogTitle>\n197: <DialogDescription>"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "critical"
+      },
+      {
         "file": "src\\components\\reports\\invoices\\InvoiceDetailsDialog.tsx",
         "hardcodedStrings": [
           {
             "text": "Invoice",
-            "line": 482,
-            "context": "481: <div class=\"sender-name\">${senderName}</div>\n482: <div class=\"doc-title\">Invoice</div>\n483: ${servicePeriod ? `"
+            "line": 490,
+            "context": "489: <div class=\"sender-name\">${senderName}</div>\n490: <div class=\"doc-title\">Invoice</div>\n491: ${servicePeriod ? `"
           },
           {
             "text": "Bill To",
-            "line": 494,
-            "context": "493: <div class=\"bill-to\">\n494: <h3>Bill To</h3>\n495: <div class=\"company\">${dealerName}</div>"
+            "line": 502,
+            "context": "501: <div class=\"bill-to\">\n502: <h3>Bill To</h3>\n503: <div class=\"company\">${dealerName}</div>"
           },
           {
             "text": "Invoice Date",
-            "line": 508,
-            "context": "507: <div class=\"detail-row\">\n508: <span class=\"label\">Invoice Date</span>\n509: <div class=\"value\">${formatDate(invoice.issueDate)}</div>"
+            "line": 516,
+            "context": "515: <div class=\"detail-row\">\n516: <span class=\"label\">Invoice Date</span>\n517: <div class=\"value\">${formatDate(invoice.issueDate)}</div>"
           },
           {
             "text": "Due Date",
-            "line": 512,
-            "context": "511: <div class=\"detail-row\">\n512: <span class=\"label\">Due Date</span>\n513: <div class=\"value\">${formatDate(invoice.dueDate)}</div>"
+            "line": 520,
+            "context": "519: <div class=\"detail-row\">\n520: <span class=\"label\">Due Date</span>\n521: <div class=\"value\">${formatDate(invoice.dueDate)}</div>"
           },
           {
             "text": "Invoice Number",
-            "line": 516,
-            "context": "515: <div class=\"detail-row\">\n516: <span class=\"label\">Invoice Number</span>\n517: <div class=\"value font-mono\">${invoice.invoiceNumber}</div>"
+            "line": 524,
+            "context": "523: <div class=\"detail-row\">\n524: <span class=\"label\">Invoice Number</span>\n525: <div class=\"value font-mono\">${invoice.invoiceNumber}</div>"
           },
           {
             "text": "Total Amount",
-            "line": 520,
-            "context": "519: <div class=\"detail-row\" style=\"margin-top: 12px;\">\n520: <span class=\"label\">Total Amount</span>\n521: <div class=\"value\" style=\"font-size: 14pt; font-weight: 700; color: #6B7280;\">${formatCurrency(invoice.totalAmount)}</div>"
-          },
-          {
-            "text": "Date",
-            "line": 534,
-            "context": "533: <th style=\"width: 4%;\">#</th>\n534: <th style=\"width: 7%;\">Date</th>\n535: <th style=\"width: 9%;\">Order</th>"
-          },
-          {
-            "text": "Order",
-            "line": 535,
-            "context": "534: <th style=\"width: 7%;\">Date</th>\n535: <th style=\"width: 9%;\">Order</th>\n536: <th style=\"width: 17%;\">PO | RO | Tag</th>"
+            "line": 528,
+            "context": "527: <div class=\"detail-row\" style=\"margin-top: 12px;\">\n528: <span class=\"label\">Total Amount</span>\n529: <div class=\"value\" style=\"font-size: 14pt; font-weight: 700; color: #6B7280;\">${formatCurrency(invoice.totalAmount)}</div>"
           },
           {
             "text": "Vehicle",
-            "line": 537,
-            "context": "536: <th style=\"width: 17%;\">PO | RO | Tag</th>\n537: <th style=\"width: 15%;\">Vehicle</th>\n538: <th style=\"width: 13%;\">VIN</th>"
+            "line": 544,
+            "context": "543: <th style=\"width: 17%;\">PO | RO | Tag</th>\n544: <th style=\"width: 16%;\">Vehicle</th>\n545: <th style=\"width: 14%;\">VIN</th>"
           },
           {
             "text": "Services",
-            "line": 539,
-            "context": "538: <th style=\"width: 13%;\">VIN</th>\n539: <th style=\"width: 23%;\" class=\"text-left\">Services</th>\n540: <th style=\"width: 12%;\">Amount</th>"
+            "line": 546,
+            "context": "545: <th style=\"width: 14%;\">VIN</th>\n546: <th style=\"width: 25%;\" class=\"text-left\">Services</th>\n547: <th style=\"width: 12%;\">Amount</th>"
           },
           {
             "text": "Amount",
-            "line": 540,
-            "context": "539: <th style=\"width: 23%;\" class=\"text-left\">Services</th>\n540: <th style=\"width: 12%;\">Amount</th>\n541: </tr>"
+            "line": 547,
+            "context": "546: <th style=\"width: 25%;\" class=\"text-left\">Services</th>\n547: <th style=\"width: 12%;\">Amount</th>\n548: </tr>"
           },
           {
             "text": "Loading Invoice",
-            "line": 706,
-            "context": "705: <DialogHeader>\n706: <DialogTitle>Loading Invoice</DialogTitle>\n707: <DialogDescription>"
+            "line": 715,
+            "context": "714: <DialogHeader>\n715: <DialogTitle>Loading Invoice</DialogTitle>\n716: <DialogDescription>"
           },
           {
             "text": "Invoice Not Found",
-            "line": 724,
-            "context": "723: <DialogHeader>\n724: <DialogTitle>Invoice Not Found</DialogTitle>\n725: <DialogDescription>"
+            "line": 733,
+            "context": "732: <DialogHeader>\n733: <DialogTitle>Invoice Not Found</DialogTitle>\n734: <DialogDescription>"
           },
           {
             "text": "Invoice not found",
-            "line": 730,
-            "context": "729: <div className=\"flex items-center justify-center py-12\">\n730: <p className=\"text-muted-foreground\">Invoice not found</p>\n731: </div>"
+            "line": 739,
+            "context": "738: <div className=\"flex items-center justify-center py-12\">\n739: <p className=\"text-muted-foreground\">Invoice not found</p>\n740: </div>"
           },
           {
             "text": "Download PDF",
-            "line": 822,
-            "context": "821: <DropdownMenuItem onClick={handleDownloadPDF}>\n822: <FileText className=\"h-4 w-4 mr-2\" />\n823: Download PDF"
+            "line": 831,
+            "context": "830: <DropdownMenuItem onClick={handleDownloadPDF}>\n831: <FileText className=\"h-4 w-4 mr-2\" />\n832: Download PDF"
           },
           {
             "text": "Download Excel",
-            "line": 826,
-            "context": "825: <DropdownMenuItem onClick={handleDownloadExcel}>\n826: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n827: Download Excel"
+            "line": 835,
+            "context": "834: <DropdownMenuItem onClick={handleDownloadExcel}>\n835: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n836: Download Excel"
           },
           {
             "text": "Total Amount",
-            "line": 895,
-            "context": "894: <div className=\"pt-2 border-t\">\n895: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Total Amount</span>\n896: <p className=\"text-2xl font-bold text-primary\">{formatCurrency(invoice.totalAmount)}</p>"
+            "line": 904,
+            "context": "903: <div className=\"pt-2 border-t\">\n904: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Total Amount</span>\n905: <p className=\"text-2xl font-bold text-primary\">{formatCurrency(invoice.totalAmount)}</p>"
           },
           {
             "text": "Amount Due",
-            "line": 900,
-            "context": "899: <div className=\"pt-2\">\n900: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Amount Due</span>\n901: <p className=\"text-xl font-bold text-amber-600\">{formatCurrency(invoice.amountDue)}</p>"
+            "line": 909,
+            "context": "908: <div className=\"pt-2\">\n909: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Amount Due</span>\n910: <p className=\"text-xl font-bold text-amber-600\">{formatCurrency(invoice.amountDue)}</p>"
           },
           {
             "text": "Vehicles",
-            "line": 925,
-            "context": "924: <div className=\"flex items-center justify-between mb-4\">\n925: <h3 className=\"font-bold text-lg text-gray-900\">\n926: Vehicles"
+            "line": 934,
+            "context": "933: <div className=\"flex items-center justify-between mb-4\">\n934: <h3 className=\"font-bold text-lg text-gray-900\">\n935: Vehicles"
           },
           {
             "text": "Date",
-            "line": 943,
-            "context": "942: </TableHead>\n943: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n944: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>"
+            "line": 952,
+            "context": "951: </TableHead>\n952: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n953: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>"
           },
           {
             "text": "Order",
-            "line": 944,
-            "context": "943: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n944: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>\n945: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>"
+            "line": 953,
+            "context": "952: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n953: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>\n954: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>"
           },
           {
             "text": "Vehicle",
-            "line": 946,
-            "context": "945: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>\n946: <TableHead className=\"font-bold text-center text-white\">Vehicle</TableHead>\n947: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>"
+            "line": 955,
+            "context": "954: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>\n955: <TableHead className=\"font-bold text-center text-white\">Vehicle</TableHead>\n956: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>"
           },
           {
             "text": "Services",
-            "line": 948,
-            "context": "947: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>\n948: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n949: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>"
+            "line": 957,
+            "context": "956: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>\n957: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n958: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 949,
-            "context": "948: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n949: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>\n950: </TableRow>"
+            "line": 958,
+            "context": "957: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n958: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>\n959: </TableRow>"
           },
           {
             "text": "No items found",
-            "line": 1061,
-            "context": "1060: <TableRow>\n1061: <TableCell colSpan={8} className=\"text-center py-8 text-muted-foreground\">\n1062: No items found"
+            "line": 1070,
+            "context": "1069: <TableRow>\n1070: <TableCell colSpan={8} className=\"text-center py-8 text-muted-foreground\">\n1071: No items found"
           },
           {
             "text": "Cancel",
-            "line": 1250,
-            "context": "1249: <AlertDialogFooter>\n1250: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1251: <AlertDialogAction"
+            "line": 1259,
+            "context": "1258: <AlertDialogFooter>\n1259: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1260: <AlertDialogAction"
           },
           {
             "text": "Service names from current dealer services",
-            "line": 1278,
-            "context": "1277: <ul className=\"list-disc list-inside ml-2 space-y-1 text-sm\">\n1278: <li>Service names from current dealer services</li>\n1279: <li>Order totals and prices</li>"
+            "line": 1287,
+            "context": "1286: <ul className=\"list-disc list-inside ml-2 space-y-1 text-sm\">\n1287: <li>Service names from current dealer services</li>\n1288: <li>Order totals and prices</li>"
           },
           {
             "text": "Order totals and prices",
-            "line": 1279,
-            "context": "1278: <li>Service names from current dealer services</li>\n1279: <li>Order totals and prices</li>\n1280: <li>Customer and vehicle information</li>"
+            "line": 1288,
+            "context": "1287: <li>Service names from current dealer services</li>\n1288: <li>Order totals and prices</li>\n1289: <li>Customer and vehicle information</li>"
           },
           {
             "text": "Customer and vehicle information",
-            "line": 1280,
-            "context": "1279: <li>Order totals and prices</li>\n1280: <li>Customer and vehicle information</li>\n1281: <li>Invoice totals and tax calculations</li>"
+            "line": 1289,
+            "context": "1288: <li>Order totals and prices</li>\n1289: <li>Customer and vehicle information</li>\n1290: <li>Invoice totals and tax calculations</li>"
           },
           {
             "text": "Invoice totals and tax calculations",
-            "line": 1281,
-            "context": "1280: <li>Customer and vehicle information</li>\n1281: <li>Invoice totals and tax calculations</li>\n1282: </ul>"
+            "line": 1290,
+            "context": "1289: <li>Customer and vehicle information</li>\n1290: <li>Invoice totals and tax calculations</li>\n1291: </ul>"
           },
           {
             "text": "Cancel",
-            "line": 1290,
-            "context": "1289: <AlertDialogFooter>\n1290: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1291: <AlertDialogAction"
+            "line": 1299,
+            "context": "1298: <AlertDialogFooter>\n1299: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1300: <AlertDialogAction"
           },
           {
             "text": "Loading Invoice",
-            "line": 706,
-            "context": "705: <DialogHeader>\n706: <DialogTitle>Loading Invoice</DialogTitle>\n707: <DialogDescription>"
+            "line": 715,
+            "context": "714: <DialogHeader>\n715: <DialogTitle>Loading Invoice</DialogTitle>\n716: <DialogDescription>"
           },
           {
             "text": "Invoice Not Found",
-            "line": 724,
-            "context": "723: <DialogHeader>\n724: <DialogTitle>Invoice Not Found</DialogTitle>\n725: <DialogDescription>"
+            "line": 733,
+            "context": "732: <DialogHeader>\n733: <DialogTitle>Invoice Not Found</DialogTitle>\n734: <DialogDescription>"
           }
         ],
         "translationCalls": [
           {
             "key": "reports.invoices.delete",
-            "line": 778,
+            "line": 787,
             "exists": false
           },
           {
             "key": "reports.invoices.send_email",
-            "line": 800,
+            "line": 809,
             "exists": false
           },
           {
             "key": "common.action_buttons.print",
-            "line": 808,
-            "exists": false
-          },
-          {
-            "key": "common.action_buttons.download",
             "line": 817,
             "exists": false
           },
           {
+            "key": "common.action_buttons.download",
+            "line": 826,
+            "exists": false
+          },
+          {
             "key": "common.action_buttons.close",
-            "line": 837,
+            "line": 846,
             "exists": false
           },
           {
             "key": "reports.invoices.delete_confirm_title",
-            "line": 1203,
+            "line": 1212,
             "exists": false
           },
           {
             "key": "reports.invoices.delete_confirm_message",
-            "line": 1208,
+            "line": 1217,
             "exists": false
           },
           {
             "key": "reports.invoices.vehicles_available_again",
-            "line": 1211,
+            "line": 1220,
             "exists": false
           },
           {
             "key": "reports.invoices.has_payments_warning",
-            "line": 1215,
+            "line": 1224,
             "exists": false
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1222,
+            "line": 1231,
             "exists": false
           },
           {
             "key": "reports.invoices.deleting",
-            "line": 1233,
+            "line": 1242,
             "exists": false
           },
           {
             "key": "reports.invoices.delete_invoice",
-            "line": 1234,
+            "line": 1243,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "reports.invoices.delete",
-            "line": 778,
-            "context": "777: <Trash2 className=\"h-4 w-4 mr-2\" />\n778: {t('reports.invoices.delete')}\n779: </Button>"
+            "line": 787,
+            "context": "786: <Trash2 className=\"h-4 w-4 mr-2\" />\n787: {t('reports.invoices.delete')}\n788: </Button>"
           },
           {
             "key": "reports.invoices.send_email",
-            "line": 800,
-            "context": "799: <Mail className=\"h-4 w-4 mr-2\" />\n800: {t('reports.invoices.send_email')}\n801: </Button>"
+            "line": 809,
+            "context": "808: <Mail className=\"h-4 w-4 mr-2\" />\n809: {t('reports.invoices.send_email')}\n810: </Button>"
           },
           {
             "key": "common.action_buttons.print",
-            "line": 808,
-            "context": "807: <Printer className=\"h-4 w-4 mr-2\" />\n808: {t('common.action_buttons.print')}\n809: </Button>"
+            "line": 817,
+            "context": "816: <Printer className=\"h-4 w-4 mr-2\" />\n817: {t('common.action_buttons.print')}\n818: </Button>"
           },
           {
             "key": "common.action_buttons.download",
-            "line": 817,
-            "context": "816: <Download className=\"h-4 w-4 mr-2\" />\n817: {t('common.action_buttons.download')}\n818: </Button>"
+            "line": 826,
+            "context": "825: <Download className=\"h-4 w-4 mr-2\" />\n826: {t('common.action_buttons.download')}\n827: </Button>"
           },
           {
             "key": "common.action_buttons.close",
-            "line": 837,
-            "context": "836: <X className=\"h-4 w-4 mr-2\" />\n837: {t('common.action_buttons.close')}\n838: </Button>"
+            "line": 846,
+            "context": "845: <X className=\"h-4 w-4 mr-2\" />\n846: {t('common.action_buttons.close')}\n847: </Button>"
           },
           {
             "key": "reports.invoices.delete_confirm_title",
-            "line": 1203,
-            "context": "1202: <AlertDialogTitle>\n1203: {t('reports.invoices.delete_confirm_title', { number: invoice.invoiceNumber })}\n1204: </AlertDialogTitle>"
+            "line": 1212,
+            "context": "1211: <AlertDialogTitle>\n1212: {t('reports.invoices.delete_confirm_title', { number: invoice.invoiceNumber })}\n1213: </AlertDialogTitle>"
           },
           {
             "key": "reports.invoices.delete_confirm_message",
-            "line": 1208,
-            "context": "1207: <p>\n1208: {t('reports.invoices.delete_confirm_message', { count: invoice.items?.length || 0 })}\n1209: </p>"
+            "line": 1217,
+            "context": "1216: <p>\n1217: {t('reports.invoices.delete_confirm_message', { count: invoice.items?.length || 0 })}\n1218: </p>"
           },
           {
             "key": "reports.invoices.vehicles_available_again",
-            "line": 1211,
-            "context": "1210: <p className=\"text-sm text-gray-600\">\n1211: {t('reports.invoices.vehicles_available_again')}\n1212: </p>"
+            "line": 1220,
+            "context": "1219: <p className=\"text-sm text-gray-600\">\n1220: {t('reports.invoices.vehicles_available_again')}\n1221: </p>"
           },
           {
             "key": "reports.invoices.has_payments_warning",
-            "line": 1215,
-            "context": "1214: <p className=\"text-red-600 font-semibold mt-2\">\n1215: {t('reports.invoices.has_payments_warning', { count: invoice.payments.length })}\n1216: </p>"
+            "line": 1224,
+            "context": "1223: <p className=\"text-red-600 font-semibold mt-2\">\n1224: {t('reports.invoices.has_payments_warning', { count: invoice.payments.length })}\n1225: </p>"
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1222,
-            "context": "1221: <AlertDialogFooter>\n1222: <AlertDialogCancel>{t('common.action_buttons.cancel')}</AlertDialogCancel>\n1223: <AlertDialogAction"
+            "line": 1231,
+            "context": "1230: <AlertDialogFooter>\n1231: <AlertDialogCancel>{t('common.action_buttons.cancel')}</AlertDialogCancel>\n1232: <AlertDialogAction"
           },
           {
             "key": "reports.invoices.deleting",
-            "line": 1233,
-            "context": "1232: {deleteMutation.isPending\n1233: ? t('reports.invoices.deleting')\n1234: : t('reports.invoices.delete_invoice')}"
+            "line": 1242,
+            "context": "1241: {deleteMutation.isPending\n1242: ? t('reports.invoices.deleting')\n1243: : t('reports.invoices.delete_invoice')}"
           },
           {
             "key": "reports.invoices.delete_invoice",
-            "line": 1234,
-            "context": "1233: ? t('reports.invoices.deleting')\n1234: : t('reports.invoices.delete_invoice')}\n1235: </AlertDialogAction>"
+            "line": 1243,
+            "context": "1242: ? t('reports.invoices.deleting')\n1243: : t('reports.invoices.delete_invoice')}\n1244: </AlertDialogAction>"
           }
         ],
-        "coverage": 27,
+        "coverage": 28,
         "severity": "critical"
       },
       {
@@ -10664,105 +10768,6 @@
             "text": "Email Contacts",
             "line": 140,
             "context": "139: <div>\n140: <DialogTitle className=\"text-2xl\">Email Contacts</DialogTitle>\n141: <DialogDescription>{dealershipName}</DialogDescription>"
-          }
-        ],
-        "translationCalls": [],
-        "missingKeys": [],
-        "coverage": 0,
-        "severity": "high"
-      },
-      {
-        "file": "src\\components\\reports\\invoices\\email\\SendInvoiceEmailDialog.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Send Invoice Email",
-            "line": 162,
-            "context": "161: <div>\n162: <DialogTitle className=\"text-2xl\">Send Invoice Email</DialogTitle>\n163: <DialogDescription>"
-          },
-          {
-            "text": "Recipients",
-            "line": 174,
-            "context": "173: <div className=\"flex items-center justify-between mb-3\">\n174: <Label>Recipients</Label>\n175: <Button"
-          },
-          {
-            "text": "Manage Contacts",
-            "line": 180,
-            "context": "179: >\n180: <Settings className=\"h-4 w-4 mr-2\" />\n181: Manage Contacts"
-          },
-          {
-            "text": "Add your first contact",
-            "line": 191,
-            "context": "190: onClick={() => setShowManageContacts(true)}\n191: >\n192: Add your first contact"
-          },
-          {
-            "text": "Default",
-            "line": 219,
-            "context": "218: {contact.is_default && (\n219: <Badge variant=\"secondary\" className=\"ml-2\">Default</Badge>\n220: )}"
-          },
-          {
-            "text": "Subject",
-            "line": 267,
-            "context": "266: <div>\n267: <Label htmlFor=\"subject\">Subject</Label>\n268: <Input"
-          },
-          {
-            "text": "Message",
-            "line": 278,
-            "context": "277: <div>\n278: <Label htmlFor=\"message\">Message</Label>\n279: <Textarea"
-          },
-          {
-            "text": "Attachments",
-            "line": 290,
-            "context": "289: <div>\n290: <Label className=\"mb-3 block\">Attachments</Label>\n291: <div className=\"space-y-2\">"
-          },
-          {
-            "text": "Invoice PDF",
-            "line": 299,
-            "context": "298: <Label htmlFor=\"attach-pdf\" className=\"flex items-center gap-2 cursor-pointer font-normal\">\n299: <FileText className=\"h-4 w-4 text-red-500\" />\n300: Invoice PDF"
-          },
-          {
-            "text": "Detailed Excel Report",
-            "line": 310,
-            "context": "309: <Label htmlFor=\"attach-excel\" className=\"flex items-center gap-2 cursor-pointer font-normal\">\n310: <FileSpreadsheet className=\"h-4 w-4 text-green-600\" />\n311: Detailed Excel Report"
-          },
-          {
-            "text": "Cancel",
-            "line": 323,
-            "context": "322: <div className=\"flex gap-2\">\n323: <Button variant=\"outline\" onClick={() => onOpenChange(false)}>\n324: Cancel"
-          },
-          {
-            "text": "Invoice subject...",
-            "line": 272,
-            "context": "271: onChange={(e) => setSubject(e.target.value)}\n272: placeholder=\"Invoice subject...\"\n273: />"
-          },
-          {
-            "text": "Email message...",
-            "line": 284,
-            "context": "283: rows={6}\n284: placeholder=\"Email message...\"\n285: />"
-          },
-          {
-            "text": "Recipients",
-            "line": 174,
-            "context": "173: <div className=\"flex items-center justify-between mb-3\">\n174: <Label>Recipients</Label>\n175: <Button"
-          },
-          {
-            "text": "Subject",
-            "line": 267,
-            "context": "266: <div>\n267: <Label htmlFor=\"subject\">Subject</Label>\n268: <Input"
-          },
-          {
-            "text": "Message",
-            "line": 278,
-            "context": "277: <div>\n278: <Label htmlFor=\"message\">Message</Label>\n279: <Textarea"
-          },
-          {
-            "text": "Attachments",
-            "line": 290,
-            "context": "289: <div>\n290: <Label className=\"mb-3 block\">Attachments</Label>\n291: <div className=\"space-y-2\">"
-          },
-          {
-            "text": "Send Invoice Email",
-            "line": 162,
-            "context": "161: <div>\n162: <DialogTitle className=\"text-2xl\">Send Invoice Email</DialogTitle>\n163: <DialogDescription>"
           }
         ],
         "translationCalls": [],
@@ -101715,7 +101720,7 @@
     {
       "priority": "CRITICAL",
       "title": "Fix Critical Files First",
-      "description": "21 files have 20+ hardcoded strings",
+      "description": "22 files have 20+ hardcoded strings",
       "files": [
         "src\\components\\chat\\ContextualChatLauncher.tsx",
         "src\\components\\detail-hub\\InvoiceCenter.BACKUP.tsx",
@@ -101730,6 +101735,7 @@
         "src\\components\\orders\\OrderTasksSection.tsx",
         "src\\components\\productivity\\ProductivityQuickNotes.tsx",
         "src\\components\\reports\\invoices\\CreateInvoiceDialog.tsx",
+        "src\\components\\reports\\invoices\\email\\SendInvoiceEmailDialog.tsx",
         "src\\components\\reports\\invoices\\InvoiceDetailsDialog.tsx",
         "src\\components\\reports\\sections\\FinancialReports.tsx",
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
@@ -101739,7 +101745,7 @@
         "src\\hooks\\useChatPermissions.examples.tsx",
         "src\\pages\\Settings.tsx"
       ],
-      "estimatedEffort": "42 hours"
+      "estimatedEffort": "44 hours"
     },
     {
       "priority": "HIGH",
@@ -101852,9 +101858,9 @@
         "src\\components\\detail-hub\\InvoiceCenter.BACKUP.tsx",
         "src\\components\\reports\\invoices\\CreateInvoiceDialog.tsx",
         "src\\hooks\\useChatPermissions.examples.tsx",
-        "src\\components\\reports\\invoices\\InvoiceDetailsDialog.tsx",
         "src\\components\\reports\\sections\\FinancialReports.tsx",
         "src\\components\\settings\\SMSHistoryTab.tsx",
+        "src\\components\\reports\\invoices\\InvoiceDetailsDialog.tsx",
         "src\\components\\chat\\ContextualChatLauncher.tsx",
         "src\\components\\productivity\\ProductivityQuickNotes.tsx",
         "src\\pages\\Settings.tsx",
@@ -101863,6 +101869,7 @@
         "src\\components\\orders\\OrderTasksSection.tsx",
         "src\\components\\get-ready\\GetReadyActivityFeed.tsx",
         "src\\components\\get-ready\\GetReadyOverview.tsx",
+        "src\\components\\reports\\invoices\\email\\SendInvoiceEmailDialog.tsx",
         "src\\components\\get-ready\\GetReadyWorkflowActions.tsx",
         "src\\components\\settings\\IntegrationSettings.tsx",
         "src\\components\\detail-hub\\DetailHubAnalytics.BACKUP.tsx",
@@ -101872,7 +101879,6 @@
         "src\\components\\users\\password\\PasswordActivityLog.tsx",
         "src\\components\\detail-hub\\PunchClockKiosk.BACKUP.tsx",
         "src\\components\\management\\EnhancedUserManagementSection.tsx",
-        "src\\components\\reports\\invoices\\email\\SendInvoiceEmailDialog.tsx",
         "src\\components\\detail-hub\\FacialEnrollment.BACKUP.tsx",
         "src\\components\\reports\\invoices\\RecordPaymentDialog.tsx",
         "src\\components\\dev\\StorageDevTools.tsx",
