@@ -347,7 +347,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       // Check if kiosk exists in database
       supabase
         .from('detail_hub_kiosks')
-        .select('id, name, kiosk_code, dealership_id, is_active')
+        .select('id, name, kiosk_code, dealership_id, status')
         .eq('id', KIOSK_ID)
         .single()
         .then(({ data, error }) => {
@@ -381,7 +381,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
               name: data.name,
               code: data.kiosk_code,
               dealershipId: data.dealership_id,
-              isActive: data.is_active,
+              status: data.status, // ✅ FIX: Use 'status' instead of 'is_active'
               localStorage_age: localStorage.getItem('kiosk_configured_at')
                 ? `${Math.floor((Date.now() - new Date(localStorage.getItem('kiosk_configured_at')!).getTime()) / (1000 * 60 * 60 * 24))} days`
                 : 'unknown'
