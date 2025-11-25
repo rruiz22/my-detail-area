@@ -1,5 +1,5 @@
 {
-  "scannedFiles": 916,
+  "scannedFiles": 917,
   "totalStrings": 10678,
   "hardcodedStrings": 2168,
   "translatedStrings": 8510,
@@ -8117,7 +8117,7 @@
           {
             "text": "Clock In",
             "line": 878,
-            "context": "877: src={timecard.photoInUrl}\n878: alt=\"Clock In\"\n879: className=\"w-10 h-10 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer\""
+            "context": "877: src={timecard.photoInUrl}\n878: alt=\"Clock In\"\n879: className=\"w-8 h-8 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer\""
           },
           {
             "text": "View clock-out photo",
@@ -8127,7 +8127,7 @@
           {
             "text": "Clock Out",
             "line": 910,
-            "context": "909: src={timecard.photoOutUrl}\n910: alt=\"Clock Out\"\n911: className=\"w-10 h-10 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer\""
+            "context": "909: src={timecard.photoOutUrl}\n910: alt=\"Clock Out\"\n911: className=\"w-8 h-8 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer\""
           },
           {
             "text": "View clock-in photo",
@@ -8137,7 +8137,7 @@
           {
             "text": "Clock In",
             "line": 1030,
-            "context": "1029: src={timecard.photoInUrl}\n1030: alt=\"Clock In\"\n1031: className=\"w-10 h-10 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer\""
+            "context": "1029: src={timecard.photoInUrl}\n1030: alt=\"Clock In\"\n1031: className=\"w-8 h-8 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer\""
           },
           {
             "text": "View clock-out photo",
@@ -8147,7 +8147,7 @@
           {
             "text": "Clock Out",
             "line": 1062,
-            "context": "1061: src={timecard.photoOutUrl}\n1062: alt=\"Clock Out\"\n1063: className=\"w-10 h-10 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer\""
+            "context": "1061: src={timecard.photoOutUrl}\n1062: alt=\"Clock Out\"\n1063: className=\"w-8 h-8 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer\""
           },
           {
             "text": "Double-click to view employee details",
@@ -8616,17 +8616,17 @@
           {
             "key": "detail_hub.timecard.status_badges.complete",
             "line": 324,
-            "context": "323: case \"Complete\":\n324: return <Badge className=\"bg-green-100 text-green-800\">{t('detail_hub.timecard.status_badges.complete')}</Badge>;\n325: case \"Clocked In\":"
+            "context": "323: case \"Complete\":\n324: return <Badge className=\"bg-green-100 text-green-800 text-xs py-0\">{t('detail_hub.timecard.status_badges.complete')}</Badge>;\n325: case \"Clocked In\":"
           },
           {
             "key": "detail_hub.timecard.status_badges.active",
             "line": 326,
-            "context": "325: case \"Clocked In\":\n326: return <Badge className=\"bg-blue-100 text-blue-800\">{t('detail_hub.timecard.status_badges.active')}</Badge>;\n327: case \"Late\":"
+            "context": "325: case \"Clocked In\":\n326: return <Badge className=\"bg-blue-100 text-blue-800 text-xs py-0\">{t('detail_hub.timecard.status_badges.active')}</Badge>;\n327: case \"Late\":"
           },
           {
             "key": "detail_hub.timecard.status_badges.late",
             "line": 328,
-            "context": "327: case \"Late\":\n328: return <Badge className=\"bg-red-100 text-red-800\">{t('detail_hub.timecard.status_badges.late')}</Badge>;\n329: default:"
+            "context": "327: case \"Late\":\n328: return <Badge className=\"bg-red-100 text-red-800 text-xs py-0\">{t('detail_hub.timecard.status_badges.late')}</Badge>;\n329: default:"
           },
           {
             "key": "detail_hub.timecard.export_success",
@@ -8936,12 +8936,12 @@
           {
             "key": "detail_hub.timecard.table.hours_abbr",
             "line": 932,
-            "context": "931: </TableCell>\n932: <TableCell>{timecard.totalHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}</TableCell>\n933: <TableCell>"
+            "context": "931: </TableCell>\n932: <TableCell className=\"py-2 text-sm\">{timecard.totalHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}</TableCell>\n933: <TableCell className=\"py-2\">"
           },
           {
             "key": "detail_hub.timecard.table.hours_abbr",
             "line": 936,
-            "context": "935: <span className=\"text-orange-600 font-medium\">\n936: {timecard.overtimeHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}\n937: </span>"
+            "context": "935: <span className=\"text-orange-600 font-medium text-sm\">\n936: {timecard.overtimeHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}\n937: </span>"
           },
           {
             "key": "detail_hub.timecard.actions.view_logs",
@@ -8961,12 +8961,12 @@
           {
             "key": "detail_hub.timecard.table.hours_abbr",
             "line": 1084,
-            "context": "1083: </TableCell>\n1084: <TableCell>{timecard.totalHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}</TableCell>\n1085: <TableCell>"
+            "context": "1083: </TableCell>\n1084: <TableCell className=\"py-2 text-sm\">{timecard.totalHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}</TableCell>\n1085: <TableCell className=\"py-2\">"
           },
           {
             "key": "detail_hub.timecard.table.hours_abbr",
             "line": 1088,
-            "context": "1087: <span className=\"text-orange-600 font-medium\">\n1088: {timecard.overtimeHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}\n1089: </span>"
+            "context": "1087: <span className=\"text-orange-600 font-medium text-sm\">\n1088: {timecard.overtimeHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}\n1089: </span>"
           },
           {
             "key": "detail_hub.timecard.actions.view_logs",
@@ -31453,172 +31453,172 @@
         "hardcodedStrings": [
           {
             "text": "Setup Required",
-            "line": 118,
-            "context": "117: {!isKioskConfigured() && (\n118: <Badge variant=\"outline\" className=\"ml-2 text-xs\">Setup Required</Badge>\n119: )}"
+            "line": 120,
+            "context": "119: {!isKioskConfigured() && (\n120: <Badge variant=\"outline\" className=\"ml-2 text-xs\">Setup Required</Badge>\n121: )}"
           }
         ],
         "translationCalls": [
           {
             "key": "detail_hub.dashboard.stats.active_employees",
-            "line": 66,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.dashboard.stats.todays_hours",
-            "line": 67,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.dashboard.stats.pending_reviews",
             "line": 68,
             "exists": false
           },
           {
+            "key": "detail_hub.dashboard.stats.todays_hours",
+            "line": 69,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.dashboard.stats.pending_reviews",
+            "line": 70,
+            "exists": false
+          },
+          {
             "key": "detail_hub.toasts.clocked_out",
-            "line": 75,
+            "line": 77,
             "exists": false
           },
           {
             "key": "detail_hub.toasts.clocked_in",
-            "line": 75,
+            "line": 77,
             "exists": false
           },
           {
             "key": "detail_hub.title",
-            "line": 85,
+            "line": 87,
             "exists": false
           },
           {
             "key": "detail_hub.subtitle",
-            "line": 86,
+            "line": 88,
             "exists": false
           },
           {
             "key": "detail_hub.dashboard.quick_actions.time_clock",
-            "line": 116,
+            "line": 118,
             "exists": false
           },
           {
             "key": "detail_hub.tabs.overview",
-            "line": 152,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.tabs.employees",
-            "line": 153,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.tabs.schedules",
             "line": 154,
             "exists": false
           },
           {
-            "key": "detail_hub.tabs.timecards",
+            "key": "detail_hub.tabs.employees",
             "line": 155,
             "exists": false
           },
           {
-            "key": "detail_hub.tabs.analytics",
+            "key": "detail_hub.tabs.schedules",
             "line": 156,
             "exists": false
           },
           {
-            "key": "detail_hub.tabs.reports",
+            "key": "detail_hub.tabs.timecards",
             "line": 157,
             "exists": false
           },
           {
-            "key": "detail_hub.tabs.invoices",
+            "key": "detail_hub.tabs.analytics",
             "line": 158,
             "exists": false
           },
           {
-            "key": "detail_hub.tabs.kiosks",
+            "key": "detail_hub.tabs.reports",
             "line": 159,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.tabs.invoices",
+            "line": 160,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.tabs.kiosks",
+            "line": 161,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "detail_hub.dashboard.stats.active_employees",
-            "line": 66,
-            "context": "65: const stats = [\n66: { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: \"+2\", color: \"text-gray-600\" },\n67: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-emerald-600\" },"
+            "line": 68,
+            "context": "67: const stats = [\n68: { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: \"+2\", color: \"text-gray-600\" },\n69: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-emerald-600\" },"
           },
           {
             "key": "detail_hub.dashboard.stats.todays_hours",
-            "line": 67,
-            "context": "66: { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: \"+2\", color: \"text-gray-600\" },\n67: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-emerald-600\" },\n68: { title: t('detail_hub.dashboard.stats.pending_reviews'), value: pendingReviews.length.toString(), icon: AlertCircle, change: \"\", color: \"text-amber-600\" },"
+            "line": 69,
+            "context": "68: { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: \"+2\", color: \"text-gray-600\" },\n69: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-emerald-600\" },\n70: { title: t('detail_hub.dashboard.stats.pending_reviews'), value: pendingReviews.length.toString(), icon: AlertCircle, change: \"\", color: \"text-amber-600\" },"
           },
           {
             "key": "detail_hub.dashboard.stats.pending_reviews",
-            "line": 68,
-            "context": "67: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-emerald-600\" },\n68: { title: t('detail_hub.dashboard.stats.pending_reviews'), value: pendingReviews.length.toString(), icon: AlertCircle, change: \"\", color: \"text-amber-600\" },\n69: { title: \"Total Employees\", value: employees.length.toString(), icon: UserCheck, change: \"\", color: \"text-emerald-600\" }"
+            "line": 70,
+            "context": "69: { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: \"+5%\", color: \"text-emerald-600\" },\n70: { title: t('detail_hub.dashboard.stats.pending_reviews'), value: pendingReviews.length.toString(), icon: AlertCircle, change: \"\", color: \"text-amber-600\" },\n71: { title: \"Total Employees\", value: employees.length.toString(), icon: UserCheck, change: \"\", color: \"text-emerald-600\" }"
           },
           {
             "key": "detail_hub.toasts.clocked_out",
-            "line": 75,
-            "context": "74: employee: entry.employee_name,\n75: action: entry.clock_out ? t('detail_hub.toasts.clocked_out') : t('detail_hub.toasts.clocked_in'),\n76: time: new Date(entry.clock_in).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),"
+            "line": 77,
+            "context": "76: employee: entry.employee_name,\n77: action: entry.clock_out ? t('detail_hub.toasts.clocked_out') : t('detail_hub.toasts.clocked_in'),\n78: time: new Date(entry.clock_in).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),"
           },
           {
             "key": "detail_hub.toasts.clocked_in",
-            "line": 75,
-            "context": "74: employee: entry.employee_name,\n75: action: entry.clock_out ? t('detail_hub.toasts.clocked_out') : t('detail_hub.toasts.clocked_in'),\n76: time: new Date(entry.clock_in).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),"
+            "line": 77,
+            "context": "76: employee: entry.employee_name,\n77: action: entry.clock_out ? t('detail_hub.toasts.clocked_out') : t('detail_hub.toasts.clocked_in'),\n78: time: new Date(entry.clock_in).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),"
           },
           {
             "key": "detail_hub.title",
-            "line": 85,
-            "context": "84: <div>\n85: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.title')}</h1>\n86: <p className=\"text-muted-foreground\">{t('detail_hub.subtitle')}</p>"
+            "line": 87,
+            "context": "86: <div>\n87: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.title')}</h1>\n88: <p className=\"text-muted-foreground\">{t('detail_hub.subtitle')}</p>"
           },
           {
             "key": "detail_hub.subtitle",
-            "line": 86,
-            "context": "85: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.title')}</h1>\n86: <p className=\"text-muted-foreground\">{t('detail_hub.subtitle')}</p>\n87: </div>"
+            "line": 88,
+            "context": "87: <h1 className=\"text-3xl font-bold tracking-tight\">{t('detail_hub.title')}</h1>\n88: <p className=\"text-muted-foreground\">{t('detail_hub.subtitle')}</p>\n89: </div>"
           },
           {
             "key": "detail_hub.dashboard.quick_actions.time_clock",
-            "line": 116,
-            "context": "115: <Clock className=\"w-4 h-4 mr-2\" />\n116: {t('detail_hub.dashboard.quick_actions.time_clock')}\n117: {!isKioskConfigured() && ("
+            "line": 118,
+            "context": "117: <Clock className=\"w-4 h-4 mr-2\" />\n118: {t('detail_hub.dashboard.quick_actions.time_clock')}\n119: {!isKioskConfigured() && ("
           },
           {
             "key": "detail_hub.tabs.overview",
-            "line": 152,
-            "context": "151: <TabsList className=\"grid w-full grid-cols-8\">\n152: <TabsTrigger value=\"overview\">{t('detail_hub.tabs.overview')}</TabsTrigger>\n153: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>"
+            "line": 154,
+            "context": "153: <TabsList className=\"grid w-full grid-cols-8\">\n154: <TabsTrigger value=\"overview\">{t('detail_hub.tabs.overview')}</TabsTrigger>\n155: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.employees",
-            "line": 153,
-            "context": "152: <TabsTrigger value=\"overview\">{t('detail_hub.tabs.overview')}</TabsTrigger>\n153: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>\n154: <TabsTrigger value=\"schedules\">{t('detail_hub.tabs.schedules')}</TabsTrigger>"
+            "line": 155,
+            "context": "154: <TabsTrigger value=\"overview\">{t('detail_hub.tabs.overview')}</TabsTrigger>\n155: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>\n156: <TabsTrigger value=\"schedules\">{t('detail_hub.tabs.schedules')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.schedules",
-            "line": 154,
-            "context": "153: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>\n154: <TabsTrigger value=\"schedules\">{t('detail_hub.tabs.schedules')}</TabsTrigger>\n155: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>"
+            "line": 156,
+            "context": "155: <TabsTrigger value=\"employees\">{t('detail_hub.tabs.employees')}</TabsTrigger>\n156: <TabsTrigger value=\"schedules\">{t('detail_hub.tabs.schedules')}</TabsTrigger>\n157: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.timecards",
-            "line": 155,
-            "context": "154: <TabsTrigger value=\"schedules\">{t('detail_hub.tabs.schedules')}</TabsTrigger>\n155: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>\n156: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>"
+            "line": 157,
+            "context": "156: <TabsTrigger value=\"schedules\">{t('detail_hub.tabs.schedules')}</TabsTrigger>\n157: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>\n158: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.analytics",
-            "line": 156,
-            "context": "155: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>\n156: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>\n157: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>"
+            "line": 158,
+            "context": "157: <TabsTrigger value=\"timecards\">{t('detail_hub.tabs.timecards')}</TabsTrigger>\n158: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>\n159: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.reports",
-            "line": 157,
-            "context": "156: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>\n157: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>\n158: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>"
+            "line": 159,
+            "context": "158: <TabsTrigger value=\"analytics\">{t('detail_hub.tabs.analytics')}</TabsTrigger>\n159: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>\n160: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.invoices",
-            "line": 158,
-            "context": "157: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>\n158: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>\n159: <TabsTrigger value=\"kiosks\">{t('detail_hub.tabs.kiosks')}</TabsTrigger>"
+            "line": 160,
+            "context": "159: <TabsTrigger value=\"reports\">{t('detail_hub.tabs.reports')}</TabsTrigger>\n160: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>\n161: <TabsTrigger value=\"kiosks\">{t('detail_hub.tabs.kiosks')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.tabs.kiosks",
-            "line": 159,
-            "context": "158: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>\n159: <TabsTrigger value=\"kiosks\">{t('detail_hub.tabs.kiosks')}</TabsTrigger>\n160: </TabsList>"
+            "line": 161,
+            "context": "160: <TabsTrigger value=\"invoices\">{t('detail_hub.tabs.invoices')}</TabsTrigger>\n161: <TabsTrigger value=\"kiosks\">{t('detail_hub.tabs.kiosks')}</TabsTrigger>\n162: </TabsList>"
           }
         ],
         "coverage": 94,
