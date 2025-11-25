@@ -39,8 +39,13 @@ import type { QueryClient } from '@tanstack/react-query';
 export function invalidateInvoiceQueries(queryClient: QueryClient): void {
   queryClient.invalidateQueries({ queryKey: ['invoices'] });
   queryClient.invalidateQueries({ queryKey: ['invoice-summary'] });
-  queryClient.invalidateQueries({ queryKey: ['all-vehicles-for-counts'] });
-  queryClient.invalidateQueries({ queryKey: ['vehicles-without-invoice'] });
+
+  // ✅ CRITICAL FIX: Reset queries with exact: false to match ALL queries with these prefixes
+  // QueryKeys have parameters like ['all-vehicles-for-counts', dealerId, orderType, ...]
+  // Using exact: false ensures ALL variations of the query are reset, not just the base key
+  queryClient.resetQueries({ queryKey: ['all-vehicles-for-counts'], exact: false });
+  queryClient.resetQueries({ queryKey: ['vehicles-without-invoice'], exact: false });
+  queryClient.resetQueries({ queryKey: ['total-orders-in-period'], exact: false });
 }
 
 /**

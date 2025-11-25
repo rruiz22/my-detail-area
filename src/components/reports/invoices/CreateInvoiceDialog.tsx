@@ -35,7 +35,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { useCreateInvoice } from '@/hooks/useInvoices';
 import { supabase } from '@/integrations/supabase/client';
 import type { InvoiceFormData } from '@/types/invoices';
-import { useQuery } from '@tanstack/react-query';
+import { invalidateInvoiceQueries } from '@/utils/queryInvalidation';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
 import { AlertCircle, Calendar, Car, DollarSign, FileText, Filter, Receipt, Search } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
@@ -79,10 +80,11 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
   const { user } = useAuth();
   const { toast } = useToast();
   const { calculateDateRange } = useDateCalculations();
+  const queryClient = useQueryClient(); // ✅ Added for cache invalidation
 
   const today = new Date();
   const defaultDueDate = new Date(today);
-  defaultDueDate.setDate(today.getDate() + 30);
+  defaultDueDate.setDate(today.getDate() + 15); // ✅ Changed from 30 days to 15 days (2 weeks)
 
   // Get this week's date range using platform timezone
   const { startDate: startOfThisWeek, endDate: endOfThisWeek } = calculateDateRange('this_week');
@@ -115,7 +117,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
   const [discountAmount, setDiscountAmount] = useState<number>(0);
   const [invoiceNotes, setInvoiceNotes] = useState<string>('');
   const [termsAndConditions, setTermsAndConditions] = useState<string>(
-    'Payment due within 30 days. Late payments may be subject to fees.'
+    'Payment due within 15 days. Late payments may be subject to fees.'
   );
 
   // Fetch dealer services for service name resolution
@@ -382,6 +384,9 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
       if (itemsError) throw itemsError;
 
       toast({ description: `Invoice created with ${selectedVehicles.length} vehicles` });
+
+      // ✅ CRITICAL FIX: Invalidate cache to refresh available orders in all invoice views
+      invalidateInvoiceQueries(queryClient);
 
       // Reset and close
       setSelectedVehicleIds(new Set());

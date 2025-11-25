@@ -136,7 +136,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
   const today = new Date();
   const defaultDueDate = new Date(today);
-  defaultDueDate.setDate(today.getDate() + 30);
+  defaultDueDate.setDate(today.getDate() + 15); // ✅ Changed from 30 days to 15 days (2 weeks)
 
   const [activeTab, setActiveTab] = useState<'invoices' | 'create'>('invoices');
 
@@ -343,13 +343,39 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
         return reportDate >= startDateTime && reportDate <= endDateTime;
       });
 
-      // Get existing invoice items
+      // Get existing invoice items (only from active invoices in this dealership)
+      // First, get all invoice IDs for this dealer with active status
+      const { data: activeInvoices, error: invoiceError } = await supabase
+        .from('invoices')
+        .select('id')
+        .eq('dealer_id', dealerId)
+        .in('status', ['pending', 'paid', 'partially_paid', 'overdue']);
+
+      if (invoiceError) throw invoiceError;
+
+      const invoiceIds = activeInvoices?.map(inv => inv.id) || [];
+
+      console.log('🔍 [TOTAL-ORDERS DEBUG 1] Active invoices:', {
+        dealerId,
+        count: activeInvoices?.length,
+        sampleIds: invoiceIds.slice(0, 2)
+      });
+
+      // Then, get invoice items for those invoices
+      // ⚠️ CRITICAL: Supabase defaults to 1000 row limit - we need ALL items
       const { data: existingInvoiceItems, error: itemsError } = await supabase
         .from('invoice_items')
         .select('service_reference')
-        .not('service_reference', 'is', null);
+        .in('invoice_id', invoiceIds)
+        .not('service_reference', 'is', null)
+        .limit(10000); // ✅ Fix: Get ALL invoice items, not just first 1000
 
       if (itemsError) throw itemsError;
+
+      console.log('🔍 [TOTAL-ORDERS DEBUG 2] Invoice items:', {
+        count: existingInvoiceItems?.length,
+        samples: existingInvoiceItems?.slice(0, 3)
+      });
 
       const invoicedOrderIds = new Set(
         existingInvoiceItems
@@ -357,8 +383,18 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
           .filter(Boolean) || []
       );
 
+      console.log('🔍 [TOTAL-ORDERS DEBUG 3] Set created:', {
+        setSize: invoicedOrderIds.size
+      });
+
       const availableCount = filteredByDate.filter(order => !invoicedOrderIds.has(order.id)).length;
       const invoicedCount = filteredByDate.filter(order => invoicedOrderIds.has(order.id)).length;
+
+      console.log('🔍 [TOTAL-ORDERS DEBUG 4] Counts:', {
+        total: filteredByDate.length,
+        available: availableCount,
+        invoiced: invoicedCount
+      });
 
       return {
         total: filteredByDate.length,
@@ -368,7 +404,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       };
     },
     enabled: !!dealerId && activeTab === 'create',
-    staleTime: 30 * 1000,
+    staleTime: 0, // ✅ Always fetch fresh data after invoice creation
+    gcTime: 0, // ✅ Don't keep in cache when query becomes inactive
   });
 
   // Fetch ALL vehicles for counts (direct query, no RPC)
@@ -418,13 +455,39 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
         return reportDate >= startDateTime && reportDate <= endDateTime;
       });
 
-      // Get existing invoice items to filter out already invoiced orders
+      // Get existing invoice items to filter out already invoiced orders (only from active invoices in this dealership)
+      // First, get all invoice IDs for this dealer with active status
+      const { data: activeInvoices2, error: invoiceError2 } = await supabase
+        .from('invoices')
+        .select('id')
+        .eq('dealer_id', dealerId)
+        .in('status', ['pending', 'paid', 'partially_paid', 'overdue']);
+
+      if (invoiceError2) throw invoiceError2;
+
+      const invoiceIds2 = activeInvoices2?.map(inv => inv.id) || [];
+
+      console.log('🔍 [INVOICE DEBUG 1] Active invoices for dealer:', {
+        dealerId,
+        invoiceCount: activeInvoices2?.length,
+        sampleIds: invoiceIds2.slice(0, 3)
+      });
+
+      // Then, get invoice items for those invoices
+      // ⚠️ CRITICAL: Supabase defaults to 1000 row limit - we need ALL items
       const { data: existingInvoiceItems, error: itemsError } = await supabase
         .from('invoice_items')
         .select('service_reference')
-        .not('service_reference', 'is', null);
+        .in('invoice_id', invoiceIds2)
+        .not('service_reference', 'is', null)
+        .limit(10000); // ✅ Fix: Get ALL invoice items, not just first 1000
 
       if (itemsError) throw itemsError;
+
+      console.log('🔍 [INVOICE DEBUG 2] Invoice items fetched:', {
+        itemsCount: existingInvoiceItems?.length,
+        sampleItems: existingInvoiceItems?.slice(0, 5)
+      });
 
       const invoicedOrderIds = new Set(
         existingInvoiceItems
@@ -432,10 +495,36 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
           .filter(Boolean) || []
       );
 
-      return filteredByDate.filter(order => !invoicedOrderIds.has(order.id)) as VehicleForInvoice[];
+      console.log('🔍 [INVOICE DEBUG 3] Invoiced Order IDs Set:', {
+        setSize: invoicedOrderIds.size,
+        sampleIds: Array.from(invoicedOrderIds).slice(0, 5),
+        includes_SA267_id: invoicedOrderIds.has('c1918d08-3d31-4693-83d0-7414e601e6a8'),
+        rawItemsSample: existingInvoiceItems?.slice(0, 3),
+        afterMapSample: existingInvoiceItems?.slice(0, 3).map(item => ({
+          raw: item,
+          serviceRef: item.service_reference,
+          type: typeof item.service_reference
+        }))
+      });
+
+      const beforeFilterCount = filteredByDate.length;
+      const result = filteredByDate.filter(order => !invoicedOrderIds.has(order.id));
+
+      console.log('🔍 [INVOICE DEBUG 4] Filter results:', {
+        beforeFilter: beforeFilterCount,
+        afterFilter: result.length,
+        filteredOut: beforeFilterCount - result.length,
+        sampleOrderId: filteredByDate[0]?.id,
+        sampleOrderIdType: typeof filteredByDate[0]?.id,
+        sampleInvoicedIdType: typeof Array.from(invoicedOrderIds)[0],
+        firstOrderIsInSet: invoicedOrderIds.has(filteredByDate[0]?.id)
+      });
+
+      return result as VehicleForInvoice[];
     },
     enabled: !!dealerId && activeTab === 'create',
-    staleTime: 30 * 1000,
+    staleTime: 0, // ✅ Always fetch fresh data after invoice creation
+    gcTime: 0, // ✅ Don't keep in cache when query becomes inactive
   });
 
   // Fetch vehicles WITH status filter applied (for display)
@@ -1517,7 +1606,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                                 )}
 
                                 {/* Comments Tooltip */}
-                                {invoice.commentsCount && invoice.commentsCount > 0 && (
+                                {invoice.commentsCount > 0 && (
                                   <InvoiceCommentsTooltip
                                     invoiceId={invoice.id}
                                     count={invoice.commentsCount}

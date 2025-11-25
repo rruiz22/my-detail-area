@@ -376,6 +376,12 @@
     "monthly_report": "Monthly Report",
     "daily_timecards": "Daily Timecards",
     "export": "Export",
+    "export_pdf": "Export to PDF",
+    "export_excel": "Export to Excel",
+    "export_success": "Export successful",
+    "export_failed": "Export failed",
+    "pdf_downloaded": "PDF report downloaded successfully",
+    "excel_downloaded": "Excel report downloaded successfully",
     "filter": "Filter",
     "pick_date": "Pick a date",
     "stats": {

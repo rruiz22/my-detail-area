@@ -96,7 +96,8 @@ export const VehicleInvoiceSearch: React.FC<VehicleInvoiceSearchProps> = ({ deal
             issue_date
           )
         `)
-        .in('service_reference', orderIds);
+        .in('service_reference', orderIds)
+        .limit(10000); // ✅ Fix: Remove Supabase 1000 row default limit
 
       if (itemsError) throw itemsError;
 

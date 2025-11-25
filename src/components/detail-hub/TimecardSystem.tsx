@@ -11,9 +11,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CalendarIcon, Download, Filter, Clock, User, DollarSign, AlertTriangle, Camera, Image as ImageIcon, Plus, FileText, Edit2, Ban, X, Search } from "lucide-react";
+import { CalendarIcon, Download, Filter, Clock, User, DollarSign, AlertTriangle, Camera, Image as ImageIcon, Plus, FileText, Edit2, Ban, X, Search, FileSpreadsheet } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
+import { toast } from "sonner";
 // Real database integration (NO MOCK DATA)
 import { usePendingReviews, useApproveTimeEntry, useRejectTimeEntry, TimeEntryWithEmployee, useDetailHubTimeEntries, useDetailHubEmployees, useDisableTimeEntry } from "@/hooks/useDetailHubDatabase";
 import { PhotoReviewCard } from "./PhotoReviewCard";
@@ -23,6 +25,8 @@ import { EditTimeEntryModal } from "./EditTimeEntryModal";
 import { EmployeeTimecardDetailModal } from "./EmployeeTimecardDetailModal";
 import { useTabPersistence } from "@/hooks/useTabPersistence";
 import { useTimecardPersistence, type DateFilter } from "@/hooks/useTimecardPersistence";
+import { exportReportToPDF, exportReportToExcel } from "@/utils/reportExporters";
+import { createTimecardReport, createWeeklySummaryReport, type TimecardEntry, type TimecardSummary } from "@/utils/timecardExportUtils";
 
 /**
  * Timecard System - Real Database Integration
@@ -330,6 +334,115 @@ const TimecardSystem = () => {
   // Helper: Count active filters (use hook method)
   const getActiveFiltersCount = getActiveFiltersCountFromHook;
 
+  // =============================
+  // EXPORT HANDLERS
+  // =============================
+
+  /**
+   * Export daily/weekly timecard report to PDF
+   */
+  const handleExportPDF = () => {
+    try {
+      // Transform timecard data to export format
+      const exportEntries: TimecardEntry[] = timecards.map((tc) => ({
+        employeeId: tc.employeeId,
+        employeeName: tc.employeeName,
+        date: tc.date,
+        clockIn: tc.clockIn,
+        clockOut: tc.clockOut,
+        breakTimes: `${tc.breakStart} - ${tc.breakEnd}`,
+        totalHours: tc.totalHours,
+        regularHours: tc.regularHours,
+        overtimeHours: tc.overtimeHours,
+        hourlyRate: tc.hourlyRate,
+        totalPay: tc.totalPay,
+        status: tc.status
+      }));
+
+      // Calculate total regular hours (sum of all entries)
+      const totalRegularHours = timecards.reduce((sum, tc) => sum + tc.regularHours, 0);
+
+      // Create summary
+      const exportSummary: TimecardSummary = {
+        totalHours: stats.totalHours,
+        totalRegularHours: Math.round(totalRegularHours * 100) / 100,
+        totalOvertimeHours: stats.overtimeHours,
+        totalPayroll: stats.totalPayroll,
+        totalEmployees: stats.totalEmployees,
+        activeEmployees: stats.activeEmployees,
+        totalEntries: stats.filteredCount,
+        averageHoursPerEmployee: stats.totalEmployees > 0
+          ? Math.round((stats.totalHours / stats.totalEmployees) * 100) / 100
+          : 0
+      };
+
+      // Use weekly summary if in weekly/monthly tab, otherwise daily report
+      const reportData = (activeTab === 'weekly' || activeTab === 'monthly')
+        ? createWeeklySummaryReport(exportEntries, exportSummary, dateRange, 'MyDetailArea')
+        : createTimecardReport(exportEntries, exportSummary, dateRange, 'MyDetailArea');
+
+      exportReportToPDF(reportData);
+
+      toast.success(t('detail_hub.timecard.export_success'), {
+        description: t('detail_hub.timecard.pdf_downloaded')
+      });
+    } catch (error) {
+      console.error('Failed to export timecard PDF:', error);
+      toast.error(t('detail_hub.timecard.export_failed'));
+    }
+  };
+
+  /**
+   * Export daily/weekly timecard report to Excel
+   */
+  const handleExportExcel = async () => {
+    try {
+      // Transform timecard data to export format (same as PDF)
+      const exportEntries: TimecardEntry[] = timecards.map((tc) => ({
+        employeeId: tc.employeeId,
+        employeeName: tc.employeeName,
+        date: tc.date,
+        clockIn: tc.clockIn,
+        clockOut: tc.clockOut,
+        breakTimes: `${tc.breakStart} - ${tc.breakEnd}`,
+        totalHours: tc.totalHours,
+        regularHours: tc.regularHours,
+        overtimeHours: tc.overtimeHours,
+        hourlyRate: tc.hourlyRate,
+        totalPay: tc.totalPay,
+        status: tc.status
+      }));
+
+      const totalRegularHours = timecards.reduce((sum, tc) => sum + tc.regularHours, 0);
+
+      const exportSummary: TimecardSummary = {
+        totalHours: stats.totalHours,
+        totalRegularHours: Math.round(totalRegularHours * 100) / 100,
+        totalOvertimeHours: stats.overtimeHours,
+        totalPayroll: stats.totalPayroll,
+        totalEmployees: stats.totalEmployees,
+        activeEmployees: stats.activeEmployees,
+        totalEntries: stats.filteredCount,
+        averageHoursPerEmployee: stats.totalEmployees > 0
+          ? Math.round((stats.totalHours / stats.totalEmployees) * 100) / 100
+          : 0
+      };
+
+      const reportData = (activeTab === 'weekly' || activeTab === 'monthly')
+        ? createWeeklySummaryReport(exportEntries, exportSummary, dateRange, 'MyDetailArea')
+        : createTimecardReport(exportEntries, exportSummary, dateRange, 'MyDetailArea');
+
+      await exportReportToExcel(reportData);
+
+      toast.success(t('detail_hub.timecard.export_success'), {
+        description: t('detail_hub.timecard.excel_downloaded')
+      });
+    } catch (error) {
+      console.error('Failed to export timecard Excel:', error);
+      toast.error(t('detail_hub.timecard.export_failed'));
+    }
+  };
+
   // Helper: Group timecards by date (for weekly views)
   // Uses raw time entries instead of transformed timecards to avoid parsing formatted strings
   const groupTimecardsByDate = () => {
@@ -451,10 +564,24 @@ const TimecardSystem = () => {
             )}
           </Button>
 
-          <Button>
-            <Download className="w-4 h-4 mr-2" />
-            {t('detail_hub.timecard.export')}
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button>
+                <Download className="w-4 h-4 mr-2" />
+                {t('detail_hub.timecard.export')}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem onClick={handleExportPDF}>
+                <FileText className="w-4 h-4 mr-2" />
+                {t('detail_hub.timecard.export_pdf')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportExcel}>
+                <FileSpreadsheet className="w-4 h-4 mr-2" />
+                {t('detail_hub.timecard.export_excel')}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 

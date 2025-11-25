@@ -56,6 +56,7 @@ import { Loader2, Monitor, User, CheckCircle, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useDetailHubKiosks } from "@/hooks/useDetailHubKiosks";
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface KioskSetupWizardProps {
   /** Controls modal visibility */
@@ -117,11 +118,44 @@ export function KioskSetupWizard({
         throw new Error("Selected kiosk not found");
       }
 
-      // Save to localStorage (persists across browser sessions)
+      const configTimestamp = new Date().toISOString();
+
+      // STEP 1: Save to localStorage (fast, synchronous)
       localStorage.setItem("kiosk_id", selectedKioskId);
       localStorage.setItem("kiosk_device_fingerprint", fingerprint);
-      localStorage.setItem("kiosk_configured_at", new Date().toISOString());
+      localStorage.setItem("kiosk_configured_at", configTimestamp);
       localStorage.setItem("kiosk_username", username);
+
+      console.log('[KioskSetup] ✅ Configuration saved to localStorage:', {
+        kioskId: selectedKioskId,
+        fingerprint: fingerprint.substring(0, 12) + '...',
+        username,
+        timestamp: configTimestamp
+      });
+
+      // STEP 2: Persist to database (backup for recovery if localStorage is cleared)
+      console.log('[KioskSetup] 💾 Saving device binding to database...');
+
+      const { error: dbError } = await supabase
+        .from('detail_hub_kiosk_devices')
+        .upsert({
+          kiosk_id: selectedKioskId,
+          device_fingerprint: fingerprint,
+          last_seen_at: configTimestamp,
+          last_seen_username: username,
+          is_active: true,
+          configured_at: configTimestamp
+        }, {
+          onConflict: 'device_fingerprint' // Update existing device if fingerprint matches
+        });
+
+      if (dbError) {
+        console.error('[KioskSetup] ⚠️ Database backup failed (non-critical):', dbError);
+        // Don't fail the entire operation - localStorage is the primary storage
+        // Database is just a backup for recovery
+      } else {
+        console.log('[KioskSetup] ✅ Device binding saved to database successfully');
+      }
 
       // Success toast
       toast({

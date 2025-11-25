@@ -11,6 +11,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { enrichOrdersArray, createUserDisplayName, type EnrichmentLookups } from '@/services/orderEnrichment';
 import { createOrderNotification } from '@/utils/notificationHelper';
+import { followersService } from '@/services/followersService';
 import { sendOrderCreatedSMS } from '@/services/smsNotificationHelper';
 import { slackNotificationService } from '@/services/slackNotificationService';
 
@@ -477,6 +478,26 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
       }
 
       dev('Service order created successfully:', data);
+
+      // 👥 AUTO-FOLLOW: Add creator and assigned user as followers
+      try {
+        // Add creator as follower (type: 'creator', notification: 'important')
+        await followersService.autoFollowOnCreation(data.id, user.id);
+        dev('✅ Auto-follow: Creator added as follower');
+
+        // Add assigned user as follower if exists (type: 'assigned', notification: 'all')
+        if (data.assigned_group_id) {
+          await followersService.autoFollowOnAssignment(
+            data.id,
+            data.assigned_group_id, // Contains user_id despite field name
+            user.id
+          );
+          dev('✅ Auto-follow: Assigned user added as follower');
+        }
+      } catch (followError) {
+        logError('❌ Failed to auto-add followers (non-blocking):', followError);
+        // Don't throw - followers error shouldn't block order creation
+      }
 
       // 🔔 NOTIFICATION: Order Created
       void createOrderNotification({

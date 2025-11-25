@@ -291,7 +291,15 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     if (open) {
       // Case 1: kioskId is null (never configured)
       if (KIOSK_ID === null) {
-        console.error('[Kiosk] ❌ No kiosk configured on this device');
+        console.error('[Kiosk] ❌ No kiosk configured on this device', {
+          timestamp: new Date().toISOString(),
+          localStorage_keys: {
+            kiosk_id: localStorage.getItem('kiosk_id'),
+            fingerprint: localStorage.getItem('kiosk_device_fingerprint'),
+            configured_at: localStorage.getItem('kiosk_configured_at'),
+            username: localStorage.getItem('kiosk_username')
+          }
+        });
 
         if (!hasShownErrorRef.current) {
           toast({
@@ -309,7 +317,15 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
       // Case 2: kioskId is invalid UUID
       if (!isValidUUID(KIOSK_ID)) {
-        console.error('[Kiosk] ❌ Invalid kiosk ID format:', KIOSK_ID);
+        console.error('[Kiosk] ❌ Invalid kiosk ID format:', {
+          timestamp: new Date().toISOString(),
+          kioskId: KIOSK_ID,
+          localStorage_keys: {
+            kiosk_id: localStorage.getItem('kiosk_id'),
+            fingerprint: localStorage.getItem('kiosk_device_fingerprint'),
+            configured_at: localStorage.getItem('kiosk_configured_at')
+          }
+        });
 
         if (!hasShownErrorRef.current) {
           toast({
@@ -325,8 +341,53 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
         return;
       }
 
-      // Valid UUID - proceed normally
-      console.log('[Kiosk] ✅ Valid kiosk ID:', KIOSK_ID);
+      // Case 3: Valid UUID - Verify it exists in database
+      console.log('[Kiosk] ✅ Valid UUID format detected:', KIOSK_ID);
+
+      // Check if kiosk exists in database
+      supabase
+        .from('detail_hub_kiosks')
+        .select('id, name, kiosk_code, dealership_id, is_active')
+        .eq('id', KIOSK_ID)
+        .single()
+        .then(({ data, error }) => {
+          if (error || !data) {
+            // UUID is valid format BUT kiosk doesn't exist in database
+            console.error('[Kiosk] 🚨 CRITICAL: Valid UUID but kiosk NOT FOUND in database!', {
+              timestamp: new Date().toISOString(),
+              kioskId: KIOSK_ID,
+              error: error?.message || 'not found',
+              possibleCauses: [
+                '1. Kiosk was deleted by admin',
+                '2. Dealership was deleted (CASCADE)',
+                '3. Database migration reset',
+                '4. Wrong database environment'
+              ],
+              localStorage_keys: {
+                kiosk_id: localStorage.getItem('kiosk_id'),
+                fingerprint: localStorage.getItem('kiosk_device_fingerprint'),
+                configured_at: localStorage.getItem('kiosk_configured_at'),
+                username: localStorage.getItem('kiosk_username')
+              }
+            });
+
+            // This is a CRITICAL diagnostic finding - kiosk was deleted from database
+            // but localStorage still has the UUID
+          } else {
+            // Kiosk exists in database - everything is OK
+            console.log('[Kiosk] ✅ Kiosk validated against database:', {
+              timestamp: new Date().toISOString(),
+              kioskId: data.id,
+              name: data.name,
+              code: data.kiosk_code,
+              dealershipId: data.dealership_id,
+              isActive: data.is_active,
+              localStorage_age: localStorage.getItem('kiosk_configured_at')
+                ? `${Math.floor((Date.now() - new Date(localStorage.getItem('kiosk_configured_at')!).getTime()) / (1000 * 60 * 60 * 24))} days`
+                : 'unknown'
+            });
+          }
+        });
     }
   }, [open, KIOSK_ID, toast, t, onClose]);
 

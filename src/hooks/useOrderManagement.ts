@@ -9,6 +9,7 @@ import { useOrderPolling } from '@/hooks/useSmartPolling';
 import { useSubscriptionManager } from '@/hooks/useSubscriptionManager';
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
+import { followersService } from '@/services/followersService';
 import { orderNumberService, OrderType } from '@/services/orderNumberService';
 import { pushNotificationHelper } from '@/services/pushNotificationHelper';
 import { sendOrderCreatedSMS } from '@/services/smsNotificationHelper';
@@ -863,6 +864,26 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       }
 
       dev('Order created successfully:', data);
+
+      // 👥 AUTO-FOLLOW: Add creator and assigned user as followers
+      try {
+        // Add creator as follower (type: 'creator', notification: 'important')
+        await followersService.autoFollowOnCreation(data.id, user.id);
+        dev('✅ Auto-follow: Creator added as follower');
+
+        // Add assigned user as follower if exists (type: 'assigned', notification: 'all')
+        if (data.assigned_group_id) {
+          await followersService.autoFollowOnAssignment(
+            data.id,
+            data.assigned_group_id, // Contains user_id despite field name
+            user.id
+          );
+          dev('✅ Auto-follow: Assigned user added as follower');
+        }
+      } catch (followError) {
+        logError('❌ Failed to auto-add followers (non-blocking):', followError);
+        // Don't throw - followers error shouldn't block order creation
+      }
 
       // 🔔 NOTIFICATION: Order Created (dynamic module based on order_type)
       void createOrderNotification({

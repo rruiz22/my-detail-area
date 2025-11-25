@@ -53,7 +53,10 @@
       "Bash(taskkill:*)",
       "Bash(powershell -Command:*)",
       "Bash(powershell.exe -ExecutionPolicy Bypass -File open-sql-editor.ps1)",
-      "Bash(supabase db pull:*)"
+      "Bash(supabase db pull:*)",
+      "Bash(nul)",
+      "mcp__supabase__execute_sql",
+      "mcp__supabase__apply_migration"
     ],
     "deny": [],
     "ask": []
