@@ -48,9 +48,12 @@ function formatShortDate(dateString: string): string {
 
 /**
  * Format long date for invoice header (abbreviated month)
+ * Automatically handles timezone issues for date-only strings (YYYY-MM-DD)
  */
 function formatLongDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString('en-US', {
+  // If date string is just YYYY-MM-DD (no time component), add noon time to avoid timezone issues
+  const dateToFormat = dateString.length === 10 ? dateString + 'T12:00:00' : dateString;
+  return new Date(dateToFormat).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
@@ -276,14 +279,14 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
 
   yPosition += 8;
 
-  // ===== ITEMS TABLE WITH AUTOTABLE (7 COLUMNS) =====
+  // ===== ITEMS TABLE WITH AUTOTABLE (7 COLUMNS - Date/Order combined) =====
 
-  // Determine header for column 3 based on order type
+  // Determine header for column 2 based on order type
   const hasServiceOrders = invoice.items?.some(item => item.metadata?.order_type === 'service');
   const poRoTagHeader = hasServiceOrders ? 'PO | RO | Tag' : 'Stock';
 
-  // Prepare table headers
-  const tableHeaders = [['#', 'Date', 'Order', poRoTagHeader, 'Vehicle', 'VIN', 'Services', 'Amount']];
+  // Prepare table headers (Date and Order combined)
+  const tableHeaders = [['#', 'Date / Order', poRoTagHeader, 'Vehicle', 'VIN', 'Services', 'Amount']];
 
   // Sort items by date (ascending) - using correct date based on order type
   const sortedItems = (invoice.items || []).sort((a, b) => {
@@ -332,6 +335,9 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       // Order number
       const orderNumber = item.metadata?.order_number || '';
 
+      // Combine Date and Order in one cell
+      const dateOrderCell = `${date}\n${orderNumber}`;
+
       // PO/RO/Tag or Stock
       let poRoTagStock = '';
       if (item.metadata?.order_type === 'service') {
@@ -350,6 +356,11 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       let vehicle = item.description || '';
       if (vehicle && vehicle.includes(' - ')) {
         vehicle = vehicle.split(' - ')[0].trim();
+      }
+
+      // Truncate vehicle name if longer than 17 characters
+      if (vehicle.length > 17) {
+        vehicle = vehicle.substring(0, 17) + '...';
       }
 
       // VIN - ensure full visibility
@@ -396,7 +407,7 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       // Amount
       const amount = formatCurrency(item.totalAmount);
 
-      tableData.push([orderNum, date, orderNumber, poRoTagStock, vehicle, vin, services, amount]);
+      tableData.push([orderNum, dateOrderCell, poRoTagStock, vehicle, vin, services, amount]);
     });
 
     // Add separator row with date after each group (except last)
@@ -405,7 +416,7 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       tableData.push([
         {
           content: nextGroupDate,
-          colSpan: 8, // Updated to 8 columns due to new # column
+          colSpan: 7, // 7 columns total (Date and Order combined)
           styles: {
             fillColor: '#E5E7EB',
             minCellHeight: 6,
@@ -426,6 +437,7 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
     body: tableData,
     startY: yPosition,
     theme: 'plain',
+    rowPageBreak: 'avoid', // Prevent rows from breaking across pages
     styles: {
       fontSize: 8,
       cellPadding: 2.5,
@@ -433,7 +445,7 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
       lineColor: colors.border,
       lineWidth: 0.1,
       overflow: 'visible', // Default to visible for all cells
-      minCellHeight: 7,
+      minCellHeight: 6,
     },
     headStyles: {
       fillColor: colors.headerBg,
@@ -447,13 +459,12 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
     },
     columnStyles: {
       0: { cellWidth: 10, halign: 'center', fontStyle: 'bold', fontSize: 8 },     // # (Order Number)
-      1: { cellWidth: 15, halign: 'center', fontSize: 8 },                       // Date
-      2: { cellWidth: 18, halign: 'center', overflow: 'visible', fontSize: 8 },  // Order - No wrap
-      3: { cellWidth: 18, halign: 'left', overflow: 'visible', fontSize: 7 },    // PO/RO/Tag or Stock - No wrap
-      4: { cellWidth: 28, halign: 'left', fontSize: 7.5 },                       // Vehicle
-      5: { cellWidth: 35, halign: 'center', fontStyle: 'bold', overflow: 'visible', fontSize: 7 }, // VIN - No wrap, inline
-      6: { cellWidth: 30, halign: 'left', fontSize: 7.5 },                       // Services
-      7: { cellWidth: 18, halign: 'right', fontStyle: 'bold', fontSize: 8 },     // Amount
+      1: { cellWidth: 20, halign: 'center', fontSize: 7, cellPadding: { top: 1, bottom: 1, left: 2, right: 2 } },  // Date / Order (combined, compact)
+      2: { cellWidth: 32, halign: 'left', overflow: 'visible', fontSize: 6.5 },   // PO/RO/Tag or Stock
+      3: { cellWidth: 27, halign: 'left', overflow: 'visible', fontSize: 7 },     // Vehicle - Truncated, no wrap
+      4: { cellWidth: 37, halign: 'center', fontStyle: 'bold', overflow: 'visible', fontSize: 7 }, // VIN - No wrap, inline
+      5: { cellWidth: 27, halign: 'left', fontSize: 7.5 },                        // Services
+      6: { cellWidth: 17, halign: 'right', fontStyle: 'bold', fontSize: 8 },      // Amount
     },
     alternateRowStyles: {
       fillColor: [249, 250, 251], // Gray-50 for zebra striping
@@ -466,8 +477,11 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
         data.cell.styles.overflow = 'visible';
         data.cell.styles.fontSize = 8;
         // Special handling for smaller headers
-        if (data.column.index === 3 || data.column.index === 5) {
-          data.cell.styles.fontSize = 7.5;
+        if (data.column.index === 2) {
+          data.cell.styles.fontSize = 7; // PO | RO | Tag header smaller
+        }
+        if (data.column.index === 4) {
+          data.cell.styles.fontSize = 7.5; // VIN header smaller
         }
       }
 
@@ -478,24 +492,33 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
           data.cell.styles.overflow = 'visible';
           data.cell.styles.fontStyle = 'bold';
         }
-        // Order column - column 2
+        // Date/Order combined column - column 1 (compact for page breaks)
+        if (data.column.index === 1) {
+          data.cell.styles.overflow = 'visible';
+          data.cell.styles.fontSize = 7;
+          data.cell.styles.cellPadding = { top: 1, bottom: 1, left: 2, right: 2 };
+          data.cell.styles.lineHeight = 1.1; // Reduce line spacing
+        }
+        // Stock/PO/RO column - column 2 (optimized for service orders)
         if (data.column.index === 2) {
           data.cell.styles.overflow = 'visible';
+          data.cell.styles.fontSize = 6.5;
         }
-        // Stock/PO/RO column - column 3
+        // Vehicle column - column 3 (truncated, no wrap)
         if (data.column.index === 3) {
           data.cell.styles.overflow = 'visible';
+          data.cell.styles.fontSize = 7;
         }
-        // VIN column (column 5) - FORCE inline, no wrapping
-        if (data.column.index === 5) {
+        // VIN column (column 4) - FORCE inline, no wrapping
+        if (data.column.index === 4) {
           data.cell.styles.overflow = 'visible';
           data.cell.styles.fontSize = 7;
           data.cell.styles.fontStyle = 'bold';
         }
       }
 
-      // Style separator rows (rows with colSpan: 8) - styles already set in tableData
-      if (data.section === 'body' && data.cell.raw && typeof data.cell.raw === 'object' && data.cell.raw.colSpan === 8) {
+      // Style separator rows (rows with colSpan: 7) - styles already set in tableData
+      if (data.section === 'body' && data.cell.raw && typeof data.cell.raw === 'object' && data.cell.raw.colSpan === 7) {
         // Styles are already applied in the tableData definition above
       }
     },
@@ -756,14 +779,32 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
   }
 
   // Save the PDF
-  // Generate filename with dealer name and date range
+  // Generate filename with dealer name, invoice number, department, and date range
   const dealerName = invoice.dealership?.name || 'Invoice';
   const sanitizedDealerName = dealerName.replace(/[^a-zA-Z0-9]/g, '_');
 
+  const invoiceNum = invoice.invoiceNumber || invoice.invoice_number || 'undefined';
+
+  // Department part
+  let deptPart = '';
+  const departments = invoice.metadata?.departments;
+  if (departments && departments.length > 0) {
+    if (departments.length === 1) {
+      // Single department: "Service-Dept", "Sales-Dept", etc.
+      const dept = departments[0].charAt(0).toUpperCase() + departments[0].slice(1);
+      deptPart = `_${dept}-Dept`;
+    } else {
+      // Multiple departments: "Multi-Dept"
+      deptPart = '_Multi-Dept';
+    }
+  }
+
+  // Date range part
   let dateRangePart = '';
   if (invoice.metadata?.filter_date_range) {
-    const startDate = new Date(invoice.metadata.filter_date_range.start);
-    const endDate = new Date(invoice.metadata.filter_date_range.end);
+    // Parse dates with explicit noon time to avoid timezone issues
+    const startDate = new Date(invoice.metadata.filter_date_range.start + 'T12:00:00');
+    const endDate = new Date(invoice.metadata.filter_date_range.end + 'T12:00:00');
 
     // Format dates like "October 27, 2025" to match department revenue report
     const formatDateLong = (date: Date) => {
@@ -777,6 +818,6 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
     dateRangePart = `_${formatDateLong(startDate)}_to_${formatDateLong(endDate)}`;
   }
 
-  const filename = `${sanitizedDealerName}_${invoice.invoiceNumber}${dateRangePart}.pdf`;
+  const filename = `${sanitizedDealerName}_${invoiceNum}${deptPart}${dateRangePart}.pdf`;
   doc.save(filename);
 }

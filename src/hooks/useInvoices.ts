@@ -105,6 +105,7 @@ export const useInvoices = (filters: InvoiceFilters) => {
     queryKey: ['invoices', filters],
     queryFn: async (): Promise<Invoice[]> => {
       // Use RPC function for complex filtering with order fields
+      // Convert dealerId to integer (BIGINT in database)
       const dealerId = filters.dealerId && filters.dealerId !== 'all'
         ? (typeof filters.dealerId === 'string' ? parseInt(filters.dealerId) : filters.dealerId)
         : null;
@@ -115,7 +116,8 @@ export const useInvoices = (filters: InvoiceFilters) => {
         p_order_type: filters.orderType && filters.orderType !== 'all' ? filters.orderType : null,
         p_start_date: filters.startDate?.toISOString() || null,
         p_end_date: filters.endDate?.toISOString() || null,
-        p_search_term: filters.searchTerm || null
+        p_search_term: filters.searchTerm || null,
+        p_exclude_reinvoices: true // ✅ Filter out re-invoices from main list
       });
 
       if (error) throw error;

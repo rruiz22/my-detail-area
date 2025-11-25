@@ -1,14 +1,10 @@
 -- =====================================================
--- Update get_invoice_items_with_order_info RPC with DROP first
--- Created: 2025-11-24
--- Description: Drop and recreate function to add is_paid field
+-- Fix get_invoice_items_with_order_info RPC to use orders table
+-- Created: 2025-11-25
+-- Description: Modify RPC to LEFT JOIN with orders table and fetch order_number directly
 -- =====================================================
 
--- Drop the existing function first
-DROP FUNCTION IF EXISTS public.get_invoice_items_with_order_info(UUID);
-
--- Recreate with is_paid field included
-CREATE FUNCTION public.get_invoice_items_with_order_info(p_invoice_id UUID)
+CREATE OR REPLACE FUNCTION public.get_invoice_items_with_order_info(p_invoice_id UUID)
 RETURNS TABLE (
   id UUID,
   invoice_id UUID,
@@ -52,20 +48,22 @@ BEGIN
     ii.metadata,
     ii.created_at,
     ii.updated_at,
-    (ii.metadata->>'order_number')::TEXT as order_number,
-    (ii.metadata->>'order_type')::TEXT as order_type,
-    (ii.metadata->>'po')::TEXT as po,
-    (ii.metadata->>'ro')::TEXT as ro,
-    (ii.metadata->>'tag')::TEXT as tag,
+    -- Get order_number from orders table (with prefixes SA-, SV-, CW-, RC-)
+    COALESCE(o.order_number, (ii.metadata->>'order_number')::TEXT) as order_number,
+    COALESCE(o.order_type, (ii.metadata->>'order_type')::TEXT) as order_type,
+    COALESCE(o.po, (ii.metadata->>'po')::TEXT) as po,
+    COALESCE(o.ro, (ii.metadata->>'ro')::TEXT) as ro,
+    COALESCE(o.tag, (ii.metadata->>'tag')::TEXT) as tag,
     (ii.metadata->>'service_names')::TEXT as service_names
   FROM public.invoice_items ii
+  LEFT JOIN public.orders o ON o.id::TEXT = ii.service_reference
   WHERE ii.invoice_id = p_invoice_id
   ORDER BY ii.sort_order, ii.created_at;
 END;
 $$;
 
--- Grant execute permissions
+-- Grant execute permission
 GRANT EXECUTE ON FUNCTION public.get_invoice_items_with_order_info(UUID) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.get_invoice_items_with_order_info(UUID) TO service_role;
 
-COMMENT ON FUNCTION public.get_invoice_items_with_order_info IS 'Get invoice items with order information extracted from metadata, including is_paid status';
+COMMENT ON FUNCTION public.get_invoice_items_with_order_info IS 'Get invoice items with order information from orders table (with fallback to metadata), using LEFT JOIN on service_reference';

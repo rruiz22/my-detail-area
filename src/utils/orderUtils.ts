@@ -19,7 +19,7 @@ export function formatOrderNumber(order: Order): string {
   const orderNumber = order.orderNumber || order.customOrderNumber || order.order_number;
 
   // If already in new format (XX-XXXXXX), return as-is
-  if (orderNumber && /^(SA|SE|CW|RC)-\d{6}$/.test(orderNumber)) {
+  if (orderNumber && /^(SA|SV|CW|RC)-\d{6}$/.test(orderNumber)) {
     return orderNumber;
   }
 
@@ -31,7 +31,7 @@ export function formatOrderNumber(order: Order): string {
   // For orders without order number, generate fallback based on type
   const orderType = order.order_type || 'sales';
   const prefix = orderType === 'sales' ? 'SA' :
-                orderType === 'service' ? 'SE' :
+                orderType === 'service' ? 'SV' :
                 orderType === 'carwash' ? 'CW' : 'RC';
 
   return `${prefix}-${order.id.slice(0, 6).padStart(6, '0')}`;

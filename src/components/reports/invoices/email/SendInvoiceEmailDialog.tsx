@@ -40,6 +40,8 @@ export const SendInvoiceEmailDialog: React.FC<SendInvoiceEmailDialogProps> = ({
   const [selectedRecipients, setSelectedRecipients] = useState<string[]>([]);
   const [customEmail, setCustomEmail] = useState('');
   const [customEmails, setCustomEmails] = useState<string[]>([]);
+  const [replyTo, setReplyTo] = useState('');
+  const [cc, setCc] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [includePDF, setIncludePDF] = useState(true);
@@ -72,24 +74,47 @@ export const SendInvoiceEmailDialog: React.FC<SendInvoiceEmailDialogProps> = ({
     }
 
     if (!message) {
+      // Format dates with timezone fix
       const startDate = invoice.metadata?.filter_date_range?.start
-        ? new Date(invoice.metadata.filter_date_range.start).toLocaleDateString('en-US', {
+        ? new Date(invoice.metadata.filter_date_range.start + 'T12:00:00').toLocaleDateString('en-US', {
             year: 'numeric',
-            month: 'short',
+            month: 'long',
             day: 'numeric',
           })
         : '';
       const endDate = invoice.metadata?.filter_date_range?.end
-        ? new Date(invoice.metadata.filter_date_range.end).toLocaleDateString('en-US', {
+        ? new Date(invoice.metadata.filter_date_range.end + 'T12:00:00').toLocaleDateString('en-US', {
             year: 'numeric',
-            month: 'short',
+            month: 'long',
             day: 'numeric',
           })
         : '';
-      const period = startDate && endDate ? ` during the period of ${startDate} - ${endDate}` : '';
+
+      // Get department name
+      const departments = invoice.metadata?.departments;
+      let departmentText = '';
+      if (departments && departments.length > 0) {
+        if (departments.length === 1) {
+          const deptName = departments[0].charAt(0).toUpperCase() + departments[0].slice(1);
+          departmentText = `${deptName} `;
+        } else {
+          departmentText = 'Multi-Department ';
+        }
+      }
+
+      // Format amount
+      const amount = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }).format(invoice.totalAmount);
+
+      // Build professional enterprise message
+      const period = startDate && endDate ? `during the period of ${startDate} - ${endDate}` : '';
+      const invoiceNum = invoice.invoiceNumber || invoice.invoice_number;
+      const vehicleCount = invoice.items?.length || 0;
 
       setMessage(
-        `Hello,\n\nPlease find attached invoice ${invoice.invoiceNumber} for services rendered${period}.\n\nThank you for your business!\n\nBest regards,\nDealer Detail Service LLC`
+        `Dear ${dealershipName},\n\nPlease find attached invoice #${invoiceNum} for ${departmentText}services rendered ${period}.\n\nInvoice Summary:\n• Invoice Number: ${invoiceNum}\n${departmentText ? `• Department: ${departmentText.trim()}\n` : ''}${period ? `• Service Period: ${startDate} - ${endDate}\n` : ''}• Total Vehicles: ${vehicleCount}\n• Total Amount: ${amount}\n\nThe detailed invoice and supporting documentation are attached in PDF and Excel formats.\n\nShould you have any questions or require additional information, please do not hesitate to contact us.\n\nBest regards,\nDealer Detail Service LLC`
       );
     }
   }, [invoice, subject, message]);
@@ -126,10 +151,17 @@ export const SendInvoiceEmailDialog: React.FC<SendInvoiceEmailDialogProps> = ({
       return;
     }
 
+    // Parse and validate CC emails
+    const ccEmails = cc
+      ? cc.split(',').map(e => e.trim()).filter(e => /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(e))
+      : undefined;
+
     const request: SendInvoiceEmailRequest = {
       invoice_id: invoice.id,
       dealership_id: dealershipId,
       recipients: allRecipients,
+      reply_to: replyTo.trim() || undefined,
+      cc: ccEmails,
       subject,
       message,
       include_pdf: includePDF,
@@ -143,6 +175,8 @@ export const SendInvoiceEmailDialog: React.FC<SendInvoiceEmailDialogProps> = ({
         setSelectedRecipients([]);
         setCustomEmails([]);
         setCustomEmail('');
+        setReplyTo('');
+        setCc('');
       },
     });
   };
@@ -260,6 +294,38 @@ export const SendInvoiceEmailDialog: React.FC<SendInvoiceEmailDialogProps> = ({
                   ))}
                 </div>
               )}
+            </div>
+
+            {/* Reply To */}
+            <div>
+              <Label htmlFor="replyTo">Reply To (optional)</Label>
+              <Input
+                id="replyTo"
+                type="email"
+                value={replyTo}
+                onChange={(e) => setReplyTo(e.target.value)}
+                placeholder="reply@example.com"
+                className="mt-2"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Replies will be sent to this email address
+              </p>
+            </div>
+
+            {/* CC */}
+            <div>
+              <Label htmlFor="cc">CC (optional)</Label>
+              <Input
+                id="cc"
+                type="text"
+                value={cc}
+                onChange={(e) => setCc(e.target.value)}
+                placeholder="email1@example.com, email2@example.com"
+                className="mt-2"
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Separate multiple emails with commas
+              </p>
             </div>
 
             {/* Subject */}

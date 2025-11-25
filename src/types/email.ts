@@ -63,6 +63,7 @@ export interface SendInvoiceEmailRequest {
   invoice_id: string;
   dealership_id: number;
   recipients: string[];
+  reply_to?: string;
   cc?: string[];
   bcc?: string[];
   subject?: string;

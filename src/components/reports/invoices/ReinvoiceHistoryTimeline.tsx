@@ -6,9 +6,10 @@ import type { ReinvoiceHistory } from '@/types/invoices';
 interface ReinvoiceHistoryTimelineProps {
   history: ReinvoiceHistory[];
   currentInvoiceId: string;
+  onInvoiceClick?: (invoiceId: string) => void; // ✅ Click handler for opening re-invoices
 }
 
-export function ReinvoiceHistoryTimeline({ history, currentInvoiceId }: ReinvoiceHistoryTimelineProps) {
+export function ReinvoiceHistoryTimeline({ history, currentInvoiceId, onInvoiceClick }: ReinvoiceHistoryTimelineProps) {
   if (history.length === 0) {
     return (
       <div className="text-center py-8 text-gray-500">
@@ -42,9 +43,14 @@ export function ReinvoiceHistoryTimeline({ history, currentInvoiceId }: Reinvoic
               }`} />
 
               {/* Content card */}
-              <div className={`bg-white border rounded-lg p-4 shadow-sm transition-all ${
-                isCurrentInvoice ? 'border-emerald-200 bg-emerald-50/30' : 'border-gray-200'
-              }`}>
+              <div
+                className={`bg-white border rounded-lg p-4 shadow-sm transition-all ${
+                  isCurrentInvoice
+                    ? 'border-emerald-200 bg-emerald-50/30'
+                    : 'border-gray-200 hover:border-indigo-300 hover:shadow-md cursor-pointer'
+                }`}
+                onClick={() => !isCurrentInvoice && onInvoiceClick?.(entry.childInvoiceId)}
+              >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <Badge variant={isCurrentInvoice ? 'default' : 'secondary'} className="font-mono">
@@ -81,6 +87,15 @@ export function ReinvoiceHistoryTimeline({ history, currentInvoiceId }: Reinvoic
                   {entry.notes && (
                     <div className="pt-2 border-t">
                       <p className="text-xs text-gray-600 italic">{entry.notes}</p>
+                    </div>
+                  )}
+
+                  {!isCurrentInvoice && onInvoiceClick && (
+                    <div className="pt-2 mt-2 border-t border-gray-100">
+                      <p className="text-xs text-indigo-600 font-medium flex items-center gap-1">
+                        <FileText className="h-3 w-3" />
+                        Click to view invoice details
+                      </p>
                     </div>
                   )}
                 </div>

@@ -564,14 +564,32 @@ export async function generateInvoiceExcel(invoice: InvoiceWithDetails): Promise
   const link = document.createElement('a');
   const url = URL.createObjectURL(blob);
 
-  // Generate filename with dealer name and date range
+  // Generate filename with dealer name, invoice number, department, and date range
   const dealerName = invoice.dealership?.name || 'Invoice';
   const sanitizedDealerName = dealerName.replace(/[^a-zA-Z0-9]/g, '_');
 
+  const invoiceNum = invoice.invoiceNumber || invoice.invoice_number || 'undefined';
+
+  // Department part
+  let deptPart = '';
+  const departments = invoice.metadata?.departments;
+  if (departments && departments.length > 0) {
+    if (departments.length === 1) {
+      // Single department: "Service-Dept", "Sales-Dept", etc.
+      const dept = departments[0].charAt(0).toUpperCase() + departments[0].slice(1);
+      deptPart = `_${dept}-Dept`;
+    } else {
+      // Multiple departments: "Multi-Dept"
+      deptPart = '_Multi-Dept';
+    }
+  }
+
+  // Date range part
   let dateRangePart = '';
   if (invoice.metadata?.filter_date_range) {
-    const startDate = new Date(invoice.metadata.filter_date_range.start);
-    const endDate = new Date(invoice.metadata.filter_date_range.end);
+    // Parse dates with explicit noon time to avoid timezone issues
+    const startDate = new Date(invoice.metadata.filter_date_range.start + 'T12:00:00');
+    const endDate = new Date(invoice.metadata.filter_date_range.end + 'T12:00:00');
 
     // Format dates like "October 27, 2025" to match department revenue report
     const formatDateLong = (date: Date) => {
@@ -585,7 +603,7 @@ export async function generateInvoiceExcel(invoice: InvoiceWithDetails): Promise
     dateRangePart = `_${formatDateLong(startDate)}_to_${formatDateLong(endDate)}`;
   }
 
-  const filename = `${sanitizedDealerName}_${invoice.invoiceNumber}${dateRangePart}.xlsx`;
+  const filename = `${sanitizedDealerName}_${invoiceNum}${deptPart}${dateRangePart}.xlsx`;
   link.setAttribute('href', url);
   link.setAttribute('download', filename);
   link.style.visibility = 'hidden';

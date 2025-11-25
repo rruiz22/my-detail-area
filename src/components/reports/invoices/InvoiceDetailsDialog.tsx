@@ -99,6 +99,10 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
   const [paymentToDelete, setPaymentToDelete] = useState<string | null>(null);
   const [showEmailDialog, setShowEmailDialog] = useState(false);
 
+  // ✅ Nested modal for viewing re-invoices
+  const [nestedInvoiceId, setNestedInvoiceId] = useState<string | null>(null);
+  const [showNestedInvoice, setShowNestedInvoice] = useState(false);
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -107,7 +111,9 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
   };
 
   const formatDate = (dateString: string) => {
-    return format(parseISO(dateString), 'MMM dd, yyyy');
+    // If date string is just YYYY-MM-DD (no time component), add noon time to avoid timezone issues
+    const dateToFormat = dateString.length === 10 ? dateString + 'T12:00:00' : dateString;
+    return format(parseISO(dateToFormat), 'MMM dd, yyyy');
   };
 
   /**
@@ -159,11 +165,17 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
     if (!description || description === 'N/A') return description;
 
     // Remove everything after " - " (which is usually the stock number)
+    let cleaned = description;
     if (description.includes(' - ')) {
-      return description.split(' - ')[0].trim();
+      cleaned = description.split(' - ')[0].trim();
     }
 
-    return description;
+    // Truncate if longer than 17 characters
+    if (cleaned.length > 17) {
+      return cleaned.substring(0, 17) + '...';
+    }
+
+    return cleaned;
   };
 
   // Handle toggle individual item paid status
@@ -527,12 +539,11 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
             <thead>
               <tr>
                 <th style="width: 4%;">#</th>
-                <th style="width: 7%;">Date</th>
-                <th style="width: 9%;">Order</th>
+                <th style="width: 12%;">Date / Order</th>
                 <th style="width: 17%;">PO | RO | Tag</th>
-                <th style="width: 15%;">Vehicle</th>
-                <th style="width: 13%;">VIN</th>
-                <th style="width: 23%;" class="text-left">Services</th>
+                <th style="width: 16%;">Vehicle</th>
+                <th style="width: 14%;">VIN</th>
+                <th style="width: 25%;" class="text-left">Services</th>
                 <th style="width: 12%;">Amount</th>
               </tr>
             </thead>
@@ -565,7 +576,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                   if (itemDate !== lastDate && index > 0) {
                     rows += `
                       <tr class="date-separator">
-                        <td colspan="8">${itemDate}</td>
+                        <td colspan="7">${itemDate}</td>
                       </tr>
                     `;
                   }
@@ -576,8 +587,10 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                   rows += `
                     <tr>
                       <td style="font-weight: 600; color: #6B7280;">${rowNumber}</td>
-                      <td>${itemDate}</td>
-                      <td style="font-weight: 600; white-space: nowrap;">${item.metadata?.order_number || 'N/A'}</td>
+                      <td style="white-space: nowrap;">
+                        <div style="font-size: 7.5pt; color: #6B7280; margin-bottom: 2px;">${itemDate}</div>
+                        <div style="font-weight: 600; font-size: 8pt;">${item.metadata?.order_number || 'N/A'}</div>
+                      </td>
                       <td class="po-ro-tag" style="white-space: nowrap;">${poRoTag}</td>
                       <td>${cleanVehicleDescription(item.description)}</td>
                       <td class="font-mono" style="white-space: nowrap;">${item.metadata?.vehicle_vin || 'N/A'}</td>
@@ -1172,6 +1185,10 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
               <ReinvoiceHistoryTimeline
                 history={hierarchy.history}
                 currentInvoiceId={invoiceId}
+                onInvoiceClick={(childInvoiceId) => {
+                  setNestedInvoiceId(childInvoiceId);
+                  setShowNestedInvoice(true);
+                }}
               />
             </div>
           )}
@@ -1306,6 +1323,15 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
         open={showEmailDialog}
         onOpenChange={setShowEmailDialog}
         invoice={invoice}
+      />
+    )}
+
+    {/* Nested Invoice Dialog - for viewing re-invoices */}
+    {nestedInvoiceId && (
+      <InvoiceDetailsDialog
+        open={showNestedInvoice}
+        onOpenChange={setShowNestedInvoice}
+        invoiceId={nestedInvoiceId}
       />
     )}
     </>

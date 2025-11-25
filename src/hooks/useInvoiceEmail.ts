@@ -82,17 +82,60 @@ export const useSendInvoiceEmail = () => {
       const { data: user } = await supabase.auth.getUser();
 
       // Fetch full invoice details for attachment generation
-      const { data: invoice } = await supabase
+      const { data: invoiceData } = await supabase
         .from('invoices')
         .select(`
           *,
-          dealership:dealerships(*),
-          items:invoice_items(*)
+          dealership:dealerships(*)
         `)
         .eq('id', request.invoice_id)
         .single();
 
-      if (!invoice) throw new Error('Invoice not found');
+      if (!invoiceData) throw new Error('Invoice not found');
+
+      // Get invoice items with order info using RPC
+      const { data: itemsData, error: itemsError } = await supabase
+        .rpc('get_invoice_items_with_order_info', { p_invoice_id: request.invoice_id });
+
+      if (itemsError) throw new Error(`Failed to fetch invoice items: ${itemsError.message}`);
+
+      // Combine invoice with items
+      const invoice = {
+        ...invoiceData,
+        items: (itemsData || []).map((item: any) => ({
+          id: item.id,
+          invoiceId: item.invoice_id,
+          itemType: item.item_type,
+          description: item.description,
+          quantity: parseFloat(item.quantity),
+          unitPrice: parseFloat(item.unit_price),
+          discountAmount: parseFloat(item.discount_amount || 0),
+          taxRate: parseFloat(item.tax_rate),
+          totalAmount: parseFloat(item.total_amount),
+          total_amount: parseFloat(item.total_amount), // Add snake_case too
+          serviceReference: item.service_reference,
+          sortOrder: item.sort_order,
+          isPaid: item.is_paid || false,
+          metadata: {
+            ...(item.metadata || {}),
+            // Add order info from RPC (with correct order_number from orders table)
+            order_number: item.order_number,
+            order_type: item.order_type,
+            po: item.po,
+            ro: item.ro,
+            tag: item.tag,
+            service_names: item.service_names,
+            vehicle_vin: item.metadata?.vehicle_vin,
+            stock_number: item.metadata?.stock_number,
+            due_date: item.metadata?.due_date,
+            completed_at: item.metadata?.completed_at,
+            completed_date: item.metadata?.completed_date,
+          },
+          createdAt: item.created_at,
+          created_at: item.created_at, // Add snake_case too
+          updatedAt: item.updated_at
+        }))
+      };
 
       // Generate attachments if requested
       const attachments: EmailAttachmentData[] = [];

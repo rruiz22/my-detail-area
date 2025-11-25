@@ -52,7 +52,8 @@
       "Bash(supabase projects:*)",
       "Bash(taskkill:*)",
       "Bash(powershell -Command:*)",
-      "Bash(powershell.exe -ExecutionPolicy Bypass -File open-sql-editor.ps1)"
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File open-sql-editor.ps1)",
+      "Bash(supabase db pull:*)"
     ],
     "deny": [],
     "ask": []

@@ -361,7 +361,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
           service_reference: vehicle.id, // Store order ID as reference
           sort_order: index,
           metadata: {
-            order_number: vehicle.custom_order_number || vehicle.order_number,
+            order_number: vehicle.order_number || vehicle.custom_order_number,
             order_type: vehicle.order_type,
             customer_name: vehicle.customer_name,
             vehicle_vin: vehicle.vehicle_vin,
