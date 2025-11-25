@@ -214,6 +214,9 @@ const EmployeePortal = () => {
     if (employee) {
       setEditingEmployee(employee);
 
+      // ✅ FIX: Show PIN when editing (so user can see existing PIN)
+      setShowPIN(true);
+
       // Parse schedule template if exists
       const template = employee.schedule_template as any;
 
@@ -239,6 +242,10 @@ const EmployeePortal = () => {
       });
     } else {
       setEditingEmployee(null);
+
+      // ✅ FIX: Hide PIN when creating new employee (will be auto-generated)
+      setShowPIN(false);
+
       form.reset({
         first_name: "",
         last_name: "",
@@ -265,6 +272,7 @@ const EmployeePortal = () => {
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setEditingEmployee(null);
+    setShowPIN(false); // ✅ FIX: Reset PIN visibility when closing dialog
     form.reset();
   };
 
