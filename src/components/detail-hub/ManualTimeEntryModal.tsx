@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -156,6 +156,9 @@ export function ManualTimeEntryModal({ open, onOpenChange, employees }: ManualTi
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t('detail_hub.timecard.manual_entry.title')}</DialogTitle>
+          <DialogDescription>
+            {t('detail_hub.timecard.manual_entry.description')}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">

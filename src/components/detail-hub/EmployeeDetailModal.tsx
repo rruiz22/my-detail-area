@@ -22,7 +22,8 @@ import {
   LogOut,
   AlertCircle,
   CheckCircle,
-  X
+  X,
+  Camera
 } from "lucide-react";
 import { format } from "date-fns";
 import { CurrentlyWorkingEmployee, useElapsedTime } from "@/hooks/useCurrentlyWorking";
