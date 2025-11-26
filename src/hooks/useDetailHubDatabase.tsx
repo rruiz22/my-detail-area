@@ -438,11 +438,37 @@ export function useClockOut() {
       if (fetchError) throw fetchError;
       if (!activeEntry) throw new Error('No active time entry found');
 
+      // ✅ AUTO-CLOSE OPEN BREAKS: Find any open breaks and close them automatically
+      const clockOutTime = new Date();
+
+      const { data: openBreaks } = await supabase
+        .from('detail_hub_breaks')
+        .select('id, break_start, break_number')
+        .eq('time_entry_id', activeEntry.id)
+        .is('break_end', null);
+
+      if (openBreaks && openBreaks.length > 0) {
+        console.warn('[AUTO-CLOSE] Found open breaks at clock out - auto-closing:', openBreaks.length);
+
+        // Auto-close all open breaks
+        for (const openBreak of openBreaks) {
+          await supabase
+            .from('detail_hub_breaks')
+            .update({
+              break_end: clockOutTime.toISOString(),
+              // duration will be auto-calculated by trigger
+            })
+            .eq('id', openBreak.id);
+
+          console.log(`[AUTO-CLOSE] Break #${openBreak.break_number} auto-closed at clock out`);
+        }
+      }
+
       // Update with clock out
       const { data, error } = await supabase
         .from('detail_hub_time_entries')
         .update({
-          clock_out: new Date().toISOString(),
+          clock_out: clockOutTime.toISOString(),
           punch_out_method: params.method || 'manual',
           photo_out_url: params.photoUrl,
           face_confidence_out: params.faceConfidence,
@@ -450,6 +476,7 @@ export function useClockOut() {
           ip_address: params.ipAddress || activeEntry.ip_address, // Update if provided, keep existing if not
           status: 'complete', // ✅ FIX: Explicitly set status to complete (trigger doesn't do this)
           // Hours will be auto-calculated by database trigger
+          // break_duration_minutes will be updated by detail_hub_breaks trigger (sum of all breaks)
         })
         .eq('id', activeEntry.id)
         .select()
@@ -497,39 +524,69 @@ export function useStartBreak() {
       // Find active time entry
       const { data: activeEntry, error: fetchError } = await supabase
         .from('detail_hub_time_entries')
-        .select('*')
+        .select('id, employee_id, dealership_id, clock_in, clock_out, status')
         .eq('employee_id', params.employeeId)
         .eq('status', 'active')
         .maybeSingle();
 
       if (fetchError) throw fetchError;
       if (!activeEntry) throw new Error('No active time entry found. Please clock in first.');
-      if (activeEntry.break_start && !activeEntry.break_end) {
-        throw new Error('Break already in progress');
+
+      // ✅ NEW: Check for open breaks in detail_hub_breaks table
+      const { data: openBreaks, error: openBreakError } = await supabase
+        .from('detail_hub_breaks')
+        .select('id, break_number')
+        .eq('time_entry_id', activeEntry.id)
+        .is('break_end', null)
+        .limit(1);
+
+      if (openBreakError) throw openBreakError;
+
+      if (openBreaks && openBreaks.length > 0) {
+        throw new Error('Break already in progress. Please end current break first.');
       }
 
-      // Update with break start
-      const { data, error } = await supabase
-        .from('detail_hub_time_entries')
-        .update({
+      // ✅ NEW: INSERT into detail_hub_breaks table (supports multiple breaks)
+      const { data: newBreak, error: insertError } = await supabase
+        .from('detail_hub_breaks')
+        .insert({
+          time_entry_id: activeEntry.id,
+          employee_id: params.employeeId,
+          dealership_id: activeEntry.dealership_id,
           break_start: new Date().toISOString(),
-          break_end: null, // Reset break_end for new break
-          kiosk_id: params.kioskId || activeEntry.kiosk_id, // Update if provided, keep existing if not
-          ip_address: params.ipAddress || activeEntry.ip_address, // Update if provided, keep existing if not
+          break_end: null,
+          photo_start_url: params.photoUrl,
+          kiosk_id: params.kioskId,
+          // break_number will be auto-assigned by trigger
+          // break_type will be auto-assigned by trigger (1='lunch', 2+='regular')
         })
-        .eq('id', activeEntry.id)
         .select()
         .single();
 
-      if (error) throw error;
-      return data as DetailHubTimeEntry;
+      if (insertError) throw insertError;
+
+      // ✅ BACKWARD COMPATIBILITY: Also update time_entries (deprecated columns)
+      // This keeps old code working during transition period
+      await supabase
+        .from('detail_hub_time_entries')
+        .update({
+          break_start: new Date().toISOString(),
+          break_end: null,
+          kiosk_id: params.kioskId || activeEntry.kiosk_id,
+        })
+        .eq('id', activeEntry.id);
+
+      return newBreak;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.timeEntries(selectedDealerId) });
 
+      const breakNumber = (data as any).break_number || 1;
+      const breakType = breakNumber === 1 ? 'Lunch Break' : `Break #${breakNumber}`;
+
       toast({
         title: "Break Started",
-        description: `Break started at ${new Date().toLocaleTimeString()}`,
+        description: `${breakType} started at ${new Date().toLocaleTimeString()}`,
         variant: "default"
       });
     },
@@ -560,53 +617,82 @@ export function useEndBreak() {
       // Find active time entry
       const { data: activeEntry, error: fetchError } = await supabase
         .from('detail_hub_time_entries')
-        .select('*')
+        .select('id, employee_id, dealership_id, status')
         .eq('employee_id', params.employeeId)
         .eq('status', 'active')
         .maybeSingle();
 
       if (fetchError) throw fetchError;
       if (!activeEntry) throw new Error('No active time entry found. Please clock in first.');
-      if (!activeEntry.break_start) {
-        throw new Error('No break in progress');
-      }
-      if (activeEntry.break_end) {
-        throw new Error('Break already ended');
-      }
+
+      // ✅ NEW: Find open break in detail_hub_breaks table
+      const { data: openBreak, error: openBreakError } = await supabase
+        .from('detail_hub_breaks')
+        .select('id, break_number, break_start, employee_id')
+        .eq('time_entry_id', activeEntry.id)
+        .is('break_end', null)
+        .maybeSingle();
+
+      if (openBreakError) throw openBreakError;
+      if (!openBreak) throw new Error('No break in progress');
 
       // Calculate break duration
-      const breakStart = new Date(activeEntry.break_start);
+      const breakStart = new Date(openBreak.break_start);
       const breakEnd = new Date();
       const breakDurationMinutes = Math.floor((breakEnd.getTime() - breakStart.getTime()) / 60000);
 
-      // Validate minimum break duration (30 minutes)
-      const MINIMUM_BREAK_MINUTES = 30;
-      if (breakDurationMinutes < MINIMUM_BREAK_MINUTES) {
-        throw new Error(`Break must be at least ${MINIMUM_BREAK_MINUTES} minutes. Current duration: ${breakDurationMinutes} minutes.`);
-      }
+      // ✅ SMART VALIDATION: Only validate first break (lunch break)
+      if (openBreak.break_number === 1) {
+        // Get employee's required break minimum from their schedule template
+        const { data: employee } = await supabase
+          .from('detail_hub_employees')
+          .select('template_break_minutes')
+          .eq('id', params.employeeId)
+          .single();
 
-      // Update with break end
-      const { data, error } = await supabase
-        .from('detail_hub_time_entries')
+        const requiredMinimum = employee?.template_break_minutes || 30;
+
+        if (breakDurationMinutes < requiredMinimum) {
+          throw new Error(`First break (lunch) must be at least ${requiredMinimum} minutes. Current: ${breakDurationMinutes} min. Please wait ${requiredMinimum - breakDurationMinutes} more minutes.`);
+        }
+      }
+      // ✅ Subsequent breaks (break_number > 1) → NO VALIDATION (free duration)
+
+      // ✅ NEW: Update break in detail_hub_breaks table
+      const { data: updatedBreak, error: updateError } = await supabase
+        .from('detail_hub_breaks')
         .update({
           break_end: breakEnd.toISOString(),
-          break_duration_minutes: breakDurationMinutes,
-          kiosk_id: params.kioskId || activeEntry.kiosk_id,
-          ip_address: params.ipAddress || activeEntry.ip_address,
+          photo_end_url: params.photoUrl,
+          // duration_minutes will be auto-calculated by trigger
         })
-        .eq('id', activeEntry.id)
+        .eq('id', openBreak.id)
         .select()
         .single();
 
-      if (error) throw error;
-      return data as DetailHubTimeEntry;
+      if (updateError) throw updateError;
+
+      // ✅ BACKWARD COMPATIBILITY: Also update time_entries (deprecated columns)
+      // This keeps old code working during transition period
+      await supabase
+        .from('detail_hub_time_entries')
+        .update({
+          break_end: breakEnd.toISOString(),
+          // break_duration_minutes will be updated by detail_hub_breaks trigger
+        })
+        .eq('id', activeEntry.id);
+
+      return updatedBreak;
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.timeEntries(selectedDealerId) });
+
+      const breakType = data.break_number === 1 ? 'Lunch break' : `Break #${data.break_number}`;
+      const duration = data.duration_minutes || 0;
 
       toast({
         title: "Break Ended",
-        description: `Break ended. Duration: ${data.break_duration_minutes || 0} minutes`,
+        description: `${breakType} ended. Duration: ${duration} minutes`,
         variant: "default"
       });
     },
@@ -617,6 +703,86 @@ export function useEndBreak() {
         variant: "destructive"
       });
     }
+  });
+}
+
+// =====================================================
+// BREAKS QUERIES (Multiple Breaks Support)
+// =====================================================
+
+export interface DetailHubBreak {
+  id: string;
+  time_entry_id: string;
+  employee_id: string;
+  break_number: number;
+  break_start: string;
+  break_end: string | null;
+  duration_minutes: number | null;
+  break_type: string;
+  is_paid: boolean;
+  photo_start_url: string | null;
+  photo_end_url: string | null;
+  kiosk_id: string | null;
+  created_at: string;
+}
+
+/**
+ * Fetch all breaks for a specific time entry
+ * Used to display multiple breaks in UI
+ */
+export function useEmployeeBreaks(timeEntryId: string | null) {
+  return useQuery({
+    queryKey: ['detail_hub_breaks', timeEntryId],
+    queryFn: async () => {
+      if (!timeEntryId) return [];
+
+      const { data, error } = await supabase
+        .from('detail_hub_breaks')
+        .select('*')
+        .eq('time_entry_id', timeEntryId)
+        .order('break_number', { ascending: true });
+
+      if (error) throw error;
+      return (data || []) as DetailHubBreak[];
+    },
+    enabled: !!timeEntryId,
+    staleTime: 1000 * 60, // 1 minute (breaks don't change frequently)
+  });
+}
+
+/**
+ * Get current open break for an employee (if any)
+ * Used to show "Break in progress" status
+ */
+export function useCurrentBreak(employeeId: string | null) {
+  return useQuery({
+    queryKey: ['current_break', employeeId],
+    queryFn: async () => {
+      if (!employeeId) return null;
+
+      // First get active time entry
+      const { data: activeEntry } = await supabase
+        .from('detail_hub_time_entries')
+        .select('id')
+        .eq('employee_id', employeeId)
+        .eq('status', 'active')
+        .maybeSingle();
+
+      if (!activeEntry) return null;
+
+      // Then get open break
+      const { data, error } = await supabase
+        .from('detail_hub_breaks')
+        .select('*')
+        .eq('time_entry_id', activeEntry.id)
+        .is('break_end', null)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data as DetailHubBreak | null;
+    },
+    enabled: !!employeeId,
+    refetchInterval: 5000, // Refetch every 5 seconds for live updates
   });
 }
 
