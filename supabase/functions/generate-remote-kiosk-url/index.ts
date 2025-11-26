@@ -270,8 +270,8 @@ const handler = async (req: Request): Promise<Response> => {
     const tokenHash = await sha256Hash(jwt);
 
     // Generate full URL (will be used as redirect URL for mda.to)
-    // Support local development with DEV_BASE_URL (e.g., http://localhost:8080)
-    let appUrl = Deno.env.get("DEV_BASE_URL") || Deno.env.get("BASE_URL") || "https://dds.mydetailarea.com";
+    // Priority: BASE_URL (production) → DEV_BASE_URL (local testing) → default
+    let appUrl = Deno.env.get("BASE_URL") || Deno.env.get("DEV_BASE_URL") || "https://dds.mydetailarea.com";
     if (appUrl.endsWith('/')) {
       appUrl = appUrl.slice(0, -1);
     }
