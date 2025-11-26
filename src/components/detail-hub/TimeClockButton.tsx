@@ -38,21 +38,22 @@ export function TimeClockButton({ dealerId }: TimeClockButtonProps) {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              variant="ghost"
-              size="icon"
-              className={`relative h-9 w-9 transition-transform hover:scale-105 ${
-                modalOpen ? 'bg-gray-100' : ''
+              variant="default"
+              size="sm"
+              className={`relative h-9 px-3 gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-md hover:shadow-lg transition-all hover:scale-105 ${
+                modalOpen ? 'ring-2 ring-emerald-300' : ''
               }`}
               onClick={() => setModalOpen(true)}
               aria-label={t('detail_hub.dashboard.quick_actions.time_clock')}
             >
-              <Clock className="h-5 w-5 text-gray-700" />
+              <Clock className="h-4 w-4" />
+              <span className="hidden sm:inline">Time Clock</span>
 
               {/* Badge - Show count if > 0 */}
               {activeCount > 0 && (
                 <Badge
-                  variant="default"
-                  className="absolute -right-1 -top-1 h-5 min-w-5 px-1 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold pointer-events-none"
+                  variant="secondary"
+                  className="absolute -right-1 -top-1 h-5 min-w-5 px-1.5 bg-amber-500 text-white text-xs font-bold pointer-events-none animate-pulse shadow-sm"
                 >
                   {activeCount}
                 </Badge>
@@ -60,9 +61,9 @@ export function TimeClockButton({ dealerId }: TimeClockButtonProps) {
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>{t('detail_hub.dashboard.quick_actions.time_clock')}</p>
+            <p className="font-semibold">{t('detail_hub.dashboard.quick_actions.time_clock')}</p>
             {activeCount > 0 && (
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-300 mt-1">
                 {activeCount} {activeCount === 1 ? 'employee' : 'employees'} clocked in
               </p>
             )}
