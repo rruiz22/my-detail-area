@@ -641,6 +641,7 @@
     "tab_physical_kiosks": "Quiosques Físicos",
     "add_kiosk": "Adicionar Quiosque",
     "generate_remote_access": "Gerar Acesso Remoto",
+    "generate_remote_kiosk": "Gerar Quiosque Remoto",
     "add_description": "Criar nova configuração de quiosque para operações de ponto",
     "edit_kiosk": "Editar Quiosque",
     "edit_description": "Atualizar configurações e ajustes do quiosque",

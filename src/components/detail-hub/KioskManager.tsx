@@ -215,7 +215,7 @@ const KioskManager = () => {
             disabled={selectedDealerId === 'all'}
           >
             <ExternalLink className="w-4 h-4 mr-2" />
-            {t('detail_hub.kiosk_manager.generate_remote_access')}
+            {t('detail_hub.kiosk_manager.generate_remote_kiosk', { defaultValue: 'Generate Remote Kiosk' })}
           </Button>
           <Dialog open={isAddingKiosk || !!editingKiosk} onOpenChange={(open) => {
             if (!open) {
@@ -487,22 +487,6 @@ const KioskManager = () => {
         open={!!viewingKiosk}
         onClose={() => setViewingKiosk(null)}
       />
-
-      {/* Remote Kiosk Access Generator */}
-      <GenerateRemoteKioskModal
-        open={remoteKioskModalOpen}
-        onClose={() => setRemoteKioskModalOpen(false)}
-        dealershipId={selectedDealerId === 'all' ? 0 : Number(selectedDealerId)}
-        employees={employees
-          .filter((emp) => emp.status === 'active')
-          .map((emp) => ({
-            id: emp.id,
-            first_name: emp.first_name,
-            last_name: emp.last_name,
-            employee_number: emp.employee_number,
-          }))
-        }
-      />
         </TabsContent>
 
         {/* Remote Tokens Tab */}
@@ -541,6 +525,22 @@ const KioskManager = () => {
           />
         </TabsContent>
       </Tabs>
+
+      {/* Remote Kiosk Access Generator - Outside tabs so it works from any tab */}
+      <GenerateRemoteKioskModal
+        open={remoteKioskModalOpen}
+        onClose={() => setRemoteKioskModalOpen(false)}
+        dealershipId={selectedDealerId === 'all' ? 0 : Number(selectedDealerId)}
+        employees={employees
+          .filter((emp) => emp.status === 'active')
+          .map((emp) => ({
+            id: emp.id,
+            first_name: emp.first_name,
+            last_name: emp.last_name,
+            employee_number: emp.employee_number,
+          }))
+        }
+      />
     </div>
   );
 };

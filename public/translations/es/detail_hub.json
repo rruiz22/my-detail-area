@@ -638,6 +638,7 @@
     "tab_physical_kiosks": "Kioscos Físicos",
     "add_kiosk": "Agregar Kiosco",
     "generate_remote_access": "Generar Acceso Remoto",
+    "generate_remote_kiosk": "Generar Kiosco Remoto",
     "add_description": "Crear nueva configuración de kiosco para reloj de tiempo",
     "edit_kiosk": "Edit Kiosk",
     "edit_description": "Actualizar configuración y ajustes del kiosco",
