@@ -233,6 +233,9 @@ export function GenerateRemoteKioskModal({
                     <SelectItem value="2">2 {t('remote_kiosk_generator.hours')}</SelectItem>
                     <SelectItem value="4">4 {t('remote_kiosk_generator.hours')}</SelectItem>
                     <SelectItem value="8">8 {t('remote_kiosk_generator.hours')}</SelectItem>
+                    <SelectItem value="12">12 {t('remote_kiosk_generator.hours')}</SelectItem>
+                    <SelectItem value="24">24 {t('remote_kiosk_generator.hours')}</SelectItem>
+                    <SelectItem value="48">48 {t('remote_kiosk_generator.hours')}</SelectItem>
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">
