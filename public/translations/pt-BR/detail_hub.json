@@ -463,14 +463,14 @@
       "no_pending": "Nenhuma revisão pendente"
     },
     "photo_review": {
-      "title": "Revisão de Foto",
+      "title": "Verificação de Foto Necessária",
       "pending_review": "Revisão Pendente",
       "punch_in_label": "Entrada",
       "punch_out_label": "Saída",
       "total_hours": "Total",
       "hours_abbr": "h",
       "photo_punch": "Registro com Foto",
-      "verify_identity": "Verifique a identidade do funcionário antes de aprovar",
+      "verify_identity": "Verifique a identidade do funcionário antes de aprovar o registro",
       "approve": "Aprovar",
       "reject": "Rejeitar"
     },
