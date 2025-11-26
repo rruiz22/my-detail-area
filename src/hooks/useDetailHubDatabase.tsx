@@ -580,6 +580,8 @@ export function useStartBreak() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.timeEntries(selectedDealerId) });
+      // ✅ CRITICAL FIX: Invalidate current break cache to refresh UI immediately
+      queryClient.invalidateQueries({ queryKey: ['current_break'] });
 
       const breakNumber = (data as any).break_number || 1;
       const breakType = breakNumber === 1 ? 'Lunch Break' : `Break #${breakNumber}`;
@@ -686,6 +688,8 @@ export function useEndBreak() {
     },
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.timeEntries(selectedDealerId) });
+      // ✅ CRITICAL FIX: Invalidate current break cache to refresh UI immediately
+      queryClient.invalidateQueries({ queryKey: ['current_break'] });
 
       const breakType = data.break_number === 1 ? 'Lunch break' : `Break #${data.break_number}`;
       const duration = data.duration_minutes || 0;
