@@ -736,9 +736,13 @@ const TimecardSystem = () => {
                     id: entry.id,
                     employee_id: entry.employee_id,
                     employee_name: entry.employee_name,
+                    employee_number: entry.employee_number,      // ✨ ADD: Show employee number
                     clock_in: entry.clock_in,
+                    clock_out: entry.clock_out,                  // ✨ ADD: Show punch out if exists
+                    total_hours: entry.total_hours,              // ✨ ADD: Show total hours
                     punch_in_method: 'photo_fallback',
                     photo_in_url: entry.photo_in_url!,
+                    photo_out_url: entry.photo_out_url,          // ✨ ADD: For future use
                     requires_manual_verification: true
                   }}
                   onApprove={approveTimeEntry}

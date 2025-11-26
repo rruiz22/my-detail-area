@@ -459,6 +459,18 @@
       "pending_count": "{{count}} Pendientes",
       "no_pending": "Sin revisiones pendientes"
     },
+    "photo_review": {
+      "title": "Revisión de Foto",
+      "pending_review": "Revisión Pendiente",
+      "punch_in_label": "Entrada",
+      "punch_out_label": "Salida",
+      "total_hours": "Total",
+      "hours_abbr": "h",
+      "photo_punch": "Registro con Foto",
+      "verify_identity": "Verificar identidad del empleado antes de aprobar",
+      "approve": "Aprobar",
+      "reject": "Rechazar"
+    },
     "photo_viewer": {
       "title": "Foto de Registro de Tiempo",
       "employee": "Empleado",

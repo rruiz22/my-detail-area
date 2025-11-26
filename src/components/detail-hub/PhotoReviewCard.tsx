@@ -18,9 +18,13 @@ interface TimeEntryWithPhoto {
   id: string;
   employee_id: string;
   employee_name?: string;
+  employee_number?: string;          // ✨ ADD: Show employee number prominently
   clock_in: string;
+  clock_out?: string | null;         // ✨ ADD: Show punch out time if exists
+  total_hours?: number | null;       // ✨ ADD: Show total hours if clocked out
   punch_in_method: 'photo_fallback';
   photo_in_url: string;
+  photo_out_url?: string | null;     // ✨ ADD: For future dual-photo display
   requires_manual_verification: boolean;
 }
 
@@ -77,16 +81,50 @@ export function PhotoReviewCard({ timeEntry, onApprove, onReject }: PhotoReviewC
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Employee & Time Info */}
-        <div className="space-y-2">
+        <div className="space-y-3">
+          {/* Employee Name + Number */}
           <div className="flex items-center gap-2 text-sm">
             <User className="w-4 h-4 text-muted-foreground" />
             <span className="font-medium">
               {timeEntry.employee_name || `Employee ${timeEntry.employee_id}`}
             </span>
+            {timeEntry.employee_number && (
+              <Badge variant="outline" className="text-xs">
+                {timeEntry.employee_number}
+              </Badge>
+            )}
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Clock className="w-4 h-4" />
-            <span>{formatTime(timeEntry.clock_in)}</span>
+
+          {/* ✨ NEW: Punch In/Out Times */}
+          <div className="space-y-1.5">
+            {/* Punch In */}
+            <div className="flex items-center gap-2 text-sm">
+              <Clock className="w-4 h-4 text-emerald-600" />
+              <span className="text-xs text-muted-foreground min-w-[60px]">
+                {t('detail_hub.photo_review.punch_in_label')}:
+              </span>
+              <span className="font-medium">{formatTime(timeEntry.clock_in)}</span>
+            </div>
+
+            {/* Punch Out (if exists) */}
+            {timeEntry.clock_out && (
+              <div className="flex items-center gap-2 text-sm">
+                <Clock className="w-4 h-4 text-red-600" />
+                <span className="text-xs text-muted-foreground min-w-[60px]">
+                  {t('detail_hub.photo_review.punch_out_label')}:
+                </span>
+                <span className="font-medium">{formatTime(timeEntry.clock_out)}</span>
+              </div>
+            )}
+
+            {/* Total Hours Badge (if clocked out) */}
+            {timeEntry.clock_out && timeEntry.total_hours !== null && timeEntry.total_hours !== undefined && (
+              <div className="flex items-start gap-2">
+                <Badge variant="secondary" className="text-xs">
+                  ⏱️ {t('detail_hub.photo_review.total_hours')}: {timeEntry.total_hours.toFixed(2)}{t('detail_hub.photo_review.hours_abbr')}
+                </Badge>
+              </div>
+            )}
           </div>
         </div>
 

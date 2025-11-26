@@ -453,6 +453,18 @@
       "pending_count": "{{count}} Pending",
       "no_pending": "No pending reviews"
     },
+    "photo_review": {
+      "title": "Photo Review",
+      "pending_review": "Pending Review",
+      "punch_in_label": "Punch In",
+      "punch_out_label": "Punch Out",
+      "total_hours": "Total",
+      "hours_abbr": "h",
+      "photo_punch": "Photo Punch",
+      "verify_identity": "Verify employee identity before approval",
+      "approve": "Approve",
+      "reject": "Reject"
+    },
     "photo_viewer": {
       "title": "Time Clock Photo",
       "employee": "Employee",
