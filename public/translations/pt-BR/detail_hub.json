@@ -578,16 +578,6 @@
       }
     }
   },
-  "photo_review": {
-    "title": "VerificaÃ§Ã£o de Foto NecessÃ¡ria",
-    "pending_review": "RevisÃ£o Pendente",
-    "employee": "FuncionÃ¡rio",
-    "approve": "Aprovar",
-    "reject": "Rejeitar",
-    "verify_identity": "Verifique a identidade do funcionÃ¡rio antes de aprovar o registro",
-    "photo_punch": "Registro com Foto",
-    "captured": "âœ“ Capturado"
-  },
   "facial_enrollment": {
     "title": "Registro de ID Facial",
     "subtitle": "Registro de Reconhecimento Facial",

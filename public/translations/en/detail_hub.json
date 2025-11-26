@@ -569,16 +569,6 @@
       }
     }
   },
-  "photo_review": {
-    "title": "Photo Verification Required",
-    "pending_review": "Pending Review",
-    "employee": "Employee",
-    "approve": "Approve",
-    "reject": "Reject",
-    "verify_identity": "Verify employee identity before approving punch",
-    "photo_punch": "Photo Punch",
-    "captured": "âœ“ Captured"
-  },
   "facial_enrollment": {
     "title": "Face ID Enrollment",
     "subtitle": "Facial Recognition Enrollment",
