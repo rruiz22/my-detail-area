@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS detail_hub_breaks (
   duration_minutes INTEGER,
 
   -- Classification
-  break_type TEXT DEFAULT 'regular', -- 'lunch', 'regular', 'unpaid', 'paid'
-  is_paid BOOLEAN DEFAULT true,
+  break_type TEXT DEFAULT 'regular', -- 'lunch', 'regular' (all are unpaid)
+  is_paid BOOLEAN DEFAULT false, -- ✅ FIX: All breaks are UNPAID in this business
 
   -- Verification (same as time_entries)
   photo_start_url TEXT,

@@ -61,7 +61,7 @@ import { PinInputDisplay } from "./punch-clock/PinInputDisplay";
 import { PunchHistoryCard } from "./punch-clock/PunchHistoryCard";
 
 // DetailHub hooks
-import { useClockIn, useClockOut, useStartBreak, useEndBreak, DetailHubEmployee } from "@/hooks/useDetailHubDatabase";
+import { useClockIn, useClockOut, useStartBreak, useEndBreak, DetailHubEmployee, useCurrentBreak } from "@/hooks/useDetailHubDatabase";
 import { getEmployeeTodaySchedule } from "@/hooks/useDetailHubSchedules";
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
 import { useToast } from "@/hooks/use-toast";
@@ -181,6 +181,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   const { data: employeeState, refetch: refetchEmployeeState } = useEmployeeCurrentState(selectedEmployee?.id || null);
   const { data: faceMatchedEmployee, isLoading: loadingFaceEmployee } = useEmployeeById(faceMatchedEmployeeId);
 
+  // ✅ NEW: Get current open break from detail_hub_breaks table
+  const { data: currentBreak } = useCurrentBreak(selectedEmployee?.id || null);
+
   // Live break timer (updates every second)
   const [breakSecondsRemaining, setBreakSecondsRemaining] = useState<number | null>(null);
 
@@ -257,14 +260,22 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   }, [currentView, t, toast, kioskConfig.sleep_timeout_minutes]);
 
   useEffect(() => {
-    if (employeeState?.state === 'on_break' && employeeState.currentEntry?.break_start) {
+    if (employeeState?.state === 'on_break' && currentBreak) {
       const updateBreakTimer = () => {
-        const breakStart = new Date(employeeState.currentEntry.break_start!);
+        const breakStart = new Date(currentBreak.break_start);
         const now = new Date();
         const elapsedSeconds = Math.floor((now.getTime() - breakStart.getTime()) / 1000);
-        const requiredSeconds = 30 * 60; // 30 minutes
-        const remaining = Math.max(0, requiredSeconds - elapsedSeconds);
-        setBreakSecondsRemaining(remaining);
+
+        // ✅ SMART VALIDATION: Only require minimum for first break (lunch)
+        if (currentBreak.break_number === 1) {
+          // First break requires minimum 30 minutes (or employee template setting)
+          const requiredSeconds = 30 * 60; // TODO: Get from employee.template_break_minutes
+          const remaining = Math.max(0, requiredSeconds - elapsedSeconds);
+          setBreakSecondsRemaining(remaining);
+        } else {
+          // Subsequent breaks have no minimum - just show elapsed time as negative (countdown not needed)
+          setBreakSecondsRemaining(0); // No countdown for breaks #2+
+        }
       };
 
       // Update immediately
@@ -276,7 +287,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     } else {
       setBreakSecondsRemaining(null);
     }
-  }, [employeeState?.state, employeeState?.currentEntry?.break_start]);
+  }, [employeeState?.state, currentBreak]);
 
   const formatBreakTimer = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -1598,7 +1609,15 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                             onClick={() => handleStartPhotoCapture('break_start')}
                           >
                             <Coffee className="w-8 h-8 mr-2" />
-                            {t('detail_hub.punch_clock.start_break')}
+                            <div className="text-left">
+                              <div>{t('detail_hub.punch_clock.start_break')}</div>
+                              <div className="text-xs font-normal opacity-75">
+                                {/* ✅ SMART MESSAGE: Show break type based on how many taken */}
+                                {currentBreak === null && employeeState.currentEntry?.break_start === null
+                                  ? 'Lunch Break (min 30 min, unpaid)'
+                                  : 'Short Break (no minimum, unpaid)'}
+                              </div>
+                            </div>
                           </Button>
 
                           <Button
@@ -1621,17 +1640,25 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                             onClick={() => handleStartPhotoCapture('break_end')}
                             disabled={breakSecondsRemaining !== null && breakSecondsRemaining > 0}
                             title={breakSecondsRemaining !== null && breakSecondsRemaining > 0
-                              ? `Break must be at least 30 minutes. ${formatBreakTimer(breakSecondsRemaining)} remaining.`
+                              ? `Lunch break must be at least 30 minutes. ${formatBreakTimer(breakSecondsRemaining)} remaining.`
                               : undefined
                             }
                           >
                             <Coffee className="w-8 h-8 mr-2" />
-                            <span>{t('detail_hub.punch_clock.end_break')}</span>
-                            {breakSecondsRemaining !== null && breakSecondsRemaining > 0 && (
-                              <span className="ml-2 font-mono">
-                                {formatBreakTimer(breakSecondsRemaining)}
-                              </span>
-                            )}
+                            <div className="text-left">
+                              <div>{t('detail_hub.punch_clock.end_break')}</div>
+                              {currentBreak && (
+                                <div className="text-xs font-normal opacity-75">
+                                  {/* ✅ SMART MESSAGE: Show break type */}
+                                  {currentBreak.break_number === 1 ? 'Lunch Break' : `Break #${currentBreak.break_number}`}
+                                  {breakSecondsRemaining !== null && breakSecondsRemaining > 0 && (
+                                    <span className="ml-2 font-mono">
+                                      {formatBreakTimer(breakSecondsRemaining)}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                            </div>
                           </Button>
 
                           <Button
