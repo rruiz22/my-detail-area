@@ -33,5 +33,11 @@
     "not_supported": "La ubicación GPS no es soportada en este dispositivo",
     "gps_required": "Se requiere ubicación GPS. Por favor habilita los permisos de ubicación y recarga la página.",
     "accuracy": "Precisión"
+  },
+  "status": {
+    "not_clocked_in": "Sin registrar entrada",
+    "clocked_in": "Actualmente trabajando",
+    "on_break": "En descanso",
+    "elapsed_time": "Tiempo transcurrido"
   }
 }

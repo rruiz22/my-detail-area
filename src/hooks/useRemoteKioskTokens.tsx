@@ -53,14 +53,15 @@ export interface RemoteKioskToken {
     fallback_photo_url: string | null;
     department: string;
   } | null;
-  creator?: {
-    first_name: string;
-    last_name: string;
-  } | null;
-  revoker?: {
-    first_name: string;
-    last_name: string;
-  } | null;
+  // Note: creator and revoker data not available yet (FKs not created)
+  // creator?: {
+  //   first_name: string;
+  //   last_name: string;
+  // } | null;
+  // revoker?: {
+  //   first_name: string;
+  //   last_name: string;
+  // } | null;
 }
 
 export interface TokenStatistics {
@@ -123,7 +124,7 @@ export function useRemoteKioskTokens(filters: TokenFilters = {}) {
         .from('remote_kiosk_tokens')
         .select(`
           *,
-          employee:detail_hub_employees(
+          employee:detail_hub_employees!remote_kiosk_tokens_employee_id_fkey(
             first_name,
             last_name,
             employee_number,

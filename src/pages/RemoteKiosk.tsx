@@ -10,6 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 import { requestGPSLocation, isGeolocationSupported } from '@/utils/geolocation';
 import { reverseGeocode, formatAddressCompact } from '@/services/geocoding';
+import { useEmployeeCurrentState } from '@/hooks/useEmployeeCurrentState';
 
 interface TokenPayload {
   sub: string; // employee_id
@@ -54,6 +55,9 @@ export default function RemoteKiosk() {
     address: string;
     accuracy: number;
   } | null>(null);
+
+  // Employee current state (for validating available actions)
+  const { data: employeeState, refetch: refetchState } = useEmployeeCurrentState(employee?.id || null);
 
   // Parse JWT token from URL
   useEffect(() => {
@@ -105,6 +109,12 @@ export default function RemoteKiosk() {
 
   // Request GPS location after employee is loaded
   useEffect(() => {
+    console.log('[RemoteKiosk GPS] useEffect triggered', {
+      hasEmployee: !!employee,
+      hasToken: !!token,
+      willRequestGPS: !!employee && !!token
+    });
+
     if (!employee || !token) return;
 
     const requestLocation = async () => {
@@ -303,6 +313,9 @@ export default function RemoteKiosk() {
         setPin(''); // Clear PIN
         setPhotoData(null); // Clear photo
 
+        // Refresh employee state to update available actions
+        refetchState();
+
         // Show success for 3 seconds, then redirect or reset
         setTimeout(() => {
           setSuccess(null);
@@ -479,6 +492,25 @@ export default function RemoteKiosk() {
             </Alert>
           )}
 
+          {/* Employee Current Status */}
+          {employeeState && (
+            <Alert className="border-blue-500 bg-blue-50">
+              <Clock className="h-4 w-4 text-blue-600" />
+              <AlertDescription className="text-blue-700">
+                <div className="font-medium">
+                  {employeeState.state === 'not_clocked_in' && t('remote_kiosk.status.not_clocked_in', { defaultValue: 'Not clocked in' })}
+                  {employeeState.state === 'clocked_in' && t('remote_kiosk.status.clocked_in', { defaultValue: 'Currently working' })}
+                  {employeeState.state === 'on_break' && t('remote_kiosk.status.on_break', { defaultValue: 'On break' })}
+                </div>
+                {employeeState.currentEntry && (
+                  <div className="text-xs opacity-75 mt-1">
+                    {t('remote_kiosk.status.elapsed_time', { defaultValue: 'Time elapsed' })}: {Math.floor(employeeState.currentEntry.elapsed_minutes / 60)}h {employeeState.currentEntry.elapsed_minutes % 60}m
+                  </div>
+                )}
+              </AlertDescription>
+            </Alert>
+          )}
+
           {/* PIN Input */}
           <div className="space-y-2">
             <label className="text-sm font-medium">
@@ -498,9 +530,17 @@ export default function RemoteKiosk() {
 
           {/* Action Buttons */}
           <div className="grid grid-cols-2 gap-3 pt-4">
+            {/* Clock In - Only available if not clocked in */}
             <Button
               onClick={() => handlePunch('clock_in')}
-              disabled={loading || !employee || !pin || pin.length !== 4 || locationStatus !== 'granted'}
+              disabled={
+                loading ||
+                !employee ||
+                !pin ||
+                pin.length !== 4 ||
+                locationStatus !== 'granted' ||
+                employeeState?.state !== 'not_clocked_in'
+              }
               className="h-20 flex-col gap-1"
             >
               {loading ? (
@@ -513,9 +553,17 @@ export default function RemoteKiosk() {
               )}
             </Button>
 
+            {/* Clock Out - Only available if clocked in (not on break) */}
             <Button
               onClick={() => handlePunch('clock_out')}
-              disabled={loading || !employee || !pin || pin.length !== 4 || locationStatus !== 'granted'}
+              disabled={
+                loading ||
+                !employee ||
+                !pin ||
+                pin.length !== 4 ||
+                locationStatus !== 'granted' ||
+                employeeState?.state !== 'clocked_in'
+              }
               variant="secondary"
               className="h-20 flex-col gap-1"
             >
@@ -529,9 +577,17 @@ export default function RemoteKiosk() {
               )}
             </Button>
 
+            {/* Start Break - Only available if clocked in */}
             <Button
               onClick={() => handlePunch('start_break')}
-              disabled={loading || !employee || !pin || pin.length !== 4 || locationStatus !== 'granted'}
+              disabled={
+                loading ||
+                !employee ||
+                !pin ||
+                pin.length !== 4 ||
+                locationStatus !== 'granted' ||
+                employeeState?.state !== 'clocked_in'
+              }
               variant="outline"
               className="h-20 flex-col gap-1"
             >
@@ -545,9 +601,17 @@ export default function RemoteKiosk() {
               )}
             </Button>
 
+            {/* End Break - Only available if on break */}
             <Button
               onClick={() => handlePunch('end_break')}
-              disabled={loading || !employee || !pin || pin.length !== 4 || locationStatus !== 'granted'}
+              disabled={
+                loading ||
+                !employee ||
+                !pin ||
+                pin.length !== 4 ||
+                locationStatus !== 'granted' ||
+                employeeState?.state !== 'on_break'
+              }
               variant="outline"
               className="h-20 flex-col gap-1"
             >

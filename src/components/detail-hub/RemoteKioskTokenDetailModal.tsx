@@ -256,8 +256,8 @@ export function RemoteKioskTokenDetailModal({
             </CardContent>
           </Card>
 
-          {/* Creator Information */}
-          <Card>
+          {/* Creator Information - Temporarily disabled (FKs not created yet) */}
+          {/* <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-gray-700">
                 {t('remote_kiosk_management.detail_modal.creator_info')}
@@ -275,7 +275,7 @@ export function RemoteKioskTokenDetailModal({
                 </span>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
 
           {/* Revocation Information (if revoked) */}
           {token.status === 'revoked' && token.revoked_at && (
@@ -296,7 +296,8 @@ export function RemoteKioskTokenDetailModal({
                       {format(new Date(token.revoked_at), 'MMM d, yyyy HH:mm')}
                     </div>
                   </div>
-                  {token.revoker && (
+                  {/* Revoker info - Temporarily disabled (FKs not created yet) */}
+                  {/* {token.revoker && (
                     <div>
                       <div className="text-xs text-red-600 mb-1">
                         {t('remote_kiosk_management.detail_modal.revoked_by')}
@@ -305,7 +306,7 @@ export function RemoteKioskTokenDetailModal({
                         {token.revoker.first_name} {token.revoker.last_name}
                       </div>
                     </div>
-                  )}
+                  )} */}
                 </div>
                 {token.revoke_reason && (
                   <>

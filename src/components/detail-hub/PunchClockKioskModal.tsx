@@ -38,7 +38,8 @@ import {
   RotateCcw,
   Loader2,
   X,
-  Clock
+  Clock,
+  AlertCircle
 } from "lucide-react";
 
 // Photo capture utilities
@@ -61,7 +62,7 @@ import { PinInputDisplay } from "./punch-clock/PinInputDisplay";
 import { PunchHistoryCard } from "./punch-clock/PunchHistoryCard";
 
 // DetailHub hooks
-import { useClockIn, useClockOut, useStartBreak, useEndBreak, DetailHubEmployee, useCurrentBreak } from "@/hooks/useDetailHubDatabase";
+import { useClockIn, useClockOut, useStartBreak, useEndBreak, DetailHubEmployee, useCurrentBreak, useTemplateValidation } from "@/hooks/useDetailHubDatabase";
 import { getEmployeeTodaySchedule } from "@/hooks/useDetailHubSchedules";
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
 import { useToast } from "@/hooks/use-toast";
@@ -183,6 +184,12 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
   // ✅ NEW: Get current open break from detail_hub_breaks table
   const { data: currentBreak } = useCurrentBreak(selectedEmployee?.id || null);
+
+  // ✅ TEMPLATE VALIDATION: Pre-punch validation using employee template
+  const { data: templateValidation } = useTemplateValidation(
+    selectedEmployee?.id || null,
+    KIOSK_ID
+  );
 
   // Live break timer (updates every second)
   const [breakSecondsRemaining, setBreakSecondsRemaining] = useState<number | null>(null);
@@ -1580,6 +1587,40 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                   daysWorked={employeeState.weekStats.days_worked}
                 />
 
+                {/* Punch Validation Alert - Only for not_clocked_in state */}
+                {employeeState.state === 'not_clocked_in' && templateValidation && (
+                  <Alert className={templateValidation.allowed
+                    ? "border-emerald-500 bg-emerald-50"
+                    : "border-amber-500 bg-amber-50"
+                  }>
+                    <div className="flex items-start gap-2">
+                      {templateValidation.allowed ? (
+                        <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                      ) : (
+                        <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                      )}
+                      <div className="flex-1">
+                        <AlertDescription className={templateValidation.allowed
+                          ? "text-emerald-700"
+                          : "text-amber-700"
+                        }>
+                          {templateValidation.reason}
+                          {!templateValidation.allowed && templateValidation.minutes_until_allowed && templateValidation.minutes_until_allowed > 0 && (
+                            <span className="ml-2 font-mono">
+                              ({Math.floor(templateValidation.minutes_until_allowed / 60)}h {templateValidation.minutes_until_allowed % 60}m remaining)
+                            </span>
+                          )}
+                        </AlertDescription>
+                        {templateValidation.shift_start_time && (
+                          <div className="text-xs mt-1 text-gray-600">
+                            Scheduled: {templateValidation.shift_start_time} - {templateValidation.shift_end_time}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </Alert>
+                )}
+
                 {/* Contextual Action Buttons */}
                 <Card className="card-enhanced">
                   <CardContent className="py-6">
@@ -1590,6 +1631,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                           size="lg"
                           className="h-24 text-xl font-semibold bg-emerald-600 hover:bg-emerald-700 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-emerald-200 col-span-2"
                           onClick={() => handleStartPhotoCapture('clock_in')}
+                          disabled={templateValidation?.allowed === false}
                         >
                           <LogIn className="w-8 h-8 mr-3" />
                           <div className="text-left">
