@@ -24,5 +24,14 @@
   "success_clock_in": "Entrada registrada com sucesso!",
   "success_clock_out": "Saída registrada com sucesso!",
   "success_start_break": "Intervalo iniciado com sucesso!",
-  "success_end_break": "Intervalo terminado com sucesso!"
+  "success_end_break": "Intervalo terminado com sucesso!",
+  "location": {
+    "requesting_permission": "Solicitando permissão de localização de dds.mydetailarea.com...",
+    "permission_denied_title": "Permissão de Localização Necessária",
+    "permission_denied_message": "O quiosque remoto requer localização GPS por segurança. Por favor habilite as permissões de localização e recarregue a página.",
+    "reload_page": "Recarregar Página",
+    "not_supported": "A localização GPS não é suportada neste dispositivo",
+    "gps_required": "Localização GPS é obrigatória. Por favor habilite as permissões de localização e recarregue a página.",
+    "accuracy": "Precisão"
+  }
 }

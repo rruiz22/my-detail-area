@@ -1,0 +1,171 @@
+{
+  "title": "Tokens de Quiosque Remoto",
+  "subtitle": "Gerencie links temporários de acesso para rastreamento de tempo remoto",
+  "tab_name": "Quiosque Remoto",
+
+  "status": {
+    "active": "Ativo",
+    "expired": "Expirado",
+    "revoked": "Revogado",
+    "used": "Usado",
+    "all": "Todos"
+  },
+
+  "table": {
+    "employee": "Funcionário",
+    "created_by": "Criado Por",
+    "expires": "Expira",
+    "uses": "Usos",
+    "last_used": "Último Uso",
+    "actions": "Ações",
+    "no_tokens": "Nenhum token encontrado",
+    "loading": "Carregando tokens...",
+    "select_all": "Selecionar todos",
+    "selected_count": "{{count}} selecionado(s)"
+  },
+
+  "stats": {
+    "total_active": "Tokens Ativos",
+    "used_today": "Usados Hoje",
+    "expiring_soon": "Expirando em Breve",
+    "total_revoked": "Revogados"
+  },
+
+  "charts": {
+    "tokens_created_title": "Tokens Criados (Últimos 30 Dias)",
+    "usage_by_employee_title": "Top 10 Funcionários por Uso",
+    "date": "Data",
+    "count": "Quantidade",
+    "employee": "Funcionário",
+    "uses": "Usos"
+  },
+
+  "filters": {
+    "search_placeholder": "Buscar por nome ou número do funcionário...",
+    "status_filter": "Filtrar por status",
+    "clear_search": "Limpar busca"
+  },
+
+  "actions": {
+    "view_details": "Ver Detalhes",
+    "copy_url": "Copiar URL",
+    "revoke": "Revogar",
+    "delete": "Excluir",
+    "batch_revoke": "Revogar Selecionados",
+    "batch_delete": "Excluir Selecionados",
+    "refresh": "Atualizar"
+  },
+
+  "detail_modal": {
+    "title": "Detalhes do Token",
+    "employee_info": "Informações do Funcionário",
+    "token_info": "Informações do Token",
+    "creator_info": "Informações do Criador",
+    "usage_history": "Histórico de Uso",
+    "revocation_info": "Informações de Revogação",
+
+    "short_code": "Código Curto",
+    "full_url": "URL Completa",
+    "expires_at": "Expira Em",
+    "max_uses": "Usos Máximos",
+    "current_uses": "Usos Atuais",
+    "created_at": "Criado Em",
+    "last_used_at": "Último Uso",
+    "last_used_ip": "IP do Último Uso",
+    "last_used_device": "Dispositivo do Último Uso",
+
+    "revoked_at": "Revogado Em",
+    "revoked_by": "Revogado Por",
+    "revoke_reason": "Motivo da Revogação",
+
+    "open_in_maps": "Abrir no Google Maps",
+
+    "no_usage_history": "Nenhum histórico de uso disponível",
+    "usage_action": "Ação",
+    "usage_timestamp": "Data e Hora",
+    "usage_ip": "Endereço IP",
+    "usage_device": "Dispositivo",
+    "usage_success": "Sucesso"
+  },
+
+  "confirm": {
+    "revoke_title": "Revogar Token?",
+    "revoke_message": "Isso invalidará imediatamente o link do quiosque remoto. O funcionário não poderá mais usar este token.",
+    "revoke_reason_label": "Motivo (opcional)",
+    "revoke_reason_placeholder": "Digite o motivo para revogar este token...",
+    "revoke_button": "Revogar Token",
+
+    "delete_title": "Excluir Token?",
+    "delete_message": "Isso excluirá permanentemente o token do banco de dados. Esta ação não pode ser desfeita.",
+    "delete_warning": "Tem certeza de que deseja excluir permanentemente este token?",
+    "delete_button": "Excluir Permanentemente",
+
+    "batch_revoke_title": "Revogar {{count}} Token(s)?",
+    "batch_revoke_message": "Isso invalidará imediatamente todos os links de quiosque remoto selecionados.",
+    "batch_revoke_button": "Revogar Todos",
+
+    "batch_delete_title": "Excluir {{count}} Token(s)?",
+    "batch_delete_message": "Isso excluirá permanentemente todos os tokens selecionados. Esta ação não pode ser desfeita.",
+    "batch_delete_button": "Excluir Todos"
+  },
+
+  "messages": {
+    "token_revoked": "Token Revogado",
+    "token_revoked_success": "O token de quiosque remoto foi revogado com sucesso.",
+    "revoke_failed": "Revogação Falhou",
+
+    "token_deleted": "Token Excluído",
+    "token_deleted_success": "O token de quiosque remoto foi excluído permanentemente.",
+    "delete_failed": "Exclusão Falhou",
+
+    "batch_revoked": "Tokens Revogados",
+    "batch_revoked_success": "{{count}} token(s) revogado(s) com sucesso.",
+    "batch_revoke_failed": "Revogação em Lote Falhou",
+
+    "batch_deleted": "Tokens Excluídos",
+    "batch_deleted_success": "{{count}} token(s) excluído(s) com sucesso.",
+    "batch_delete_failed": "Exclusão em Lote Falhou",
+
+    "url_copied": "URL Copiada",
+    "url_copied_success": "A URL do quiosque remoto foi copiada para a área de transferência.",
+    "copy_failed": "Cópia Falhou",
+    "copy_failed_message": "Falha ao copiar a URL para a área de transferência.",
+
+    "not_authenticated": "Usuário não autenticado",
+    "unknown_error": "Ocorreu um erro desconhecido"
+  },
+
+  "expires_in": {
+    "expired": "Expirado",
+    "expires_soon": "Expira em {{time}}",
+    "never": "Nunca",
+    "less_than_hour": "< 1 hora",
+    "hours": "{{count}} hora",
+    "hours_plural": "{{count}} horas",
+    "days": "{{count}} dia",
+    "days_plural": "{{count}} dias"
+  },
+
+  "pagination": {
+    "showing": "Mostrando {{from}} até {{to}} de {{total}} tokens",
+    "per_page": "Tokens por página",
+    "previous": "Anterior",
+    "next": "Próximo",
+    "page": "Página {{page}} de {{totalPages}}"
+  },
+
+  "empty_states": {
+    "no_tokens_title": "Nenhum Token de Quiosque Remoto",
+    "no_tokens_message": "Nenhum token de quiosque remoto foi criado ainda. Gere um novo token no Gerenciador de Quiosques.",
+    "no_results_title": "Nenhum Resultado Encontrado",
+    "no_results_message": "Nenhum token corresponde aos seus critérios de busca. Tente ajustar seus filtros.",
+    "no_active_title": "Nenhum Token Ativo",
+    "no_active_message": "Não há tokens de quiosque remoto ativos no momento.",
+    "no_expired_title": "Nenhum Token Expirado",
+    "no_expired_message": "Não há tokens expirados. Tokens ativos aparecerão aqui após expirar.",
+    "no_revoked_title": "Nenhum Token Revogado",
+    "no_revoked_message": "Não há tokens revogados.",
+    "no_used_title": "Nenhum Token Usado",
+    "no_used_message": "Não há tokens completamente usados (atingiram o limite de max_uses)."
+  }
+}

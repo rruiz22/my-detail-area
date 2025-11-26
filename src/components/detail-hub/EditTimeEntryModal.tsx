@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Clock, Save, X } from "lucide-react";
-import { useUpdateTimeEntry, TimeEntryWithEmployee } from "@/hooks/useDetailHubDatabase";
+import { Badge } from "@/components/ui/badge";
+import { Clock, Save, X, Coffee } from "lucide-react";
+import { useUpdateTimeEntry, TimeEntryWithEmployee, useEmployeeBreaks, DetailHubBreak } from "@/hooks/useDetailHubDatabase";
 import { format } from "date-fns";
 
 interface EditTimeEntryModalProps {
@@ -22,6 +23,9 @@ export function EditTimeEntryModal({
 }: EditTimeEntryModalProps) {
   const { t } = useTranslation();
   const { mutateAsync: updateEntry, isPending } = useUpdateTimeEntry();
+
+  // Fetch all breaks for this time entry
+  const { data: breaks = [] } = useEmployeeBreaks(timeEntry?.id || null);
 
   // Form state
   const [clockInTime, setClockInTime] = useState<string>("");
@@ -169,41 +173,102 @@ export function EditTimeEntryModal({
             </div>
           </div>
 
-          {/* Break Times */}
-          <div className="grid grid-cols-2 gap-4">
-            {/* Break Start */}
-            <div className="space-y-2">
-              <Label htmlFor="breakStart">{t('detail_hub.timecard.edit_entry.break_start')}</Label>
-              <div className="relative">
-                <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  id="breakStart"
-                  type="time"
-                  value={breakStart}
-                  onChange={(e) => setBreakStart(e.target.value)}
-                  className={`pl-10 ${errors.breakStart ? 'border-red-500' : ''}`}
-                />
-              </div>
-              {errors.breakStart && <p className="text-sm text-red-500">{errors.breakStart}</p>}
+          {/* Legacy Break Times - Single Break (Deprecated) */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-medium">Break Time (Legacy)</Label>
+              <Badge variant="outline" className="text-xs text-muted-foreground">
+                Deprecated - Use breaks list below
+              </Badge>
             </div>
-
-            {/* Break End */}
-            <div className="space-y-2">
-              <Label htmlFor="breakEnd">{t('detail_hub.timecard.edit_entry.break_end')}</Label>
-              <div className="relative">
-                <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  id="breakEnd"
-                  type="time"
-                  value={breakEnd}
-                  onChange={(e) => setBreakEnd(e.target.value)}
-                  className={`pl-10 ${errors.breakEnd ? 'border-red-500' : ''}`}
-                  disabled={!breakStart}
-                />
+            <div className="grid grid-cols-2 gap-4 opacity-60">
+              {/* Break Start */}
+              <div className="space-y-2">
+                <Label htmlFor="breakStart" className="text-xs">{t('detail_hub.timecard.edit_entry.break_start')}</Label>
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    id="breakStart"
+                    type="time"
+                    value={breakStart}
+                    onChange={(e) => setBreakStart(e.target.value)}
+                    className={`pl-10 ${errors.breakStart ? 'border-red-500' : ''}`}
+                  />
+                </div>
+                {errors.breakStart && <p className="text-sm text-red-500">{errors.breakStart}</p>}
               </div>
-              {errors.breakEnd && <p className="text-sm text-red-500">{errors.breakEnd}</p>}
+
+              {/* Break End */}
+              <div className="space-y-2">
+                <Label htmlFor="breakEnd" className="text-xs">{t('detail_hub.timecard.edit_entry.break_end')}</Label>
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    id="breakEnd"
+                    type="time"
+                    value={breakEnd}
+                    onChange={(e) => setBreakEnd(e.target.value)}
+                    className={`pl-10 ${errors.breakEnd ? 'border-red-500' : ''}`}
+                    disabled={!breakStart}
+                  />
+                </div>
+                {errors.breakEnd && <p className="text-sm text-red-500">{errors.breakEnd}</p>}
+              </div>
             </div>
           </div>
+
+          {/* Multiple Breaks Section */}
+          {breaks.length > 0 && (
+            <div className="space-y-3 border-t pt-4">
+              <div className="flex items-center gap-2">
+                <Coffee className="w-4 h-4 text-muted-foreground" />
+                <Label className="text-sm font-medium">Breaks Taken</Label>
+                <Badge variant="secondary" className="text-xs">{breaks.length}</Badge>
+              </div>
+              <div className="space-y-2">
+                {breaks.map((breakRecord) => (
+                  <div
+                    key={breakRecord.id}
+                    className="grid grid-cols-4 gap-3 p-3 border rounded-lg bg-gray-50"
+                  >
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Break #{breakRecord.break_number}</Label>
+                      <Badge variant={breakRecord.break_type === 'lunch' ? 'default' : 'outline'} className="text-xs mt-1">
+                        {breakRecord.break_type === 'lunch' ? 'Lunch' : 'Regular'}
+                      </Badge>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Start</Label>
+                      <p className="text-sm font-medium mt-1">
+                        {format(new Date(breakRecord.break_start), 'HH:mm')}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">End</Label>
+                      <p className="text-sm font-medium mt-1">
+                        {breakRecord.break_end
+                          ? format(new Date(breakRecord.break_end), 'HH:mm')
+                          : <span className="text-amber-600">Active</span>
+                        }
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-xs text-muted-foreground">Duration</Label>
+                      <p className="text-sm font-medium mt-1">
+                        {breakRecord.duration_minutes
+                          ? `${breakRecord.duration_minutes} min`
+                          : <span className="text-muted-foreground">-</span>
+                        }
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                ℹ️ Individual break editing coming soon. For now, use legacy fields above.
+              </p>
+            </div>
+          )}
 
           {/* Notes */}
           <div className="space-y-2">

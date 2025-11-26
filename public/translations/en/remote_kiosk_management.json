@@ -1,0 +1,171 @@
+{
+  "title": "Remote Kiosk Tokens",
+  "subtitle": "Manage temporary access links for remote employee time tracking",
+  "tab_name": "Remote Kiosk",
+
+  "status": {
+    "active": "Active",
+    "expired": "Expired",
+    "revoked": "Revoked",
+    "used": "Used",
+    "all": "All"
+  },
+
+  "table": {
+    "employee": "Employee",
+    "created_by": "Created By",
+    "expires": "Expires",
+    "uses": "Uses",
+    "last_used": "Last Used",
+    "actions": "Actions",
+    "no_tokens": "No tokens found",
+    "loading": "Loading tokens...",
+    "select_all": "Select all",
+    "selected_count": "{{count}} selected"
+  },
+
+  "stats": {
+    "total_active": "Active Tokens",
+    "used_today": "Used Today",
+    "expiring_soon": "Expiring Soon",
+    "total_revoked": "Revoked"
+  },
+
+  "charts": {
+    "tokens_created_title": "Tokens Created (Last 30 Days)",
+    "usage_by_employee_title": "Top 10 Employees by Usage",
+    "date": "Date",
+    "count": "Count",
+    "employee": "Employee",
+    "uses": "Uses"
+  },
+
+  "filters": {
+    "search_placeholder": "Search by employee name or number...",
+    "status_filter": "Filter by status",
+    "clear_search": "Clear search"
+  },
+
+  "actions": {
+    "view_details": "View Details",
+    "copy_url": "Copy URL",
+    "revoke": "Revoke",
+    "delete": "Delete",
+    "batch_revoke": "Revoke Selected",
+    "batch_delete": "Delete Selected",
+    "refresh": "Refresh"
+  },
+
+  "detail_modal": {
+    "title": "Token Details",
+    "employee_info": "Employee Information",
+    "token_info": "Token Information",
+    "creator_info": "Creator Information",
+    "usage_history": "Usage History",
+    "revocation_info": "Revocation Information",
+
+    "short_code": "Short Code",
+    "full_url": "Full URL",
+    "expires_at": "Expires At",
+    "max_uses": "Maximum Uses",
+    "current_uses": "Current Uses",
+    "created_at": "Created At",
+    "last_used_at": "Last Used At",
+    "last_used_ip": "Last Used IP",
+    "last_used_device": "Last Used Device",
+
+    "revoked_at": "Revoked At",
+    "revoked_by": "Revoked By",
+    "revoke_reason": "Revoke Reason",
+
+    "open_in_maps": "Open in Google Maps",
+
+    "no_usage_history": "No usage history available",
+    "usage_action": "Action",
+    "usage_timestamp": "Timestamp",
+    "usage_ip": "IP Address",
+    "usage_device": "Device",
+    "usage_success": "Success"
+  },
+
+  "confirm": {
+    "revoke_title": "Revoke Token?",
+    "revoke_message": "This will immediately invalidate the remote kiosk link. The employee will no longer be able to use this token.",
+    "revoke_reason_label": "Reason (optional)",
+    "revoke_reason_placeholder": "Enter reason for revoking this token...",
+    "revoke_button": "Revoke Token",
+
+    "delete_title": "Delete Token?",
+    "delete_message": "This will permanently delete the token from the database. This action cannot be undone.",
+    "delete_warning": "Are you sure you want to permanently delete this token?",
+    "delete_button": "Delete Permanently",
+
+    "batch_revoke_title": "Revoke {{count}} Token(s)?",
+    "batch_revoke_message": "This will immediately invalidate all selected remote kiosk links.",
+    "batch_revoke_button": "Revoke All",
+
+    "batch_delete_title": "Delete {{count}} Token(s)?",
+    "batch_delete_message": "This will permanently delete all selected tokens. This action cannot be undone.",
+    "batch_delete_button": "Delete All"
+  },
+
+  "messages": {
+    "token_revoked": "Token Revoked",
+    "token_revoked_success": "The remote kiosk token has been revoked successfully.",
+    "revoke_failed": "Revoke Failed",
+
+    "token_deleted": "Token Deleted",
+    "token_deleted_success": "The remote kiosk token has been permanently deleted.",
+    "delete_failed": "Delete Failed",
+
+    "batch_revoked": "Tokens Revoked",
+    "batch_revoked_success": "Successfully revoked {{count}} token(s).",
+    "batch_revoke_failed": "Batch Revoke Failed",
+
+    "batch_deleted": "Tokens Deleted",
+    "batch_deleted_success": "Successfully deleted {{count}} token(s).",
+    "batch_delete_failed": "Batch Delete Failed",
+
+    "url_copied": "URL Copied",
+    "url_copied_success": "The remote kiosk URL has been copied to clipboard.",
+    "copy_failed": "Copy Failed",
+    "copy_failed_message": "Failed to copy URL to clipboard.",
+
+    "not_authenticated": "User not authenticated",
+    "unknown_error": "An unknown error occurred"
+  },
+
+  "expires_in": {
+    "expired": "Expired",
+    "expires_soon": "Expires in {{time}}",
+    "never": "Never",
+    "less_than_hour": "< 1 hour",
+    "hours": "{{count}} hour",
+    "hours_plural": "{{count}} hours",
+    "days": "{{count}} day",
+    "days_plural": "{{count}} days"
+  },
+
+  "pagination": {
+    "showing": "Showing {{from}} to {{to}} of {{total}} tokens",
+    "per_page": "Tokens per page",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{page}} of {{totalPages}}"
+  },
+
+  "empty_states": {
+    "no_tokens_title": "No Remote Kiosk Tokens",
+    "no_tokens_message": "No remote kiosk tokens have been created yet. Generate a new token from the Kiosk Manager.",
+    "no_results_title": "No Results Found",
+    "no_results_message": "No tokens match your search criteria. Try adjusting your filters.",
+    "no_active_title": "No Active Tokens",
+    "no_active_message": "There are no active remote kiosk tokens at the moment.",
+    "no_expired_title": "No Expired Tokens",
+    "no_expired_message": "There are no expired tokens. Active tokens will appear here after expiration.",
+    "no_revoked_title": "No Revoked Tokens",
+    "no_revoked_message": "There are no revoked tokens.",
+    "no_used_title": "No Used Tokens",
+    "no_used_message": "There are no fully used tokens (reached max_uses limit)."
+  }
+}

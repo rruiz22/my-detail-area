@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,8 @@ import {
   Edit,
   AlertCircle,
   CheckCircle,
-  X
+  X,
+  ThumbsUp
 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -33,8 +34,9 @@ import {
 // Employee Detail Modal
 import { EmployeeDetailModal } from "./EmployeeDetailModal";
 import { EditTimeEntryModal } from "./EditTimeEntryModal";
-import { TimeEntryWithEmployee } from "@/hooks/useDetailHubDatabase";
+import { TimeEntryWithEmployee, useApproveEarlyPunch } from "@/hooks/useDetailHubDatabase";
 import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const LiveStatusDashboard = () => {
   const { t } = useTranslation();
@@ -45,9 +47,21 @@ const LiveStatusDashboard = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedTimeEntry, setSelectedTimeEntry] = useState<TimeEntryWithEmployee | null>(null);
 
+  // Live clock state - updates every second
+  const [currentTime, setCurrentTime] = useState(new Date());
+
   // Real-time data (updates every 30 seconds)
   const { data: employees = [], isLoading } = useCurrentlyWorking();
   const { data: stats } = useLiveDashboardStats();
+
+  // Update clock every second for live time display
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   // Department label mapping - capitalized versions
   const getDepartmentLabel = (departmentKey: string): string => {
@@ -60,46 +74,39 @@ const LiveStatusDashboard = () => {
     return departmentKey.charAt(0).toUpperCase() + departmentKey.slice(1);
   };
 
-  // Transform CurrentlyWorkingEmployee to TimeEntryWithEmployee for editing
-  const transformToTimeEntry = (employee: CurrentlyWorkingEmployee): TimeEntryWithEmployee => {
-    return {
-      id: employee.time_entry_id,
-      employee_id: employee.employee_id,
-      dealership_id: employee.dealership_id,
-      clock_in: employee.clock_in,
-      clock_out: null, // Active employees haven't clocked out yet
-      break_start: employee.break_start,
-      break_end: null, // If on break, break_end is null
-      break_duration_minutes: employee.break_elapsed_minutes || 0,
-      total_hours: null,
-      regular_hours: null,
-      overtime_hours: null,
-      punch_in_method: null,
-      punch_out_method: null,
-      face_confidence_in: null,
-      face_confidence_out: null,
-      photo_in_url: employee.photo_in_url,
-      photo_out_url: null,
-      requires_manual_verification: false,
-      verified_by: null,
-      verified_at: null,
-      kiosk_id: employee.kiosk_id,
-      ip_address: null,
-      user_agent: null,
-      status: 'active',
-      notes: null,
-      created_at: employee.clock_in,
-      updated_at: employee.clock_in,
-      employee_name: employee.employee_name,
-      employee_number: employee.employee_number
-    };
-  };
+  // Handler for editing time entry - fetches full data from database
+  const handleEditTimeEntry = async (employee: CurrentlyWorkingEmployee) => {
+    try {
+      // Fetch complete time entry with all fields from database
+      const { data, error } = await supabase
+        .from('detail_hub_time_entries')
+        .select(`
+          *,
+          employee:detail_hub_employees!employee_id(
+            first_name,
+            last_name,
+            employee_number
+          )
+        `)
+        .eq('id', employee.time_entry_id)
+        .single();
 
-  // Handler for editing time entry
-  const handleEditTimeEntry = (employee: CurrentlyWorkingEmployee) => {
-    const timeEntry = transformToTimeEntry(employee);
-    setSelectedTimeEntry(timeEntry);
-    setShowEditModal(true);
+      if (error) throw error;
+
+      if (data && data.employee) {
+        // Transform to TimeEntryWithEmployee format
+        const timeEntryWithEmployee: TimeEntryWithEmployee = {
+          ...data,
+          employee_name: `${data.employee.first_name} ${data.employee.last_name}`,
+          employee_number: data.employee.employee_number
+        };
+
+        setSelectedTimeEntry(timeEntryWithEmployee);
+        setShowEditModal(true);
+      }
+    } catch (error) {
+      console.error('Error fetching time entry for edit:', error);
+    }
   };
 
   // Handler for closing edit modal and refreshing data
@@ -134,12 +141,18 @@ const LiveStatusDashboard = () => {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          {/* Live Clock - Clean Design */}
           <div className="text-right mr-4">
-            <div className="text-2xl font-mono font-bold text-gray-700">
-              {format(new Date(), 'HH:mm:ss')}
+            <div className="flex items-center justify-end gap-2 mb-1">
+              <Badge variant="destructive" className="text-[10px] px-1.5 py-0 animate-pulse">
+                LIVE
+              </Badge>
+            </div>
+            <div className="text-4xl font-mono font-bold text-gray-900">
+              {format(currentTime, 'HH:mm:ss')}
             </div>
             <div className="text-sm text-gray-500">
-              {format(new Date(), 'EEEE, MMMM dd')}
+              {format(currentTime, 'EEEE, MMMM dd')}
             </div>
           </div>
           <Button
@@ -315,6 +328,7 @@ function EmployeeCardGrid({ employee, getDepartmentLabel, onView, onEdit }: Empl
   const { t } = useTranslation();
   const elapsedTime = useElapsedTime(employee.clock_in);
   const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const { mutate: approveEarlyPunch, isPending: isApproving } = useApproveEarlyPunch();
 
   return (
     <>
@@ -446,9 +460,23 @@ function EmployeeCardGrid({ employee, getDepartmentLabel, onView, onEdit }: Empl
                 <span>On time</span>
               </div>
             ) : employee.schedule_variance_minutes < 0 ? (
-              <div className="flex items-center gap-1 text-xs text-gray-600">
+              <div className="flex items-center gap-2 text-xs text-gray-600">
                 <Clock className="w-3 h-3" />
                 <span>{Math.abs(employee.schedule_variance_minutes)} min early</span>
+                {!employee.early_punch_approved && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-5 px-2 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      approveEarlyPunch(employee.time_entry_id);
+                    }}
+                    disabled={isApproving}
+                  >
+                    <ThumbsUp className="w-3 h-3" />
+                  </Button>
+                )}
               </div>
             ) : (
               <div className="flex items-center gap-1 text-xs text-amber-600">

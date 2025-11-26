@@ -27,12 +27,28 @@ import { useDealerFilter } from "@/contexts/DealerFilterContext";
 import { KioskDetailModal } from "./KioskDetailModal";
 import { GenerateRemoteKioskModal } from "./GenerateRemoteKioskModal";
 
+// Remote Kiosk Token Management
+import { RemoteKioskTokenStats } from "./RemoteKioskTokenStats";
+import { RemoteKioskTokenList } from "./RemoteKioskTokenList";
+import { RemoteKioskTokenDetailModal } from "./RemoteKioskTokenDetailModal";
+import { RemoteKioskTokenCharts } from "./RemoteKioskTokenCharts";
+import { useTabPersistence } from "@/hooks/useTabPersistence";
+import type { RemoteKioskToken } from "@/hooks/useRemoteKioskTokens";
+
 const KioskManager = () => {
   const { t } = useTranslation();
+
+  // Tab state with persistence
+  const [activeTab, setActiveTab] = useTabPersistence('kiosk_manager');
+
+  // Physical kiosk states
   const [isAddingKiosk, setIsAddingKiosk] = useState(false);
   const [editingKiosk, setEditingKiosk] = useState<DetailHubKiosk | null>(null);
   const [viewingKiosk, setViewingKiosk] = useState<DetailHubKiosk | null>(null);
   const [remoteKioskModalOpen, setRemoteKioskModalOpen] = useState(false);
+
+  // Remote token states
+  const [viewingToken, setViewingToken] = useState<RemoteKioskToken | null>(null);
 
   // Form state - Simplified (removed unused fields: IP, MAC, brightness, volume, kioskMode)
   const [name, setName] = useState("");
@@ -317,6 +333,21 @@ const KioskManager = () => {
         </div>
       </div>
 
+      {/* Main Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="physical">
+            <Monitor className="w-4 h-4 mr-2" />
+            {t('detail_hub.kiosk_manager.tab_physical_kiosks', { defaultValue: 'Physical Kiosks' })}
+          </TabsTrigger>
+          <TabsTrigger value="remote">
+            <ExternalLink className="w-4 h-4 mr-2" />
+            {t('remote_kiosk_management.tab_name')}
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Physical Kiosks Tab */}
+        <TabsContent value="physical" className="space-y-6 mt-6">
       {/* System Overview */}
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
@@ -472,6 +503,44 @@ const KioskManager = () => {
           }))
         }
       />
+        </TabsContent>
+
+        {/* Remote Tokens Tab */}
+        <TabsContent value="remote" className="space-y-6 mt-6">
+          {/* Token Statistics */}
+          <RemoteKioskTokenStats />
+
+          {/* Analytics Charts */}
+          <RemoteKioskTokenCharts />
+
+          {/* Token List */}
+          <RemoteKioskTokenList onViewDetails={setViewingToken} />
+
+          {/* Token Detail Modal */}
+          <RemoteKioskTokenDetailModal
+            token={viewingToken}
+            open={!!viewingToken}
+            onClose={() => setViewingToken(null)}
+            onCopyUrl={async (token) => {
+              try {
+                await navigator.clipboard.writeText(token.full_url);
+                // Toast will be shown by the button click handler
+              } catch (err) {
+                console.error('Failed to copy URL:', err);
+              }
+              setViewingToken(null);
+            }}
+            onRevoke={(token) => {
+              setViewingToken(null);
+              // Revoke logic will be handled by RemoteKioskTokenList
+            }}
+            onDelete={(token) => {
+              setViewingToken(null);
+              // Delete logic will be handled by RemoteKioskTokenList
+            }}
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

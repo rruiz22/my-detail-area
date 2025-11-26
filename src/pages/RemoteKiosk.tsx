@@ -2,12 +2,14 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Webcam from 'react-webcam';
-import { Camera, Clock, Coffee, LogOut, Loader2, CheckCircle2, XCircle, User } from 'lucide-react';
+import { Camera, Clock, Coffee, LogOut, Loader2, CheckCircle2, XCircle, User, MapPin, AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
+import { requestGPSLocation, isGeolocationSupported } from '@/utils/geolocation';
+import { reverseGeocode, formatAddressCompact } from '@/services/geocoding';
 
 interface TokenPayload {
   sub: string; // employee_id
@@ -43,6 +45,15 @@ export default function RemoteKiosk() {
   const [showCamera, setShowCamera] = useState(false);
   const [photoData, setPhotoData] = useState<string | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<string>('');
+
+  // GPS location states
+  const [locationStatus, setLocationStatus] = useState<'loading' | 'granted' | 'denied' | 'unavailable'>('loading');
+  const [currentLocation, setCurrentLocation] = useState<{
+    latitude: number;
+    longitude: number;
+    address: string;
+    accuracy: number;
+  } | null>(null);
 
   // Parse JWT token from URL
   useEffect(() => {
@@ -91,6 +102,66 @@ export default function RemoteKiosk() {
       setError(t('remote_kiosk.error_invalid_token'));
     }
   }, [searchParams, t]);
+
+  // Request GPS location after employee is loaded
+  useEffect(() => {
+    if (!employee || !token) return;
+
+    const requestLocation = async () => {
+      console.log('[RemoteKiosk] Requesting GPS location...');
+      setLocationStatus('loading');
+
+      // Check if geolocation is supported
+      if (!isGeolocationSupported()) {
+        console.error('[RemoteKiosk] Geolocation not supported');
+        setLocationStatus('unavailable');
+        setError(t('remote_kiosk.location.not_supported', { defaultValue: 'GPS is not supported on this device' }));
+        return;
+      }
+
+      // Request GPS permission
+      const coords = await requestGPSLocation();
+
+      if (!coords) {
+        // Permission denied or error
+        console.error('[RemoteKiosk] GPS permission denied');
+        setLocationStatus('denied');
+        setError(t('remote_kiosk.location.permission_denied', {
+          defaultValue: 'Location permission is required for remote punches. Please enable location and reload the page.'
+        }));
+        return;
+      }
+
+      console.log('[RemoteKiosk] GPS location obtained:', coords);
+      setLocationStatus('granted');
+
+      // Reverse geocode to get address
+      try {
+        const geocodingResult = await reverseGeocode(coords.latitude, coords.longitude);
+        const address = formatAddressCompact(geocodingResult);
+
+        setCurrentLocation({
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          address,
+          accuracy: coords.accuracy
+        });
+
+        console.log('[RemoteKiosk] Address resolved:', address);
+      } catch (err) {
+        console.error('[RemoteKiosk] Geocoding failed:', err);
+        // Still allow punch with coordinates only
+        setCurrentLocation({
+          latitude: coords.latitude,
+          longitude: coords.longitude,
+          address: `${coords.latitude.toFixed(6)}, ${coords.longitude.toFixed(6)}`,
+          accuracy: coords.accuracy
+        });
+      }
+    };
+
+    requestLocation();
+  }, [employee, token, t]);
 
   // Update time remaining countdown
   useEffect(() => {
@@ -188,6 +259,14 @@ export default function RemoteKiosk() {
       return;
     }
 
+    // ✅ MANDATORY GPS VALIDATION
+    if (!currentLocation) {
+      setError(t('remote_kiosk.location.gps_required', {
+        defaultValue: 'GPS location is required. Please enable location permissions and reload the page.'
+      }));
+      return;
+    }
+
     setLoading(true);
     setError(null);
     setSuccess(null);
@@ -207,7 +286,12 @@ export default function RemoteKiosk() {
             action,
             photoBase64: photoData,
             ipAddress,
-            userAgent
+            userAgent,
+            // GPS location (mandatory for remote punches)
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
+            address: currentLocation.address,
+            locationAccuracy: currentLocation.accuracy
           }
         }
       );
@@ -344,6 +428,57 @@ export default function RemoteKiosk() {
             </div>
           ) : null}
 
+          {/* GPS Location Status */}
+          {locationStatus === 'loading' && (
+            <Alert>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <AlertDescription>
+                {t('remote_kiosk.location.requesting_permission', { defaultValue: 'Requesting location permission from dds.mydetailarea.com...' })}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {locationStatus === 'granted' && currentLocation && (
+            <Alert className="border-emerald-500 bg-emerald-50">
+              <MapPin className="h-4 w-4 text-emerald-600" />
+              <AlertDescription className="text-emerald-700">
+                <div className="font-medium">{currentLocation.address}</div>
+                <div className="text-xs opacity-75 mt-1">
+                  {t('remote_kiosk.location.accuracy', { defaultValue: 'Accuracy' })}: ±{currentLocation.accuracy.toFixed(0)}m
+                </div>
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {locationStatus === 'denied' && (
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>{t('remote_kiosk.location.permission_denied_title', { defaultValue: 'Location Permission Required' })}</AlertTitle>
+              <AlertDescription>
+                {t('remote_kiosk.location.permission_denied_message', {
+                  defaultValue: 'Remote kiosk requires GPS location for security. Please enable location permissions and reload the page.'
+                })}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.location.reload()}
+                  className="mt-2 w-full"
+                >
+                  {t('remote_kiosk.location.reload_page', { defaultValue: 'Reload Page' })}
+                </Button>
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {locationStatus === 'unavailable' && (
+            <Alert variant="destructive">
+              <XCircle className="h-4 w-4" />
+              <AlertDescription>
+                {t('remote_kiosk.location.not_supported', { defaultValue: 'GPS location is not supported on this device' })}
+              </AlertDescription>
+            </Alert>
+          )}
+
           {/* PIN Input */}
           <div className="space-y-2">
             <label className="text-sm font-medium">
@@ -365,7 +500,7 @@ export default function RemoteKiosk() {
           <div className="grid grid-cols-2 gap-3 pt-4">
             <Button
               onClick={() => handlePunch('clock_in')}
-              disabled={loading || !employee || !pin || pin.length !== 4}
+              disabled={loading || !employee || !pin || pin.length !== 4 || locationStatus !== 'granted'}
               className="h-20 flex-col gap-1"
             >
               {loading ? (
@@ -380,7 +515,7 @@ export default function RemoteKiosk() {
 
             <Button
               onClick={() => handlePunch('clock_out')}
-              disabled={loading || !employee || !pin || pin.length !== 4}
+              disabled={loading || !employee || !pin || pin.length !== 4 || locationStatus !== 'granted'}
               variant="secondary"
               className="h-20 flex-col gap-1"
             >
@@ -396,7 +531,7 @@ export default function RemoteKiosk() {
 
             <Button
               onClick={() => handlePunch('start_break')}
-              disabled={loading || !employee || !pin || pin.length !== 4}
+              disabled={loading || !employee || !pin || pin.length !== 4 || locationStatus !== 'granted'}
               variant="outline"
               className="h-20 flex-col gap-1"
             >
@@ -412,7 +547,7 @@ export default function RemoteKiosk() {
 
             <Button
               onClick={() => handlePunch('end_break')}
-              disabled={loading || !employee || !pin || pin.length !== 4}
+              disabled={loading || !employee || !pin || pin.length !== 4 || locationStatus !== 'granted'}
               variant="outline"
               className="h-20 flex-col gap-1"
             >

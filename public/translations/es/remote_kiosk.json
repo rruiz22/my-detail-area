@@ -24,5 +24,14 @@
   "success_clock_in": "¡Entrada registrada exitosamente!",
   "success_clock_out": "¡Salida registrada exitosamente!",
   "success_start_break": "¡Descanso iniciado exitosamente!",
-  "success_end_break": "¡Descanso terminado exitosamente!"
+  "success_end_break": "¡Descanso terminado exitosamente!",
+  "location": {
+    "requesting_permission": "Solicitando permiso de ubicación de dds.mydetailarea.com...",
+    "permission_denied_title": "Permiso de Ubicación Requerido",
+    "permission_denied_message": "El kiosk remoto requiere ubicación GPS por seguridad. Por favor habilita los permisos de ubicación y recarga la página.",
+    "reload_page": "Recargar Página",
+    "not_supported": "La ubicación GPS no es soportada en este dispositivo",
+    "gps_required": "Se requiere ubicación GPS. Por favor habilita los permisos de ubicación y recarga la página.",
+    "accuracy": "Precisión"
+  }
 }

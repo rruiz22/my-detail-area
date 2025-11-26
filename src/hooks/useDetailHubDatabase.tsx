@@ -305,7 +305,12 @@ export function useClockIn() {
       faceConfidence?: number;
       kioskId?: string;
       ipAddress?: string;
-      scheduleId?: string; // NEW: Link to schedule
+      scheduleId?: string; // Link to schedule
+      // GPS location (required for remote kiosk punches)
+      latitude?: number;
+      longitude?: number;
+      address?: string;
+      locationAccuracy?: number;
     }) => {
       if (!user) throw new Error('User not authenticated');
 
@@ -379,7 +384,12 @@ export function useClockIn() {
           requires_manual_verification: params.method === 'photo_fallback' || (params.faceConfidence ? params.faceConfidence < 80 : false),
           kiosk_id: params.kioskId,
           ip_address: params.ipAddress,
-          schedule_id: params.scheduleId, // NEW: Link to schedule (triggers auto-calculate variance)
+          schedule_id: params.scheduleId,
+          // GPS location (for remote kiosk punches)
+          punch_in_latitude: params.latitude,
+          punch_in_longitude: params.longitude,
+          punch_in_address: params.address,
+          punch_in_accuracy: params.locationAccuracy,
           status: 'active'
         })
         .select()
@@ -426,6 +436,11 @@ export function useClockOut() {
       faceConfidence?: number;
       kioskId?: string;
       ipAddress?: string;
+      // GPS location (required for remote kiosk punches)
+      latitude?: number;
+      longitude?: number;
+      address?: string;
+      locationAccuracy?: number;
     }) => {
       // Find active time entry
       const { data: activeEntry, error: fetchError } = await supabase
@@ -472,9 +487,14 @@ export function useClockOut() {
           punch_out_method: params.method || 'manual',
           photo_out_url: params.photoUrl,
           face_confidence_out: params.faceConfidence,
-          kiosk_id: params.kioskId || activeEntry.kiosk_id, // Update if provided, keep existing if not
-          ip_address: params.ipAddress || activeEntry.ip_address, // Update if provided, keep existing if not
-          status: 'complete', // ✅ FIX: Explicitly set status to complete (trigger doesn't do this)
+          kiosk_id: params.kioskId || activeEntry.kiosk_id,
+          ip_address: params.ipAddress || activeEntry.ip_address,
+          // GPS location (for remote kiosk punches)
+          punch_out_latitude: params.latitude,
+          punch_out_longitude: params.longitude,
+          punch_out_address: params.address,
+          punch_out_accuracy: params.locationAccuracy,
+          status: 'complete',
           // Hours will be auto-calculated by database trigger
           // break_duration_minutes will be updated by detail_hub_breaks trigger (sum of all breaks)
         })
@@ -520,6 +540,10 @@ export function useStartBreak() {
       faceConfidence?: number;
       kioskId?: string;
       ipAddress?: string;
+      // GPS location (required for remote kiosk punches)
+      latitude?: number;
+      longitude?: number;
+      address?: string;
     }) => {
       // Find active time entry
       const { data: activeEntry, error: fetchError } = await supabase
@@ -557,6 +581,10 @@ export function useStartBreak() {
           break_end: null,
           photo_start_url: params.photoUrl,
           kiosk_id: params.kioskId,
+          // GPS location (for remote kiosk punches)
+          break_start_latitude: params.latitude,
+          break_start_longitude: params.longitude,
+          break_start_address: params.address,
           // break_number will be auto-assigned by trigger
           // break_type will be auto-assigned by trigger (1='lunch', 2+='regular')
         })
@@ -615,6 +643,10 @@ export function useEndBreak() {
       faceConfidence?: number;
       kioskId?: string;
       ipAddress?: string;
+      // GPS location (required for remote kiosk punches)
+      latitude?: number;
+      longitude?: number;
+      address?: string;
     }) => {
       // Find active time entry
       const { data: activeEntry, error: fetchError } = await supabase
@@ -666,6 +698,10 @@ export function useEndBreak() {
         .update({
           break_end: breakEnd.toISOString(),
           photo_end_url: params.photoUrl,
+          // GPS location (for remote kiosk punches)
+          break_end_latitude: params.latitude,
+          break_end_longitude: params.longitude,
+          break_end_address: params.address,
           // duration_minutes will be auto-calculated by trigger
         })
         .eq('id', openBreak.id)
@@ -1398,5 +1434,153 @@ export function useEmployeeSearch(query: string) {
     enabled: !!user && query.length >= 2,
     staleTime: CACHE_TIMES.SHORT, // 1 minute (search results should be fresh)
     gcTime: GC_TIMES.MEDIUM,
+  });
+}
+
+// =====================================================
+// EARLY PUNCH APPROVAL SYSTEM
+// =====================================================
+
+/**
+ * Approve an early punch for a time entry
+ * Marks the early clock-in as supervisor-approved
+ */
+export function useApproveEarlyPunch() {
+  const queryClient = useQueryClient();
+  const { selectedDealerId } = useDealerFilter();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async (timeEntryId: string) => {
+      const { data, error } = await supabase
+        .from('detail_hub_time_entries')
+        .update({
+          early_punch_approved: true,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', timeEntryId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      // Invalidate queries to refresh dashboard
+      queryClient.invalidateQueries({ queryKey: ['detail-hub', 'currently-working'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.timeEntries(selectedDealerId) });
+
+      toast({
+        title: "Early Punch Approved",
+        description: "The early clock-in has been approved successfully."
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Approval Failed",
+        description: error instanceof Error ? error.message : 'Failed to approve early punch',
+        variant: "destructive"
+      });
+    }
+  });
+}
+
+// =====================================================
+// TEMPLATE-BASED PUNCH VALIDATION (REPLACES SCHEDULES)
+// =====================================================
+
+export interface TemplateValidationResult {
+  allowed: boolean;
+  reason: string;
+  shift_start_time: string | null;
+  shift_end_time: string | null;
+  early_punch_allowed_minutes: number | null;
+  late_punch_grace_minutes: number | null;
+  minutes_until_allowed: number | null;
+}
+
+/**
+ * Validates punch-in using employee schedule template (no schedules table)
+ * Replaces usePunchValidation from useDetailHubSchedules
+ */
+export function useTemplateValidation(employeeId: string | null, kioskId: string | null) {
+  return useQuery({
+    queryKey: ['template-validation', employeeId, kioskId],
+    queryFn: async () => {
+      if (!employeeId || !kioskId) return null;
+
+      const { data, error } = await supabase.rpc('can_punch_in_from_template', {
+        p_employee_id: employeeId,
+        p_kiosk_id: kioskId,
+        p_current_time: new Date().toISOString()
+      });
+
+      if (error) throw error;
+      return data[0] as TemplateValidationResult;
+    },
+    enabled: !!employeeId && !!kioskId,
+    staleTime: 10000, // 10 seconds
+    gcTime: GC_TIMES.SHORT,
+    refetchInterval: 30000, // Refresh every 30s for time-based validation
+  });
+}
+
+// =====================================================
+// SUPERVISOR OVERRIDE SYSTEM
+// =====================================================
+
+/**
+ * Allow supervisor to override schedule validation and clock in employee
+ * Creates a temporary "walk-in" schedule for tracking
+ * SAFE: Does not bypass security, only schedule validation
+ */
+export function useSupervisorOverridePunch() {
+  const queryClient = useQueryClient();
+  const { selectedDealerId } = useDealerFilter();
+  const { toast } = useToast();
+  const { user } = useAuth();
+
+  return useMutation({
+    mutationFn: async (params: {
+      employeeId: string;
+      kioskId: string;
+      reason: string;
+    }) => {
+      if (!user) throw new Error('No authenticated user');
+
+      // Call supervisor override function
+      const { data, error } = await supabase.rpc('allow_supervisor_override', {
+        p_employee_id: params.employeeId,
+        p_kiosk_id: params.kioskId,
+        p_supervisor_id: user.id,
+        p_reason: params.reason
+      });
+
+      if (error) throw error;
+
+      const result = data[0];
+      if (!result.allowed) {
+        throw new Error(result.message);
+      }
+
+      return result;
+    },
+    onSuccess: (data) => {
+      // Invalidate queries to refresh dashboard
+      queryClient.invalidateQueries({ queryKey: ['detail-hub', 'currently-working'] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.timeEntries(selectedDealerId) });
+
+      toast({
+        title: "Override Approved",
+        description: data.message || "Walk-in schedule created successfully."
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Override Failed",
+        description: error instanceof Error ? error.message : 'Failed to override schedule validation',
+        variant: "destructive"
+      });
+    }
   });
 }

@@ -25,6 +25,11 @@ interface ValidatePunchRequest {
   photoBase64: string | null;
   ipAddress: string | null;
   userAgent: string;
+  // GPS location (mandatory for remote punches)
+  latitude: number;
+  longitude: number;
+  address: string;
+  locationAccuracy: number;
 }
 
 interface ValidatePunchResponse {
@@ -58,10 +63,30 @@ const handler = async (req: Request): Promise<Response> => {
       action,
       photoBase64,
       ipAddress,
-      userAgent
+      userAgent,
+      latitude,
+      longitude,
+      address,
+      locationAccuracy
     }: ValidatePunchRequest = await req.json();
 
-    console.log('[Remote Kiosk Punch] Validating:', { action, hasPhoto: !!photoBase64 });
+    console.log('[Remote Kiosk Punch] Validating:', {
+      action,
+      hasPhoto: !!photoBase64,
+      hasGPS: !!(latitude && longitude),
+      accuracy: locationAccuracy
+    });
+
+    // ✅ VALIDATE GPS LOCATION (mandatory)
+    if (!latitude || !longitude || !address) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: 'GPS location is required for remote punches. Please enable location permissions.'
+        }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
 
     // Verify JWT
     const key = await crypto.subtle.importKey(
@@ -190,6 +215,11 @@ const handler = async (req: Request): Promise<Response> => {
           ip_address: ipAddress,
           user_agent: userAgent,
           kiosk_id: 'REMOTE_KIOSK',
+          // GPS location
+          punch_in_latitude: latitude,
+          punch_in_longitude: longitude,
+          punch_in_address: address,
+          punch_in_accuracy: locationAccuracy,
           status: 'active'
         });
       timeEntryError = error;
@@ -218,7 +248,12 @@ const handler = async (req: Request): Promise<Response> => {
         .update({
           clock_out: new Date().toISOString(),
           punch_out_method: 'pin',
-          photo_out_url: photoUrl
+          photo_out_url: photoUrl,
+          // GPS location
+          punch_out_latitude: latitude,
+          punch_out_longitude: longitude,
+          punch_out_address: address,
+          punch_out_accuracy: locationAccuracy
         })
         .eq('id', activeEntry.id);
       timeEntryError = error;
@@ -281,6 +316,36 @@ const handler = async (req: Request): Promise<Response> => {
         JSON.stringify({ success: false, error: 'Failed to record time entry' }),
         { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
+    }
+
+    // ✅ Update token usage and last used metadata
+    const tokenHash = await sha256Hash(token);
+
+    // Get current token to increment uses
+    const { data: currentToken } = await supabase
+      .from('remote_kiosk_tokens')
+      .select('current_uses')
+      .eq('token_hash', tokenHash)
+      .single();
+
+    const { error: tokenUpdateError } = await supabase
+      .from('remote_kiosk_tokens')
+      .update({
+        current_uses: (currentToken?.current_uses || 0) + 1,
+        last_used_at: new Date().toISOString(),
+        last_used_ip: ipAddress,
+        last_used_user_agent: userAgent,
+        // GPS location
+        last_used_latitude: latitude,
+        last_used_longitude: longitude,
+        last_used_address: address,
+        updated_at: new Date().toISOString()
+      })
+      .eq('token_hash', tokenHash);
+
+    if (tokenUpdateError) {
+      console.error('[Remote Kiosk Punch] Failed to update token usage:', tokenUpdateError);
+      // Don't fail the punch if token update fails
     }
 
     const actionMessages = {

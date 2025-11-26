@@ -638,6 +638,7 @@
   "kiosk_manager": {
     "title": "Gerenciador de Quiosques",
     "subtitle": "Configurar e monitorar estações de ponto",
+    "tab_physical_kiosks": "Quiosques Físicos",
     "add_kiosk": "Adicionar Quiosque",
     "generate_remote_access": "Gerar Acesso Remoto",
     "add_description": "Criar nova configuração de quiosque para operações de ponto",

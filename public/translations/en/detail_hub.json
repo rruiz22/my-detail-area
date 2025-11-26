@@ -629,6 +629,7 @@
   "kiosk_manager": {
     "title": "Kiosk Manager",
     "subtitle": "Configure and monitor time clock stations",
+    "tab_physical_kiosks": "Physical Kiosks",
     "add_kiosk": "Add Kiosk",
     "add_description": "Create a new kiosk configuration for time clock operations",
     "edit_kiosk": "Edit Kiosk",

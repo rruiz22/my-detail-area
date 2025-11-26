@@ -1,0 +1,171 @@
+{
+  "title": "Tokens de Kiosko Remoto",
+  "subtitle": "Gestiona enlaces temporales de acceso para seguimiento de tiempo remoto",
+  "tab_name": "Kiosko Remoto",
+
+  "status": {
+    "active": "Activo",
+    "expired": "Expirado",
+    "revoked": "Revocado",
+    "used": "Usado",
+    "all": "Todos"
+  },
+
+  "table": {
+    "employee": "Empleado",
+    "created_by": "Creado Por",
+    "expires": "Expira",
+    "uses": "Usos",
+    "last_used": "Último Uso",
+    "actions": "Acciones",
+    "no_tokens": "No se encontraron tokens",
+    "loading": "Cargando tokens...",
+    "select_all": "Seleccionar todos",
+    "selected_count": "{{count}} seleccionado(s)"
+  },
+
+  "stats": {
+    "total_active": "Tokens Activos",
+    "used_today": "Usados Hoy",
+    "expiring_soon": "Por Expirar",
+    "total_revoked": "Revocados"
+  },
+
+  "charts": {
+    "tokens_created_title": "Tokens Creados (Últimos 30 Días)",
+    "usage_by_employee_title": "Top 10 Empleados por Uso",
+    "date": "Fecha",
+    "count": "Cantidad",
+    "employee": "Empleado",
+    "uses": "Usos"
+  },
+
+  "filters": {
+    "search_placeholder": "Buscar por nombre o número de empleado...",
+    "status_filter": "Filtrar por estado",
+    "clear_search": "Limpiar búsqueda"
+  },
+
+  "actions": {
+    "view_details": "Ver Detalles",
+    "copy_url": "Copiar URL",
+    "revoke": "Revocar",
+    "delete": "Eliminar",
+    "batch_revoke": "Revocar Seleccionados",
+    "batch_delete": "Eliminar Seleccionados",
+    "refresh": "Actualizar"
+  },
+
+  "detail_modal": {
+    "title": "Detalles del Token",
+    "employee_info": "Información del Empleado",
+    "token_info": "Información del Token",
+    "creator_info": "Información del Creador",
+    "usage_history": "Historial de Uso",
+    "revocation_info": "Información de Revocación",
+
+    "short_code": "Código Corto",
+    "full_url": "URL Completa",
+    "expires_at": "Expira El",
+    "max_uses": "Usos Máximos",
+    "current_uses": "Usos Actuales",
+    "created_at": "Creado El",
+    "last_used_at": "Último Uso",
+    "last_used_ip": "IP del Último Uso",
+    "last_used_device": "Dispositivo del Último Uso",
+
+    "revoked_at": "Revocado El",
+    "revoked_by": "Revocado Por",
+    "revoke_reason": "Razón de Revocación",
+
+    "open_in_maps": "Abrir en Google Maps",
+
+    "no_usage_history": "No hay historial de uso disponible",
+    "usage_action": "Acción",
+    "usage_timestamp": "Fecha y Hora",
+    "usage_ip": "Dirección IP",
+    "usage_device": "Dispositivo",
+    "usage_success": "Éxito"
+  },
+
+  "confirm": {
+    "revoke_title": "¿Revocar Token?",
+    "revoke_message": "Esto invalidará inmediatamente el enlace del kiosko remoto. El empleado ya no podrá usar este token.",
+    "revoke_reason_label": "Razón (opcional)",
+    "revoke_reason_placeholder": "Ingrese la razón para revocar este token...",
+    "revoke_button": "Revocar Token",
+
+    "delete_title": "¿Eliminar Token?",
+    "delete_message": "Esto eliminará permanentemente el token de la base de datos. Esta acción no se puede deshacer.",
+    "delete_warning": "¿Está seguro de que desea eliminar permanentemente este token?",
+    "delete_button": "Eliminar Permanentemente",
+
+    "batch_revoke_title": "¿Revocar {{count}} Token(s)?",
+    "batch_revoke_message": "Esto invalidará inmediatamente todos los enlaces de kiosko remoto seleccionados.",
+    "batch_revoke_button": "Revocar Todos",
+
+    "batch_delete_title": "¿Eliminar {{count}} Token(s)?",
+    "batch_delete_message": "Esto eliminará permanentemente todos los tokens seleccionados. Esta acción no se puede deshacer.",
+    "batch_delete_button": "Eliminar Todos"
+  },
+
+  "messages": {
+    "token_revoked": "Token Revocado",
+    "token_revoked_success": "El token de kiosko remoto ha sido revocado exitosamente.",
+    "revoke_failed": "Revocación Fallida",
+
+    "token_deleted": "Token Eliminado",
+    "token_deleted_success": "El token de kiosko remoto ha sido eliminado permanentemente.",
+    "delete_failed": "Eliminación Fallida",
+
+    "batch_revoked": "Tokens Revocados",
+    "batch_revoked_success": "Se revocaron exitosamente {{count}} token(s).",
+    "batch_revoke_failed": "Revocación por Lotes Fallida",
+
+    "batch_deleted": "Tokens Eliminados",
+    "batch_deleted_success": "Se eliminaron exitosamente {{count}} token(s).",
+    "batch_delete_failed": "Eliminación por Lotes Fallida",
+
+    "url_copied": "URL Copiada",
+    "url_copied_success": "La URL del kiosko remoto ha sido copiada al portapapeles.",
+    "copy_failed": "Copia Fallida",
+    "copy_failed_message": "No se pudo copiar la URL al portapapeles.",
+
+    "not_authenticated": "Usuario no autenticado",
+    "unknown_error": "Ocurrió un error desconocido"
+  },
+
+  "expires_in": {
+    "expired": "Expirado",
+    "expires_soon": "Expira en {{time}}",
+    "never": "Nunca",
+    "less_than_hour": "< 1 hora",
+    "hours": "{{count}} hora",
+    "hours_plural": "{{count}} horas",
+    "days": "{{count}} día",
+    "days_plural": "{{count}} días"
+  },
+
+  "pagination": {
+    "showing": "Mostrando {{from}} a {{to}} de {{total}} tokens",
+    "per_page": "Tokens por página",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página {{page}} de {{totalPages}}"
+  },
+
+  "empty_states": {
+    "no_tokens_title": "No Hay Tokens de Kiosko Remoto",
+    "no_tokens_message": "No se han creado tokens de kiosko remoto aún. Genere un nuevo token desde el Administrador de Kioskos.",
+    "no_results_title": "No Se Encontraron Resultados",
+    "no_results_message": "Ningún token coincide con sus criterios de búsqueda. Intente ajustar sus filtros.",
+    "no_active_title": "No Hay Tokens Activos",
+    "no_active_message": "No hay tokens de kiosko remoto activos en este momento.",
+    "no_expired_title": "No Hay Tokens Expirados",
+    "no_expired_message": "No hay tokens expirados. Los tokens activos aparecerán aquí después de expirar.",
+    "no_revoked_title": "No Hay Tokens Revocados",
+    "no_revoked_message": "No hay tokens revocados.",
+    "no_used_title": "No Hay Tokens Usados",
+    "no_used_message": "No hay tokens completamente usados (alcanzaron el límite de max_uses)."
+  }
+}

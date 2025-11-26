@@ -46,9 +46,11 @@ export interface CurrentlyWorkingEmployee {
   break_elapsed_minutes: number | null;
 
   // Schedule compliance
+  schedule_id: string | null;
   scheduled_start: string | null;
   scheduled_end: string | null;
   schedule_variance_minutes: number | null;
+  early_punch_approved: boolean | null;
 
   // Kiosk info
   kiosk_name: string | null;

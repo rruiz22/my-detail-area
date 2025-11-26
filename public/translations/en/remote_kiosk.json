@@ -24,5 +24,14 @@
   "success_clock_in": "Clock in successful!",
   "success_clock_out": "Clock out successful!",
   "success_start_break": "Break started successfully!",
-  "success_end_break": "Break ended successfully!"
+  "success_end_break": "Break ended successfully!",
+  "location": {
+    "requesting_permission": "Requesting location permission from dds.mydetailarea.com...",
+    "permission_denied_title": "Location Permission Required",
+    "permission_denied_message": "Remote kiosk requires GPS location for security. Please enable location permissions and reload the page.",
+    "reload_page": "Reload Page",
+    "not_supported": "GPS location is not supported on this device",
+    "gps_required": "GPS location is required. Please enable location permissions and reload the page.",
+    "accuracy": "Accuracy"
+  }
 }

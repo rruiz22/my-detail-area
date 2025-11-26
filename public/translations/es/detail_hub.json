@@ -635,6 +635,7 @@
   "kiosk_manager": {
     "title": "Administrador de Kioscos",
     "subtitle": "Configurar y monitorear estaciones de reloj",
+    "tab_physical_kiosks": "Kioscos Físicos",
     "add_kiosk": "Agregar Kiosco",
     "generate_remote_access": "Generar Acceso Remoto",
     "add_description": "Crear nueva configuración de kiosco para reloj de tiempo",

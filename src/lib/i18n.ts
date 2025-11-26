@@ -70,7 +70,7 @@ const ALL_NAMESPACES = [
   'nfc', 'nfc_tracking', 'notifications', 'order_comments', 'order_detail',
   'orders', 'pages', 'password_management', 'permissions', 'presence',
   'productivity', 'profile', 'quick_actions', 'quick_scan', 'recent_activity',
-  'recon', 'recon_defaults', 'recon_orders', 'remote_kiosk', 'remote_kiosk_generator', 'reports', 'roles',
+  'recon', 'recon_defaults', 'recon_orders', 'remote_kiosk', 'remote_kiosk_generator', 'remote_kiosk_management', 'reports', 'roles',
   'sales', 'sales_orders', 'schedule_view', 'search', 'service_orders',
   'services', 'settings', 'sticker_scanner', 'stock', 'sweetalert',
   'system_update', 'time', 'ui', 'user_management', 'users',

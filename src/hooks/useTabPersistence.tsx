@@ -94,6 +94,11 @@ export const TAB_CONFIGS = {
     key: 'detail_hub_timecard',
     defaultTab: 'daily',
     validTabs: ['daily', 'weekly', 'monthly']
+  },
+  kiosk_manager: {
+    key: 'kiosk_manager',
+    defaultTab: 'physical',
+    validTabs: ['physical', 'remote']
   }
 } as const;
 
