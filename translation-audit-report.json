@@ -1,8 +1,8 @@
 {
   "scannedFiles": 918,
-  "totalStrings": 10700,
-  "hardcodedStrings": 2189,
-  "translatedStrings": 8511,
+  "totalStrings": 10708,
+  "hardcodedStrings": 2192,
+  "translatedStrings": 8516,
   "issues": {
     "critical": [
       {
@@ -1341,48 +1341,48 @@
           },
           {
             "text": "Employee",
-            "line": 1180,
-            "context": "1179: <TableRow className=\"bg-gray-100\">\n1180: <TableHead className=\"font-semibold\">Employee</TableHead>\n1181: <TableHead className=\"font-semibold text-right\">Days Worked</TableHead>"
+            "line": 1184,
+            "context": "1183: <TableRow className=\"bg-gray-100\">\n1184: <TableHead className=\"font-semibold\">Employee</TableHead>\n1185: <TableHead className=\"font-semibold text-right\">Days Worked</TableHead>"
           },
           {
             "text": "Days Worked",
-            "line": 1181,
-            "context": "1180: <TableHead className=\"font-semibold\">Employee</TableHead>\n1181: <TableHead className=\"font-semibold text-right\">Days Worked</TableHead>\n1182: <TableHead className=\"font-semibold text-right\">Regular Hours</TableHead>"
+            "line": 1185,
+            "context": "1184: <TableHead className=\"font-semibold\">Employee</TableHead>\n1185: <TableHead className=\"font-semibold text-right\">Days Worked</TableHead>\n1186: <TableHead className=\"font-semibold text-right\">Regular Hours</TableHead>"
           },
           {
             "text": "Regular Hours",
-            "line": 1182,
-            "context": "1181: <TableHead className=\"font-semibold text-right\">Days Worked</TableHead>\n1182: <TableHead className=\"font-semibold text-right\">Regular Hours</TableHead>\n1183: <TableHead className=\"font-semibold text-right\">Overtime</TableHead>"
+            "line": 1186,
+            "context": "1185: <TableHead className=\"font-semibold text-right\">Days Worked</TableHead>\n1186: <TableHead className=\"font-semibold text-right\">Regular Hours</TableHead>\n1187: <TableHead className=\"font-semibold text-right\">Overtime</TableHead>"
           },
           {
             "text": "Overtime",
-            "line": 1183,
-            "context": "1182: <TableHead className=\"font-semibold text-right\">Regular Hours</TableHead>\n1183: <TableHead className=\"font-semibold text-right\">Overtime</TableHead>\n1184: <TableHead className=\"font-semibold text-right\">Total Hours</TableHead>"
+            "line": 1187,
+            "context": "1186: <TableHead className=\"font-semibold text-right\">Regular Hours</TableHead>\n1187: <TableHead className=\"font-semibold text-right\">Overtime</TableHead>\n1188: <TableHead className=\"font-semibold text-right\">Total Hours</TableHead>"
           },
           {
             "text": "Total Hours",
-            "line": 1184,
-            "context": "1183: <TableHead className=\"font-semibold text-right\">Overtime</TableHead>\n1184: <TableHead className=\"font-semibold text-right\">Total Hours</TableHead>\n1185: <TableHead className=\"font-semibold text-right\">Hourly Rate</TableHead>"
+            "line": 1188,
+            "context": "1187: <TableHead className=\"font-semibold text-right\">Overtime</TableHead>\n1188: <TableHead className=\"font-semibold text-right\">Total Hours</TableHead>\n1189: <TableHead className=\"font-semibold text-right\">Hourly Rate</TableHead>"
           },
           {
             "text": "Hourly Rate",
-            "line": 1185,
-            "context": "1184: <TableHead className=\"font-semibold text-right\">Total Hours</TableHead>\n1185: <TableHead className=\"font-semibold text-right\">Hourly Rate</TableHead>\n1186: <TableHead className=\"font-semibold text-right\">Total Pay</TableHead>"
+            "line": 1189,
+            "context": "1188: <TableHead className=\"font-semibold text-right\">Total Hours</TableHead>\n1189: <TableHead className=\"font-semibold text-right\">Hourly Rate</TableHead>\n1190: <TableHead className=\"font-semibold text-right\">Total Pay</TableHead>"
           },
           {
             "text": "Total Pay",
-            "line": 1186,
-            "context": "1185: <TableHead className=\"font-semibold text-right\">Hourly Rate</TableHead>\n1186: <TableHead className=\"font-semibold text-right\">Total Pay</TableHead>\n1187: </TableRow>"
+            "line": 1190,
+            "context": "1189: <TableHead className=\"font-semibold text-right\">Hourly Rate</TableHead>\n1190: <TableHead className=\"font-semibold text-right\">Total Pay</TableHead>\n1191: </TableRow>"
           },
           {
             "text": "No employee data for this period",
-            "line": 1242,
-            "context": "1241: <Clock className=\"w-12 h-12 text-muted-foreground mx-auto mb-2\" />\n1242: <p className=\"text-muted-foreground\">No employee data for this period</p>\n1243: </TableCell>"
+            "line": 1246,
+            "context": "1245: <Clock className=\"w-12 h-12 text-muted-foreground mx-auto mb-2\" />\n1246: <p className=\"text-muted-foreground\">No employee data for this period</p>\n1247: </TableCell>"
           },
           {
             "text": "Monthly report functionality coming soon",
-            "line": 1342,
-            "context": "1341: <Clock className=\"w-12 h-12 text-muted-foreground mx-auto mb-4\" />\n1342: <p className=\"text-muted-foreground\">Monthly report functionality coming soon</p>\n1343: </div>"
+            "line": 1346,
+            "context": "1345: <Clock className=\"w-12 h-12 text-muted-foreground mx-auto mb-4\" />\n1346: <p className=\"text-muted-foreground\">Monthly report functionality coming soon</p>\n1347: </div>"
           },
           {
             "text": "Manage disabled entries to prevent overlap errors",
@@ -1391,53 +1391,53 @@
           },
           {
             "text": "View clock-in photo",
-            "line": 886,
-            "context": "885: className=\"relative group\"\n886: title=\"View clock-in photo\"\n887: >"
+            "line": 890,
+            "context": "889: className=\"relative group\"\n890: title=\"View clock-in photo\"\n891: >"
           },
           {
             "text": "Clock In",
-            "line": 890,
-            "context": "889: src={timecard.photoInUrl}\n890: alt=\"Clock In\"\n891: className=\"w-8 h-8 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer\""
+            "line": 894,
+            "context": "893: src={timecard.photoInUrl}\n894: alt=\"Clock In\"\n895: className=\"w-8 h-8 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer\""
           },
           {
             "text": "View clock-out photo",
-            "line": 918,
-            "context": "917: className=\"relative group\"\n918: title=\"View clock-out photo\"\n919: >"
+            "line": 922,
+            "context": "921: className=\"relative group\"\n922: title=\"View clock-out photo\"\n923: >"
           },
           {
             "text": "Clock Out",
-            "line": 922,
-            "context": "921: src={timecard.photoOutUrl}\n922: alt=\"Clock Out\"\n923: className=\"w-8 h-8 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer\""
+            "line": 926,
+            "context": "925: src={timecard.photoOutUrl}\n926: alt=\"Clock Out\"\n927: className=\"w-8 h-8 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer\""
           },
           {
             "text": "View clock-in photo",
-            "line": 1038,
-            "context": "1037: className=\"relative group\"\n1038: title=\"View clock-in photo\"\n1039: >"
+            "line": 1042,
+            "context": "1041: className=\"relative group\"\n1042: title=\"View clock-in photo\"\n1043: >"
           },
           {
             "text": "Clock In",
-            "line": 1042,
-            "context": "1041: src={timecard.photoInUrl}\n1042: alt=\"Clock In\"\n1043: className=\"w-8 h-8 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer\""
+            "line": 1046,
+            "context": "1045: src={timecard.photoInUrl}\n1046: alt=\"Clock In\"\n1047: className=\"w-8 h-8 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer\""
           },
           {
             "text": "View clock-out photo",
-            "line": 1070,
-            "context": "1069: className=\"relative group\"\n1070: title=\"View clock-out photo\"\n1071: >"
+            "line": 1074,
+            "context": "1073: className=\"relative group\"\n1074: title=\"View clock-out photo\"\n1075: >"
           },
           {
             "text": "Clock Out",
-            "line": 1074,
-            "context": "1073: src={timecard.photoOutUrl}\n1074: alt=\"Clock Out\"\n1075: className=\"w-8 h-8 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer\""
+            "line": 1078,
+            "context": "1077: src={timecard.photoOutUrl}\n1078: alt=\"Clock Out\"\n1079: className=\"w-8 h-8 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer\""
           },
           {
             "text": "Double-click to view employee details",
-            "line": 1261,
-            "context": "1260: }}\n1261: title=\"Double-click to view employee details\"\n1262: >"
+            "line": 1265,
+            "context": "1264: }}\n1265: title=\"Double-click to view employee details\"\n1266: >"
           },
           {
             "text": "Time clock photo",
-            "line": 1474,
-            "context": "1473: src={selectedPhoto.url}\n1474: alt=\"Time clock photo\"\n1475: className=\"max-w-full max-h-[60vh] rounded-lg object-contain\""
+            "line": 1478,
+            "context": "1477: src={selectedPhoto.url}\n1478: alt=\"Time clock photo\"\n1479: className=\"max-w-full max-h-[60vh] rounded-lg object-contain\""
           }
         ],
         "translationCalls": [
@@ -1663,107 +1663,102 @@
           },
           {
             "key": "detail_hub.timecard.daily_view",
-            "line": 755,
+            "line": 759,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.weekly_summary",
-            "line": 756,
+            "line": 760,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.monthly_report",
-            "line": 757,
+            "line": 761,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.todays_timecards",
-            "line": 764,
+            "line": 768,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.this_weeks_timecards",
-            "line": 765,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.filters.last_weeks_timecards",
-            "line": 766,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.daily_timecards",
             "line": 769,
             "exists": false
           },
           {
-            "key": "detail_hub.timecard.daily_timecards",
+            "key": "detail_hub.timecard.filters.last_weeks_timecards",
             "line": 770,
             "exists": false
           },
           {
+            "key": "detail_hub.timecard.daily_timecards",
+            "line": 773,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.daily_timecards",
+            "line": 774,
+            "exists": false
+          },
+          {
             "key": "detail_hub.timecard.table.employee",
-            "line": 778,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.table.photo",
-            "line": 779,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.table.clock_in",
-            "line": 780,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.table.clock_out",
-            "line": 781,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.table.break",
             "line": 782,
             "exists": false
           },
           {
-            "key": "detail_hub.timecard.table.total_hours",
+            "key": "detail_hub.timecard.table.photo",
             "line": 783,
             "exists": false
           },
           {
-            "key": "detail_hub.timecard.table.overtime",
+            "key": "detail_hub.timecard.table.clock_in",
             "line": 784,
             "exists": false
           },
           {
-            "key": "detail_hub.timecard.table.pay",
+            "key": "detail_hub.timecard.table.clock_out",
             "line": 785,
             "exists": false
           },
           {
-            "key": "detail_hub.timecard.table.status",
+            "key": "detail_hub.timecard.table.break",
             "line": 786,
             "exists": false
           },
           {
-            "key": "detail_hub.timecard.table.actions",
+            "key": "detail_hub.timecard.table.total_hours",
             "line": 787,
             "exists": false
           },
           {
+            "key": "detail_hub.timecard.table.overtime",
+            "line": 788,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.table.pay",
+            "line": 789,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.table.status",
+            "line": 790,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.table.actions",
+            "line": 791,
+            "exists": false
+          },
+          {
             "key": "detail_hub.timecard.loading",
-            "line": 796,
+            "line": 800,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.no_entries",
-            "line": 804,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.table.hours_abbr",
-            "line": 944,
+            "line": 808,
             "exists": false
           },
           {
@@ -1772,23 +1767,23 @@
             "exists": false
           },
           {
+            "key": "detail_hub.timecard.table.hours_abbr",
+            "line": 952,
+            "exists": false
+          },
+          {
             "key": "detail_hub.timecard.actions.view_logs",
-            "line": 967,
+            "line": 971,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.actions.edit",
-            "line": 981,
+            "line": 985,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.actions.disable",
-            "line": 992,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.table.hours_abbr",
-            "line": 1096,
+            "line": 996,
             "exists": false
           },
           {
@@ -1797,98 +1792,103 @@
             "exists": false
           },
           {
+            "key": "detail_hub.timecard.table.hours_abbr",
+            "line": 1104,
+            "exists": false
+          },
+          {
             "key": "detail_hub.timecard.actions.view_logs",
-            "line": 1119,
+            "line": 1123,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.actions.edit",
-            "line": 1133,
+            "line": 1137,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.actions.disable",
-            "line": 1144,
+            "line": 1148,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.this_weeks_timecards",
-            "line": 1165,
+            "line": 1169,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.last_weeks_timecards",
-            "line": 1166,
+            "line": 1170,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.monthly_report",
-            "line": 1337,
+            "line": 1341,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.disable_dialog.title",
-            "line": 1400,
+            "line": 1404,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.disable_dialog.description",
-            "line": 1402,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.disable_dialog.cancel",
             "line": 1406,
             "exists": false
           },
           {
+            "key": "detail_hub.timecard.disable_dialog.cancel",
+            "line": 1410,
+            "exists": false
+          },
+          {
             "key": "detail_hub.timecard.disable_dialog.confirm",
-            "line": 1416,
+            "line": 1420,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_viewer.title",
-            "line": 1427,
+            "line": 1431,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_viewer.employee",
-            "line": 1434,
+            "line": 1438,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_viewer.timestamp",
-            "line": 1439,
+            "line": 1443,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_viewer.clock_in",
-            "line": 1442,
+            "line": 1446,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_viewer.clock_out",
-            "line": 1442,
+            "line": 1446,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_viewer.kiosk",
-            "line": 1455,
+            "line": 1459,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_viewer.location",
-            "line": 1461,
+            "line": 1465,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_viewer.method",
-            "line": 1487,
+            "line": 1491,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_viewer.captured_at",
-            "line": 1496,
+            "line": 1500,
             "exists": false
           }
         ],
@@ -2115,233 +2115,233 @@
           },
           {
             "key": "detail_hub.timecard.daily_view",
-            "line": 755,
-            "context": "754: <TabsList>\n755: <TabsTrigger value=\"daily\">{t('detail_hub.timecard.daily_view')}</TabsTrigger>\n756: <TabsTrigger value=\"weekly\">{t('detail_hub.timecard.weekly_summary')}</TabsTrigger>"
+            "line": 759,
+            "context": "758: <TabsList>\n759: <TabsTrigger value=\"daily\">{t('detail_hub.timecard.daily_view')}</TabsTrigger>\n760: <TabsTrigger value=\"weekly\">{t('detail_hub.timecard.weekly_summary')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.timecard.weekly_summary",
-            "line": 756,
-            "context": "755: <TabsTrigger value=\"daily\">{t('detail_hub.timecard.daily_view')}</TabsTrigger>\n756: <TabsTrigger value=\"weekly\">{t('detail_hub.timecard.weekly_summary')}</TabsTrigger>\n757: <TabsTrigger value=\"monthly\">{t('detail_hub.timecard.monthly_report')}</TabsTrigger>"
+            "line": 760,
+            "context": "759: <TabsTrigger value=\"daily\">{t('detail_hub.timecard.daily_view')}</TabsTrigger>\n760: <TabsTrigger value=\"weekly\">{t('detail_hub.timecard.weekly_summary')}</TabsTrigger>\n761: <TabsTrigger value=\"monthly\">{t('detail_hub.timecard.monthly_report')}</TabsTrigger>"
           },
           {
             "key": "detail_hub.timecard.monthly_report",
-            "line": 757,
-            "context": "756: <TabsTrigger value=\"weekly\">{t('detail_hub.timecard.weekly_summary')}</TabsTrigger>\n757: <TabsTrigger value=\"monthly\">{t('detail_hub.timecard.monthly_report')}</TabsTrigger>\n758: </TabsList>"
+            "line": 761,
+            "context": "760: <TabsTrigger value=\"weekly\">{t('detail_hub.timecard.weekly_summary')}</TabsTrigger>\n761: <TabsTrigger value=\"monthly\">{t('detail_hub.timecard.monthly_report')}</TabsTrigger>\n762: </TabsList>"
           },
           {
             "key": "detail_hub.timecard.filters.todays_timecards",
-            "line": 764,
-            "context": "763: <CardTitle>\n764: {dateFilter === 'today' && t('detail_hub.timecard.filters.todays_timecards')}\n765: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}"
+            "line": 768,
+            "context": "767: <CardTitle>\n768: {dateFilter === 'today' && t('detail_hub.timecard.filters.todays_timecards')}\n769: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}"
           },
           {
             "key": "detail_hub.timecard.filters.this_weeks_timecards",
-            "line": 765,
-            "context": "764: {dateFilter === 'today' && t('detail_hub.timecard.filters.todays_timecards')}\n765: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n766: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}"
+            "line": 769,
+            "context": "768: {dateFilter === 'today' && t('detail_hub.timecard.filters.todays_timecards')}\n769: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n770: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}"
           },
           {
             "key": "detail_hub.timecard.filters.last_weeks_timecards",
-            "line": 766,
-            "context": "765: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n766: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n767: {dateFilter === 'custom' && customDateRange.from && ("
-          },
-          {
-            "key": "detail_hub.timecard.daily_timecards",
-            "line": 769,
-            "context": "768: customDateRange.to\n769: ? `${t('detail_hub.timecard.daily_timecards')} (${format(customDateRange.from, 'MMM d')} - ${format(customDateRange.to, 'MMM d, yyyy')})`\n770: : `${t('detail_hub.timecard.daily_timecards')} - ${format(customDateRange.from, \"MMMM d, yyyy\")}`"
-          },
-          {
-            "key": "detail_hub.timecard.daily_timecards",
             "line": 770,
-            "context": "769: ? `${t('detail_hub.timecard.daily_timecards')} (${format(customDateRange.from, 'MMM d')} - ${format(customDateRange.to, 'MMM d, yyyy')})`\n770: : `${t('detail_hub.timecard.daily_timecards')} - ${format(customDateRange.from, \"MMMM d, yyyy\")}`\n771: )}"
+            "context": "769: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n770: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n771: {dateFilter === 'custom' && customDateRange.from && ("
+          },
+          {
+            "key": "detail_hub.timecard.daily_timecards",
+            "line": 773,
+            "context": "772: customDateRange.to\n773: ? `${t('detail_hub.timecard.daily_timecards')} (${format(customDateRange.from, 'MMM d')} - ${format(customDateRange.to, 'MMM d, yyyy')})`\n774: : `${t('detail_hub.timecard.daily_timecards')} - ${format(customDateRange.from, \"MMMM d, yyyy\")}`"
+          },
+          {
+            "key": "detail_hub.timecard.daily_timecards",
+            "line": 774,
+            "context": "773: ? `${t('detail_hub.timecard.daily_timecards')} (${format(customDateRange.from, 'MMM d')} - ${format(customDateRange.to, 'MMM d, yyyy')})`\n774: : `${t('detail_hub.timecard.daily_timecards')} - ${format(customDateRange.from, \"MMMM d, yyyy\")}`\n775: )}"
           },
           {
             "key": "detail_hub.timecard.table.employee",
-            "line": 778,
-            "context": "777: <TableRow>\n778: <TableHead>{t('detail_hub.timecard.table.employee')}</TableHead>\n779: <TableHead>{t('detail_hub.timecard.table.photo')}</TableHead>"
+            "line": 782,
+            "context": "781: <TableRow>\n782: <TableHead>{t('detail_hub.timecard.table.employee')}</TableHead>\n783: <TableHead>{t('detail_hub.timecard.table.photo')}</TableHead>"
           },
           {
             "key": "detail_hub.timecard.table.photo",
-            "line": 779,
-            "context": "778: <TableHead>{t('detail_hub.timecard.table.employee')}</TableHead>\n779: <TableHead>{t('detail_hub.timecard.table.photo')}</TableHead>\n780: <TableHead>{t('detail_hub.timecard.table.clock_in')}</TableHead>"
+            "line": 783,
+            "context": "782: <TableHead>{t('detail_hub.timecard.table.employee')}</TableHead>\n783: <TableHead>{t('detail_hub.timecard.table.photo')}</TableHead>\n784: <TableHead>{t('detail_hub.timecard.table.clock_in')}</TableHead>"
           },
           {
             "key": "detail_hub.timecard.table.clock_in",
-            "line": 780,
-            "context": "779: <TableHead>{t('detail_hub.timecard.table.photo')}</TableHead>\n780: <TableHead>{t('detail_hub.timecard.table.clock_in')}</TableHead>\n781: <TableHead>{t('detail_hub.timecard.table.clock_out')}</TableHead>"
+            "line": 784,
+            "context": "783: <TableHead>{t('detail_hub.timecard.table.photo')}</TableHead>\n784: <TableHead>{t('detail_hub.timecard.table.clock_in')}</TableHead>\n785: <TableHead>{t('detail_hub.timecard.table.clock_out')}</TableHead>"
           },
           {
             "key": "detail_hub.timecard.table.clock_out",
-            "line": 781,
-            "context": "780: <TableHead>{t('detail_hub.timecard.table.clock_in')}</TableHead>\n781: <TableHead>{t('detail_hub.timecard.table.clock_out')}</TableHead>\n782: <TableHead>{t('detail_hub.timecard.table.break')}</TableHead>"
+            "line": 785,
+            "context": "784: <TableHead>{t('detail_hub.timecard.table.clock_in')}</TableHead>\n785: <TableHead>{t('detail_hub.timecard.table.clock_out')}</TableHead>\n786: <TableHead>{t('detail_hub.timecard.table.break')}</TableHead>"
           },
           {
             "key": "detail_hub.timecard.table.break",
-            "line": 782,
-            "context": "781: <TableHead>{t('detail_hub.timecard.table.clock_out')}</TableHead>\n782: <TableHead>{t('detail_hub.timecard.table.break')}</TableHead>\n783: <TableHead>{t('detail_hub.timecard.table.total_hours')}</TableHead>"
+            "line": 786,
+            "context": "785: <TableHead>{t('detail_hub.timecard.table.clock_out')}</TableHead>\n786: <TableHead>{t('detail_hub.timecard.table.break')}</TableHead>\n787: <TableHead>{t('detail_hub.timecard.table.total_hours')}</TableHead>"
           },
           {
             "key": "detail_hub.timecard.table.total_hours",
-            "line": 783,
-            "context": "782: <TableHead>{t('detail_hub.timecard.table.break')}</TableHead>\n783: <TableHead>{t('detail_hub.timecard.table.total_hours')}</TableHead>\n784: <TableHead>{t('detail_hub.timecard.table.overtime')}</TableHead>"
+            "line": 787,
+            "context": "786: <TableHead>{t('detail_hub.timecard.table.break')}</TableHead>\n787: <TableHead>{t('detail_hub.timecard.table.total_hours')}</TableHead>\n788: <TableHead>{t('detail_hub.timecard.table.overtime')}</TableHead>"
           },
           {
             "key": "detail_hub.timecard.table.overtime",
-            "line": 784,
-            "context": "783: <TableHead>{t('detail_hub.timecard.table.total_hours')}</TableHead>\n784: <TableHead>{t('detail_hub.timecard.table.overtime')}</TableHead>\n785: <TableHead>{t('detail_hub.timecard.table.pay')}</TableHead>"
+            "line": 788,
+            "context": "787: <TableHead>{t('detail_hub.timecard.table.total_hours')}</TableHead>\n788: <TableHead>{t('detail_hub.timecard.table.overtime')}</TableHead>\n789: <TableHead>{t('detail_hub.timecard.table.pay')}</TableHead>"
           },
           {
             "key": "detail_hub.timecard.table.pay",
-            "line": 785,
-            "context": "784: <TableHead>{t('detail_hub.timecard.table.overtime')}</TableHead>\n785: <TableHead>{t('detail_hub.timecard.table.pay')}</TableHead>\n786: <TableHead>{t('detail_hub.timecard.table.status')}</TableHead>"
+            "line": 789,
+            "context": "788: <TableHead>{t('detail_hub.timecard.table.overtime')}</TableHead>\n789: <TableHead>{t('detail_hub.timecard.table.pay')}</TableHead>\n790: <TableHead>{t('detail_hub.timecard.table.status')}</TableHead>"
           },
           {
             "key": "detail_hub.timecard.table.status",
-            "line": 786,
-            "context": "785: <TableHead>{t('detail_hub.timecard.table.pay')}</TableHead>\n786: <TableHead>{t('detail_hub.timecard.table.status')}</TableHead>\n787: <TableHead className=\"w-[100px]\">{t('detail_hub.timecard.table.actions')}</TableHead>"
+            "line": 790,
+            "context": "789: <TableHead>{t('detail_hub.timecard.table.pay')}</TableHead>\n790: <TableHead>{t('detail_hub.timecard.table.status')}</TableHead>\n791: <TableHead className=\"w-[100px]\">{t('detail_hub.timecard.table.actions')}</TableHead>"
           },
           {
             "key": "detail_hub.timecard.table.actions",
-            "line": 787,
-            "context": "786: <TableHead>{t('detail_hub.timecard.table.status')}</TableHead>\n787: <TableHead className=\"w-[100px]\">{t('detail_hub.timecard.table.actions')}</TableHead>\n788: </TableRow>"
+            "line": 791,
+            "context": "790: <TableHead>{t('detail_hub.timecard.table.status')}</TableHead>\n791: <TableHead className=\"w-[100px]\">{t('detail_hub.timecard.table.actions')}</TableHead>\n792: </TableRow>"
           },
           {
             "key": "detail_hub.timecard.loading",
-            "line": 796,
-            "context": "795: <div className=\"animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900\"></div>\n796: <span className=\"text-muted-foreground\">{t('detail_hub.timecard.loading')}</span>\n797: </div>"
+            "line": 800,
+            "context": "799: <div className=\"animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900\"></div>\n800: <span className=\"text-muted-foreground\">{t('detail_hub.timecard.loading')}</span>\n801: </div>"
           },
           {
             "key": "detail_hub.timecard.no_entries",
-            "line": 804,
-            "context": "803: <Clock className=\"w-12 h-12 text-muted-foreground mx-auto mb-2\" />\n804: <p className=\"text-muted-foreground\">{t('detail_hub.timecard.no_entries')}</p>\n805: </TableCell>"
-          },
-          {
-            "key": "detail_hub.timecard.table.hours_abbr",
-            "line": 944,
-            "context": "943: </TableCell>\n944: <TableCell className=\"py-2 text-sm\">{timecard.totalHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}</TableCell>\n945: <TableCell className=\"py-2\">"
+            "line": 808,
+            "context": "807: <Clock className=\"w-12 h-12 text-muted-foreground mx-auto mb-2\" />\n808: <p className=\"text-muted-foreground\">{t('detail_hub.timecard.no_entries')}</p>\n809: </TableCell>"
           },
           {
             "key": "detail_hub.timecard.table.hours_abbr",
             "line": 948,
-            "context": "947: <span className=\"text-orange-600 font-medium text-sm\">\n948: {timecard.overtimeHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}\n949: </span>"
-          },
-          {
-            "key": "detail_hub.timecard.actions.view_logs",
-            "line": 967,
-            "context": "966: }}\n967: title={t('detail_hub.timecard.actions.view_logs')}\n968: className=\"p-1 hover:bg-gray-100 rounded transition-colors\""
-          },
-          {
-            "key": "detail_hub.timecard.actions.edit",
-            "line": 981,
-            "context": "980: }}\n981: title={t('detail_hub.timecard.actions.edit')}\n982: className=\"p-1 hover:bg-blue-50 rounded transition-colors\""
-          },
-          {
-            "key": "detail_hub.timecard.actions.disable",
-            "line": 992,
-            "context": "991: }}\n992: title={t('detail_hub.timecard.actions.disable')}\n993: className=\"p-1 hover:bg-red-50 rounded transition-colors\""
+            "context": "947: </TableCell>\n948: <TableCell className=\"py-2 text-sm\">{timecard.totalHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}</TableCell>\n949: <TableCell className=\"py-2\">"
           },
           {
             "key": "detail_hub.timecard.table.hours_abbr",
-            "line": 1096,
-            "context": "1095: </TableCell>\n1096: <TableCell className=\"py-2 text-sm\">{timecard.totalHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}</TableCell>\n1097: <TableCell className=\"py-2\">"
+            "line": 952,
+            "context": "951: <span className=\"text-orange-600 font-medium text-sm\">\n952: {timecard.overtimeHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}\n953: </span>"
+          },
+          {
+            "key": "detail_hub.timecard.actions.view_logs",
+            "line": 971,
+            "context": "970: }}\n971: title={t('detail_hub.timecard.actions.view_logs')}\n972: className=\"p-1 hover:bg-gray-100 rounded transition-colors\""
+          },
+          {
+            "key": "detail_hub.timecard.actions.edit",
+            "line": 985,
+            "context": "984: }}\n985: title={t('detail_hub.timecard.actions.edit')}\n986: className=\"p-1 hover:bg-blue-50 rounded transition-colors\""
+          },
+          {
+            "key": "detail_hub.timecard.actions.disable",
+            "line": 996,
+            "context": "995: }}\n996: title={t('detail_hub.timecard.actions.disable')}\n997: className=\"p-1 hover:bg-red-50 rounded transition-colors\""
           },
           {
             "key": "detail_hub.timecard.table.hours_abbr",
             "line": 1100,
-            "context": "1099: <span className=\"text-orange-600 font-medium text-sm\">\n1100: {timecard.overtimeHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}\n1101: </span>"
+            "context": "1099: </TableCell>\n1100: <TableCell className=\"py-2 text-sm\">{timecard.totalHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}</TableCell>\n1101: <TableCell className=\"py-2\">"
+          },
+          {
+            "key": "detail_hub.timecard.table.hours_abbr",
+            "line": 1104,
+            "context": "1103: <span className=\"text-orange-600 font-medium text-sm\">\n1104: {timecard.overtimeHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}\n1105: </span>"
           },
           {
             "key": "detail_hub.timecard.actions.view_logs",
-            "line": 1119,
-            "context": "1118: }}\n1119: title={t('detail_hub.timecard.actions.view_logs')}\n1120: className=\"p-1 hover:bg-gray-100 rounded transition-colors\""
+            "line": 1123,
+            "context": "1122: }}\n1123: title={t('detail_hub.timecard.actions.view_logs')}\n1124: className=\"p-1 hover:bg-gray-100 rounded transition-colors\""
           },
           {
             "key": "detail_hub.timecard.actions.edit",
-            "line": 1133,
-            "context": "1132: }}\n1133: title={t('detail_hub.timecard.actions.edit')}\n1134: className=\"p-1 hover:bg-blue-50 rounded transition-colors\""
+            "line": 1137,
+            "context": "1136: }}\n1137: title={t('detail_hub.timecard.actions.edit')}\n1138: className=\"p-1 hover:bg-blue-50 rounded transition-colors\""
           },
           {
             "key": "detail_hub.timecard.actions.disable",
-            "line": 1144,
-            "context": "1143: }}\n1144: title={t('detail_hub.timecard.actions.disable')}\n1145: className=\"p-1 hover:bg-red-50 rounded transition-colors\""
+            "line": 1148,
+            "context": "1147: }}\n1148: title={t('detail_hub.timecard.actions.disable')}\n1149: className=\"p-1 hover:bg-red-50 rounded transition-colors\""
           },
           {
             "key": "detail_hub.timecard.filters.this_weeks_timecards",
-            "line": 1165,
-            "context": "1164: {dateFilter === 'today' && 'Today\\'s Summary'}\n1165: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1166: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}"
+            "line": 1169,
+            "context": "1168: {dateFilter === 'today' && 'Today\\'s Summary'}\n1169: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1170: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}"
           },
           {
             "key": "detail_hub.timecard.filters.last_weeks_timecards",
-            "line": 1166,
-            "context": "1165: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1166: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1167: {dateFilter === 'custom' && customDateRange.from && ("
+            "line": 1170,
+            "context": "1169: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1170: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1171: {dateFilter === 'custom' && customDateRange.from && ("
           },
           {
             "key": "detail_hub.timecard.monthly_report",
-            "line": 1337,
-            "context": "1336: <CardHeader>\n1337: <CardTitle>{t('detail_hub.timecard.monthly_report')}</CardTitle>\n1338: </CardHeader>"
+            "line": 1341,
+            "context": "1340: <CardHeader>\n1341: <CardTitle>{t('detail_hub.timecard.monthly_report')}</CardTitle>\n1342: </CardHeader>"
           },
           {
             "key": "detail_hub.timecard.disable_dialog.title",
-            "line": 1400,
-            "context": "1399: <AlertDialogHeader>\n1400: <AlertDialogTitle>{t('detail_hub.timecard.disable_dialog.title')}</AlertDialogTitle>\n1401: <AlertDialogDescription>"
+            "line": 1404,
+            "context": "1403: <AlertDialogHeader>\n1404: <AlertDialogTitle>{t('detail_hub.timecard.disable_dialog.title')}</AlertDialogTitle>\n1405: <AlertDialogDescription>"
           },
           {
             "key": "detail_hub.timecard.disable_dialog.description",
-            "line": 1402,
-            "context": "1401: <AlertDialogDescription>\n1402: {t('detail_hub.timecard.disable_dialog.description')}\n1403: </AlertDialogDescription>"
+            "line": 1406,
+            "context": "1405: <AlertDialogDescription>\n1406: {t('detail_hub.timecard.disable_dialog.description')}\n1407: </AlertDialogDescription>"
           },
           {
             "key": "detail_hub.timecard.disable_dialog.cancel",
-            "line": 1406,
-            "context": "1405: <AlertDialogFooter>\n1406: <AlertDialogCancel>{t('detail_hub.timecard.disable_dialog.cancel')}</AlertDialogCancel>\n1407: <AlertDialogAction"
+            "line": 1410,
+            "context": "1409: <AlertDialogFooter>\n1410: <AlertDialogCancel>{t('detail_hub.timecard.disable_dialog.cancel')}</AlertDialogCancel>\n1411: <AlertDialogAction"
           },
           {
             "key": "detail_hub.timecard.disable_dialog.confirm",
-            "line": 1416,
-            "context": "1415: >\n1416: {t('detail_hub.timecard.disable_dialog.confirm')}\n1417: </AlertDialogAction>"
+            "line": 1420,
+            "context": "1419: >\n1420: {t('detail_hub.timecard.disable_dialog.confirm')}\n1421: </AlertDialogAction>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.title",
-            "line": 1427,
-            "context": "1426: <DialogHeader>\n1427: <DialogTitle>{t('detail_hub.timecard.photo_viewer.title')}</DialogTitle>\n1428: </DialogHeader>"
+            "line": 1431,
+            "context": "1430: <DialogHeader>\n1431: <DialogTitle>{t('detail_hub.timecard.photo_viewer.title')}</DialogTitle>\n1432: </DialogHeader>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.employee",
-            "line": 1434,
-            "context": "1433: <div>\n1434: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.employee')}</p>\n1435: <p className=\"font-medium\">{selectedPhoto.employeeName}</p>"
+            "line": 1438,
+            "context": "1437: <div>\n1438: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.employee')}</p>\n1439: <p className=\"font-medium\">{selectedPhoto.employeeName}</p>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.timestamp",
-            "line": 1439,
-            "context": "1438: <div>\n1439: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.timestamp')}</p>\n1440: <p className=\"font-medium\">{selectedPhoto.timestamp}</p>"
+            "line": 1443,
+            "context": "1442: <div>\n1443: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.timestamp')}</p>\n1444: <p className=\"font-medium\">{selectedPhoto.timestamp}</p>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.clock_in",
-            "line": 1442,
-            "context": "1441: <Badge variant=\"outline\" className={selectedPhoto.type === 'clock_in' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}>\n1442: {selectedPhoto.type === 'clock_in' ? t('detail_hub.timecard.photo_viewer.clock_in') : t('detail_hub.timecard.photo_viewer.clock_out')}\n1443: </Badge>"
+            "line": 1446,
+            "context": "1445: <Badge variant=\"outline\" className={selectedPhoto.type === 'clock_in' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}>\n1446: {selectedPhoto.type === 'clock_in' ? t('detail_hub.timecard.photo_viewer.clock_in') : t('detail_hub.timecard.photo_viewer.clock_out')}\n1447: </Badge>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.clock_out",
-            "line": 1442,
-            "context": "1441: <Badge variant=\"outline\" className={selectedPhoto.type === 'clock_in' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}>\n1442: {selectedPhoto.type === 'clock_in' ? t('detail_hub.timecard.photo_viewer.clock_in') : t('detail_hub.timecard.photo_viewer.clock_out')}\n1443: </Badge>"
+            "line": 1446,
+            "context": "1445: <Badge variant=\"outline\" className={selectedPhoto.type === 'clock_in' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}>\n1446: {selectedPhoto.type === 'clock_in' ? t('detail_hub.timecard.photo_viewer.clock_in') : t('detail_hub.timecard.photo_viewer.clock_out')}\n1447: </Badge>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.kiosk",
-            "line": 1455,
-            "context": "1454: <div>\n1455: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.kiosk')}</p>\n1456: <p className=\"font-medium text-sm\">{fullEntry.kiosk_id}</p>"
+            "line": 1459,
+            "context": "1458: <div>\n1459: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.kiosk')}</p>\n1460: <p className=\"font-medium text-sm\">{fullEntry.kiosk_id}</p>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.location",
-            "line": 1461,
-            "context": "1460: <div>\n1461: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.location')}</p>\n1462: <p className=\"font-medium text-sm\">{fullEntry.ip_address}</p>"
+            "line": 1465,
+            "context": "1464: <div>\n1465: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.location')}</p>\n1466: <p className=\"font-medium text-sm\">{fullEntry.ip_address}</p>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.method",
-            "line": 1487,
-            "context": "1486: <span className=\"text-muted-foreground\">\n1487: {t('detail_hub.timecard.photo_viewer.method')}: <span className=\"font-medium text-gray-700\">{selectedPhoto.method}</span>\n1488: </span>"
+            "line": 1491,
+            "context": "1490: <span className=\"text-muted-foreground\">\n1491: {t('detail_hub.timecard.photo_viewer.method')}: <span className=\"font-medium text-gray-700\">{selectedPhoto.method}</span>\n1492: </span>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.captured_at",
-            "line": 1496,
-            "context": "1495: <div className=\"text-muted-foreground\">\n1496: {t('detail_hub.timecard.photo_viewer.captured_at')}: <span className=\"font-medium text-gray-700\">{format(new Date(fullEntry.created_at), 'MMMM d, yyyy h:mm a')}</span>\n1497: </div>"
+            "line": 1500,
+            "context": "1499: <div className=\"text-muted-foreground\">\n1500: {t('detail_hub.timecard.photo_viewer.captured_at')}: <span className=\"font-medium text-gray-700\">{format(new Date(fullEntry.created_at), 'MMMM d, yyyy h:mm a')}</span>\n1501: </div>"
           }
         ],
         "coverage": 81,
@@ -13986,6 +13986,212 @@
           }
         ],
         "coverage": 79,
+        "severity": "medium"
+      },
+      {
+        "file": "src\\components\\detail-hub\\LiveStatusDashboard.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Clock In Photo",
+            "line": 323,
+            "context": "322: <div className=\"space-y-2\">\n323: <h4 className=\"font-semibold text-sm\">Clock In Photo</h4>\n324: {employee.photo_in_url ? ("
+          },
+          {
+            "text": "No photo available",
+            "line": 332,
+            "context": "331: <div className=\"w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center\">\n332: <p className=\"text-sm text-gray-500\">No photo available</p>\n333: </div>"
+          },
+          {
+            "text": "On time",
+            "line": 389,
+            "context": "388: <CheckCircle className=\"w-3 h-3\" />\n389: <span>On time</span>\n390: </div>"
+          },
+          {
+            "text": "No photo available",
+            "line": 446,
+            "context": "445: <div className=\"w-full h-96 bg-gray-100 rounded-lg flex items-center justify-center\">\n446: <p className=\"text-gray-500\">No photo available</p>\n447: </div>"
+          },
+          {
+            "text": "Active",
+            "line": 551,
+            "context": "550: <>\n551: <div className=\"w-2 h-2 rounded-full bg-emerald-500 mr-1 animate-pulse\" />\n552: Active"
+          },
+          {
+            "text": "No photo available",
+            "line": 589,
+            "context": "588: <div className=\"w-full h-96 bg-gray-100 rounded-lg flex items-center justify-center\">\n589: <p className=\"text-gray-500\">No photo available</p>\n590: </div>"
+          },
+          {
+            "text": "Clock in verification photo",
+            "line": 327,
+            "context": "326: src={employee.photo_in_url}\n327: alt=\"Clock in verification photo\"\n328: className=\"w-full rounded-lg border-2 border-gray-200\""
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "detail_hub.live_dashboard.title",
+            "line": 74,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.subtitle",
+            "line": 77,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.clocked_in",
+            "line": 113,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.on_break",
+            "line": 131,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.total_hours_today",
+            "line": 149,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.active_departments",
+            "line": 167,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.no_employees_working",
+            "line": 187,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.on_break",
+            "line": 298,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.active",
+            "line": 303,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.clocked_in_at",
+            "line": 313,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.elapsed_time",
+            "line": 344,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.break_duration",
+            "line": 353,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.view_details",
+            "line": 414,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.edit",
+            "line": 423,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.clock_in",
+            "line": 522,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.elapsed",
+            "line": 530,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "detail_hub.live_dashboard.title",
+            "line": 74,
+            "context": "73: <h1 className=\"text-3xl font-bold tracking-tight text-gray-900\">\n74: {t('detail_hub.live_dashboard.title')}\n75: </h1>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.subtitle",
+            "line": 77,
+            "context": "76: <p className=\"text-gray-500 mt-1\">\n77: {t('detail_hub.live_dashboard.subtitle')}\n78: </p>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.clocked_in",
+            "line": 113,
+            "context": "112: <p className=\"text-sm font-medium text-gray-500\">\n113: {t('detail_hub.live_dashboard.stats.clocked_in')}\n114: </p>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.on_break",
+            "line": 131,
+            "context": "130: <p className=\"text-sm font-medium text-gray-500\">\n131: {t('detail_hub.live_dashboard.stats.on_break')}\n132: </p>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.total_hours_today",
+            "line": 149,
+            "context": "148: <p className=\"text-sm font-medium text-gray-500\">\n149: {t('detail_hub.live_dashboard.stats.total_hours_today')}\n150: </p>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.stats.active_departments",
+            "line": 167,
+            "context": "166: <p className=\"text-sm font-medium text-gray-500\">\n167: {t('detail_hub.live_dashboard.stats.active_departments')}\n168: </p>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.no_employees_working",
+            "line": 187,
+            "context": "186: <p className=\"text-muted-foreground\">\n187: {t('detail_hub.live_dashboard.no_employees_working')}\n188: </p>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.on_break",
+            "line": 298,
+            "context": "297: <Coffee className=\"w-3 h-3 mr-1\" />\n298: {t('detail_hub.live_dashboard.on_break')}\n299: </>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.active",
+            "line": 303,
+            "context": "302: <div className=\"w-2 h-2 rounded-full bg-emerald-500 mr-1 animate-pulse\" />\n303: {t('detail_hub.live_dashboard.active')}\n304: </>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.clocked_in_at",
+            "line": 313,
+            "context": "312: <span className=\"text-gray-500\">\n313: {t('detail_hub.live_dashboard.clocked_in_at')}\n314: </span>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.elapsed_time",
+            "line": 344,
+            "context": "343: <span className=\"text-sm text-gray-500\">\n344: {t('detail_hub.live_dashboard.elapsed_time')}\n345: </span>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.break_duration",
+            "line": 353,
+            "context": "352: <span className=\"text-amber-600\">\n353: {t('detail_hub.live_dashboard.break_duration')}\n354: </span>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.view_details",
+            "line": 414,
+            "context": "413: <Eye className=\"w-3 h-3 mr-1\" />\n414: {t('detail_hub.live_dashboard.view_details')}\n415: </Button>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.edit",
+            "line": 423,
+            "context": "422: <Edit className=\"w-3 h-3 mr-1\" />\n423: {t('detail_hub.live_dashboard.edit')}\n424: </Button>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.clock_in",
+            "line": 522,
+            "context": "521: <p className=\"text-xs text-gray-500\">\n522: {t('detail_hub.live_dashboard.clock_in')}\n523: </p>"
+          },
+          {
+            "key": "detail_hub.live_dashboard.elapsed",
+            "line": 530,
+            "context": "529: <p className=\"text-xs text-gray-500\">\n530: {t('detail_hub.live_dashboard.elapsed')}\n531: </p>"
+          }
+        ],
+        "coverage": 70,
         "severity": "medium"
       },
       {
@@ -35619,202 +35825,6 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\detail-hub\\LiveStatusDashboard.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Clock In Photo",
-            "line": 302,
-            "context": "301: <div className=\"space-y-2\">\n302: <h4 className=\"font-semibold text-sm\">Clock In Photo</h4>\n303: {employee.photo_in_url ? ("
-          },
-          {
-            "text": "No photo available",
-            "line": 311,
-            "context": "310: <div className=\"w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center\">\n311: <p className=\"text-sm text-gray-500\">No photo available</p>\n312: </div>"
-          },
-          {
-            "text": "On time",
-            "line": 368,
-            "context": "367: <CheckCircle className=\"w-3 h-3\" />\n368: <span>On time</span>\n369: </div>"
-          },
-          {
-            "text": "Active",
-            "line": 488,
-            "context": "487: <>\n488: <div className=\"w-2 h-2 rounded-full bg-emerald-500 mr-1 animate-pulse\" />\n489: Active"
-          },
-          {
-            "text": "Clock in verification photo",
-            "line": 306,
-            "context": "305: src={employee.photo_in_url}\n306: alt=\"Clock in verification photo\"\n307: className=\"w-full rounded-lg border-2 border-gray-200\""
-          }
-        ],
-        "translationCalls": [
-          {
-            "key": "detail_hub.live_dashboard.title",
-            "line": 61,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.subtitle",
-            "line": 64,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.stats.clocked_in",
-            "line": 100,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.stats.on_break",
-            "line": 118,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.stats.total_hours_today",
-            "line": 136,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.stats.active_departments",
-            "line": 154,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.no_employees_working",
-            "line": 174,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.on_break",
-            "line": 277,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.active",
-            "line": 282,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.clocked_in_at",
-            "line": 292,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.elapsed_time",
-            "line": 323,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.break_duration",
-            "line": 332,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.view_details",
-            "line": 393,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.edit",
-            "line": 402,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.clock_in",
-            "line": 459,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.elapsed",
-            "line": 467,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "detail_hub.live_dashboard.title",
-            "line": 61,
-            "context": "60: <h1 className=\"text-3xl font-bold tracking-tight text-gray-900\">\n61: {t('detail_hub.live_dashboard.title')}\n62: </h1>"
-          },
-          {
-            "key": "detail_hub.live_dashboard.subtitle",
-            "line": 64,
-            "context": "63: <p className=\"text-gray-500 mt-1\">\n64: {t('detail_hub.live_dashboard.subtitle')}\n65: </p>"
-          },
-          {
-            "key": "detail_hub.live_dashboard.stats.clocked_in",
-            "line": 100,
-            "context": "99: <p className=\"text-sm font-medium text-gray-500\">\n100: {t('detail_hub.live_dashboard.stats.clocked_in')}\n101: </p>"
-          },
-          {
-            "key": "detail_hub.live_dashboard.stats.on_break",
-            "line": 118,
-            "context": "117: <p className=\"text-sm font-medium text-gray-500\">\n118: {t('detail_hub.live_dashboard.stats.on_break')}\n119: </p>"
-          },
-          {
-            "key": "detail_hub.live_dashboard.stats.total_hours_today",
-            "line": 136,
-            "context": "135: <p className=\"text-sm font-medium text-gray-500\">\n136: {t('detail_hub.live_dashboard.stats.total_hours_today')}\n137: </p>"
-          },
-          {
-            "key": "detail_hub.live_dashboard.stats.active_departments",
-            "line": 154,
-            "context": "153: <p className=\"text-sm font-medium text-gray-500\">\n154: {t('detail_hub.live_dashboard.stats.active_departments')}\n155: </p>"
-          },
-          {
-            "key": "detail_hub.live_dashboard.no_employees_working",
-            "line": 174,
-            "context": "173: <p className=\"text-muted-foreground\">\n174: {t('detail_hub.live_dashboard.no_employees_working')}\n175: </p>"
-          },
-          {
-            "key": "detail_hub.live_dashboard.on_break",
-            "line": 277,
-            "context": "276: <Coffee className=\"w-3 h-3 mr-1\" />\n277: {t('detail_hub.live_dashboard.on_break')}\n278: </>"
-          },
-          {
-            "key": "detail_hub.live_dashboard.active",
-            "line": 282,
-            "context": "281: <div className=\"w-2 h-2 rounded-full bg-emerald-500 mr-1 animate-pulse\" />\n282: {t('detail_hub.live_dashboard.active')}\n283: </>"
-          },
-          {
-            "key": "detail_hub.live_dashboard.clocked_in_at",
-            "line": 292,
-            "context": "291: <span className=\"text-gray-500\">\n292: {t('detail_hub.live_dashboard.clocked_in_at')}\n293: </span>"
-          },
-          {
-            "key": "detail_hub.live_dashboard.elapsed_time",
-            "line": 323,
-            "context": "322: <span className=\"text-sm text-gray-500\">\n323: {t('detail_hub.live_dashboard.elapsed_time')}\n324: </span>"
-          },
-          {
-            "key": "detail_hub.live_dashboard.break_duration",
-            "line": 332,
-            "context": "331: <span className=\"text-amber-600\">\n332: {t('detail_hub.live_dashboard.break_duration')}\n333: </span>"
-          },
-          {
-            "key": "detail_hub.live_dashboard.view_details",
-            "line": 393,
-            "context": "392: <Eye className=\"w-3 h-3 mr-1\" />\n393: {t('detail_hub.live_dashboard.view_details')}\n394: </Button>"
-          },
-          {
-            "key": "detail_hub.live_dashboard.edit",
-            "line": 402,
-            "context": "401: <Edit className=\"w-3 h-3 mr-1\" />\n402: {t('detail_hub.live_dashboard.edit')}\n403: </Button>"
-          },
-          {
-            "key": "detail_hub.live_dashboard.clock_in",
-            "line": 459,
-            "context": "458: <p className=\"text-xs text-gray-500\">\n459: {t('detail_hub.live_dashboard.clock_in')}\n460: </p>"
-          },
-          {
-            "key": "detail_hub.live_dashboard.elapsed",
-            "line": 467,
-            "context": "466: <p className=\"text-xs text-gray-500\">\n467: {t('detail_hub.live_dashboard.elapsed')}\n468: </p>"
-          }
-        ],
-        "coverage": 76,
-        "severity": "low"
-      },
-      {
         "file": "src\\components\\detail-hub\\ManualTimeEntryModal.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -36079,18 +36089,18 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 29,
-            "context": "28: timeEntry: TimeEntryWithPhoto;\n29: onApprove: (timeEntryId: string) => Promise<void>;\n30: onReject: (timeEntryId: string) => Promise<void>;"
+            "line": 33,
+            "context": "32: timeEntry: TimeEntryWithPhoto;\n33: onApprove: (timeEntryId: string) => Promise<void>;\n34: onReject: (timeEntryId: string) => Promise<void>;"
           },
           {
             "text": "Promise",
-            "line": 30,
-            "context": "29: onApprove: (timeEntryId: string) => Promise<void>;\n30: onReject: (timeEntryId: string) => Promise<void>;\n31: }"
+            "line": 34,
+            "context": "33: onApprove: (timeEntryId: string) => Promise<void>;\n34: onReject: (timeEntryId: string) => Promise<void>;\n35: }"
           },
           {
             "text": "Employee punch photo",
-            "line": 97,
-            "context": "96: src={timeEntry.photo_in_url}\n97: alt=\"Employee punch photo\"\n98: className=\"w-full h-48 object-cover rounded-lg border-2 border-muted\""
+            "line": 135,
+            "context": "134: src={timeEntry.photo_in_url}\n135: alt=\"Employee punch photo\"\n136: className=\"w-full h-48 object-cover rounded-lg border-2 border-muted\""
           },
           {
             "text": "Promise",
@@ -36100,69 +36110,119 @@
         ],
         "translationCalls": [
           {
-            "key": "detail_hub.photo_review.title",
-            "line": 71,
+            "key": "detail_hub.timecard.photo_review.title",
+            "line": 75,
             "exists": false
           },
           {
-            "key": "detail_hub.photo_review.pending_review",
-            "line": 74,
+            "key": "detail_hub.timecard.photo_review.pending_review",
+            "line": 78,
             "exists": false
           },
           {
-            "key": "detail_hub.photo_review.photo_punch",
-            "line": 103,
+            "key": "detail_hub.timecard.photo_review.punch_in_label",
+            "line": 104,
             "exists": false
           },
           {
-            "key": "detail_hub.photo_review.reject",
-            "line": 117,
+            "key": "detail_hub.timecard.photo_review.punch_out_label",
+            "line": 114,
             "exists": false
           },
           {
-            "key": "detail_hub.photo_review.approve",
-            "line": 125,
+            "key": "detail_hub.timecard.photo_review.total_hours",
+            "line": 124,
             "exists": false
           },
           {
-            "key": "detail_hub.photo_review.verify_identity",
-            "line": 131,
+            "key": "detail_hub.timecard.photo_review.hours_abbr",
+            "line": 124,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.photo_review.photo_punch_out",
+            "line": 142,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.photo_review.photo_punch_in",
+            "line": 143,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.photo_review.reject",
+            "line": 158,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.photo_review.approve",
+            "line": 166,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.photo_review.verify_identity",
+            "line": 172,
             "exists": false
           }
         ],
         "missingKeys": [
           {
-            "key": "detail_hub.photo_review.title",
-            "line": 71,
-            "context": "70: <Camera className=\"w-4 h-4 text-amber-500\" />\n71: {t('detail_hub.photo_review.title')}\n72: </CardTitle>"
+            "key": "detail_hub.timecard.photo_review.title",
+            "line": 75,
+            "context": "74: <Camera className=\"w-4 h-4 text-amber-500\" />\n75: {t('detail_hub.timecard.photo_review.title')}\n76: </CardTitle>"
           },
           {
-            "key": "detail_hub.photo_review.pending_review",
-            "line": 74,
-            "context": "73: <Badge variant=\"outline\" className=\"bg-amber-50 text-amber-700 border-amber-200\">\n74: {t('detail_hub.photo_review.pending_review')}\n75: </Badge>"
+            "key": "detail_hub.timecard.photo_review.pending_review",
+            "line": 78,
+            "context": "77: <Badge variant=\"outline\" className=\"bg-amber-50 text-amber-700 border-amber-200\">\n78: {t('detail_hub.timecard.photo_review.pending_review')}\n79: </Badge>"
           },
           {
-            "key": "detail_hub.photo_review.photo_punch",
-            "line": 103,
-            "context": "102: <Badge className=\"bg-indigo-500 text-white\">\n103: {t('detail_hub.photo_review.photo_punch')}\n104: </Badge>"
+            "key": "detail_hub.timecard.photo_review.punch_in_label",
+            "line": 104,
+            "context": "103: <span className=\"text-xs text-muted-foreground min-w-[60px]\">\n104: {t('detail_hub.timecard.photo_review.punch_in_label')}:\n105: </span>"
           },
           {
-            "key": "detail_hub.photo_review.reject",
-            "line": 117,
-            "context": "116: <XCircle className=\"w-4 h-4 mr-2\" />\n117: {t('detail_hub.photo_review.reject')}\n118: </Button>"
+            "key": "detail_hub.timecard.photo_review.punch_out_label",
+            "line": 114,
+            "context": "113: <span className=\"text-xs text-muted-foreground min-w-[60px]\">\n114: {t('detail_hub.timecard.photo_review.punch_out_label')}:\n115: </span>"
           },
           {
-            "key": "detail_hub.photo_review.approve",
-            "line": 125,
-            "context": "124: <CheckCircle className=\"w-4 h-4 mr-2\" />\n125: {t('detail_hub.photo_review.approve')}\n126: </Button>"
+            "key": "detail_hub.timecard.photo_review.total_hours",
+            "line": 124,
+            "context": "123: <Badge variant=\"secondary\" className=\"text-xs\">\n124: ⏱️ {t('detail_hub.timecard.photo_review.total_hours')}: {timeEntry.total_hours.toFixed(2)}{t('detail_hub.timecard.photo_review.hours_abbr')}\n125: </Badge>"
           },
           {
-            "key": "detail_hub.photo_review.verify_identity",
-            "line": 131,
-            "context": "130: <p className=\"text-xs text-muted-foreground text-center\">\n131: {t('detail_hub.photo_review.verify_identity')}\n132: </p>"
+            "key": "detail_hub.timecard.photo_review.hours_abbr",
+            "line": 124,
+            "context": "123: <Badge variant=\"secondary\" className=\"text-xs\">\n124: ⏱️ {t('detail_hub.timecard.photo_review.total_hours')}: {timeEntry.total_hours.toFixed(2)}{t('detail_hub.timecard.photo_review.hours_abbr')}\n125: </Badge>"
+          },
+          {
+            "key": "detail_hub.timecard.photo_review.photo_punch_out",
+            "line": 142,
+            "context": "141: {timeEntry.clock_out\n142: ? t('detail_hub.timecard.photo_review.photo_punch_out')\n143: : t('detail_hub.timecard.photo_review.photo_punch_in')"
+          },
+          {
+            "key": "detail_hub.timecard.photo_review.photo_punch_in",
+            "line": 143,
+            "context": "142: ? t('detail_hub.timecard.photo_review.photo_punch_out')\n143: : t('detail_hub.timecard.photo_review.photo_punch_in')\n144: }"
+          },
+          {
+            "key": "detail_hub.timecard.photo_review.reject",
+            "line": 158,
+            "context": "157: <XCircle className=\"w-4 h-4 mr-2\" />\n158: {t('detail_hub.timecard.photo_review.reject')}\n159: </Button>"
+          },
+          {
+            "key": "detail_hub.timecard.photo_review.approve",
+            "line": 166,
+            "context": "165: <CheckCircle className=\"w-4 h-4 mr-2\" />\n166: {t('detail_hub.timecard.photo_review.approve')}\n167: </Button>"
+          },
+          {
+            "key": "detail_hub.timecard.photo_review.verify_identity",
+            "line": 172,
+            "context": "171: <p className=\"text-xs text-muted-foreground text-center\">\n172: {t('detail_hub.timecard.photo_review.verify_identity')}\n173: </p>"
           }
         ],
-        "coverage": 60,
+        "coverage": 73,
         "severity": "low"
       },
       {
@@ -39772,7 +39832,13 @@
       },
       {
         "file": "src\\components\\detail-hub\\TimeClockButton.tsx",
-        "hardcodedStrings": [],
+        "hardcodedStrings": [
+          {
+            "text": "Time Clock",
+            "line": 50,
+            "context": "49: <Clock className=\"h-4 w-4\" />\n50: <span className=\"hidden sm:inline\">Time Clock</span>\n51: "
+          }
+        ],
         "translationCalls": [
           {
             "key": "detail_hub.dashboard.quick_actions.time_clock",
@@ -39781,7 +39847,7 @@
           },
           {
             "key": "detail_hub.dashboard.quick_actions.time_clock",
-            "line": 63,
+            "line": 64,
             "exists": false
           }
         ],
@@ -39793,11 +39859,11 @@
           },
           {
             "key": "detail_hub.dashboard.quick_actions.time_clock",
-            "line": 63,
-            "context": "62: <TooltipContent>\n63: <p>{t('detail_hub.dashboard.quick_actions.time_clock')}</p>\n64: {activeCount > 0 && ("
+            "line": 64,
+            "context": "63: <TooltipContent>\n64: <p className=\"font-semibold\">{t('detail_hub.dashboard.quick_actions.time_clock')}</p>\n65: {activeCount > 0 && ("
           }
         ],
-        "coverage": 100,
+        "coverage": 67,
         "severity": "low"
       },
       {
@@ -102123,6 +102189,7 @@
         "src\\components\\settings\\RoleNotificationSettings.tsx",
         "src\\hooks\\useChatMessages.tsx",
         "src\\hooks\\useChatPermissions.tsx",
+        "src\\components\\detail-hub\\LiveStatusDashboard.tsx",
         "src\\components\\ErrorBoundary.tsx",
         "src\\components\\get-ready\\VehicleDetailPanel.tsx",
         "src\\components\\orders\\AttachmentUploader.tsx",
@@ -102145,7 +102212,6 @@
         "src\\hooks\\useVehiclePhotos.ts",
         "src\\lib\\cloudSync.ts",
         "src\\components\\chat\\FloatingChatBubble.tsx",
-        "src\\components\\detail-hub\\LiveStatusDashboard.tsx",
         "src\\components\\get-ready\\approvals\\PendingApprovalsTable.tsx",
         "src\\components\\get-ready\\GetReadyAlerts.tsx",
         "src\\components\\invitations\\InvitationManagement.tsx",
@@ -102277,6 +102343,7 @@
         "src\\components\\dealerships\\LogoUploader.tsx",
         "src\\components\\debug\\SimpleSalesOrders.tsx",
         "src\\components\\detail-hub\\DetailHubDashboard.tsx",
+        "src\\components\\detail-hub\\TimeClockButton.tsx",
         "src\\components\\get-ready\\analytics\\BottleneckAnalysis.tsx",
         "src\\components\\get-ready\\approvals\\ApprovalHeader.tsx",
         "src\\components\\get-ready\\GetReadyDashboardWidget.tsx",
@@ -102394,7 +102461,6 @@
         "src\\components\\detail-hub\\punch-clock\\WeekStatsCard.tsx",
         "src\\components\\detail-hub\\ScheduleCalendar.tsx",
         "src\\components\\detail-hub\\ScheduleList.tsx",
-        "src\\components\\detail-hub\\TimeClockButton.tsx",
         "src\\components\\detail-hub\\WeekStatsCard.tsx",
         "src\\components\\filters\\DealershipFilter.tsx",
         "src\\components\\get-ready\\analytics\\SafeBarChart.tsx",
@@ -102583,7 +102649,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "8511 translation keys are referenced but missing",
+      "description": "8516 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "426 hours"
     }

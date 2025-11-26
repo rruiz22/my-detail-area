@@ -72,10 +72,10 @@ export function PhotoReviewCard({ timeEntry, onApprove, onReject }: PhotoReviewC
         <div className="flex items-center justify-between">
           <CardTitle className="text-base flex items-center gap-2">
             <Camera className="w-4 h-4 text-amber-500" />
-            {t('detail_hub.photo_review.title')}
+            {t('detail_hub.timecard.photo_review.title')}
           </CardTitle>
           <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
-            {t('detail_hub.photo_review.pending_review')}
+            {t('detail_hub.timecard.photo_review.pending_review')}
           </Badge>
         </div>
       </CardHeader>
@@ -101,7 +101,7 @@ export function PhotoReviewCard({ timeEntry, onApprove, onReject }: PhotoReviewC
             <div className="flex items-center gap-2 text-sm">
               <Clock className="w-4 h-4 text-emerald-600" />
               <span className="text-xs text-muted-foreground min-w-[60px]">
-                {t('detail_hub.photo_review.punch_in_label')}:
+                {t('detail_hub.timecard.photo_review.punch_in_label')}:
               </span>
               <span className="font-medium">{formatTime(timeEntry.clock_in)}</span>
             </div>
@@ -111,7 +111,7 @@ export function PhotoReviewCard({ timeEntry, onApprove, onReject }: PhotoReviewC
               <div className="flex items-center gap-2 text-sm">
                 <Clock className="w-4 h-4 text-red-600" />
                 <span className="text-xs text-muted-foreground min-w-[60px]">
-                  {t('detail_hub.photo_review.punch_out_label')}:
+                  {t('detail_hub.timecard.photo_review.punch_out_label')}:
                 </span>
                 <span className="font-medium">{formatTime(timeEntry.clock_out)}</span>
               </div>
@@ -121,7 +121,7 @@ export function PhotoReviewCard({ timeEntry, onApprove, onReject }: PhotoReviewC
             {timeEntry.clock_out && timeEntry.total_hours !== null && timeEntry.total_hours !== undefined && (
               <div className="flex items-start gap-2">
                 <Badge variant="secondary" className="text-xs">
-                  ⏱️ {t('detail_hub.photo_review.total_hours')}: {timeEntry.total_hours.toFixed(2)}{t('detail_hub.photo_review.hours_abbr')}
+                  ⏱️ {t('detail_hub.timecard.photo_review.total_hours')}: {timeEntry.total_hours.toFixed(2)}{t('detail_hub.timecard.photo_review.hours_abbr')}
                 </Badge>
               </div>
             )}
@@ -138,7 +138,10 @@ export function PhotoReviewCard({ timeEntry, onApprove, onReject }: PhotoReviewC
           />
           <div className="absolute top-2 left-2">
             <Badge className="bg-indigo-500 text-white">
-              {t('detail_hub.photo_review.photo_punch')}
+              {timeEntry.clock_out
+                ? t('detail_hub.timecard.photo_review.photo_punch_out')
+                : t('detail_hub.timecard.photo_review.photo_punch_in')
+              }
             </Badge>
           </div>
         </div>
@@ -152,7 +155,7 @@ export function PhotoReviewCard({ timeEntry, onApprove, onReject }: PhotoReviewC
             disabled={loading}
           >
             <XCircle className="w-4 h-4 mr-2" />
-            {t('detail_hub.photo_review.reject')}
+            {t('detail_hub.timecard.photo_review.reject')}
           </Button>
           <Button
             className="flex-1 bg-emerald-600 hover:bg-emerald-700"
@@ -160,13 +163,13 @@ export function PhotoReviewCard({ timeEntry, onApprove, onReject }: PhotoReviewC
             disabled={loading}
           >
             <CheckCircle className="w-4 h-4 mr-2" />
-            {t('detail_hub.photo_review.approve')}
+            {t('detail_hub.timecard.photo_review.approve')}
           </Button>
         </div>
 
         {/* Helper Text */}
         <p className="text-xs text-muted-foreground text-center">
-          {t('detail_hub.photo_review.verify_identity')}
+          {t('detail_hub.timecard.photo_review.verify_identity')}
         </p>
       </CardContent>
     </Card>

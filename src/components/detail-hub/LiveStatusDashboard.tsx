@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   Clock,
   Coffee,
@@ -15,7 +16,8 @@ import {
   Eye,
   Edit,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  X
 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -30,16 +32,83 @@ import {
 
 // Employee Detail Modal
 import { EmployeeDetailModal } from "./EmployeeDetailModal";
+import { EditTimeEntryModal } from "./EditTimeEntryModal";
+import { TimeEntryWithEmployee } from "@/hooks/useDetailHubDatabase";
+import { useQueryClient } from "@tanstack/react-query";
 
 const LiveStatusDashboard = () => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedEmployee, setSelectedEmployee] = useState<CurrentlyWorkingEmployee | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedTimeEntry, setSelectedTimeEntry] = useState<TimeEntryWithEmployee | null>(null);
 
   // Real-time data (updates every 30 seconds)
   const { data: employees = [], isLoading } = useCurrentlyWorking();
   const { data: stats } = useLiveDashboardStats();
+
+  // Department label mapping - capitalized versions
+  const getDepartmentLabel = (departmentKey: string): string => {
+    // Format the key to display name (capitalize and replace underscore)
+    if (departmentKey === 'car_wash') return 'Car Wash';
+    if (departmentKey === 'detail') return 'Detail';
+    if (departmentKey === 'service') return 'Service';
+    if (departmentKey === 'management') return 'Management';
+    // Fallback: capitalize first letter
+    return departmentKey.charAt(0).toUpperCase() + departmentKey.slice(1);
+  };
+
+  // Transform CurrentlyWorkingEmployee to TimeEntryWithEmployee for editing
+  const transformToTimeEntry = (employee: CurrentlyWorkingEmployee): TimeEntryWithEmployee => {
+    return {
+      id: employee.time_entry_id,
+      employee_id: employee.employee_id,
+      dealership_id: employee.dealership_id,
+      clock_in: employee.clock_in,
+      clock_out: null, // Active employees haven't clocked out yet
+      break_start: employee.break_start,
+      break_end: null, // If on break, break_end is null
+      break_duration_minutes: employee.break_elapsed_minutes || 0,
+      total_hours: null,
+      regular_hours: null,
+      overtime_hours: null,
+      punch_in_method: null,
+      punch_out_method: null,
+      face_confidence_in: null,
+      face_confidence_out: null,
+      photo_in_url: employee.photo_in_url,
+      photo_out_url: null,
+      requires_manual_verification: false,
+      verified_by: null,
+      verified_at: null,
+      kiosk_id: employee.kiosk_id,
+      ip_address: null,
+      user_agent: null,
+      status: 'active',
+      notes: null,
+      created_at: employee.clock_in,
+      updated_at: employee.clock_in,
+      employee_name: employee.employee_name,
+      employee_number: employee.employee_number
+    };
+  };
+
+  // Handler for editing time entry
+  const handleEditTimeEntry = (employee: CurrentlyWorkingEmployee) => {
+    const timeEntry = transformToTimeEntry(employee);
+    setSelectedTimeEntry(timeEntry);
+    setShowEditModal(true);
+  };
+
+  // Handler for closing edit modal and refreshing data
+  const handleEditModalClose = () => {
+    setShowEditModal(false);
+    setSelectedTimeEntry(null);
+    // Invalidate queries to refresh the dashboard
+    queryClient.invalidateQueries({ queryKey: ['detail-hub', 'currently-working'] });
+  };
 
   if (isLoading) {
     return (
@@ -186,27 +255,23 @@ const LiveStatusDashboard = () => {
               <EmployeeCardGrid
                 key={employee.employee_id}
                 employee={employee}
+                getDepartmentLabel={getDepartmentLabel}
                 onView={() => {
                   setSelectedEmployee(employee);
                   setShowDetailModal(true);
                 }}
-                onEdit={() => {
-                  setSelectedEmployee(employee);
-                  setShowDetailModal(true);
-                }}
+                onEdit={() => handleEditTimeEntry(employee)}
               />
             ) : (
               <EmployeeCardList
                 key={employee.employee_id}
                 employee={employee}
+                getDepartmentLabel={getDepartmentLabel}
                 onView={() => {
                   setSelectedEmployee(employee);
                   setShowDetailModal(true);
                 }}
-                onEdit={() => {
-                  setSelectedEmployee(employee);
-                  setShowDetailModal(true);
-                }}
+                onEdit={() => handleEditTimeEntry(employee)}
               />
             )
           ))}
@@ -224,6 +289,13 @@ const LiveStatusDashboard = () => {
           }}
         />
       )}
+
+      {/* Edit Time Entry Modal */}
+      <EditTimeEntryModal
+        open={showEditModal}
+        onOpenChange={handleEditModalClose}
+        timeEntry={selectedTimeEntry}
+      />
     </div>
   );
 };
@@ -234,35 +306,41 @@ const LiveStatusDashboard = () => {
 
 interface EmployeeCardProps {
   employee: any;
+  getDepartmentLabel: (key: string) => string;
   onView: () => void;
   onEdit: () => void;
 }
 
-function EmployeeCardGrid({ employee, onView, onEdit }: EmployeeCardProps) {
+function EmployeeCardGrid({ employee, getDepartmentLabel, onView, onEdit }: EmployeeCardProps) {
   const { t } = useTranslation();
   const elapsedTime = useElapsedTime(employee.clock_in);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
 
   return (
-    <Card className="card-enhanced hover:shadow-md transition-all">
-      <CardContent className="p-4">
-        {/* Header with photo and status */}
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex items-center gap-3">
-            <Avatar className="w-12 h-12 border-2 border-gray-200">
-              <AvatarImage src={employee.profile_photo_url} />
-              <AvatarFallback className="bg-gray-100 text-gray-700">
-                {employee.first_name[0]}{employee.last_name[0]}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h3 className="font-semibold text-gray-900">
-                {employee.employee_name}
-              </h3>
-              <p className="text-xs text-gray-500">
-                {employee.employee_number}
-              </p>
+    <>
+      <Card className="card-enhanced hover:shadow-md transition-all">
+        <CardContent className="p-4">
+          {/* Header with photo and status */}
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex items-center gap-3">
+              <Avatar
+                className="w-12 h-12 border-2 border-emerald-200 cursor-pointer hover:border-emerald-400 transition-all hover:scale-105"
+                onClick={() => employee.photo_in_url && setShowPhotoModal(true)}
+              >
+                <AvatarImage src={employee.photo_in_url} />
+                <AvatarFallback className="bg-gray-100 text-gray-700">
+                  {employee.first_name[0]}{employee.last_name[0]}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <h3 className="font-semibold text-gray-900">
+                  {employee.employee_name}
+                </h3>
+                <p className="text-xs text-gray-500">
+                  {employee.employee_number}
+                </p>
+              </div>
             </div>
-          </div>
           {/* Status badge */}
           <Badge
             className={cn(
@@ -342,7 +420,7 @@ function EmployeeCardGrid({ employee, onView, onEdit }: EmployeeCardProps) {
         <div className="flex gap-2 mb-3">
           <Badge variant="outline" className="text-xs bg-gray-50">
             <Building2 className="w-3 h-3 mr-1" />
-            {employee.department}
+            {getDepartmentLabel(employee.department)}
           </Badge>
           {employee.kiosk_name ? (
             <Badge variant="outline" className="text-xs bg-indigo-50 text-indigo-700 border-indigo-200">
@@ -404,6 +482,43 @@ function EmployeeCardGrid({ employee, onView, onEdit }: EmployeeCardProps) {
         </div>
       </CardContent>
     </Card>
+
+      {/* Photo Modal */}
+      <Dialog open={showPhotoModal} onOpenChange={setShowPhotoModal}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>
+              {employee.employee_name} - Clock In Photo
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            {employee.photo_in_url ? (
+              <img
+                src={employee.photo_in_url}
+                alt={`${employee.employee_name} punch in photo`}
+                className="w-full rounded-lg border-2 border-emerald-200"
+              />
+            ) : (
+              <div className="w-full h-96 bg-gray-100 rounded-lg flex items-center justify-center">
+                <p className="text-gray-500">No photo available</p>
+              </div>
+            )}
+            <div className="flex items-center justify-between text-sm text-gray-600">
+              <div>
+                <p className="font-medium">{employee.employee_number}</p>
+                <p>{employee.department}</p>
+              </div>
+              <div className="text-right">
+                <p className="font-medium">
+                  {format(new Date(employee.clock_in), 'MMM d, yyyy')}
+                </p>
+                <p>{format(new Date(employee.clock_in), 'HH:mm:ss')}</p>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
@@ -411,29 +526,34 @@ function EmployeeCardGrid({ employee, onView, onEdit }: EmployeeCardProps) {
 // EMPLOYEE CARD - LIST VIEW
 // =====================================================
 
-function EmployeeCardList({ employee, onView, onEdit }: EmployeeCardProps) {
+function EmployeeCardList({ employee, getDepartmentLabel, onView, onEdit }: EmployeeCardProps) {
   const { t } = useTranslation();
   const elapsedTime = useElapsedTime(employee.clock_in);
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
 
   return (
-    <Card className="card-enhanced">
-      <CardContent className="p-3">
-        <div className="flex items-center justify-between">
-          {/* Left: Employee info */}
-          <div className="flex items-center gap-3 flex-1">
-            <Avatar className="w-10 h-10">
-              <AvatarImage src={employee.profile_photo_url} />
-              <AvatarFallback className="bg-gray-100 text-gray-700">
-                {employee.first_name[0]}{employee.last_name[0]}
-              </AvatarFallback>
-            </Avatar>
+    <>
+      <Card className="card-enhanced">
+        <CardContent className="p-3">
+          <div className="flex items-center justify-between">
+            {/* Left: Employee info */}
+            <div className="flex items-center gap-3 flex-1">
+              <Avatar
+                className="w-10 h-10 border-2 border-emerald-200 cursor-pointer hover:border-emerald-400 transition-all hover:scale-105"
+                onClick={() => employee.photo_in_url && setShowPhotoModal(true)}
+              >
+                <AvatarImage src={employee.photo_in_url} />
+                <AvatarFallback className="bg-gray-100 text-gray-700">
+                  {employee.first_name[0]}{employee.last_name[0]}
+                </AvatarFallback>
+              </Avatar>
             <div>
               <h3 className="font-semibold text-sm text-gray-900">
                 {employee.employee_name}
               </h3>
               <div className="flex items-center gap-2 mt-0.5">
                 <Badge variant="outline" className="text-xs bg-gray-50">
-                  {employee.department}
+                  {getDepartmentLabel(employee.department)}
                 </Badge>
                 {employee.kiosk_name ? (
                   <Badge variant="outline" className="text-xs bg-indigo-50 text-indigo-700 border-indigo-200">
@@ -505,6 +625,43 @@ function EmployeeCardList({ employee, onView, onEdit }: EmployeeCardProps) {
         </div>
       </CardContent>
     </Card>
+
+      {/* Photo Modal */}
+      <Dialog open={showPhotoModal} onOpenChange={setShowPhotoModal}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>
+              {employee.employee_name} - Clock In Photo
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            {employee.photo_in_url ? (
+              <img
+                src={employee.photo_in_url}
+                alt={`${employee.employee_name} punch in photo`}
+                className="w-full rounded-lg border-2 border-emerald-200"
+              />
+            ) : (
+              <div className="w-full h-96 bg-gray-100 rounded-lg flex items-center justify-center">
+                <p className="text-gray-500">No photo available</p>
+              </div>
+            )}
+            <div className="flex items-center justify-between text-sm text-gray-600">
+              <div>
+                <p className="font-medium">{employee.employee_number}</p>
+                <p>{employee.department}</p>
+              </div>
+              <div className="text-right">
+                <p className="font-medium">
+                  {format(new Date(employee.clock_in), 'MMM d, yyyy')}
+                </p>
+                <p>{format(new Date(employee.clock_in), 'HH:mm:ss')}</p>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 

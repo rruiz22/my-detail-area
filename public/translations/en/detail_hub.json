@@ -461,6 +461,8 @@
       "total_hours": "Total",
       "hours_abbr": "h",
       "photo_punch": "Photo Punch",
+      "photo_punch_in": "Photo Punch In",
+      "photo_punch_out": "Photo Punch Out",
       "verify_identity": "Verify employee identity before approving punch",
       "approve": "Approve",
       "reject": "Reject"

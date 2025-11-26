@@ -467,6 +467,8 @@
       "total_hours": "Total",
       "hours_abbr": "h",
       "photo_punch": "Registro con Foto",
+      "photo_punch_in": "Registro con Foto - Entrada",
+      "photo_punch_out": "Registro con Foto - Salida",
       "verify_identity": "Verificar identidad del empleado antes de aprobar el registro",
       "approve": "Aprobar",
       "reject": "Rechazar"
