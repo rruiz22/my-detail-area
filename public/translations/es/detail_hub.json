@@ -169,6 +169,7 @@
       "loading_employee_state": "Cargando estado del empleado...",
       "error_loading_state": "No se pudo cargar el estado del empleado",
       "state_load_warning": "No se pudo cargar el estado actual. Usando valores predeterminados seguros.",
+      "state_fallback_info": "Mostrando opciones básicas de marcado. Tu estado actual se verificará durante el registro.",
       "please_try_again": "Volviendo a búsqueda por inactividad",
       "face_not_recognized_timeout": "No se pudo reconocer el rostro",
       "face_scan_timeout_title": "Tiempo de Reconocimiento Agotado",

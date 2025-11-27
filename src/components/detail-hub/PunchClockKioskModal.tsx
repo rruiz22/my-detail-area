@@ -1481,8 +1481,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                     </div>
                   </CardContent>
                 </Card>
-              ) : employeeState || employeeStateError ? (
-                /* Show employee detail even if there's an error - use safe defaults */
+              ) : (
+                /* Always show UI - use employeeState if available, fallback if not */
                 employeeState ? (
               <>
                 {/* Inactivity Timer Badge - Bottom Right */}
@@ -1777,12 +1777,12 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                 ) : (
                   // Fallback: Use safe defaults if employeeState failed to load
                   <>
-                    {/* Show warning but allow punch operations */}
-                    <Alert variant="destructive" className="mb-4">
-                      <AlertTriangle className="h-4 w-4" />
-                      <AlertDescription>
-                        {t('detail_hub.punch_clock.state_load_warning', {
-                          defaultValue: 'Could not load current status. Using safe defaults.'
+                    {/* Show info message instead of error */}
+                    <Alert className="mb-4 border-blue-500 bg-blue-50">
+                      <AlertCircle className="h-4 w-4 text-blue-600" />
+                      <AlertDescription className="text-blue-700">
+                        {t('detail_hub.punch_clock.state_fallback_info', {
+                          defaultValue: 'Showing basic punch options. Your current status will be verified during punch.'
                         })}
                       </AlertDescription>
                     </Alert>
@@ -1818,7 +1818,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                     </Card>
                   </>
                 )
-              ) : null
+              )
             )}
 
             {/* ============================= */}

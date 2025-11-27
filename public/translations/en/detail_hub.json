@@ -183,6 +183,7 @@
       "loading_employee_state": "Loading employee status...",
       "error_loading_state": "Could not load employee status",
       "state_load_warning": "Could not load current status. Using safe defaults.",
+      "state_fallback_info": "Showing basic punch options. Your current status will be verified during punch.",
       "please_try_again": "Returning to search due to inactivity",
       "face_not_recognized_timeout": "Could not recognize face",
       "face_scan_timeout_title": "Recognition Timeout",
