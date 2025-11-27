@@ -183,7 +183,21 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
   // Use hooks
   const { data: searchResults = [], isLoading: searching } = useEmployeeSearch(searchQuery);
-  const { data: employeeState, refetch: refetchEmployeeState, isLoading: loadingEmployeeState, error: employeeStateError } = useEmployeeCurrentState(selectedEmployee?.id || null);
+  const { data: employeeState, refetch: refetchEmployeeState, isLoading: loadingEmployeeState, error: employeeStateError, isError: hasEmployeeStateError } = useEmployeeCurrentState(selectedEmployee?.id || null);
+
+  // Debug employee state loading
+  useEffect(() => {
+    if (selectedEmployee && currentView === 'employee_detail') {
+      console.log('[Kiosk Debug] Employee State:', {
+        employeeId: selectedEmployee.id,
+        loading: loadingEmployeeState,
+        hasData: !!employeeState,
+        hasError: hasEmployeeStateError,
+        error: employeeStateError,
+        data: employeeState
+      });
+    }
+  }, [selectedEmployee, currentView, loadingEmployeeState, employeeState, hasEmployeeStateError, employeeStateError]);
   const { data: faceMatchedEmployee, isLoading: loadingFaceEmployee } = useEmployeeById(faceMatchedEmployeeId);
 
   // ✅ NEW: Get current open break from detail_hub_breaks table
