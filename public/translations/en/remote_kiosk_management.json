@@ -57,7 +57,7 @@
   },
 
   "detail_modal": {
-    "title": "Token Details",
+    "title": "Remote Kiosk Details",
     "employee_info": "Employee Information",
     "token_info": "Token Information",
     "creator_info": "Creator Information",

@@ -9,6 +9,7 @@
  * - Quick actions (Copy URL, Revoke, Delete)
  */
 
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,11 +29,15 @@ import {
   CheckCircle,
   AlertTriangle,
   MapPin,
-  Smartphone
+  Smartphone,
+  MessageSquare,
+  Loader2
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import type { RemoteKioskToken } from "@/hooks/useRemoteKioskTokens";
 import { getGoogleMapsUrl } from "@/utils/geolocation";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface RemoteKioskTokenDetailModalProps {
   token: RemoteKioskToken | null;
@@ -52,11 +57,83 @@ export function RemoteKioskTokenDetailModal({
   onCopyUrl
 }: RemoteKioskTokenDetailModalProps) {
   const { t } = useTranslation();
+  const { toast } = useToast();
+  const [sendingSMS, setSendingSMS] = useState(false);
 
   if (!token) return null;
 
   const isExpired = new Date(token.expires_at) < new Date();
   const isActive = token.status === 'active' && !isExpired;
+
+  // Calculate hours until expiration
+  const expiresAt = new Date(token.expires_at);
+  const now = new Date();
+  const hoursUntilExpiration = Math.max(0, Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60)));
+
+  const handleSendSMS = async () => {
+    if (!token.employee) return;
+
+    // Check if employee has phone number
+    if (!token.employee.phone) {
+      toast({
+        title: t('remote_kiosk_generator.no_phone_number'),
+        description: t('remote_kiosk_generator.no_phone_error', {
+          name: `${token.employee.first_name} ${token.employee.last_name}`
+        }),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setSendingSMS(true);
+
+    try {
+      // Generate SMS message
+      const smsMessage = t('remote_kiosk_generator.sms_message_template', {
+        url: token.full_url,
+        hours: hoursUntilExpiration
+      });
+
+      // Call send-sms Edge Function
+      const { data, error: smsError } = await supabase.functions.invoke('send-sms', {
+        body: {
+          to: token.employee.phone,
+          message: smsMessage,
+          orderNumber: `Remote-${token.short_code}`
+        }
+      });
+
+      if (smsError) {
+        console.error('[Token Detail SMS] Error:', smsError);
+        throw new Error(smsError.message || 'Failed to send SMS');
+      }
+
+      if (!data || !data.success) {
+        throw new Error(data?.error || 'SMS sending failed');
+      }
+
+      console.log('[Token Detail SMS] Success:', data);
+
+      toast({
+        title: t('remote_kiosk_generator.sms_sent_title'),
+        description: t('remote_kiosk_generator.sms_sent_description', {
+          phone: token.employee.phone
+        }),
+      });
+
+    } catch (err: any) {
+      console.error('[Token Detail SMS] Failed to send SMS:', err);
+      toast({
+        title: t('remote_kiosk_generator.sms_failed_title'),
+        description: t('remote_kiosk_generator.sms_failed_description', {
+          error: err.message
+        }),
+        variant: 'destructive',
+      });
+    } finally {
+      setSendingSMS(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -64,7 +141,7 @@ export function RemoteKioskTokenDetailModal({
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold flex items-center gap-2">
             <Link2 className="h-6 w-6" />
-            {t('remote_kiosk_management.detail_modal.title')}
+            {t('remote_kiosk_management.detail_modal.title', { defaultValue: 'Remote Kiosk Details' })}
           </DialogTitle>
         </DialogHeader>
         <p id="token-detail-description" className="sr-only">
@@ -327,6 +404,26 @@ export function RemoteKioskTokenDetailModal({
 
           {/* Action Buttons */}
           <div className="flex gap-2 pt-4">
+            {/* Send SMS Button - Only show if employee has phone */}
+            {token.employee?.phone && (
+              <Button
+                variant="outline"
+                onClick={handleSendSMS}
+                disabled={sendingSMS}
+              >
+                {sendingSMS ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    {t('remote_kiosk_generator.sending_sms')}
+                  </>
+                ) : (
+                  <>
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    {t('remote_kiosk_generator.send_sms_button')}
+                  </>
+                )}
+              </Button>
+            )}
             {onCopyUrl && (
               <Button variant="outline" onClick={() => onCopyUrl(token)}>
                 <Copy className="h-4 w-4 mr-2" />

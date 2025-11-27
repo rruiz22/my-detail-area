@@ -538,6 +538,7 @@ const KioskManager = () => {
             first_name: emp.first_name,
             last_name: emp.last_name,
             employee_number: emp.employee_number,
+            phone: emp.phone,
           }))
         }
       />

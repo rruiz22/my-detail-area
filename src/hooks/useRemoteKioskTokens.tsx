@@ -52,6 +52,7 @@ export interface RemoteKioskToken {
     employee_number: string;
     fallback_photo_url: string | null;
     department: string;
+    phone: string | null;
   } | null;
   // Note: creator and revoker data not available yet (FKs not created)
   // creator?: {
@@ -129,7 +130,8 @@ export function useRemoteKioskTokens(filters: TokenFilters = {}) {
             last_name,
             employee_number,
             fallback_photo_url,
-            department
+            department,
+            phone
           )
         `)
         .order('created_at', { ascending: false });

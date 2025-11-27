@@ -27,5 +27,14 @@
   "error_select_employee": "Por favor selecciona un empleado primero.",
   "error_generation_failed": "Falló al generar el enlace de acceso.",
   "error_copy_failed": "Falló al copiar la URL al portapapeles.",
-  "error_unknown": "Ocurrió un error desconocido."
+  "error_unknown": "Ocurrió un error desconocido.",
+  "send_sms_button": "Enviar Enlace por SMS",
+  "sending_sms": "Enviando...",
+  "sms_sent_title": "SMS Enviado Exitosamente",
+  "sms_sent_description": "Enlace de acceso enviado a {{phone}}",
+  "sms_failed_title": "Fallo en SMS",
+  "sms_failed_description": "No se pudo enviar SMS: {{error}}",
+  "no_phone_number": "Sin número de teléfono registrado",
+  "no_phone_error": "El empleado {{name}} no tiene un número de teléfono configurado. Por favor actualice su perfil primero.",
+  "sms_message_template": "Tu enlace de kiosco remoto Detail Hub: {{url}} - Expira en {{hours}} horas. Úsalo para registrar entrada/salida remotamente."
 }

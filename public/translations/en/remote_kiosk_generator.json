@@ -27,5 +27,14 @@
   "error_select_employee": "Please select an employee first.",
   "error_generation_failed": "Failed to generate access link.",
   "error_copy_failed": "Failed to copy URL to clipboard.",
-  "error_unknown": "An unknown error occurred."
+  "error_unknown": "An unknown error occurred.",
+  "send_sms_button": "Send Link via SMS",
+  "sending_sms": "Sending...",
+  "sms_sent_title": "SMS Sent Successfully",
+  "sms_sent_description": "Access link sent to {{phone}}",
+  "sms_failed_title": "SMS Failed",
+  "sms_failed_description": "Could not send SMS: {{error}}",
+  "no_phone_number": "No phone number on file",
+  "no_phone_error": "Employee {{name}} does not have a phone number configured. Please update their profile first.",
+  "sms_message_template": "Your Detail Hub remote kiosk link: {{url}} - Expires in {{hours}} hours. Use this to punch in/out remotely."
 }

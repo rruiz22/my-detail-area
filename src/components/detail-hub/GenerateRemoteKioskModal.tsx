@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Copy, ExternalLink, Loader2, QrCode, X } from 'lucide-react';
+import { Check, Copy, ExternalLink, Loader2, QrCode, X, MessageSquare } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import {
   Dialog,
@@ -33,6 +33,7 @@ interface GenerateRemoteKioskModalProps {
     first_name: string;
     last_name: string;
     employee_number: string;
+    phone: string | null;
   }>;
 }
 
@@ -59,6 +60,7 @@ export function GenerateRemoteKioskModal({
   const [loading, setLoading] = useState(false);
   const [generatedToken, setGeneratedToken] = useState<GeneratedToken | null>(null);
   const [copied, setCopied] = useState(false);
+  const [sendingSMS, setSendingSMS] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const selectedEmployee = employees.find((e) => e.id === selectedEmployeeId);
@@ -161,12 +163,78 @@ export function GenerateRemoteKioskModal({
     }
   };
 
+  const handleSendSMS = async () => {
+    if (!generatedToken || !selectedEmployee) return;
+
+    // Check if employee has phone number
+    if (!selectedEmployee.phone) {
+      toast({
+        title: t('remote_kiosk_generator.no_phone_number'),
+        description: t('remote_kiosk_generator.no_phone_error', {
+          name: `${selectedEmployee.first_name} ${selectedEmployee.last_name}`
+        }),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setSendingSMS(true);
+
+    try {
+      // Generate SMS message
+      const smsMessage = t('remote_kiosk_generator.sms_message_template', {
+        url: generatedToken.fullUrl,
+        hours: expirationHours
+      });
+
+      // Call send-sms Edge Function
+      const { data, error: smsError } = await supabase.functions.invoke('send-sms', {
+        body: {
+          to: selectedEmployee.phone,
+          message: smsMessage,
+          orderNumber: `Remote-${generatedToken.shortCode}` // For logging/tracking
+        }
+      });
+
+      if (smsError) {
+        console.error('[Remote Kiosk SMS] Error:', smsError);
+        throw new Error(smsError.message || 'Failed to send SMS');
+      }
+
+      if (!data || !data.success) {
+        throw new Error(data?.error || 'SMS sending failed');
+      }
+
+      console.log('[Remote Kiosk SMS] Success:', data);
+
+      toast({
+        title: t('remote_kiosk_generator.sms_sent_title'),
+        description: t('remote_kiosk_generator.sms_sent_description', {
+          phone: selectedEmployee.phone
+        }),
+      });
+
+    } catch (err: any) {
+      console.error('[Remote Kiosk SMS] Failed to send SMS:', err);
+      toast({
+        title: t('remote_kiosk_generator.sms_failed_title'),
+        description: t('remote_kiosk_generator.sms_failed_description', {
+          error: err.message
+        }),
+        variant: 'destructive',
+      });
+    } finally {
+      setSendingSMS(false);
+    }
+  };
+
   const handleClose = () => {
     setSelectedEmployeeId('');
     setExpirationHours(2);
     setMaxUses(1);
     setGeneratedToken(null);
     setCopied(false);
+    setSendingSMS(false);
     setError(null);
     onClose();
   };
@@ -358,6 +426,29 @@ export function GenerateRemoteKioskModal({
 
               {/* Action Buttons */}
               <div className="flex gap-2">
+                {/* Send SMS Button - Only show if employee has phone */}
+                {selectedEmployee?.phone && (
+                  <Button
+                    onClick={handleSendSMS}
+                    disabled={sendingSMS}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    {sendingSMS ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        {t('remote_kiosk_generator.sending_sms')}
+                      </>
+                    ) : (
+                      <>
+                        <MessageSquare className="h-4 w-4 mr-2" />
+                        {t('remote_kiosk_generator.send_sms_button')}
+                      </>
+                    )}
+                  </Button>
+                )}
+
+                {/* Copy URL Button */}
                 <Button onClick={handleCopy} variant="outline" className="flex-1">
                   {copied ? (
                     <>
@@ -371,6 +462,8 @@ export function GenerateRemoteKioskModal({
                     </>
                   )}
                 </Button>
+
+                {/* Close Button */}
                 <Button onClick={handleClose} className="flex-1">
                   {t('common.close')}
                 </Button>

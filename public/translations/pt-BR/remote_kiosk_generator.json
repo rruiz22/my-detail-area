@@ -27,5 +27,14 @@
   "error_select_employee": "Por favor selecione um funcionário primeiro.",
   "error_generation_failed": "Falha ao gerar link de acesso.",
   "error_copy_failed": "Falha ao copiar URL para a área de transferência.",
-  "error_unknown": "Ocorreu um erro desconhecido."
+  "error_unknown": "Ocorreu um erro desconhecido.",
+  "send_sms_button": "Enviar Link por SMS",
+  "sending_sms": "Enviando...",
+  "sms_sent_title": "SMS Enviado com Sucesso",
+  "sms_sent_description": "Link de acesso enviado para {{phone}}",
+  "sms_failed_title": "Falha no SMS",
+  "sms_failed_description": "Não foi possível enviar SMS: {{error}}",
+  "no_phone_number": "Sem número de telefone cadastrado",
+  "no_phone_error": "O funcionário {{name}} não possui número de telefone configurado. Por favor, atualize o perfil primeiro.",
+  "sms_message_template": "Seu link de quiosque remoto Detail Hub: {{url}} - Expira em {{hours}} horas. Use-o para registrar entrada/saída remotamente."
 }
