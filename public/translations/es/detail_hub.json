@@ -168,6 +168,7 @@
       "break_minimum_required": "El descanso de almuerzo debe ser de al menos {{minutes}} minutos. {{timeRemaining}} restante.",
       "loading_employee_state": "Cargando estado del empleado...",
       "error_loading_state": "No se pudo cargar el estado del empleado",
+      "state_load_warning": "No se pudo cargar el estado actual. Usando valores predeterminados seguros.",
       "please_try_again": "Volviendo a búsqueda por inactividad",
       "face_not_recognized_timeout": "No se pudo reconocer el rostro",
       "face_scan_timeout_title": "Tiempo de Reconocimiento Agotado",

@@ -183,7 +183,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
   // Use hooks
   const { data: searchResults = [], isLoading: searching } = useEmployeeSearch(searchQuery);
-  const { data: employeeState, refetch: refetchEmployeeState, isLoading: loadingEmployeeState } = useEmployeeCurrentState(selectedEmployee?.id || null);
+  const { data: employeeState, refetch: refetchEmployeeState, isLoading: loadingEmployeeState, error: employeeStateError } = useEmployeeCurrentState(selectedEmployee?.id || null);
   const { data: faceMatchedEmployee, isLoading: loadingFaceEmployee } = useEmployeeById(faceMatchedEmployeeId);
 
   // ✅ NEW: Get current open break from detail_hub_breaks table
@@ -1467,7 +1467,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                     </div>
                   </CardContent>
                 </Card>
-              ) : employeeState ? (
+              ) : employeeState || employeeStateError ? (
+                /* Show employee detail even if there's an error - use safe defaults */
+                employeeState ? (
               <>
                 {/* Inactivity Timer Badge - Bottom Right */}
                 <div className="fixed bottom-6 right-6 z-50 animate-fade-in">
@@ -1758,25 +1760,51 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                   limit={5}
                 />
               </>
-              ) : (
-                // Error state - employee state could not be loaded
-                <Card className="card-enhanced">
-                  <CardContent className="py-12">
-                    <div className="flex flex-col items-center justify-center gap-4">
-                      <AlertTriangle className="h-12 w-12 text-destructive" />
-                      <p className="text-lg text-destructive font-medium">
-                        {t('detail_hub.punch_clock.error_loading_state', { defaultValue: 'Could not load employee status' })}
-                      </p>
-                      <Button onClick={() => {
-                        setCurrentView('search');
-                        setSelectedEmployee(null);
-                      }}>
-                        {t('detail_hub.punch_clock.back_to_search')}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              )
+                ) : (
+                  // Fallback: Use safe defaults if employeeState failed to load
+                  <>
+                    {/* Show warning but allow punch operations */}
+                    <Alert variant="destructive" className="mb-4">
+                      <AlertTriangle className="h-4 w-4" />
+                      <AlertDescription>
+                        {t('detail_hub.punch_clock.state_load_warning', {
+                          defaultValue: 'Could not load current status. Using safe defaults.'
+                        })}
+                      </AlertDescription>
+                    </Alert>
+
+                    {/* Show employee with Clock In button only (safe default) */}
+                    <Card className="card-enhanced">
+                      <CardContent className="py-6 space-y-6">
+                        <div className="text-center">
+                          <h2 className="text-2xl font-bold">{selectedEmployee.first_name} {selectedEmployee.last_name}</h2>
+                          <p className="text-muted-foreground">#{selectedEmployee.employee_number}</p>
+                        </div>
+
+                        <Button
+                          size="lg"
+                          className="w-full h-24 text-xl font-semibold bg-emerald-600 hover:bg-emerald-700"
+                          onClick={() => handleStartPhotoCapture('clock_in')}
+                        >
+                          <LogIn className="w-8 h-8 mr-2" />
+                          {t('detail_hub.punch_clock.messages.clock_in')}
+                        </Button>
+
+                        <Button
+                          variant="ghost"
+                          onClick={() => {
+                            setCurrentView('search');
+                            setSelectedEmployee(null);
+                          }}
+                          className="w-full"
+                        >
+                          {t('detail_hub.punch_clock.back_to_search')}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </>
+                )
+              ) : null
             )}
 
             {/* ============================= */}
