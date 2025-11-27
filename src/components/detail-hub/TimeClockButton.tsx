@@ -32,6 +32,13 @@ export function TimeClockButton({ dealerId }: TimeClockButtonProps) {
   const { kioskId } = useKioskConfig();
   const { data: activeCount = 0 } = useActiveClockedInCount();
 
+  // ✅ HIDE BUTTON: Only show if kiosk is configured on this PC
+  if (!kioskId) return null;
+
+  // ✅ HIDE ON MOBILE: Mobile devices should not be kiosks
+  const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (isMobileDevice) return null;
+
   return (
     <>
       <TooltipProvider>
