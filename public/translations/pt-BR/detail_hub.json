@@ -166,6 +166,8 @@
       "lunch_break_label": "Intervalo para Almoço (mín {{minutes}} min, não pago)",
       "short_break_label": "Intervalo Curto (sem mínimo, não pago)",
       "break_minimum_required": "O intervalo para almoço deve ser de pelo menos {{minutes}} minutos. {{timeRemaining}} restante.",
+      "loading_employee_state": "Carregando status do funcionário...",
+      "error_loading_state": "Não foi possível carregar o status do funcionário",
       "please_try_again": "Retornando à busca por inatividade",
       "face_not_recognized_timeout": "Não foi possível reconhecer o rosto",
       "face_scan_timeout_title": "Tempo de Reconhecimento Esgotado",

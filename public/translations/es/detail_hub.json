@@ -166,6 +166,8 @@
       "lunch_break_label": "Descanso de Almuerzo (mín {{minutes}} min, no pagado)",
       "short_break_label": "Descanso Corto (sin mínimo, no pagado)",
       "break_minimum_required": "El descanso de almuerzo debe ser de al menos {{minutes}} minutos. {{timeRemaining}} restante.",
+      "loading_employee_state": "Cargando estado del empleado...",
+      "error_loading_state": "No se pudo cargar el estado del empleado",
       "please_try_again": "Volviendo a búsqueda por inactividad",
       "face_not_recognized_timeout": "No se pudo reconocer el rostro",
       "face_scan_timeout_title": "Tiempo de Reconocimiento Agotado",

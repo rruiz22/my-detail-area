@@ -182,7 +182,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
   // Use hooks
   const { data: searchResults = [], isLoading: searching } = useEmployeeSearch(searchQuery);
-  const { data: employeeState, refetch: refetchEmployeeState } = useEmployeeCurrentState(selectedEmployee?.id || null);
+  const { data: employeeState, refetch: refetchEmployeeState, isLoading: loadingEmployeeState } = useEmployeeCurrentState(selectedEmployee?.id || null);
   const { data: faceMatchedEmployee, isLoading: loadingFaceEmployee } = useEmployeeById(faceMatchedEmployeeId);
 
   // ✅ NEW: Get current open break from detail_hub_breaks table
@@ -1453,7 +1453,20 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
             {/* ============================= */}
             {/* VIEW 3: EMPLOYEE DETAIL */}
             {/* ============================= */}
-            {currentView === 'employee_detail' && selectedEmployee && employeeState && (
+            {currentView === 'employee_detail' && selectedEmployee && (
+              loadingEmployeeState ? (
+                // Loading state while fetching employee status
+                <Card className="card-enhanced">
+                  <CardContent className="py-12">
+                    <div className="flex flex-col items-center justify-center gap-4">
+                      <Loader2 className="h-12 w-12 animate-spin text-primary" />
+                      <p className="text-lg text-muted-foreground">
+                        {t('detail_hub.punch_clock.loading_employee_state', { defaultValue: 'Loading employee status...' })}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ) : employeeState ? (
               <>
                 {/* Inactivity Timer Badge - Bottom Right */}
                 <div className="fixed bottom-6 right-6 z-50 animate-fade-in">
@@ -1744,6 +1757,25 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                   limit={5}
                 />
               </>
+              ) : (
+                // Error state - employee state could not be loaded
+                <Card className="card-enhanced">
+                  <CardContent className="py-12">
+                    <div className="flex flex-col items-center justify-center gap-4">
+                      <AlertTriangle className="h-12 w-12 text-destructive" />
+                      <p className="text-lg text-destructive font-medium">
+                        {t('detail_hub.punch_clock.error_loading_state', { defaultValue: 'Could not load employee status' })}
+                      </p>
+                      <Button onClick={() => {
+                        setCurrentView('search');
+                        setSelectedEmployee(null);
+                      }}>
+                        {t('detail_hub.punch_clock.back_to_search')}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )
             )}
 
             {/* ============================= */}

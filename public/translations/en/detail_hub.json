@@ -180,6 +180,8 @@
       "lunch_break_label": "Lunch Break (min {{minutes}} min, unpaid)",
       "short_break_label": "Short Break (no minimum, unpaid)",
       "break_minimum_required": "Lunch break must be at least {{minutes}} minutes. {{timeRemaining}} remaining.",
+      "loading_employee_state": "Loading employee status...",
+      "error_loading_state": "Could not load employee status",
       "please_try_again": "Returning to search due to inactivity",
       "face_not_recognized_timeout": "Could not recognize face",
       "face_scan_timeout_title": "Recognition Timeout",
