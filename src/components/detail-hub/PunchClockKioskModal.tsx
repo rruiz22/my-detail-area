@@ -39,7 +39,8 @@ import {
   Loader2,
   X,
   Clock,
-  AlertCircle
+  AlertCircle,
+  AlertTriangle
 } from "lucide-react";
 
 // Photo capture utilities
