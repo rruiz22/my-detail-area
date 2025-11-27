@@ -51,6 +51,9 @@ import { useFaceRecognition } from "@/hooks/useFaceRecognition";
 // Supabase
 import { supabase } from "@/integrations/supabase/client";
 
+// Debug utility
+import { debugLog } from "@/utils/debugLog";
+
 // New hooks and components
 import { useEmployeeSearch } from "@/hooks/useEmployeeSearch";
 import { useEmployeeCurrentState } from "@/hooks/useEmployeeCurrentState";
@@ -123,7 +126,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   // Fetch kiosk configuration from database
   useEffect(() => {
     if (isValidUUID(KIOSK_ID)) {
-      console.log('[Kiosk] Fetching configuration for kiosk ID:', KIOSK_ID);
+      debugLog('[Kiosk] Fetching configuration for kiosk ID:', KIOSK_ID);
       supabase
         .from('detail_hub_kiosks')
         .select('face_recognition_enabled, allow_manual_entry, sleep_timeout_minutes, kiosk_code, name')
@@ -135,7 +138,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
             return;
           }
           if (data) {
-            console.log('[Kiosk] Configuration loaded:', data);
+            debugLog('[Kiosk] Configuration loaded:', data);
             setKioskConfig({
               face_recognition_enabled: data.face_recognition_enabled ?? true,
               allow_manual_entry: data.allow_manual_entry ?? true,
@@ -197,7 +200,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   // Inactivity timer for employee_detail AND photo_capture views with countdown
   useEffect(() => {
     if (currentView === 'employee_detail' || currentView === 'photo_capture') {
-      console.log('[Kiosk] 🚀 Starting 10-second inactivity timer');
+      debugLog('[Kiosk] 🚀 Starting 10-second inactivity timer');
 
       // Reset countdown to configured timeout
       setInactivitySecondsLeft(kioskConfig.sleep_timeout_minutes);
@@ -229,7 +232,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
       // Reset timer on user activity
       const resetTimer = (event: Event) => {
-        console.log('[Kiosk] 🔄 Activity detected:', event.type, `- resetting to ${kioskConfig.sleep_timeout_minutes}s`);
+        debugLog('[Kiosk] 🔄 Activity detected:', event.type, `- resetting to ${kioskConfig.sleep_timeout_minutes}s`);
         setInactivitySecondsLeft(kioskConfig.sleep_timeout_minutes);
       };
 
@@ -251,7 +254,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       }
 
       return () => {
-        console.log('[Kiosk] 🧹 Cleaning up inactivity timer');
+        debugLog('[Kiosk] 🧹 Cleaning up inactivity timer');
         clearInterval(countdownInterval);
         events.forEach(event => {
           window.removeEventListener(event, resetTimer);
@@ -1057,8 +1060,11 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
           }
         }, 2000);
 
-        // Store interval to clear on unmount
-        return () => clearInterval(scanInterval);
+        // Store intervals to clear on unmount
+        return () => {
+          clearInterval(countdownInterval);
+          clearInterval(scanInterval);
+        };
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -1656,8 +1662,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                               <div className="text-xs font-normal opacity-75">
                                 {/* ✅ SMART MESSAGE: Show break type based on how many taken */}
                                 {currentBreak === null && employeeState.currentEntry?.break_start === null
-                                  ? 'Lunch Break (min 30 min, unpaid)'
-                                  : 'Short Break (no minimum, unpaid)'}
+                                  ? t('detail_hub.messages.lunch_break_label', { minutes: 30 })
+                                  : t('detail_hub.messages.short_break_label')}
                               </div>
                             </div>
                           </Button>
@@ -1682,7 +1688,10 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                             onClick={() => handleStartPhotoCapture('break_end')}
                             disabled={breakSecondsRemaining !== null && breakSecondsRemaining > 0}
                             title={breakSecondsRemaining !== null && breakSecondsRemaining > 0
-                              ? `Lunch break must be at least 30 minutes. ${formatBreakTimer(breakSecondsRemaining)} remaining.`
+                              ? t('detail_hub.messages.break_minimum_required', {
+                                  minutes: 30,
+                                  timeRemaining: formatBreakTimer(breakSecondsRemaining)
+                                })
                               : undefined
                             }
                           >
