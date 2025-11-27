@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Copy, ExternalLink, Loader2, QrCode, X, MessageSquare } from 'lucide-react';
+import { Check, Copy, ExternalLink, Loader2, QrCode, X, MessageSquare, Users, User as UserIcon } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import {
   Dialog,
@@ -12,6 +12,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Progress } from '@/components/ui/progress';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
   Select,
   SelectContent,
@@ -44,6 +47,20 @@ interface GeneratedToken {
   expiresAt: string;
 }
 
+interface BulkGenerationResult {
+  employee: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    employee_number: string;
+    phone: string | null;
+  };
+  token?: GeneratedToken;
+  smsSent?: boolean;
+  success: boolean;
+  error?: string;
+}
+
 export function GenerateRemoteKioskModal({
   open,
   onClose,
@@ -54,16 +71,44 @@ export function GenerateRemoteKioskModal({
   const { user } = useAuth();
   const { toast } = useToast();
 
+  // Mode selection
+  const [mode, setMode] = useState<'single' | 'bulk'>('single');
+
+  // Single mode states
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>('');
+  const [generatedToken, setGeneratedToken] = useState<GeneratedToken | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  // Bulk mode states
+  const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<string[]>([]);
+  const [bulkResults, setBulkResults] = useState<BulkGenerationResult[]>([]);
+  const [bulkProgress, setBulkProgress] = useState<{ current: number; total: number } | null>(null);
+
+  // Shared states
   const [expirationHours, setExpirationHours] = useState<number>(2);
   const [maxUses, setMaxUses] = useState<number>(1);
   const [loading, setLoading] = useState(false);
-  const [generatedToken, setGeneratedToken] = useState<GeneratedToken | null>(null);
-  const [copied, setCopied] = useState(false);
   const [sendingSMS, setSendingSMS] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const selectedEmployee = employees.find((e) => e.id === selectedEmployeeId);
+
+  // Bulk selection helpers
+  const toggleEmployee = (employeeId: string) => {
+    setSelectedEmployeeIds(prev =>
+      prev.includes(employeeId)
+        ? prev.filter(id => id !== employeeId)
+        : [...prev, employeeId]
+    );
+  };
+
+  const toggleAll = () => {
+    if (selectedEmployeeIds.length === employees.length) {
+      setSelectedEmployeeIds([]);
+    } else {
+      setSelectedEmployeeIds(employees.map(e => e.id));
+    }
+  };
 
   const handleGenerate = async () => {
     if (!selectedEmployeeId || !user) {
@@ -228,11 +273,111 @@ export function GenerateRemoteKioskModal({
     }
   };
 
+  const handleBulkGenerate = async () => {
+    if (selectedEmployeeIds.length === 0 || !user) {
+      setError(t('remote_kiosk_generator.error_select_employees', { defaultValue: 'Please select at least one employee' }));
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setBulkResults([]);
+    setBulkProgress({ current: 0, total: selectedEmployeeIds.length });
+
+    const results: BulkGenerationResult[] = [];
+
+    for (let i = 0; i < selectedEmployeeIds.length; i++) {
+      const employeeId = selectedEmployeeIds[i];
+      const employee = employees.find(e => e.id === employeeId)!;
+
+      setBulkProgress({ current: i + 1, total: selectedEmployeeIds.length });
+
+      try {
+        // Generate token for this employee (reuse existing logic)
+        const { data, error: functionError } = await supabase.functions.invoke(
+          'generate-remote-kiosk-url',
+          {
+            body: {
+              employeeId,
+              dealershipId,
+              createdBy: user.id,
+              expirationHours,
+              maxUses,
+            },
+          }
+        );
+
+        if (functionError) throw functionError;
+        if (!data.success) throw new Error(data.error || 'Token generation failed');
+
+        const token: GeneratedToken = {
+          tokenId: data.tokenId,
+          shortCode: data.shortCode,
+          fullUrl: data.fullUrl,
+          expiresAt: data.expiresAt,
+        };
+
+        // Try to send SMS if phone exists
+        let smsSent = false;
+        if (employee.phone) {
+          try {
+            const smsMessage = t('remote_kiosk_generator.sms_message_template', {
+              url: token.fullUrl,
+              hours: expirationHours
+            });
+
+            const { data: smsData, error: smsError } = await supabase.functions.invoke('send-sms', {
+              body: {
+                to: employee.phone,
+                message: smsMessage,
+                orderNumber: `Remote-${token.shortCode}`
+              }
+            });
+
+            if (smsError || !smsData?.success) {
+              console.error('[Bulk SMS] Failed for:', employee.first_name, smsError);
+            } else {
+              smsSent = true;
+            }
+          } catch (smsErr) {
+            console.error('[Bulk SMS] Exception:', smsErr);
+          }
+        }
+
+        results.push({ employee, token, smsSent, success: true });
+
+      } catch (err: any) {
+        console.error('[Bulk Generation] Failed for:', employee.first_name, err);
+        results.push({ employee, success: false, error: err.message });
+      }
+    }
+
+    setBulkResults(results);
+    setBulkProgress(null);
+    setLoading(false);
+
+    const successCount = results.filter(r => r.success).length;
+    const smsCount = results.filter(r => r.smsSent).length;
+
+    toast({
+      title: t('remote_kiosk_generator.bulk_complete_title', { defaultValue: 'Bulk Generation Complete' }),
+      description: t('remote_kiosk_generator.bulk_complete_description', {
+        defaultValue: '{{success}} tokens generated, {{sms}} SMS sent',
+        success: successCount,
+        sms: smsCount
+      }),
+    });
+  };
+
   const handleClose = () => {
+    setMode('single');
     setSelectedEmployeeId('');
+    setSelectedEmployeeIds([]);
     setExpirationHours(2);
     setMaxUses(1);
     setGeneratedToken(null);
+    setBulkResults([]);
+    setBulkProgress(null);
     setCopied(false);
     setSendingSMS(false);
     setError(null);
@@ -266,8 +411,32 @@ export function GenerateRemoteKioskModal({
             </Alert>
           )}
 
-          {/* Configuration Form */}
-          {!generatedToken ? (
+          {/* Mode Toggle */}
+          {!generatedToken && bulkResults.length === 0 && (
+            <div className="flex gap-2 p-1 bg-muted rounded-lg">
+              <Button
+                variant={mode === 'single' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setMode('single')}
+                className="flex-1"
+              >
+                <UserIcon className="h-4 w-4 mr-2" />
+                {t('remote_kiosk_generator.mode_single', { defaultValue: 'Single Employee' })}
+              </Button>
+              <Button
+                variant={mode === 'bulk' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setMode('bulk')}
+                className="flex-1"
+              >
+                <Users className="h-4 w-4 mr-2" />
+                {t('remote_kiosk_generator.mode_bulk', { defaultValue: 'Multiple Employees' })}
+              </Button>
+            </div>
+          )}
+
+          {/* Configuration Form - Single Mode */}
+          {mode === 'single' && !generatedToken && (
             <div className="space-y-4">
               {/* Employee Selection */}
               <div className="space-y-2">
@@ -345,7 +514,143 @@ export function GenerateRemoteKioskModal({
                 )}
               </Button>
             </div>
-          ) : (
+          )}
+
+          {/* Configuration Form - Bulk Mode */}
+          {mode === 'bulk' && bulkResults.length === 0 && (
+            <div className="space-y-4">
+              {/* Employee Multi-Select */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label>{t('remote_kiosk_generator.select_employees', { defaultValue: 'Select Employees' })}</Label>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleAll}
+                  >
+                    {selectedEmployeeIds.length === employees.length
+                      ? t('remote_kiosk_generator.deselect_all', { defaultValue: 'Deselect All' })
+                      : t('remote_kiosk_generator.select_all', { defaultValue: 'Select All' })
+                    }
+                  </Button>
+                </div>
+
+                <div className="border rounded-lg p-3 max-h-64 overflow-y-auto space-y-2">
+                  {employees.map((employee) => (
+                    <div key={employee.id} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`employee-${employee.id}`}
+                        checked={selectedEmployeeIds.includes(employee.id)}
+                        onCheckedChange={() => toggleEmployee(employee.id)}
+                      />
+                      <label
+                        htmlFor={`employee-${employee.id}`}
+                        className="flex-1 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                      >
+                        {employee.first_name} {employee.last_name} (#{employee.employee_number})
+                        {!employee.phone && (
+                          <span className="text-xs text-amber-600 ml-2">(No phone)</span>
+                        )}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+
+                {selectedEmployeeIds.length > 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    {t('remote_kiosk_generator.selected_count', {
+                      defaultValue: '{{count}} employee(s) selected',
+                      count: selectedEmployeeIds.length
+                    })}
+                  </p>
+                )}
+              </div>
+
+              {/* Expiration Hours */}
+              <div className="space-y-2">
+                <Label>{t('remote_kiosk_generator.expiration_hours')}</Label>
+                <Select
+                  value={expirationHours.toString()}
+                  onValueChange={(value) => setExpirationHours(parseInt(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1 {t('remote_kiosk_generator.hour')}</SelectItem>
+                    <SelectItem value="2">2 {t('remote_kiosk_generator.hours')}</SelectItem>
+                    <SelectItem value="4">4 {t('remote_kiosk_generator.hours')}</SelectItem>
+                    <SelectItem value="8">8 {t('remote_kiosk_generator.hours')}</SelectItem>
+                    <SelectItem value="12">12 {t('remote_kiosk_generator.hours')}</SelectItem>
+                    <SelectItem value="24">24 {t('remote_kiosk_generator.hours')}</SelectItem>
+                    <SelectItem value="48">48 {t('remote_kiosk_generator.hours')}</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  {t('remote_kiosk_generator.expiration_hint')}
+                </p>
+              </div>
+
+              {/* Max Uses */}
+              <div className="space-y-2">
+                <Label>{t('remote_kiosk_generator.max_uses')}</Label>
+                <Input
+                  type="number"
+                  min="1"
+                  max="100"
+                  value={maxUses}
+                  onChange={(e) => setMaxUses(parseInt(e.target.value) || 1)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  {t('remote_kiosk_generator.max_uses_hint')}
+                </p>
+              </div>
+
+              {/* Progress Indicator */}
+              {bulkProgress && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="font-medium">
+                      {t('remote_kiosk_generator.generating_progress', {
+                        defaultValue: 'Generating {{current}} of {{total}}...',
+                        current: bulkProgress.current,
+                        total: bulkProgress.total
+                      })}
+                    </span>
+                    <span className="text-muted-foreground">
+                      {Math.round((bulkProgress.current / bulkProgress.total) * 100)}%
+                    </span>
+                  </div>
+                  <Progress value={(bulkProgress.current / bulkProgress.total) * 100} />
+                </div>
+              )}
+
+              {/* Generate Button */}
+              <Button
+                onClick={handleBulkGenerate}
+                disabled={selectedEmployeeIds.length === 0 || loading}
+                className="w-full"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    {t('remote_kiosk_generator.generating')}
+                  </>
+                ) : (
+                  <>
+                    <Users className="h-4 w-4 mr-2" />
+                    {t('remote_kiosk_generator.generate_bulk', {
+                      defaultValue: 'Generate {{count}} Token(s)',
+                      count: selectedEmployeeIds.length
+                    })}
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
+
+          {/* Single Token Generated Display */}
+          {mode === 'single' && generatedToken && (
             /* Generated URL Display */
             <div className="space-y-6">
               {/* Employee Info */}
@@ -468,6 +773,118 @@ export function GenerateRemoteKioskModal({
                   {t('common.close')}
                 </Button>
               </div>
+            </div>
+          )}
+
+          {/* Bulk Results Table */}
+          {mode === 'bulk' && bulkResults.length > 0 && (
+            <div className="space-y-4">
+              {/* Summary */}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                  <div className="text-xs text-emerald-600 font-medium">
+                    {t('remote_kiosk_generator.bulk_success', { defaultValue: 'Successful' })}
+                  </div>
+                  <div className="text-2xl font-bold text-emerald-700">
+                    {bulkResults.filter(r => r.success).length}
+                  </div>
+                </div>
+                <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="text-xs text-blue-600 font-medium">
+                    {t('remote_kiosk_generator.bulk_sms_sent', { defaultValue: 'SMS Sent' })}
+                  </div>
+                  <div className="text-2xl font-bold text-blue-700">
+                    {bulkResults.filter(r => r.smsSent).length}
+                  </div>
+                </div>
+                <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+                  <div className="text-xs text-red-600 font-medium">
+                    {t('remote_kiosk_generator.bulk_failed', { defaultValue: 'Failed' })}
+                  </div>
+                  <div className="text-2xl font-bold text-red-700">
+                    {bulkResults.filter(r => !r.success).length}
+                  </div>
+                </div>
+              </div>
+
+              {/* Results Table */}
+              <div className="border rounded-lg">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t('remote_kiosk_generator.bulk_employee', { defaultValue: 'Employee' })}</TableHead>
+                      <TableHead>{t('remote_kiosk_generator.bulk_url', { defaultValue: 'URL' })}</TableHead>
+                      <TableHead className="text-center">{t('remote_kiosk_generator.bulk_sms', { defaultValue: 'SMS' })}</TableHead>
+                      <TableHead className="text-center">{t('remote_kiosk_generator.bulk_status', { defaultValue: 'Status' })}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {bulkResults.map((result, index) => (
+                      <TableRow key={result.employee.id}>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">
+                              {result.employee.first_name} {result.employee.last_name}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              #{result.employee.employee_number}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {result.token ? (
+                            <div className="flex items-center gap-2">
+                              <code className="text-xs bg-gray-50 px-2 py-1 rounded border flex-1">
+                                {result.token.fullUrl}
+                              </code>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={async () => {
+                                  await navigator.clipboard.writeText(result.token!.fullUrl);
+                                  toast({
+                                    title: t('remote_kiosk_generator.copied_title'),
+                                    description: t('remote_kiosk_generator.copied_description'),
+                                  });
+                                }}
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">-</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {result.smsSent ? (
+                            <CheckCircle className="h-4 w-4 text-green-600 mx-auto" />
+                          ) : result.employee.phone ? (
+                            <XCircle className="h-4 w-4 text-red-600 mx-auto" />
+                          ) : (
+                            <span className="text-xs text-muted-foreground">No phone</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {result.success ? (
+                            <Badge className="bg-green-100 text-green-700 border-green-200">
+                              {t('remote_kiosk_generator.bulk_success_status', { defaultValue: 'Success' })}
+                            </Badge>
+                          ) : (
+                            <Badge variant="destructive">
+                              {t('remote_kiosk_generator.bulk_failed_status', { defaultValue: 'Failed' })}
+                            </Badge>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Close Button */}
+              <Button onClick={handleClose} className="w-full">
+                {t('common.close')}
+              </Button>
             </div>
           )}
         </div>
