@@ -380,10 +380,10 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       // Case 3: Valid UUID - Verify it exists in database
       console.log('[Kiosk] ✅ Valid UUID format detected:', KIOSK_ID);
 
-      // Check if kiosk exists in database
+      // Check if kiosk exists in database and is not archived
       supabase
         .from('detail_hub_kiosks')
-        .select('id, name, kiosk_code, dealership_id, status')
+        .select('id, name, kiosk_code, dealership_id, status, archived') // ✅ NEW: Select archived column
         .eq('id', KIOSK_ID)
         .single()
         .then(({ data, error }) => {
@@ -394,7 +394,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
               kioskId: KIOSK_ID,
               error: error?.message || 'not found',
               possibleCauses: [
-                '1. Kiosk was deleted by admin',
+                '1. Kiosk was archived/deleted by admin',
                 '2. Dealership was deleted (CASCADE)',
                 '3. Database migration reset',
                 '4. Wrong database environment'
@@ -403,21 +403,68 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                 kiosk_id: localStorage.getItem('kiosk_id'),
                 fingerprint: localStorage.getItem('kiosk_device_fingerprint'),
                 configured_at: localStorage.getItem('kiosk_configured_at'),
-                username: localStorage.getItem('kiosk_username')
+                username: localStorage.getItem('kiosk_username'),
+                registration_code: localStorage.getItem('kiosk_registration_code') // ✅ NEW
               }
             });
 
-            // This is a CRITICAL diagnostic finding - kiosk was deleted from database
-            // but localStorage still has the UUID
+            // ✅ NEW: Show specific error message to user
+            if (!hasShownErrorRef.current) {
+              toast({
+                title: '⚠️ Kiosk Configuration Invalid',
+                description: (
+                  <div className="space-y-2">
+                    <p>This kiosk was archived or removed by an administrator.</p>
+                    <p className="text-xs text-muted-foreground">
+                      Please reconfigure this device with an active kiosk from the Kiosk Manager.
+                    </p>
+                    {localStorage.getItem('kiosk_registration_code') && (
+                      <p className="text-xs font-mono bg-muted p-1 rounded">
+                        Code: {localStorage.getItem('kiosk_registration_code')}
+                      </p>
+                    )}
+                  </div>
+                ),
+                variant: "destructive",
+                duration: 8000
+              });
+              hasShownErrorRef.current = true;
+            }
+          } else if (data.archived) {
+            // ✅ NEW: Kiosk exists but is archived
+            console.warn('[Kiosk] ⚠️ Kiosk exists but is ARCHIVED:', {
+              timestamp: new Date().toISOString(),
+              kioskId: data.id,
+              name: data.name,
+              code: data.kiosk_code
+            });
+
+            if (!hasShownErrorRef.current) {
+              toast({
+                title: '⚠️ Kiosk Archived',
+                description: (
+                  <div className="space-y-2">
+                    <p>Kiosk "{data.name}" has been archived by an administrator.</p>
+                    <p className="text-xs text-muted-foreground">
+                      This device needs to be reconfigured with an active kiosk.
+                    </p>
+                  </div>
+                ),
+                variant: "destructive",
+                duration: 8000
+              });
+              hasShownErrorRef.current = true;
+            }
           } else {
-            // Kiosk exists in database - everything is OK
+            // Kiosk exists in database and is active - everything is OK
             console.log('[Kiosk] ✅ Kiosk validated against database:', {
               timestamp: new Date().toISOString(),
               kioskId: data.id,
               name: data.name,
               code: data.kiosk_code,
               dealershipId: data.dealership_id,
-              status: data.status, // ✅ FIX: Use 'status' instead of 'is_active'
+              status: data.status,
+              archived: data.archived, // ✅ NEW
               localStorage_age: localStorage.getItem('kiosk_configured_at')
                 ? `${Math.floor((Date.now() - new Date(localStorage.getItem('kiosk_configured_at')!).getTime()) / (1000 * 60 * 60 * 24))} days`
                 : 'unknown'

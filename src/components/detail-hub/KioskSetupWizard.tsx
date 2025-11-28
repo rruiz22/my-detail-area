@@ -120,15 +120,31 @@ export function KioskSetupWizard({
 
       const configTimestamp = new Date().toISOString();
 
+      // STEP 0: Generate unique registration code (permanent device identifier)
+      console.log('[KioskSetup] 🔑 Generating registration code...');
+
+      const { data: registrationCodeData, error: registrationCodeError } = await supabase
+        .rpc('generate_registration_code');
+
+      if (registrationCodeError || !registrationCodeData) {
+        console.error('[KioskSetup] ❌ Failed to generate registration code:', registrationCodeError);
+        throw new Error('Failed to generate registration code');
+      }
+
+      const registrationCode = registrationCodeData as string;
+      console.log('[KioskSetup] ✅ Registration code generated:', registrationCode);
+
       // STEP 1: Save to localStorage (fast, synchronous)
       localStorage.setItem("kiosk_id", selectedKioskId);
       localStorage.setItem("kiosk_device_fingerprint", fingerprint);
       localStorage.setItem("kiosk_configured_at", configTimestamp);
       localStorage.setItem("kiosk_username", username);
+      localStorage.setItem("kiosk_registration_code", registrationCode); // ✅ NEW
 
       console.log('[KioskSetup] ✅ Configuration saved to localStorage:', {
         kioskId: selectedKioskId,
         fingerprint: fingerprint.substring(0, 12) + '...',
+        registrationCode, // ✅ NEW
         username,
         timestamp: configTimestamp
       });
@@ -141,6 +157,8 @@ export function KioskSetupWizard({
         .upsert({
           kiosk_id: selectedKioskId,
           device_fingerprint: fingerprint,
+          registration_code: registrationCode, // ✅ NEW - Permanent identifier
+          device_fingerprint_history: [fingerprint], // ✅ NEW - Initialize history
           last_seen_at: configTimestamp,
           last_seen_username: username,
           is_active: true,
@@ -157,12 +175,44 @@ export function KioskSetupWizard({
         console.log('[KioskSetup] ✅ Device binding saved to database successfully');
       }
 
-      // Success toast
+      // Success toast with registration code
       toast({
         title: t("detail_hub.kiosk_setup.success_title"),
-        description: t("detail_hub.kiosk_setup.success_message", {
-          kioskName: selectedKiosk.name,
-        }),
+        description: (
+          <div className="space-y-2">
+            <p>{t("detail_hub.kiosk_setup.success_message", {
+              kioskName: selectedKiosk.name,
+            })}</p>
+            <div className="mt-3 p-2 bg-emerald-50 dark:bg-emerald-950 rounded border border-emerald-200 dark:border-emerald-800">
+              <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-300 mb-1">
+                Registration Code (Save for recovery):
+              </p>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 text-sm font-mono font-bold text-emerald-900 dark:text-emerald-100">
+                  {registrationCode}
+                </code>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(registrationCode);
+                    toast({
+                      title: "✅ Copied!",
+                      description: "Registration code copied to clipboard",
+                      duration: 2000
+                    });
+                  }}
+                  className="px-2 py-1 text-xs bg-emerald-600 hover:bg-emerald-700 text-white rounded"
+                >
+                  Copy
+                </button>
+              </div>
+              <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1">
+                This code allows recovery if device fingerprint changes
+              </p>
+            </div>
+          </div>
+        ),
+        duration: 10000, // ✅ Extended duration to give user time to copy
+        className: 'bg-emerald-50 border-emerald-500 dark:bg-emerald-950'
       });
 
       // Call success callback

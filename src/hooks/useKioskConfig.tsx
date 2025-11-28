@@ -16,6 +16,7 @@ const KIOSK_ID_KEY = 'kiosk_id';
 const KIOSK_FINGERPRINT_KEY = 'kiosk_device_fingerprint';
 const KIOSK_CONFIGURED_AT_KEY = 'kiosk_configured_at';
 const KIOSK_USERNAME_KEY = 'kiosk_username';
+const KIOSK_REGISTRATION_CODE_KEY = 'kiosk_registration_code'; // ✅ NEW: Permanent device identifier
 const DEFAULT_KIOSK_ID = 'default-kiosk';
 
 export function useKioskConfig() {
@@ -78,84 +79,231 @@ export function useKioskConfig() {
     };
   }, []);
 
-  // 🔄 AUTOMATIC RECOVERY: Restore config from database if localStorage was cleared
+  // 🔄 AUTOMATIC RECOVERY: Triple-layered recovery system (registration code → fingerprint → history)
   useEffect(() => {
     if (isReady && fingerprint) {
       const currentKioskId = localStorage.getItem(KIOSK_ID_KEY);
 
       // Only attempt recovery if localStorage is empty
       if (!currentKioskId) {
-        console.log('[KioskConfig] 🔍 No localStorage config found - attempting database recovery...');
+        console.log('[KioskConfig] 🔍 No localStorage config found - attempting triple-recovery...');
 
-        supabase
-          .from('detail_hub_kiosk_devices')
-          .select('kiosk_id, configured_at, last_seen_username, is_active')
-          .eq('device_fingerprint', fingerprint)
-          .eq('is_active', true)
-          .single()
-          .then(({ data, error }) => {
-            if (error || !data) {
-              console.log('[KioskConfig] ℹ️ No device binding found in database (never configured or deleted)');
-              return;
+        const attemptRecovery = async () => {
+          const registrationCode = localStorage.getItem(KIOSK_REGISTRATION_CODE_KEY);
+
+          try {
+            // STEP 1: Try recovery by registration code (highest priority - survives fingerprint changes)
+            if (registrationCode) {
+              console.log('[KioskConfig] 🔑 Attempting recovery by registration code:', registrationCode);
+
+              const { data: codeData, error: codeError } = await supabase
+                .from('detail_hub_kiosk_devices')
+                .select('*, detail_hub_kiosks!inner(*)')
+                .eq('registration_code', registrationCode)
+                .eq('is_active', true)
+                .single();
+
+              if (!codeError && codeData) {
+                await logRecoveryAttempt('registration_code', 'success', codeData, registrationCode);
+                await restoreConfiguration(codeData, 'registration_code', registrationCode);
+                return;
+              } else {
+                await logRecoveryAttempt('registration_code', 'failed_no_binding', null, registrationCode);
+                console.log('[KioskConfig] ⚠️ Registration code not found in database');
+              }
             }
 
-            // Found device binding in database!
-            console.log('[KioskConfig] 🎉 RECOVERY SUCCESSFUL - Found device binding in database:', {
-              kioskId: data.kiosk_id,
-              configuredAt: data.configured_at,
-              username: data.last_seen_username,
-              fingerprint: fingerprint.substring(0, 12) + '...'
-            });
+            // STEP 2: Try recovery by exact fingerprint match
+            console.log('[KioskConfig] 🔍 Attempting recovery by fingerprint:', fingerprint.substring(0, 12) + '...');
 
-            // Restore configuration to localStorage
-            localStorage.setItem(KIOSK_ID_KEY, data.kiosk_id);
-            localStorage.setItem(KIOSK_FINGERPRINT_KEY, fingerprint);
-            localStorage.setItem(KIOSK_CONFIGURED_AT_KEY, data.configured_at || new Date().toISOString());
-            if (data.last_seen_username) {
-              localStorage.setItem(KIOSK_USERNAME_KEY, data.last_seen_username);
-            }
-
-            // Update React state
-            setKioskId(data.kiosk_id);
-            setIsConfigured(true);
-
-            console.log('[KioskConfig] ✅ Configuration restored to localStorage successfully');
-
-            // Show success notification to user
-            toast({
-              title: '✅ Kiosk Configuration Restored',
-              description: 'Your kiosk configuration was automatically recovered from the database.',
-              duration: 5000,
-              className: 'bg-emerald-50 border-emerald-500'
-            });
-
-            // Update last_seen timestamp in database
-            supabase
+            const { data: fingerprintData, error: fingerprintError } = await supabase
               .from('detail_hub_kiosk_devices')
-              .update({ last_seen_at: new Date().toISOString() })
+              .select('*, detail_hub_kiosks!inner(*)')
               .eq('device_fingerprint', fingerprint)
-              .then(({ error: updateError }) => {
-                if (updateError) {
-                  console.warn('[KioskConfig] ⚠️ Failed to update last_seen timestamp:', updateError);
-                }
-              });
+              .eq('is_active', true)
+              .single();
+
+            if (!fingerprintError && fingerprintData) {
+              await logRecoveryAttempt('fingerprint', 'success', fingerprintData, registrationCode);
+              await restoreConfiguration(fingerprintData, 'fingerprint', registrationCode);
+              return;
+            } else {
+              await logRecoveryAttempt('fingerprint', 'failed_no_binding', null, registrationCode);
+              console.log('[KioskConfig] ⚠️ Fingerprint not found in database');
+            }
+
+            // STEP 3: Try recovery by searching fingerprint history (JSONB array)
+            console.log('[KioskConfig] 🕵️ Attempting recovery by fingerprint history...');
+
+            const { data: historyData, error: historyError } = await supabase
+              .from('detail_hub_kiosk_devices')
+              .select('*, detail_hub_kiosks!inner(*)')
+              .contains('device_fingerprint_history', [fingerprint])
+              .eq('is_active', true)
+              .single();
+
+            if (!historyError && historyData) {
+              await logRecoveryAttempt('fingerprint_history', 'success', historyData, registrationCode);
+              await restoreConfiguration(historyData, 'fingerprint_history', registrationCode);
+
+              // Update current fingerprint in device binding
+              await supabase
+                .from('detail_hub_kiosk_devices')
+                .update({
+                  device_fingerprint: fingerprint,
+                  last_seen_at: new Date().toISOString()
+                })
+                .eq('id', historyData.id);
+
+              console.log('[KioskConfig] ✅ Fingerprint updated from history');
+              return;
+            } else {
+              await logRecoveryAttempt('fingerprint_history', 'failed_no_binding', null, registrationCode);
+              console.log('[KioskConfig] ℹ️ Device not found in history (never configured or all methods failed)');
+            }
+
+          } catch (error) {
+            console.error('[KioskConfig] ❌ Recovery failed with error:', error);
+            await logRecoveryAttempt('manual', 'failed_error', null, registrationCode, error);
+          }
+        };
+
+        // Helper: Restore configuration to localStorage
+        const restoreConfiguration = async (deviceData: any, method: string, registrationCode: string | null) => {
+          const kiosk = deviceData.detail_hub_kiosks;
+
+          // Check if kiosk is archived
+          if (kiosk.archived) {
+            console.warn('[KioskConfig] ⚠️ Kiosk is archived - configuration cannot be restored');
+            await logRecoveryAttempt(method, 'failed_kiosk_archived', deviceData, registrationCode);
+
+            toast({
+              title: '⚠️ Kiosk Archived',
+              description: 'This kiosk has been archived by an administrator. Please reconfigure this device with an active kiosk.',
+              duration: 8000,
+              variant: 'destructive'
+            });
+            return;
+          }
+
+          // Restore all localStorage keys
+          localStorage.setItem(KIOSK_ID_KEY, deviceData.kiosk_id);
+          localStorage.setItem(KIOSK_FINGERPRINT_KEY, fingerprint);
+          localStorage.setItem(KIOSK_CONFIGURED_AT_KEY, deviceData.configured_at || new Date().toISOString());
+          localStorage.setItem(KIOSK_REGISTRATION_CODE_KEY, deviceData.registration_code);
+
+          if (deviceData.last_seen_username) {
+            localStorage.setItem(KIOSK_USERNAME_KEY, deviceData.last_seen_username);
+          }
+
+          // Update React state
+          setKioskId(deviceData.kiosk_id);
+          setIsConfigured(true);
+
+          console.log('[KioskConfig] 🎉 RECOVERY SUCCESSFUL via', method, {
+            kioskId: deviceData.kiosk_id,
+            kioskCode: kiosk.kiosk_code,
+            registrationCode: deviceData.registration_code,
+            configuredAt: deviceData.configured_at
           });
+
+          // Show success notification
+          toast({
+            title: `✅ Configuration Restored (${method})`,
+            description: `Kiosk "${kiosk.name}" recovered successfully.`,
+            duration: 5000,
+            className: 'bg-emerald-50 border-emerald-500'
+          });
+
+          // Update last_seen timestamp
+          await supabase
+            .from('detail_hub_kiosk_devices')
+            .update({ last_seen_at: new Date().toISOString() })
+            .eq('id', deviceData.id);
+        };
+
+        // Helper: Log recovery attempt to audit table
+        const logRecoveryAttempt = async (
+          method: string,
+          status: string,
+          deviceData: any | null,
+          registrationCode: string | null,
+          errorDetails?: any
+        ) => {
+          try {
+            await supabase.rpc('log_kiosk_recovery', {
+              p_device_fingerprint: fingerprint,
+              p_registration_code: registrationCode,
+              p_recovery_method: method,
+              p_recovery_status: status,
+              p_kiosk_id: deviceData?.kiosk_id || null,
+              p_device_binding_id: deviceData?.id || null,
+              p_error_details: errorDetails ? JSON.parse(JSON.stringify(errorDetails)) : null,
+              p_user_agent: navigator.userAgent,
+              p_ip_address: null // Will be detected by backend if needed
+            });
+          } catch (logError) {
+            console.warn('[KioskConfig] ⚠️ Failed to log recovery attempt:', logError);
+          }
+        };
+
+        attemptRecovery();
       }
     }
   }, [isReady, fingerprint, toast]);
 
-  // Validate fingerprint matches stored fingerprint
+  // Validate fingerprint and update history if changed
   useEffect(() => {
-    if (isReady && fingerprint) {
+    if (isReady && fingerprint && kioskId) {
       const storedFingerprint = localStorage.getItem(KIOSK_FINGERPRINT_KEY);
+      const registrationCode = localStorage.getItem(KIOSK_REGISTRATION_CODE_KEY);
 
       if (storedFingerprint && storedFingerprint !== fingerprint) {
-        console.warn('[KioskConfig] ⚠️ Fingerprint mismatch - device may have changed');
-        // Optionally: Clear configuration if fingerprint doesn't match
-        // clearKioskConfiguration();
+        console.warn('[KioskConfig] ⚠️ Fingerprint changed - updating device binding...', {
+          old: storedFingerprint.substring(0, 12) + '...',
+          new: fingerprint.substring(0, 12) + '...',
+          registrationCode
+        });
+
+        // Update fingerprint in localStorage
+        localStorage.setItem(KIOSK_FINGERPRINT_KEY, fingerprint);
+
+        // Update fingerprint in database and add to history
+        if (registrationCode) {
+          supabase
+            .from('detail_hub_kiosk_devices')
+            .select('device_fingerprint_history')
+            .eq('registration_code', registrationCode)
+            .single()
+            .then(({ data }) => {
+              const history = data?.device_fingerprint_history || [];
+
+              // Add old fingerprint to history if not already present
+              if (!history.includes(storedFingerprint)) {
+                history.push(storedFingerprint);
+              }
+
+              // Update device binding with new fingerprint and history
+              return supabase
+                .from('detail_hub_kiosk_devices')
+                .update({
+                  device_fingerprint: fingerprint,
+                  device_fingerprint_history: history,
+                  last_seen_at: new Date().toISOString()
+                })
+                .eq('registration_code', registrationCode);
+            })
+            .then(({ error }) => {
+              if (error) {
+                console.error('[KioskConfig] ❌ Failed to update fingerprint:', error);
+              } else {
+                console.log('[KioskConfig] ✅ Fingerprint updated successfully in database');
+              }
+            });
+        }
       }
     }
-  }, [isReady, fingerprint]);
+  }, [isReady, fingerprint, kioskId]);
 
   // Save configuration
   const configureKiosk = (newKioskId: string) => {
@@ -180,6 +328,7 @@ export function useKioskConfig() {
     localStorage.removeItem(KIOSK_FINGERPRINT_KEY);
     localStorage.removeItem(KIOSK_CONFIGURED_AT_KEY);
     localStorage.removeItem(KIOSK_USERNAME_KEY);
+    localStorage.removeItem(KIOSK_REGISTRATION_CODE_KEY); // ✅ NEW
 
     setKioskId(null);
     setIsConfigured(false);
@@ -229,6 +378,7 @@ export function clearInvalidKioskConfig(): void {
   const fingerprint = localStorage.getItem(KIOSK_FINGERPRINT_KEY);
   const configuredAt = localStorage.getItem(KIOSK_CONFIGURED_AT_KEY);
   const username = localStorage.getItem(KIOSK_USERNAME_KEY);
+  const registrationCode = localStorage.getItem(KIOSK_REGISTRATION_CODE_KEY); // ✅ NEW
 
   // UUID validation regex
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -247,7 +397,8 @@ export function clearInvalidKioskConfig(): void {
         kioskId: kioskId || '(null)',
         fingerprint: fingerprint ? fingerprint.substring(0, 12) + '...' : '(null)',
         configuredAt: configuredAt || '(null)',
-        username: username || '(null)'
+        username: username || '(null)',
+        registrationCode: registrationCode || '(null)' // ✅ NEW
       },
       validationResults: {
         isDefaultFallback,
@@ -264,6 +415,7 @@ export function clearInvalidKioskConfig(): void {
     localStorage.removeItem(KIOSK_FINGERPRINT_KEY);
     localStorage.removeItem(KIOSK_CONFIGURED_AT_KEY);
     localStorage.removeItem(KIOSK_USERNAME_KEY);
+    localStorage.removeItem(KIOSK_REGISTRATION_CODE_KEY); // ✅ NEW
 
     console.warn('[KioskConfig] ✅ Configuration deleted successfully - automatic recovery will attempt restoration');
   } else if (kioskId && fingerprint) {
@@ -289,3 +441,6 @@ export function clearInvalidKioskConfig(): void {
     console.log('[KioskConfig] ℹ️ No kiosk configuration found (device not configured)');
   }
 }
+
+// Export localStorage keys for use in other modules
+export { KIOSK_REGISTRATION_CODE_KEY };

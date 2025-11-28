@@ -92,6 +92,7 @@ export function useDetailHubKiosks() {
       let query = supabase
         .from('detail_hub_kiosks')
         .select('*')
+        .eq('archived', false) // ✅ NEW: Exclude archived kiosks
         .order('created_at', { ascending: false });
 
       // Filter by dealership
@@ -99,7 +100,7 @@ export function useDetailHubKiosks() {
         query = query.eq('dealership_id', selectedDealerId);
       }
 
-      const { data, error } = await query;
+      const { data, error} = await query;
 
       if (error) throw error;
       return data as DetailHubKiosk[];
@@ -268,6 +269,83 @@ export function useDeleteKiosk() {
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : 'Failed to delete kiosk',
+        variant: "destructive"
+      });
+    }
+  });
+}
+
+// ✅ NEW: Archive kiosk (soft-delete)
+export function useArchiveKiosk() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { selectedDealerId } = useDealerFilter();
+  const { user } = useAuth();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { data, error } = await supabase.rpc('archive_kiosk', {
+        p_kiosk_id: id,
+        p_archived_by: user?.id || null
+      });
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (result: any) => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.kiosks(selectedDealerId) });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.kioskStats(selectedDealerId) });
+
+      const deviceCount = result.device_count || 0;
+
+      toast({
+        title: "Kiosk Archived",
+        description: deviceCount > 0
+          ? `${result.message} ${deviceCount} device(s) will need reconfiguration if this kiosk is unarchived.`
+          : "Kiosk has been archived successfully.",
+        duration: 8000,
+        className: deviceCount > 0 ? 'bg-amber-50 border-amber-500' : undefined
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : 'Failed to archive kiosk',
+        variant: "destructive"
+      });
+    }
+  });
+}
+
+// ✅ NEW: Unarchive kiosk (restore)
+export function useUnarchiveKiosk() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { selectedDealerId } = useDealerFilter();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { data, error } = await supabase.rpc('unarchive_kiosk', {
+        p_kiosk_id: id
+      });
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (result: any) => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.kiosks(selectedDealerId) });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.kioskStats(selectedDealerId) });
+
+      toast({
+        title: "Kiosk Unarchived",
+        description: result.message || "Kiosk has been restored successfully.",
+        className: 'bg-emerald-50 border-emerald-500'
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : 'Failed to unarchive kiosk',
         variant: "destructive"
       });
     }

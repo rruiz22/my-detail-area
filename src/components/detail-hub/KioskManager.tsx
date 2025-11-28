@@ -19,6 +19,7 @@ import {
   useCreateKiosk,
   useUpdateKiosk,
   useDeleteKiosk,
+  useArchiveKiosk, // ✅ NEW
   generateKioskCode,
   type DetailHubKiosk
 } from "@/hooks/useDetailHubKiosks";
@@ -65,7 +66,7 @@ const KioskManager = () => {
   const { data: employees = [] } = useDetailHubEmployees();
   const { mutate: createKiosk, isPending: isCreating } = useCreateKiosk();
   const { mutate: updateKiosk, isPending: isUpdating } = useUpdateKiosk();
-  const { mutate: deleteKiosk } = useDeleteKiosk();
+  const { mutate: archiveKiosk } = useArchiveKiosk(); // ✅ CHANGED: Use archive instead of delete
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -175,8 +176,15 @@ const KioskManager = () => {
   };
 
   const handleDeleteKiosk = (id: string) => {
-    if (confirm('Are you sure you want to delete this kiosk?')) {
-      deleteKiosk(id);
+    const confirmed = confirm(
+      '⚠️ Archive this kiosk?\n\n' +
+      'The kiosk will be hidden from the active list, but device bindings will be preserved. ' +
+      'You can unarchive it later if needed.\n\n' +
+      'Devices configured with this kiosk may need to be reconfigured.'
+    );
+
+    if (confirmed) {
+      archiveKiosk(id); // ✅ CHANGED: Archive instead of delete
     }
   };
 

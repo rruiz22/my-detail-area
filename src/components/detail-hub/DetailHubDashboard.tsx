@@ -17,7 +17,6 @@ import ReportsCenter from "./ReportsCenter";
 import InvoiceCenter from "./InvoiceCenter";
 import KioskManager from "./KioskManager";
 import LiveStatusDashboard from "./LiveStatusDashboard";
-import ScheduleCalendar from "./ScheduleCalendar";
 import { PunchClockKioskModal } from "./PunchClockKioskModal";
 // KIOSK SETUP WIZARD
 import { KioskSetupWizard, isKioskConfigured, getConfiguredKioskId, generateDeviceFingerprint, getSystemUsername } from "./KioskSetupWizard";
@@ -40,14 +39,18 @@ const DetailHubDashboard = () => {
   // Persisted tab state
   const [activeTab, setActiveTab] = useTabPersistence('detail_hub', 'overview');
 
-  // Initialize kiosk ID on mount + Clean invalid configurations
+  // Initialize kiosk ID on mount
   useEffect(() => {
-    // ✅ FIX: Auto-clean invalid kiosk configs on mount
-    clearInvalidKioskConfig();
+    // ⚠️ REMOVED: clearInvalidKioskConfig() - No longer needed with triple-recovery system
+    // The new recovery system in useKioskConfig.tsx handles validation automatically:
+    // - Recovery attempts registration_code → fingerprint → history
+    // - Only clears obviously invalid configs (default-kiosk, malformed UUIDs)
+    // - Validation of kiosk existence happens in PunchClockKioskModal
+    // clearInvalidKioskConfig(); // ← COMMENTED OUT (kept import for safety)
 
     const configuredId = getConfiguredKioskId();
     setKioskId(configuredId);
-    console.log('[DetailHub] 🧹 Cleanup complete. Kiosk configured:', configuredId ? 'YES' : 'NO', configuredId);
+    console.log('[DetailHub] Kiosk configured:', configuredId ? 'YES' : 'NO', configuredId);
   }, []);
 
   // REAL DATABASE INTEGRATION
@@ -150,10 +153,9 @@ const DetailHubDashboard = () => {
 
       {/* Tabs for all Detail Hub functionality */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-8">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="overview">{t('detail_hub.tabs.overview')}</TabsTrigger>
           <TabsTrigger value="employees">{t('detail_hub.tabs.employees')}</TabsTrigger>
-          <TabsTrigger value="schedules">{t('detail_hub.tabs.schedules')}</TabsTrigger>
           <TabsTrigger value="timecards">{t('detail_hub.tabs.timecards')}</TabsTrigger>
           <TabsTrigger value="analytics">{t('detail_hub.tabs.analytics')}</TabsTrigger>
           <TabsTrigger value="reports">{t('detail_hub.tabs.reports')}</TabsTrigger>
@@ -169,11 +171,6 @@ const DetailHubDashboard = () => {
         {/* TAB: Employees */}
         <TabsContent value="employees">
           <EmployeePortal />
-        </TabsContent>
-
-        {/* TAB: Schedules */}
-        <TabsContent value="schedules">
-          <ScheduleCalendar />
         </TabsContent>
 
         {/* TAB: Timecards */}
