@@ -30,7 +30,9 @@ const SERVICE_WORKER_ERROR_PATTERNS = [
   'The FetchEvent resulted in a network error',
   'redirected response was used for a request',
   'Service worker registration failed',
-  'Service Worker registration failed'
+  'Service Worker registration failed',
+  'sw-custom.js', // ⚠️ OLD: Legacy service worker no longer used
+  'unsupported MIME type' // ⚠️ Service worker MIME type errors
 ];
 
 // Push notification non-critical patterns to suppress

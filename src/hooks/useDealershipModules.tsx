@@ -168,8 +168,11 @@ export const useDealershipModules = (
     // 1. New dealerships auto-seed modules via trigger
     // 2. Existing dealerships were backfilled
     if (modules.length === 0) {
-      console.warn(`[hasModuleAccess] ⚠️ No modules configured - DENYING ${module} (fail-closed security)`);
-      console.warn('  This should not happen - dealership may need module configuration');
+      // ⚠️ OPTIMIZATION: Only show warning if NOT loading (reduces initial render noise)
+      if (!loading) {
+        console.warn(`[hasModuleAccess] ⚠️ No modules configured - DENYING ${module} (fail-closed security)`);
+        console.warn('  This should not happen - dealership may need module configuration');
+      }
       return false; // ✅ DENY by default (fail-closed)
     }
 
@@ -184,7 +187,7 @@ export const useDealershipModules = (
     }
 
     return isEnabled;
-  }, [modules]);
+  }, [modules, loading]);
 
   useEffect(() => {
     refreshModules();
