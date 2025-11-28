@@ -179,9 +179,13 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
   // Check if user can view pricing (system admin or has view_pricing permission in any order module)
   const canViewPrices = enhancedUser?.is_system_admin ||
     (enhancedUser?.custom_roles?.some(role => {
-      const salesPerms = role.module_permissions?.get('sales_orders' satisfies AppModule);
-      const servicePerms = role.module_permissions?.get('service_orders' satisfies AppModule);
-      const reconPerms = role.module_permissions?.get('recon_orders' satisfies AppModule);
+      // ⚠️ DEFENSIVE: Check if module_permissions is actually a Map
+      if (!role.module_permissions || typeof role.module_permissions.get !== 'function') {
+        return false;
+      }
+      const salesPerms = role.module_permissions.get('sales_orders' satisfies AppModule);
+      const servicePerms = role.module_permissions.get('service_orders' satisfies AppModule);
+      const reconPerms = role.module_permissions.get('recon_orders' satisfies AppModule);
       return salesPerms?.has('view_pricing' satisfies ModulePermissionKey) ||
              servicePerms?.has('view_pricing' satisfies ModulePermissionKey) ||
              reconPerms?.has('view_pricing' satisfies ModulePermissionKey);
