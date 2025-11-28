@@ -4,7 +4,7 @@ import Backend from 'i18next-http-backend';
 
 // 🔴 CRITICAL FIX: Use STATIC version from package.json instead of dynamic Date.now()
 // This allows proper cache validation and automatic invalidation on version bumps
-const APP_VERSION = '1.3.44'; // 🚀 Code splitting implementation (Phase 2) + preload fix
+const APP_VERSION = '1.3.51'; // 🚀 v1.3.51: Translation fixes (timeout 60s, cache 5min, browser cache, all NS)
 const TRANSLATION_VERSION = APP_VERSION; // Tied to app version for cache invalidation
 
 // 🎛️ FEATURE FLAG: Enable code splitting (set to false for rollback)
@@ -14,8 +14,10 @@ const USE_CODE_SPLITTING = import.meta.env.VITE_USE_CODE_SPLITTING !== 'false';
 // ✅ Include app version in cache key - auto-invalidates on version change
 const TRANSLATION_CACHE_KEY = `i18n_translations_cache_${APP_VERSION}${USE_CODE_SPLITTING ? '_split' : ''}`;
 
-// Cache expiration time (1 hour)
-const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour
+// ✅ PERFORMANCE FIX: Cache expiration time (5 minutes)
+// Reduced from 1 hour to match browser cache (max-age=300) for consistency
+// Ensures translation updates are visible within 5 minutes of deploy
+const CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutes (down from 1 hour)
 
 // Interface for cached translations with metadata
 interface CachedTranslations {
@@ -79,18 +81,26 @@ const ALL_NAMESPACES = [
   'vin_scanner_settings'
 ];
 
-const PRELOAD_NAMESPACES = ALL_NAMESPACES; // Load all on init
+// 🔴 ROLLBACK: Preload ALL namespaces (82 total)
+// Fix 5 (10 critical NS) was too aggressive - caused missing translations (Detail Hub showed keys)
+// BMW of Sudbury heavily uses Detail Hub module which wasn't in critical list
+// Reverted to preload all namespaces for zero-config compatibility
+// With Fixes 1-4 (timeout 60s, SW cleanup, browser cache 5min), 82 NS load is acceptable
+const PRELOAD_NAMESPACES = ALL_NAMESPACES; // Load all 82 on init
 
 // Track if initial language is being loaded
 let initialLanguageLoading: Promise<any> | null = null;
 
 // 🔴 CRITICAL FIX: Retry fetch with exponential backoff
+// ✅ PERFORMANCE FIX: Enable browser cache (5 minutes) to reduce network requests
 const fetchWithRetry = async (url: string, maxRetries = 2): Promise<Response> => {
   for (let i = 0; i <= maxRetries; i++) {
     try {
       const response = await fetch(url, {
-        cache: 'no-store',
-        headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
+        cache: 'default', // Use browser cache (respects Cache-Control headers)
+        headers: {
+          'Cache-Control': 'public, max-age=300' // 5 minutes browser cache
+        }
       });
 
       if (!response.ok && i < maxRetries) {

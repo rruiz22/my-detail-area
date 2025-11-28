@@ -11,61 +11,78 @@ import "./styles/order-animations.css";
 import "./lib/i18n";
 import packageJson from "../package.json";
 
-// 🔴 CRITICAL FIX: Version-based Service Worker invalidation
-// Automatically unregisters SW and clears all caches when version changes
-// This prevents "Translation Loading Failed" and stale cache issues
+// 🔴 SERVICE WORKER DISABLED - Cache cleanup for all users
+// Date: 2025-11-28
+// Reason: BMW of Sudbury reported stale data due to 24h API cache
+// Solution: Remove all service workers and rely on TanStack Query cache only
 const CURRENT_VERSION = packageJson.version;
-const SW_VERSION_KEY = 'sw_version';
+const SW_CLEANUP_KEY = 'sw_cleanup_completed';
+const SW_CLEANUP_VERSION = '1.3.51'; // Version with aggressive SW cleanup + translation fixes
 
+console.log(`🚀 MyDetailArea v${CURRENT_VERSION} starting...`);
+
+// 🔴 CRITICAL: Aggressive Service Worker cleanup - BLOCKS app rendering if SW detected
+// This prevents old SW from intercepting translation requests and causing timeouts
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(async registrations => {
-    const cachedVersion = localStorage.getItem(SW_VERSION_KEY);
+  // Check immediately (synchronous check for already-completed cleanup)
+  const cleanupCompleted = localStorage.getItem(SW_CLEANUP_KEY);
+  const needsCleanup = cleanupCompleted !== SW_CLEANUP_VERSION;
 
-    // 🔴 VERSION MISMATCH: Force clear all service workers and caches
-    if (cachedVersion && cachedVersion !== CURRENT_VERSION) {
-      console.warn(`🔄 Version changed: ${cachedVersion} → ${CURRENT_VERSION}`);
-      console.log('🗑️ Clearing all service workers and caches...');
+  if (needsCleanup) {
+    console.warn('⚠️ OLD SERVICE WORKER DETECTED - Starting aggressive cleanup...');
 
-      // Unregister all service workers
-      for (const registration of registrations) {
-        await registration.unregister();
-      }
+    // BLOCKING: Wait for SW cleanup before rendering app
+    navigator.serviceWorker.getRegistrations().then(async registrations => {
+      if (registrations.length > 0) {
+        console.warn('🗑️ SERVICE WORKER CLEANUP: Removing all service workers...');
 
-      // Clear all caches (translations, API, images)
-      const cacheNames = await caches.keys();
-      for (const cacheName of cacheNames) {
-        await caches.delete(cacheName);
-      }
-
-      // Update version and force reload
-      localStorage.setItem(SW_VERSION_KEY, CURRENT_VERSION);
-      console.log('✅ Cache cleared. Reloading app...');
-      window.location.reload();
-      return; // Exit early - reload will re-register SW
-    }
-
-    // 🔴 FIRST TIME or SAME VERSION: Normal SW management
-    localStorage.setItem(SW_VERSION_KEY, CURRENT_VERSION);
-
-    registrations.forEach(registration => {
-      const scriptURL = registration.active?.scriptURL || registration.installing?.scriptURL || registration.waiting?.scriptURL;
-
-      // Unregister legacy sw.js (no longer exists)
-      if (scriptURL && scriptURL.includes('/sw.js')) {
-        registration.unregister();
-        console.log('🗑️ Unregistered legacy service worker: sw.js');
-      }
-      // Update current service workers (sw-custom.js, firebase-messaging-sw.js)
-      else if (scriptURL && (scriptURL.includes('sw-custom.js') || scriptURL.includes('firebase-messaging-sw.js'))) {
-        registration.update();
-        if (import.meta.env.DEV) {
-          console.log('🔄 Service worker update check triggered');
+        // Unregister ALL service workers (including firebase-messaging-sw.js)
+        for (const registration of registrations) {
+          const scriptURL = registration.active?.scriptURL || registration.installing?.scriptURL || registration.waiting?.scriptURL;
+          await registration.unregister();
+          console.log(`  ✅ Unregistered: ${scriptURL}`);
         }
+
+        // Clear ALL caches (translations, API, images, fonts, etc)
+        if ('caches' in window) {
+          const cacheNames = await caches.keys();
+          if (cacheNames.length > 0) {
+            console.warn('🗑️ Clearing all service worker caches...');
+            for (const cacheName of cacheNames) {
+              await caches.delete(cacheName);
+              console.log(`  ✅ Deleted cache: ${cacheName}`);
+            }
+          }
+        }
+
+        // Mark cleanup as completed
+        localStorage.setItem(SW_CLEANUP_KEY, SW_CLEANUP_VERSION);
+        console.log('✅ Service worker cleanup completed!');
+
+        // 🔴 CRITICAL: Force immediate reload to ensure SW doesn't interfere
+        console.log('🔄 Reloading app without service worker...');
+        window.location.reload();
+
+        // Stop execution - reload will re-run this script
+        throw new Error('SW cleanup - reloading');
+      } else {
+        // No SW found but cleanup wasn't marked complete
+        console.log('✅ No service workers found - marking cleanup as done');
+        localStorage.setItem(SW_CLEANUP_KEY, SW_CLEANUP_VERSION);
+      }
+    }).catch(error => {
+      if (error.message !== 'SW cleanup - reloading') {
+        console.error('❌ Service worker cleanup failed:', error);
+        // Continue with app render even if cleanup fails
       }
     });
-  }).catch(error => {
-    console.warn('Service worker update check failed:', error);
-  });
+  } else {
+    console.log('✅ Service worker cleanup already completed for v' + SW_CLEANUP_VERSION);
+    console.log('📊 App uses:');
+    console.log('  • TanStack Query (5min cache for API)');
+    console.log('  • localStorage (user preferences)');
+    console.log('  • Browser cache (static assets)');
+  }
 }
 
 createRoot(document.getElementById("root")!).render(

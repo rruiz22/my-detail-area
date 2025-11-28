@@ -88,15 +88,15 @@ export function useTranslationsReady() {
 
     // 🔴 CRITICAL FIX: Timeout now triggers error instead of proceeding
     // Better to show error message than render with translation keys
-    // Increased to 30 seconds for mobile networks (3G/4G) + 80 translation files
-    // Reduces false positives on slow connections
+    // Increased to 60 seconds for slow networks (3G/4G/Corporate VPN) + 82 translation files
+    // Reduces false positives on slow connections (BMW of Sudbury: 20-30s avg load time)
     const timeoutId = setTimeout(() => {
       if (isMounted && !checkReady()) {
         // Always log timeout errors (even in production)
-        console.error('❌ Translations not loaded after 30 seconds - translation load failure');
+        console.error('❌ Translations not loaded after 60 seconds - translation load failure');
         setHasError(true); // Trigger error state instead of proceeding
       }
-    }, 30000);
+    }, 60000); // 60 seconds (2x previous timeout)
 
     return () => {
       isMounted = false;
