@@ -4,7 +4,7 @@
   "tools": "Tools",
   "preferences": "Preferences",
   "footer": {
-    "copyright": "Â© {{year}} My Detail Area",
+    "copyright": "© {{year}} My Detail Area",
     "tagline": "Enterprise Dealership Management",
     "privacy_policy": "Privacy Policy",
     "terms_of_service": "Terms of Service",
