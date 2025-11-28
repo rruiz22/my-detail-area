@@ -1,11 +1,11 @@
 {
-  "service_date": "Data do ServiÃ§o",
-  "select_service_date": "Selecionar data do serviÃ§o",
-  "service_date_help": "Data em que o serviÃ§o de lavagem foi concluÃ­do",
-  "order_created_successfully": "Pedido de lavagem criado com sucesso",
-  "order_updated_successfully": "Pedido de lavagem atualizado com sucesso",
-  "order_deleted_successfully": "Pedido de lavagem excluÃ­do com sucesso",
-  "error_creating_order": "Erro ao criar pedido de lavagem",
-  "error_updating_order": "Erro ao atualizar pedido de lavagem",
-  "error_deleting_order": "Erro ao excluir pedido de lavagem"
+  "service_date": "Fecha del Servicio",
+  "select_service_date": "Seleccionar fecha del servicio",
+  "service_date_help": "Fecha en que se completó el servicio de lavado",
+  "order_created_successfully": "Orden de lavado creada exitosamente",
+  "order_updated_successfully": "Orden de lavado actualizada exitosamente",
+  "order_deleted_successfully": "Orden de lavado eliminada exitosamente",
+  "error_creating_order": "Error al crear orden de lavado",
+  "error_updating_order": "Error al actualizar orden de lavado",
+  "error_deleting_order": "Error al eliminar orden de lavado"
 }

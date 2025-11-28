@@ -1,11 +1,11 @@
 {
-  "title": "Data e Hora de Vencimento",
-  "date_placeholder": "Selecionar data de vencimento",
-  "time_placeholder": "Selecionar horÃ¡rio",
+  "title": "Fecha y Hora de Vencimiento",
+  "date_placeholder": "Seleccionar fecha de vencimiento",
+  "time_placeholder": "Seleccionar hora",
   "validation": {
-    "no_slots_available": "NÃ£o hÃ¡ horÃ¡rios disponÃ­veis",
-    "closed_sundays": "Fechado aos domingos",
-    "same_day_notice": "Agendamentos no mesmo dia requerem processamento imediato",
-    "business_hours_only": "Apenas horÃ¡rio comercial"
+    "no_slots_available": "No hay horarios disponibles",
+    "closed_sundays": "Cerrado los domingos",
+    "same_day_notice": "Las citas del mismo día requieren procesamiento inmediato",
+    "business_hours_only": "Solo horario comercial"
   }
 }

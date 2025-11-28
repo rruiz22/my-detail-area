@@ -1,15 +1,20 @@
 {
-  "month": "MÃªs",
+  "month": "Mes",
   "week": "Semana",
-  "day": "Dia",
-  "today": "Hoje",
+  "day": "Día",
+  "today": "Hoy",
   "previous": "Anterior",
-  "next": "PrÃ³ximo",
+  "next": "Siguiente",
   "agenda": "Agenda",
-  "date": "Data",
+  "date": "Fecha",
   "time": "Hora",
   "event": "Evento",
-  "noEventsInRange": "Nenhum pedido neste perÃ­odo",
-  "showMore": "Mostrar mais",
-  "clickToCreateOrder": "Clique em um espaÃ§o vazio para criar um novo pedido"
+  "noEventsInRange": "No hay órdenes en este rango de fechas",
+  "showMore": "Mostrar más",
+  "clickToCreateOrder": "Haz clic en un espacio vacío para crear una nueva orden",
+  "status_legend": "Colores de Estado",
+  "date_source_legend": "Fuentes de Fecha",
+  "due_date": "Fecha de Vencimiento",
+  "scheduled_date": "Fecha Programada",
+  "created_date": "Fecha de Creación"
 }

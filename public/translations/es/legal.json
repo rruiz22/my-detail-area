@@ -1,82 +1,82 @@
 {
   "privacy_policy": {
-    "title": "PolÃ­tica de Privacidade",
-    "last_updated": "Ãšltima atualizaÃ§Ã£o: 24 de outubro de 2025",
+    "title": "Política de Privacidad",
+    "last_updated": "Última actualización: 24 de octubre de 2025",
     "intro": {
-      "title": "IntroduÃ§Ã£o",
-      "content": "My Detail Area estÃ¡ comprometido com a proteÃ§Ã£o da sua privacidade. Esta PolÃ­tica de Privacidade explica como coletamos, usamos, divulgamos e protegemos suas informaÃ§Ãµes quando vocÃª usa nossa plataforma de gestÃ£o para concessionÃ¡rias."
+      "title": "Introducción",
+      "content": "My Detail Area está comprometido con la protección de su privacidad. Esta Política de Privacidad explica cómo recopilamos, usamos, divulgamos y protegemos su información cuando utiliza nuestra plataforma de gestión para concesionarias."
     },
     "collection": {
-      "title": "InformaÃ§Ãµes que Coletamos",
-      "content": "Coletamos informaÃ§Ãµes que vocÃª nos fornece diretamente, incluindo:",
-      "item1": "InformaÃ§Ãµes pessoais (nome, endereÃ§o de e-mail, nÃºmero de telefone)",
-      "item2": "InformaÃ§Ãµes da concessionÃ¡ria (nome comercial, endereÃ§o, CNPJ)",
-      "item3": "Dados de veÃ­culos e clientes inseridos no sistema",
-      "item4": "Dados de uso e anÃ¡lise para melhorar nosso serviÃ§o"
+      "title": "Información que Recopilamos",
+      "content": "Recopilamos información que usted nos proporciona directamente, incluyendo:",
+      "item1": "Información personal (nombre, dirección de correo electrónico, número de teléfono)",
+      "item2": "Información de la concesionaria (nombre comercial, dirección, identificación fiscal)",
+      "item3": "Datos de vehículos y clientes ingresados en el sistema",
+      "item4": "Datos de uso y analíticas para mejorar nuestro servicio"
     },
     "usage": {
-      "title": "Como Usamos suas InformaÃ§Ãµes",
-      "content": "Usamos as informaÃ§Ãµes que coletamos para:",
-      "item1": "Fornecer, manter e melhorar nossos serviÃ§os de gestÃ£o para concessionÃ¡rias",
-      "item2": "Processar transaÃ§Ãµes e enviar informaÃ§Ãµes relacionadas",
-      "item3": "Enviar avisos tÃ©cnicos, atualizaÃ§Ãµes, alertas de seguranÃ§a e mensagens de suporte",
-      "item4": "Responder aos seus comentÃ¡rios, perguntas e solicitaÃ§Ãµes de atendimento ao cliente"
+      "title": "Cómo Usamos su Información",
+      "content": "Usamos la información que recopilamos para:",
+      "item1": "Proporcionar, mantener y mejorar nuestros servicios de gestión para concesionarias",
+      "item2": "Procesar transacciones y enviar información relacionada",
+      "item3": "Enviar avisos técnicos, actualizaciones, alertas de seguridad y mensajes de soporte",
+      "item4": "Responder a sus comentarios, preguntas y solicitudes de servicio al cliente"
     },
     "security": {
-      "title": "SeguranÃ§a de Dados",
-      "content": "Implementamos medidas tÃ©cnicas e organizacionais apropriadas para proteger suas informaÃ§Ãµes pessoais contra acesso nÃ£o autorizado, alteraÃ§Ã£o, divulgaÃ§Ã£o ou destruiÃ§Ã£o. Todos os dados sÃ£o criptografados em trÃ¢nsito e em repouso usando protocolos padrÃ£o da indÃºstria."
+      "title": "Seguridad de Datos",
+      "content": "Implementamos medidas técnicas y organizacionales apropiadas para proteger su información personal contra acceso no autorizado, alteración, divulgación o destrucción. Todos los datos están encriptados en tránsito y en reposo utilizando protocolos estándar de la industria."
     },
     "rights": {
-      "title": "Seus Direitos",
-      "content": "VocÃª tem o direito de:",
-      "item1": "Acessar e receber uma cÃ³pia dos seus dados pessoais",
-      "item2": "Retificar dados pessoais imprecisos ou incompletos",
-      "item3": "Solicitar a exclusÃ£o dos seus dados pessoais",
-      "item4": "Opor-se ou restringir o processamento dos seus dados pessoais"
+      "title": "Sus Derechos",
+      "content": "Usted tiene derecho a:",
+      "item1": "Acceder y recibir una copia de sus datos personales",
+      "item2": "Rectificar datos personales inexactos o incompletos",
+      "item3": "Solicitar la eliminación de sus datos personales",
+      "item4": "Oponerse o restringir el procesamiento de sus datos personales"
     },
     "contact": {
-      "title": "Contato",
-      "content": "Se vocÃª tiver alguma dÃºvida sobre esta PolÃ­tica de Privacidade, entre em contato conosco em:",
+      "title": "Contacto",
+      "content": "Si tiene alguna pregunta sobre esta Política de Privacidad, contáctenos en:",
       "email": "privacy@mydetailarea.com"
     }
   },
   "terms_of_service": {
-    "title": "Termos de ServiÃ§o",
-    "last_updated": "Ãšltima atualizaÃ§Ã£o: 24 de outubro de 2025",
+    "title": "Términos de Servicio",
+    "last_updated": "Última actualización: 24 de octubre de 2025",
     "acceptance": {
-      "title": "AceitaÃ§Ã£o dos Termos",
-      "content": "Ao acessar e usar o My Detail Area, vocÃª aceita e concorda em cumprir estes Termos de ServiÃ§o. Se vocÃª nÃ£o concordar com estes termos, por favor nÃ£o use nosso serviÃ§o."
+      "title": "Aceptación de los Términos",
+      "content": "Al acceder y usar My Detail Area, usted acepta y acepta cumplir con estos Términos de Servicio. Si no está de acuerdo con estos términos, por favor no use nuestro servicio."
     },
     "usage": {
-      "title": "Uso do ServiÃ§o",
-      "content": "VocÃª concorda em usar o My Detail Area apenas para fins legais e de acordo com estes Termos. VocÃª concorda em nÃ£o:",
-      "item1": "Usar o serviÃ§o de forma que viole leis ou regulamentos aplicÃ¡veis",
-      "item2": "Tentar obter acesso nÃ£o autorizado a qualquer parte do serviÃ§o",
-      "item3": "Interferir ou interromper o serviÃ§o ou os servidores",
-      "item4": "Fazer upload ou transmitir vÃ­rus ou qualquer outro cÃ³digo malicioso"
+      "title": "Uso del Servicio",
+      "content": "Usted acepta usar My Detail Area solo para fines legales y de acuerdo con estos Términos. Usted acepta no:",
+      "item1": "Usar el servicio de forma que viole leyes o regulaciones aplicables",
+      "item2": "Intentar obtener acceso no autorizado a cualquier parte del servicio",
+      "item3": "Interferir o interrumpir el servicio o los servidores",
+      "item4": "Cargar o transmitir virus o cualquier otro código malicioso"
     },
     "accounts": {
-      "title": "Contas de UsuÃ¡rio",
-      "content": "Quando vocÃª cria uma conta conosco, deve fornecer informaÃ§Ãµes precisas e completas. VocÃª Ã© responsÃ¡vel por:",
-      "item1": "Manter a confidencialidade das credenciais da sua conta",
-      "item2": "Todas as atividades que ocorrem sob sua conta",
-      "item3": "Nos notificar imediatamente de qualquer uso nÃ£o autorizado"
+      "title": "Cuentas de Usuario",
+      "content": "Cuando crea una cuenta con nosotros, debe proporcionar información precisa y completa. Usted es responsable de:",
+      "item1": "Mantener la confidencialidad de las credenciales de su cuenta",
+      "item2": "Todas las actividades que ocurran bajo su cuenta",
+      "item3": "Notificarnos inmediatamente de cualquier uso no autorizado"
     },
     "intellectual_property": {
-      "title": "Propriedade Intelectual",
-      "content": "O serviÃ§o e seu conteÃºdo original, recursos e funcionalidade sÃ£o de propriedade do My Detail Area e sÃ£o protegidos por leis internacionais de direitos autorais, marcas registradas, patentes, segredos comerciais e outras leis de propriedade intelectual."
+      "title": "Propiedad Intelectual",
+      "content": "El servicio y su contenido original, características y funcionalidad son propiedad de My Detail Area y están protegidos por leyes internacionales de derechos de autor, marcas registradas, patentes, secretos comerciales y otras leyes de propiedad intelectual."
     },
     "liability": {
-      "title": "LimitaÃ§Ã£o de Responsabilidade",
-      "content": "My Detail Area nÃ£o serÃ¡ responsÃ¡vel por quaisquer danos indiretos, incidentais, especiais, consequentes ou punitivos resultantes do seu uso ou incapacidade de usar o serviÃ§o, mesmo que tenhamos sido avisados da possibilidade de tais danos."
+      "title": "Limitación de Responsabilidad",
+      "content": "My Detail Area no será responsable de ningún daño indirecto, incidental, especial, consecuente o punitivo resultante de su uso o incapacidad para usar el servicio, incluso si hemos sido advertidos de la posibilidad de tales daños."
     },
     "changes": {
-      "title": "AlteraÃ§Ãµes nos Termos",
-      "content": "Reservamo-nos o direito de modificar ou substituir estes Termos a qualquer momento. Se uma revisÃ£o for material, forneceremos pelo menos 30 dias de aviso antes que os novos termos entrem em vigor. O uso continuado do serviÃ§o apÃ³s as alteraÃ§Ãµes constitui aceitaÃ§Ã£o dos novos Termos."
+      "title": "Cambios a los Términos",
+      "content": "Nos reservamos el derecho de modificar o reemplazar estos Términos en cualquier momento. Si una revisión es material, proporcionaremos al menos 30 días de aviso antes de que los nuevos términos entren en vigor. El uso continuado del servicio después de los cambios constituye aceptación de los nuevos Términos."
     },
     "contact": {
-      "title": "Contato",
-      "content": "Se vocÃª tiver alguma dÃºvida sobre estes Termos, entre em contato conosco em:",
+      "title": "Contacto",
+      "content": "Si tiene alguna pregunta sobre estos Términos, contáctenos en:",
       "email": "legal@mydetailarea.com"
     }
   }

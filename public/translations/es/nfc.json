@@ -1,57 +1,58 @@
 {
   "writer": {
-    "title": "Gravador de Tag NFC",
+    "title": "Escritor NFC",
     "preparing": "Preparando...",
-    "writing": "Gravando em Tag...",
-    "success": "GravaÃ§Ã£o Bem-Sucedida!",
-    "error": "Erro de GravaÃ§Ã£o",
-    "ready": "Pronto para Gravar",
-    "write_tag": "Gravar Tag",
-    "retry": "Tentar Novamente",
+    "writing": "Escribiendo en Etiqueta...",
+    "success": "Escritura Exitosa",
+    "error": "Escritura Fallida",
+    "ready": "Listo para Escribir",
+    "write_to_physical": "Escribir en Etiqueta Física",
+    "write_tag": "Escribir Etiqueta",
+    "retry": "Reintentar",
     "instructions": {
-      "ready": "Clique em 'Gravar Tag' e entÃ£o aproxime a tag NFC fÃ­sica do seu dispositivo.",
-      "preparing": "Preparando tag para gravaÃ§Ã£o...",
-      "writing": "Mantenha a tag prÃ³xima ao dispositivo atÃ© que a gravaÃ§Ã£o seja concluÃ­da.",
-      "success": "Tag gravada com sucesso! Agora vocÃª pode usÃ¡-la para rastreamento.",
-      "error": "Falha ao gravar na tag. Verifique a conexÃ£o e tente novamente."
+      "preparing": "Solicitando permisos NFC...",
+      "writing": "Mantenga su dispositivo cerca de la etiqueta NFC",
+      "success": "¡Etiqueta escrita exitosamente!",
+      "error": "Error al escribir etiqueta. Por favor intente de nuevo.",
+      "ready": "Haga clic en 'Escribir Etiqueta' y mantenga el dispositivo cerca de la etiqueta"
     }
   },
   "reader": {
-    "title": "Leitor de Tag NFC",
-    "scanning": "Lendo Tag...",
-    "success": "Tag Lida com Sucesso!",
-    "error": "Erro de Leitura",
-    "ready": "Pronto para Ler",
-    "start_scanning": "Iniciar Leitura",
-    "stop_scanning": "Parar Leitura",
-    "scan_another": "Ler Outra Tag",
-    "retry": "Tentar Novamente",
-    "tag_data": "Dados da Tag",
+    "title": "Lector NFC",
+    "scanning": "Escaneando...",
+    "success": "Etiqueta Leída Exitosamente",
+    "error": "Lectura Fallida",
+    "ready": "Listo para Escanear",
+    "start_scanning": "Iniciar Escaneo",
+    "stop_scanning": "Detener Escaneo",
+    "scan_another": "Escanear Otra",
+    "retry": "Reintentar",
+    "tag_data": "Datos de Etiqueta",
     "instructions": {
-      "ready": "Clique em 'Iniciar Leitura' e entÃ£o aproxime uma tag NFC do seu dispositivo.",
-      "scanning": "Aproxime uma tag NFC do seu dispositivo...",
-      "success": "Tag lida com sucesso! Dados exibidos abaixo.",
-      "error": "Falha ao ler a tag. Verifique a conexÃ£o e tente novamente."
+      "scanning": "Mantenga su dispositivo cerca de una etiqueta NFC",
+      "success": "¡Etiqueta leída exitosamente!",
+      "error": "Error al leer etiqueta. Por favor intente de nuevo.",
+      "ready": "Haga clic en 'Iniciar Escaneo' para comenzar"
     }
   },
   "tag_info": {
-    "id": "ID da Tag",
-    "name": "Nome",
+    "id": "ID de Etiqueta",
+    "name": "Nombre",
     "type": "Tipo",
     "vin": "VIN",
-    "location": "LocalizaÃ§Ã£o",
+    "location": "Ubicación",
     "url": "URL"
   },
   "templates": {
-    "quick_create": "CriaÃ§Ã£o RÃ¡pida",
-    "vehicle_tag": "Tag de VeÃ­culo",
-    "location_tag": "Tag de LocalizaÃ§Ã£o",
-    "generic_tag": "Tag GenÃ©rica"
+    "title": "Plantillas de Etiquetas",
+    "subtitle": "Crear etiquetas rápidamente desde plantillas predefinidas",
+    "quick_create": "Plantillas",
+    "create_tag": "Crear Etiqueta desde Plantilla"
   },
   "errors": {
-    "not_supported": "Tecnologia NFC nÃ£o Ã© suportada neste dispositivo ou navegador.",
-    "permission_denied": "PermissÃ£o NFC negada. Verifique as configuraÃ§Ãµes do seu dispositivo.",
-    "read_failed": "Falha ao ler a tag NFC. Por favor, tente novamente.",
-    "write_failed": "Falha ao gravar na tag NFC. Por favor, tente novamente."
+    "not_supported": "NFC no es compatible con este dispositivo",
+    "permission_denied": "Permiso NFC denegado",
+    "write_failed": "Error al escribir en etiqueta NFC",
+    "read_failed": "Error al leer etiqueta NFC"
   }
 }

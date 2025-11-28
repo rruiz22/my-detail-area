@@ -1,14 +1,14 @@
 {
-  "search_placeholder": "Pesquisar pedidos...",
-  "mobile_menu": "Menu",
-  "tools": "Ferramentas",
-  "preferences": "PreferÃªncias",
+  "search_placeholder": "Buscar órdenes...",
+  "mobile_menu": "Menú",
+  "tools": "Herramientas",
+  "preferences": "Preferencias",
   "footer": {
-    "copyright": "Â© {{year}} My Detail Area",
-    "tagline": "GestÃ£o Empresarial para ConcessionÃ¡rias",
-    "privacy_policy": "PolÃ­tica de Privacidade",
-    "terms_of_service": "Termos de ServiÃ§o",
-    "support": "Suporte",
+    "copyright": "© {{year}} My Detail Area",
+    "tagline": "Gestión Empresarial para Concesionarias",
+    "privacy_policy": "Política de Privacidad",
+    "terms_of_service": "Términos de Servicio",
+    "support": "Soporte",
     "version": "v{{version}}"
   }
 }

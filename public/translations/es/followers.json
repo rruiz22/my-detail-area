@@ -1,0 +1,37 @@
+{
+  "title": "Seguidores",
+  "loading": "Cargando equipo...",
+  "no_followers": "Sin seguidores",
+  "add_team_member": "Agregar Miembro del Equipo",
+  "add_follower": "Agregar Seguidor",
+  "add_follower_title": "Agregar Miembro del Equipo como Seguidor",
+  "add_follower_description": "Selecciona un miembro del equipo para seguir esta orden y recibir notificaciones sobre actualizaciones.",
+  "search_team": "Buscar Miembros del Equipo",
+  "search_placeholder": "Buscar por nombre o correo electrónico...",
+  "loading_team": "Cargando equipo...",
+  "no_team_members": "No se encontraron miembros del equipo",
+  "already_following": "Siguiendo",
+  "notification_level": "Nivel de Notificación",
+  "all_notifications": "Todas las notificaciones",
+  "important_only": "Solo importantes",
+  "no_notifications": "Sin notificaciones",
+  "adding": "Agregando...",
+  "added_successfully": "Seguidor agregado exitosamente",
+  "add_failed": "Error al agregar seguidor",
+  "removed_successfully": "Seguidor eliminado exitosamente",
+  "remove_failed": "Error al eliminar seguidor",
+  "notification_updated": "Nivel de notificación actualizado",
+  "notification_update_failed": "Error al actualizar nivel de notificación",
+  "view_all": "Ver Todo",
+  "follow_types": {
+    "assigned": "Asignado",
+    "creator": "Creador",
+    "manual": "Manual",
+    "interested": "Interesado"
+  },
+  "notification_levels": {
+    "all": "Todas las notificaciones",
+    "important": "Solo importantes",
+    "none": "Sin notificaciones"
+  }
+}

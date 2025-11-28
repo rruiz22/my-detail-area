@@ -17,7 +17,7 @@ import packageJson from "../package.json";
 // Solution: Remove all service workers and rely on TanStack Query cache only
 const CURRENT_VERSION = packageJson.version;
 const SW_CLEANUP_KEY = 'sw_cleanup_completed';
-const SW_CLEANUP_VERSION = '1.3.51'; // Version with aggressive SW cleanup + translation fixes
+const SW_CLEANUP_VERSION = '1.3.52'; // Version with complete Spanish translations (83 files)
 
 console.log(`🚀 MyDetailArea v${CURRENT_VERSION} starting...`);
 

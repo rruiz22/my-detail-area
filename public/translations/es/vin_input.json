@@ -1,7 +1,7 @@
 {
-  "placeholder": "Digite um VIN com 17 caracteres",
-  "paste_button": "Colar VIN",
-  "clipboard_error": "NÃ£o foi possÃ­vel ler a Ã¡rea de transferÃªncia.",
-  "clipboard_no_vin": "Nenhum VIN completo foi encontrado na Ã¡rea de transferÃªncia.",
-  "clipboard_unsupported": "O acesso Ã  Ã¡rea de transferÃªncia nÃ£o estÃ¡ disponÃ­vel neste navegador."
+  "placeholder": "Ingrese VIN de 17 caracteres",
+  "paste_button": "Pegar VIN",
+  "clipboard_error": "No se puede leer del portapapeles.",
+  "clipboard_no_vin": "No se encontró un VIN completo en su portapapeles.",
+  "clipboard_unsupported": "El acceso al portapapeles no está disponible en este navegador."
 }

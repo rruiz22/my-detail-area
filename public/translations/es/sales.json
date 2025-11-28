@@ -1,28 +1,28 @@
 {
   "views": {
     "kanban": "Kanban",
-    "table": "Tabela",
-    "calendar": "CalendÃ¡rio"
+    "table": "Tabla",
+    "calendar": "Calendario"
   },
   "tabs": {
-    "overview": "VisÃ£o Geral",
-    "dashboard": "Painel",
-    "today": "Hoje",
-    "tomorrow": "AmanhÃ£",
-    "pending": "Pendentes",
-    "in_process": "Em Processo",
+    "overview": "Resumen",
+    "dashboard": "Panel",
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "pending": "Pendientes",
+    "in_process": "En Proceso",
     "week": "Semana",
-    "all_orders": "Todos os Pedidos",
-    "all": "Todos os Pedidos",
-    "services": "ServiÃ§os",
-    "deleted": "ExcluÃ­dos"
+    "all_orders": "Todas las Órdenes",
+    "all": "Todas las Órdenes",
+    "services": "Servicios",
+    "deleted": "Eliminadas"
   },
   "metrics": {
-    "completion_rate": "Taxa de ConclusÃ£o",
-    "progress": "Progresso",
-    "revenue_potential": "Potencial de Receita",
-    "avg_processing_time": "Tempo MÃ©dio de Processamento",
-    "orders_this_month": "Pedidos Este MÃªs",
-    "sla_compliance": "Conformidade SLA"
+    "completion_rate": "Tasa de Finalización",
+    "progress": "Progreso",
+    "revenue_potential": "Potencial de Ingresos",
+    "avg_processing_time": "Tiempo Promedio de Procesamiento",
+    "orders_this_month": "Órdenes Este Mes",
+    "sla_compliance": "Cumplimiento de SLA"
   }
 }

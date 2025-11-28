@@ -1,10 +1,10 @@
 {
-  "confirm_delete": "Excluir Pedido?",
-  "delete_warning": "Esta aÃ§Ã£o nÃ£o pode ser desfeita. O pedido serÃ¡ excluÃ­do permanentemente.",
-  "confirm_status": "Mudar Status?",
-  "success": "Sucesso!",
-  "error": "Erro",
-  "info": "InformaÃ§Ã£o",
-  "yes_delete": "Sim, excluir",
+  "confirm_delete": "¿Eliminar Orden?",
+  "delete_warning": "Esta acción no se puede deshacer. La orden será eliminada permanentemente.",
+  "confirm_status": "¿Cambiar Estado?",
+  "success": "¡Éxito!",
+  "error": "Error",
+  "info": "Información",
+  "yes_delete": "Sí, eliminarla",
   "cancel": "Cancelar"
 }
