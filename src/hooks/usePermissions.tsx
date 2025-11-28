@@ -988,6 +988,13 @@ export const usePermissions = () => {
       return false;
     }
 
+    // ⚠️ DEFENSIVE: Check if module_permissions is actually a Map
+    if (!enhancedUser.module_permissions || typeof enhancedUser.module_permissions.get !== 'function') {
+      console.error('[hasPermission] module_permissions is not a Map -  permissions corrupted');
+      telemetry.trackPermissionCheck(module, permission, false, performance.now() - startTime);
+      return false;
+    }
+
     // Check if user has this specific permission for the module
     const modulePerms = enhancedUser.module_permissions.get(module);
     if (!modulePerms) {
@@ -1059,6 +1066,12 @@ export const usePermissions = () => {
 
     const requiredPerms = permissionsByLevel[requiredLevel];
     if (!requiredPerms || requiredPerms.length === 0) return false;
+
+    // ⚠️ DEFENSIVE: Check if module_permissions is actually a Map
+    if (!enhancedUser.module_permissions || typeof enhancedUser.module_permissions.get !== 'function') {
+      console.error('[hasAccessLevel] module_permissions is not a Map - permissions corrupted');
+      return false;
+    }
 
     // Check if user has ANY of the required permissions for this level
     const modulePerms = enhancedUser.module_permissions.get(module);

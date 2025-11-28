@@ -159,7 +159,9 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = React.memo(({
             hasAccess = false;
           } else {
             // Second, verify user has AT LEAST ONE permission in this module
-            const userModulePerms = enhancedUser?.module_permissions?.get(module);
+            // ⚠️ DEFENSIVE: Check if module_permissions is actually a Map
+            const modulePermsIsMap = enhancedUser?.module_permissions && typeof enhancedUser.module_permissions.get === 'function';
+            const userModulePerms = modulePermsIsMap ? enhancedUser.module_permissions.get(module) : undefined;
             const hasAnyModulePermission = userModulePerms && userModulePerms.size > 0;
 
             if (import.meta.env.DEV) {

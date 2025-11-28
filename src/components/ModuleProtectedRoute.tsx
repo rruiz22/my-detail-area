@@ -62,12 +62,22 @@ export const ModuleProtectedRoute = ({
   }
 
   // Check 4: User must have AT LEAST ONE permission in this module
-  const userHasModulePermissions = enhancedUser?.module_permissions.has(module) &&
-    (enhancedUser?.module_permissions.get(module)?.size ?? 0) > 0;
+  // ⚠️ DEFENSIVE: Verify module_permissions is a Map before calling .has() and .get()
+  const modulePermsIsMap = enhancedUser?.module_permissions &&
+    typeof enhancedUser.module_permissions.has === 'function' &&
+    typeof enhancedUser.module_permissions.get === 'function';
+
+  const userHasModulePermissions = modulePermsIsMap &&
+    enhancedUser.module_permissions.has(module) &&
+    (enhancedUser.module_permissions.get(module)?.size ?? 0) > 0;
 
   if (!userHasModulePermissions) {
     console.warn(`🚫 [ModuleProtectedRoute] User has NO permissions for ${module} module - redirecting to ${redirectTo}`);
-    console.warn(`   User has permissions for: ${Array.from(enhancedUser?.module_permissions.keys() || []).join(', ')}`);
+    if (modulePermsIsMap) {
+      console.warn(`   User has permissions for: ${Array.from(enhancedUser?.module_permissions.keys() || []).join(', ')}`);
+    } else {
+      console.error(`   ⚠️ module_permissions is not a Map - permissions corrupted`);
+    }
     return <Navigate to={redirectTo} replace />;
   }
 
