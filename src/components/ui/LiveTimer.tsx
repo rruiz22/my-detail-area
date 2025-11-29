@@ -1,6 +1,7 @@
 import { Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useRefreshCountdown } from '@/hooks/useTimeAgo';
+import { pollingConfig } from '@/config/realtimeFeatures';
 
 interface LiveTimerProps {
   lastRefresh: Date | null;
@@ -13,7 +14,7 @@ export const LiveTimer = ({
   lastRefresh,
   isRefreshing = false,
   className = '',
-  refreshInterval = 180
+  refreshInterval = pollingConfig.orders / 1000  // Dynamic: 120 seconds (2 minutes)
 }: LiveTimerProps) => {
   const { t } = useTranslation();
   const countdown = useRefreshCountdown(lastRefresh, refreshInterval);
