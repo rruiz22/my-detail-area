@@ -16,6 +16,7 @@ import { ServicesProvider } from "@/contexts/ServicesContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 // ✅ PHASE 3.3: Import AppLoadingBoundary for global loading state
 import { AppLoadingBoundary } from "@/components/loading/AppLoadingBoundary";
 import { CACHE_TIMES, GC_TIMES } from "@/constants/cacheConfig";
@@ -343,6 +344,8 @@ const App = () => (
     </TooltipProvider>
     {/* Sistema de toast shadcn/ui - Sistema unificado */}
     <Toaster />
+    {/* Vercel Speed Insights - Performance monitoring */}
+    <SpeedInsights />
   </QueryClientProvider>
 );
 
