@@ -1,6 +1,6 @@
 import { useToast } from "@/hooks/use-toast";
 import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from "@/components/ui/toast";
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, XCircle, AlertTriangle } from 'lucide-react';
 
 export function Toaster() {
   const { toasts } = useToast();
@@ -9,8 +9,21 @@ export function Toaster() {
     <ToastProvider>
       {toasts.map(function ({ id, title, description, action, variant, ...props }) {
         // Determinar icono según variant
-        const Icon = variant === 'destructive' ? XCircle : CheckCircle2;
-        const iconColor = variant === 'destructive' ? 'text-red-600' : 'text-emerald-600';
+        const Icon = variant === 'destructive'
+          ? XCircle
+          : variant === 'warning'
+            ? AlertTriangle
+            : variant === 'success'
+              ? CheckCircle2
+              : CheckCircle2;
+
+        const iconColor = variant === 'destructive'
+          ? 'text-red-600'
+          : variant === 'warning'
+            ? 'text-amber-600'
+            : variant === 'success'
+              ? 'text-emerald-600'
+              : 'text-gray-600';
 
         return (
           <Toast key={id} variant={variant} {...props}>

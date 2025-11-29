@@ -290,7 +290,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
 
       toast({
         description: t("common.data_refreshed") || "Data refreshed successfully",
-        variant: "default",
+        variant: "success",
       });
     } catch (error) {
       console.error("❌ [Refresh] Manual refresh failed:", error);

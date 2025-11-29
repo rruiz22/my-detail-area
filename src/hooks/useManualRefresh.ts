@@ -31,7 +31,7 @@ export function useManualRefresh(refreshFn: () => Promise<void>) {
       await refreshFn();
       toast({
         description: t('common.data_refreshed') || 'Data refreshed successfully',
-        variant: 'default'
+        variant: 'success'
       });
     } catch (error) {
       console.error('Manual refresh failed:', error);

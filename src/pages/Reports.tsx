@@ -117,7 +117,7 @@ export default function Reports() {
 
       toast({
         description: t('common.data_refreshed') || 'Data refreshed successfully',
-        variant: 'default'
+        variant: 'success'
       });
     } catch (error) {
       console.error('Error refreshing reports:', error);

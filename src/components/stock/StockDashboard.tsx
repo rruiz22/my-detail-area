@@ -55,7 +55,8 @@ export const StockDashboard: React.FC = () => {
       await refreshInventory();
       toast({
         title: t('common.success'),
-        description: t('stock.actions.refresh_success', 'Inventory refreshed successfully')
+        description: t('stock.actions.refresh_success', 'Inventory refreshed successfully'),
+        variant: 'success'
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to refresh inventory';

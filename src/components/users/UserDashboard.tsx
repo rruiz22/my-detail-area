@@ -195,6 +195,7 @@ export const UserDashboard: React.FC = () => {
     toast({
       title: t('common.success'),
       description: 'Dashboard data refreshed',
+      variant: 'success'
     });
   };
 
