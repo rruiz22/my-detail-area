@@ -73,17 +73,6 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
       // Check if user has change_status permission for this module
       const hasChangeStatus = hasModulePermission(module, 'change_status');
 
-      console.log('🔍 Status Change Validation:', {
-        user: enhancedUser.email,
-        dealership: enhancedUser.dealership_id,
-        module: module,
-        hasChangeStatus: hasChangeStatus,
-        currentStatus,
-        newStatus,
-        orderType,
-        roles: enhancedUser.custom_roles.map(r => r.role_name)
-      });
-
       if (!hasChangeStatus) {
         console.warn(`⚠️ User does not have change_status permission for ${module}`);
         return false;

@@ -266,7 +266,7 @@ export async function testRecovery(): Promise<boolean> {
 }
 
 // Make functions available globally in browser console for easy debugging
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
   (window as any).kioskDiagnostics = {
     diagnose: diagnoseKioskConfig,
     reset: forceResetKioskConfig,

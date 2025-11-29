@@ -11,8 +11,10 @@
  * SOLUTION: Block WebGL at the browser API level BEFORE any library loads.
  */
 
+import * as logger from './logger';
+
 if (typeof window !== 'undefined' && typeof HTMLCanvasElement !== 'undefined') {
-  console.log('[WebGL Blocker] Installing WebGL context blocker...');
+  logger.dev('[WebGL Blocker] Installing WebGL context blocker...');
 
   const originalGetContext = HTMLCanvasElement.prototype.getContext;
 
@@ -22,7 +24,7 @@ if (typeof window !== 'undefined' && typeof HTMLCanvasElement !== 'undefined') {
   ): RenderingContext | null {
     // Block WebGL and WebGL2 contexts completely
     if (contextType === 'webgl' || contextType === 'webgl2') {
-      console.warn(`[WebGL Blocker] Blocked ${contextType} context creation - forcing CPU fallback`);
+      logger.dev(`[WebGL Blocker] Blocked ${contextType} context creation - forcing CPU fallback`);
       return null; // Force TensorFlow.js to use CPU backend
     }
 
@@ -30,7 +32,7 @@ if (typeof window !== 'undefined' && typeof HTMLCanvasElement !== 'undefined') {
     return originalGetContext.apply(this, [contextType, ...args] as any);
   };
 
-  console.log('[WebGL Blocker] ✓ WebGL contexts will be blocked (CPU-only mode)');
+  logger.dev('[WebGL Blocker] ✓ WebGL contexts will be blocked (CPU-only mode)');
 }
 
 // Export empty object to make this a module

@@ -18,6 +18,7 @@ import * as tf from '@tensorflow/tfjs-core';
 import '@tensorflow/tfjs-backend-cpu';
 import '@tensorflow/tfjs-backend-webgl'; // Import but won't use
 import * as faceapi from '@vladmandic/face-api';
+import * as logger from '@/utils/logger';
 
 // Singleton state
 let isInitialized = false;
@@ -47,22 +48,22 @@ const EXPECTED_MODEL_SIZES = {
  */
 async function ensureCpuBackend(): Promise<void> {
   if (backendInitialized) {
-    console.log('[FaceAPI Service] Backend already configured:', tf.getBackend());
+    logger.dev('[FaceAPI Service] Backend already configured:', tf.getBackend());
     return;
   }
 
-  console.log('[FaceAPI Service] Configuring TensorFlow.js backend...');
+  logger.dev('[FaceAPI Service] Configuring TensorFlow.js backend...');
 
   let retries = 0;
   while (retries < MAX_BACKEND_RETRIES) {
     try {
       // Get current backend (might be undefined or 'webgl')
       const currentBackend = tf.getBackend();
-      console.log(`[FaceAPI Service] Current backend: ${currentBackend || 'none'}`);
+      logger.dev(`[FaceAPI Service] Current backend: ${currentBackend || 'none'}`);
 
       // Force CPU backend registration
       if (currentBackend !== FORCED_BACKEND) {
-        console.log(`[FaceAPI Service] Switching to ${FORCED_BACKEND} backend...`);
+        logger.dev(`[FaceAPI Service] Switching to ${FORCED_BACKEND} backend...`);
         await tf.setBackend(FORCED_BACKEND);
       }
 
@@ -71,7 +72,7 @@ async function ensureCpuBackend(): Promise<void> {
 
       // Verify the backend is actually CPU
       const finalBackend = tf.getBackend();
-      console.log(`[FaceAPI Service] Final backend: ${finalBackend}`);
+      logger.dev(`[FaceAPI Service] Final backend: ${finalBackend}`);
 
       if (finalBackend !== FORCED_BACKEND) {
         throw new Error(`Backend mismatch: expected '${FORCED_BACKEND}', got '${finalBackend}'`);
@@ -79,14 +80,14 @@ async function ensureCpuBackend(): Promise<void> {
 
       // Get backend details for logging
       const engine = tf.engine();
-      console.log('[FaceAPI Service] TensorFlow.js engine state:', {
+      logger.dev('[FaceAPI Service] TensorFlow.js engine state:', {
         backend: finalBackend,
         memoryInfo: engine.memory(),
         registeredBackends: tf.engine().registryFactory ? 'available' : 'none'
       });
 
       backendInitialized = true;
-      console.log('[FaceAPI Service] ✓ CPU backend successfully configured');
+      logger.dev('[FaceAPI Service] ✓ CPU backend successfully configured');
       return;
 
     } catch (error) {
@@ -121,13 +122,13 @@ export async function initializeFaceApi(
 ): Promise<void> {
   // Already initialized - return immediately
   if (isInitialized) {
-    console.log('[FaceAPI Service] Already initialized');
+    logger.dev('[FaceAPI Service] Already initialized');
     return Promise.resolve();
   }
 
   // Currently initializing - return existing promise
   if (isInitializing && initializationPromise) {
-    console.log('[FaceAPI Service] Initialization in progress, waiting...');
+    logger.dev('[FaceAPI Service] Initialization in progress, waiting...');
     return initializationPromise;
   }
 
@@ -139,7 +140,7 @@ export async function initializeFaceApi(
 
   // Start new initialization
   isInitializing = true;
-  console.log('[FaceAPI Service] Starting initialization (FORCED CPU-only mode)...');
+  logger.dev('[FaceAPI Service] Starting initialization (FORCED CPU-only mode)...');
 
   initializationPromise = (async () => {
     try {
@@ -152,28 +153,28 @@ export async function initializeFaceApi(
         : modelUrl;
 
       // Load models sequentially
-      console.log('[FaceAPI Service] Loading models from:', finalModelUrl);
-      console.log('[FaceAPI Service] Cache-busting:', enableCacheBusting ? 'enabled' : 'disabled');
-      console.log('[FaceAPI Service] Expected model format: .bin (Vladmandic fork)');
+      logger.dev('[FaceAPI Service] Loading models from:', finalModelUrl);
+      logger.dev('[FaceAPI Service] Cache-busting:', enableCacheBusting ? 'enabled' : 'disabled');
+      logger.dev('[FaceAPI Service] Expected model format: .bin (Vladmandic fork)');
 
       // 1. Tiny Face Detector (lightweight, fast)
-      console.log('[FaceAPI Service] Loading tiny_face_detector_model.bin...');
+      logger.dev('[FaceAPI Service] Loading tiny_face_detector_model.bin...');
       await faceapi.nets.tinyFaceDetector.loadFromUri(finalModelUrl);
-      console.log('[FaceAPI Service] ✓ Tiny face detector loaded');
+      logger.dev('[FaceAPI Service] ✓ Tiny face detector loaded');
 
       // 2. Face Landmarks (68-point alignment)
-      console.log('[FaceAPI Service] Loading face_landmark_68_model.bin...');
+      logger.dev('[FaceAPI Service] Loading face_landmark_68_model.bin...');
       await faceapi.nets.faceLandmark68Net.loadFromUri(finalModelUrl);
-      console.log('[FaceAPI Service] ✓ Face landmark detector loaded');
+      logger.dev('[FaceAPI Service] ✓ Face landmark detector loaded');
 
       // 3. Face Recognition (128D descriptors)
-      console.log('[FaceAPI Service] Loading face_recognition_model.bin (~6.2MB)...');
+      logger.dev('[FaceAPI Service] Loading face_recognition_model.bin (~6.2MB)...');
       await faceapi.nets.faceRecognitionNet.loadFromUri(finalModelUrl);
-      console.log('[FaceAPI Service] ✓ Face recognition model loaded');
+      logger.dev('[FaceAPI Service] ✓ Face recognition model loaded');
 
       // Final backend verification
       const finalBackend = tf.getBackend();
-      console.log('[FaceAPI Service] Models loaded successfully using backend:', finalBackend);
+      logger.dev('[FaceAPI Service] Models loaded successfully using backend:', finalBackend);
 
       if (finalBackend !== FORCED_BACKEND) {
         console.warn(`[FaceAPI Service] WARNING: Backend changed to ${finalBackend} during model loading`);

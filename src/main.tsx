@@ -2,6 +2,7 @@
 import "./utils/networkErrorSuppressor";
 // Import WebGL blocker SECOND to force CPU-only mode for face-api.js
 import "./utils/disableWebGL";
+import * as logger from "./utils/logger";
 
 import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "next-themes";
@@ -77,11 +78,11 @@ if ('serviceWorker' in navigator) {
       }
     });
   } else {
-    console.log('✅ Service worker cleanup already completed for v' + SW_CLEANUP_VERSION);
-    console.log('📊 App uses:');
-    console.log('  • TanStack Query (5min cache for API)');
-    console.log('  • localStorage (user preferences)');
-    console.log('  • Browser cache (static assets)');
+    logger.dev('✅ Service worker cleanup already completed for v' + SW_CLEANUP_VERSION);
+    logger.dev('📊 App uses:');
+    logger.dev('  • TanStack Query (5min cache for API)');
+    logger.dev('  • localStorage (user preferences)');
+    logger.dev('  • Browser cache (static assets)');
   }
 }
 

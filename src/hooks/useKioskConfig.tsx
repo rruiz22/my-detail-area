@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { useDeviceFingerprint } from './useDeviceFingerprint';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from './use-toast';
+import * as logger from '@/utils/logger';
 
 const KIOSK_ID_KEY = 'kiosk_id';
 const KIOSK_FINGERPRINT_KEY = 'kiosk_device_fingerprint';
@@ -259,7 +260,7 @@ export function useKioskConfig() {
       const registrationCode = localStorage.getItem(KIOSK_REGISTRATION_CODE_KEY);
 
       if (storedFingerprint && storedFingerprint !== fingerprint) {
-        console.warn('[KioskConfig] ⚠️ Fingerprint changed - updating device binding...', {
+        logger.dev('[KioskConfig] ⚠️ Fingerprint changed - updating device binding...', {
           old: storedFingerprint.substring(0, 12) + '...',
           new: fingerprint.substring(0, 12) + '...',
           registrationCode

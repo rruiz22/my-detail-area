@@ -170,8 +170,8 @@ export const useDealershipModules = (
     if (modules.length === 0) {
       // ⚠️ OPTIMIZATION: Only show warning if NOT loading (reduces initial render noise)
       if (!loading) {
-        console.warn(`[hasModuleAccess] ⚠️ No modules configured - DENYING ${module} (fail-closed security)`);
-        console.warn('  This should not happen - dealership may need module configuration');
+        logger.dev(`[hasModuleAccess] ⚠️ No modules configured - DENYING ${module} (fail-closed security)`);
+        logger.dev('  This should not happen - dealership may need module configuration');
       }
       return false; // ✅ DENY by default (fail-closed)
     }
