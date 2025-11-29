@@ -130,6 +130,7 @@ const transformServiceOrder = (supabaseOrder: SupabaseOrder): ServiceOrder => ({
   totalAmount: supabaseOrder.total_amount || undefined,
   createdAt: supabaseOrder.created_at,
   updatedAt: supabaseOrder.updated_at,
+  completedAt: supabaseOrder.completed_at || undefined,
   dueDate: supabaseOrder.due_date || undefined,
   assignedTo: 'Unassigned', // Will be overwritten in refreshData
   assigned_group_id: supabaseOrder.assigned_group_id || undefined, // User ID for modal edit

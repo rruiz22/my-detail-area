@@ -316,8 +316,10 @@ const transformOrder = (supabaseOrder: SupabaseOrderWithComments): Order => {
     vehicleYear: getFieldValue(supabaseOrder.vehicle_year),
     vehicleMake: getFieldValue(supabaseOrder.vehicle_make),
     vehicleModel: getFieldValue(supabaseOrder.vehicle_model),
+    vehicleTrim: getFieldValue(supabaseOrder.vehicle_trim),
     vehicleVin: getFieldValue(supabaseOrder.vehicle_vin),
     stockNumber: getFieldValue(supabaseOrder.stock_number),
+    tag: getFieldValue(supabaseOrder.tag),
 
     // Order management
     status: (supabaseOrder.status as 'pending' | 'in_progress' | 'completed' | 'cancelled') || 'pending',
@@ -330,6 +332,8 @@ const transformOrder = (supabaseOrder: SupabaseOrderWithComments): Order => {
     // System fields
     createdAt: supabaseOrder.created_at,
     updatedAt: supabaseOrder.updated_at,
+    completedAt: getFieldValue(supabaseOrder.completed_at),
+    completed_at: getFieldValue(supabaseOrder.completed_at),
 
     // Financial and services
     totalAmount: getFieldValue(supabaseOrder.total_amount),
