@@ -859,16 +859,4 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
       </Card>
     </>
   );
-}, (prevProps, nextProps) => {
-  // Custom comparison function - only re-render if critical props change
-  return (
-    prevProps.orders.length === nextProps.orders.length &&
-    prevProps.loading === nextProps.loading &&
-    prevProps.tabType === nextProps.tabType &&
-    // Deep check: compare order IDs and statuses to detect changes
-    prevProps.orders.every((order, index) =>
-      order.id === nextProps.orders[index]?.id &&
-      order.status === nextProps.orders[index]?.status
-    )
-  );
 });
