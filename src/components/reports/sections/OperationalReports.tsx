@@ -912,7 +912,11 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                                   {vehicle.order_number}
                                 </button>
                                 <span className="text-xs text-muted-foreground">
-                                  {format(parseISO(vehicle.completed_at || vehicle.created_at), 'MM/dd/yyyy')}
+                                  {format(parseISO(
+                                    vehicle.order_type === 'sales' || vehicle.order_type === 'service'
+                                      ? (vehicle.due_date || vehicle.created_at)
+                                      : (vehicle.completed_at || vehicle.created_at)
+                                  ), 'MM/dd/yyyy')}
                                 </span>
                               </div>
                             </TableCell>
