@@ -1,6 +1,9 @@
 -- Create RPC function to fetch operational orders list with server-side filtering
 -- Replaces client-side filtering in OperationalReports.tsx for better performance
 
+-- Drop existing function (needed when changing return type from INTEGER to UUID)
+DROP FUNCTION IF EXISTS get_operational_orders_list(integer,timestamp with time zone,timestamp with time zone,text,text,text[]);
+
 CREATE OR REPLACE FUNCTION get_operational_orders_list(
   p_dealer_id INTEGER,
   p_start_date TIMESTAMPTZ,
@@ -10,7 +13,7 @@ CREATE OR REPLACE FUNCTION get_operational_orders_list(
   p_service_ids TEXT[] DEFAULT NULL
 )
 RETURNS TABLE (
-  id INTEGER,
+  id UUID,  -- ✅ FIXED: Changed from INTEGER to UUID
   order_number TEXT,
   custom_order_number TEXT,
   order_type TEXT,
@@ -106,7 +109,7 @@ BEGIN
       i.invoice_number
     FROM invoice_items ii
     INNER JOIN invoices i ON ii.invoice_id = i.id
-    WHERE ii.service_reference IN (SELECT fo.id FROM filtered_orders fo)
+    WHERE ii.service_reference IN (SELECT fo.id::TEXT FROM filtered_orders fo)  -- ✅ FIXED: Cast UUID to TEXT
     ORDER BY ii.service_reference, i.created_at DESC
   )
   SELECT
@@ -134,7 +137,7 @@ BEGIN
     inv.invoice_number
   FROM filtered_orders fo
   LEFT JOIN user_profiles up ON fo.assigned_group_id = up.id
-  LEFT JOIN invoice_numbers inv ON fo.id = inv.order_id
+  LEFT JOIN invoice_numbers inv ON fo.id::TEXT = inv.order_id  -- ✅ FIXED: Cast UUID to TEXT for join
   ORDER BY fo.created_at DESC;
 END;
 $$ LANGUAGE plpgsql;

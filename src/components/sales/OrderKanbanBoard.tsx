@@ -186,13 +186,4 @@ export const OrderKanbanBoard = memo(function OrderKanbanBoard({ orders, onEdit,
       })}
     </div>
   );
-}, (prevProps, nextProps) => {
-  // Custom comparison - re-render only if orders array changes
-  return (
-    prevProps.orders.length === nextProps.orders.length &&
-    prevProps.orders.every((order, index) =>
-      order.id === nextProps.orders[index]?.id &&
-      order.status === nextProps.orders[index]?.status
-    )
-  );
 });
