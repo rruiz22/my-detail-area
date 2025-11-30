@@ -207,6 +207,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [isDebouncing, setIsDebouncing] = useState(false);  // ✅ FIX: Prevent double-submit
   const [vinDecoded, setVinDecoded] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -922,6 +923,13 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // ✅ FIX: Debounce check to prevent double-submit
+    if (isDebouncing) {
+      console.warn('⚠️ [OrderModal] Submit debounced - too fast, ignoring duplicate click');
+      return;
+    }
+
+    setIsDebouncing(true);
     setSubmitting(true);
     setSubmitError(null);
 
@@ -930,6 +938,20 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       const isValid = await validateForm();
       if (!isValid) {
         setSubmitting(false);
+        setIsDebouncing(false);
+        return;
+      }
+
+      // ✅ FIX: Validate that at least one service is selected
+      if (selectedServices.length === 0) {
+        console.error('❌ [OrderModal] No services selected - blocking submission');
+        toast({
+          variant: 'destructive',
+          title: t('validation.servicesRequired') || 'Services Required',
+          description: t('validation.servicesRequiredDescription') || 'Please select at least one service for this order.'
+        });
+        setSubmitting(false);
+        setIsDebouncing(false);
         return;
       }
 
@@ -950,6 +972,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
             description: t('orders.servicesNotLoaded') || 'Services are still loading. Please wait a moment and try again.'
           });
           setSubmitting(false);
+          setIsDebouncing(false);
           return;
         }
 
@@ -961,6 +984,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
             description: t('orders.servicesNotLoaded') || 'Services data is not available. Please refresh and try again.'
           });
           setSubmitting(false);
+          setIsDebouncing(false);
           return;
         }
       }
@@ -999,6 +1023,16 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           const service = services.find((s: { id: string; price?: number; name?: string; description?: string }) => s.id === serviceId);
           const individualAmount = service?.price || 0;
 
+          // ✅ FIX: Validate individual service has positive price
+          if (individualAmount === 0) {
+            console.error('❌ [OrderModal] Service has $0 price:', {
+              serviceId,
+              serviceName: service?.name,
+              price: service?.price
+            });
+            throw new Error(`Service "${service?.name || 'Unknown'}" has invalid price: $${individualAmount}. Please contact administrator to fix service pricing.`);
+          }
+
           return {
             ...dbData,
             services: [{
@@ -1032,6 +1066,23 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         // Single service or editing - proceed as normal
         const dbData = transformToDbFormat(formData);
 
+        // ✅ FIX: Validate total amount is positive
+        if (dbData.total_amount === 0 && !isEditing) {
+          console.error('❌ [OrderModal] Zero amount order detected - blocking submission:', {
+            selectedServices,
+            services: services.map(s => ({ id: s.id, name: s.name, price: s.price })),
+            calculatedTotal: dbData.total_amount
+          });
+          toast({
+            variant: 'destructive',
+            title: t('validation.zeroAmountOrder') || 'Invalid Order Amount',
+            description: t('validation.zeroAmountOrderDescription') || 'Order total cannot be $0. Please check that selected services have valid prices.'
+          });
+          setSubmitting(false);
+          setIsDebouncing(false);
+          return;
+        }
+
         try {
           // Show immediate success feedback
           toast({ description: t('orders.creating_order') });
@@ -1055,6 +1106,8 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       toast({ variant: 'destructive', description: t('orders.creation_failed') });
     } finally {
       setSubmitting(false);
+      // ✅ FIX: Reset debounce with 1s cooldown to prevent rapid re-submission
+      setTimeout(() => setIsDebouncing(false), 1000);
     }
   };
 
