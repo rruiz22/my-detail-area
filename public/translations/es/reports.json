@@ -246,6 +246,32 @@
       "loading": "Cargando facturas...",
       "view_manage": "Ver y gestionar todas las facturas",
       "select_dealership": "Por favor seleccione un concesionario para gestionar facturas"
+    },
+    "grouping": {
+      "label": "Agrupar por",
+      "none": "Sin agrupación",
+      "status": "Estado",
+      "department": "Departamento",
+      "week": "Semana"
+    },
+    "details": {
+      "tabs": {
+        "overview": "Resumen",
+        "orders": "Órdenes",
+        "payments": "Pagos",
+        "history": "Historial",
+        "emails": "Registro de Emails",
+        "comments": "Comentarios"
+      },
+      "orders_tab": {
+        "search_placeholder": "Buscar por VIN, Orden, Vehículo...",
+        "filter_all": "Todas las Órdenes",
+        "filter_paid": "Solo Pagadas",
+        "filter_unpaid": "Solo No Pagadas",
+        "showing": "Mostrando {{start}}-{{end}} de {{total}} órdenes",
+        "filtered": "filtradas de {{total}} totales",
+        "per_page": "por página"
+      }
     }
   },
   "analytics": {

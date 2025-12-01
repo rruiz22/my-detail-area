@@ -361,6 +361,19 @@ export function useVehicleManagement() {
       });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
+      queryClient.invalidateQueries({ queryKey: ['get-ready-kpis'] });
+
+      // ✅ FIX: Invalidate vehicle detail panel and work items
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'get-ready-vehicle-detail' &&
+          query.queryKey[1] === movedVehicle.id
+      });
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === 'work-items' &&
+          query.queryKey[1] === movedVehicle.id
+      });
 
       toast({
         title: t('common.success'),
@@ -413,6 +426,21 @@ export function useVehicleManagement() {
       });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
+      queryClient.invalidateQueries({ queryKey: ['get-ready-kpis'] });
+
+      // ✅ FIX: Invalidate vehicle detail panel and work items (use result.vehicle_id from RPC)
+      if (result.vehicle_id) {
+        queryClient.invalidateQueries({
+          predicate: (query) =>
+            query.queryKey[0] === 'get-ready-vehicle-detail' &&
+            query.queryKey[1] === result.vehicle_id
+        });
+        queryClient.invalidateQueries({
+          predicate: (query) =>
+            query.queryKey[0] === 'work-items' &&
+            query.queryKey[1] === result.vehicle_id
+        });
+      }
 
       toast({ description: t('get_ready.approvals.success.approved') });
     },
@@ -453,6 +481,21 @@ export function useVehicleManagement() {
       });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
+      queryClient.invalidateQueries({ queryKey: ['get-ready-kpis'] });
+
+      // ✅ FIX: Invalidate vehicle detail panel and work items (use result.vehicle_id from RPC)
+      if (result.vehicle_id) {
+        queryClient.invalidateQueries({
+          predicate: (query) =>
+            query.queryKey[0] === 'get-ready-vehicle-detail' &&
+            query.queryKey[1] === result.vehicle_id
+        });
+        queryClient.invalidateQueries({
+          predicate: (query) =>
+            query.queryKey[0] === 'work-items' &&
+            query.queryKey[1] === result.vehicle_id
+        });
+      }
 
       toast({ description: t('get_ready.approvals.success.rejected') });
     },
@@ -488,6 +531,21 @@ export function useVehicleManagement() {
       });
       queryClient.invalidateQueries({ queryKey: ['get-ready-steps'] });
       queryClient.invalidateQueries({ queryKey: ['get-ready-approvals-count'] });
+      queryClient.invalidateQueries({ queryKey: ['get-ready-kpis'] });
+
+      // ✅ FIX: Invalidate vehicle detail panel and work items (use result.vehicle_id from RPC)
+      if (result.vehicle_id) {
+        queryClient.invalidateQueries({
+          predicate: (query) =>
+            query.queryKey[0] === 'get-ready-vehicle-detail' &&
+            query.queryKey[1] === result.vehicle_id
+        });
+        queryClient.invalidateQueries({
+          predicate: (query) =>
+            query.queryKey[0] === 'work-items' &&
+            query.queryKey[1] === result.vehicle_id
+        });
+      }
 
       toast({ description: t('get_ready.approvals.success.requested') });
     },

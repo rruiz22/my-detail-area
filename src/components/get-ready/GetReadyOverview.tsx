@@ -1,35 +1,31 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useGetReady } from '@/hooks/useGetReady';
 import { TimeRange, useStepRevisitAnalytics } from '@/hooks/useGetReadyHistoricalAnalytics';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { cn } from '@/lib/utils';
 import {
-    AlertTriangle,
     ArrowRight,
     Calendar,
-    CheckCircle2,
     Clock,
-    FileText,
     Layers,
-    Shield,
-    Target,
-    TrendingUp,
-    Users,
-    Zap
+    TrendingUp
 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { GetReadyAlerts } from './GetReadyAlerts';
-import { GetReadyDashboardWidget } from './GetReadyDashboardWidget';
-import { GetReadyEnterpriseMetrics } from './GetReadyEnterpriseMetrics';
 import { BottleneckAnalysis, StepPerformanceMatrix, TimeSeriesCharts } from './analytics';
 import { SafeBarChart } from './analytics/SafeBarChart';
+import { StepTimeBreakdownTable } from './StepTimeBreakdownTable';
 
 interface GetReadyOverviewProps {
   className?: string;
@@ -42,107 +38,133 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
   const { setSelectedStepId } = useGetReadyStore();
   const navigate = useNavigate();
 
-  // Time Range State with localStorage persistence
+  // Period Type State - NEW: 'relative' (7d) or 'monthly'
+  const [periodType, setPeriodType] = useState<'relative' | 'monthly'>(() => {
+    const stored = localStorage.getItem('getReady.overview.periodType');
+    return (stored as 'relative' | 'monthly') || 'relative';
+  });
+
+  // Time Range State (for relative periods: 7d, 30d, 90d)
   const [timeRange, setTimeRange] = useState<TimeRange>(() => {
     const stored = localStorage.getItem('getReady.overview.timeRange');
+    // ✅ Default to 30d for better step coverage
     return (stored as TimeRange) || '30d';
   });
 
-  // Persist time range selection
+  // Selected Month State (for monthly view)
+  const [selectedMonth, setSelectedMonth] = useState<string>(() => {
+    const stored = localStorage.getItem('getReady.overview.selectedMonth');
+    return stored || new Date().toISOString().slice(0, 7); // "2024-12"
+  });
+
+  // Persist selections
   useEffect(() => {
+    localStorage.setItem('getReady.overview.periodType', periodType);
     localStorage.setItem('getReady.overview.timeRange', timeRange);
-  }, [timeRange]);
+    localStorage.setItem('getReady.overview.selectedMonth', selectedMonth);
+  }, [periodType, timeRange, selectedMonth]);
+
+  // Generate list of last 12 months for monthly selector
+  const availableMonths = useMemo(() => {
+    const months = [];
+    for (let i = 0; i < 12; i++) {
+      const date = new Date();
+      date.setMonth(date.getMonth() - i);
+      const monthValue = date.toISOString().slice(0, 7); // "2024-12"
+      const monthLabel = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      months.push({ value: monthValue, label: monthLabel });
+    }
+    return months;
+  }, []);
+
+  // Calculate period label for display
+  const periodLabel = useMemo(() => {
+    if (periodType === 'monthly') {
+      return availableMonths.find(m => m.value === selectedMonth)?.label || selectedMonth;
+    }
+    return timeRange === '7d' ? 'Last 7 Days' : timeRange === '30d' ? 'Last 30 Days' : 'Last 90 Days';
+  }, [periodType, selectedMonth, timeRange, availableMonths]);
 
   // Fetch historical step analytics for accurate average days calculation
-  const { data: historicalStepAnalytics } = useStepRevisitAnalytics(timeRange);
+  // NOTE: For monthly periods, we currently use '30d' as approximation
+  // TODO: Enhance hook to support exact date ranges for monthly views
+  const effectiveTimeRange = periodType === 'monthly' ? '30d' : timeRange;
+  const { data: historicalStepAnalytics } = useStepRevisitAnalytics(effectiveTimeRange);
 
   // Workflow distribution calculation removed - workflow_type no longer exists
-
-  // Calculate priority breakdown
-  const priorityStats = useMemo(() => {
-    const stats = {
-      urgent: { count: 0, atRisk: 0 },
-      high: { count: 0, atRisk: 0 },
-      medium: { count: 0, atRisk: 0 },
-      normal: { count: 0, atRisk: 0 },
-      low: { count: 0, atRisk: 0 },
-    };
-
-    allVehicles.forEach(v => {
-      const priority = v.priority || 'normal';
-      if (stats[priority as keyof typeof stats]) {
-        stats[priority as keyof typeof stats].count++;
-        if (v.sla_status === 'warning' || v.sla_status === 'critical' || v.sla_status === 'red') {
-          stats[priority as keyof typeof stats].atRisk++;
-        }
-      }
-    });
-
-    return stats;
-  }, [allVehicles]);
-
-  // Calculate work items summary
-  const workItemsTotal = useMemo(() => {
-    const total = {
-      pending: 0,
-      in_progress: 0,
-      completed: 0,
-      declined: 0,
-    };
-
-    allVehicles.forEach(v => {
-      if (v.work_item_counts) {
-        total.pending += v.work_item_counts.pending || 0;
-        total.in_progress += v.work_item_counts.in_progress || 0;
-        total.completed += v.work_item_counts.completed || 0;
-        total.declined += v.work_item_counts.declined || 0;
-      }
-    });
-
-    const totalItems = total.pending + total.in_progress + total.completed + total.declined;
-    const completionRate = totalItems > 0 ? (total.completed / totalItems) * 100 : 0;
-
-    return { ...total, totalItems, completionRate };
-  }, [allVehicles]);
+  // Priority breakdown calculation removed - not needed for step time analysis
+  // Work items summary calculation removed - not needed for step time analysis
 
   // Calculate step analysis with historical averages
   const stepStats = useMemo(() => {
-    // First, get current vehicle counts and at-risk counts
+    console.log('🔍 [stepStats] Starting calculation with:', {
+      allVehiclesCount: allVehicles.length,
+      stepsCount: steps.length,
+      stepIds: steps.map(s => s.id),
+      stepNames: steps.map(s => s.name),
+      historicalAnalyticsCount: historicalStepAnalytics?.length || 0
+    });
+
+    // ✅ FIX: Initialize stepMap with ALL dealer steps (not just steps with active vehicles)
     const stepMap = new Map();
 
+    // STEP 1: Initialize with ALL configured steps from dealer
+    steps.forEach(step => {
+      console.log('➕ [stepStats] Adding step to map:', step.id, step.name);
+      stepMap.set(step.id, {
+        step_id: step.id,
+        step_name: step.name,
+        count: 0,
+        atRisk: 0,
+      });
+    });
+
+    // STEP 2: Add current vehicle counts to steps that have vehicles
     allVehicles.forEach(v => {
-      if (!stepMap.has(v.step_id)) {
+      if (stepMap.has(v.step_id)) {
+        const stats = stepMap.get(v.step_id);
+        stats.count++;
+        if (v.sla_status === 'warning' || v.sla_status === 'critical' || v.sla_status === 'red') {
+          stats.atRisk++;
+        }
+      } else {
+        // Fallback: if step not in configured steps, add it anyway
         stepMap.set(v.step_id, {
           step_id: v.step_id,
           step_name: v.step_name,
-          count: 0,
-          atRisk: 0,
+          count: 1,
+          atRisk: (v.sla_status === 'warning' || v.sla_status === 'critical' || v.sla_status === 'red') ? 1 : 0,
         });
-      }
-
-      const stats = stepMap.get(v.step_id);
-      stats.count++;
-      if (v.sla_status === 'warning' || v.sla_status === 'critical' || v.sla_status === 'red') {
-        stats.atRisk++;
       }
     });
 
-    // Merge with historical analytics for accurate average days
+    // STEP 3: Merge with historical analytics for accurate average days
     return Array.from(stepMap.values())
       .map(s => {
         const historicalData = historicalStepAnalytics?.find(h => h.step_id === s.step_id);
-        const avgDays = historicalData
-          ? historicalData.avg_total_time / 24  // Convert hours to days
-          : 0; // Fallback if no historical data
+
+        // ✅ FIX: Defensive null/undefined/NaN checking for avg_total_time
+        let avgDays = 0;
+        if (historicalData && typeof historicalData.avg_total_time === 'number' && !isNaN(historicalData.avg_total_time)) {
+          avgDays = historicalData.avg_total_time / 24; // Convert hours to days
+        }
+
+        const stepConfig = steps.find(step => step.id === s.step_id);
 
         return {
           ...s,
-          avgDays,
+          avgDays: avgDays || 0, // Ensure always a valid number
           revisitRate: historicalData?.revisit_rate || 0,
-          step: steps.find(step => step.id === s.step_id)
+          step: stepConfig,
+          color: stepConfig?.color,
+          order_index: stepConfig?.order_index || 999
         };
       })
-      .sort((a, b) => b.count - a.count);
+      .sort((a, b) => {
+        // ✅ FIX: Sort by order_index (workflow order), not by count
+        // This shows steps in their natural workflow progression
+        return a.order_index - b.order_index;
+      });
   }, [allVehicles, steps, historicalStepAnalytics]);
 
   // Calculate overall step average for all steps combined
@@ -158,17 +180,25 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
     let totalTransitions = 0;
 
     historicalStepAnalytics.forEach(step => {
-      const transitions = step.total_transitions || 0;
-      const avgTimeHours = step.avg_total_time || 0;
+      // ✅ FIX: Defensive null checking for transitions and avg_total_time
+      const transitions = (typeof step.total_transitions === 'number' && !isNaN(step.total_transitions))
+        ? step.total_transitions
+        : 0;
 
-      totalTimeWeighted += (avgTimeHours / 24) * transitions; // Convert hours to days
-      totalTransitions += transitions;
+      const avgTimeHours = (typeof step.avg_total_time === 'number' && !isNaN(step.avg_total_time))
+        ? step.avg_total_time
+        : 0;
+
+      if (transitions > 0 && avgTimeHours > 0) {
+        totalTimeWeighted += (avgTimeHours / 24) * transitions; // Convert hours to days
+        totalTransitions += transitions;
+      }
     });
 
     const avgDays = totalTransitions > 0 ? totalTimeWeighted / totalTransitions : 0;
 
     return {
-      avgDays,
+      avgDays: avgDays || 0, // Ensure always valid number
       totalSteps: historicalStepAnalytics.length,
       totalVehicles: allVehicles.length,
       totalTransitions
@@ -222,61 +252,8 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
     return processedData;
   }, [stepStats]);
 
-  // Calculate team performance
-  const teamStats = useMemo(() => {
-    const teamMap = new Map();
-
-    allVehicles.forEach(v => {
-      const assignee = v.assigned_to || 'Unassigned';
-      if (!teamMap.has(assignee)) {
-        teamMap.set(assignee, {
-          name: assignee,
-          vehicles: 0,
-          completed: 0,
-          totalT2L: 0,
-        });
-      }
-
-      const stats = teamMap.get(assignee);
-      stats.vehicles++;
-      stats.totalT2L += parseFloat(v.t2l) || 0;
-
-      // Count as completed if at "ready" step
-      if (v.step_id === 'ready' || v.step_name?.toLowerCase().includes('ready')) {
-        stats.completed++;
-      }
-    });
-
-    return Array.from(teamMap.values())
-      .map(t => ({
-        ...t,
-        avgT2L: t.vehicles > 0 ? t.totalT2L / t.vehicles : 0,
-        completionRate: t.vehicles > 0 ? (t.completed / t.vehicles) * 100 : 0,
-      }))
-      .sort((a, b) => b.vehicles - a.vehicles)
-      .slice(0, 5); // Top 5 team members
-  }, [allVehicles]);
-
-  // Calculate recent activity (last 24h)
-  const recentActivity = useMemo(() => {
-    const now = new Date();
-    const last24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-
-    const vehiclesAdded = allVehicles.filter(v => {
-      const created = new Date(v.created_at);
-      return created >= last24h;
-    }).length;
-
-    const vehiclesCompleted = allVehicles.filter(v => {
-      return v.step_id === 'ready' || v.step_name?.toLowerCase().includes('ready');
-    }).length;
-
-    return {
-      vehiclesAdded,
-      vehiclesCompleted,
-      totalActive: allVehicles.length,
-    };
-  }, [allVehicles]);
+  // Team performance calculation removed - not needed for step time analysis
+  // Recent activity calculation removed - not needed for step time analysis
 
   const handleNavigateToDetails = (stepId?: string, filters?: any) => {
     if (stepId) {
@@ -294,28 +271,56 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
 
   return (
     <div className={cn("h-full overflow-auto space-y-6 p-6", className)}>
-      {/* Time Range Selector */}
+      {/* Time Range Selector - Enhanced with Monthly View */}
       <Card>
-        <CardContent className="pt-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-muted-foreground" />
-              <span className="font-medium">{t('get_ready.analytics.timeRange')}:</span>
-            </div>
+        <CardContent className="pt-6 space-y-4">
+          <div className="flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-muted-foreground" />
+            <span className="font-medium">{t('get_ready.analytics.timeRange')}:</span>
+          </div>
+
+          {/* Period Type Selector */}
+          <Tabs value={periodType} onValueChange={(value) => setPeriodType(value as 'relative' | 'monthly')}>
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="relative">Last 7 Days</TabsTrigger>
+              <TabsTrigger value="monthly">By Month</TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          {/* Relative Period Selector (7d, 30d, 90d) */}
+          {periodType === 'relative' && (
             <Tabs value={timeRange} onValueChange={(value) => setTimeRange(value as TimeRange)}>
-              <TabsList>
-                <TabsTrigger value="7d">
-                  {t('get_ready.analytics.last7Days')}
-                </TabsTrigger>
-                <TabsTrigger value="30d">
-                  {t('get_ready.analytics.last30Days')}
-                </TabsTrigger>
-                <TabsTrigger value="90d">
-                  {t('get_ready.analytics.last90Days')}
-                </TabsTrigger>
+              <TabsList className="w-full">
+                <TabsTrigger value="7d">{t('get_ready.analytics.last7Days')}</TabsTrigger>
+                <TabsTrigger value="30d">{t('get_ready.analytics.last30Days')}</TabsTrigger>
+                <TabsTrigger value="90d">{t('get_ready.analytics.last90Days')}</TabsTrigger>
               </TabsList>
             </Tabs>
-          </div>
+          )}
+
+          {/* Monthly Selector */}
+          {periodType === 'monthly' && (
+            <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select month" />
+              </SelectTrigger>
+              <SelectContent>
+                {availableMonths.map((month) => (
+                  <SelectItem key={month.value} value={month.value}>
+                    {month.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+
+          {/* Helper Text */}
+          <p className="text-xs text-muted-foreground">
+            {periodType === 'monthly'
+              ? `Showing average time per step for ${availableMonths.find(m => m.value === selectedMonth)?.label || selectedMonth}`
+              : `Showing data for the ${timeRange === '7d' ? 'last 7 days' : timeRange === '30d' ? 'last 30 days' : 'last 90 days'}`
+            }
+          </p>
         </CardContent>
       </Card>
 
@@ -327,270 +332,123 @@ export function GetReadyOverview({ className, allVehicles }: GetReadyOverviewPro
             Average Time by Step
           </CardTitle>
           <CardDescription>
-            Top 5 steps with longest average processing time ({timeRange === '7d' ? 'last 7 days' : timeRange === '30d' ? 'last 30 days' : 'last 90 days'})
+            {periodType === 'monthly'
+              ? `Top 5 steps with longest average processing time (${availableMonths.find(m => m.value === selectedMonth)?.label || selectedMonth})`
+              : `Top 5 steps with longest average processing time (${timeRange === '7d' ? 'last 7 days' : timeRange === '30d' ? 'last 30 days' : 'last 90 days'})`
+            }
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <SafeBarChart data={stepChartData} timeRange={timeRange} />
+          <SafeBarChart data={stepChartData} />
         </CardContent>
       </Card>
 
-      {/* Executive KPIs */}
-      <GetReadyDashboardWidget />
-
-      {/* Enterprise Metrics Dashboard */}
-      <GetReadyEnterpriseMetrics allVehicles={allVehicles} timeRange={timeRange} />
-
       {/* Workflow Distribution section removed - workflow_type no longer exists */}
 
-      {/* Step Analysis & Priority Breakdown */}
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Step Analysis - Overall Average */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Layers className="h-5 w-5" />
-              Step Analysis
-            </CardTitle>
-            <CardDescription>Average time across all workflow steps</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              {/* Overall Average Display */}
-              <div className="flex items-center justify-between p-4 rounded-lg bg-indigo-50 border border-indigo-200">
-                <div className="flex items-center gap-4 flex-1">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100">
-                    <Clock className="h-6 w-6 text-indigo-600" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                      Average Time Per Step
-                    </div>
-                    <div className="text-3xl font-bold text-indigo-600 mt-1">
-                      {overallStepAverage.avgDays.toFixed(1)}
-                      <span className="text-lg text-muted-foreground ml-1">days</span>
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      Based on {timeRange === '7d' ? 'last 7 days' : timeRange === '30d' ? 'last 30 days' : 'last 90 days'}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-right space-y-1">
-                  <div className="text-sm text-muted-foreground">{overallStepAverage.totalSteps} Steps</div>
-                  <div className="text-sm text-muted-foreground">{overallStepAverage.totalVehicles} Vehicles</div>
-                </div>
-              </div>
-
-              {/* Top Steps Summary */}
-              <div className="space-y-2">
-                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                  Top Steps by Volume
-                </div>
-                <div className="space-y-2">
-                  {stepStats.slice(0, 3).map((stat) => (
-                    <div
-                      key={stat.step_id}
-                      className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
-                      onClick={() => handleNavigateToDetails(stat.step_id)}
-                    >
-                      <div className="flex items-center gap-2 flex-1 min-w-0">
-                        <div
-                          className="w-2 h-2 rounded-full flex-shrink-0"
-                          style={{ backgroundColor: stat.step?.color || '#6B7280' }}
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="font-medium text-sm truncate">{stat.step_name}</div>
-                          <div className="text-xs text-muted-foreground">
-                            Avg: {stat.avgDays.toFixed(1)}d
-                          </div>
-                        </div>
-                      </div>
-                      <Badge variant="outline" className="ml-2">{stat.count}</Badge>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* View All Button */}
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => navigate('/get-ready/details')}
-              >
-                View All Steps
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Priority Breakdown */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Target className="h-5 w-5" />
-              Priority Breakdown
-            </CardTitle>
-            <CardDescription>Vehicle priority distribution</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {Object.entries(priorityStats).map(([priority, stats]) => {
-                const getPriorityColor = (p: string) => {
-                  switch (p) {
-                    case 'urgent': return 'bg-red-100 text-red-700';
-                    case 'high': return 'bg-orange-100 text-orange-700';
-                    case 'medium': return 'bg-yellow-100 text-yellow-700';
-                    case 'normal': return 'bg-blue-100 text-blue-700';
-                    case 'low': return 'bg-gray-100 text-gray-700';
-                    default: return 'bg-gray-100 text-gray-700';
-                  }
-                };
-
-                if (stats.count === 0) return null;
-
-                return (
-                  <div key={priority} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50">
-                    <div className="flex items-center gap-3">
-                      <Badge className={cn("capitalize", getPriorityColor(priority))}>
-                        {priority}
-                      </Badge>
-                      {stats.atRisk > 0 && (
-                        <span className="text-xs text-amber-600 flex items-center gap-1">
-                          <AlertTriangle className="h-3 w-3" />
-                          {stats.atRisk} at risk
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-lg font-semibold">{stats.count}</div>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Work Items Summary & Team Performance */}
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Work Items Summary */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5" />
-              Work Items Summary
-            </CardTitle>
-            <CardDescription>Aggregate work items across all vehicles</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <div className="text-xs text-muted-foreground">Pending</div>
-                  <div className="text-2xl font-bold text-amber-600">{workItemsTotal.pending}</div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-xs text-muted-foreground">In Progress</div>
-                  <div className="text-2xl font-bold text-sky-600">{workItemsTotal.in_progress}</div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-xs text-muted-foreground">Completed</div>
-                  <div className="text-2xl font-bold text-emerald-600">{workItemsTotal.completed}</div>
-                </div>
-                <div className="space-y-1">
-                  <div className="text-xs text-muted-foreground">Total Items</div>
-                  <div className="text-2xl font-bold">{workItemsTotal.totalItems}</div>
-                </div>
-              </div>
-
-              <Separator />
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-medium">Completion Rate</span>
-                  <span className="text-muted-foreground">{workItemsTotal.completionRate.toFixed(1)}%</span>
-                </div>
-                <Progress value={workItemsTotal.completionRate} className="h-2" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Team Performance */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              Team Performance
-            </CardTitle>
-            <CardDescription>Top performers by vehicle count</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {teamStats.length === 0 ? (
-                <div className="text-sm text-muted-foreground text-center py-4">
-                  No team data available
-                </div>
-              ) : (
-                teamStats.map((member, index) => (
-                  <div key={member.name} className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50">
-                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <div className="flex-shrink-0">
-                        <Badge variant="outline" className="w-6 h-6 flex items-center justify-center p-0">
-                          {index + 1}
-                        </Badge>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-sm truncate">{member.name}</div>
-                        <div className="text-xs text-muted-foreground">
-                          Avg T2L: {member.avgT2L.toFixed(1)}d
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-semibold">{member.vehicles}</div>
-                      <div className="text-xs text-muted-foreground">vehicles</div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Recent Activity */}
+      {/* Step Analysis - Expanded to full width */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
-            Recent Activity (Last 24h)
+            <Layers className="h-5 w-5" />
+            Step Analysis
           </CardTitle>
+          <CardDescription>Average time across all workflow steps</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-50 border border-blue-100">
-              <TrendingUp className="h-8 w-8 text-blue-600" />
-              <div>
-                <div className="text-2xl font-bold">{recentActivity.vehiclesAdded}</div>
-                <div className="text-xs text-muted-foreground">Vehicles Added</div>
+          <div className="space-y-6">
+            {/* Overall Average Display */}
+            <div className="flex items-center justify-between p-4 rounded-lg bg-indigo-50 border border-indigo-200">
+              <div className="flex items-center gap-4 flex-1">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100">
+                  <Clock className="h-6 w-6 text-indigo-600" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                    Average Time Per Step
+                  </div>
+                  <div className="text-3xl font-bold text-indigo-600 mt-1">
+                    {overallStepAverage.avgDays.toFixed(1)}
+                    <span className="text-lg text-muted-foreground ml-1">days</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {periodType === 'monthly'
+                      ? `Based on ${availableMonths.find(m => m.value === selectedMonth)?.label || selectedMonth}`
+                      : `Based on ${timeRange === '7d' ? 'last 7 days' : timeRange === '30d' ? 'last 30 days' : 'last 90 days'}`
+                    }
+                  </div>
+                </div>
+              </div>
+              <div className="text-right space-y-1">
+                <div className="text-sm text-muted-foreground">{overallStepAverage.totalSteps} Steps</div>
+                <div className="text-sm text-muted-foreground">{overallStepAverage.totalVehicles} Vehicles</div>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-emerald-50 border border-emerald-100">
-              <CheckCircle2 className="h-8 w-8 text-emerald-600" />
-              <div>
-                <div className="text-2xl font-bold">{recentActivity.vehiclesCompleted}</div>
-                <div className="text-xs text-muted-foreground">Ready for Frontline</div>
+
+            {/* Top Steps Summary */}
+            <div className="space-y-2">
+              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                Top Steps by Volume
+              </div>
+              <div className="space-y-2">
+                {stepStats.slice(0, 3).map((stat) => (
+                  <div
+                    key={stat.step_id}
+                    className="flex items-center justify-between p-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+                    onClick={() => handleNavigateToDetails(stat.step_id)}
+                  >
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                      <div
+                        className="w-2 h-2 rounded-full flex-shrink-0"
+                        style={{ backgroundColor: stat.step?.color || '#6B7280' }}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm truncate">{stat.step_name}</div>
+                        <div className="text-xs text-muted-foreground">
+                          Avg: {stat.avgDays.toFixed(1)}d
+                        </div>
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="ml-2">{stat.count}</Badge>
+                  </div>
+                ))}
               </div>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-purple-50 border border-purple-100">
-              <Layers className="h-8 w-8 text-purple-600" />
-              <div>
-                <div className="text-2xl font-bold">{recentActivity.totalActive}</div>
-                <div className="text-xs text-muted-foreground">Total Active</div>
-              </div>
-            </div>
+
+            {/* View All Button */}
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => navigate('/get-ready/details')}
+            >
+              View All Steps
+              <ArrowRight className="h-4 w-4 ml-2" />
+            </Button>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Recent Activity - REMOVED (not needed for step time analysis) */}
+      {/* Work Items Summary - REMOVED (not related to step timing) */}
+      {/* Team Performance - REMOVED (not related to step timing) */}
+      {/* Priority Breakdown - REMOVED (not related to step timing) */}
+
+      {/* Detailed Step Breakdown Table - ALL steps with timing data */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Layers className="h-5 w-5" />
+            Detailed Step Breakdown
+          </CardTitle>
+          <CardDescription>
+            Complete timing analysis for all workflow steps
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <StepTimeBreakdownTable
+            stepStats={stepStats}
+            periodLabel={periodLabel}
+            onStepClick={handleStepClick}
+          />
         </CardContent>
       </Card>
 

@@ -1,25 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(for:*)",
-      "Bash(do echo \"=== $file ===\")",
-      "Bash(python -m json.tool:*)",
-      "Bash(/dev/null)",
-      "Bash(supabase db push:*)",
-      "Bash(supabase db execute:*)",
-      "mcp__supabase__execute_sql",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "mcp__supabase__apply_migration",
-      "Bash(npm run build:*)",
-      "Bash(node scripts/generate-version.js:*)",
-      "Bash(node -e:*)",
       "Bash(npx tsc:*)",
-      "Bash(node check-translations.js:*)",
-      "Bash(npm run build:dev:*)",
-      "Bash(powershell -Command:*)",
-      "Bash(node scripts/audit-translations.cjs:*)"
+      "Bash(git checkout:*)",
+      "Bash(npm run build:dev:*)"
     ],
     "deny": [],
     "ask": []

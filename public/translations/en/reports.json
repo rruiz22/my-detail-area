@@ -246,6 +246,32 @@
       "loading": "Loading invoices...",
       "view_manage": "View and manage all invoices",
       "select_dealership": "Please select a dealership to manage invoices"
+    },
+    "grouping": {
+      "label": "Group by",
+      "none": "No grouping",
+      "status": "Status",
+      "department": "Department",
+      "week": "Week"
+    },
+    "details": {
+      "tabs": {
+        "overview": "Overview",
+        "orders": "Orders",
+        "payments": "Payments",
+        "history": "History",
+        "emails": "Email Log",
+        "comments": "Comments"
+      },
+      "orders_tab": {
+        "search_placeholder": "Search by VIN, Order #, Vehicle...",
+        "filter_all": "All Orders",
+        "filter_paid": "Paid Only",
+        "filter_unpaid": "Unpaid Only",
+        "showing": "Showing {{start}}-{{end}} of {{total}} orders",
+        "filtered": "filtered from {{total}} total",
+        "per_page": "per page"
+      }
     }
   },
   "analytics": {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +12,6 @@ interface ChartDataItem {
 
 interface SafeBarChartProps {
   data: ChartDataItem[];
-  timeRange: string;
 }
 
 /**
@@ -29,7 +28,7 @@ interface SafeBarChartProps {
  * ✅ Enterprise-grade error handling with graceful degradation
  * ✅ Maintains all existing functionality (colors, tooltips, animations)
  */
-export function SafeBarChart({ data, timeRange }: SafeBarChartProps) {
+export function SafeBarChart({ data }: SafeBarChartProps) {
   const { t } = useTranslation();
   const [shouldRender, setShouldRender] = useState(false);
   const [validatedData, setValidatedData] = useState<ChartDataItem[]>([]);
@@ -71,7 +70,52 @@ export function SafeBarChart({ data, timeRange }: SafeBarChartProps) {
     }
   }, [data]);
 
-  // Loading state
+  // ✅ FIX: Calculate domain BEFORE early returns to satisfy Rules of Hooks
+  // CRITICAL: ALL useMemo hooks must be called unconditionally on every render
+  const { minDomain, maxDomain, isValidDomain, ticks } = useMemo(() => {
+    // If no validated data, return safe fallback domain
+    if (!validatedData || validatedData.length === 0) {
+      return { minDomain: 0, maxDomain: 10, isValidDomain: false, ticks: [0, 2.5, 5, 7.5, 10] };
+    }
+
+    const maxValue = Math.max(...validatedData.map(item => item.avgDays));
+
+    // Safety checks for domain calculation
+    if (isNaN(maxValue) || !isFinite(maxValue) || maxValue <= 0) {
+      console.error('❌ SafeBarChart: Invalid maxValue for domain', maxValue);
+      return { minDomain: 0, maxDomain: 10, isValidDomain: false, ticks: [0, 2.5, 5, 7.5, 10] };
+    }
+
+    // Ensure upperBound is never NaN or invalid
+    let upperBound = Math.ceil(maxValue * 1.1);
+
+    // Additional validation after calculation
+    if (isNaN(upperBound) || !isFinite(upperBound) || upperBound <= 0) {
+      console.error('❌ SafeBarChart: Invalid upperBound calculated', upperBound);
+      return { minDomain: 0, maxDomain: 10, isValidDomain: false, ticks: [0, 2.5, 5, 7.5, 10] };
+    }
+
+    // ✅ Calculate explicit ticks to prevent Recharts' DecimalError
+    // Generate 5 evenly-spaced ticks from 0 to upperBound
+    const tickCount = 5;
+    const tickStep = upperBound / (tickCount - 1);
+    const calculatedTicks = Array.from({ length: tickCount }, (_, i) => {
+      const tick = i * tickStep;
+      return Number(tick.toFixed(1)); // Round to 1 decimal place
+    });
+
+    console.log('✅ SafeBarChart: Domain calculated', { maxValue, upperBound, ticks: calculatedTicks });
+
+    return { minDomain: 0, maxDomain: upperBound, isValidDomain: true, ticks: calculatedTicks };
+  }, [validatedData]);
+
+  // ✅ Memoize domain array BEFORE early returns (Rules of Hooks!)
+  const domainArray = useMemo<[number, number]>(() => {
+    console.log('📊 Creating domain array:', [minDomain, maxDomain]);
+    return [minDomain, maxDomain];
+  }, [minDomain, maxDomain]);
+
+  // Early return for loading state (AFTER all hooks)
   if (!shouldRender || validatedData.length === 0) {
     return (
       <div className="flex items-center justify-center h-[300px] text-muted-foreground">
@@ -87,24 +131,18 @@ export function SafeBarChart({ data, timeRange }: SafeBarChartProps) {
     );
   }
 
-  // CRITICAL: Calculate domain SAFELY before passing to XAxis
-  // This prevents NaN from ever reaching Recharts' Decimal constructor
-  const safeDomain = (): [number, number] => {
-    const maxValue = Math.max(...validatedData.map(item => item.avgDays));
-
-    // Safety checks for domain calculation
-    if (isNaN(maxValue) || !isFinite(maxValue) || maxValue <= 0) {
-      console.error('❌ SafeBarChart: Invalid maxValue for domain', maxValue);
-      return [0, 10]; // Fallback domain
-    }
-
-    const upperBound = Math.ceil(maxValue * 1.1);
-    console.log('✅ SafeBarChart: Domain calculated', { maxValue, upperBound });
-
-    return [0, upperBound];
-  };
-
-  const [minDomain, maxDomain] = safeDomain();
+  // Early return for invalid domain (AFTER all hooks)
+  if (!isValidDomain) {
+    console.error('❌ SafeBarChart: Invalid domain detected, cannot render chart', { minDomain, maxDomain });
+    return (
+      <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+        <div className="text-center">
+          <Clock className="h-12 w-12 mx-auto mb-4 opacity-50" />
+          <p className="text-sm">Chart data validation error. Please try again.</p>
+        </div>
+      </div>
+    );
+  }
 
   // Chart render (only when data is validated)
   return (
@@ -118,7 +156,8 @@ export function SafeBarChart({ data, timeRange }: SafeBarChartProps) {
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
           <XAxis
             type="number"
-            domain={[minDomain, maxDomain]}
+            domain={domainArray}
+            ticks={ticks}
             label={{ value: t('get_ready.analytics.days'), position: 'insideBottom', offset: -5 }}
           />
           <YAxis

@@ -138,6 +138,9 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const processedVehicleIdRef = useRef<string | null>(null);
   const prefillProcessedRef = useRef(false);
 
+  // Ref to control auto-fetch for Overview (prevent infinite loop)
+  const isAutoFetchingRef = useRef(false);
+
   // Use the selected step from sidebar, or 'all' if none selected
   const selectedStep = selectedStepId || "all";
 
@@ -173,6 +176,17 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     }
   }, [location.state, location.pathname, navigate]);
 
+  // Determine which content to show based on route - MOVED UP for useEffect dependencies
+  const isOverview =
+    location.pathname === "/get-ready/overview" ||
+    location.pathname === "/get-ready" ||
+    location.pathname === "/get-ready/";
+  const isDetailsView = location.pathname === "/get-ready/details";
+  const isReportsView = location.pathname === "/get-ready/reports";
+  const isActivityView = location.pathname === "/get-ready/activity";
+  const isApprovalsView = location.pathname === "/get-ready/approvals";
+  const isSetupView = location.pathname === "/get-ready/setup";
+
   // Fetch vehicles for export (infinite query to get all vehicles)
   const { data: vehiclesData } = useGetReadyVehiclesInfinite({
     searchQuery,
@@ -182,7 +196,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     sortOrder,
   });
 
-  // Fetch ALL vehicles without step filter for Approvals tab
+  // Fetch ALL vehicles without step filter for Approvals tab & Overview tab
   const {
     data: allVehiclesData,
     fetchNextPage: fetchNextApprovalPage,
@@ -190,9 +204,37 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     isFetchingNextPage: isFetchingNextApprovalPage
   } = useGetReadyVehiclesInfinite({});
 
-  // PHASE 3 OPTIMIZATION: Removed auto-fetch ALL pages loop
-  // Now using server-side RPC function get_pending_approvals_count() for accurate counts
-  // This eliminates 10-20 queries per page load
+  // ✅ FIX: Auto-fetch ALL pages for Overview tab ONLY
+  // Overview needs complete data for accurate step timing averages
+  useEffect(() => {
+    // Reset auto-fetch control when entering/leaving Overview
+    if (!isOverview) {
+      isAutoFetchingRef.current = false;
+      return;
+    }
+
+    // Start auto-fetch sequence only once when entering Overview
+    if (isOverview && !isAutoFetchingRef.current) {
+      isAutoFetchingRef.current = true;
+      console.log('📊 [Overview] Starting auto-fetch sequence for complete statistics');
+    }
+
+    // Continue fetching pages if we're auto-fetching and there are more pages
+    if (isOverview && isAutoFetchingRef.current && hasNextApprovalPage && !isFetchingNextApprovalPage) {
+      console.log('📊 [Overview] Auto-fetching next page');
+      fetchNextApprovalPage();
+    }
+
+    // Stop auto-fetching when we reach the end
+    if (isOverview && isAutoFetchingRef.current && !hasNextApprovalPage) {
+      console.log('📊 [Overview] Auto-fetch complete!');
+      isAutoFetchingRef.current = false;
+    }
+  }, [isOverview, hasNextApprovalPage, isFetchingNextApprovalPage, fetchNextApprovalPage]);
+
+  // PHASE 3 OPTIMIZATION: Removed auto-fetch ALL pages loop FOR OTHER TABS
+  // Approvals tab uses server-side RPC function get_pending_approvals_count() for accurate counts
+  // This eliminates 10-20 queries per page load for non-Overview tabs
 
   // Flatten all vehicles from infinite query
   const allVehicles =
@@ -261,8 +303,8 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const handleRefresh = async () => {
     setIsManualRefreshing(true);
     try {
-      // Targeted refresh: only invalidate visible data (vehicle list, steps, KPIs)
-      // Detail panel, notes, work items, media, and activity log are only invalidated if panel is open
+      // ✅ FIX: Comprehensive refresh - invalidate ALL Get Ready related queries
+      // Core vehicle data
       await queryClient.invalidateQueries({
         queryKey: ['get-ready-vehicles', 'infinite'],
         exact: false
@@ -278,15 +320,66 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
         exact: false
       });
 
-      // Only invalidate detail panel if a vehicle is selected
+      // Alerts and monitoring
+      await queryClient.invalidateQueries({
+        queryKey: ['bottleneck-alerts'],
+        exact: false
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: ['sla-alerts'],
+        exact: false
+      });
+
+      // Approval system
+      await queryClient.invalidateQueries({
+        queryKey: ['approval-count'],
+        exact: false
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: ['approval-vehicles'],
+        exact: false
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: ['get-ready-approvals-count'],
+        exact: false
+      });
+
+      // Vehicle detail panel and sub-queries (if vehicle is selected)
       if (selectedVehicleId) {
         await queryClient.invalidateQueries({
           queryKey: ['get-ready-vehicle-detail', selectedVehicleId],
           exact: false
         });
+
+        await queryClient.invalidateQueries({
+          predicate: (query) =>
+            query.queryKey[0] === 'work-items' &&
+            query.queryKey[1] === selectedVehicleId
+        });
+
+        await queryClient.invalidateQueries({
+          predicate: (query) =>
+            query.queryKey[0] === 'vehicle-media' &&
+            query.queryKey[1] === selectedVehicleId
+        });
+
+        await queryClient.invalidateQueries({
+          predicate: (query) =>
+            query.queryKey[0] === 'vehicle-notes' &&
+            query.queryKey[1] === selectedVehicleId
+        });
+
+        await queryClient.invalidateQueries({
+          predicate: (query) =>
+            query.queryKey[0] === 'vehicle-activity-log' &&
+            query.queryKey[1] === selectedVehicleId
+        });
       }
 
-      console.log('✅ [Refresh] Get Ready core queries invalidated (targeted scope)');
+      console.log('✅ [Refresh] All Get Ready queries invalidated (comprehensive scope)');
 
       toast({
         description: t("common.data_refreshed") || "Data refreshed successfully",
@@ -359,16 +452,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
     setSelectedPriority("all");
   };
 
-  // Determine which content to show based on route
-  const isOverview =
-    location.pathname === "/get-ready/overview" ||
-    location.pathname === "/get-ready" ||
-    location.pathname === "/get-ready/";
-  const isDetailsView = location.pathname === "/get-ready/details";
-  const isReportsView = location.pathname === "/get-ready/reports";
-  const isActivityView = location.pathname === "/get-ready/activity";
-  const isApprovalsView = location.pathname === "/get-ready/approvals";
-  const isSetupView = location.pathname === "/get-ready/setup";
+  // Route determination moved up before infinite query hooks (see line 176)
 
   // ✅ FIX: Move ALL useMemo hooks BEFORE any early returns
   // Filter vehicles by approval status - USE UNFILTERED DATA for Approvals tab

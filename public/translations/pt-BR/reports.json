@@ -246,6 +246,32 @@
       "loading": "Carregando faturas...",
       "view_manage": "Ver e gerenciar todas as faturas",
       "select_dealership": "Por favor selecione um dealer para gerenciar faturas"
+    },
+    "grouping": {
+      "label": "Agrupar por",
+      "none": "Sem agrupamento",
+      "status": "Status",
+      "department": "Departamento",
+      "week": "Semana"
+    },
+    "details": {
+      "tabs": {
+        "overview": "Resumo",
+        "orders": "Pedidos",
+        "payments": "Pagamentos",
+        "history": "Histórico",
+        "emails": "Registro de Emails",
+        "comments": "Comentários"
+      },
+      "orders_tab": {
+        "search_placeholder": "Buscar por VIN, Pedido, Veículo...",
+        "filter_all": "Todos os Pedidos",
+        "filter_paid": "Apenas Pagos",
+        "filter_unpaid": "Apenas Não Pagos",
+        "showing": "Mostrando {{start}}-{{end}} de {{total}} pedidos",
+        "filtered": "filtrados de {{total}} totais",
+        "per_page": "por página"
+      }
     }
   },
   "analytics": {

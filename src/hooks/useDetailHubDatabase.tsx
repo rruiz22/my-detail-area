@@ -1435,6 +1435,15 @@ export function useUpdateTimeEntry() {
     }) => {
       if (!user) throw new Error('User not authenticated');
 
+      // Fetch current time entry to check if we're adding clock out
+      const { data: currentEntry, error: fetchError } = await supabase
+        .from('detail_hub_time_entries')
+        .select('id, clock_out, status')
+        .eq('id', params.timeEntryId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
       const updates: any = {
         verified_by: user.id, // Track who made the edit
         updated_at: new Date().toISOString()
@@ -1443,6 +1452,33 @@ export function useUpdateTimeEntry() {
       if (params.clockIn) updates.clock_in = params.clockIn;
       if (params.clockOut !== undefined) updates.clock_out = params.clockOut || null;
       if (params.notes !== undefined) updates.notes = params.notes || null;
+
+      // If adding clock out to an active entry, update status and punch method
+      const isAddingClockOut = !currentEntry.clock_out && params.clockOut;
+      if (isAddingClockOut) {
+        updates.status = 'complete';
+        updates.punch_out_method = 'manual';
+
+        // Auto-close any open breaks
+        const { data: openBreaks } = await supabase
+          .from('detail_hub_breaks')
+          .select('id, break_number')
+          .eq('time_entry_id', params.timeEntryId)
+          .is('break_end', null);
+
+        if (openBreaks && openBreaks.length > 0) {
+          console.warn(`[MANUAL CLOCK OUT] Auto-closing ${openBreaks.length} open breaks for time entry ${params.timeEntryId}`);
+
+          for (const openBreak of openBreaks) {
+            await supabase
+              .from('detail_hub_breaks')
+              .update({ break_end: params.clockOut })
+              .eq('id', openBreak.id);
+
+            console.log(`[MANUAL CLOCK OUT] Break #${openBreak.break_number} auto-closed`);
+          }
+        }
+      }
 
       const { data, error } = await supabase
         .from('detail_hub_time_entries')

@@ -77,6 +77,9 @@ import { CreateInvoiceDialog } from '../invoices/CreateInvoiceDialog';
 import { InvoiceDetailsDialog } from '../invoices/InvoiceDetailsDialog';
 import { RecordPaymentDialog } from '../invoices/RecordPaymentDialog';
 import { VehicleInvoiceSearch } from '../invoices/VehicleInvoiceSearch';
+import { InvoiceGroupAccordion } from '../invoices/InvoiceGroupAccordion';
+import { useInvoiceGrouping, useAccordionDefaultValue } from '@/hooks/useInvoiceGrouping';
+import { GroupByOption } from '@/utils/invoiceGrouping';
 
 interface InvoicesReportProps {
   filters: ReportsFilters;
@@ -273,6 +276,19 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
   const { data: invoices = [], isLoading: loadingInvoices } = useInvoices(invoiceFilters);
   const { data: summary } = useInvoiceSummary(invoiceFilters);
   const deleteInvoiceMutation = useDeleteInvoice();
+
+  // Invoice grouping
+  const {
+    groupBy,
+    setGroupBy,
+    groups,
+    isGroupCollapsed,
+    toggleGroup,
+  } = useInvoiceGrouping(invoices);
+
+  const accordionDefaultValue = useAccordionDefaultValue(groups, new Set(
+    groups.filter(g => isGroupCollapsed(g.key)).map(g => g.key)
+  ));
 
   // Fetch available services for filters
   const { data: availableServices = [], isLoading: loadingServices } = useQuery({
@@ -1420,6 +1436,29 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
               <CardTitle>{t('reports.invoices.title')}</CardTitle>
               <CardDescription>{t('reports.invoices.messages.view_manage')}</CardDescription>
 
+              {/* Group By Selector */}
+              <div className="pt-4 pb-2 border-b">
+                <div className="flex items-center gap-3">
+                  <Label className="text-sm font-medium whitespace-nowrap">
+                    {t('reports.invoices.grouping.label')}:
+                  </Label>
+                  <Select
+                    value={groupBy}
+                    onValueChange={(value) => setGroupBy(value as GroupByOption)}
+                  >
+                    <SelectTrigger className="w-[200px] h-9">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">{t('reports.invoices.grouping.none')}</SelectItem>
+                      <SelectItem value="status">{t('reports.invoices.grouping.status')}</SelectItem>
+                      <SelectItem value="department">{t('reports.invoices.grouping.department')}</SelectItem>
+                      <SelectItem value="week">{t('reports.invoices.grouping.week')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
               {/* Filters - Independent from global filters */}
               <div className="space-y-3 mt-4">
                 {/* First Row: Date Range, Search, Order Type, Status */}
@@ -1532,6 +1571,33 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                 <div className="py-12 text-center">
                   <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                   <p className="text-muted-foreground">{t('reports.invoices.no_invoices')}</p>
+                </div>
+              ) : groupBy !== 'none' ? (
+                <div className="p-4">
+                  <InvoiceGroupAccordion
+                    groups={groups}
+                    defaultValue={accordionDefaultValue}
+                    onValueChange={(openGroups) => {
+                      // Update collapsed state based on what's NOT in openGroups
+                      groups.forEach(group => {
+                        const shouldBeCollapsed = !openGroups.includes(group.key);
+                        const isCurrentlyCollapsed = isGroupCollapsed(group.key);
+                        if (shouldBeCollapsed !== isCurrentlyCollapsed) {
+                          toggleGroup(group.key);
+                        }
+                      });
+                    }}
+                    onSelectInvoice={setSelectedInvoice}
+                    onShowDetails={(invoice) => {
+                      setSelectedInvoice(invoice);
+                      setShowDetailsDialog(true);
+                    }}
+                    onShowPayment={(invoice) => {
+                      setSelectedInvoice(invoice);
+                      setShowPaymentDialog(true);
+                    }}
+                    onDeleteInvoice={handleDeleteInvoice}
+                  />
                 </div>
               ) : (
                 <Table>
