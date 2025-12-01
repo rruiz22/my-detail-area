@@ -393,6 +393,11 @@ if (USE_CODE_SPLITTING) {
 // Export function to wait for initial translations
 export const waitForInitialTranslations = async () => {
   if (USE_CODE_SPLITTING) {
+    // 🎯 Minimum splash screen time: 2 seconds
+    // This prevents translation key flash by ensuring translations load before UI renders
+    const minimumSplashTime = 2000; // 2 seconds
+    const startTime = Date.now();
+
     // With Backend, i18next handles loading automatically
     await i18n.loadNamespaces(PRELOAD_NAMESPACES);
 
@@ -404,14 +409,30 @@ export const waitForInitialTranslations = async () => {
 
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       // Check if critical namespaces have translations loaded
+      // These are the most frequently used namespaces across the app
       const hasCommon = i18n.hasResourceBundle(currentLang, 'common');
       const hasNavigation = i18n.hasResourceBundle(currentLang, 'navigation');
+      const hasLayout = i18n.hasResourceBundle(currentLang, 'layout');
+      const hasReports = i18n.hasResourceBundle(currentLang, 'reports');
+      const hasDashboard = i18n.hasResourceBundle(currentLang, 'dashboard');
 
-      if (hasCommon && hasNavigation) {
+      if (hasCommon && hasNavigation && hasLayout && hasReports && hasDashboard) {
         // Only log in development
         if (import.meta.env.DEV) {
-          console.log(`✅ [CODE SPLITTING] Resources confirmed available after ${attempt * 100}ms`);
+          console.log(`✅ [CODE SPLITTING] Critical namespaces (5) confirmed available after ${attempt * 100}ms`);
         }
+
+        // Ensure minimum splash time has elapsed
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = minimumSplashTime - elapsedTime;
+
+        if (remainingTime > 0) {
+          if (import.meta.env.DEV) {
+            console.log(`⏱️ [SPLASH] Waiting additional ${remainingTime}ms to reach minimum 2s splash time`);
+          }
+          await new Promise(resolve => setTimeout(resolve, remainingTime));
+        }
+
         return;
       }
 
@@ -419,7 +440,7 @@ export const waitForInitialTranslations = async () => {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
 
-    console.error('⚠️ [CODE SPLITTING] Resources not available after 5 seconds');
+    console.error('⚠️ [CODE SPLITTING] Critical namespaces not available after 5 seconds');
   } else {
     // Legacy system
     return initialLanguageLoading;

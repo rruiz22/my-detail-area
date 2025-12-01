@@ -867,7 +867,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                         <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.vin')}</TableHead>
                         <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.assigned')}</TableHead>
                         <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.dept')}</TableHead>
-                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.invoices.status')}</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.status')}</TableHead>
                         <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.invoice')}</TableHead>
                         <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.amount')}</TableHead>
                       </TableRow>

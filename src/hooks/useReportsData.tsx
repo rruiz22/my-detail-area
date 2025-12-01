@@ -230,7 +230,9 @@ export const useDepartmentRevenue = (filters: ReportsFilters) => {
         name: row.department.charAt(0).toUpperCase() + row.department.slice(1),
         revenue: parseFloat(String(row.revenue || 0)),
         orders: row.orders || 0,
-        avg_order_value: parseFloat(String(row.avg_order_value || 0))
+        completed: row.completed || 0,
+        avg_order_value: parseFloat(String(row.avg_order_value || 0)),
+        completionRate: parseFloat(String(row.completion_rate || 0))
       }));
     },
     enabled: !!dealerId,

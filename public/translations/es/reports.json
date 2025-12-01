@@ -441,6 +441,7 @@
       "vin": "VIN",
       "assigned": "Asignado",
       "dept": "Depto",
+      "status": "Estado",
       "invoice": "Factura",
       "amount": "Monto",
       "unassigned": "Sin asignar",

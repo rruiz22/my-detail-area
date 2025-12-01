@@ -247,7 +247,9 @@ export interface DepartmentRevenue {
   name: string;
   revenue: number;
   orders: number;
+  completed: number;
   avg_order_value: number;
+  completionRate: number;
   color?: string;
 }
 

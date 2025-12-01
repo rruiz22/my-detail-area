@@ -441,6 +441,7 @@
       "vin": "VIN",
       "assigned": "Assigned",
       "dept": "Dept",
+      "status": "Status",
       "invoice": "Invoice",
       "amount": "Amount",
       "unassigned": "Unassigned",

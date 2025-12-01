@@ -441,6 +441,7 @@
       "vin": "VIN",
       "assigned": "Atribuído",
       "dept": "Depto",
+      "status": "Status",
       "invoice": "Fatura",
       "amount": "Valor",
       "unassigned": "Não atribuído",
