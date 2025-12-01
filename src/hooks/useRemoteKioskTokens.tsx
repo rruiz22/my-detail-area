@@ -395,12 +395,19 @@ export function useDeleteToken() {
 
   return useMutation({
     mutationFn: async (tokenId: string) => {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('remote_kiosk_tokens')
         .delete()
-        .eq('id', tokenId);
+        .eq('id', tokenId)
+        .select();
 
       if (error) throw error;
+
+      // Validate that a row was actually deleted (prevents silent RLS failures)
+      if (!data || data.length === 0) {
+        throw new Error('Failed to delete token. You may not have permission or the token may not exist.');
+      }
+
       return tokenId;
     },
     onSuccess: () => {
