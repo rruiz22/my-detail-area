@@ -198,19 +198,19 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Verify manager has permission to create tokens
-    const { data: membership, error: membershipError } = await supabase
-      .from('dealer_memberships')
+    // First check profile role (for supermanagers/system_admins with global access)
+    const { data: userProfile, error: profileError } = await supabase
+      .from('profiles')
       .select('role')
-      .eq('user_id', createdBy)
-      .eq('dealer_id', dealershipId)
+      .eq('id', createdBy)
       .single();
 
-    if (membershipError || !membership) {
-      console.error('[Remote Kiosk] Manager not found:', membershipError);
+    if (profileError || !userProfile) {
+      console.error('[Remote Kiosk] User profile not found:', profileError);
       return new Response(
         JSON.stringify({
           success: false,
-          error: 'Unauthorized: Manager not found or not member of dealership'
+          error: 'Unauthorized: User not found'
         } as RemoteKioskResponse),
         {
           status: 403,
@@ -219,17 +219,51 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    if (!['dealer_admin', 'dealer_manager', 'system_admin'].includes(membership.role)) {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: 'Unauthorized: Insufficient permissions (requires manager or admin role)'
-        } as RemoteKioskResponse),
-        {
-          status: 403,
-          headers: { "Content-Type": "application/json", ...corsHeaders }
-        }
-      );
+    // Allow system_admin and supermanager at profile level (they have global access)
+    const allowedProfileRoles = ['system_admin', 'supermanager'];
+    const hasGlobalAccess = allowedProfileRoles.includes(userProfile.role);
+
+    if (hasGlobalAccess) {
+      console.log(`[Remote Kiosk] Access granted via profile role: ${userProfile.role}`);
+      // Skip membership role check - these roles have global access
+    } else {
+      // For regular users, check dealer_memberships role
+      const { data: membership, error: membershipError } = await supabase
+        .from('dealer_memberships')
+        .select('role')
+        .eq('user_id', createdBy)
+        .eq('dealer_id', dealershipId)
+        .single();
+
+      if (membershipError || !membership) {
+        console.error('[Remote Kiosk] Manager not found:', membershipError);
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: 'Unauthorized: Not a member of this dealership'
+          } as RemoteKioskResponse),
+          {
+            status: 403,
+            headers: { "Content-Type": "application/json", ...corsHeaders }
+          }
+        );
+      }
+
+      const allowedMembershipRoles = ['dealer_admin', 'dealer_manager'];
+      if (!allowedMembershipRoles.includes(membership.role)) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: 'Unauthorized: Insufficient permissions (requires manager or admin role)'
+          } as RemoteKioskResponse),
+          {
+            status: 403,
+            headers: { "Content-Type": "application/json", ...corsHeaders }
+          }
+        );
+      }
+
+      console.log(`[Remote Kiosk] Access granted via membership role: ${membership.role}`);
     }
 
     // Generate unique short code
