@@ -13,7 +13,9 @@ import {
   Coffee,
   Camera,
   ImageIcon,
-  User
+  User,
+  Eye,
+  EyeOff
 } from "lucide-react";
 import { format } from "date-fns";
 import { TimeEntryWithEmployee } from "@/hooks/useDetailHubDatabase";
@@ -53,6 +55,9 @@ export function EmployeeTimecardDetailModal({
   onPhotoClick
 }: EmployeeTimecardDetailModalProps) {
   const { t } = useTranslation();
+
+  // 🔒 PRIVACY: Track if hourly rate is visible
+  const [showHourlyRate, setShowHourlyRate] = useState(false);
 
   // Calculate employee statistics
   const stats = useMemo(() => {
@@ -146,9 +151,25 @@ export function EmployeeTimecardDetailModal({
                 <div>
                   <h3 className="font-semibold text-lg">{employeeName}</h3>
                   <p className="text-sm text-muted-foreground">{employeeNumber}</p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    ${hourlyRate.toFixed(2)}/hr
-                  </p>
+                  <button
+                    onClick={() => setShowHourlyRate(!showHourlyRate)}
+                    className="flex items-center gap-2 hover:bg-gray-100 px-2 py-1 rounded transition-colors cursor-pointer group mt-1"
+                    title={showHourlyRate ? "Click to hide salary" : "Click to reveal salary"}
+                  >
+                    {showHourlyRate ? (
+                      <>
+                        <span className="text-xs font-medium text-emerald-600">
+                          ${hourlyRate.toFixed(2)}/hr
+                        </span>
+                        <EyeOff className="w-3 h-3 text-gray-400 group-hover:text-gray-600" />
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-xs font-mono text-gray-400">••••••</span>
+                        <Eye className="w-3 h-3 text-gray-400 group-hover:text-emerald-600" />
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
 

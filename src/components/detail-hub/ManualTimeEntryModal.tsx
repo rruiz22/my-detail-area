@@ -10,7 +10,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon, Clock, Save, X } from "lucide-react";
 import { format } from "date-fns";
-import { useCreateManualTimeEntry, DetailHubEmployee } from "@/hooks/useDetailHubDatabase";
+import { useCreateManualTimeEntry, useAddBreak, DetailHubEmployee } from "@/hooks/useDetailHubDatabase";
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
 
 interface ManualTimeEntryModalProps {
@@ -23,6 +23,7 @@ export function ManualTimeEntryModal({ open, onOpenChange, employees }: ManualTi
   const { t } = useTranslation();
   const { selectedDealerId } = useDealerFilter();
   const { mutateAsync: createEntry, isPending } = useCreateManualTimeEntry();
+  const { mutateAsync: addBreak } = useAddBreak();
 
   // Form state
   const [selectedEmployee, setSelectedEmployee] = useState<string>("");
@@ -113,15 +114,26 @@ export function ManualTimeEntryModal({ open, onOpenChange, employees }: ManualTi
     const breakEndISO = breakEnd ? new Date(`${dateString}T${breakEnd}`).toISOString() : undefined;
 
     try {
-      await createEntry({
+      // Create time entry first (without breaks)
+      const newEntry = await createEntry({
         employeeId: selectedEmployee,
         dealershipId: dealershipId as number,
         clockIn: clockInISO,
         clockOut: clockOutISO,
-        breakStart: breakStartISO,
-        breakEnd: breakEndISO,
         notes: notes || undefined
       });
+
+      // If break data provided, create break in detail_hub_breaks table
+      if (breakStartISO && breakEndISO) {
+        await addBreak({
+          timeEntryId: newEntry.id,
+          employeeId: selectedEmployee,
+          dealershipId: dealershipId as number,
+          breakStart: breakStartISO,
+          breakEnd: breakEndISO,
+          breakType: 'lunch' // Default to lunch for manual entries
+        });
+      }
 
       // Reset form and close
       resetForm();

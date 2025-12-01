@@ -69,15 +69,14 @@ export function KioskDetailModal({ kiosk, open, onClose }: KioskDetailModalProps
     queryFn: async () => {
       if (!kiosk?.id) return [];
 
-      const { data, error } = await supabase
+      // Query time entries for clock in/out activities
+      const { data: timeEntriesData, error: timeEntriesError } = await supabase
         .from('detail_hub_time_entries')
         .select(`
           id,
           employee_id,
           clock_in,
           clock_out,
-          break_start,
-          break_end,
           punch_in_method,
           punch_out_method,
           employees:detail_hub_employees(first_name, last_name, employee_number)
@@ -86,11 +85,31 @@ export function KioskDetailModal({ kiosk, open, onClose }: KioskDetailModalProps
         .order('clock_in', { ascending: false })
         .limit(20);
 
-      if (error) throw error;
+      if (timeEntriesError) throw timeEntriesError;
+
+      // Query breaks for this kiosk
+      const { data: breaksData, error: breaksError } = await supabase
+        .from('detail_hub_breaks')
+        .select(`
+          id,
+          time_entry_id,
+          employee_id,
+          break_start,
+          break_end,
+          break_number,
+          employees:detail_hub_employees(first_name, last_name, employee_number)
+        `)
+        .eq('kiosk_id', kiosk.kiosk_code)
+        .order('break_start', { ascending: false })
+        .limit(40);
+
+      if (breaksError) throw breaksError;
 
       // Transform into activity timeline
       const activities: KioskActivity[] = [];
-      data?.forEach((entry: any) => {
+
+      // Add clock in/out activities
+      timeEntriesData?.forEach((entry: any) => {
         if (entry.clock_in) {
           activities.push({
             id: `${entry.id}-in`,
@@ -102,28 +121,6 @@ export function KioskDetailModal({ kiosk, open, onClose }: KioskDetailModalProps
             method: entry.punch_in_method || 'unknown',
           });
         }
-        if (entry.break_start) {
-          activities.push({
-            id: `${entry.id}-break-start`,
-            employee_id: entry.employee_id,
-            employee_name: `${entry.employees?.first_name} ${entry.employees?.last_name}`,
-            employee_number: entry.employees?.employee_number || 'N/A',
-            action: 'break_start',
-            timestamp: entry.break_start,
-            method: entry.punch_in_method || 'unknown',
-          });
-        }
-        if (entry.break_end) {
-          activities.push({
-            id: `${entry.id}-break-end`,
-            employee_id: entry.employee_id,
-            employee_name: `${entry.employees?.first_name} ${entry.employees?.last_name}`,
-            employee_number: entry.employees?.employee_number || 'N/A',
-            action: 'break_end',
-            timestamp: entry.break_end,
-            method: entry.punch_out_method || 'unknown',
-          });
-        }
         if (entry.clock_out) {
           activities.push({
             id: `${entry.id}-out`,
@@ -133,6 +130,32 @@ export function KioskDetailModal({ kiosk, open, onClose }: KioskDetailModalProps
             action: 'clock_out',
             timestamp: entry.clock_out,
             method: entry.punch_out_method || 'unknown',
+          });
+        }
+      });
+
+      // Add break activities from detail_hub_breaks table
+      breaksData?.forEach((breakRecord: any) => {
+        if (breakRecord.break_start) {
+          activities.push({
+            id: `${breakRecord.id}-start`,
+            employee_id: breakRecord.employee_id,
+            employee_name: `${breakRecord.employees?.first_name} ${breakRecord.employees?.last_name}`,
+            employee_number: breakRecord.employees?.employee_number || 'N/A',
+            action: 'break_start',
+            timestamp: breakRecord.break_start,
+            method: 'manual',
+          });
+        }
+        if (breakRecord.break_end) {
+          activities.push({
+            id: `${breakRecord.id}-end`,
+            employee_id: breakRecord.employee_id,
+            employee_name: `${breakRecord.employees?.first_name} ${breakRecord.employees?.last_name}`,
+            employee_number: breakRecord.employees?.employee_number || 'N/A',
+            action: 'break_end',
+            timestamp: breakRecord.break_end,
+            method: 'manual',
           });
         }
       });

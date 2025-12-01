@@ -54,15 +54,36 @@ const employeeFormSchema = z.object({
     .min(1, "PIN code is required")
     .regex(/^\d{4,6}$/, "PIN must be 4-6 digits"),
 
-  // NEW: Schedule template fields
-  auto_generate_schedules: z.boolean().default(false),
-  template_shift_start: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).optional(),
-  template_shift_end: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).optional(),
-  template_days_of_week: z.array(z.number().min(0).max(6)).optional(),
-  template_break_minutes: z.coerce.number().min(0).max(120).optional(),
+  // NEW: Schedule template fields (REQUIRED for punch-in validation)
+  auto_generate_schedules: z.boolean().default(true), // Always true by default
+  template_shift_start: z.string()
+    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format")
+    .min(1, "Shift start time is required"),
+  template_shift_end: z.string()
+    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format")
+    .min(1, "Shift end time is required"),
+  template_days_of_week: z.array(z.number().min(0).max(6))
+    .min(1, "At least one work day is required"),
+  // Punch window settings (null = no restrictions)
+  template_early_punch_minutes: z.coerce.number().min(0).max(60).nullable().optional(),
+  template_late_punch_minutes: z.coerce.number().min(0).max(120).nullable().optional(),
+  // Break settings
+  template_break_minutes: z.coerce.number().min(0).max(120).default(30),
   template_break_is_paid: z.boolean().default(false),
   schedule_generation_days_ahead: z.coerce.number().min(7).max(90).default(30),
-});
+}).refine(
+  (data) => {
+    // Validate that shift end time is after shift start time
+    if (data.template_shift_start && data.template_shift_end) {
+      return data.template_shift_end > data.template_shift_start;
+    }
+    return true;
+  },
+  {
+    message: "Shift end time must be after shift start time",
+    path: ["template_shift_end"],
+  }
+);
 
 type EmployeeFormValues = z.infer<typeof employeeFormSchema>;
 
@@ -122,11 +143,13 @@ const EmployeePortal = () => {
       hire_date: new Date(),
       status: "active",
       pin_code: "",
-      // Schedule template defaults
-      auto_generate_schedules: false,
+      // Schedule template defaults (REQUIRED for punch-in validation)
+      auto_generate_schedules: true, // ✅ Always enabled
       template_shift_start: "08:00",
-      template_shift_end: "17:00",
+      template_shift_end: "18:00", // 6:00 PM
       template_days_of_week: [1, 2, 3, 4, 5], // Mon-Fri
+      template_early_punch_minutes: 5, // 5 min before shift
+      template_late_punch_minutes: 15, // 15 min after shift
       template_break_minutes: 30,
       template_break_is_paid: false,
       schedule_generation_days_ahead: 30,
@@ -237,8 +260,15 @@ const EmployeePortal = () => {
         // Load template values
         auto_generate_schedules: employee.auto_generate_schedules || false,
         template_shift_start: template?.shift_start_time || "08:00",
-        template_shift_end: template?.shift_end_time || "17:00",
+        template_shift_end: template?.shift_end_time || "18:00", // 6:00 PM
         template_days_of_week: template?.days_of_week || [1, 2, 3, 4, 5],
+        // ✅ FIX: If template exists, use its values (even if null), otherwise use defaults
+        template_early_punch_minutes: template
+          ? template.early_punch_allowed_minutes
+          : 5,
+        template_late_punch_minutes: template
+          ? template.late_punch_grace_minutes
+          : 15,
         template_break_minutes: template?.required_break_minutes || 30,
         template_break_is_paid: template?.break_is_paid || false,
         schedule_generation_days_ahead: employee.schedule_generation_days_ahead || 30,
@@ -260,10 +290,12 @@ const EmployeePortal = () => {
         hire_date: new Date(),
         status: "active",
         pin_code: "",
-        auto_generate_schedules: false,
+        auto_generate_schedules: true, // ✅ Always enabled for punch-in validation
         template_shift_start: "08:00",
-        template_shift_end: "17:00",
+        template_shift_end: "18:00", // 6:00 PM
         template_days_of_week: [1, 2, 3, 4, 5],
+        template_early_punch_minutes: 5,
+        template_late_punch_minutes: 15,
         template_break_minutes: 30,
         template_break_is_paid: false,
         schedule_generation_days_ahead: 30,
@@ -291,8 +323,9 @@ const EmployeePortal = () => {
       days_of_week: values.template_days_of_week || [1,2,3,4,5],
       required_break_minutes: values.template_break_minutes || 30,
       break_is_paid: values.template_break_is_paid || false,
-      early_punch_allowed_minutes: 5,
-      late_punch_grace_minutes: 5,
+      // Punch windows (null = no restrictions)
+      early_punch_allowed_minutes: values.template_early_punch_minutes ?? null,
+      late_punch_grace_minutes: values.template_late_punch_minutes ?? null,
       assigned_kiosk_id: null,
     } : null;
 
@@ -803,128 +836,267 @@ const EmployeePortal = () => {
                   />
                 </div>
 
-                {/* Schedule Template Section */}
-                <div className="border-t pt-4 mt-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <h3 className="text-sm font-semibold text-gray-900">
-                        {t('detail_hub.employees.schedule_template')}
-                      </h3>
-                      <p className="text-xs text-gray-500">
-                        {t('detail_hub.employees.schedule_template_description')}
-                      </p>
-                    </div>
-                    <FormField
-                      control={form.control}
-                      name="auto_generate_schedules"
-                      render={({ field }) => (
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            id="auto_generate"
-                            checked={field.value}
-                            onChange={field.onChange}
-                            className="w-4 h-4 rounded border-gray-300"
-                          />
-                          <label htmlFor="auto_generate" className="text-sm cursor-pointer">
-                            {t('detail_hub.employees.auto_generate_schedules')}
-                          </label>
-                        </div>
-                      )}
-                    />
-                  </div>
+                {/* Default Work Schedule - REQUIRED */}
+                <Card className="border-2 border-emerald-500 bg-emerald-50/30 mt-6">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base flex items-center gap-2 text-emerald-900">
+                      <Clock className="w-5 h-5" />
+                      Default Work Schedule
+                      <span className="text-destructive ml-1">*</span>
+                    </CardTitle>
+                    <p className="text-sm text-emerald-700">
+                      Set employee's standard shift hours. This will be used for all punch-in validations at the kiosk.
+                    </p>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {/* Hidden field to auto-enable schedules */}
+                    <input type="hidden" {...form.register('auto_generate_schedules')} value="true" />
 
-                  {form.watch('auto_generate_schedules') && (
-                    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                      {/* Shift Times */}
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="template_shift_start"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>{t('detail_hub.employees.default_start_time')}</FormLabel>
-                              <FormControl>
-                                <Input type="time" {...field} className="font-mono" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="template_shift_end"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>{t('detail_hub.employees.default_end_time')}</FormLabel>
-                              <FormControl>
-                                <Input type="time" {...field} className="font-mono" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      {/* Days of Week */}
+                    {/* Shift Times */}
+                    <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
-                        name="template_days_of_week"
+                        name="template_shift_start"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{t('detail_hub.employees.work_days')}</FormLabel>
-                            <div className="grid grid-cols-7 gap-2">
-                              {[
-                                { value: 0, label: 'S' },
-                                { value: 1, label: 'M' },
-                                { value: 2, label: 'T' },
-                                { value: 3, label: 'W' },
-                                { value: 4, label: 'T' },
-                                { value: 5, label: 'F' },
-                                { value: 6, label: 'S' },
-                              ].map((day) => {
-                                const isSelected = (field.value || []).includes(day.value);
-                                return (
-                                  <button
-                                    key={day.value}
-                                    type="button"
-                                    onClick={() => {
-                                      const current = field.value || [];
-                                      const updated = isSelected
-                                        ? current.filter((d: number) => d !== day.value)
-                                        : [...current, day.value].sort();
-                                      field.onChange(updated);
-                                    }}
-                                    className={cn(
-                                      "h-10 w-full rounded-md border-2 font-medium transition-colors text-sm",
-                                      isSelected
-                                        ? "bg-emerald-100 border-emerald-500 text-emerald-900"
-                                        : "border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50"
-                                    )}
-                                  >
-                                    {day.label}
-                                  </button>
-                                );
-                              })}
-                            </div>
+                            <FormLabel className="text-sm font-semibold text-gray-900">
+                              Shift Start Time <span className="text-destructive">*</span>
+                            </FormLabel>
+                            <FormControl>
+                              <Input type="time" {...field} className="font-mono text-base" required />
+                            </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
 
-                      {/* Break Settings */}
+                      <FormField
+                        control={form.control}
+                        name="template_shift_end"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-semibold text-gray-900">
+                              Shift End Time <span className="text-destructive">*</span>
+                            </FormLabel>
+                            <FormControl>
+                              <Input type="time" {...field} className="font-mono text-base" required />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    {/* Work Days */}
+                    <FormField
+                      control={form.control}
+                      name="template_days_of_week"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-semibold text-gray-900">
+                            Work Days <span className="text-destructive">*</span>
+                          </FormLabel>
+                          <div className="grid grid-cols-7 gap-2 mt-2">
+                            {[
+                              { value: 0, label: 'Sun', fullName: 'Sunday' },
+                              { value: 1, label: 'Mon', fullName: 'Monday' },
+                              { value: 2, label: 'Tue', fullName: 'Tuesday' },
+                              { value: 3, label: 'Wed', fullName: 'Wednesday' },
+                              { value: 4, label: 'Thu', fullName: 'Thursday' },
+                              { value: 5, label: 'Fri', fullName: 'Friday' },
+                              { value: 6, label: 'Sat', fullName: 'Saturday' },
+                            ].map((day) => {
+                              const isSelected = (field.value || []).includes(day.value);
+                              return (
+                                <button
+                                  key={day.value}
+                                  type="button"
+                                  onClick={() => {
+                                    const current = field.value || [];
+                                    const updated = isSelected
+                                      ? current.filter((d: number) => d !== day.value)
+                                      : [...current, day.value].sort();
+                                    field.onChange(updated);
+                                  }}
+                                  title={day.fullName}
+                                  className={cn(
+                                    "h-10 w-full rounded-md border-2 font-semibold transition-all text-sm",
+                                    isSelected
+                                      ? "bg-emerald-500 border-emerald-600 text-white shadow-md hover:bg-emerald-600"
+                                      : "border-gray-300 text-gray-600 hover:border-emerald-400 hover:bg-emerald-50"
+                                  )}
+                                >
+                                  {day.label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Punch Windows - EDITABLE */}
+                    <div className="p-4 bg-white rounded-lg border border-emerald-200">
+                      <p className="text-sm font-semibold text-emerald-900 mb-3">Punch-In Window Settings</p>
                       <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="template_early_punch_minutes"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-xs text-gray-700">Early Punch Allowed</FormLabel>
+                              <FormControl>
+                                <div className="flex items-center gap-2">
+                                  <Input
+                                    type="number"
+                                    min="0"
+                                    max="60"
+                                    step="5"
+                                    placeholder="No limit"
+                                    {...field}
+                                    value={field.value ?? ''}
+                                    onChange={(e) => {
+                                      const value = e.target.value === '' ? null : Number(e.target.value);
+                                      field.onChange(value);
+                                    }}
+                                    className="w-24"
+                                  />
+                                  <span className="text-xs text-gray-600">min before</span>
+                                </div>
+                              </FormControl>
+                              <p className="text-xs text-gray-500">Leave empty for no restrictions</p>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="template_late_punch_minutes"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-xs text-gray-700">Late Punch Grace</FormLabel>
+                              <FormControl>
+                                <div className="flex items-center gap-2">
+                                  <Input
+                                    type="number"
+                                    min="0"
+                                    max="120"
+                                    step="5"
+                                    placeholder="No limit"
+                                    {...field}
+                                    value={field.value ?? ''}
+                                    onChange={(e) => {
+                                      const value = e.target.value === '' ? null : Number(e.target.value);
+                                      field.onChange(value);
+                                    }}
+                                    className="w-24"
+                                  />
+                                  <span className="text-xs text-gray-600">min after</span>
+                                </div>
+                              </FormControl>
+                              <p className="text-xs text-gray-500">Leave empty for no restrictions</p>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Preview Card */}
+                    <div className="p-4 bg-white rounded-lg border-2 border-emerald-300 shadow-sm">
+                      <p className="text-xs font-semibold text-emerald-900 mb-2 uppercase tracking-wide">
+                        Schedule Preview
+                      </p>
+                      <div className="space-y-2">
+                        <div className="flex items-baseline gap-2">
+                          <Clock className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                          <p className="text-sm text-gray-900">
+                            <strong className="font-bold text-emerald-700">
+                              {form.watch('first_name') || 'Employee'}
+                            </strong>{' '}
+                            will work{' '}
+                            <strong className="font-semibold">
+                              {(() => {
+                                const days = form.watch('template_days_of_week') || [];
+                                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                                if (days.length === 0) return 'no days selected';
+                                if (days.length === 7) return 'every day';
+                                if (days.length === 5 && days.includes(1) && days.includes(5) && !days.includes(0) && !days.includes(6)) {
+                                  return 'Mon-Fri';
+                                }
+                                return days.map(d => dayNames[d]).join(', ');
+                              })()}
+                            </strong>
+                            {', '}
+                            <strong className="font-semibold text-emerald-700">
+                              {form.watch('template_shift_start') || '08:00'} - {form.watch('template_shift_end') || '18:00'}
+                            </strong>
+                          </p>
+                        </div>
+                        <div className="flex items-baseline gap-2">
+                          <Shield className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
+                          <p className="text-sm text-gray-700">
+                            {(() => {
+                              const earlyMinutes = form.watch('template_early_punch_minutes');
+                              const lateMinutes = form.watch('template_late_punch_minutes');
+                              const shiftStart = form.watch('template_shift_start') || '08:00';
+
+                              if (earlyMinutes == null && lateMinutes == null) {
+                                return (
+                                  <>
+                                    <strong className="font-semibold text-amber-600">No punch restrictions</strong>
+                                    {' - Employee can punch in anytime'}
+                                  </>
+                                );
+                              }
+
+                              if (earlyMinutes != null && earlyMinutes > 0) {
+                                const [hours, minutes] = shiftStart.split(':').map(Number);
+                                const totalMinutes = hours * 60 + minutes - earlyMinutes;
+                                const earlyHours = Math.floor(totalMinutes / 60);
+                                const earlyMins = totalMinutes % 60;
+                                const earlyTime = `${earlyHours.toString().padStart(2, '0')}:${earlyMins.toString().padStart(2, '0')}`;
+
+                                return (
+                                  <>
+                                    Can punch in starting at{' '}
+                                    <strong className="font-semibold text-emerald-700">{earlyTime}</strong>
+                                    {' '}({earlyMinutes} min early)
+                                  </>
+                                );
+                              }
+
+                              return (
+                                <>
+                                  Can punch in starting at{' '}
+                                  <strong className="font-semibold text-emerald-700">{shiftStart}</strong>
+                                  {' (exactly at shift time)'}
+                                </>
+                              );
+                            })()}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Break Settings (Optional) */}
+                    <details className="mt-2">
+                      <summary className="text-sm font-medium text-gray-700 cursor-pointer hover:text-emerald-700 transition-colors">
+                        Advanced: Break Settings (Optional)
+                      </summary>
+                      <div className="grid grid-cols-2 gap-4 mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
                         <FormField
                           control={form.control}
                           name="template_break_minutes"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>{t('detail_hub.employees.default_break')}</FormLabel>
+                              <FormLabel className="text-xs">Default Break Duration</FormLabel>
                               <FormControl>
                                 <div className="flex items-center gap-2">
                                   <Input type="number" min="0" max="120" step="15" {...field} className="w-20" />
-                                  <span className="text-sm text-gray-600">{t('detail_hub.schedules.minutes')}</span>
+                                  <span className="text-sm text-gray-600">minutes</span>
                                 </div>
                               </FormControl>
                               <FormMessage />
@@ -946,36 +1118,16 @@ const EmployeePortal = () => {
                                   className="w-4 h-4 rounded border-gray-300"
                                 />
                                 <label htmlFor="template_break_paid" className="text-sm cursor-pointer">
-                                  {t('detail_hub.employees.paid_break')}
+                                  Paid Break
                                 </label>
                               </div>
                             </FormItem>
                           )}
                         />
                       </div>
-
-                      {/* Days Ahead */}
-                      <FormField
-                        control={form.control}
-                        name="schedule_generation_days_ahead"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t('detail_hub.employees.days_ahead')}</FormLabel>
-                            <FormControl>
-                              <div className="flex items-center gap-2">
-                                <Input type="number" min="7" max="90" step="1" {...field} className="w-20" />
-                                <span className="text-sm text-gray-600">
-                                  {t('detail_hub.employees.days_ahead_description')}
-                                </span>
-                              </div>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  )}
-                </div>
+                    </details>
+                  </CardContent>
+                </Card>
 
                 <div className="flex justify-center py-2">
                   <Button type="button" variant="outline" className="w-40">

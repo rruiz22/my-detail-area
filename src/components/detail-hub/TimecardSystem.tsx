@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CalendarIcon, Download, Filter, Clock, User, DollarSign, AlertTriangle, Camera, Image as ImageIcon, Plus, FileText, Edit2, Ban, X, Search, FileSpreadsheet, Trash2 } from "lucide-react";
+import { CalendarIcon, Download, Filter, Clock, User, DollarSign, AlertTriangle, Camera, Image as ImageIcon, Plus, FileText, Edit2, Ban, X, Search, FileSpreadsheet, Trash2, Eye, EyeOff } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
@@ -80,6 +80,9 @@ const TimecardSystem = () => {
     number: string;
     hourlyRate: number;
   } | null>(null);
+
+  // 🔒 PRIVACY: Track which employees have hourly rate visible in weekly summary
+  const [visibleSalaries, setVisibleSalaries] = useState<Set<string>>(new Set());
 
   // Real database hooks (NO MOCK DATA)
   const { data: pendingReviews = [], isLoading: loadingReviews } = usePendingReviews();
@@ -175,8 +178,7 @@ const TimecardSystem = () => {
       date: localDateString,
       clockIn: formatTime(entry.clock_in),
       clockOut: formatTime(entry.clock_out),
-      breakStart: formatTime(entry.break_start),
-      breakEnd: formatTime(entry.break_end),
+      breakDuration: entry.break_duration_minutes || 0, // Use calculated total from detail_hub_breaks
       totalHours: entry.total_hours || 0,
       regularHours: entry.regular_hours || 0,
       overtimeHours: entry.overtime_hours || 0,
@@ -352,7 +354,7 @@ const TimecardSystem = () => {
         date: tc.date,
         clockIn: tc.clockIn,
         clockOut: tc.clockOut,
-        breakTimes: `${tc.breakStart} - ${tc.breakEnd}`,
+        breakTimes: tc.breakDuration > 0 ? `${tc.breakDuration} min` : '--',
         totalHours: tc.totalHours,
         regularHours: tc.regularHours,
         overtimeHours: tc.overtimeHours,
@@ -406,7 +408,7 @@ const TimecardSystem = () => {
         date: tc.date,
         clockIn: tc.clockIn,
         clockOut: tc.clockOut,
-        breakTimes: `${tc.breakStart} - ${tc.breakEnd}`,
+        breakTimes: tc.breakDuration > 0 ? `${tc.breakDuration} min` : '--',
         totalHours: tc.totalHours,
         regularHours: tc.regularHours,
         overtimeHours: tc.overtimeHours,
@@ -943,7 +945,7 @@ const TimecardSystem = () => {
                       <TableCell className="py-2 text-sm">{timecard.clockIn}</TableCell>
                       <TableCell className="py-2 text-sm">{timecard.clockOut}</TableCell>
                       <TableCell className="py-2 text-sm">
-                        {timecard.breakStart} - {timecard.breakEnd}
+                        {timecard.breakDuration > 0 ? `${timecard.breakDuration} min` : '--'}
                       </TableCell>
                       <TableCell className="py-2 text-sm">{timecard.totalHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}</TableCell>
                       <TableCell className="py-2">
@@ -1095,7 +1097,7 @@ const TimecardSystem = () => {
                       <TableCell className="py-2 text-sm">{timecard.clockIn}</TableCell>
                       <TableCell className="py-2 text-sm">{timecard.clockOut}</TableCell>
                       <TableCell className="py-2 text-sm">
-                        {timecard.breakStart} - {timecard.breakEnd}
+                        {timecard.breakDuration > 0 ? `${timecard.breakDuration} min` : '--'}
                       </TableCell>
                       <TableCell className="py-2 text-sm">{timecard.totalHours.toFixed(2)}{t('detail_hub.timecard.table.hours_abbr')}</TableCell>
                       <TableCell className="py-2">
@@ -1288,8 +1290,36 @@ const TimecardSystem = () => {
                           <TableCell className="text-right font-semibold text-blue-600">
                             {emp.totalHours.toFixed(2)}h
                           </TableCell>
-                          <TableCell className="text-right text-muted-foreground">
-                            ${emp.hourlyRate.toFixed(2)}/h
+                          <TableCell className="text-right">
+                            <button
+                              onClick={() => {
+                                setVisibleSalaries(prev => {
+                                  const updated = new Set(prev);
+                                  if (updated.has(emp.id)) {
+                                    updated.delete(emp.id);
+                                  } else {
+                                    updated.add(emp.id);
+                                  }
+                                  return updated;
+                                });
+                              }}
+                              className="flex items-center gap-2 hover:bg-gray-100 px-2 py-1 rounded transition-colors cursor-pointer group mx-auto"
+                              title={visibleSalaries.has(emp.id) ? "Click to hide salary" : "Click to reveal salary"}
+                            >
+                              {visibleSalaries.has(emp.id) ? (
+                                <>
+                                  <span className="font-medium text-emerald-600">
+                                    ${emp.hourlyRate.toFixed(2)}/h
+                                  </span>
+                                  <EyeOff className="w-3.5 h-3.5 text-gray-400 group-hover:text-gray-600" />
+                                </>
+                              ) : (
+                                <>
+                                  <span className="font-mono text-gray-400">••••••</span>
+                                  <Eye className="w-3.5 h-3.5 text-gray-400 group-hover:text-emerald-600" />
+                                </>
+                              )}
+                            </button>
                           </TableCell>
                           <TableCell className="text-right font-semibold text-green-600">
                             ${emp.totalPay.toFixed(2)}

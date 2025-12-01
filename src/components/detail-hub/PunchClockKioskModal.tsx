@@ -70,6 +70,7 @@ import { useClockIn, useClockOut, useStartBreak, useEndBreak, DetailHubEmployee,
 import { getEmployeeTodaySchedule } from "@/hooks/useDetailHubSchedules";
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
 import { useToast } from "@/hooks/use-toast";
+import { useLiveClock } from "@/hooks/useLiveClock";
 
 interface PunchClockKioskModalProps {
   open: boolean;
@@ -88,6 +89,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   const { mutateAsync: clockOut } = useClockOut();
   const { mutateAsync: startBreak } = useStartBreak();
   const { mutateAsync: endBreak } = useEndBreak();
+
+  // Live clock (updates every second)
+  const liveClock = useLiveClock();
 
   // Face recognition hook
   const {
@@ -799,6 +803,27 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
       setPhotoUploadStatus(t('detail_hub.punch_clock.messages.processing'));
 
+      // ========================================
+      // CRITICAL: Re-validate punch time before submission
+      // ========================================
+      // Prevents bypass if validation state changed during photo capture
+      if (captureAction === 'clock_in' && KIOSK_ID) {
+        const currentTime = new Date().toISOString();
+
+        const { data: revalidation, error: revalidationError } = await supabase.rpc('can_punch_in_from_template', {
+          p_employee_id: selectedEmployee.id,
+          p_kiosk_id: KIOSK_ID, // Use UUID, not kiosk_code
+          p_current_time: currentTime
+        });
+
+        if (revalidationError) {
+          console.error('[Punch] Re-validation RPC error:', revalidationError);
+        } else if (revalidation && revalidation.length > 0 && !revalidation[0].allowed) {
+          // Validation failed at punch time - block
+          throw new Error(revalidation[0].reason || 'Clock in not allowed at this time');
+        }
+      }
+
       // Get employee's schedule for today
       // NOTE: Temporarily disabled schedule linking due to trigger foreign key issue
       // const schedule = await getEmployeeTodaySchedule(selectedEmployee.id);
@@ -811,7 +836,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
             dealershipId: selectedDealerId as number,
             method: 'photo_fallback',
             photoUrl: uploadResult.photoUrl,
-            kioskId: kioskConfig.kiosk_code || undefined,
+            kioskId: KIOSK_ID || kioskConfig.kiosk_code || undefined, // Prefer UUID
             ipAddress: currentIp || undefined
             // scheduleId: schedule?.id // Disabled until trigger is fixed
           });
@@ -1551,6 +1576,16 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                 {/* Employee Header with Status - Combined */}
                 <Card className="card-enhanced">
                   <CardContent className="py-4">
+                    {/* Live Clock Display */}
+                    <div className="text-center mb-4 pb-3 border-b border-gray-200">
+                      <div className="text-4xl font-mono font-bold text-gray-900 tracking-tight">
+                        {liveClock.time}
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {liveClock.date}
+                      </div>
+                    </div>
+
                     {/* Employee Info */}
                     <div className="flex items-center gap-3 mb-3">
                       {/* Photo or Avatar */}

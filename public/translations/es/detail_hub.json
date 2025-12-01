@@ -538,11 +538,63 @@
       "saving": "Guardando...",
       "cancel": "Cancelar",
       "audit_warning": "Todos los cambios se registrarán en el historial de auditoría.",
+      "breaks_taken": "Descansos Tomados",
+      "add_break": "Agregar Descanso",
+      "lunch": "Almuerzo",
+      "break": "Descanso",
+      "start": "Inicio",
+      "end": "Fin",
+      "duration": "Duración",
+      "active": "Activo",
+      "end_now": "Finalizar Ahora",
+      "edit_break": "Editar Descanso",
+      "delete_break": "Eliminar Descanso",
+      "no_breaks": "No hay descansos registrados",
+      "delete_break_title": "¿Eliminar Descanso?",
+      "delete_break_description": "Esto eliminará permanentemente el descanso y recalculará las horas. Esta acción no se puede deshacer.",
+      "delete": "Eliminar",
       "errors": {
         "clock_in_required": "Se requiere hora de entrada",
         "clock_out_after_in": "La salida debe ser después de la entrada",
         "break_end_after_start": "El fin del descanso debe ser después del inicio",
         "break_minimum_30": "El descanso debe ser de al menos 30 minutos"
+      }
+    },
+    "break_edit": {
+      "title": "Editar Descanso",
+      "subtitle": "Descanso #{{breakNumber}}",
+      "break_type": "Tipo de Descanso",
+      "type_lunch": "Descanso de Almuerzo",
+      "type_regular": "Descanso Regular",
+      "type_personal": "Descanso Personal",
+      "break_start": "Hora de Inicio del Descanso",
+      "break_end": "Hora de Fin del Descanso",
+      "leave_empty_for_active": "Dejar vacío para mantener el descanso activo",
+      "cancel": "Cancelar",
+      "save": "Guardar Cambios",
+      "saving": "Guardando...",
+      "errors": {
+        "start_required": "Se requiere hora de inicio del descanso",
+        "end_after_start": "El fin del descanso debe ser después del inicio",
+        "lunch_minimum_30": "El descanso de almuerzo debe ser de al menos 30 minutos"
+      }
+    },
+    "add_break": {
+      "title": "Agregar Nuevo Descanso",
+      "break_type": "Tipo de Descanso",
+      "type_lunch": "Descanso de Almuerzo",
+      "type_regular": "Descanso Regular",
+      "type_personal": "Descanso Personal",
+      "break_start": "Hora de Inicio del Descanso",
+      "break_end": "Hora de Fin del Descanso",
+      "leave_empty_for_active": "Dejar vacío para crear un descanso activo",
+      "cancel": "Cancelar",
+      "add": "Agregar Descanso",
+      "adding": "Agregando...",
+      "errors": {
+        "start_required": "Se requiere hora de inicio del descanso",
+        "end_after_start": "El fin del descanso debe ser después del inicio",
+        "lunch_minimum_30": "El descanso de almuerzo debe ser de al menos 30 minutos"
       }
     },
     "disable_dialog": {

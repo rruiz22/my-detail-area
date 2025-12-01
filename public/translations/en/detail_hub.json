@@ -538,11 +538,63 @@
       "saving": "Saving...",
       "cancel": "Cancel",
       "audit_warning": "All changes will be logged in the audit trail.",
+      "breaks_taken": "Breaks Taken",
+      "add_break": "Add Break",
+      "lunch": "Lunch",
+      "break": "Break",
+      "start": "Start",
+      "end": "End",
+      "duration": "Duration",
+      "active": "Active",
+      "end_now": "End Now",
+      "edit_break": "Edit Break",
+      "delete_break": "Delete Break",
+      "no_breaks": "No breaks recorded",
+      "delete_break_title": "Delete Break?",
+      "delete_break_description": "This will permanently remove the break and recalculate hours. This action cannot be undone.",
+      "delete": "Delete",
       "errors": {
         "clock_in_required": "Clock in time is required",
         "clock_out_after_in": "Clock out must be after clock in",
         "break_end_after_start": "Break end must be after break start",
         "break_minimum_30": "Break must be at least 30 minutes"
+      }
+    },
+    "break_edit": {
+      "title": "Edit Break",
+      "subtitle": "Break #{{breakNumber}}",
+      "break_type": "Break Type",
+      "type_lunch": "Lunch Break",
+      "type_regular": "Regular Break",
+      "type_personal": "Personal Break",
+      "break_start": "Break Start Time",
+      "break_end": "Break End Time",
+      "leave_empty_for_active": "Leave empty to keep break active",
+      "cancel": "Cancel",
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "errors": {
+        "start_required": "Break start time is required",
+        "end_after_start": "Break end must be after break start",
+        "lunch_minimum_30": "Lunch break must be at least 30 minutes"
+      }
+    },
+    "add_break": {
+      "title": "Add New Break",
+      "break_type": "Break Type",
+      "type_lunch": "Lunch Break",
+      "type_regular": "Regular Break",
+      "type_personal": "Personal Break",
+      "break_start": "Break Start Time",
+      "break_end": "Break End Time",
+      "leave_empty_for_active": "Leave empty to create an active break",
+      "cancel": "Cancel",
+      "add": "Add Break",
+      "adding": "Adding...",
+      "errors": {
+        "start_required": "Break start time is required",
+        "end_after_start": "Break end must be after break start",
+        "lunch_minimum_30": "Lunch break must be at least 30 minutes"
       }
     },
     "disable_dialog": {

@@ -99,7 +99,8 @@ export function EmployeeAuditLogsModal({
 
     // Format based on field type
     if (field === 'hourly_rate') {
-      return `$${parseFloat(value).toFixed(2)}`;
+      // 🔒 PRIVACY: Hide hourly rate in audit logs
+      return '••••••';
     }
 
     if (field === 'hire_date') {
@@ -221,7 +222,7 @@ export function EmployeeAuditLogsModal({
             {data.hourly_rate && (
               <div className="flex items-center gap-1 text-green-700">
                 <DollarSign className="w-3 h-3" />
-                {formatValue(data.hourly_rate, 'hourly_rate')}/hr
+                <span className="font-mono">••••••</span>/hr
               </div>
             )}
           </div>

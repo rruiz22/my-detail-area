@@ -371,6 +371,40 @@ export function useClockIn() {
         }
       }
 
+      // ========================================
+      // CRITICAL: Validate punch time against schedule template
+      // ========================================
+      // Prevents early/late punches outside allowed window
+      // This server-side check cannot be bypassed by UI manipulation
+      if (params.kioskId) {
+        const currentTime = new Date().toISOString();
+
+        const { data: validation, error: validationError } = await supabase.rpc('can_punch_in_from_template', {
+          p_employee_id: params.employeeId,
+          p_kiosk_id: params.kioskId,
+          p_current_time: currentTime
+        });
+
+        if (validationError) {
+          console.error('[ClockIn] Validation RPC error:', validationError);
+          // Log error but don't block punch (fallback to allow if RPC fails)
+        } else if (validation && validation.length > 0 && !validation[0].allowed) {
+          // Validation failed - block punch
+          const reason = validation[0].reason || 'Clock in not allowed at this time';
+          const minutesUntilAllowed = validation[0].minutes_until_allowed || 0;
+
+          console.warn('[ClockIn] Punch blocked by validation:', reason);
+
+          throw new Error(
+            minutesUntilAllowed > 0
+              ? `${reason}. Please wait ${minutesUntilAllowed} more minute(s).`
+              : reason
+          );
+        }
+
+        console.log('[ClockIn] Validation passed - proceeding with punch');
+      }
+
       // Create time entry
       const { data, error } = await supabase
         .from('detail_hub_time_entries')
@@ -827,6 +861,222 @@ export function useCurrentBreak(employeeId: string | null) {
 }
 
 // =====================================================
+// INDIVIDUAL BREAK CRUD OPERATIONS
+// =====================================================
+
+/**
+ * Update an existing break (edit start/end times, break type)
+ * Used for editing individual breaks in time entry detail view
+ */
+export function useUpdateBreak() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { selectedDealerId } = useDealerFilter();
+
+  return useMutation({
+    mutationFn: async (params: {
+      breakId: string;
+      breakStart?: string;
+      breakEnd?: string;
+      breakType?: string;
+    }) => {
+      const updates: any = {};
+
+      if (params.breakStart !== undefined) updates.break_start = params.breakStart;
+      if (params.breakEnd !== undefined) updates.break_end = params.breakEnd;
+      if (params.breakType !== undefined) updates.break_type = params.breakType;
+
+      const { data, error } = await supabase
+        .from('detail_hub_breaks')
+        .update(updates)
+        .eq('id', params.breakId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as DetailHubBreak;
+    },
+    onSuccess: (data) => {
+      // Invalidate breaks for this time entry
+      queryClient.invalidateQueries({ queryKey: ['detail_hub_breaks', data.time_entry_id] });
+      // Invalidate time entries to refresh hours calculation
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.timeEntries(selectedDealerId) });
+      // Invalidate current break cache
+      queryClient.invalidateQueries({ queryKey: ['current_break'] });
+
+      toast({
+        title: "Break Updated",
+        description: `Break #${data.break_number} has been updated successfully.`
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Update Failed",
+        description: error instanceof Error ? error.message : 'Failed to update break',
+        variant: "destructive"
+      });
+    }
+  });
+}
+
+/**
+ * End an active break by break ID (quick action)
+ * Used for "End Now" button functionality
+ */
+export function useEndBreakById() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { selectedDealerId } = useDealerFilter();
+
+  return useMutation({
+    mutationFn: async (params: {
+      breakId: string;
+      breakEnd?: string; // Optional, defaults to now
+    }) => {
+      const breakEndTime = params.breakEnd || new Date().toISOString();
+
+      const { data, error } = await supabase
+        .from('detail_hub_breaks')
+        .update({
+          break_end: breakEndTime,
+          // duration_minutes will be auto-calculated by trigger
+        })
+        .eq('id', params.breakId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as DetailHubBreak;
+    },
+    onSuccess: (data) => {
+      // Invalidate breaks for this time entry
+      queryClient.invalidateQueries({ queryKey: ['detail_hub_breaks', data.time_entry_id] });
+      // Invalidate time entries to refresh hours calculation
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.timeEntries(selectedDealerId) });
+      // Invalidate current break cache
+      queryClient.invalidateQueries({ queryKey: ['current_break'] });
+
+      const breakType = data.break_number === 1 ? 'Lunch break' : `Break #${data.break_number}`;
+      const duration = data.duration_minutes || 0;
+
+      toast({
+        title: "Break Ended",
+        description: `${breakType} ended. Duration: ${duration} minutes`
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "End Break Failed",
+        description: error instanceof Error ? error.message : 'Failed to end break',
+        variant: "destructive"
+      });
+    }
+  });
+}
+
+/**
+ * Delete a break record
+ * Removes break from time entry and recalculates hours
+ */
+export function useDeleteBreak() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { selectedDealerId } = useDealerFilter();
+
+  return useMutation({
+    mutationFn: async (params: {
+      breakId: string;
+      timeEntryId: string;
+    }) => {
+      const { error } = await supabase
+        .from('detail_hub_breaks')
+        .delete()
+        .eq('id', params.breakId);
+
+      if (error) throw error;
+      return params;
+    },
+    onSuccess: (params) => {
+      // Invalidate breaks for this time entry
+      queryClient.invalidateQueries({ queryKey: ['detail_hub_breaks', params.timeEntryId] });
+      // Invalidate time entries to refresh hours calculation
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.timeEntries(selectedDealerId) });
+      // Invalidate current break cache
+      queryClient.invalidateQueries({ queryKey: ['current_break'] });
+
+      toast({
+        title: "Break Deleted",
+        description: "Break has been removed and hours have been recalculated."
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Delete Failed",
+        description: error instanceof Error ? error.message : 'Failed to delete break',
+        variant: "destructive"
+      });
+    }
+  });
+}
+
+/**
+ * Add a new break to an existing time entry
+ * Supports multiple breaks per entry
+ */
+export function useAddBreak() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { selectedDealerId } = useDealerFilter();
+
+  return useMutation({
+    mutationFn: async (params: {
+      timeEntryId: string;
+      employeeId: string;
+      dealershipId: number;
+      breakStart: string;
+      breakEnd?: string;
+      breakType?: string;
+    }) => {
+      const { data, error } = await supabase
+        .from('detail_hub_breaks')
+        .insert({
+          time_entry_id: params.timeEntryId,
+          employee_id: params.employeeId,
+          dealership_id: params.dealershipId,
+          break_start: params.breakStart,
+          break_end: params.breakEnd || null,
+          break_type: params.breakType || 'regular',
+          // break_number will be auto-assigned by trigger
+          // duration_minutes will be auto-calculated by trigger if break_end provided
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as DetailHubBreak;
+    },
+    onSuccess: (data) => {
+      // Invalidate breaks for this time entry
+      queryClient.invalidateQueries({ queryKey: ['detail_hub_breaks', data.time_entry_id] });
+      // Invalidate time entries to refresh hours calculation
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.timeEntries(selectedDealerId) });
+
+      toast({
+        title: "Break Added",
+        description: `Break #${data.break_number} has been added successfully.`
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Add Failed",
+        description: error instanceof Error ? error.message : 'Failed to add break',
+        variant: "destructive"
+      });
+    }
+  });
+}
+
+// =====================================================
 // PENDING REVIEWS QUERIES
 // =====================================================
 
@@ -1004,8 +1254,6 @@ export function useCreateManualTimeEntry() {
       dealershipId: number;
       clockIn: string; // ISO timestamp
       clockOut?: string; // ISO timestamp (optional for active entry)
-      breakStart?: string; // ISO timestamp
-      breakEnd?: string; // ISO timestamp
       notes?: string;
     }) => {
       if (!user) throw new Error('User not authenticated');
@@ -1038,19 +1286,7 @@ export function useCreateManualTimeEntry() {
         }
       }
 
-      // Calculate break duration if both start and end provided
-      let breakDurationMinutes = 0;
-      if (params.breakStart && params.breakEnd) {
-        const breakStartTime = new Date(params.breakStart);
-        const breakEndTime = new Date(params.breakEnd);
-        breakDurationMinutes = Math.floor((breakEndTime.getTime() - breakStartTime.getTime()) / 60000);
-
-        if (breakDurationMinutes < 30) {
-          throw new Error('Break duration must be at least 30 minutes');
-        }
-      }
-
-      // Create manual time entry
+      // Create manual time entry (NO LEGACY BREAK FIELDS)
       const { data, error } = await supabase
         .from('detail_hub_time_entries')
         .insert({
@@ -1058,9 +1294,6 @@ export function useCreateManualTimeEntry() {
           dealership_id: params.dealershipId,
           clock_in: params.clockIn,
           clock_out: params.clockOut || null,
-          break_start: params.breakStart || null,
-          break_end: params.breakEnd || null,
-          break_duration_minutes: breakDurationMinutes,
           punch_in_method: 'manual',
           punch_out_method: params.clockOut ? 'manual' : null,
           requires_manual_verification: false,
@@ -1068,6 +1301,7 @@ export function useCreateManualTimeEntry() {
           verified_at: new Date().toISOString(),
           status: params.clockOut ? 'complete' : 'active',
           notes: params.notes || null
+          // break_duration_minutes will be auto-calculated by trigger when breaks are added
         })
         .select()
         .single();
@@ -1197,8 +1431,6 @@ export function useUpdateTimeEntry() {
       timeEntryId: string;
       clockIn?: string;
       clockOut?: string;
-      breakStart?: string;
-      breakEnd?: string;
       notes?: string;
     }) => {
       if (!user) throw new Error('User not authenticated');
@@ -1210,8 +1442,6 @@ export function useUpdateTimeEntry() {
 
       if (params.clockIn) updates.clock_in = params.clockIn;
       if (params.clockOut !== undefined) updates.clock_out = params.clockOut || null;
-      if (params.breakStart !== undefined) updates.break_start = params.breakStart || null;
-      if (params.breakEnd !== undefined) updates.break_end = params.breakEnd || null;
       if (params.notes !== undefined) updates.notes = params.notes || null;
 
       const { data, error } = await supabase
@@ -1227,6 +1457,8 @@ export function useUpdateTimeEntry() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.timeEntries(selectedDealerId) });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.auditLogs(data.id) });
+      // Also invalidate breaks to refresh break-related data
+      queryClient.invalidateQueries({ queryKey: ['detail_hub_breaks'] });
 
       toast({
         title: "Time Entry Updated",

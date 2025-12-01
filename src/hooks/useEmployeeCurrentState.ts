@@ -62,9 +62,17 @@ export function useEmployeeCurrentState(employeeId: string | null) {
         const elapsedMs = now.getTime() - clockInTime.getTime();
         const elapsedMinutes = Math.floor(elapsedMs / 60000);
 
+        // Check for active break in detail_hub_breaks table
         let breakElapsedMinutes = null;
-        if (activeEntry.break_start && !activeEntry.break_end) {
-          const breakStartTime = new Date(activeEntry.break_start);
+        const { data: activeBreak } = await supabase
+          .from('detail_hub_breaks')
+          .select('break_start, break_end')
+          .eq('time_entry_id', activeEntry.id)
+          .is('break_end', null)
+          .maybeSingle();
+
+        if (activeBreak) {
+          const breakStartTime = new Date(activeBreak.break_start);
           const breakElapsedMs = now.getTime() - breakStartTime.getTime();
           breakElapsedMinutes = Math.floor(breakElapsedMs / 60000);
           state = 'on_break';

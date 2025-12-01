@@ -547,11 +547,63 @@
       "saving": "Salvando...",
       "cancel": "Cancelar",
       "audit_warning": "Todas as alterações serão registradas no histórico de auditoria.",
+      "breaks_taken": "Intervalos Realizados",
+      "add_break": "Adicionar Intervalo",
+      "lunch": "Almoço",
+      "break": "Intervalo",
+      "start": "Início",
+      "end": "Fim",
+      "duration": "Duração",
+      "active": "Ativo",
+      "end_now": "Finalizar Agora",
+      "edit_break": "Editar Intervalo",
+      "delete_break": "Excluir Intervalo",
+      "no_breaks": "Nenhum intervalo registrado",
+      "delete_break_title": "Excluir Intervalo?",
+      "delete_break_description": "Isso removerá permanentemente o intervalo e recalculará as horas. Esta ação não pode ser desfeita.",
+      "delete": "Excluir",
       "errors": {
         "clock_in_required": "A hora de entrada é obrigatória",
         "clock_out_after_in": "A hora de saída deve ser depois da entrada",
         "break_end_after_start": "O fim do intervalo deve ser depois do início",
         "break_minimum_30": "O intervalo deve ser de pelo menos 30 minutos"
+      }
+    },
+    "break_edit": {
+      "title": "Editar Intervalo",
+      "subtitle": "Intervalo #{{breakNumber}}",
+      "break_type": "Tipo de Intervalo",
+      "type_lunch": "Intervalo de Almoço",
+      "type_regular": "Intervalo Regular",
+      "type_personal": "Intervalo Pessoal",
+      "break_start": "Hora de Início do Intervalo",
+      "break_end": "Hora de Fim do Intervalo",
+      "leave_empty_for_active": "Deixe vazio para manter o intervalo ativo",
+      "cancel": "Cancelar",
+      "save": "Salvar Alterações",
+      "saving": "Salvando...",
+      "errors": {
+        "start_required": "A hora de início do intervalo é obrigatória",
+        "end_after_start": "O fim do intervalo deve ser depois do início",
+        "lunch_minimum_30": "O intervalo de almoço deve ser de pelo menos 30 minutos"
+      }
+    },
+    "add_break": {
+      "title": "Adicionar Novo Intervalo",
+      "break_type": "Tipo de Intervalo",
+      "type_lunch": "Intervalo de Almoço",
+      "type_regular": "Intervalo Regular",
+      "type_personal": "Intervalo Pessoal",
+      "break_start": "Hora de Início do Intervalo",
+      "break_end": "Hora de Fim do Intervalo",
+      "leave_empty_for_active": "Deixe vazio para criar um intervalo ativo",
+      "cancel": "Cancelar",
+      "add": "Adicionar Intervalo",
+      "adding": "Adicionando...",
+      "errors": {
+        "start_required": "A hora de início do intervalo é obrigatória",
+        "end_after_start": "O fim do intervalo deve ser depois do início",
+        "lunch_minimum_30": "O intervalo de almoço deve ser de pelo menos 30 minutos"
       }
     },
     "disable_dialog": {
