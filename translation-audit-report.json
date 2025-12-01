@@ -62000,67 +62000,67 @@
           },
           {
             "key": "remote_kiosk_management.messages.token_deleted",
-            "line": 411,
-            "exists": false
-          },
-          {
-            "key": "remote_kiosk_management.messages.token_deleted_success",
-            "line": 412,
-            "exists": false
-          },
-          {
-            "key": "remote_kiosk_management.messages.delete_failed",
-            "line": 417,
-            "exists": false
-          },
-          {
-            "key": "remote_kiosk_management.messages.unknown_error",
             "line": 418,
             "exists": false
           },
           {
+            "key": "remote_kiosk_management.messages.token_deleted_success",
+            "line": 419,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_management.messages.delete_failed",
+            "line": 424,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_management.messages.unknown_error",
+            "line": 425,
+            "exists": false
+          },
+          {
             "key": "remote_kiosk_management.messages.not_authenticated",
-            "line": 436,
+            "line": 443,
             "exists": false
           },
           {
             "key": "remote_kiosk_management.messages.batch_revoked",
-            "line": 458,
-            "exists": false
-          },
-          {
-            "key": "remote_kiosk_management.messages.batch_revoked_success",
-            "line": 459,
-            "exists": false
-          },
-          {
-            "key": "remote_kiosk_management.messages.batch_revoke_failed",
-            "line": 464,
-            "exists": false
-          },
-          {
-            "key": "remote_kiosk_management.messages.unknown_error",
             "line": 465,
             "exists": false
           },
           {
-            "key": "remote_kiosk_management.messages.batch_deleted",
-            "line": 495,
+            "key": "remote_kiosk_management.messages.batch_revoked_success",
+            "line": 466,
             "exists": false
           },
           {
-            "key": "remote_kiosk_management.messages.batch_deleted_success",
-            "line": 496,
-            "exists": false
-          },
-          {
-            "key": "remote_kiosk_management.messages.batch_delete_failed",
-            "line": 501,
+            "key": "remote_kiosk_management.messages.batch_revoke_failed",
+            "line": 471,
             "exists": false
           },
           {
             "key": "remote_kiosk_management.messages.unknown_error",
+            "line": 472,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_management.messages.batch_deleted",
             "line": 502,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_management.messages.batch_deleted_success",
+            "line": 503,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_management.messages.batch_delete_failed",
+            "line": 508,
+            "exists": false
+          },
+          {
+            "key": "remote_kiosk_management.messages.unknown_error",
+            "line": 509,
             "exists": false
           }
         ],
@@ -62092,68 +62092,68 @@
           },
           {
             "key": "remote_kiosk_management.messages.token_deleted",
-            "line": 411,
-            "context": "410: toast({\n411: title: t('remote_kiosk_management.messages.token_deleted'),\n412: description: t('remote_kiosk_management.messages.token_deleted_success')"
+            "line": 418,
+            "context": "417: toast({\n418: title: t('remote_kiosk_management.messages.token_deleted'),\n419: description: t('remote_kiosk_management.messages.token_deleted_success')"
           },
           {
             "key": "remote_kiosk_management.messages.token_deleted_success",
-            "line": 412,
-            "context": "411: title: t('remote_kiosk_management.messages.token_deleted'),\n412: description: t('remote_kiosk_management.messages.token_deleted_success')\n413: });"
+            "line": 419,
+            "context": "418: title: t('remote_kiosk_management.messages.token_deleted'),\n419: description: t('remote_kiosk_management.messages.token_deleted_success')\n420: });"
           },
           {
             "key": "remote_kiosk_management.messages.delete_failed",
-            "line": 417,
-            "context": "416: toast({\n417: title: t('remote_kiosk_management.messages.delete_failed'),\n418: description: error instanceof Error ? error.message : t('remote_kiosk_management.messages.unknown_error'),"
+            "line": 424,
+            "context": "423: toast({\n424: title: t('remote_kiosk_management.messages.delete_failed'),\n425: description: error instanceof Error ? error.message : t('remote_kiosk_management.messages.unknown_error'),"
           },
           {
             "key": "remote_kiosk_management.messages.unknown_error",
-            "line": 418,
-            "context": "417: title: t('remote_kiosk_management.messages.delete_failed'),\n418: description: error instanceof Error ? error.message : t('remote_kiosk_management.messages.unknown_error'),\n419: variant: \"destructive\""
+            "line": 425,
+            "context": "424: title: t('remote_kiosk_management.messages.delete_failed'),\n425: description: error instanceof Error ? error.message : t('remote_kiosk_management.messages.unknown_error'),\n426: variant: \"destructive\""
           },
           {
             "key": "remote_kiosk_management.messages.not_authenticated",
-            "line": 436,
-            "context": "435: mutationFn: async (params: { tokenIds: string[]; reason?: string }) => {\n436: if (!user) throw new Error(t('remote_kiosk_management.messages.not_authenticated'));\n437: "
+            "line": 443,
+            "context": "442: mutationFn: async (params: { tokenIds: string[]; reason?: string }) => {\n443: if (!user) throw new Error(t('remote_kiosk_management.messages.not_authenticated'));\n444: "
           },
           {
             "key": "remote_kiosk_management.messages.batch_revoked",
-            "line": 458,
-            "context": "457: toast({\n458: title: t('remote_kiosk_management.messages.batch_revoked'),\n459: description: t('remote_kiosk_management.messages.batch_revoked_success', { count: data.length })"
+            "line": 465,
+            "context": "464: toast({\n465: title: t('remote_kiosk_management.messages.batch_revoked'),\n466: description: t('remote_kiosk_management.messages.batch_revoked_success', { count: data.length })"
           },
           {
             "key": "remote_kiosk_management.messages.batch_revoked_success",
-            "line": 459,
-            "context": "458: title: t('remote_kiosk_management.messages.batch_revoked'),\n459: description: t('remote_kiosk_management.messages.batch_revoked_success', { count: data.length })\n460: });"
+            "line": 466,
+            "context": "465: title: t('remote_kiosk_management.messages.batch_revoked'),\n466: description: t('remote_kiosk_management.messages.batch_revoked_success', { count: data.length })\n467: });"
           },
           {
             "key": "remote_kiosk_management.messages.batch_revoke_failed",
-            "line": 464,
-            "context": "463: toast({\n464: title: t('remote_kiosk_management.messages.batch_revoke_failed'),\n465: description: error instanceof Error ? error.message : t('remote_kiosk_management.messages.unknown_error'),"
+            "line": 471,
+            "context": "470: toast({\n471: title: t('remote_kiosk_management.messages.batch_revoke_failed'),\n472: description: error instanceof Error ? error.message : t('remote_kiosk_management.messages.unknown_error'),"
           },
           {
             "key": "remote_kiosk_management.messages.unknown_error",
-            "line": 465,
-            "context": "464: title: t('remote_kiosk_management.messages.batch_revoke_failed'),\n465: description: error instanceof Error ? error.message : t('remote_kiosk_management.messages.unknown_error'),\n466: variant: \"destructive\""
+            "line": 472,
+            "context": "471: title: t('remote_kiosk_management.messages.batch_revoke_failed'),\n472: description: error instanceof Error ? error.message : t('remote_kiosk_management.messages.unknown_error'),\n473: variant: \"destructive\""
           },
           {
             "key": "remote_kiosk_management.messages.batch_deleted",
-            "line": 495,
-            "context": "494: toast({\n495: title: t('remote_kiosk_management.messages.batch_deleted'),\n496: description: t('remote_kiosk_management.messages.batch_deleted_success', { count: tokenIds.length })"
+            "line": 502,
+            "context": "501: toast({\n502: title: t('remote_kiosk_management.messages.batch_deleted'),\n503: description: t('remote_kiosk_management.messages.batch_deleted_success', { count: tokenIds.length })"
           },
           {
             "key": "remote_kiosk_management.messages.batch_deleted_success",
-            "line": 496,
-            "context": "495: title: t('remote_kiosk_management.messages.batch_deleted'),\n496: description: t('remote_kiosk_management.messages.batch_deleted_success', { count: tokenIds.length })\n497: });"
+            "line": 503,
+            "context": "502: title: t('remote_kiosk_management.messages.batch_deleted'),\n503: description: t('remote_kiosk_management.messages.batch_deleted_success', { count: tokenIds.length })\n504: });"
           },
           {
             "key": "remote_kiosk_management.messages.batch_delete_failed",
-            "line": 501,
-            "context": "500: toast({\n501: title: t('remote_kiosk_management.messages.batch_delete_failed'),\n502: description: error instanceof Error ? error.message : t('remote_kiosk_management.messages.unknown_error'),"
+            "line": 508,
+            "context": "507: toast({\n508: title: t('remote_kiosk_management.messages.batch_delete_failed'),\n509: description: error instanceof Error ? error.message : t('remote_kiosk_management.messages.unknown_error'),"
           },
           {
             "key": "remote_kiosk_management.messages.unknown_error",
-            "line": 502,
-            "context": "501: title: t('remote_kiosk_management.messages.batch_delete_failed'),\n502: description: error instanceof Error ? error.message : t('remote_kiosk_management.messages.unknown_error'),\n503: variant: \"destructive\""
+            "line": 509,
+            "context": "508: title: t('remote_kiosk_management.messages.batch_delete_failed'),\n509: description: error instanceof Error ? error.message : t('remote_kiosk_management.messages.unknown_error'),\n510: variant: \"destructive\""
           }
         ],
         "coverage": 100,
