@@ -5,11 +5,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import type { ReportsFilters } from '@/hooks/useReportsData';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
-import { format } from 'date-fns';
+import { format, startOfWeek, endOfWeek, subDays } from 'date-fns';
 import { CalendarIcon, Filter, X } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getSystemTimezone } from '@/utils/dateUtils';
+import type { TransformedDealerService, DealerService } from '@/types/reports';
+import { useToast } from '@/hooks/use-toast';
 
 interface ReportFiltersProps {
   filters: ReportsFilters;
@@ -23,7 +25,8 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
   onFiltersChange
 }) => {
   const { t } = useTranslation();
-  const [services, setServices] = useState<any[]>([]);
+  const { toast } = useToast();
+  const [services, setServices] = useState<TransformedDealerService[]>([]);
   const [servicesLoading, setServicesLoading] = useState(false);
 
   // Fetch services based on selected dealer and order type
@@ -57,15 +60,15 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
           if (error) throw error;
 
           // Transform to match expected format
-          const transformedServices = (data || []).map((service: any) => ({
+          const transformedServices = (data || []).map((service): TransformedDealerService => ({
             id: service.id,
             name: service.name,
             description: service.description,
             price: service.price,
             duration: service.duration,
             category_id: service.category_id,
-            category_name: service.service_categories?.name,
-            category_color: service.service_categories?.color,
+            category_name: service.service_categories?.name ?? null,
+            category_color: service.service_categories?.color ?? null,
             color: service.color,
           }));
 
@@ -93,6 +96,10 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
       } catch (err) {
         console.error('Error fetching services:', err);
         setServices([]);
+        toast({
+          variant: 'destructive',
+          description: t('reports.errors.failed_to_load_services')
+        });
       } finally {
         setServicesLoading(false);
       }
@@ -103,19 +110,10 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
 
   // Helper function to get week dates (Monday to Sunday) in system timezone
   const getWeekDates = (date: Date) => {
-    const timezone = getSystemTimezone();
-    const dateInTimezone = new Date(date.toLocaleString('en-US', { timeZone: timezone }));
-    const current = new Date(dateInTimezone.getFullYear(), dateInTimezone.getMonth(), dateInTimezone.getDate());
-    const day = current.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-
-    // Calculate days to Monday
-    const daysToMonday = day === 0 ? -6 : 1 - day;
-
-    const monday = new Date(current);
-    monday.setDate(current.getDate() + daysToMonday);
-
-    const sunday = new Date(monday);
-    sunday.setDate(monday.getDate() + 6);
+    // Use date-fns for immutable date operations
+    // weekStartsOn: 1 = Monday (ISO 8601 standard)
+    const monday = startOfWeek(date, { weekStartsOn: 1 });
+    const sunday = endOfWeek(date, { weekStartsOn: 1 });
 
     return { monday, sunday };
   };
@@ -143,21 +141,18 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
         return filterStart.getTime() === mondayTime && filterEnd.getTime() === sundayTime;
       }
       case 'last_week': {
-        const lastWeekDate = new Date(now);
-        lastWeekDate.setDate(lastWeekDate.getDate() - 7);
+        const lastWeekDate = subDays(now, 7);
         const { monday, sunday } = getWeekDates(lastWeekDate);
         const mondayTime = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate()).getTime();
         const sundayTime = new Date(sunday.getFullYear(), sunday.getMonth(), sunday.getDate()).getTime();
         return filterStart.getTime() === mondayTime && filterEnd.getTime() === sundayTime;
       }
       case 'last_30_days': {
-        const startDate = new Date(today);
-        startDate.setDate(today.getDate() - 30);
+        const startDate = subDays(today, 30);
         return filterStart.getTime() === startDate.getTime() && filterEnd.getTime() === today.getTime();
       }
       case 'last_90_days': {
-        const startDate = new Date(today);
-        startDate.setDate(today.getDate() - 90);
+        const startDate = subDays(today, 90);
         return filterStart.getTime() === startDate.getTime() && filterEnd.getTime() === today.getTime();
       }
       case 'this_year': {
@@ -216,8 +211,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
         break;
       }
       case 'last_week': {
-        const lastWeekDate = new Date(now);
-        lastWeekDate.setDate(lastWeekDate.getDate() - 7);
+        const lastWeekDate = subDays(now, 7);
         const { monday, sunday } = getWeekDates(lastWeekDate);
         startDate = monday;
         endDate = sunday;
@@ -225,13 +219,11 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
       }
       case 'last_30_days':
         endDate = new Date(today);
-        startDate = new Date(today);
-        startDate.setDate(today.getDate() - 30);
+        startDate = subDays(today, 30);
         break;
       case 'last_90_days':
         endDate = new Date(today);
-        startDate = new Date(today);
-        startDate.setDate(today.getDate() - 90);
+        startDate = subDays(today, 90);
         break;
       case 'this_year':
         endDate = new Date(today);
@@ -431,7 +423,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
                         variant="ghost"
                         size="sm"
                         onClick={() => {
-                          const allServiceIds = services.map((s: any) => s.id);
+                          const allServiceIds = services.map((s) => s.id);
                           onFiltersChange({ ...filters, serviceIds: allServiceIds });
                         }}
                         className="h-6 text-xs"
@@ -462,7 +454,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
                     {t('reports.filters.no_services', 'No services available')}
                   </div>
                 ) : (
-                  services.map((service: any) => {
+                  services.map((service) => {
                     const isSelected = filters.serviceIds?.includes(service.id);
                     return (
                       <div
@@ -546,7 +538,7 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
                 {t(`reports.filters.${filters.status}`)}
               </span>
             )}
-            {services.map((service: any) => {
+            {services.map((service) => {
               const isSelected = filters.serviceIds?.includes(service.id);
               return (
                 <span

@@ -44,6 +44,7 @@ import { useDeleteInvoice, useInvoices, useInvoiceSummary } from '@/hooks/useInv
 import type { ReportsFilters } from '@/hooks/useReportsData';
 import { supabase } from '@/integrations/supabase/client';
 import type { Invoice, InvoiceFilters, InvoiceStatus } from '@/types/invoices';
+import type { OrderServiceItem } from '@/types/reports';
 import type { UnifiedOrderData } from '@/types/unifiedOrder';
 import { invalidateInvoiceQueries } from '@/utils/queryInvalidation';
 import { toEndOfDay } from '@/utils/reportDateUtils';
@@ -97,7 +98,7 @@ interface VehicleForInvoice {
   vehicle_year: number | null;
   vehicle_vin: string | null;
   total_amount: number;
-  services: any[] | null;
+  services: OrderServiceItem[] | null;
   status: string;
   created_at: string;
   completed_at: string | null;
@@ -557,8 +558,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     if (selectedService !== 'all') {
       filtered = filtered.filter(vehicle => {
         if (!vehicle.services || !Array.isArray(vehicle.services)) return false;
-        return vehicle.services.some((service: any) => {
-          const serviceId = service.id || service.type || service;
+        return vehicle.services.some((service: OrderServiceItem) => {
+          const serviceId = typeof service === 'string' ? service : (service.id || service.type || service);
           return serviceId === selectedService;
         });
       });
@@ -567,8 +568,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     if (excludedServices.size > 0) {
       filtered = filtered.filter(vehicle => {
         if (!vehicle.services || !Array.isArray(vehicle.services)) return true;
-        const hasExcludedService = vehicle.services.some((service: any) => {
-          const serviceId = service.id || service.type || service;
+        const hasExcludedService = vehicle.services.some((service: OrderServiceItem) => {
+          const serviceId = typeof service === 'string' ? service : (service.id || service.type || service);
           return excludedServices.has(serviceId);
         });
         return !hasExcludedService;
@@ -627,8 +628,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     allVehiclesForCounts.forEach(vehicle => {
       if (!vehicle.services || !Array.isArray(vehicle.services)) return;
 
-      vehicle.services.forEach((service: any) => {
-        const serviceId = service.id || service.type || service;
+      vehicle.services.forEach((service: OrderServiceItem) => {
+        const serviceId = typeof service === 'string' ? service : (service.id || service.type || service);
         counts[serviceId] = (counts[serviceId] || 0) + 1;
       });
     });
@@ -642,8 +643,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
     return allVehiclesForCounts.filter(vehicle => {
       if (!vehicle.services || !Array.isArray(vehicle.services)) return false;
-      return vehicle.services.some((service: any) => {
-        const serviceId = service.id || service.type || service;
+      return vehicle.services.some((service: OrderServiceItem) => {
+        const serviceId = typeof service === 'string' ? service : (service.id || service.type || service);
         return excludedServices.has(serviceId);
       });
     }).length;
@@ -764,7 +765,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       const items = selectedVehicles.map((vehicle, index) => {
         // Extract service names from vehicle.services using standardized logic
         const serviceNames = vehicle.services && Array.isArray(vehicle.services)
-          ? vehicle.services.map((service: any) => getServiceNames([service])).join(', ')
+          ? vehicle.services.map((service: OrderServiceItem) => getServiceNames([service])).join(', ')
           : 'N/A';
 
         return {
@@ -809,9 +810,10 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       setSelectedVehicleIds(new Set());
       setSearchTerm('');
       setActiveTab('invoices');
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to create invoice:', error);
-      toast({ variant: 'destructive', description: `Failed to create invoice: ${error.message}` });
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      toast({ variant: 'destructive', description: `Failed to create invoice: ${errorMessage}` });
     }
   };
 
@@ -829,10 +831,10 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     return format(parseISO(dateString), 'MMM dd, yyyy');
   };
 
-  const getServiceNames = (services: any[] | null): string => {
+  const getServiceNames = (services: OrderServiceItem[] | null): string => {
     if (!services || !Array.isArray(services) || services.length === 0) return 'N/A';
 
-    return services.map((s: any) => {
+    return services.map((s: OrderServiceItem) => {
       // Priority 1: Direct name from service object (NEW standard format)
       if (s && typeof s === 'object' && s.name) {
         return s.name;

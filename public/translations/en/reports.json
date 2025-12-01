@@ -46,6 +46,9 @@
     "active_filters": "Active Filters",
     "no_services": "No services available"
   },
+  "errors": {
+    "failed_to_load_services": "Failed to load services. Please try again."
+  },
   "metrics": {
     "total_orders": "Total Orders",
     "total_revenue": "Total Revenue",
@@ -332,5 +335,179 @@
   "two_weeks_ago": "2 Weeks Ago",
   "invoice_management": "Invoice Management",
   "delete_invoice": "Delete Invoice",
-  "financial_performance_overview": "Financial Performance Overview"
+  "financial_performance_overview": "Financial Performance Overview",
+  "operational": {
+    "executive_metrics": {
+      "efficiency_score": "Efficiency Score",
+      "total_volume": "Total Volume",
+      "services_processed": "services processed",
+      "per_order": "per order",
+      "from_completed_orders": "from completed orders"
+    },
+    "tabs": {
+      "orders": "Orders",
+      "volume": "Order Volume",
+      "status": "Status Analysis",
+      "performance": "Performance"
+    },
+    "volume": {
+      "total_orders": "Total Orders",
+      "across_all_departments": "Across all departments",
+      "completed": "Completed",
+      "success_rate": "success rate",
+      "in_progress": "In Progress",
+      "currently_active": "Currently active",
+      "daily_average": "Daily Average",
+      "orders_per_day": "Orders per day",
+      "order_volume_trend": "Order Volume Trend",
+      "daily_correlation": "Daily order volume and revenue correlation over time",
+      "no_volume_data": "No volume data available"
+    },
+    "status": {
+      "completion_rate": "Completion Rate",
+      "success_rate": "Success Rate",
+      "cancellation_rate": "Cancellation Rate",
+      "active_orders": "Active Orders",
+      "pending_plus_in_progress": "Pending + In Progress",
+      "distribution": "Status Distribution",
+      "visual_breakdown": "Visual breakdown of order statuses",
+      "detailed_breakdown": "Detailed Status Breakdown",
+      "counts_and_percentages": "Order counts and percentages by status",
+      "pending": "Pending",
+      "awaiting_processing": "Awaiting processing",
+      "currently_processing": "Currently processing",
+      "successfully_finished": "Successfully finished",
+      "not_completed": "Not completed",
+      "no_status_data": "No status data available"
+    },
+    "insights": {
+      "title": "Status Insights & Recommendations",
+      "description": "AI-powered insights based on status distribution",
+      "high_completion_rate": "High Completion Rate",
+      "successfully_completed": "of orders successfully completed",
+      "processing_efficiency": "Processing Efficiency",
+      "actively_processing": "orders actively being processed",
+      "pending_queue": "Pending Queue",
+      "waiting_for_processing": "orders waiting for processing"
+    },
+    "performance": {
+      "avg_processing_time": "Avg Processing Time",
+      "per_order_average": "Per order average",
+      "sla_compliance": "SLA Compliance",
+      "efficiency_score": "Efficiency Score",
+      "out_of_100": "Out of 100",
+      "revenue_per_hour": "Revenue per Hour",
+      "productivity_metric": "Productivity metric",
+      "department_analysis": "Department Performance Analysis",
+      "detailed_kpis": "Detailed metrics and KPIs by department",
+      "departments": "Departments",
+      "orders_processed": "orders processed",
+      "high_performer": "High Performer",
+      "completion": "Completion",
+      "avg_time": "Avg Time",
+      "excellent_completion": "Excellent completion",
+      "room_for_improvement": "Room for improvement",
+      "fast_processing": "Fast processing",
+      "average_speed": "Average speed",
+      "total_orders": "total orders",
+      "no_department_data": "No department performance data available",
+      "data_will_appear": "Data will appear once departments start processing orders"
+    },
+    "performance_insights": {
+      "title": "Performance Insights",
+      "description": "Key takeaways and optimization opportunities",
+      "strong_performance": "Strong Performance",
+      "sla_compliance_demonstrates": "SLA compliance demonstrates reliable service delivery",
+      "meeting_targets": "Meeting targets",
+      "processing_efficiency": "Processing Efficiency",
+      "shows_good_pace": "shows good operational pace",
+      "optimized_workflow": "Optimized workflow"
+    },
+    "orders_table": {
+      "title": "Orders Report",
+      "description": "Detailed vehicle orders matching your filters",
+      "total_orders": "Total Orders",
+      "in_selected_period": "In selected period",
+      "pending": "Pending",
+      "of_total": "of total",
+      "completion_rate": "completion rate",
+      "no_orders_found": "No orders found",
+      "try_adjusting_filters": "Try adjusting your filters",
+      "order_number": "Order #",
+      "po_ro_tag": "PO / RO / Tag",
+      "stock_tag": "Stock / Tag",
+      "stock": "Stock",
+      "vehicle": "Vehicle",
+      "vin": "VIN",
+      "assigned": "Assigned",
+      "dept": "Dept",
+      "invoice": "Invoice",
+      "amount": "Amount",
+      "unassigned": "Unassigned",
+      "no_invoice_yet": "No invoice yet"
+    }
+  },
+  "financial": {
+    "executive_summary": {
+      "title": "Financial Performance Overview",
+      "description": "Revenue insights and financial metrics",
+      "total_revenue": "Total Revenue",
+      "vs_last_week": "vs last week",
+      "avg_per_period": "Avg per",
+      "day": "Day",
+      "week": "Week",
+      "month": "Month",
+      "vs_previous_period": "vs previous period",
+      "total_orders": "Total Orders",
+      "avg_orders_per_period": "Avg Orders",
+      "total_by_departments": "Total by Departments",
+      "orders_count": "orders"
+    },
+    "tabs": {
+      "departments": "By Department",
+      "trends": "Revenue Trends",
+      "services": "Top Services",
+      "analysis": "Detailed Analysis"
+    },
+    "departments": {
+      "revenue_by_department": "Revenue by Department",
+      "total_revenue_per_dept": "Total revenue generated per department (Last 3 weeks comparison)",
+      "order_count_by_department": "Order Count by Department",
+      "total_orders_per_dept": "Total number of orders per department (Last 3 weeks comparison)",
+      "performance_summary": "Department Performance Summary",
+      "detailed_metrics": "Detailed metrics for each department",
+      "department": "Department",
+      "total_revenue": "Total Revenue",
+      "orders": "Orders",
+      "avg_order_value": "Avg Order Value",
+      "completion_rate": "Completion Rate",
+      "no_department_data": "No department data available",
+      "completed": "completed"
+    },
+    "charts": {
+      "revenue_performance_over_time": "Revenue Performance Over Time",
+      "monthly_revenue_correlation": "Monthly revenue trends with order volume correlation",
+      "top_revenue_generators": "Top Revenue Generators",
+      "services_ranked_by_revenue": "Services ranked by total revenue contribution",
+      "revenue_distribution": "Revenue Distribution",
+      "detailed_breakdown": "Detailed breakdown of service contributions",
+      "of_total_revenue": "of total revenue",
+      "no_service_data": "No service data available",
+      "avg_order_value_analysis": "Average Order Value Analysis",
+      "track_transaction_values": "Track changes in transaction values over time",
+      "no_analysis_data": "No analysis data available",
+      "no_revenue_data": "No revenue data available"
+    },
+    "export": {
+      "export_to_excel": "Export to Excel",
+      "export_to_pdf": "Export to PDF",
+      "exporting": "Exporting...",
+      "generating": "Generating...",
+      "no_data_to_export": "No data to export",
+      "excel_exported_successfully": "Excel exported successfully",
+      "pdf_exported_successfully": "PDF exported successfully",
+      "failed_to_export_excel": "Failed to export Excel",
+      "failed_to_export_pdf": "Failed to export PDF"
+    }
+  }
 }

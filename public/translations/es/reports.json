@@ -46,6 +46,9 @@
     "active_filters": "Filtros Activos",
     "no_services": "No hay servicios disponibles"
   },
+  "errors": {
+    "failed_to_load_services": "Error al cargar servicios. Por favor, inténtelo de nuevo."
+  },
   "metrics": {
     "total_orders": "Órdenes Totales",
     "total_revenue": "Ingresos Totales",
@@ -332,5 +335,179 @@
   "two_weeks_ago": "Hace 2 Semanas",
   "invoice_management": "Gestión de Facturas",
   "delete_invoice": "Eliminar Factura",
-  "financial_performance_overview": "Resumen de Rendimiento Financiero"
+  "financial_performance_overview": "Resumen de Rendimiento Financiero",
+  "operational": {
+    "executive_metrics": {
+      "efficiency_score": "Puntuación de Eficiencia",
+      "total_volume": "Volumen Total",
+      "services_processed": "servicios procesados",
+      "per_order": "por orden",
+      "from_completed_orders": "de órdenes completadas"
+    },
+    "tabs": {
+      "orders": "Órdenes",
+      "volume": "Volumen de Órdenes",
+      "status": "Análisis de Estado",
+      "performance": "Rendimiento"
+    },
+    "volume": {
+      "total_orders": "Órdenes Totales",
+      "across_all_departments": "A través de todos los departamentos",
+      "completed": "Completadas",
+      "success_rate": "tasa de éxito",
+      "in_progress": "En Proceso",
+      "currently_active": "Actualmente activas",
+      "daily_average": "Promedio Diario",
+      "orders_per_day": "Órdenes por día",
+      "order_volume_trend": "Tendencia de Volumen de Órdenes",
+      "daily_correlation": "Correlación diaria de volumen de órdenes e ingresos a lo largo del tiempo",
+      "no_volume_data": "No hay datos de volumen disponibles"
+    },
+    "status": {
+      "completion_rate": "Tasa de Finalización",
+      "success_rate": "Tasa de Éxito",
+      "cancellation_rate": "Tasa de Cancelación",
+      "active_orders": "Órdenes Activas",
+      "pending_plus_in_progress": "Pendiente + En Proceso",
+      "distribution": "Distribución de Estados",
+      "visual_breakdown": "Desglose visual de estados de órdenes",
+      "detailed_breakdown": "Desglose Detallado de Estados",
+      "counts_and_percentages": "Conteos y porcentajes de órdenes por estado",
+      "pending": "Pendiente",
+      "awaiting_processing": "Esperando procesamiento",
+      "currently_processing": "Procesando actualmente",
+      "successfully_finished": "Finalizado exitosamente",
+      "not_completed": "No completado",
+      "no_status_data": "No hay datos de estado disponibles"
+    },
+    "insights": {
+      "title": "Información de Estado y Recomendaciones",
+      "description": "Información impulsada por IA basada en la distribución de estados",
+      "high_completion_rate": "Alta Tasa de Finalización",
+      "successfully_completed": "de órdenes completadas exitosamente",
+      "processing_efficiency": "Eficiencia de Procesamiento",
+      "actively_processing": "órdenes siendo procesadas activamente",
+      "pending_queue": "Cola de Pendientes",
+      "waiting_for_processing": "órdenes esperando procesamiento"
+    },
+    "performance": {
+      "avg_processing_time": "Tiempo Promedio de Procesamiento",
+      "per_order_average": "Promedio por orden",
+      "sla_compliance": "Cumplimiento SLA",
+      "efficiency_score": "Puntuación de Eficiencia",
+      "out_of_100": "De 100",
+      "revenue_per_hour": "Ingresos por Hora",
+      "productivity_metric": "Métrica de productividad",
+      "department_analysis": "Análisis de Rendimiento por Departamento",
+      "detailed_kpis": "Métricas detalladas y KPIs por departamento",
+      "departments": "Departamentos",
+      "orders_processed": "órdenes procesadas",
+      "high_performer": "Alto Rendimiento",
+      "completion": "Finalización",
+      "avg_time": "Tiempo Promedio",
+      "excellent_completion": "Excelente finalización",
+      "room_for_improvement": "Margen de mejora",
+      "fast_processing": "Procesamiento rápido",
+      "average_speed": "Velocidad promedio",
+      "total_orders": "órdenes totales",
+      "no_department_data": "No hay datos de rendimiento por departamento disponibles",
+      "data_will_appear": "Los datos aparecerán una vez que los departamentos comiencen a procesar órdenes"
+    },
+    "performance_insights": {
+      "title": "Información de Rendimiento",
+      "description": "Conclusiones clave y oportunidades de optimización",
+      "strong_performance": "Rendimiento Sólido",
+      "sla_compliance_demonstrates": "El cumplimiento SLA demuestra entrega de servicio confiable",
+      "meeting_targets": "Cumpliendo objetivos",
+      "processing_efficiency": "Eficiencia de Procesamiento",
+      "shows_good_pace": "muestra buen ritmo operacional",
+      "optimized_workflow": "Flujo de trabajo optimizado"
+    },
+    "orders_table": {
+      "title": "Reporte de Órdenes",
+      "description": "Órdenes de vehículos detalladas que coinciden con sus filtros",
+      "total_orders": "Órdenes Totales",
+      "in_selected_period": "En el período seleccionado",
+      "pending": "Pendiente",
+      "of_total": "del total",
+      "completion_rate": "tasa de finalización",
+      "no_orders_found": "No se encontraron órdenes",
+      "try_adjusting_filters": "Intente ajustar sus filtros",
+      "order_number": "Orden #",
+      "po_ro_tag": "PO / RO / Etiqueta",
+      "stock_tag": "Stock / Etiqueta",
+      "stock": "Stock",
+      "vehicle": "Vehículo",
+      "vin": "VIN",
+      "assigned": "Asignado",
+      "dept": "Depto",
+      "invoice": "Factura",
+      "amount": "Monto",
+      "unassigned": "Sin asignar",
+      "no_invoice_yet": "Sin factura aún"
+    }
+  },
+  "financial": {
+    "executive_summary": {
+      "title": "Resumen de Rendimiento Financiero",
+      "description": "Información de ingresos y métricas financieras",
+      "total_revenue": "Ingresos Totales",
+      "vs_last_week": "vs semana pasada",
+      "avg_per_period": "Promedio por",
+      "day": "Día",
+      "week": "Semana",
+      "month": "Mes",
+      "vs_previous_period": "vs período anterior",
+      "total_orders": "Órdenes Totales",
+      "avg_orders_per_period": "Órdenes Promedio",
+      "total_by_departments": "Total por Departamentos",
+      "orders_count": "órdenes"
+    },
+    "tabs": {
+      "departments": "Por Departamento",
+      "trends": "Tendencias de Ingresos",
+      "services": "Servicios Principales",
+      "analysis": "Análisis Detallado"
+    },
+    "departments": {
+      "revenue_by_department": "Ingresos por Departamento",
+      "total_revenue_per_dept": "Ingresos totales generados por departamento (Comparación últimas 3 semanas)",
+      "order_count_by_department": "Conteo de Órdenes por Departamento",
+      "total_orders_per_dept": "Número total de órdenes por departamento (Comparación últimas 3 semanas)",
+      "performance_summary": "Resumen de Rendimiento por Departamento",
+      "detailed_metrics": "Métricas detalladas para cada departamento",
+      "department": "Departamento",
+      "total_revenue": "Ingresos Totales",
+      "orders": "Órdenes",
+      "avg_order_value": "Valor Promedio de Orden",
+      "completion_rate": "Tasa de Finalización",
+      "no_department_data": "No hay datos de departamento disponibles",
+      "completed": "completadas"
+    },
+    "charts": {
+      "revenue_performance_over_time": "Rendimiento de Ingresos a lo Largo del Tiempo",
+      "monthly_revenue_correlation": "Tendencias de ingresos mensuales con correlación de volumen de órdenes",
+      "top_revenue_generators": "Principales Generadores de Ingresos",
+      "services_ranked_by_revenue": "Servicios clasificados por contribución total de ingresos",
+      "revenue_distribution": "Distribución de Ingresos",
+      "detailed_breakdown": "Desglose detallado de contribuciones de servicios",
+      "of_total_revenue": "del total de ingresos",
+      "no_service_data": "No hay datos de servicios disponibles",
+      "avg_order_value_analysis": "Análisis de Valor Promedio de Orden",
+      "track_transaction_values": "Rastrear cambios en valores de transacción a lo largo del tiempo",
+      "no_analysis_data": "No hay datos de análisis disponibles",
+      "no_revenue_data": "No hay datos de ingresos disponibles"
+    },
+    "export": {
+      "export_to_excel": "Exportar a Excel",
+      "export_to_pdf": "Exportar a PDF",
+      "exporting": "Exportando...",
+      "generating": "Generando...",
+      "no_data_to_export": "No hay datos para exportar",
+      "excel_exported_successfully": "Excel exportado exitosamente",
+      "pdf_exported_successfully": "PDF exportado exitosamente",
+      "failed_to_export_excel": "Error al exportar Excel",
+      "failed_to_export_pdf": "Error al exportar PDF"
+    }
+  }
 }

@@ -45,6 +45,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import ExcelJS from 'exceljs';
 import { getWeek, getYear, subWeeks, startOfWeek, endOfWeek } from 'date-fns';
+import { normalizeDepartmentName } from '@/types/reports';
 
 interface FinancialReportsProps {
   filters: ReportsFilters;
@@ -117,9 +118,12 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
   const combineWeeklyData = () => {
     const departments = ['Sales', 'Service', 'Recon', 'Carwash'];
     return departments.map(deptName => {
-      const week1 = week1Data.find(d => d.name.toLowerCase() === deptName.toLowerCase()) || { revenue: 0, orders: 0 };
-      const week2 = week2Data.find(d => d.name.toLowerCase() === deptName.toLowerCase()) || { revenue: 0, orders: 0 };
-      const week3 = week3Data.find(d => d.name.toLowerCase() === deptName.toLowerCase()) || { revenue: 0, orders: 0 };
+      // Use normalizeDepartmentName for case-insensitive matching with DB variations
+      const normalizedDept = normalizeDepartmentName(deptName);
+
+      const week1 = week1Data.find(d => normalizeDepartmentName(d.name) === normalizedDept) || { revenue: 0, orders: 0 };
+      const week2 = week2Data.find(d => normalizeDepartmentName(d.name) === normalizedDept) || { revenue: 0, orders: 0 };
+      const week3 = week3Data.find(d => normalizeDepartmentName(d.name) === normalizedDept) || { revenue: 0, orders: 0 };
 
       return {
         name: deptName,
@@ -196,7 +200,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
   // Export to Excel function with formatting
   const handleExportToExcel = async () => {
     if (!departmentData || departmentData.length === 0) {
-      toast({ variant: 'destructive', description: 'No data to export' });
+      toast({ variant: 'destructive', description: t('reports.financial.export.no_data_to_export') });
       return;
     }
 
@@ -257,7 +261,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       // Title - Merge cells for long title
       worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
       const titleCell = worksheet.getCell(`A${currentRow}`);
-      titleCell.value = 'Department Revenue Report';
+      titleCell.value = t('reports.financial.executive_summary.title');
       titleCell.font = { size: 14, bold: true, color: { argb: 'FF111827' } };
       titleCell.alignment = { vertical: 'middle', horizontal: 'center' };
       worksheet.getRow(currentRow).height = 20;
@@ -266,7 +270,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       // Period - Merge cells for long date range
       worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
       const periodCell = worksheet.getCell(`A${currentRow}`);
-      periodCell.value = `Period: ${formatDate(filters.startDate)} to ${formatDate(filters.endDate)}`;
+      periodCell.value = `${t('reports.period')}: ${formatDate(filters.startDate)} to ${formatDate(filters.endDate)}`;
       periodCell.font = { size: 9, color: { argb: 'FF374151' } };
       periodCell.alignment = { vertical: 'middle', horizontal: 'center' };
       worksheet.getRow(currentRow).height = 15;
@@ -293,7 +297,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       // Department Overview section title - Merge cells
       worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
       const overviewTitleCell = worksheet.getCell(`A${currentRow}`);
-      overviewTitleCell.value = 'Department Overview';
+      overviewTitleCell.value = t('reports.financial.departments.performance_summary');
       overviewTitleCell.font = { size: 11, bold: true, color: { argb: 'FF111827' } };
       overviewTitleCell.alignment = { vertical: 'middle', horizontal: 'left' };
       worksheet.getRow(currentRow).height = 18;
@@ -301,7 +305,13 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
 
       // Table headers
       const headerRow = worksheet.getRow(currentRow);
-      const headers = ['Department', 'Total Revenue', 'Orders', 'Avg Order Value', 'Completion Rate'];
+      const headers = [
+        t('reports.financial.departments.department'),
+        t('reports.financial.departments.total_revenue'),
+        t('reports.financial.departments.orders'),
+        t('reports.financial.departments.avg_order_value'),
+        t('reports.financial.departments.completion_rate')
+      ];
       headers.forEach((header, index) => {
         const cell = headerRow.getCell(index + 1);
         cell.value = header;
@@ -377,7 +387,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       // Summary Totals section - Merge cells
       worksheet.mergeCells(`A${currentRow}:B${currentRow}`);
       const summaryTitleCell = worksheet.getCell(`A${currentRow}`);
-      summaryTitleCell.value = 'Summary Totals';
+      summaryTitleCell.value = t('reports.financial.departments.performance_summary');
       summaryTitleCell.font = { size: 10, bold: true, color: { argb: 'FF111827' } };
       summaryTitleCell.alignment = { vertical: 'middle', horizontal: 'left' };
       worksheet.getRow(currentRow).height = 16;
@@ -387,11 +397,13 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       const totalRevenue = departmentData.reduce((sum, dept) => sum + dept.revenue, 0);
       const totalOrders = departmentData.reduce((sum, dept) => sum + dept.orders, 0);
       const totalAvgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-      const avgCompletionRate = departmentData.reduce((sum, dept) => sum + dept.completionRate, 0) / departmentData.length / 100;
+      const avgCompletionRate = departmentData.length > 0
+        ? departmentData.reduce((sum, dept) => sum + dept.completionRate, 0) / departmentData.length / 100
+        : null;
 
       // Summary table headers
       const summaryHeaderRow = worksheet.getRow(currentRow);
-      ['Metric', 'Value'].forEach((header, index) => {
+      [t('reports.financial.departments.department'), t('reports.financial.departments.total_revenue')].forEach((header, index) => {
         const cell = summaryHeaderRow.getCell(index + 1);
         cell.value = header;
         cell.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 9 };
@@ -413,10 +425,10 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
 
       // Summary data
       const summaryData = [
-        ['Total Revenue (All Departments)', totalRevenue],
-        ['Total Orders (All Departments)', totalOrders],
-        ['Average Order Value (Overall)', totalAvgOrderValue],
-        ['Average Completion Rate', avgCompletionRate],
+        [t('reports.financial.departments.total_revenue'), totalRevenue],
+        [t('reports.financial.executive_summary.total_orders'), totalOrders],
+        [t('reports.financial.departments.avg_order_value'), totalAvgOrderValue],
+        [t('reports.financial.departments.completion_rate'), avgCompletionRate],
       ];
 
       summaryData.forEach((rowData, index) => {
@@ -508,7 +520,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       worksheet.getRow(currentRow).height = 14;
 
       // Auto-adjust columns based on content
-      worksheet.columns.forEach((column: any, index) => {
+      worksheet.columns.forEach((column: Partial<ExcelJS.Column>, index) => {
         let maxLength = 0;
         const columnLetter = String.fromCharCode(65 + index);
 
@@ -545,10 +557,10 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
 
-      toast({ description: 'Excel exported successfully' });
+      toast({ description: t('reports.financial.export.excel_exported_successfully') });
     } catch (error) {
       console.error('Excel export failed:', error);
-      toast({ variant: 'destructive', description: 'Failed to export Excel' });
+      toast({ variant: 'destructive', description: t('reports.financial.export.failed_to_export_excel') });
     } finally {
       setIsExportingExcel(false);
     }
@@ -557,7 +569,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
   // Export to PDF function
   const handleExportToPDF = async () => {
     if (!departmentData || departmentData.length === 0) {
-      toast({ variant: 'destructive', description: 'No data to export' });
+      toast({ variant: 'destructive', description: t('reports.financial.export.no_data_to_export') });
       return;
     }
 
@@ -600,14 +612,14 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       doc.setFontSize(20);
       doc.setTextColor(colors.gray900[0], colors.gray900[1], colors.gray900[2]);
       doc.setFont('helvetica', 'bold');
-      doc.text('Department Revenue Report', pageWidth / 2, currentY, { align: 'center' });
+      doc.text(t('reports.financial.executive_summary.title'), pageWidth / 2, currentY, { align: 'center' });
       currentY += 10;
 
       // Date range
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(colors.gray700[0], colors.gray700[1], colors.gray700[2]);
-      doc.text(`Period: ${formatDate(filters.startDate)} to ${formatDate(filters.endDate)}`, pageWidth / 2, currentY, { align: 'center' });
+      doc.text(`${t('reports.period')}: ${formatDate(filters.startDate)} to ${formatDate(filters.endDate)}`, pageWidth / 2, currentY, { align: 'center' });
       currentY += 5;
 
       // Week info
@@ -628,7 +640,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(colors.gray900[0], colors.gray900[1], colors.gray900[2]);
-      doc.text('Department Overview', 20, currentY);
+      doc.text(t('reports.financial.departments.performance_summary'), 20, currentY);
       currentY += 10;
 
       const summaryData = departmentData.map((dept) => [
@@ -641,7 +653,13 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
 
       autoTable(doc, {
         startY: currentY,
-        head: [['Department', 'Total Revenue', 'Orders', 'Avg Order Value', 'Completion Rate']],
+        head: [[
+          t('reports.financial.departments.department'),
+          t('reports.financial.departments.total_revenue'),
+          t('reports.financial.departments.orders'),
+          t('reports.financial.departments.avg_order_value'),
+          t('reports.financial.departments.completion_rate')
+        ]],
         body: summaryData,
         theme: 'striped',
         headStyles: {
@@ -675,24 +693,26 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       const totalRevenue = departmentData.reduce((sum, dept) => sum + dept.revenue, 0);
       const totalOrders = departmentData.reduce((sum, dept) => sum + dept.orders, 0);
       const totalAvgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-      const avgCompletionRate = departmentData.reduce((sum, dept) => sum + dept.completionRate, 0) / departmentData.length;
+      const avgCompletionRate = departmentData.length > 0
+        ? departmentData.reduce((sum, dept) => sum + dept.completionRate, 0) / departmentData.length
+        : null;
 
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(colors.gray900[0], colors.gray900[1], colors.gray900[2]);
-      doc.text('Summary Totals', 20, currentY);
+      doc.text(t('reports.financial.departments.performance_summary'), 20, currentY);
       currentY += 8;
 
       const totalData = [
-        ['Total Revenue (All Departments)', formatCurrency(totalRevenue)],
-        ['Total Orders (All Departments)', totalOrders.toString()],
-        ['Average Order Value (Overall)', formatCurrency(totalAvgOrderValue)],
-        ['Average Completion Rate', `${avgCompletionRate.toFixed(1)}%`],
+        [t('reports.financial.departments.total_revenue'), formatCurrency(totalRevenue)],
+        [t('reports.financial.executive_summary.total_orders'), totalOrders.toString()],
+        [t('reports.financial.departments.avg_order_value'), formatCurrency(totalAvgOrderValue)],
+        [t('reports.financial.departments.completion_rate'), avgCompletionRate !== null ? `${avgCompletionRate.toFixed(1)}%` : 'N/A'],
       ];
 
       autoTable(doc, {
         startY: currentY,
-        head: [['Metric', 'Value']],
+        head: [[t('reports.financial.departments.department'), t('reports.financial.departments.total_revenue')]],
         body: totalData,
         theme: 'plain',
         headStyles: {
@@ -758,10 +778,10 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       const filename = `${sanitizedDealerName}_department_revenue_${formatDate(filters.startDate)}_to_${formatDate(filters.endDate)}.pdf`;
       doc.save(filename);
 
-      toast({ description: 'PDF exported successfully' });
+      toast({ description: t('reports.financial.export.pdf_exported_successfully') });
     } catch (error) {
       console.error('PDF export failed:', error);
-      toast({ variant: 'destructive', description: 'Failed to export PDF' });
+      toast({ variant: 'destructive', description: t('reports.financial.export.failed_to_export_pdf') });
     } finally {
       setIsExportingPDF(false);
     }
@@ -811,7 +831,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
   const totalOrders = revenueData?.total_orders || 0;
   const avgOrdersPerPeriod = revenueData?.period_data.length
     ? totalOrders / revenueData.period_data.length
-    : 0;
+    : null;
 
   // Calculate last week comparison for orders
   const periodData = revenueData?.period_data || [];
@@ -835,16 +855,16 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       {/* Executive Financial Summary */}
       <Card className="border-2">
         <CardHeader className="pb-3">
-          <CardTitle className="text-xl">Financial Performance Overview</CardTitle>
+          <CardTitle className="text-xl">{t('reports.financial.executive_summary.title')}</CardTitle>
           <CardDescription className="mt-1">
-            Revenue insights and financial metrics
+            {t('reports.financial.executive_summary.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="p-4 border rounded-lg space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Total Revenue</span>
+                <span className="text-sm font-medium text-muted-foreground">{t('reports.financial.executive_summary.total_revenue')}</span>
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="text-2xl font-bold">{formatCurrency(revenueData?.total_revenue || 0)}</div>
@@ -860,13 +880,13 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                     {growthRate.toFixed(1)}%
                   </span>
                 )}
-                <span className="text-muted-foreground">vs last week</span>
+                <span className="text-muted-foreground">{t('reports.financial.executive_summary.vs_last_week')}</span>
               </div>
             </div>
             <div className="p-4 border rounded-lg space-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-muted-foreground">
-                  Avg per {grouping === 'daily' ? 'Day' : grouping === 'weekly' ? 'Week' : 'Month'}
+                  {t('reports.financial.executive_summary.avg_per_period')} {grouping === 'daily' ? t('reports.financial.executive_summary.day') : grouping === 'weekly' ? t('reports.financial.executive_summary.week') : t('reports.financial.executive_summary.month')}
                 </span>
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
               </div>
@@ -883,12 +903,12 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                     {growthRate.toFixed(1)}%
                   </span>
                 )}
-                <span className="text-muted-foreground">vs previous period</span>
+                <span className="text-muted-foreground">{t('reports.financial.executive_summary.vs_previous_period')}</span>
               </div>
             </div>
             <div className="p-4 border rounded-lg space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Total Orders</span>
+                <span className="text-sm font-medium text-muted-foreground">{t('reports.financial.executive_summary.total_orders')}</span>
                 <Target className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="text-2xl font-bold">{totalOrders}</div>
@@ -904,13 +924,13 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                     {ordersGrowth.toFixed(1)}%
                   </span>
                 )}
-                <span className="text-muted-foreground">vs last week</span>
+                <span className="text-muted-foreground">{t('reports.financial.executive_summary.vs_last_week')}</span>
               </div>
             </div>
             <div className="p-4 border rounded-lg space-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-muted-foreground">
-                  Avg Orders/{grouping === 'daily' ? 'Day' : grouping === 'weekly' ? 'Week' : 'Month'}
+                  {t('reports.financial.executive_summary.avg_orders_per_period')}/{grouping === 'daily' ? t('reports.financial.executive_summary.day') : grouping === 'weekly' ? t('reports.financial.executive_summary.week') : t('reports.financial.executive_summary.month')}
                 </span>
                 {isOrdersGrowthPositive ? (
                   <ArrowUpRight className="h-4 w-4 text-green-600" />
@@ -919,7 +939,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                 )}
               </div>
               <div className={`text-2xl font-bold ${isOrdersGrowthPositive ? 'text-green-600' : 'text-red-600'}`}>
-                {avgOrdersPerPeriod.toFixed(0)}
+                {avgOrdersPerPeriod !== null ? avgOrdersPerPeriod.toFixed(0) : 'N/A'}
               </div>
               <div className="flex items-center gap-2 text-xs mt-1">
                 {isOrdersGrowthPositive ? (
@@ -933,17 +953,17 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                     {ordersGrowth.toFixed(1)}%
                   </span>
                 )}
-                <span className="text-muted-foreground">vs previous period</span>
+                <span className="text-muted-foreground">{t('reports.financial.executive_summary.vs_previous_period')}</span>
               </div>
             </div>
             <div className="p-4 border rounded-lg space-y-1 bg-gradient-to-br from-indigo-50 to-blue-50 border-indigo-200">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-indigo-700">Total by Departments</span>
+                <span className="text-sm font-medium text-indigo-700">{t('reports.financial.executive_summary.total_by_departments')}</span>
                 <DollarSign className="h-4 w-4 text-indigo-600" />
               </div>
               <div className="text-2xl font-bold text-indigo-900">{formatCurrency(totalByDepartments)}</div>
               <div className="flex items-center gap-2 text-xs mt-1">
-                <span className="text-indigo-600 font-medium">{totalOrdersByDepartments} orders</span>
+                <span className="text-indigo-600 font-medium">{totalOrdersByDepartments} {t('reports.financial.executive_summary.orders_count')}</span>
               </div>
             </div>
           </div>
@@ -953,10 +973,10 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
       {/* Revenue Analysis Charts */}
       <Tabs defaultValue="departments" className="space-y-4">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="departments">By Department</TabsTrigger>
-          <TabsTrigger value="trends">Revenue Trends</TabsTrigger>
-          <TabsTrigger value="services">Top Services</TabsTrigger>
-          <TabsTrigger value="analysis">Detailed Analysis</TabsTrigger>
+          <TabsTrigger value="departments">{t('reports.financial.tabs.departments')}</TabsTrigger>
+          <TabsTrigger value="trends">{t('reports.financial.tabs.trends')}</TabsTrigger>
+          <TabsTrigger value="services">{t('reports.financial.tabs.services')}</TabsTrigger>
+          <TabsTrigger value="analysis">{t('reports.financial.tabs.analysis')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="departments" className="space-y-4">
@@ -970,7 +990,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
               className="gap-2"
             >
               <FileSpreadsheet className="h-4 w-4" />
-              {isExportingExcel ? 'Exporting...' : 'Export to Excel'}
+              {isExportingExcel ? t('reports.financial.export.exporting') : t('reports.financial.export.export_to_excel')}
             </Button>
             <Button
               onClick={handleExportToPDF}
@@ -980,7 +1000,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
               className="gap-2"
             >
               <FileDown className="h-4 w-4" />
-              {isExportingPDF ? 'Generating...' : 'Export to PDF'}
+              {isExportingPDF ? t('reports.financial.export.generating') : t('reports.financial.export.export_to_pdf')}
             </Button>
           </div>
 
@@ -1008,8 +1028,8 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                       {formatCurrency(dept.revenue)}
                     </div>
                     <div className="flex items-center justify-between text-xs text-muted-foreground mt-2">
-                      <span>{dept.orders} orders</span>
-                      <span>{dept.completionRate.toFixed(0)}% completed</span>
+                      <span>{dept.orders} {t('reports.financial.executive_summary.orders_count')}</span>
+                      <span>{dept.completionRate.toFixed(0)}% {t('reports.financial.departments.completed')}</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -1021,9 +1041,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Revenue by Department</CardTitle>
+                <CardTitle>{t('reports.financial.departments.revenue_by_department')}</CardTitle>
                 <CardDescription>
-                  Total revenue generated per department (Last 3 weeks comparison)
+                  {t('reports.financial.departments.total_revenue_per_dept')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -1067,7 +1087,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                 ) : (
                   <div className="text-center py-12 text-muted-foreground">
                     <BarChart3 className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                    <p>No department data available</p>
+                    <p>{t('reports.financial.departments.no_department_data')}</p>
                   </div>
                 )}
               </CardContent>
@@ -1075,9 +1095,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
 
             <Card>
               <CardHeader>
-                <CardTitle>Order Count by Department</CardTitle>
+                <CardTitle>{t('reports.financial.departments.order_count_by_department')}</CardTitle>
                 <CardDescription>
-                  Total number of orders per department (Last 3 weeks comparison)
+                  {t('reports.financial.departments.total_orders_per_dept')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -1130,9 +1150,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
           {/* Department Detailed Table */}
           <Card>
             <CardHeader className="bg-slate-50 border-b">
-              <CardTitle>Department Performance Summary</CardTitle>
+              <CardTitle>{t('reports.financial.departments.performance_summary')}</CardTitle>
               <CardDescription>
-                Detailed metrics for each department
+                {t('reports.financial.departments.detailed_metrics')}
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
@@ -1145,11 +1165,11 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                   <table className="w-full">
                     <thead className="bg-slate-100 border-b-2 border-slate-300">
                       <tr>
-                        <th className="text-left px-6 py-4 text-sm font-bold text-slate-700">Department</th>
-                        <th className="text-right px-6 py-4 text-sm font-bold text-slate-700">Total Revenue</th>
-                        <th className="text-right px-6 py-4 text-sm font-bold text-slate-700">Orders</th>
-                        <th className="text-right px-6 py-4 text-sm font-bold text-slate-700">Avg Order Value</th>
-                        <th className="text-right px-6 py-4 text-sm font-bold text-slate-700">Completion Rate</th>
+                        <th className="text-left px-6 py-4 text-sm font-bold text-slate-700">{t('reports.financial.departments.department')}</th>
+                        <th className="text-right px-6 py-4 text-sm font-bold text-slate-700">{t('reports.financial.departments.total_revenue')}</th>
+                        <th className="text-right px-6 py-4 text-sm font-bold text-slate-700">{t('reports.financial.departments.orders')}</th>
+                        <th className="text-right px-6 py-4 text-sm font-bold text-slate-700">{t('reports.financial.departments.avg_order_value')}</th>
+                        <th className="text-right px-6 py-4 text-sm font-bold text-slate-700">{t('reports.financial.departments.completion_rate')}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1182,7 +1202,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
               ) : (
                 <div className="flex flex-col items-center justify-center h-64">
                   <BarChart3 className="h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">No department data available</p>
+                  <p className="text-muted-foreground">{t('reports.financial.departments.no_department_data')}</p>
                 </div>
               )}
             </CardContent>
@@ -1192,9 +1212,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
         <TabsContent value="trends" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Revenue Performance Over Time</CardTitle>
+              <CardTitle>{t('reports.financial.charts.revenue_performance_over_time')}</CardTitle>
               <CardDescription>
-                Monthly revenue trends with order volume correlation
+                {t('reports.financial.charts.monthly_revenue_correlation')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1255,7 +1275,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
               ) : (
                 <div className="text-center py-12 text-muted-foreground">
                   <BarChart3 className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                  <p>No revenue data available</p>
+                  <p>{t('reports.financial.charts.no_revenue_data')}</p>
                 </div>
               )}
             </CardContent>
@@ -1266,9 +1286,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Top Revenue Generators</CardTitle>
+                <CardTitle>{t('reports.financial.charts.top_revenue_generators')}</CardTitle>
                 <CardDescription>
-                  Services ranked by total revenue contribution
+                  {t('reports.financial.charts.services_ranked_by_revenue')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -1311,7 +1331,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                 ) : (
                   <div className="text-center py-12 text-muted-foreground">
                     <PieChart className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                    <p>No service data available</p>
+                    <p>{t('reports.financial.charts.no_service_data')}</p>
                   </div>
                 )}
               </CardContent>
@@ -1319,9 +1339,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
 
             <Card>
               <CardHeader>
-                <CardTitle>Revenue Distribution</CardTitle>
+                <CardTitle>{t('reports.financial.charts.revenue_distribution')}</CardTitle>
                 <CardDescription>
-                  Detailed breakdown of service contributions
+                  {t('reports.financial.charts.detailed_breakdown')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -1353,7 +1373,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                             <div className="flex-1">
                               <div className="font-bold text-sm mb-1.5 text-slate-800">{service.name}</div>
                               <div className="text-xs font-medium text-slate-500">
-                                {percentage.toFixed(1)}% of total revenue
+                                {percentage.toFixed(1)}% {t('reports.financial.charts.of_total_revenue')}
                               </div>
                             </div>
                             <Badge variant="outline" className={`ml-2 font-mono font-bold bg-gradient-to-r ${colors[index % colors.length]} text-white border-0 shadow-sm`}>
@@ -1368,7 +1388,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
                 ) : (
                   <div className="text-center py-12 text-muted-foreground">
                     <Award className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                    <p>No service data available</p>
+                    <p>{t('reports.financial.charts.no_service_data')}</p>
                   </div>
                 )}
               </CardContent>
@@ -1379,9 +1399,9 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
         <TabsContent value="analysis" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Average Order Value Analysis</CardTitle>
+              <CardTitle>{t('reports.financial.charts.avg_order_value_analysis')}</CardTitle>
               <CardDescription>
-                Track changes in transaction values over time
+                {t('reports.financial.charts.track_transaction_values')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1418,7 +1438,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
               ) : (
                 <div className="text-center py-12 text-muted-foreground">
                   <Target className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                  <p>No analysis data available</p>
+                  <p>{t('reports.financial.charts.no_analysis_data')}</p>
                 </div>
               )}
             </CardContent>

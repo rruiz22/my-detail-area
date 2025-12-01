@@ -124,15 +124,15 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-xl">Operational Performance Summary</CardTitle>
+              <CardTitle className="text-xl">{t('reports.operational_performance_summary')}</CardTitle>
               <CardDescription className="mt-1">
-                Key operational metrics and efficiency indicators
+                {t('reports.key_operational_metrics')}
               </CardDescription>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 border rounded-lg">
               <Activity className="h-5 w-5 text-primary" />
               <div>
-                <div className="text-xs text-muted-foreground">Efficiency Score</div>
+                <div className="text-xs text-muted-foreground">{t('reports.operational.executive_metrics.efficiency_score')}</div>
                 <div className="text-2xl font-bold">{efficiencyScore.toFixed(0)}</div>
               </div>
             </div>
@@ -142,15 +142,15 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="p-4 border rounded-lg space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Total Volume</span>
+                <span className="text-sm font-medium text-muted-foreground">{t('reports.operational.executive_metrics.total_volume')}</span>
                 <Package className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="text-2xl font-bold">{orderAnalytics?.total_volume || 0}</div>
-              <div className="text-xs text-muted-foreground">services processed</div>
+              <div className="text-xs text-muted-foreground">{t('reports.operational.executive_metrics.services_processed')}</div>
             </div>
             <div className="p-4 border rounded-lg space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Completion Rate</span>
+                <span className="text-sm font-medium text-muted-foreground">{t('reports.metrics.completion_rate')}</span>
                 <CheckCircle className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="text-2xl font-bold">{formatPercentage(orderAnalytics?.completion_rate || 0)}</div>
@@ -158,15 +158,15 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             </div>
             <div className="p-4 border rounded-lg space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Avg Processing Time</span>
+                <span className="text-sm font-medium text-muted-foreground">{t('reports.metrics.avg_processing_time')}</span>
                 <Clock className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="text-2xl font-bold">{formatHours(orderAnalytics?.avg_processing_time_hours || 0)}</div>
-              <div className="text-xs text-muted-foreground">per order</div>
+              <div className="text-xs text-muted-foreground">{t('reports.operational.executive_metrics.per_order')}</div>
             </div>
             <div className="p-4 border rounded-lg space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Total Revenue</span>
+                <span className="text-sm font-medium text-muted-foreground">{t('reports.metrics.total_revenue')}</span>
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="text-2xl font-bold">
@@ -176,7 +176,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                     .reduce((sum, v) => sum + (v.total_amount || 0), 0)
                 )}
               </div>
-              <div className="text-xs text-muted-foreground">from completed orders</div>
+              <div className="text-xs text-muted-foreground">{t('reports.operational.executive_metrics.from_completed_orders')}</div>
             </div>
           </div>
         </CardContent>
@@ -185,10 +185,10 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
       {/* Charts Section */}
       <Tabs defaultValue="orders" className="space-y-4">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="orders">Orders</TabsTrigger>
-          <TabsTrigger value="volume">Order Volume</TabsTrigger>
-          <TabsTrigger value="status">Status Analysis</TabsTrigger>
-          <TabsTrigger value="performance">Performance</TabsTrigger>
+          <TabsTrigger value="orders">{t('reports.operational.tabs.orders')}</TabsTrigger>
+          <TabsTrigger value="volume">{t('reports.operational.tabs.volume')}</TabsTrigger>
+          <TabsTrigger value="status">{t('reports.operational.tabs.status')}</TabsTrigger>
+          <TabsTrigger value="performance">{t('reports.operational.tabs.performance')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="volume" className="space-y-4">
@@ -197,43 +197,43 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Total Orders</span>
+                  <span className="text-sm text-muted-foreground">{t('reports.operational.volume.total_orders')}</span>
                   <Package className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div className="text-2xl font-bold mb-1">{orderAnalytics?.total_orders || 0}</div>
-                <p className="text-xs text-muted-foreground">Across all departments</p>
+                <p className="text-xs text-muted-foreground">{t('reports.operational.volume.across_all_departments')}</p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Completed</span>
+                  <span className="text-sm text-muted-foreground">{t('reports.operational.volume.completed')}</span>
                   <CheckCircle className="h-4 w-4 text-green-600" />
                 </div>
                 <div className="text-2xl font-bold mb-1 text-green-600">{orderAnalytics?.completed_orders || 0}</div>
-                <p className="text-xs text-muted-foreground">{formatPercentage(orderAnalytics?.completion_rate || 0)} success rate</p>
+                <p className="text-xs text-muted-foreground">{formatPercentage(orderAnalytics?.completion_rate || 0)} {t('reports.operational.volume.success_rate')}</p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">In Progress</span>
+                  <span className="text-sm text-muted-foreground">{t('reports.operational.volume.in_progress')}</span>
                   <Activity className="h-4 w-4 text-blue-600" />
                 </div>
                 <div className="text-2xl font-bold mb-1 text-blue-600">{orderAnalytics?.in_progress_orders || 0}</div>
-                <p className="text-xs text-muted-foreground">Currently active</p>
+                <p className="text-xs text-muted-foreground">{t('reports.operational.volume.currently_active')}</p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Daily Average</span>
+                  <span className="text-sm text-muted-foreground">{t('reports.operational.volume.daily_average')}</span>
                   <BarChart3 className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div className="text-2xl font-bold mb-1">
                   {orderAnalytics ? Math.round(orderAnalytics.total_orders / 30) : 0}
                 </div>
-                <p className="text-xs text-muted-foreground">Orders per day</p>
+                <p className="text-xs text-muted-foreground">{t('reports.operational.volume.orders_per_day')}</p>
               </CardContent>
             </Card>
           </div>
@@ -243,9 +243,9 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Order Volume Trend</CardTitle>
+                  <CardTitle>{t('reports.operational.volume.order_volume_trend')}</CardTitle>
                   <CardDescription className="mt-1">
-                    Daily order volume and revenue correlation over time
+                    {t('reports.operational.volume.daily_correlation')}
                   </CardDescription>
                 </div>
                 <Badge variant="outline" className="h-fit">
@@ -263,15 +263,15 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                   <OrderVolumeChart data={orderAnalytics} type="line" />
                   <div className="grid grid-cols-3 gap-4 pt-4 border-t">
                     <div className="text-center">
-                      <div className="text-sm text-muted-foreground mb-1">Total Orders</div>
+                      <div className="text-sm text-muted-foreground mb-1">{t('reports.operational.volume.total_orders')}</div>
                       <div className="text-xl font-bold">{orderAnalytics.total_orders}</div>
                     </div>
                     <div className="text-center border-l border-r">
-                      <div className="text-sm text-muted-foreground mb-1">Total Revenue</div>
+                      <div className="text-sm text-muted-foreground mb-1">{t('reports.metrics.total_revenue')}</div>
                       <div className="text-xl font-bold">{formatCurrency(orderAnalytics.total_revenue)}</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-sm text-muted-foreground mb-1">Avg Order Value</div>
+                      <div className="text-sm text-muted-foreground mb-1">{t('reports.metrics.avg_order_value')}</div>
                       <div className="text-xl font-bold">{formatCurrency(orderAnalytics.avg_order_value)}</div>
                     </div>
                   </div>
@@ -279,7 +279,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
               ) : (
                 <div className="text-center py-12 text-muted-foreground">
                   <BarChart3 className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                  <p>No volume data available</p>
+                  <p>{t('reports.operational.volume.no_volume_data')}</p>
                 </div>
               )}
             </CardContent>
@@ -292,7 +292,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Completion Rate</span>
+                  <span className="text-sm text-muted-foreground">{t('reports.operational.status.completion_rate')}</span>
                   <CheckCircle className="h-4 w-4 text-green-600" />
                 </div>
                 <div className="text-2xl font-bold mb-2">{formatPercentage(orderAnalytics?.completion_rate || 0)}</div>
@@ -302,7 +302,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Success Rate</span>
+                  <span className="text-sm text-muted-foreground">{t('reports.operational.status.success_rate')}</span>
                   <Target className="h-4 w-4 text-blue-600" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
@@ -316,7 +316,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Cancellation Rate</span>
+                  <span className="text-sm text-muted-foreground">{t('reports.operational.status.cancellation_rate')}</span>
                   <AlertCircle className="h-4 w-4 text-red-600" />
                 </div>
                 <div className="text-2xl font-bold mb-2">
@@ -330,13 +330,13 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Active Orders</span>
+                  <span className="text-sm text-muted-foreground">{t('reports.operational.status.active_orders')}</span>
                   <Activity className="h-4 w-4 text-blue-600" />
                 </div>
                 <div className="text-2xl font-bold mb-2 text-blue-600">
                   {(orderAnalytics?.pending_orders || 0) + (orderAnalytics?.in_progress_orders || 0)}
                 </div>
-                <p className="text-xs text-muted-foreground">Pending + In Progress</p>
+                <p className="text-xs text-muted-foreground">{t('reports.operational.status.pending_plus_in_progress')}</p>
               </CardContent>
             </Card>
           </div>
@@ -345,9 +345,9 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             {/* Status Distribution Chart */}
             <Card>
               <CardHeader>
-                <CardTitle>Status Distribution</CardTitle>
+                <CardTitle>{t('reports.operational.status.distribution')}</CardTitle>
                 <CardDescription>
-                  Visual breakdown of order statuses
+                  {t('reports.operational.status.visual_breakdown')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -360,7 +360,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                 ) : (
                   <div className="text-center py-12 text-muted-foreground">
                     <PieChart className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                    <p>No status data available</p>
+                    <p>{t('reports.operational.status.no_status_data')}</p>
                   </div>
                 )}
               </CardContent>
@@ -369,9 +369,9 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             {/* Detailed Status Breakdown */}
             <Card>
               <CardHeader>
-                <CardTitle>Detailed Status Breakdown</CardTitle>
+                <CardTitle>{t('reports.operational.status.detailed_breakdown')}</CardTitle>
                 <CardDescription>
-                  Order counts and percentages by status
+                  {t('reports.operational.status.counts_and_percentages')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -393,8 +393,8 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                             <AlertCircle className="h-6 w-6 text-muted-foreground" />
                           </div>
                           <div>
-                            <div className="font-semibold text-base">Pending</div>
-                            <div className="text-xs text-muted-foreground">Awaiting processing</div>
+                            <div className="font-semibold text-base">{t('reports.operational.status.pending')}</div>
+                            <div className="text-xs text-muted-foreground">{t('reports.operational.status.awaiting_processing')}</div>
                           </div>
                         </div>
                         <div className="text-right">
@@ -414,8 +414,8 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                             <Activity className="h-6 w-6 text-blue-600" />
                           </div>
                           <div>
-                            <div className="font-semibold text-base">In Progress</div>
-                            <div className="text-xs text-muted-foreground">Currently processing</div>
+                            <div className="font-semibold text-base">{t('reports.operational.volume.in_progress')}</div>
+                            <div className="text-xs text-muted-foreground">{t('reports.operational.status.currently_processing')}</div>
                           </div>
                         </div>
                         <div className="text-right">
@@ -435,8 +435,8 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                             <CheckCircle className="h-6 w-6 text-green-600" />
                           </div>
                           <div>
-                            <div className="font-semibold text-base">Completed</div>
-                            <div className="text-xs text-muted-foreground">Successfully finished</div>
+                            <div className="font-semibold text-base">{t('reports.operational.volume.completed')}</div>
+                            <div className="text-xs text-muted-foreground">{t('reports.operational.status.successfully_finished')}</div>
                           </div>
                         </div>
                         <div className="text-right">
@@ -456,8 +456,8 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                             <AlertCircle className="h-6 w-6 text-red-600" />
                           </div>
                           <div>
-                            <div className="font-semibold text-base">Cancelled</div>
-                            <div className="text-xs text-muted-foreground">Not completed</div>
+                            <div className="font-semibold text-base">{t('reports.status.cancelled')}</div>
+                            <div className="text-xs text-muted-foreground">{t('reports.operational.status.not_completed')}</div>
                           </div>
                         </div>
                         <div className="text-right">
@@ -478,9 +478,9 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
           {/* Status Insights */}
           <Card>
             <CardHeader>
-              <CardTitle>Status Insights & Recommendations</CardTitle>
+              <CardTitle>{t('reports.operational.insights.title')}</CardTitle>
               <CardDescription>
-                AI-powered insights based on status distribution
+                {t('reports.operational.insights.description')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -491,9 +491,9 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                       <TrendingUp className="h-5 w-5 text-green-600" />
                     </div>
                     <div>
-                      <div className="font-semibold mb-1">High Completion Rate</div>
+                      <div className="font-semibold mb-1">{t('reports.operational.insights.high_completion_rate')}</div>
                       <p className="text-sm text-muted-foreground">
-                        {formatPercentage(orderAnalytics?.completion_rate || 0)} of orders successfully completed
+                        {formatPercentage(orderAnalytics?.completion_rate || 0)} {t('reports.operational.insights.successfully_completed')}
                       </p>
                     </div>
                   </div>
@@ -504,9 +504,9 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                       <Zap className="h-5 w-5 text-blue-600" />
                     </div>
                     <div>
-                      <div className="font-semibold mb-1">Processing Efficiency</div>
+                      <div className="font-semibold mb-1">{t('reports.operational.insights.processing_efficiency')}</div>
                       <p className="text-sm text-muted-foreground">
-                        {orderAnalytics?.in_progress_orders || 0} orders actively being processed
+                        {orderAnalytics?.in_progress_orders || 0} {t('reports.operational.insights.actively_processing')}
                       </p>
                     </div>
                   </div>
@@ -517,9 +517,9 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                       <Target className="h-5 w-5 text-amber-600" />
                     </div>
                     <div>
-                      <div className="font-semibold mb-1">Pending Queue</div>
+                      <div className="font-semibold mb-1">{t('reports.operational.insights.pending_queue')}</div>
                       <p className="text-sm text-muted-foreground">
-                        {orderAnalytics?.pending_orders || 0} orders waiting for processing
+                        {orderAnalytics?.pending_orders || 0} {t('reports.operational.insights.waiting_for_processing')}
                       </p>
                     </div>
                   </div>
@@ -535,17 +535,17 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Avg Processing Time</span>
+                  <span className="text-sm text-muted-foreground">{t('reports.operational.performance.avg_processing_time')}</span>
                   <Clock className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div className="text-2xl font-bold mb-1">{formatHours(orderAnalytics?.avg_processing_time_hours || 0)}</div>
-                <p className="text-xs text-muted-foreground">Per order average</p>
+                <p className="text-xs text-muted-foreground">{t('reports.operational.performance.per_order_average')}</p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">SLA Compliance</span>
+                  <span className="text-sm text-muted-foreground">{t('reports.operational.performance.sla_compliance')}</span>
                   <Target className="h-4 w-4 text-green-600" />
                 </div>
                 <div className="text-2xl font-bold mb-2">{formatPercentage(orderAnalytics?.sla_compliance_rate || 0)}</div>
@@ -555,17 +555,17 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Efficiency Score</span>
+                  <span className="text-sm text-muted-foreground">{t('reports.operational.performance.efficiency_score')}</span>
                   <Zap className="h-4 w-4 text-amber-600" />
                 </div>
                 <div className="text-2xl font-bold mb-1">{efficiencyScore.toFixed(0)}</div>
-                <p className="text-xs text-muted-foreground">Out of 100</p>
+                <p className="text-xs text-muted-foreground">{t('reports.operational.performance.out_of_100')}</p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-muted-foreground">Revenue per Hour</span>
+                  <span className="text-sm text-muted-foreground">{t('reports.operational.performance.revenue_per_hour')}</span>
                   <DollarSign className="h-4 w-4 text-green-600" />
                 </div>
                 <div className="text-2xl font-bold mb-1">
@@ -575,7 +575,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                       : 0
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground">Productivity metric</p>
+                <p className="text-xs text-muted-foreground">{t('reports.operational.performance.productivity_metric')}</p>
               </CardContent>
             </Card>
           </div>
@@ -585,13 +585,13 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Department Performance Analysis</CardTitle>
+                  <CardTitle>{t('reports.operational.performance.department_analysis')}</CardTitle>
                   <CardDescription className="mt-1">
-                    Detailed metrics and KPIs by department
+                    {t('reports.operational.performance.detailed_kpis')}
                   </CardDescription>
                 </div>
                 <Badge variant="outline" className="h-fit">
-                  {performanceTrends?.department_performance?.length || 0} Departments
+                  {performanceTrends?.department_performance?.length || 0} {t('reports.operational.performance.departments')}
                 </Badge>
               </div>
             </CardHeader>
@@ -618,20 +618,20 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                                 <h4 className="font-semibold text-lg capitalize">{dept.department}</h4>
                                 {isHighPerformer && (
                                   <Badge variant="outline" className="text-green-600 border-green-200">
-                                    High Performer
+                                    {t('reports.operational.performance.high_performer')}
                                   </Badge>
                                 )}
                               </div>
-                              <p className="text-sm text-muted-foreground">{dept.total_orders} orders processed</p>
+                              <p className="text-sm text-muted-foreground">{dept.total_orders} {t('reports.operational.performance.orders_processed')}</p>
                             </div>
                           </div>
                           <div className="flex gap-3">
                             <div className="px-4 py-2 border rounded-lg text-center min-w-[100px]">
-                              <div className="text-xs text-muted-foreground mb-1">Completion</div>
+                              <div className="text-xs text-muted-foreground mb-1">{t('reports.operational.performance.completion')}</div>
                               <div className="text-xl font-bold">{dept.completion_rate}%</div>
                             </div>
                             <div className="px-4 py-2 border rounded-lg text-center min-w-[100px]">
-                              <div className="text-xs text-muted-foreground mb-1">Avg Time</div>
+                              <div className="text-xs text-muted-foreground mb-1">{t('reports.operational.performance.avg_time')}</div>
                               <div className="text-xl font-bold">{formatHours(dept.avg_processing_time)}</div>
                             </div>
                           </div>
@@ -641,7 +641,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                         <div className="space-y-4">
                           <div>
                             <div className="flex justify-between text-sm mb-2">
-                              <span className="text-muted-foreground">Completion Rate</span>
+                              <span className="text-muted-foreground">{t('reports.operational.status.completion_rate')}</span>
                               <span className="font-semibold">{dept.completion_rate}%</span>
                             </div>
                             <Progress value={dept.completion_rate} className="h-2" />
@@ -656,7 +656,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                                 <AlertCircle className="h-4 w-4 text-amber-600" />
                               )}
                               <span className="text-sm text-muted-foreground">
-                                {dept.completion_rate >= 90 ? 'Excellent completion' : 'Room for improvement'}
+                                {dept.completion_rate >= 90 ? t('reports.operational.performance.excellent_completion') : t('reports.operational.performance.room_for_improvement')}
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
@@ -666,13 +666,13 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                                 <Clock className="h-4 w-4 text-amber-600" />
                               )}
                               <span className="text-sm text-muted-foreground">
-                                {isFastProcessor ? 'Fast processing' : 'Average speed'}
+                                {isFastProcessor ? t('reports.operational.performance.fast_processing') : t('reports.operational.performance.average_speed')}
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
                               <Target className="h-4 w-4 text-primary" />
                               <span className="text-sm text-muted-foreground">
-                                {dept.total_orders} total orders
+                                {dept.total_orders} {t('reports.operational.performance.total_orders')}
                               </span>
                             </div>
                           </div>
@@ -684,8 +684,8 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
               ) : (
                 <div className="text-center py-12 text-muted-foreground">
                   <Users className="h-12 w-12 mx-auto mb-3 opacity-20" />
-                  <p className="mb-1">No department performance data available</p>
-                  <p className="text-sm">Data will appear once departments start processing orders</p>
+                  <p className="mb-1">{t('reports.operational.performance.no_department_data')}</p>
+                  <p className="text-sm">{t('reports.operational.performance.data_will_appear')}</p>
                 </div>
               )}
             </CardContent>
@@ -694,9 +694,9 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
           {/* Performance Insights */}
           <Card>
             <CardHeader>
-              <CardTitle>Performance Insights</CardTitle>
+              <CardTitle>{t('reports.operational.performance_insights.title')}</CardTitle>
               <CardDescription>
-                Key takeaways and optimization opportunities
+                {t('reports.operational.performance_insights.description')}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -707,12 +707,12 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                       <CheckCircle className="h-5 w-5 text-green-600" />
                     </div>
                     <div>
-                      <div className="font-semibold mb-2">Strong Performance</div>
+                      <div className="font-semibold mb-2">{t('reports.operational.performance_insights.strong_performance')}</div>
                       <p className="text-sm text-muted-foreground mb-3">
-                        {formatPercentage(orderAnalytics?.sla_compliance_rate || 0)} SLA compliance demonstrates reliable service delivery
+                        {formatPercentage(orderAnalytics?.sla_compliance_rate || 0)} {t('reports.operational.performance_insights.sla_compliance_demonstrates')}
                       </p>
                       <Badge variant="outline" className="text-green-600 border-green-200">
-                        Meeting targets
+                        {t('reports.operational.performance_insights.meeting_targets')}
                       </Badge>
                     </div>
                   </div>
@@ -723,12 +723,12 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                       <Activity className="h-5 w-5 text-blue-600" />
                     </div>
                     <div>
-                      <div className="font-semibold mb-2">Processing Efficiency</div>
+                      <div className="font-semibold mb-2">{t('reports.operational.performance_insights.processing_efficiency')}</div>
                       <p className="text-sm text-muted-foreground mb-3">
-                        Average processing time of {formatHours(orderAnalytics?.avg_processing_time_hours || 0)} shows good operational pace
+                        {formatHours(orderAnalytics?.avg_processing_time_hours || 0)} {t('reports.operational.performance_insights.shows_good_pace')}
                       </p>
                       <Badge variant="outline" className="text-blue-600 border-blue-200">
-                        Optimized workflow
+                        {t('reports.operational.performance_insights.optimized_workflow')}
                       </Badge>
                     </div>
                   </div>
@@ -744,17 +744,17 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-muted-foreground">Total Orders</span>
+                  <span className="text-sm font-medium text-muted-foreground">{t('reports.operational.orders_table.total_orders')}</span>
                   <FileText className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div className="text-3xl font-bold mb-1">{orderAnalytics?.total_orders || 0}</div>
-                <p className="text-xs text-muted-foreground">In selected period</p>
+                <p className="text-xs text-muted-foreground">{t('reports.operational.orders_table.in_selected_period')}</p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-muted-foreground">Pending</span>
+                  <span className="text-sm font-medium text-muted-foreground">{t('reports.operational.orders_table.pending')}</span>
                   <AlertCircle className="h-4 w-4 text-amber-600" />
                 </div>
                 <div className="text-3xl font-bold mb-1 text-amber-600">
@@ -763,14 +763,14 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                 <p className="text-xs text-muted-foreground">
                   {orderAnalytics && orderAnalytics.total_orders > 0
                     ? `${Math.round((orderAnalytics.pending_orders / orderAnalytics.total_orders) * 100)}%`
-                    : '0%'} of total
+                    : '0%'} {t('reports.operational.orders_table.of_total')}
                 </p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-muted-foreground">In Progress</span>
+                  <span className="text-sm font-medium text-muted-foreground">{t('reports.operational.volume.in_progress')}</span>
                   <Activity className="h-4 w-4 text-blue-600" />
                 </div>
                 <div className="text-3xl font-bold mb-1 text-blue-600">
@@ -779,14 +779,14 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                 <p className="text-xs text-muted-foreground">
                   {orderAnalytics && orderAnalytics.total_orders > 0
                     ? `${Math.round((orderAnalytics.in_progress_orders / orderAnalytics.total_orders) * 100)}%`
-                    : '0%'} of total
+                    : '0%'} {t('reports.operational.orders_table.of_total')}
                 </p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-muted-foreground">Completed</span>
+                  <span className="text-sm font-medium text-muted-foreground">{t('reports.operational.volume.completed')}</span>
                   <CheckCircle className="h-4 w-4 text-green-600" />
                 </div>
                 <div className="text-3xl font-bold mb-1 text-green-600">
@@ -795,14 +795,14 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                 <p className="text-xs text-muted-foreground">
                   {orderAnalytics && orderAnalytics.total_orders > 0
                     ? `${Math.round((orderAnalytics.completed_orders / orderAnalytics.total_orders) * 100)}%`
-                    : '0%'} completion rate
+                    : '0%'} {t('reports.operational.orders_table.completion_rate')}
                 </p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-muted-foreground">Cancelled</span>
+                  <span className="text-sm font-medium text-muted-foreground">{t('reports.status.cancelled')}</span>
                   <AlertCircle className="h-4 w-4 text-red-600" />
                 </div>
                 <div className="text-3xl font-bold mb-1 text-red-600">
@@ -811,7 +811,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                 <p className="text-xs text-muted-foreground">
                   {orderAnalytics && orderAnalytics.total_orders > 0
                     ? `${Math.round((orderAnalytics.cancelled_orders / orderAnalytics.total_orders) * 100)}%`
-                    : '0%'} of total
+                    : '0%'} {t('reports.operational.orders_table.of_total')}
                 </p>
               </CardContent>
             </Card>
@@ -824,10 +824,10 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                 <div>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <FileText className="h-5 w-5" />
-                    Orders Report
+                    {t('reports.operational.orders_table.title')}
                   </CardTitle>
                   <CardDescription className="mt-1">
-                    Detailed vehicle orders matching your filters
+                    {t('reports.operational.orders_table.description')}
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
@@ -838,7 +838,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                     />
                   )}
                   <Badge variant="secondary" className="h-fit font-semibold">
-                    {orderAnalytics?.total_orders || 0} orders
+                    {orderAnalytics?.total_orders || 0} {t('reports.metrics.orders')}
                   </Badge>
                 </div>
               </div>
@@ -851,25 +851,25 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
               ) : vehiclesList.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-64">
                   <Car className="h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground mb-1">No orders found</p>
-                  <p className="text-sm text-muted-foreground">Try adjusting your filters</p>
+                  <p className="text-muted-foreground mb-1">{t('reports.operational.orders_table.no_orders_found')}</p>
+                  <p className="text-sm text-muted-foreground">{t('reports.operational.orders_table.try_adjusting_filters')}</p>
                 </div>
               ) : (
                 <div className="overflow-auto">
                   <Table>
                     <TableHeader className="bg-slate-100 sticky top-0 z-10">
                       <TableRow className="border-b-2 border-slate-300">
-                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">Order #</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.order_number')}</TableHead>
                         <TableHead className="text-center font-bold text-slate-700 bg-slate-100">
-                          {filters.orderType === 'service' ? 'PO / RO / Tag' : filters.orderType === 'carwash' ? 'Stock / Tag' : 'Stock'}
+                          {filters.orderType === 'service' ? t('reports.operational.orders_table.po_ro_tag') : filters.orderType === 'carwash' ? t('reports.operational.orders_table.stock_tag') : t('reports.operational.orders_table.stock')}
                         </TableHead>
-                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">Vehicle</TableHead>
-                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">VIN</TableHead>
-                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">Assigned</TableHead>
-                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">Dept</TableHead>
-                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">Status</TableHead>
-                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">Invoice</TableHead>
-                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">Amount</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.vehicle')}</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.vin')}</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.assigned')}</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.dept')}</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.invoices.status')}</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.invoice')}</TableHead>
+                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.amount')}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -950,7 +950,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                                   {vehicle.assigned_to_name}
                                 </Badge>
                               ) : (
-                                <span className="text-muted-foreground text-xs">Unassigned</span>
+                                <span className="text-muted-foreground text-xs">{t('reports.operational.orders_table.unassigned')}</span>
                               )}
                             </TableCell>
                             <TableCell className="text-center">
@@ -974,7 +974,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                                   {vehicle.invoice_number}
                                 </Badge>
                               ) : (
-                                <span className="text-xs text-muted-foreground italic">No invoice yet</span>
+                                <span className="text-xs text-muted-foreground italic">{t('reports.operational.orders_table.no_invoice_yet')}</span>
                               )}
                             </TableCell>
                             <TableCell className="text-center font-medium">

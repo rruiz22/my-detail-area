@@ -67,7 +67,6 @@ import { PunchHistoryCard } from "./punch-clock/PunchHistoryCard";
 
 // DetailHub hooks
 import { useClockIn, useClockOut, useStartBreak, useEndBreak, DetailHubEmployee, useCurrentBreak, useTemplateValidation } from "@/hooks/useDetailHubDatabase";
-import { getEmployeeTodaySchedule } from "@/hooks/useDetailHubSchedules";
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
 import { useToast } from "@/hooks/use-toast";
 import { useLiveClock } from "@/hooks/useLiveClock";

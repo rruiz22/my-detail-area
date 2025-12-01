@@ -4,6 +4,7 @@ import { useAccessibleDealerships } from './useAccessibleDealerships';
 import { CACHE_TIMES, GC_TIMES } from '@/constants/cacheConfig';
 import { QUERY_LIMITS } from '@/constants/queryLimits';
 import { getReportDateForOrder, isOrderInDateRange, toEndOfDay } from '@/utils/reportDateUtils';
+import type { PeriodDataPoint, DepartmentRevenue, OrderServiceItem } from '@/types/reports';
 
 export interface ReportsFilters {
   startDate: Date;
@@ -97,8 +98,7 @@ export const useOrdersAnalytics = (filters: ReportsFilters) => {
       if (!dealerId) throw new Error('Dealer ID is required');
 
       // Adjust endDate to end of day (23:59:59.999) to include all orders on that day
-      const endOfDay = new Date(filters.endDate);
-      endOfDay.setHours(23, 59, 59, 999);
+      const endOfDay = toEndOfDay(filters.endDate);
 
       const { data, error } = await supabase.rpc('get_orders_analytics', {
         p_dealer_id: dealerId,
@@ -148,8 +148,7 @@ export const useRevenueAnalytics = (filters: ReportsFilters, grouping: 'daily' |
       if (!dealerId) throw new Error('Dealer ID is required');
 
       // Adjust endDate to end of day (23:59:59.999) to include all orders on that day
-      const endOfDay = new Date(filters.endDate);
-      endOfDay.setHours(23, 59, 59, 999);
+      const endOfDay = toEndOfDay(filters.endDate);
 
       const params = {
         p_dealer_id: dealerId,
@@ -172,7 +171,7 @@ export const useRevenueAnalytics = (filters: ReportsFilters, grouping: 'daily' |
         total_revenue: result?.total_revenue,
         total_orders: result?.total_orders,
         period_data_length: result?.period_data?.length,
-        summed_orders_from_periods: result?.period_data?.reduce((sum: number, p: any) => sum + (p.orders || 0), 0)
+        summed_orders_from_periods: result?.period_data?.reduce((sum: number, p: PeriodDataPoint) => sum + (p.orders || 0), 0)
       });
       return result ? {
         ...result,
@@ -218,13 +217,20 @@ export const useDepartmentRevenue = (filters: ReportsFilters) => {
       if (error) throw error;
 
       // Transform RPC result to match expected format
-      return (data || []).map((row: any) => ({
+      type DepartmentRevenueRPCResult = {
+        department: string;
+        revenue: string | number;
+        orders: number;
+        completed: number;
+        avg_order_value: string | number;
+        completion_rate: string | number;
+      };
+
+      return (data || []).map((row: DepartmentRevenueRPCResult): DepartmentRevenue => ({
         name: row.department.charAt(0).toUpperCase() + row.department.slice(1),
-        revenue: parseFloat(row.revenue || 0),
+        revenue: parseFloat(String(row.revenue || 0)),
         orders: row.orders || 0,
-        completed: row.completed || 0,
-        avgOrderValue: parseFloat(row.avg_order_value || 0),
-        completionRate: parseFloat(row.completion_rate || 0)
+        avg_order_value: parseFloat(String(row.avg_order_value || 0))
       }));
     },
     enabled: !!dealerId,
@@ -242,8 +248,7 @@ export const usePerformanceTrends = (filters: ReportsFilters) => {
       if (!dealerId) throw new Error('Dealer ID is required');
 
       // Adjust endDate to end of day (23:59:59.999) to include all orders on that day
-      const endOfDay = new Date(filters.endDate);
-      endOfDay.setHours(23, 59, 59, 999);
+      const endOfDay = toEndOfDay(filters.endDate);
 
       const { data, error } = await supabase.rpc('get_performance_trends', {
         p_dealer_id: dealerId,
@@ -288,7 +293,7 @@ export interface VehicleForList {
   vehicle_year: number | null;
   vehicle_vin: string | null;
   total_amount: number;
-  services: any[] | null;
+  services: OrderServiceItem[] | null;
   status: string;
   created_at: string;
   completed_at: string | null;
@@ -307,8 +312,7 @@ export const useOperationalOrdersList = (filters: ReportsFilters) => {
       if (!dealerId) throw new Error('Dealer ID is required');
 
       // Adjust endDate to end of day (23:59:59.999) to include all orders on that day
-      const endOfDay = new Date(filters.endDate);
-      endOfDay.setHours(23, 59, 59, 999);
+      const endOfDay = toEndOfDay(filters.endDate);
 
       // Try RPC first (server-side filtering with timezone awareness)
       const { data: rpcData, error: rpcError } = await supabase.rpc('get_operational_orders_list', {
@@ -364,7 +368,7 @@ export const useOperationalOrdersList = (filters: ReportsFilters) => {
 
         if (filters.serviceIds && filters.serviceIds.length > 0) {
           const orderServices = order.services || [];
-          const hasMatchingService = orderServices.some((service: any) => {
+          const hasMatchingService = orderServices.some((service: OrderServiceItem) => {
             const serviceId = typeof service === 'string' ? service : service?.id;
             const serviceType = typeof service === 'object' ? service?.type : null;
             return filters.serviceIds?.includes(serviceId) || (serviceType && filters.serviceIds?.includes(serviceType));
