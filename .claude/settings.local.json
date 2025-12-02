@@ -4,7 +4,8 @@
       "Bash(npx tsc:*)",
       "Bash(git checkout:*)",
       "Bash(npm run build:dev:*)",
-      "Bash(npm run test:run:*)"
+      "Bash(npm run test:run:*)",
+      "Bash(test:*)"
     ],
     "deny": [],
     "ask": []
