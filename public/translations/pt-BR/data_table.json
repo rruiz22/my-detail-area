@@ -18,5 +18,16 @@
   "edit_order": "Editar Pedido",
   "delete_order": "Excluir Pedido",
   "print_order": "Imprimir Pedido",
-  "items_per_page": "Itens por página:"
+  "items_per_page": "Itens por página:",
+  "columns": {
+    "order_id": "ID do Pedido",
+    "stock": "Estoque",
+    "tag": "Etiqueta",
+    "tag_stock": "Etiqueta/Estoque",
+    "vehicle": "Veículo",
+    "services": "Serviços",
+    "due": "Vencimento",
+    "status": "Status",
+    "actions": "Ações"
+  }
 }

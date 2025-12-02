@@ -18,5 +18,16 @@
   "edit_order": "Edit Order",
   "delete_order": "Delete Order",
   "print_order": "Print Order",
-  "items_per_page": "Items per page:"
+  "items_per_page": "Items per page:",
+  "columns": {
+    "order_id": "Order ID",
+    "stock": "Stock",
+    "tag": "Tag",
+    "tag_stock": "Tag/Stock",
+    "vehicle": "Vehicle",
+    "services": "Services",
+    "due": "Due",
+    "status": "Status",
+    "actions": "Actions"
+  }
 }

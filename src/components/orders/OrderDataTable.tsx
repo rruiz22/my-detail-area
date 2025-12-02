@@ -510,15 +510,15 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
                 <TableHead className="w-16 font-medium text-foreground text-center">#</TableHead>
-                <TableHead className="w-[140px] font-medium text-foreground text-center">Order ID</TableHead>
+                <TableHead className="w-[140px] font-medium text-foreground text-center">{t('data_table.columns.order_id')}</TableHead>
                 <TableHead className="font-medium text-foreground text-center">
-                  {tabType === 'service' ? 'Tag' : tabType === 'carwash' ? 'Tag/Stock' : 'Stock'}
+                  {tabType === 'service' ? t('data_table.columns.tag') : tabType === 'carwash' ? t('data_table.columns.tag_stock') : t('data_table.columns.stock')}
                 </TableHead>
-                <TableHead className="max-w-[200px] font-medium text-foreground text-center">Vehicle</TableHead>
-                <TableHead className="font-medium text-foreground text-center">{t('orders.services')}</TableHead>
-                <TableHead className="font-medium text-foreground text-center">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}</TableHead>
-                <TableHead className="font-medium text-foreground text-center">Status</TableHead>
-                <TableHead className="font-medium text-foreground text-center">Actions</TableHead>
+                <TableHead className="max-w-[200px] font-medium text-foreground text-center">{t('data_table.columns.vehicle')}</TableHead>
+                <TableHead className="font-medium text-foreground text-center">{t('data_table.columns.services')}</TableHead>
+                <TableHead className="font-medium text-foreground text-center">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : t('data_table.columns.due')}</TableHead>
+                <TableHead className="font-medium text-foreground text-center">{t('data_table.columns.status')}</TableHead>
+                <TableHead className="font-medium text-foreground text-center">{t('data_table.columns.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

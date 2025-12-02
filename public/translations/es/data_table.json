@@ -18,5 +18,16 @@
   "edit_order": "Editar Orden",
   "delete_order": "Eliminar Orden",
   "print_order": "Imprimir Orden",
-  "items_per_page": "Elementos por página:"
+  "items_per_page": "Elementos por página:",
+  "columns": {
+    "order_id": "ID de Orden",
+    "stock": "Stock",
+    "tag": "Etiqueta",
+    "tag_stock": "Etiqueta/Stock",
+    "vehicle": "Vehículo",
+    "services": "Servicios",
+    "due": "Vencimiento",
+    "status": "Estado",
+    "actions": "Acciones"
+  }
 }
