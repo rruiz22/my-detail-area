@@ -106,5 +106,8 @@
     "dashboard_view": "Carregando visualização do painel",
     "calendar_view": "Carregando visualização do calendário",
     "table_view": "Carregando visualização da tabela"
+  },
+  "search": {
+    "showing_results": "Mostrando resultados correspondentes a \"{{searchTerm}}\""
   }
 }

@@ -193,7 +193,7 @@ export default function ServiceOrders() {
         title: t('orders.deleted_success', 'Order deleted successfully')
       });
     } catch (error) {
-      console.error('❌ Delete failed:', error);
+      logError('❌ Delete failed:', error);
       toast({
         variant: 'destructive',
         title: t('orders.delete_error', 'Failed to delete order')
@@ -250,7 +250,7 @@ export default function ServiceOrders() {
       }
       setShowModal(false);
     } catch (error) {
-      console.error('Error saving order:', error);
+      logError('Error saving order:', error);
       const message = t('orders.save_failed', 'Failed to save order');
       toast({
         description: message,
@@ -266,7 +266,7 @@ export default function ServiceOrders() {
     // Find the order
     const order = allOrders.find(o => o.id === orderId);
     if (!order) {
-      console.error('Order not found for status change:', orderId);
+      logError('Order not found for status change:', orderId);
       toast({
         description: t('orders.order_not_found'),
         variant: 'destructive'
@@ -318,7 +318,7 @@ export default function ServiceOrders() {
         throw new Error('Status update failed');
       }
     } catch (error) {
-      console.error('Status change failed:', error);
+      logError('Status change failed:', error);
       toast({
         variant: 'destructive',
         description: t('orders.status_update_failed', 'Failed to update status')
@@ -343,7 +343,7 @@ export default function ServiceOrders() {
         description: t('orders.field_updated_successfully', 'Order updated successfully')
       });
     } catch (error) {
-      console.error('Order update failed:', error);
+      logError('Order update failed:', error);
       toast({
         variant: 'destructive',
         description: t('orders.update_failed', 'Failed to update order')
@@ -516,7 +516,7 @@ export default function ServiceOrders() {
                 {filters.search && (
                   <div className="text-center">
                     <p className="text-sm text-muted-foreground">
-                      Showing results matching "{filters.search}"
+                      {t('service_orders.search.showing_results', { searchTerm: filters.search })}
                     </p>
                   </div>
                 )}

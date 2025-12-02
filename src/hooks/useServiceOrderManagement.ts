@@ -514,7 +514,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
           vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim()
         }
       }      ).catch(err =>
-        console.error('[ServiceOrderManagement] Failed to create order notification:', err)
+        logError('[ServiceOrderManagement] Failed to create order notification:', err)
       );
 
       // 🔗 GENERATE SHORT LINK: Must happen BEFORE SMS to include it in the message
@@ -536,7 +536,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
           : '';
 
         // Debug logging to verify data
-        console.log('🔍 Service SMS Data Debug:', {
+        dev('🔍 Service SMS Data Debug:', {
           services: data.services,
           servicesText,
           tag: data.tag,
@@ -570,7 +570,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
               .single();
             assignedToName = groupData?.name || undefined;
           } catch (error) {
-            console.warn('⚠️ Failed to fetch group name for service order:', error);
+            warn('⚠️ Failed to fetch group name for service order:', error);
           }
         } else if (data.assigned_contact_id) {
           try {
@@ -583,7 +583,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
               assignedToName = `${contactData.first_name || ''} ${contactData.last_name || ''}`.trim();
             }
           } catch (error) {
-            console.warn('⚠️ Failed to fetch contact name for service order:', error);
+            warn('⚠️ Failed to fetch contact name for service order:', error);
           }
         }
 
@@ -594,7 +594,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
           'order_created'
         ).then(async (slackEnabled) => {
           if (slackEnabled) {
-            console.log('📤 Slack enabled for service order, sending notification...');
+            dev('📤 Slack enabled for service order, sending notification...');
             await slackNotificationService.notifyOrderCreated({
               orderId: data.id,
               dealerId: data.dealer_id,
@@ -612,7 +612,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
             });
           }
         }).catch((error) => {
-          console.error('❌ [Slack] Failed to send service order creation notification:', error);
+          logError('❌ [Slack] Failed to send service order creation notification:', error);
         });
       }
 

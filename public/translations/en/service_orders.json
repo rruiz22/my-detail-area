@@ -106,5 +106,8 @@
     "dashboard_view": "Loading dashboard view",
     "calendar_view": "Loading calendar view",
     "table_view": "Loading table view"
+  },
+  "search": {
+    "showing_results": "Showing results matching \"{{searchTerm}}\""
   }
 }

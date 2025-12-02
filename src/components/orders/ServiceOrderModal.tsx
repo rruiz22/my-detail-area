@@ -629,7 +629,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
 
           // ✅ VALIDATION: Warn if service has no price
           if (service && (service.price === null || service.price === undefined)) {
-            console.warn('⚠️ [ServiceOrderModal] Service has NULL price:', {
+            warn('⚠️ [ServiceOrderModal] Service has NULL price:', {
               serviceId: serviceId,
               serviceName: service.name,
               price: service.price
@@ -649,7 +649,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
 
           // ✅ VALIDATION: Log if we're adding a zero price
           if (servicePrice === 0 && service) {
-            console.warn('⚠️ [ServiceOrderModal] Adding service with $0 price to total:', {
+            warn('⚠️ [ServiceOrderModal] Adding service with $0 price to total:', {
               serviceId,
               serviceName: service.name,
               price: service.price
