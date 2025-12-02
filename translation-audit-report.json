@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 924,
-  "totalStrings": 9722,
-  "hardcodedStrings": 2088,
-  "translatedStrings": 7634,
+  "scannedFiles": 931,
+  "totalStrings": 9763,
+  "hardcodedStrings": 2112,
+  "translatedStrings": 7651,
   "issues": {
     "critical": [
       {
@@ -3279,373 +3279,233 @@
         "severity": "critical"
       },
       {
-        "file": "src\\components\\get-ready\\GetReadyOverview.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Average Time by Step",
-            "line": 326,
-            "context": "325: <CardTitle className=\"flex items-center gap-2\">\n326: <Clock className=\"h-5 w-5\" />\n327: Average Time by Step"
-          },
-          {
-            "text": "Step Analysis",
-            "line": 352,
-            "context": "351: <CardTitle className=\"flex items-center gap-2\">\n352: <Layers className=\"h-5 w-5\" />\n353: Step Analysis"
-          },
-          {
-            "text": "Average time across all workflow steps",
-            "line": 355,
-            "context": "354: </CardTitle>\n355: <CardDescription>Average time across all workflow steps</CardDescription>\n356: </CardHeader>"
-          },
-          {
-            "text": "Average Time Per Step",
-            "line": 366,
-            "context": "365: <div className=\"flex-1\">\n366: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">\n367: Average Time Per Step"
-          },
-          {
-            "text": "Top Steps by Volume",
-            "line": 386,
-            "context": "385: <div className=\"space-y-2\">\n386: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">\n387: Top Steps by Volume"
-          },
-          {
-            "text": "View All Steps",
-            "line": 419,
-            "context": "418: onClick={() => navigate('/get-ready/details')}\n419: >\n420: View All Steps"
-          },
-          {
-            "text": "Priority Breakdown",
-            "line": 431,
-            "context": "430: <CardTitle className=\"flex items-center gap-2\">\n431: <Target className=\"h-5 w-5\" />\n432: Priority Breakdown"
-          },
-          {
-            "text": "Vehicle priority distribution",
-            "line": 434,
-            "context": "433: </CardTitle>\n434: <CardDescription>Vehicle priority distribution</CardDescription>\n435: </CardHeader>"
-          },
-          {
-            "text": "Work Items Summary",
-            "line": 480,
-            "context": "479: <CardTitle className=\"flex items-center gap-2\">\n480: <CheckCircle2 className=\"h-5 w-5\" />\n481: Work Items Summary"
-          },
-          {
-            "text": "Aggregate work items across all vehicles",
-            "line": 483,
-            "context": "482: </CardTitle>\n483: <CardDescription>Aggregate work items across all vehicles</CardDescription>\n484: </CardHeader>"
-          },
-          {
-            "text": "Pending",
-            "line": 489,
-            "context": "488: <div className=\"space-y-1\">\n489: <div className=\"text-xs text-muted-foreground\">Pending</div>\n490: <div className=\"text-2xl font-bold text-amber-600\">{workItemsTotal.pending}</div>"
-          },
-          {
-            "text": "In Progress",
-            "line": 493,
-            "context": "492: <div className=\"space-y-1\">\n493: <div className=\"text-xs text-muted-foreground\">In Progress</div>\n494: <div className=\"text-2xl font-bold text-sky-600\">{workItemsTotal.in_progress}</div>"
-          },
-          {
-            "text": "Completed",
-            "line": 497,
-            "context": "496: <div className=\"space-y-1\">\n497: <div className=\"text-xs text-muted-foreground\">Completed</div>\n498: <div className=\"text-2xl font-bold text-emerald-600\">{workItemsTotal.completed}</div>"
-          },
-          {
-            "text": "Total Items",
-            "line": 501,
-            "context": "500: <div className=\"space-y-1\">\n501: <div className=\"text-xs text-muted-foreground\">Total Items</div>\n502: <div className=\"text-2xl font-bold\">{workItemsTotal.totalItems}</div>"
-          },
-          {
-            "text": "Completion Rate",
-            "line": 510,
-            "context": "509: <div className=\"flex items-center justify-between text-sm\">\n510: <span className=\"font-medium\">Completion Rate</span>\n511: <span className=\"text-muted-foreground\">{workItemsTotal.completionRate.toFixed(1)}%</span>"
-          },
-          {
-            "text": "Team Performance",
-            "line": 523,
-            "context": "522: <CardTitle className=\"flex items-center gap-2\">\n523: <Users className=\"h-5 w-5\" />\n524: Team Performance"
-          },
-          {
-            "text": "Top performers by vehicle count",
-            "line": 526,
-            "context": "525: </CardTitle>\n526: <CardDescription>Top performers by vehicle count</CardDescription>\n527: </CardHeader>"
-          },
-          {
-            "text": "No team data available",
-            "line": 531,
-            "context": "530: {teamStats.length === 0 ? (\n531: <div className=\"text-sm text-muted-foreground text-center py-4\">\n532: No team data available"
-          },
-          {
-            "text": "Vehicles Added",
-            "line": 576,
-            "context": "575: <div className=\"text-2xl font-bold\">{recentActivity.vehiclesAdded}</div>\n576: <div className=\"text-xs text-muted-foreground\">Vehicles Added</div>\n577: </div>"
-          },
-          {
-            "text": "Ready for Frontline",
-            "line": 583,
-            "context": "582: <div className=\"text-2xl font-bold\">{recentActivity.vehiclesCompleted}</div>\n583: <div className=\"text-xs text-muted-foreground\">Ready for Frontline</div>\n584: </div>"
-          },
-          {
-            "text": "Total Active",
-            "line": 590,
-            "context": "589: <div className=\"text-2xl font-bold\">{recentActivity.totalActive}</div>\n590: <div className=\"text-xs text-muted-foreground\">Total Active</div>\n591: </div>"
-          }
-        ],
-        "translationCalls": [
-          {
-            "key": "get_ready.analytics.timeRange",
-            "line": 303,
-            "exists": true
-          },
-          {
-            "key": "get_ready.analytics.last7Days",
-            "line": 308,
-            "exists": true
-          },
-          {
-            "key": "get_ready.analytics.last30Days",
-            "line": 311,
-            "exists": true
-          },
-          {
-            "key": "get_ready.analytics.last90Days",
-            "line": 314,
-            "exists": true
-          },
-          {
-            "key": "get_ready.analytics.historicalAnalytics",
-            "line": 603,
-            "exists": true
-          }
-        ],
-        "missingKeys": [],
-        "coverage": 19,
-        "severity": "critical"
-      },
-      {
         "file": "src\\components\\get-ready\\GetReadySplitContent.tsx",
         "hardcodedStrings": [
           {
             "text": "Performance Report",
-            "line": 467,
-            "context": "466: <CardHeader>\n467: <CardTitle className=\"text-base\">Performance Report</CardTitle>\n468: </CardHeader>"
+            "line": 551,
+            "context": "550: <CardHeader>\n551: <CardTitle className=\"text-base\">Performance Report</CardTitle>\n552: </CardHeader>"
           },
           {
             "text": "View overall workflow performance metrics and KPIs",
-            "line": 470,
-            "context": "469: <CardContent>\n470: <p className=\"text-sm text-muted-foreground mb-4\">\n471: View overall workflow performance metrics and KPIs"
+            "line": 554,
+            "context": "553: <CardContent>\n554: <p className=\"text-sm text-muted-foreground mb-4\">\n555: View overall workflow performance metrics and KPIs"
           },
           {
             "text": "Generate Report",
-            "line": 474,
-            "context": "473: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n474: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n475: Generate Report"
+            "line": 558,
+            "context": "557: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n558: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n559: Generate Report"
           },
           {
             "text": "Vehicle History",
-            "line": 482,
-            "context": "481: <CardHeader>\n482: <CardTitle className=\"text-base\">Vehicle History</CardTitle>\n483: </CardHeader>"
+            "line": 566,
+            "context": "565: <CardHeader>\n566: <CardTitle className=\"text-base\">Vehicle History</CardTitle>\n567: </CardHeader>"
           },
           {
             "text": "Export detailed vehicle movement and status history",
-            "line": 485,
-            "context": "484: <CardContent>\n485: <p className=\"text-sm text-muted-foreground mb-4\">\n486: Export detailed vehicle movement and status history"
+            "line": 569,
+            "context": "568: <CardContent>\n569: <p className=\"text-sm text-muted-foreground mb-4\">\n570: Export detailed vehicle movement and status history"
           },
           {
             "text": "Export Data",
-            "line": 489,
-            "context": "488: <Button className=\"w-full\" onClick={() => handleExport(\"csv\")}>\n489: <FileText className=\"h-4 w-4 mr-2\" />\n490: Export Data"
+            "line": 573,
+            "context": "572: <Button className=\"w-full\" onClick={() => handleExport(\"csv\")}>\n573: <FileText className=\"h-4 w-4 mr-2\" />\n574: Export Data"
           },
           {
             "text": "SLA Compliance",
-            "line": 497,
-            "context": "496: <CardHeader>\n497: <CardTitle className=\"text-base\">SLA Compliance</CardTitle>\n498: </CardHeader>"
+            "line": 581,
+            "context": "580: <CardHeader>\n581: <CardTitle className=\"text-base\">SLA Compliance</CardTitle>\n582: </CardHeader>"
           },
           {
             "text": "Review SLA compliance rates and identify bottlenecks",
-            "line": 500,
-            "context": "499: <CardContent>\n500: <p className=\"text-sm text-muted-foreground mb-4\">\n501: Review SLA compliance rates and identify bottlenecks"
+            "line": 584,
+            "context": "583: <CardContent>\n584: <p className=\"text-sm text-muted-foreground mb-4\">\n585: Review SLA compliance rates and identify bottlenecks"
           },
           {
             "text": "View Report",
-            "line": 504,
-            "context": "503: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n504: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n505: View Report"
+            "line": 588,
+            "context": "587: <Button className=\"w-full\" onClick={() => handleExport(\"excel\")}>\n588: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n589: View Report"
           },
           {
             "text": "Recent Exports",
-            "line": 517,
-            "context": "516: <CardHeader>\n517: <CardTitle>Recent Exports</CardTitle>\n518: </CardHeader>"
+            "line": 601,
+            "context": "600: <CardHeader>\n601: <CardTitle>Recent Exports</CardTitle>\n602: </CardHeader>"
           },
           {
             "text": "Searching all steps",
-            "line": 789,
-            "context": "788: <Badge variant=\"outline\" className=\"bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/30 dark:text-amber-400\">\n789: <Search className=\"h-3 w-3 mr-1\" />\n790: Searching all steps"
+            "line": 873,
+            "context": "872: <Badge variant=\"outline\" className=\"bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/30 dark:text-amber-400\">\n873: <Search className=\"h-3 w-3 mr-1\" />\n874: Searching all steps"
           },
           {
             "text": "All Priorities",
-            "line": 801,
-            "context": "800: <SelectContent>\n801: <SelectItem value=\"all\">All Priorities</SelectItem>\n802: <SelectItem value=\"low\">Low</SelectItem>"
+            "line": 885,
+            "context": "884: <SelectContent>\n885: <SelectItem value=\"all\">All Priorities</SelectItem>\n886: <SelectItem value=\"low\">Low</SelectItem>"
           },
           {
             "text": "Normal",
-            "line": 803,
-            "context": "802: <SelectItem value=\"low\">Low</SelectItem>\n803: <SelectItem value=\"normal\">Normal</SelectItem>\n804: <SelectItem value=\"high\">High</SelectItem>"
+            "line": 887,
+            "context": "886: <SelectItem value=\"low\">Low</SelectItem>\n887: <SelectItem value=\"normal\">Normal</SelectItem>\n888: <SelectItem value=\"high\">High</SelectItem>"
           },
           {
             "text": "High",
-            "line": 804,
-            "context": "803: <SelectItem value=\"normal\">Normal</SelectItem>\n804: <SelectItem value=\"high\">High</SelectItem>\n805: <SelectItem value=\"urgent\">Urgent</SelectItem>"
+            "line": 888,
+            "context": "887: <SelectItem value=\"normal\">Normal</SelectItem>\n888: <SelectItem value=\"high\">High</SelectItem>\n889: <SelectItem value=\"urgent\">Urgent</SelectItem>"
           },
           {
             "text": "Urgent",
-            "line": 805,
-            "context": "804: <SelectItem value=\"high\">High</SelectItem>\n805: <SelectItem value=\"urgent\">Urgent</SelectItem>\n806: </SelectContent>"
+            "line": 889,
+            "context": "888: <SelectItem value=\"high\">High</SelectItem>\n889: <SelectItem value=\"urgent\">Urgent</SelectItem>\n890: </SelectContent>"
           },
           {
             "text": "Days in Step",
-            "line": 816,
-            "context": "815: <SelectContent>\n816: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n817: <SelectItem value=\"days_to_frontline\">"
+            "line": 900,
+            "context": "899: <SelectContent>\n900: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n901: <SelectItem value=\"days_to_frontline\">"
           },
           {
             "text": "Days to Finish",
-            "line": 817,
-            "context": "816: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n817: <SelectItem value=\"days_to_frontline\">\n818: Days to Finish"
+            "line": 901,
+            "context": "900: <SelectItem value=\"days_in_step\">Days in Step</SelectItem>\n901: <SelectItem value=\"days_to_frontline\">\n902: Days to Finish"
           },
           {
             "text": "Priority Score",
-            "line": 820,
-            "context": "819: </SelectItem>\n820: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n821: <SelectItem value=\"sla_status\">SLA Status</SelectItem>"
+            "line": 904,
+            "context": "903: </SelectItem>\n904: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n905: <SelectItem value=\"sla_status\">SLA Status</SelectItem>"
           },
           {
             "text": "SLA Status",
-            "line": 821,
-            "context": "820: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n821: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n822: <SelectItem value=\"stock_number\">Stock Number</SelectItem>"
+            "line": 905,
+            "context": "904: <SelectItem value=\"priority_score\">Priority Score</SelectItem>\n905: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n906: <SelectItem value=\"stock_number\">Stock Number</SelectItem>"
           },
           {
             "text": "Stock Number",
-            "line": 822,
-            "context": "821: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n822: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n823: <SelectItem value=\"created_at\">Date Added</SelectItem>"
+            "line": 906,
+            "context": "905: <SelectItem value=\"sla_status\">SLA Status</SelectItem>\n906: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n907: <SelectItem value=\"created_at\">Date Added</SelectItem>"
           },
           {
             "text": "Date Added",
-            "line": 823,
-            "context": "822: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n823: <SelectItem value=\"created_at\">Date Added</SelectItem>\n824: </SelectContent>"
+            "line": 907,
+            "context": "906: <SelectItem value=\"stock_number\">Stock Number</SelectItem>\n907: <SelectItem value=\"created_at\">Date Added</SelectItem>\n908: </SelectContent>"
           },
           {
             "text": "Clear Filters",
-            "line": 845,
-            "context": "844: onClick={clearFilters}\n845: >\n846: Clear Filters"
+            "line": 929,
+            "context": "928: onClick={clearFilters}\n929: >\n930: Clear Filters"
           },
           {
             "text": "Priority",
-            "line": 798,
-            "context": "797: <SelectTrigger className=\"w-32 h-9\">\n798: <SelectValue placeholder=\"Priority\" />\n799: </SelectTrigger>"
+            "line": 882,
+            "context": "881: <SelectTrigger className=\"w-32 h-9\">\n882: <SelectValue placeholder=\"Priority\" />\n883: </SelectTrigger>"
           },
           {
             "text": "Clear Filters\n            ",
-            "line": 840,
-            "context": "839: {hasActiveFilters && (\n840: <Button\n841: variant=\"ghost\""
+            "line": 924,
+            "context": "923: {hasActiveFilters && (\n924: <Button\n925: variant=\"ghost\""
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.vehicle_not_found",
-            "line": 246,
+            "line": 288,
             "exists": true
           },
           {
             "key": "common.data_refreshed",
-            "line": 292,
+            "line": 385,
             "exists": true
           },
           {
             "key": "common.refresh_failed",
-            "line": 298,
+            "line": 391,
             "exists": true
           },
           {
             "key": "get_ready.export.no_vehicles",
-            "line": 309,
+            "line": 402,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_deleted",
-            "line": 338,
+            "line": 431,
             "exists": true
           },
           {
             "key": "get_ready.delete_failed",
-            "line": 347,
+            "line": 440,
             "exists": true
           },
           {
             "key": "get_ready.reports.title",
-            "line": 455,
+            "line": 539,
             "exists": true
           },
           {
             "key": "get_ready.reports.subtitle",
-            "line": 458,
+            "line": 542,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.approved_title",
-            "line": 583,
+            "line": 667,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.no_approved",
-            "line": 589,
+            "line": 673,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.rejected_title",
-            "line": 623,
+            "line": 707,
             "exists": true
           },
           {
             "key": "get_ready.approvals.queue.no_rejected",
-            "line": 629,
+            "line": 713,
             "exists": true
           },
           {
             "key": "get_ready.approvals.modal.rejection_reason",
-            "line": 652,
-            "exists": true
-          },
-          {
-            "key": "get_ready.search_placeholder",
-            "line": 696,
-            "exists": true
-          },
-          {
-            "key": "common.action_buttons.refresh",
-            "line": 723,
-            "exists": true
-          },
-          {
-            "key": "common.action_buttons.exporting",
             "line": 736,
             "exists": true
           },
           {
-            "key": "common.action_buttons.export",
-            "line": 737,
+            "key": "get_ready.search_placeholder",
+            "line": 780,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.refresh",
+            "line": 807,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.exporting",
+            "line": 820,
             "exists": true
           },
           {
             "key": "common.action_buttons.export",
-            "line": 744,
+            "line": 821,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.export",
+            "line": 828,
             "exists": true
           },
           {
             "key": "common.action_buttons.export_csv",
-            "line": 749,
+            "line": 833,
             "exists": true
           },
           {
             "key": "common.action_buttons.export_excel",
-            "line": 753,
+            "line": 837,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.add_vehicle",
-            "line": 767,
+            "line": 851,
             "exists": true
           }
         ],
@@ -4374,6 +4234,231 @@
         "severity": "critical"
       },
       {
+        "file": "src\\components\\reports\\invoices\\InvoiceDetailsDialog.backup.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Invoice",
+            "line": 490,
+            "context": "489: <div class=\"sender-name\">${senderName}</div>\n490: <div class=\"doc-title\">Invoice</div>\n491: ${servicePeriod ? `"
+          },
+          {
+            "text": "Bill To",
+            "line": 502,
+            "context": "501: <div class=\"bill-to\">\n502: <h3>Bill To</h3>\n503: <div class=\"company\">${dealerName}</div>"
+          },
+          {
+            "text": "Invoice Date",
+            "line": 516,
+            "context": "515: <div class=\"detail-row\">\n516: <span class=\"label\">Invoice Date</span>\n517: <div class=\"value\">${formatDate(invoice.issueDate)}</div>"
+          },
+          {
+            "text": "Due Date",
+            "line": 520,
+            "context": "519: <div class=\"detail-row\">\n520: <span class=\"label\">Due Date</span>\n521: <div class=\"value\">${formatDate(invoice.dueDate)}</div>"
+          },
+          {
+            "text": "Invoice Number",
+            "line": 524,
+            "context": "523: <div class=\"detail-row\">\n524: <span class=\"label\">Invoice Number</span>\n525: <div class=\"value font-mono\">${invoice.invoiceNumber}</div>"
+          },
+          {
+            "text": "Total Amount",
+            "line": 528,
+            "context": "527: <div class=\"detail-row\" style=\"margin-top: 12px;\">\n528: <span class=\"label\">Total Amount</span>\n529: <div class=\"value\" style=\"font-size: 14pt; font-weight: 700; color: #6B7280;\">${formatCurrency(invoice.totalAmount)}</div>"
+          },
+          {
+            "text": "Vehicle",
+            "line": 544,
+            "context": "543: <th style=\"width: 17%;\">PO | RO | Tag</th>\n544: <th style=\"width: 16%;\">Vehicle</th>\n545: <th style=\"width: 14%;\">VIN</th>"
+          },
+          {
+            "text": "Services",
+            "line": 546,
+            "context": "545: <th style=\"width: 14%;\">VIN</th>\n546: <th style=\"width: 25%;\" class=\"text-left\">Services</th>\n547: <th style=\"width: 12%;\">Amount</th>"
+          },
+          {
+            "text": "Amount",
+            "line": 547,
+            "context": "546: <th style=\"width: 25%;\" class=\"text-left\">Services</th>\n547: <th style=\"width: 12%;\">Amount</th>\n548: </tr>"
+          },
+          {
+            "text": "Loading Invoice",
+            "line": 715,
+            "context": "714: <DialogHeader>\n715: <DialogTitle>Loading Invoice</DialogTitle>\n716: <DialogDescription>"
+          },
+          {
+            "text": "Invoice Not Found",
+            "line": 733,
+            "context": "732: <DialogHeader>\n733: <DialogTitle>Invoice Not Found</DialogTitle>\n734: <DialogDescription>"
+          },
+          {
+            "text": "Invoice not found",
+            "line": 739,
+            "context": "738: <div className=\"flex items-center justify-center py-12\">\n739: <p className=\"text-muted-foreground\">Invoice not found</p>\n740: </div>"
+          },
+          {
+            "text": "Download PDF",
+            "line": 831,
+            "context": "830: <DropdownMenuItem onClick={handleDownloadPDF}>\n831: <FileText className=\"h-4 w-4 mr-2\" />\n832: Download PDF"
+          },
+          {
+            "text": "Download Excel",
+            "line": 835,
+            "context": "834: <DropdownMenuItem onClick={handleDownloadExcel}>\n835: <FileSpreadsheet className=\"h-4 w-4 mr-2\" />\n836: Download Excel"
+          },
+          {
+            "text": "Total Amount",
+            "line": 904,
+            "context": "903: <div className=\"pt-2 border-t\">\n904: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Total Amount</span>\n905: <p className=\"text-2xl font-bold text-primary\">{formatCurrency(invoice.totalAmount)}</p>"
+          },
+          {
+            "text": "Amount Due",
+            "line": 909,
+            "context": "908: <div className=\"pt-2\">\n909: <span className=\"text-muted-foreground block mb-0.5 text-xs font-medium uppercase tracking-wide\">Amount Due</span>\n910: <p className=\"text-xl font-bold text-amber-600\">{formatCurrency(invoice.amountDue)}</p>"
+          },
+          {
+            "text": "Vehicles",
+            "line": 934,
+            "context": "933: <div className=\"flex items-center justify-between mb-4\">\n934: <h3 className=\"font-bold text-lg text-gray-900\">\n935: Vehicles"
+          },
+          {
+            "text": "Date",
+            "line": 952,
+            "context": "951: </TableHead>\n952: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n953: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>"
+          },
+          {
+            "text": "Order",
+            "line": 953,
+            "context": "952: <TableHead className=\"font-bold text-center text-white\">Date</TableHead>\n953: <TableHead className=\"font-bold text-center text-white\">Order</TableHead>\n954: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>"
+          },
+          {
+            "text": "Vehicle",
+            "line": 955,
+            "context": "954: <TableHead className=\"font-bold text-center text-white\">PO | RO | Tag</TableHead>\n955: <TableHead className=\"font-bold text-center text-white\">Vehicle</TableHead>\n956: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>"
+          },
+          {
+            "text": "Services",
+            "line": 957,
+            "context": "956: <TableHead className=\"font-bold text-center text-white\">VIN</TableHead>\n957: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n958: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>"
+          },
+          {
+            "text": "Amount",
+            "line": 958,
+            "context": "957: <TableHead className=\"font-bold text-center text-white\">Services</TableHead>\n958: <TableHead className=\"font-bold text-center text-white\">Amount</TableHead>\n959: </TableRow>"
+          },
+          {
+            "text": "No items found",
+            "line": 1070,
+            "context": "1069: <TableRow>\n1070: <TableCell colSpan={8} className=\"text-center py-8 text-muted-foreground\">\n1071: No items found"
+          },
+          {
+            "text": "Cancel",
+            "line": 1259,
+            "context": "1258: <AlertDialogFooter>\n1259: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1260: <AlertDialogAction"
+          },
+          {
+            "text": "Service names from current dealer services",
+            "line": 1287,
+            "context": "1286: <ul className=\"list-disc list-inside ml-2 space-y-1 text-sm\">\n1287: <li>Service names from current dealer services</li>\n1288: <li>Order totals and prices</li>"
+          },
+          {
+            "text": "Order totals and prices",
+            "line": 1288,
+            "context": "1287: <li>Service names from current dealer services</li>\n1288: <li>Order totals and prices</li>\n1289: <li>Customer and vehicle information</li>"
+          },
+          {
+            "text": "Customer and vehicle information",
+            "line": 1289,
+            "context": "1288: <li>Order totals and prices</li>\n1289: <li>Customer and vehicle information</li>\n1290: <li>Invoice totals and tax calculations</li>"
+          },
+          {
+            "text": "Invoice totals and tax calculations",
+            "line": 1290,
+            "context": "1289: <li>Customer and vehicle information</li>\n1290: <li>Invoice totals and tax calculations</li>\n1291: </ul>"
+          },
+          {
+            "text": "Cancel",
+            "line": 1299,
+            "context": "1298: <AlertDialogFooter>\n1299: <AlertDialogCancel>Cancel</AlertDialogCancel>\n1300: <AlertDialogAction"
+          },
+          {
+            "text": "Loading Invoice",
+            "line": 715,
+            "context": "714: <DialogHeader>\n715: <DialogTitle>Loading Invoice</DialogTitle>\n716: <DialogDescription>"
+          },
+          {
+            "text": "Invoice Not Found",
+            "line": 733,
+            "context": "732: <DialogHeader>\n733: <DialogTitle>Invoice Not Found</DialogTitle>\n734: <DialogDescription>"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "reports.invoices.delete",
+            "line": 787,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.send_email",
+            "line": 809,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.print",
+            "line": 817,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.download",
+            "line": 826,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.close",
+            "line": 846,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.delete_confirm_title",
+            "line": 1212,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.delete_confirm_message",
+            "line": 1217,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.vehicles_available_again",
+            "line": 1220,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.has_payments_warning",
+            "line": 1224,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.cancel",
+            "line": 1231,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.deleting",
+            "line": 1242,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.delete_invoice",
+            "line": 1243,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 28,
+        "severity": "critical"
+      },
+      {
         "file": "src\\components\\reports\\invoices\\InvoiceDetailsDialog.tsx",
         "hardcodedStrings": [
           {
@@ -4603,570 +4688,620 @@
         "hardcodedStrings": [
           {
             "text": "Date",
-            "line": 1154,
-            "context": "1153: <tr>\n1154: <th>Date</th>\n1155: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>"
+            "line": 1170,
+            "context": "1169: <tr>\n1170: <th>Date</th>\n1171: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>"
           },
           {
             "text": "Vehicle",
-            "line": 1156,
-            "context": "1155: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>\n1156: <th>Vehicle</th>\n1157: <th>VIN</th>"
+            "line": 1172,
+            "context": "1171: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>\n1172: <th>Vehicle</th>\n1173: <th>VIN</th>"
           },
           {
             "text": "Amount",
-            "line": 1158,
-            "context": "1157: <th>VIN</th>\n1158: <th class=\"text-right\">Amount</th>\n1159: </tr>"
+            "line": 1174,
+            "context": "1173: <th>VIN</th>\n1174: <th class=\"text-right\">Amount</th>\n1175: </tr>"
           },
           {
             "text": "Invoice Management",
-            "line": 1365,
-            "context": "1364: <h2 className=\"text-2xl font-bold tracking-tight flex items-center gap-2\">\n1365: <Receipt className=\"h-6 w-6\" />\n1366: Invoice Management"
+            "line": 1381,
+            "context": "1380: <h2 className=\"text-2xl font-bold tracking-tight flex items-center gap-2\">\n1381: <Receipt className=\"h-6 w-6\" />\n1382: Invoice Management"
           },
           {
             "text": "Manage invoices and billing for your dealership",
-            "line": 1368,
-            "context": "1367: </h2>\n1368: <p className=\"text-muted-foreground text-sm\">Manage invoices and billing for your dealership</p>\n1369: </div>"
+            "line": 1384,
+            "context": "1383: </h2>\n1384: <p className=\"text-muted-foreground text-sm\">Manage invoices and billing for your dealership</p>\n1385: </div>"
           },
           {
             "text": "Quick Invoice",
-            "line": 1371,
-            "context": "1370: <Button onClick={() => setShowQuickCreateDialog(true)}>\n1371: <Plus className=\"h-4 w-4 mr-2\" />\n1372: Quick Invoice"
+            "line": 1387,
+            "context": "1386: <Button onClick={() => setShowQuickCreateDialog(true)}>\n1387: <Plus className=\"h-4 w-4 mr-2\" />\n1388: Quick Invoice"
           },
           {
             "text": "All Types",
-            "line": 1471,
-            "context": "1470: <SelectContent>\n1471: <SelectItem value=\"all\">All Types</SelectItem>\n1472: <SelectItem value=\"sales\">Sales</SelectItem>"
+            "line": 1510,
+            "context": "1509: <SelectContent>\n1510: <SelectItem value=\"all\">All Types</SelectItem>\n1511: <SelectItem value=\"sales\">Sales</SelectItem>"
           },
           {
             "text": "Sales",
-            "line": 1472,
-            "context": "1471: <SelectItem value=\"all\">All Types</SelectItem>\n1472: <SelectItem value=\"sales\">Sales</SelectItem>\n1473: <SelectItem value=\"service\">Service</SelectItem>"
+            "line": 1511,
+            "context": "1510: <SelectItem value=\"all\">All Types</SelectItem>\n1511: <SelectItem value=\"sales\">Sales</SelectItem>\n1512: <SelectItem value=\"service\">Service</SelectItem>"
           },
           {
             "text": "Service",
-            "line": 1473,
-            "context": "1472: <SelectItem value=\"sales\">Sales</SelectItem>\n1473: <SelectItem value=\"service\">Service</SelectItem>\n1474: <SelectItem value=\"recon\">Recon</SelectItem>"
+            "line": 1512,
+            "context": "1511: <SelectItem value=\"sales\">Sales</SelectItem>\n1512: <SelectItem value=\"service\">Service</SelectItem>\n1513: <SelectItem value=\"recon\">Recon</SelectItem>"
           },
           {
             "text": "Recon",
-            "line": 1474,
-            "context": "1473: <SelectItem value=\"service\">Service</SelectItem>\n1474: <SelectItem value=\"recon\">Recon</SelectItem>\n1475: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
+            "line": 1513,
+            "context": "1512: <SelectItem value=\"service\">Service</SelectItem>\n1513: <SelectItem value=\"recon\">Recon</SelectItem>\n1514: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
           },
           {
             "text": "Car Wash",
-            "line": 1475,
-            "context": "1474: <SelectItem value=\"recon\">Recon</SelectItem>\n1475: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1476: </SelectContent>"
+            "line": 1514,
+            "context": "1513: <SelectItem value=\"recon\">Recon</SelectItem>\n1514: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1515: </SelectContent>"
           },
           {
             "text": "Pending",
-            "line": 1491,
-            "context": "1490: <SelectItem value=\"all\">{t('reports.invoices.all_status')}</SelectItem>\n1491: <SelectItem value=\"pending\">Pending</SelectItem>\n1492: <SelectItem value=\"paid\">Paid</SelectItem>"
+            "line": 1530,
+            "context": "1529: <SelectItem value=\"all\">{t('reports.invoices.all_status')}</SelectItem>\n1530: <SelectItem value=\"pending\">Pending</SelectItem>\n1531: <SelectItem value=\"paid\">Paid</SelectItem>"
           },
           {
             "text": "Paid",
-            "line": 1492,
-            "context": "1491: <SelectItem value=\"pending\">Pending</SelectItem>\n1492: <SelectItem value=\"paid\">Paid</SelectItem>\n1493: <SelectItem value=\"overdue\">Overdue</SelectItem>"
+            "line": 1531,
+            "context": "1530: <SelectItem value=\"pending\">Pending</SelectItem>\n1531: <SelectItem value=\"paid\">Paid</SelectItem>\n1532: <SelectItem value=\"overdue\">Overdue</SelectItem>"
           },
           {
             "text": "Overdue",
-            "line": 1493,
-            "context": "1492: <SelectItem value=\"paid\">Paid</SelectItem>\n1493: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1494: <SelectItem value=\"partially_paid\">Partial</SelectItem>"
+            "line": 1532,
+            "context": "1531: <SelectItem value=\"paid\">Paid</SelectItem>\n1532: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1533: <SelectItem value=\"partially_paid\">Partial</SelectItem>"
           },
           {
             "text": "Partial",
-            "line": 1494,
-            "context": "1493: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1494: <SelectItem value=\"partially_paid\">Partial</SelectItem>\n1495: </SelectContent>"
+            "line": 1533,
+            "context": "1532: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1533: <SelectItem value=\"partially_paid\">Partial</SelectItem>\n1534: </SelectContent>"
           },
           {
             "text": "Filter Vehicles",
-            "line": 1751,
-            "context": "1750: <CardTitle className=\"flex items-center gap-2 text-lg\">\n1751: <Filter className=\"h-5 w-5\" />\n1752: Filter Vehicles"
+            "line": 1817,
+            "context": "1816: <CardTitle className=\"flex items-center gap-2 text-lg\">\n1817: <Filter className=\"h-5 w-5\" />\n1818: Filter Vehicles"
           },
           {
             "text": "Use filters to find the vehicles you want to invoice",
-            "line": 1754,
-            "context": "1753: </CardTitle>\n1754: <CardDescription>Use filters to find the vehicles you want to invoice</CardDescription>\n1755: </CardHeader>"
+            "line": 1820,
+            "context": "1819: </CardTitle>\n1820: <CardDescription>Use filters to find the vehicles you want to invoice</CardDescription>\n1821: </CardHeader>"
           },
           {
             "text": "Department",
-            "line": 1760,
-            "context": "1759: <div className=\"space-y-1.5\">\n1760: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1761: <Select value={orderType} onValueChange={setOrderType}>"
+            "line": 1826,
+            "context": "1825: <div className=\"space-y-1.5\">\n1826: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1827: <Select value={orderType} onValueChange={setOrderType}>"
           },
           {
             "text": "All Departments",
-            "line": 1766,
-            "context": "1765: <SelectContent>\n1766: <SelectItem value=\"all\">All Departments</SelectItem>\n1767: <SelectItem value=\"sales\">Sales</SelectItem>"
+            "line": 1832,
+            "context": "1831: <SelectContent>\n1832: <SelectItem value=\"all\">All Departments</SelectItem>\n1833: <SelectItem value=\"sales\">Sales</SelectItem>"
           },
           {
             "text": "Sales",
-            "line": 1767,
-            "context": "1766: <SelectItem value=\"all\">All Departments</SelectItem>\n1767: <SelectItem value=\"sales\">Sales</SelectItem>\n1768: <SelectItem value=\"service\">Service</SelectItem>"
+            "line": 1833,
+            "context": "1832: <SelectItem value=\"all\">All Departments</SelectItem>\n1833: <SelectItem value=\"sales\">Sales</SelectItem>\n1834: <SelectItem value=\"service\">Service</SelectItem>"
           },
           {
             "text": "Service",
-            "line": 1768,
-            "context": "1767: <SelectItem value=\"sales\">Sales</SelectItem>\n1768: <SelectItem value=\"service\">Service</SelectItem>\n1769: <SelectItem value=\"recon\">Recon</SelectItem>"
+            "line": 1834,
+            "context": "1833: <SelectItem value=\"sales\">Sales</SelectItem>\n1834: <SelectItem value=\"service\">Service</SelectItem>\n1835: <SelectItem value=\"recon\">Recon</SelectItem>"
           },
           {
             "text": "Recon",
-            "line": 1769,
-            "context": "1768: <SelectItem value=\"service\">Service</SelectItem>\n1769: <SelectItem value=\"recon\">Recon</SelectItem>\n1770: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
+            "line": 1835,
+            "context": "1834: <SelectItem value=\"service\">Service</SelectItem>\n1835: <SelectItem value=\"recon\">Recon</SelectItem>\n1836: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
           },
           {
             "text": "Car Wash",
-            "line": 1770,
-            "context": "1769: <SelectItem value=\"recon\">Recon</SelectItem>\n1770: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1771: </SelectContent>"
+            "line": 1836,
+            "context": "1835: <SelectItem value=\"recon\">Recon</SelectItem>\n1836: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1837: </SelectContent>"
           },
           {
             "text": "Status",
-            "line": 1776,
-            "context": "1775: <div className=\"space-y-1.5\">\n1776: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1777: <Select value={orderStatus} onValueChange={setOrderStatus}>"
+            "line": 1842,
+            "context": "1841: <div className=\"space-y-1.5\">\n1842: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1843: <Select value={orderStatus} onValueChange={setOrderStatus}>"
           },
           {
             "text": "Date Range",
-            "line": 1802,
-            "context": "1801: <div className=\"space-y-1.5\">\n1802: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1803: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
+            "line": 1868,
+            "context": "1867: <div className=\"space-y-1.5\">\n1868: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1869: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
           },
           {
             "text": "Today",
-            "line": 1808,
-            "context": "1807: <SelectContent>\n1808: <SelectItem value=\"today\">Today</SelectItem>\n1809: <SelectItem value=\"this_week\">{t('reports.this_week')}</SelectItem>"
+            "line": 1874,
+            "context": "1873: <SelectContent>\n1874: <SelectItem value=\"today\">Today</SelectItem>\n1875: <SelectItem value=\"this_week\">{t('reports.this_week')}</SelectItem>"
           },
           {
             "text": "This Month",
-            "line": 1811,
-            "context": "1810: <SelectItem value=\"last_week\">{t('reports.last_week')}</SelectItem>\n1811: <SelectItem value=\"this_month\">This Month</SelectItem>\n1812: <SelectItem value=\"last_month\">Last Month</SelectItem>"
+            "line": 1877,
+            "context": "1876: <SelectItem value=\"last_week\">{t('reports.last_week')}</SelectItem>\n1877: <SelectItem value=\"this_month\">This Month</SelectItem>\n1878: <SelectItem value=\"last_month\">Last Month</SelectItem>"
           },
           {
             "text": "Last Month",
-            "line": 1812,
-            "context": "1811: <SelectItem value=\"this_month\">This Month</SelectItem>\n1812: <SelectItem value=\"last_month\">Last Month</SelectItem>\n1813: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>"
+            "line": 1878,
+            "context": "1877: <SelectItem value=\"this_month\">This Month</SelectItem>\n1878: <SelectItem value=\"last_month\">Last Month</SelectItem>\n1879: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>"
           },
           {
             "text": "Custom Range",
-            "line": 1814,
-            "context": "1813: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>\n1814: <SelectItem value=\"custom\">Custom Range</SelectItem>\n1815: </SelectContent>"
+            "line": 1880,
+            "context": "1879: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>\n1880: <SelectItem value=\"custom\">Custom Range</SelectItem>\n1881: </SelectContent>"
           },
           {
             "text": "Search",
-            "line": 1820,
-            "context": "1819: <div className=\"space-y-1.5\">\n1820: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1821: <div className=\"relative\">"
+            "line": 1886,
+            "context": "1885: <div className=\"space-y-1.5\">\n1886: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1887: <div className=\"relative\">"
           },
           {
             "text": "From Date",
-            "line": 1838,
-            "context": "1837: <div className=\"space-y-1.5\">\n1838: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1839: <Input"
+            "line": 1904,
+            "context": "1903: <div className=\"space-y-1.5\">\n1904: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1905: <Input"
           },
           {
             "text": "To Date",
-            "line": 1851,
-            "context": "1850: <div className=\"space-y-1.5\">\n1851: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1852: <Input"
+            "line": 1917,
+            "context": "1916: <div className=\"space-y-1.5\">\n1917: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1918: <Input"
           },
           {
             "text": "Showing orders from",
-            "line": 1870,
-            "context": "1869: <Calendar className=\"h-3.5 w-3.5\" />\n1870: <span>\n1871: Showing orders from <span className=\"font-medium text-foreground\">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className=\"font-medium text-foreground\">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>"
+            "line": 1936,
+            "context": "1935: <Calendar className=\"h-3.5 w-3.5\" />\n1936: <span>\n1937: Showing orders from <span className=\"font-medium text-foreground\">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className=\"font-medium text-foreground\">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>"
           },
           {
             "text": "Include Only Service",
-            "line": 1879,
-            "context": "1878: <div className=\"space-y-2\">\n1879: <Label>Include Only Service</Label>\n1880: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
+            "line": 1945,
+            "context": "1944: <div className=\"space-y-2\">\n1945: <Label>Include Only Service</Label>\n1946: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
           },
           {
             "text": "No services found for this dealer",
-            "line": 1889,
-            "context": "1888: {availableServices.length === 0 && !loadingServices && (\n1889: <SelectItem value=\"none\" disabled>\n1890: No services found for this dealer"
+            "line": 1955,
+            "context": "1954: {availableServices.length === 0 && !loadingServices && (\n1955: <SelectItem value=\"none\" disabled>\n1956: No services found for this dealer"
           },
           {
             "text": "Exclude Services",
-            "line": 1905,
-            "context": "1904: <div className=\"space-y-2\">\n1905: <Label>Exclude Services</Label>\n1906: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
+            "line": 1971,
+            "context": "1970: <div className=\"space-y-2\">\n1971: <Label>Exclude Services</Label>\n1972: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
           },
           {
             "text": "No services excluded",
-            "line": 1922,
-            "context": "1921: ) : (\n1922: <span className=\"text-sm text-muted-foreground\">No services excluded</span>\n1923: )}"
+            "line": 1988,
+            "context": "1987: ) : (\n1988: <span className=\"text-sm text-muted-foreground\">No services excluded</span>\n1989: )}"
           },
           {
             "text": "Available Orders",
-            "line": 1956,
-            "context": "1955: <div>\n1956: <CardTitle>Available Orders</CardTitle>\n1957: <CardDescription>"
+            "line": 2022,
+            "context": "2021: <div>\n2022: <CardTitle>Available Orders</CardTitle>\n2023: <CardDescription>"
           },
           {
             "text": "No orders found",
-            "line": 1979,
-            "context": "1978: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n1979: <p className=\"text-muted-foreground\">No orders found</p>\n1980: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
+            "line": 2045,
+            "context": "2044: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n2045: <p className=\"text-muted-foreground\">No orders found</p>\n2046: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
           },
           {
             "text": "Try adjusting your filters",
-            "line": 1980,
-            "context": "1979: <p className=\"text-muted-foreground\">No orders found</p>\n1980: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n1981: </div>"
+            "line": 2046,
+            "context": "2045: <p className=\"text-muted-foreground\">No orders found</p>\n2046: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n2047: </div>"
           },
           {
             "text": "Order Number",
-            "line": 1993,
-            "context": "1992: </TableHead>\n1993: <TableHead className=\"text-center font-bold\">Order Number</TableHead>\n1994: <TableHead className=\"text-center font-bold\">"
+            "line": 2059,
+            "context": "2058: </TableHead>\n2059: <TableHead className=\"text-center font-bold\">Order Number</TableHead>\n2060: <TableHead className=\"text-center font-bold\">"
           },
           {
             "text": "Vehicle",
-            "line": 2012,
-            "context": "2011: </TableHead>\n2012: <TableHead className=\"text-center font-bold\">Vehicle</TableHead>\n2013: <TableHead className=\"text-center font-bold\">VIN</TableHead>"
+            "line": 2078,
+            "context": "2077: </TableHead>\n2078: <TableHead className=\"text-center font-bold\">Vehicle</TableHead>\n2079: <TableHead className=\"text-center font-bold\">VIN</TableHead>"
           },
           {
             "text": "Services",
-            "line": 2014,
-            "context": "2013: <TableHead className=\"text-center font-bold\">VIN</TableHead>\n2014: <TableHead className=\"text-center font-bold\">Services</TableHead>\n2015: <TableHead className=\"text-center font-bold\">Dept</TableHead>"
+            "line": 2080,
+            "context": "2079: <TableHead className=\"text-center font-bold\">VIN</TableHead>\n2080: <TableHead className=\"text-center font-bold\">Services</TableHead>\n2081: <TableHead className=\"text-center font-bold\">Dept</TableHead>"
           },
           {
             "text": "Dept",
-            "line": 2015,
-            "context": "2014: <TableHead className=\"text-center font-bold\">Services</TableHead>\n2015: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n2016: <TableHead className=\"text-center font-bold\">Amount</TableHead>"
+            "line": 2081,
+            "context": "2080: <TableHead className=\"text-center font-bold\">Services</TableHead>\n2081: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n2082: <TableHead className=\"text-center font-bold\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 2016,
-            "context": "2015: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n2016: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n2017: </TableRow>"
+            "line": 2082,
+            "context": "2081: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n2082: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n2083: </TableRow>"
           },
           {
             "text": "Invoice Details",
-            "line": 2103,
-            "context": "2102: <CardTitle className=\"flex items-center gap-2\">\n2103: <FileText className=\"h-5 w-5\" />\n2104: Invoice Details"
+            "line": 2169,
+            "context": "2168: <CardTitle className=\"flex items-center gap-2\">\n2169: <FileText className=\"h-5 w-5\" />\n2170: Invoice Details"
           },
           {
             "text": "Selected Vehicles",
-            "line": 2157,
-            "context": "2156: <div>\n2157: <div className=\"text-sm text-muted-foreground mb-1\">Selected Vehicles</div>\n2158: <div className=\"text-3xl font-bold\">{selectedVehicleIds.size}</div>"
+            "line": 2223,
+            "context": "2222: <div>\n2223: <div className=\"text-sm text-muted-foreground mb-1\">Selected Vehicles</div>\n2224: <div className=\"text-3xl font-bold\">{selectedVehicleIds.size}</div>"
           },
           {
             "text": "Invoice Total",
-            "line": 2161,
-            "context": "2160: <div>\n2161: <div className=\"text-sm text-muted-foreground mb-1\">Invoice Total</div>\n2162: <div className=\"text-3xl font-bold text-gray-600\">"
+            "line": 2227,
+            "context": "2226: <div>\n2227: <div className=\"text-sm text-muted-foreground mb-1\">Invoice Total</div>\n2228: <div className=\"text-3xl font-bold text-gray-600\">"
           },
           {
             "text": "Cancel",
-            "line": 2193,
-            "context": "2192: }}\n2193: >\n2194: Cancel"
+            "line": 2259,
+            "context": "2258: }}\n2259: >\n2260: Cancel"
           },
           {
             "text": "Invoice Preview",
-            "line": 2257,
-            "context": "2256: <div className=\"flex items-center justify-between\">\n2257: <DialogTitle>Invoice Preview</DialogTitle>\n2258: <Button"
+            "line": 2323,
+            "context": "2322: <div className=\"flex items-center justify-between\">\n2323: <DialogTitle>Invoice Preview</DialogTitle>\n2324: <Button"
           },
           {
             "text": "Type",
-            "line": 1468,
-            "context": "1467: <SelectTrigger className=\"w-[150px] h-10\">\n1468: <SelectValue placeholder=\"Type\" />\n1469: </SelectTrigger>"
+            "line": 1507,
+            "context": "1506: <SelectTrigger className=\"w-[150px] h-10\">\n1507: <SelectValue placeholder=\"Type\" />\n1508: </SelectTrigger>"
           },
           {
             "text": "VIN, stock, customer...",
-            "line": 1825,
-            "context": "1824: id=\"search-filter-inline\"\n1825: placeholder=\"VIN, stock, customer...\"\n1826: value={searchTerm}"
+            "line": 1891,
+            "context": "1890: id=\"search-filter-inline\"\n1891: placeholder=\"VIN, stock, customer...\"\n1892: value={searchTerm}"
           },
           {
             "text": "Department",
-            "line": 1760,
-            "context": "1759: <div className=\"space-y-1.5\">\n1760: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1761: <Select value={orderType} onValueChange={setOrderType}>"
+            "line": 1826,
+            "context": "1825: <div className=\"space-y-1.5\">\n1826: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n1827: <Select value={orderType} onValueChange={setOrderType}>"
           },
           {
             "text": "Status",
-            "line": 1776,
-            "context": "1775: <div className=\"space-y-1.5\">\n1776: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1777: <Select value={orderStatus} onValueChange={setOrderStatus}>"
+            "line": 1842,
+            "context": "1841: <div className=\"space-y-1.5\">\n1842: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n1843: <Select value={orderStatus} onValueChange={setOrderStatus}>"
           },
           {
             "text": "Date Range",
-            "line": 1802,
-            "context": "1801: <div className=\"space-y-1.5\">\n1802: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1803: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
+            "line": 1868,
+            "context": "1867: <div className=\"space-y-1.5\">\n1868: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n1869: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
           },
           {
             "text": "Search",
-            "line": 1820,
-            "context": "1819: <div className=\"space-y-1.5\">\n1820: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1821: <div className=\"relative\">"
+            "line": 1886,
+            "context": "1885: <div className=\"space-y-1.5\">\n1886: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n1887: <div className=\"relative\">"
           },
           {
             "text": "From Date",
-            "line": 1838,
-            "context": "1837: <div className=\"space-y-1.5\">\n1838: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1839: <Input"
+            "line": 1904,
+            "context": "1903: <div className=\"space-y-1.5\">\n1904: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n1905: <Input"
           },
           {
             "text": "To Date",
-            "line": 1851,
-            "context": "1850: <div className=\"space-y-1.5\">\n1851: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1852: <Input"
+            "line": 1917,
+            "context": "1916: <div className=\"space-y-1.5\">\n1917: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n1918: <Input"
           },
           {
             "text": "Include Only Service",
-            "line": 1879,
-            "context": "1878: <div className=\"space-y-2\">\n1879: <Label>Include Only Service</Label>\n1880: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
+            "line": 1945,
+            "context": "1944: <div className=\"space-y-2\">\n1945: <Label>Include Only Service</Label>\n1946: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
           },
           {
             "text": "Exclude Services",
-            "line": 1905,
-            "context": "1904: <div className=\"space-y-2\">\n1905: <Label>Exclude Services</Label>\n1906: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
+            "line": 1971,
+            "context": "1970: <div className=\"space-y-2\">\n1971: <Label>Exclude Services</Label>\n1972: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
           },
           {
             "text": "Invoice Preview",
-            "line": 2257,
-            "context": "2256: <div className=\"flex items-center justify-between\">\n2257: <DialogTitle>Invoice Preview</DialogTitle>\n2258: <Button"
+            "line": 2323,
+            "context": "2322: <div className=\"flex items-center justify-between\">\n2323: <DialogTitle>Invoice Preview</DialogTitle>\n2324: <Button"
           }
         ],
         "translationCalls": [
           {
             "key": "reports.invoices.messages.select_dealership",
-            "line": 1317,
+            "line": 1333,
             "exists": true
           },
           {
             "key": "reports.invoices.tabs.invoices_list",
-            "line": 1404,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.tabs.create_invoice",
-            "line": 1408,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.tabs.check_vehicle",
-            "line": 1412,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.title",
             "line": 1420,
             "exists": true
           },
           {
-            "key": "reports.invoices.messages.view_manage",
-            "line": 1421,
+            "key": "reports.invoices.tabs.create_invoice",
+            "line": 1424,
             "exists": true
           },
           {
-            "key": "reports.invoices.filters.date_range",
+            "key": "reports.invoices.tabs.check_vehicle",
             "line": 1428,
             "exists": true
           },
           {
-            "key": "reports.invoices.filters.all_time",
+            "key": "reports.invoices.title",
+            "line": 1436,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.messages.view_manage",
             "line": 1437,
             "exists": true
           },
           {
+            "key": "reports.invoices.grouping.label",
+            "line": 1443,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.grouping.none",
+            "line": 1453,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.grouping.status",
+            "line": 1454,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.grouping.department",
+            "line": 1455,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.grouping.week",
+            "line": 1456,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.filters.date_range",
+            "line": 1467,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.filters.all_time",
+            "line": 1476,
+            "exists": true
+          },
+          {
             "key": "reports.invoices.filters.today",
-            "line": 1438,
+            "line": 1477,
             "exists": true
           },
           {
             "key": "reports.invoices.filters.this_week",
-            "line": 1439,
+            "line": 1478,
             "exists": true
           },
           {
             "key": "reports.invoices.filters.last_week",
-            "line": 1440,
+            "line": 1479,
             "exists": true
           },
           {
             "key": "reports.invoices.filters.this_month",
-            "line": 1441,
+            "line": 1480,
             "exists": true
           },
           {
             "key": "reports.invoices.filters.last_month",
-            "line": 1442,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.filters.custom_range",
-            "line": 1443,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.filters.search",
-            "line": 1449,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.search_placeholder",
-            "line": 1453,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.filters.type",
-            "line": 1462,
-            "exists": true
-          },
-          {
-            "key": "common.status_label",
             "line": 1481,
             "exists": true
           },
           {
+            "key": "reports.invoices.filters.custom_range",
+            "line": 1482,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.filters.search",
+            "line": 1488,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.search_placeholder",
+            "line": 1492,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.filters.type",
+            "line": 1501,
+            "exists": true
+          },
+          {
             "key": "common.status_label",
-            "line": 1487,
+            "line": 1520,
+            "exists": true
+          },
+          {
+            "key": "common.status_label",
+            "line": 1526,
             "exists": true
           },
           {
             "key": "reports.invoices.all_status",
-            "line": 1490,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.filters.from_date",
-            "line": 1504,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.filters.to_date",
-            "line": 1513,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.messages.loading",
             "line": 1529,
             "exists": true
           },
           {
-            "key": "reports.invoices.no_invoices",
-            "line": 1534,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.table.invoice",
-            "line": 1540,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.table.date_range",
-            "line": 1541,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.issue_date",
-            "line": 1542,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.due_date",
+            "key": "reports.invoices.filters.from_date",
             "line": 1543,
             "exists": true
           },
           {
+            "key": "reports.invoices.filters.to_date",
+            "line": 1552,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.messages.loading",
+            "line": 1568,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.no_invoices",
+            "line": 1573,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.table.invoice",
+            "line": 1606,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.table.date_range",
+            "line": 1607,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.issue_date",
+            "line": 1608,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.due_date",
+            "line": 1609,
+            "exists": true
+          },
+          {
             "key": "reports.invoices.amount",
-            "line": 1544,
+            "line": 1610,
             "exists": true
           },
           {
             "key": "reports.invoices.paid",
-            "line": 1545,
+            "line": 1611,
             "exists": true
           },
           {
             "key": "reports.invoices.due",
-            "line": 1546,
+            "line": 1612,
             "exists": true
           },
           {
             "key": "common.status_label",
-            "line": 1547,
+            "line": 1613,
             "exists": true
           },
           {
             "key": "reports.invoices.actions",
-            "line": 1548,
+            "line": 1614,
             "exists": true
           },
           {
             "key": "services.departments.sales_dept",
-            "line": 1642,
+            "line": 1708,
             "exists": true
           },
           {
             "key": "services.departments.service_dept",
-            "line": 1646,
+            "line": 1712,
             "exists": true
           },
           {
             "key": "services.departments.recon_dept",
-            "line": 1650,
+            "line": 1716,
             "exists": true
           },
           {
             "key": "services.departments.carwash_dept",
-            "line": 1656,
+            "line": 1722,
             "exists": true
           },
           {
             "key": "reports.add_payment",
-            "line": 1705,
+            "line": 1771,
             "exists": true
           },
           {
             "key": "reports.view_details",
-            "line": 1717,
+            "line": 1783,
             "exists": true
           },
           {
             "key": "reports.delete_invoice",
-            "line": 1729,
+            "line": 1795,
             "exists": true
           },
           {
             "key": "reports.this_week",
-            "line": 1809,
+            "line": 1875,
             "exists": true
           },
           {
             "key": "reports.last_week",
-            "line": 1810,
+            "line": 1876,
             "exists": true
           },
           {
             "key": "reports.loading_services",
-            "line": 1882,
+            "line": 1948,
             "exists": true
           },
           {
             "key": "reports.no_services_available",
-            "line": 1929,
+            "line": 1995,
             "exists": true
           },
           {
             "key": "reports.add_service_to_exclude",
-            "line": 1930,
+            "line": 1996,
             "exists": true
           },
           {
             "key": "invoices.delete_title",
-            "line": 2282,
+            "line": 2348,
             "exists": false
           },
           {
             "key": "invoices.delete_description",
-            "line": 2283,
+            "line": 2349,
             "exists": false
           },
           {
             "key": "common.action_buttons.delete",
-            "line": 2284,
+            "line": 2350,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 2285,
+            "line": 2351,
             "exists": true
           }
         ],
         "missingKeys": [
           {
+            "key": "reports.invoices.grouping.label",
+            "line": 1443,
+            "context": "1442: <Label className=\"text-sm font-medium whitespace-nowrap\">\n1443: {t('reports.invoices.grouping.label')}:\n1444: </Label>"
+          },
+          {
+            "key": "reports.invoices.grouping.none",
+            "line": 1453,
+            "context": "1452: <SelectContent>\n1453: <SelectItem value=\"none\">{t('reports.invoices.grouping.none')}</SelectItem>\n1454: <SelectItem value=\"status\">{t('reports.invoices.grouping.status')}</SelectItem>"
+          },
+          {
+            "key": "reports.invoices.grouping.status",
+            "line": 1454,
+            "context": "1453: <SelectItem value=\"none\">{t('reports.invoices.grouping.none')}</SelectItem>\n1454: <SelectItem value=\"status\">{t('reports.invoices.grouping.status')}</SelectItem>\n1455: <SelectItem value=\"department\">{t('reports.invoices.grouping.department')}</SelectItem>"
+          },
+          {
+            "key": "reports.invoices.grouping.department",
+            "line": 1455,
+            "context": "1454: <SelectItem value=\"status\">{t('reports.invoices.grouping.status')}</SelectItem>\n1455: <SelectItem value=\"department\">{t('reports.invoices.grouping.department')}</SelectItem>\n1456: <SelectItem value=\"week\">{t('reports.invoices.grouping.week')}</SelectItem>"
+          },
+          {
+            "key": "reports.invoices.grouping.week",
+            "line": 1456,
+            "context": "1455: <SelectItem value=\"department\">{t('reports.invoices.grouping.department')}</SelectItem>\n1456: <SelectItem value=\"week\">{t('reports.invoices.grouping.week')}</SelectItem>\n1457: </SelectContent>"
+          },
+          {
             "key": "invoices.delete_title",
-            "line": 2282,
-            "context": "2281: onOpenChange={setDeleteDialogOpen}\n2282: title={t('invoices.delete_title')}\n2283: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}"
+            "line": 2348,
+            "context": "2347: onOpenChange={setDeleteDialogOpen}\n2348: title={t('invoices.delete_title')}\n2349: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}"
           },
           {
             "key": "invoices.delete_description",
-            "line": 2283,
-            "context": "2282: title={t('invoices.delete_title')}\n2283: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}\n2284: confirmText={t('common.action_buttons.delete')}"
+            "line": 2349,
+            "context": "2348: title={t('invoices.delete_title')}\n2349: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}\n2350: confirmText={t('common.action_buttons.delete')}"
           }
         ],
-        "coverage": 45,
+        "coverage": 47,
         "severity": "critical"
       },
       {
@@ -14313,6 +14448,91 @@
         "severity": "medium"
       },
       {
+        "file": "src\\components\\get-ready\\GetReadyOverview.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "By Month",
+            "line": 286,
+            "context": "285: <TabsTrigger value=\"relative\">Last 7 Days</TabsTrigger>\n286: <TabsTrigger value=\"monthly\">By Month</TabsTrigger>\n287: </TabsList>"
+          },
+          {
+            "text": "Average Time by Step",
+            "line": 331,
+            "context": "330: <CardTitle className=\"flex items-center gap-2\">\n331: <Clock className=\"h-5 w-5\" />\n332: Average Time by Step"
+          },
+          {
+            "text": "Step Analysis",
+            "line": 352,
+            "context": "351: <CardTitle className=\"flex items-center gap-2\">\n352: <Layers className=\"h-5 w-5\" />\n353: Step Analysis"
+          },
+          {
+            "text": "Average time across all workflow steps",
+            "line": 355,
+            "context": "354: </CardTitle>\n355: <CardDescription>Average time across all workflow steps</CardDescription>\n356: </CardHeader>"
+          },
+          {
+            "text": "Average Time Per Step",
+            "line": 366,
+            "context": "365: <div className=\"flex-1\">\n366: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">\n367: Average Time Per Step"
+          },
+          {
+            "text": "Top Steps by Volume",
+            "line": 389,
+            "context": "388: <div className=\"space-y-2\">\n389: <div className=\"text-xs font-medium text-muted-foreground uppercase tracking-wide\">\n390: Top Steps by Volume"
+          },
+          {
+            "text": "View All Steps",
+            "line": 422,
+            "context": "421: onClick={() => navigate('/get-ready/details')}\n422: >\n423: View All Steps"
+          },
+          {
+            "text": "Detailed Step Breakdown",
+            "line": 439,
+            "context": "438: <CardTitle className=\"flex items-center gap-2\">\n439: <Layers className=\"h-5 w-5\" />\n440: Detailed Step Breakdown"
+          },
+          {
+            "text": "Complete timing analysis for all workflow steps",
+            "line": 442,
+            "context": "441: </CardTitle>\n442: <CardDescription>\n443: Complete timing analysis for all workflow steps"
+          },
+          {
+            "text": "Select month",
+            "line": 305,
+            "context": "304: <SelectTrigger className=\"w-full\">\n305: <SelectValue placeholder=\"Select month\" />\n306: </SelectTrigger>"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "get_ready.analytics.timeRange",
+            "line": 279,
+            "exists": true
+          },
+          {
+            "key": "get_ready.analytics.last7Days",
+            "line": 294,
+            "exists": true
+          },
+          {
+            "key": "get_ready.analytics.last30Days",
+            "line": 295,
+            "exists": true
+          },
+          {
+            "key": "get_ready.analytics.last90Days",
+            "line": 296,
+            "exists": true
+          },
+          {
+            "key": "get_ready.analytics.historicalAnalytics",
+            "line": 461,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 33,
+        "severity": "medium"
+      },
+      {
         "file": "src\\components\\get-ready\\GetReadyVehicleList.tsx",
         "hardcodedStrings": [
           {
@@ -17250,57 +17470,57 @@
           },
           {
             "key": "common.success",
-            "line": 366,
+            "line": 379,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.success.moved",
-            "line": 367,
+            "line": 380,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 376,
+            "line": 389,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 382,
+            "line": 395,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.errors.move_failed",
-            "line": 383,
+            "line": 396,
             "exists": true
           },
           {
             "key": "get_ready.approvals.success.approved",
-            "line": 417,
+            "line": 445,
             "exists": true
           },
           {
             "key": "get_ready.approvals.errors.approve_failed",
-            "line": 421,
+            "line": 449,
             "exists": true
           },
           {
             "key": "get_ready.approvals.success.rejected",
-            "line": 457,
+            "line": 500,
             "exists": true
           },
           {
             "key": "get_ready.approvals.errors.reject_failed",
-            "line": 461,
+            "line": 504,
             "exists": true
           },
           {
             "key": "get_ready.approvals.success.requested",
-            "line": 492,
+            "line": 550,
             "exists": true
           },
           {
             "key": "get_ready.approvals.errors.request_failed",
-            "line": 496,
+            "line": 554,
             "exists": true
           }
         ],
@@ -28316,50 +28536,50 @@
         "translationCalls": [
           {
             "key": "get_ready.analytics.validatingChartData",
-            "line": 82,
+            "line": 126,
             "exists": false
           },
           {
             "key": "get_ready.analytics.noStepDataAvailable",
-            "line": 83,
+            "line": 127,
             "exists": false
           },
           {
             "key": "get_ready.analytics.days",
-            "line": 122,
+            "line": 161,
             "exists": true
           },
           {
             "key": "get_ready.analytics.average",
-            "line": 138,
+            "line": 177,
             "exists": false
           },
           {
             "key": "get_ready.analytics.days",
-            "line": 138,
+            "line": 177,
             "exists": true
           },
           {
             "key": "get_ready.analytics.vehicles",
-            "line": 139,
+            "line": 178,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "get_ready.analytics.validatingChartData",
-            "line": 82,
-            "context": "81: {data && data.length > 0\n82: ? t('get_ready.analytics.validatingChartData')\n83: : t('get_ready.analytics.noStepDataAvailable')}"
+            "line": 126,
+            "context": "125: {data && data.length > 0\n126: ? t('get_ready.analytics.validatingChartData')\n127: : t('get_ready.analytics.noStepDataAvailable')}"
           },
           {
             "key": "get_ready.analytics.noStepDataAvailable",
-            "line": 83,
-            "context": "82: ? t('get_ready.analytics.validatingChartData')\n83: : t('get_ready.analytics.noStepDataAvailable')}\n84: </p>"
+            "line": 127,
+            "context": "126: ? t('get_ready.analytics.validatingChartData')\n127: : t('get_ready.analytics.noStepDataAvailable')}\n128: </p>"
           },
           {
             "key": "get_ready.analytics.average",
-            "line": 138,
-            "context": "137: <div className=\"text-xs text-muted-foreground space-y-1\">\n138: <div>{t('get_ready.analytics.average')}: <span className=\"font-semibold text-foreground\">{itemData.avgDays} {t('get_ready.analytics.days')}</span></div>\n139: <div>{t('get_ready.analytics.vehicles')}: <span className=\"font-semibold text-foreground\">{itemData.count}</span></div>"
+            "line": 177,
+            "context": "176: <div className=\"text-xs text-muted-foreground space-y-1\">\n177: <div>{t('get_ready.analytics.average')}: <span className=\"font-semibold text-foreground\">{itemData.avgDays} {t('get_ready.analytics.days')}</span></div>\n178: <div>{t('get_ready.analytics.vehicles')}: <span className=\"font-semibold text-foreground\">{itemData.count}</span></div>"
           }
         ],
         "coverage": 100,
@@ -29580,6 +29800,35 @@
           }
         ],
         "coverage": 82,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\get-ready\\StepTimeBreakdownTable.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Step Name",
+            "line": 57,
+            "context": "56: <TableRow>\n57: <TableHead className=\"w-[40%]\">Step Name</TableHead>\n58: <TableHead className=\"text-right w-[25%]\">Avg Time</TableHead>"
+          },
+          {
+            "text": "Avg Time",
+            "line": 58,
+            "context": "57: <TableHead className=\"w-[40%]\">Step Name</TableHead>\n58: <TableHead className=\"text-right w-[25%]\">Avg Time</TableHead>\n59: <TableHead className=\"text-right w-[20%]\">Vehicles</TableHead>"
+          },
+          {
+            "text": "Vehicles",
+            "line": 59,
+            "context": "58: <TableHead className=\"text-right w-[25%]\">Avg Time</TableHead>\n59: <TableHead className=\"text-right w-[20%]\">Vehicles</TableHead>\n60: <TableHead className=\"text-right w-[15%]\">Status</TableHead>"
+          },
+          {
+            "text": "Status",
+            "line": 60,
+            "context": "59: <TableHead className=\"text-right w-[20%]\">Vehicles</TableHead>\n60: <TableHead className=\"text-right w-[15%]\">Status</TableHead>\n61: </TableRow>"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
         "severity": "low"
       },
       {
@@ -68552,13 +68801,13 @@
         "src\\components\\detail-hub\\TimecardSystem.BACKUP.tsx",
         "src\\components\\detail-hub\\TimecardSystem.tsx",
         "src\\components\\get-ready\\GetReadyActivityFeed.tsx",
-        "src\\components\\get-ready\\GetReadyOverview.tsx",
         "src\\components\\get-ready\\GetReadySplitContent.tsx",
         "src\\components\\invitations\\InvitationTemplateModal.tsx",
         "src\\components\\orders\\OrderTasksSection.tsx",
         "src\\components\\productivity\\ProductivityQuickNotes.tsx",
         "src\\components\\reports\\invoices\\CreateInvoiceDialog.tsx",
         "src\\components\\reports\\invoices\\email\\SendInvoiceEmailDialog.tsx",
+        "src\\components\\reports\\invoices\\InvoiceDetailsDialog.backup.tsx",
         "src\\components\\reports\\invoices\\InvoiceDetailsDialog.tsx",
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\settings\\SMSHistoryTab.tsx",
@@ -68669,13 +68918,14 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "437 Component components need translation",
+      "description": "439 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\detail-hub\\InvoiceCenter.BACKUP.tsx",
         "src\\components\\reports\\invoices\\CreateInvoiceDialog.tsx",
         "src\\hooks\\useChatPermissions.examples.tsx",
         "src\\components\\settings\\SMSHistoryTab.tsx",
+        "src\\components\\reports\\invoices\\InvoiceDetailsDialog.backup.tsx",
         "src\\components\\reports\\invoices\\InvoiceDetailsDialog.tsx",
         "src\\components\\chat\\ContextualChatLauncher.tsx",
         "src\\components\\productivity\\ProductivityQuickNotes.tsx",
@@ -68686,7 +68936,6 @@
         "src\\components\\detail-hub\\EmployeePortal.tsx",
         "src\\components\\get-ready\\GetReadyActivityFeed.tsx",
         "src\\components\\detail-hub\\TimecardSystem.tsx",
-        "src\\components\\get-ready\\GetReadyOverview.tsx",
         "src\\components\\reports\\invoices\\email\\SendInvoiceEmailDialog.tsx",
         "src\\components\\get-ready\\GetReadyWorkflowActions.tsx",
         "src\\components\\settings\\IntegrationSettings.tsx",
@@ -68719,6 +68968,7 @@
         "src\\components\\orders\\OrderDataTable.tsx",
         "src\\components\\reports\\invoices\\InvoiceComments.tsx",
         "src\\components\\reports\\invoices\\InvoiceEmailLog.tsx",
+        "src\\components\\get-ready\\GetReadyOverview.tsx",
         "src\\components\\get-ready\\GetReadyVehicleList.tsx",
         "src\\components\\users\\UserDashboard.tsx",
         "src\\components\\debug\\CacheDebugger.tsx",
@@ -68777,6 +69027,7 @@
         "src\\components\\detail-hub\\PhotoReviewCard.tsx",
         "src\\components\\detail-hub\\PunchClockKiosk.COMPLEX.tsx",
         "src\\components\\detail-hub\\PunchClockKiosk.FULL_FEATURES.tsx",
+        "src\\components\\get-ready\\StepTimeBreakdownTable.tsx",
         "src\\components\\NotificationProvider.tsx",
         "src\\components\\orders\\OrderViewLoadingFallback.tsx",
         "src\\components\\reports\\RecalculateOrderTotals.tsx",
@@ -69109,15 +69360,15 @@
         "src\\utils\\stockCSVHelpers.ts",
         "src\\utils\\translationAudit.ts"
       ],
-      "estimatedEffort": "219 hours"
+      "estimatedEffort": "220 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "2995 translation keys are referenced but missing",
+      "description": "3000 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "150 hours"
     }
   ],
-  "coverage": 79
+  "coverage": 78
 }
