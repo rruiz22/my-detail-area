@@ -73,19 +73,6 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
 }: ScheduleViewBlockProps) {
   const { t } = useTranslation();
 
-  // Debug logging to understand data structure
-  React.useEffect(() => {
-    console.log('🔍 [SCHEDULE DEBUG] Order data received:', {
-      id: order.id,
-      created_at: order.created_at,
-      updated_at: order.updated_at,
-      due_date: order.due_date,
-      status: order.status,
-      fullOrder: order
-    });
-    console.log('⚡ [CACHE REFRESH] Component refreshed at:', new Date().toLocaleTimeString());
-  }, [order]);
-
   // Local state for real-time updates
   const [currentOrder, setCurrentOrder] = useState<OrderData>(order);
   const [lastUpdateTime, setLastUpdateTime] = useState<string | null>(null);
@@ -142,19 +129,12 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
     const dueDate = getOrderDateSummary(currentOrder).due;
 
     if (!dueDate.isValid || !dueDate.rawValue) {
-      console.log('📅 [DUE DATE STATUS] No valid due date found');
       return null;
     }
 
     const enhancedStatus = getEnhancedDueDateStatus(dueDate.rawValue, t);
 
     if (enhancedStatus) {
-      console.log('📅 [ENHANCED STATUS]', {
-        isOverdue: enhancedStatus.status === 'overdue',
-        text: enhancedStatus.text,
-        severity: enhancedStatus.severity
-      });
-
       return {
         status: enhancedStatus.status,
         text: enhancedStatus.text,
@@ -185,7 +165,6 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
     const created = getOrderDateSummary(currentOrder).created;
 
     if (!created.isValid || !created.rawValue) {
-      console.log('❌ [ORDER AGE] No valid created date found');
       return 'Unknown age';
     }
 
@@ -194,39 +173,23 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
     const diffTime = now.getTime() - createdDate.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-    console.log('📅 [ORDER AGE]', {
-      createdDate: createdDate.toISOString(),
-      now: now.toISOString(),
-      diffDays,
-      source: created.source
-    });
-
     if (diffDays === 0) return 'Today';
     if (diffDays === 1) return 'Yesterday';
     return `${diffDays} days ago`;
   }, [currentOrder]);
 
-  // Enhanced schedule items with robust date handling and debugging
+  // Enhanced schedule items with robust date handling
   const scheduleItems = useMemo(() => {
-    console.log('🔍 [SCHEDULE ITEMS] Building schedule items for order:', currentOrder.id);
-
     // Use enhanced date utilities with fallbacks - pass orderType for recon/carwash
     const items = createScheduleItems(currentOrder, t, orderAge, orderType);
 
     // Convert to expected format and add icons
-    const scheduleItemsWithIcons: ScheduleItem[] = items.map((item, index) => {
+    const scheduleItemsWithIcons: ScheduleItem[] = items.map((item) => {
       const iconMap = {
         'Calendar': Calendar,
         'Target': Target,
         'Clock': Clock
       };
-
-      console.log(`📅 [SCHEDULE ITEM ${index}]`, {
-        label: item.label,
-        value: item.value,
-        subtitle: item.subtitle,
-        debug: item.debug
-      });
 
       return {
         icon: iconMap[item.icon as keyof typeof iconMap] || Calendar,
@@ -241,7 +204,7 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
 
   return (
     <Card className="h-full shadow-sm border-border/60">
-      <CardHeader className="pb-4 bg-gradient-to-br from-background to-muted/20">
+      <CardHeader className="pb-4 bg-muted/30">
         <CardTitle className="flex items-center justify-between text-base">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-lg bg-primary/10">
@@ -368,7 +331,7 @@ export const ScheduleViewBlock = React.memo(function ScheduleViewBlock({
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1, duration: 0.3 }}
-                    className="flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-background to-muted/30 border border-border/50 shadow-sm hover:shadow-md transition-shadow"
+                    className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 border border-border/50 shadow-sm hover:shadow-md transition-shadow"
                   >
                     <div className="p-2 rounded-lg bg-primary/10 flex-shrink-0">
                       <Icon className="h-4 w-4 text-primary" />

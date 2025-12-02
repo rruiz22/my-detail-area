@@ -159,7 +159,7 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
 
   return (
     <Card className="shadow-sm border-border/60">
-      <CardHeader className="pb-4 bg-gradient-to-br from-background to-muted/20">
+      <CardHeader className="pb-4 bg-muted/30">
         <div className="flex items-center justify-between mb-4">
           <CardTitle className="flex items-center gap-2.5 text-base">
             <div className="p-2 rounded-lg bg-primary/10">
@@ -282,7 +282,7 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
 
       <CardContent className="space-y-4 pt-4">
         {/* Order Context */}
-        <div className="flex items-center gap-3 text-sm p-3 rounded-xl bg-gradient-to-r from-background to-muted/30 border border-border/50 shadow-sm">
+        <div className="flex items-center gap-3 text-sm p-3 rounded-xl bg-muted/30 border border-border/50 shadow-sm">
           <div className="p-1.5 rounded-lg bg-primary/10">
             <Hash className="w-4 h-4 text-primary" />
           </div>
@@ -340,8 +340,8 @@ export const OrderTasksSection: React.FC<OrderTasksSectionProps> = ({
                   key={task.id}
                   className={`flex items-start gap-3 p-3 rounded-xl border border-border/50 transition-all hover:shadow-md ${
                     task.status === 'completed'
-                      ? 'bg-gradient-to-r from-muted/60 to-muted/40 opacity-75'
-                      : 'bg-gradient-to-r from-background to-muted/30 shadow-sm hover:border-primary/20'
+                      ? 'bg-muted/40 opacity-75'
+                      : 'bg-muted/20 shadow-sm hover:border-primary/20'
                   }`}
                 >
                   <div className="mt-0.5">

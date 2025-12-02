@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Order } from '@/hooks/useOrderManagement';
 import { Car, Hash } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Order } from '@/hooks/useOrderManagement';
 
 // ✅ IMPROVED: Use explicit type-safe interface
 interface ModifiedVehicleInfoBlockProps {
@@ -13,6 +13,7 @@ interface ModifiedVehicleInfoBlockProps {
     vehicle_image?: string;
     vin_decoded?: boolean;
   };
+  hideStockNumber?: boolean;
 }
 
 // Modified Vehicle Info Block according to new specifications:
@@ -21,37 +22,50 @@ interface ModifiedVehicleInfoBlockProps {
 // - Show complete VIN
 // - Display vehicle image in preview area
 export const ModifiedVehicleInfoBlock = React.memo(function ModifiedVehicleInfoBlock({
-  order
+  order,
+  hideStockNumber = false
 }: ModifiedVehicleInfoBlockProps) {
   const { t } = useTranslation();
 
   // Memoize vehicle info array - simplified version with required fields only
-  const vehicleInfo = useMemo(() => [
-    {
-      icon: Car,
-      label: t('vehicle_info.vehicle_information'),
-      value: order.vehicle_info || order.vehicleInfo || 'Vehicle information not available',
-      description: t('vehicle_info.decoded_from_vin')
-    },
-    {
-      icon: Hash,
-      label: 'VIN',
-      value: order.vehicleVin || order.vehicle_vin || t('data_table.vin_not_provided'),
-      mono: true,
-      fullWidth: true
-    },
-    {
-      icon: Hash,
-      label: 'Stock#',
-      value: order.stockNumber || order.stock_number || t('data_table.no_stock')
+  const vehicleInfo = useMemo(() => {
+    const items = [
+      {
+        icon: Car,
+        label: t('vehicle_info.vehicle_information'),
+        value: order.vehicle_info || order.vehicleInfo || 'Vehicle information not available',
+        description: t('vehicle_info.decoded_from_vin')
+      },
+      {
+        icon: Hash,
+        label: 'VIN',
+        value: order.vehicleVin || order.vehicle_vin || t('data_table.vin_not_provided'),
+        mono: true,
+        fullWidth: true
+      }
+    ];
+
+    // Only add stock number if not hidden
+    if (!hideStockNumber) {
+      items.push({
+        icon: Hash,
+        label: 'Stock#',
+        value: order.stockNumber || order.stock_number || t('data_table.no_stock'),
+        mono: false,
+        fullWidth: false,
+        description: undefined
+      });
     }
-  ], [
+
+    return items;
+  }, [
     order.vehicle_info,
     order.vehicleInfo,
     order.vehicleVin,
     order.vehicle_vin,
     order.stockNumber,
     order.stock_number,
+    hideStockNumber,
     t
   ]);
 
@@ -73,7 +87,7 @@ export const ModifiedVehicleInfoBlock = React.memo(function ModifiedVehicleInfoB
 
   return (
     <Card className="h-full shadow-sm border-border/60">
-      <CardHeader className="pb-4 bg-gradient-to-br from-background to-muted/20">
+      <CardHeader className="pb-4 bg-muted/30">
         <CardTitle className="flex items-center gap-2.5 text-base">
           <div className="p-2 rounded-lg bg-primary/10">
             <Car className="h-5 w-5 text-primary" />
@@ -129,7 +143,7 @@ export const ModifiedVehicleInfoBlock = React.memo(function ModifiedVehicleInfoB
             return (
               <div
                 key={index}
-                className={`flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-background to-muted/30 border border-border/50 shadow-sm hover:shadow-md transition-shadow ${
+                className={`flex items-start gap-3 p-3 rounded-xl bg-muted/30 border border-border/50 shadow-sm hover:shadow-md transition-shadow ${
                   info.fullWidth ? 'col-span-full' : ''
                 }`}
               >

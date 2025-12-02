@@ -23,14 +23,6 @@ export const calculateOverdueStatus = (dueDateString?: string | null): OverdueSt
   const diffHours = diffMs / (1000 * 60 * 60);
   const diffDays = diffMs / (1000 * 60 * 60 * 24);
 
-  console.log('🕒 [OVERDUE CALC]', {
-    dueDate: dueDate.toISOString(),
-    now: now.toISOString(),
-    diffMs,
-    diffHours: Math.round(diffHours * 100) / 100,
-    diffDays: Math.round(diffDays * 100) / 100
-  });
-
   // Not overdue yet
   if (diffMs <= 0) {
     const hoursUntilDue = Math.abs(diffHours);

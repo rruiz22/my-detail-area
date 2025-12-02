@@ -1,55 +1,50 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, AlertCircle } from 'lucide-react';
+import { FileText, MessageSquare } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface SimpleNotesDisplayProps {
-  order: any;
+  order: {
+    notes?: string;
+    created_at?: string;
+    [key: string]: unknown;
+  };
 }
 
 export function SimpleNotesDisplay({ order }: SimpleNotesDisplayProps) {
   const { t } = useTranslation();
 
+  // Don't render if no notes
+  if (!order.notes) {
+    return null;
+  }
+
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <FileText className="h-5 w-5 text-gray-700" />
-          {t('order_detail.simple_notes')}
+    <Card className="shadow-sm border-border/60">
+      <CardHeader className="pb-3 bg-muted/30">
+        <CardTitle className="flex items-center gap-2.5 text-base">
+          <div className="p-2 rounded-lg bg-primary/10">
+            <FileText className="h-4 w-4 text-primary" />
+          </div>
+          <span className="font-bold">{t('order_detail.simple_notes')}</span>
         </CardTitle>
       </CardHeader>
-      
-      <CardContent>
-        <div className="p-4 bg-muted/20 rounded-lg border border-dashed min-h-[120px]">
-          {order.notes ? (
-            <p className="text-sm whitespace-pre-wrap leading-relaxed">
+
+      <CardContent className="pt-4">
+        <div className="p-3 bg-muted/20 rounded-lg border border-border/50">
+          <div className="flex items-start gap-2">
+            <MessageSquare className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+            <p className="text-sm whitespace-pre-wrap leading-relaxed text-foreground">
               {order.notes}
             </p>
-          ) : (
-            <div className="flex items-center justify-center h-[80px]">
-              <div className="text-center">
-                <AlertCircle className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                <p className="text-sm text-muted-foreground italic">
-                  {t('order_detail.no_notes_provided')}
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-        
-        {/* Notes metadata */}
-        {order.notes && (
-          <div className="mt-3 pt-3 border-t">
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>
-                {order.notes.split(' ').length} {t('order_detail.words')} • {order.notes.length} {t('order_detail.characters')}
-              </span>
-              <span>
-                {t('order_detail.added')} {order.created_at ? new Date(order.created_at).toLocaleDateString() : t('common.recently')}
-              </span>
-            </div>
           </div>
-        )}
+        </div>
+
+        {/* Notes metadata - compact */}
+        <div className="mt-2 flex items-center justify-end text-xs text-muted-foreground">
+          <span>
+            {order.notes.split(' ').length} {t('order_detail.words')}
+          </span>
+        </div>
       </CardContent>
     </Card>
   );

@@ -1,8 +1,8 @@
 {
   "scannedFiles": 933,
-  "totalStrings": 9786,
+  "totalStrings": 9784,
   "hardcodedStrings": 2105,
-  "translatedStrings": 7681,
+  "translatedStrings": 7679,
   "issues": {
     "critical": [
       {
@@ -40988,302 +40988,312 @@
         "hardcodedStrings": [
           {
             "text": ", error);\n      const errorMessage = error?.message || t(",
-            "line": 613,
-            "context": "612: // Keep modal open and show error\n613: console.error('Submit error:', error);\n614: const errorMessage = error?.message || t('orders.creation_failed') || 'Failed to save order';"
+            "line": 592,
+            "context": "591: // Keep modal open and show error\n592: logger.error('Submit error:', error);\n593: const errorMessage = error?.message || t('orders.creation_failed') || 'Failed to save order';"
           }
         ],
         "translationCalls": [
           {
+            "key": "recon_orders.department_label",
+            "line": 167,
+            "exists": false
+          },
+          {
             "key": "stock.days",
-            "line": 373,
+            "line": 374,
             "exists": false
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 377,
+            "line": 378,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 381,
+            "line": 382,
             "exists": true
           },
           {
             "key": "stock.autopop.cleared",
-            "line": 400,
+            "line": 401,
             "exists": true
           },
           {
             "key": "orders.max_services_reached",
-            "line": 460,
+            "line": 461,
             "exists": true
           },
           {
             "key": "validation.vinRequired",
-            "line": 510,
+            "line": 511,
             "exists": true
           },
           {
             "key": "validation.vinInvalidLength",
-            "line": 514,
+            "line": 515,
             "exists": true
           },
           {
             "key": "validation.dealershipRequired",
-            "line": 520,
+            "line": 521,
             "exists": true
           },
           {
             "key": "validation.stockNumberRequired",
-            "line": 526,
+            "line": 527,
             "exists": true
           },
           {
             "key": "orders.creating_multiple_orders",
-            "line": 574,
+            "line": 570,
             "exists": true
           },
           {
             "key": "orders.creating_order",
-            "line": 603,
+            "line": 582,
             "exists": true
           },
           {
             "key": "orders.creation_failed",
-            "line": 614,
+            "line": 593,
             "exists": true
           },
           {
             "key": "recon.edit_recon_order",
-            "line": 636,
+            "line": 615,
             "exists": true
           },
           {
             "key": "recon.create_recon_order",
-            "line": 636,
+            "line": 615,
             "exists": true
           },
           {
             "key": "recon.edit_order_description",
-            "line": 639,
+            "line": 618,
             "exists": true
           },
           {
             "key": "recon.create_order_description",
-            "line": 639,
+            "line": 618,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 665,
+            "line": 644,
             "exists": true
           },
           {
             "key": "sales_orders.dealership",
-            "line": 671,
+            "line": 650,
             "exists": true
           },
           {
             "key": "dealerships.auto_selected",
-            "line": 674,
+            "line": 653,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 684,
+            "line": 663,
             "exists": true
           },
           {
             "key": "sales_orders.select_dealership",
-            "line": 684,
+            "line": 663,
             "exists": true
           },
           {
             "key": "stock.autopop.searchVehicle",
-            "line": 706,
+            "line": 685,
             "exists": true
           },
           {
             "key": "stock.filters.search_placeholder",
-            "line": 707,
+            "line": 686,
             "exists": true
           },
           {
             "key": "orders.vehicleInfo",
-            "line": 719,
+            "line": 698,
             "exists": true
           },
           {
             "key": "sales_orders.stock_number",
-            "line": 724,
+            "line": 703,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 734,
+            "line": 713,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 734,
+            "line": 713,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 734,
+            "line": 713,
             "exists": true
           },
           {
             "key": "orders.vin",
-            "line": 741,
+            "line": 720,
             "exists": true
           },
           {
             "key": "sales_orders.vin_decoded_successfully",
-            "line": 746,
+            "line": 725,
             "exists": true
           },
           {
             "key": "stock.autopop.autoPopulated",
-            "line": 774,
+            "line": 753,
             "exists": true
           },
           {
             "key": "stock.autopop.localInventory",
-            "line": 774,
+            "line": 753,
             "exists": true
           },
           {
             "key": "stock.autopop.vinDecoded",
-            "line": 774,
+            "line": 753,
             "exists": true
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 780,
+            "line": 759,
             "exists": true
           },
           {
             "key": "sales_orders.manual_vehicle_entry",
-            "line": 791,
+            "line": 770,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 806,
+            "line": 785,
             "exists": true
           },
           {
             "key": "recon.completion_date",
-            "line": 812,
+            "line": 791,
             "exists": true
           },
           {
             "key": "recon.select_completion_date",
-            "line": 816,
+            "line": 795,
             "exists": true
           },
           {
             "key": "recon.completion_date_help",
-            "line": 821,
+            "line": 800,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 829,
+            "line": 808,
             "exists": true
           },
           {
             "key": "orders.available",
-            "line": 832,
+            "line": 811,
             "exists": true
           },
           {
             "key": "orders.selected",
-            "line": 837,
+            "line": 816,
             "exists": true
           },
           {
             "key": "orders.max_services_info",
-            "line": 844,
+            "line": 823,
             "exists": true
           },
           {
             "key": "orders.selectDealershipFirst",
-            "line": 850,
+            "line": 829,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 855,
+            "line": 834,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 862,
+            "line": 841,
             "exists": true
           },
           {
             "key": "services.minutes",
-            "line": 894,
+            "line": 873,
             "exists": true
           },
           {
             "key": "orders.total",
-            "line": 915,
+            "line": 894,
             "exists": true
           },
           {
             "key": "orders.servicesSelected",
-            "line": 921,
+            "line": 900,
             "exists": true
           },
           {
             "key": "orders.notes",
-            "line": 933,
+            "line": 912,
             "exists": true
           },
           {
             "key": "orders.notes",
-            "line": 939,
+            "line": 918,
             "exists": true
           },
           {
             "key": "orders.notes_placeholder",
-            "line": 946,
+            "line": 925,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 997,
+            "line": 976,
             "exists": true
           },
           {
             "key": "orders.updating",
-            "line": 1013,
+            "line": 992,
             "exists": true
           },
           {
             "key": "orders.creating",
-            "line": 1013,
+            "line": 992,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 1016,
+            "line": 995,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 1016,
+            "line": 995,
             "exists": true
           }
         ],
         "missingKeys": [
           {
+            "key": "recon_orders.department_label",
+            "line": 167,
+            "context": "166: selectedDealership ? parseInt(selectedDealership) : null,\n167: t('recon_orders.department_label', 'Recon Dept')\n168: );"
+          },
+          {
             "key": "stock.days",
-            "line": 373,
-            "context": "372: if (result.data.price) details.push(`$${result.data.price.toLocaleString()}`);\n373: if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);\n374: if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);"
+            "line": 374,
+            "context": "373: if (result.data.price) details.push(`$${result.data.price.toLocaleString()}`);\n374: if (result.data.age_days) details.push(`${result.data.age_days} ${t('stock.days')}`);\n375: if (result.data.leads_total !== undefined) details.push(`${result.data.leads_total} leads`);"
           }
         ],
         "coverage": 98,
@@ -41294,59 +41304,59 @@
         "hardcodedStrings": [
           {
             "text": "Live",
-            "line": 256,
-            "context": "255: <Wifi className=\"h-3.5 w-3.5 text-green-600\" title=\"Real-time updates active\" />\n256: <span className=\"text-xs font-medium text-green-700\">Live</span>\n257: </div>"
+            "line": 219,
+            "context": "218: <Wifi className=\"h-3.5 w-3.5 text-green-600\" title=\"Real-time updates active\" />\n219: <span className=\"text-xs font-medium text-green-700\">Live</span>\n220: </div>"
           },
           {
             "text": "Start Order",
-            "line": 406,
-            "context": "405: >\n406: <Play className=\"h-3 w-3 mr-1\" />\n407: Start Order"
+            "line": 369,
+            "context": "368: >\n369: <Play className=\"h-3 w-3 mr-1\" />\n370: Start Order"
           },
           {
             "text": "Complete",
-            "line": 418,
-            "context": "417: >\n418: <CheckCircle className=\"h-3 w-3 mr-1\" />\n419: Complete"
+            "line": 381,
+            "context": "380: >\n381: <CheckCircle className=\"h-3 w-3 mr-1\" />\n382: Complete"
           },
           {
             "text": "Hold",
-            "line": 427,
-            "context": "426: >\n427: <Pause className=\"h-3 w-3 mr-1\" />\n428: Hold"
+            "line": 390,
+            "context": "389: >\n390: <Pause className=\"h-3 w-3 mr-1\" />\n391: Hold"
           },
           {
             "text": "Real-time updates active",
-            "line": 255,
-            "context": "254: <div className=\"flex items-center gap-1.5 px-2 py-1 rounded-md bg-green-50 border border-green-200\">\n255: <Wifi className=\"h-3.5 w-3.5 text-green-600\" title=\"Real-time updates active\" />\n256: <span className=\"text-xs font-medium text-green-700\">Live</span>"
+            "line": 218,
+            "context": "217: <div className=\"flex items-center gap-1.5 px-2 py-1 rounded-md bg-green-50 border border-green-200\">\n218: <Wifi className=\"h-3.5 w-3.5 text-green-600\" title=\"Real-time updates active\" />\n219: <span className=\"text-xs font-medium text-green-700\">Live</span>"
           }
         ],
         "translationCalls": [
           {
             "key": "schedule_view.schedule_timeline",
-            "line": 250,
+            "line": 213,
             "exists": true
           },
           {
             "key": "schedule_view.order_progress",
-            "line": 290,
+            "line": 253,
             "exists": true
           },
           {
             "key": "schedule_view.order_completed",
-            "line": 344,
+            "line": 307,
             "exists": true
           },
           {
             "key": "common.status.pending",
-            "line": 345,
+            "line": 308,
             "exists": true
           },
           {
             "key": "common.status.in_progress",
-            "line": 346,
+            "line": 309,
             "exists": true
           },
           {
             "key": "schedule_view.timeline",
-            "line": 359,
+            "line": 322,
             "exists": true
           }
         ],
@@ -41834,51 +41844,6 @@
             "key": "orders.no_service_details",
             "line": 184,
             "context": "183: <p className=\"text-xs text-muted-foreground italic\">\n184: {t('orders.no_service_details', 'No additional details available')}\n185: </p>"
-          }
-        ],
-        "coverage": 100,
-        "severity": "low"
-      },
-      {
-        "file": "src\\components\\orders\\SimpleNotesDisplay.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "order_detail.simple_notes",
-            "line": 18,
-            "exists": true
-          },
-          {
-            "key": "order_detail.no_notes_provided",
-            "line": 33,
-            "exists": true
-          },
-          {
-            "key": "order_detail.words",
-            "line": 45,
-            "exists": true
-          },
-          {
-            "key": "order_detail.characters",
-            "line": 45,
-            "exists": true
-          },
-          {
-            "key": "order_detail.added",
-            "line": 48,
-            "exists": true
-          },
-          {
-            "key": "common.recently",
-            "line": 48,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "common.recently",
-            "line": 48,
-            "context": "47: <span>\n48: {t('order_detail.added')} {order.created_at ? new Date(order.created_at).toLocaleDateString() : t('common.recently')}\n49: </span>"
           }
         ],
         "coverage": 100,
@@ -66735,9 +66700,19 @@
             "exists": false
           },
           {
+            "key": "recon_orders.tabs.week",
+            "line": 614,
+            "exists": false
+          },
+          {
             "key": "sales_orders.tabs.all",
             "line": 614,
             "exists": true
+          },
+          {
+            "key": "recon_orders.search.showing_results",
+            "line": 625,
+            "exists": false
           },
           {
             "key": "orders.confirm_delete_title",
@@ -66814,7 +66789,17 @@
           {
             "key": "sales_orders.tabs.queue",
             "line": 614,
-            "context": "613: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n614: {activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'queue' ? t('sales_orders.tabs.queue') : activeFilter === 'week' ? 'Week' : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n615: </h2>"
+            "context": "613: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n614: {activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'queue' ? t('sales_orders.tabs.queue') : activeFilter === 'week' ? t('recon_orders.tabs.week') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n615: </h2>"
+          },
+          {
+            "key": "recon_orders.tabs.week",
+            "line": 614,
+            "context": "613: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n614: {activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'queue' ? t('sales_orders.tabs.queue') : activeFilter === 'week' ? t('recon_orders.tabs.week') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n615: </h2>"
+          },
+          {
+            "key": "recon_orders.search.showing_results",
+            "line": 625,
+            "context": "624: <p className=\"text-sm text-muted-foreground\">\n625: {t('recon_orders.search.showing_results', { searchTerm })}\n626: </p>"
           },
           {
             "key": "orders.confirm_delete_title",
@@ -68052,6 +68037,11 @@
             "exists": true
           },
           {
+            "key": "service_orders.search.showing_results",
+            "line": 519,
+            "exists": true
+          },
+          {
             "key": "orders.confirm_delete_title",
             "line": 597,
             "exists": false
@@ -69128,7 +69118,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "440 Component components need translation",
+      "description": "439 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\detail-hub\\InvoiceCenter.BACKUP.tsx",
@@ -69495,7 +69485,6 @@
         "src\\components\\orders\\RecentActivity.tsx",
         "src\\components\\orders\\ServicesDisplay.tsx",
         "src\\components\\orders\\ServiceTooltip.tsx",
-        "src\\components\\orders\\SimpleNotesDisplay.tsx",
         "src\\components\\permissions\\GroupMembershipManagement.tsx",
         "src\\components\\presence\\OnlineUsersList.tsx",
         "src\\components\\productivity\\ProductivityCalendar.OLD.tsx",
@@ -69576,7 +69565,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3017 translation keys are referenced but missing",
+      "description": "3019 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "151 hours"
     }

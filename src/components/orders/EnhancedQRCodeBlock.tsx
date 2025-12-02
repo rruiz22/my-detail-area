@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { ShortLinkData, shortLinkService } from '@/services/shortLinkService';
-import { useAuth } from '@/contexts/AuthContext';
 import {
     AlertCircle,
     Copy,
@@ -14,7 +15,6 @@ import {
 import { QRCodeCanvas } from 'qrcode.react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useToast } from '@/hooks/use-toast';
 
 interface EnhancedQRCodeBlockProps {
   orderId: string;
@@ -217,7 +217,7 @@ export const EnhancedQRCodeBlock = React.memo(function EnhancedQRCodeBlock({
   }, [user]);
 
   return (
-    <div className="bg-gradient-to-br from-background to-muted/20 p-4 sm:p-5 rounded-xl border border-border/60 shadow-sm">
+    <div className="bg-muted/20 p-4 sm:p-5 rounded-xl border border-border/60 shadow-sm">
       <div className="flex items-center gap-2.5 mb-4">
         <div className="p-2 rounded-lg bg-primary/10">
           <QrCode className="h-5 w-5 text-primary" />

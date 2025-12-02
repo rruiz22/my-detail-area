@@ -1,13 +1,13 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import { usePermissions } from '@/hooks/usePermissions';
 import { useUserProfileForPermissions } from '@/hooks/useUserProfile';
 import { supabase } from '@/integrations/supabase/client';
 import { pushNotificationHelper } from '@/services/pushNotificationHelper';
-import { createCommentNotification } from '@/utils/notificationHelper';
-import { extractMentions, resolveMentionsToUserIds, createMentionNotifications } from '@/utils/mentionUtils';
 import { slackNotificationService } from '@/services/slackNotificationService';
+import { createMentionNotifications, extractMentions, resolveMentionsToUserIds } from '@/utils/mentionUtils';
+import { createCommentNotification } from '@/utils/notificationHelper';
 import { useCallback, useEffect, useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
 
 export interface OrderComment {
   id: string;
@@ -50,16 +50,22 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
   const { user } = useAuth();
   const { toast } = useToast();
   const { enhancedUser } = usePermissions();
-  const { data: userProfile } = useUserProfileForPermissions(); // 🔴 FIX: Get full user profile with first_name/last_name
+  const { data: userProfile } = useUserProfileForPermissions();
 
-  // Check if user can access internal notes based on custom role permissions
+  // Check if user can access internal notes based on permissions
   const canAccessInternal = (() => {
     if (!user || !enhancedUser) return false;
 
-    // System admins always have access
+    // 1. System admins always have access
     if ((enhancedUser as any).is_system_admin) return true;
 
-    // Check if any of user's custom roles has can_access_internal_notes permission
+    // 2. Supermanagers have access
+    if ((enhancedUser as any).is_supermanager) return true;
+
+    // 3. Detail users (user_type = 'detail') have access to internal notes
+    if (userProfile?.user_type === 'detail') return true;
+
+    // 4. Check if any of user's custom roles has can_access_internal_notes permission
     const customRoles = (enhancedUser as any).custom_roles;
     if (customRoles && Array.isArray(customRoles)) {
       return customRoles.some((role: any) => {
@@ -74,20 +80,6 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
 
     return false;
   })();
-
-  // Debug permissions
-  const customRoles = (enhancedUser as any)?.custom_roles;
-  console.log('🔐 Internal notes access check:', {
-    userId: user?.id,
-    customRolesCount: customRoles?.length || 0,
-    isSystemAdmin: (enhancedUser as any)?.is_system_admin,
-    rolePermissions: customRoles?.map((r: any) => ({
-      role: r.display_name,
-      hasGranular: !!r.granularPermissions,
-      canAccessInternal: r.granularPermissions?.can_access_internal_notes
-    })),
-    canAccessInternal
-  });
 
   // Organize threading structure for comments and notes
   const organizeThreading = useCallback((comments: OrderComment[]): OrderComment[] => {
@@ -127,8 +119,6 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
     setError(null);
 
     try {
-      console.log(`💬 Fetching comments for order: ${orderId}`);
-
       // Get comments data including parent_comment_id for threading
       const { data: commentsData, error: commentsError } = await supabase
         .from('order_comments')
@@ -152,7 +142,6 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
       }
 
       if (!commentsData || commentsData.length === 0) {
-        console.log('📊 No comments found for this order');
         setAllComments([]);
         return;
       }
@@ -218,7 +207,6 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
       // Organize threading structure
       const organizedComments = organizeThreading(transformedComments);
 
-      console.log(`✅ Loaded ${transformedComments.length} comments/notes with threading`);
       setAllComments(organizedComments);
 
     } catch (err) {
@@ -241,8 +229,6 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
     }
 
     try {
-      console.log(`💬 Adding ${type} to order ${orderId}${parentId ? ` (reply to ${parentId})` : ''}`);
-
       const { data, error } = await supabase
         .from('order_comments')
         .insert({
@@ -261,13 +247,10 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
       }
 
       const commentId = data.id;
-      console.log(`✅ ${type} added successfully${parentId ? ' as reply' : ''} - ID: ${commentId}`);
 
       // 🎯 PROCESS @MENTIONS (if any)
       const mentions = extractMentions(text);
       if (mentions.length > 0) {
-        console.log(`🔔 Detected ${mentions.length} mentions:`, mentions);
-
         // Get order data for mention notifications
         const { data: orderData } = await supabase
           .from('orders')
@@ -378,8 +361,7 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
               // Show appropriate message based on result
               if (result && result.message) {
                 if (result.message.includes('No active push notification tokens')) {
-                  // User hasn't enabled push notifications - this is normal
-                  console.log('ℹ️ User has not enabled push notifications (normal)');
+                  // User hasn't enabled push notifications - this is normal, no need to log
                 } else if (result.message.includes('not available') || result.message.includes('not deployed')) {
                   toast({ description: 'ℹ️ Push notifications not configured' });
                 } else if (result.sent > 0) {
@@ -396,8 +378,6 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
                 'comment_added'
               ).then(async (slackEnabled) => {
                 if (slackEnabled) {
-                  console.log('📤 Slack enabled for comment, sending notification...');
-
                   // Get shortLink from order data (stored in orders.short_link column)
                   let shortLink: string | undefined = undefined;
                   try {
@@ -454,8 +434,6 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
     if (!user) throw new Error('User not authenticated');
 
     try {
-      console.log('🗑️ Deleting comment:', commentId);
-
       // First, get the comment to check its type before deleting
       const { data: commentData, error: fetchError } = await supabase
         .from('order_comments')
@@ -512,8 +490,6 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
         detail: { orderId, commentId, commentType }
       }));
 
-      console.log(`✅ ${isInternalNote ? 'Internal note' : 'Comment'} deleted successfully`);
-
       // Refresh comments list
       await fetchComments();
     } catch (err) {
@@ -535,7 +511,6 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
         table: 'order_comments',
         filter: `order_id=eq.${orderId}`
       }, (payload) => {
-        console.log('📡 Real-time comment update:', payload.eventType);
         // Refresh comments when changes occur
         fetchComments();
       })

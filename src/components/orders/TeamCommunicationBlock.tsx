@@ -9,10 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
@@ -20,16 +20,16 @@ import { useToast } from '@/hooks/use-toast';
 import { useAttachments } from '@/hooks/useAttachments';
 import { useOrderComments, type OrderComment } from '@/hooks/useOrderComments';
 import {
-  AtSign,
-  Clock,
-  Eye,
-  Lock,
-  MessageSquare,
-  MoreHorizontal,
-  Reply,
-  Send,
-  Shield,
-  Trash2
+    AtSign,
+    Clock,
+    Eye,
+    Lock,
+    MessageSquare,
+    MoreHorizontal,
+    Reply,
+    Send,
+    Shield,
+    Trash2
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -231,8 +231,8 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
             {/* Parent Comment/Note */}
             <div className={`p-2.5 rounded-lg shadow-sm hover:shadow-md transition-shadow border-l-3 ${
               type === 'internal'
-                ? 'bg-gradient-to-br from-amber-50 to-amber-100/50 border-amber-400'
-                : 'bg-gradient-to-br from-background to-muted/30 border-primary'
+                ? 'bg-amber-50 border-amber-400'
+                : 'bg-muted/30 border-primary'
             }`}>
               <div className="flex items-center gap-2 mb-1.5">
                 <AvatarSystem
@@ -364,8 +364,8 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
                 {message.replies.map((reply) => (
                   <div key={reply.id as string} className={`p-2 rounded-lg shadow-sm border-l-2 ${
                     type === 'internal'
-                      ? 'bg-gradient-to-br from-amber-50 to-amber-100/30 border-amber-300'
-                      : 'bg-gradient-to-br from-muted/30 to-muted/50 border-primary/30'
+                      ? 'bg-amber-50/80 border-amber-300'
+                      : 'bg-muted/40 border-primary/30'
                   }`}>
                     <div className="flex items-center gap-1.5 mb-1">
                       <AvatarSystem
@@ -413,7 +413,7 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
 
   return (
     <Card className="shadow-sm border-border/60">
-      <CardHeader className="pb-4 bg-gradient-to-br from-background to-muted/20">
+      <CardHeader className="pb-4 bg-muted/30">
         <CardTitle className="flex items-center gap-3">
           <div className="p-2 rounded-lg bg-primary/10">
             <MessageSquare className="h-5 w-5 text-primary" />

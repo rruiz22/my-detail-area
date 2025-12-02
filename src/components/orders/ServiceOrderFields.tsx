@@ -61,7 +61,7 @@ export const ServiceOrderFields = React.memo(function ServiceOrderFields({
     <div className="space-y-4">
       {/* Service Information Card */}
       <Card className="shadow-sm border-border/60">
-        <CardHeader className="pb-4 bg-gradient-to-br from-background to-muted/20">
+        <CardHeader className="pb-4 bg-muted/30">
           <CardTitle className="flex items-center gap-2.5 text-base">
             <div className="p-2 rounded-lg bg-primary/10">
               <Wrench className="h-5 w-5 text-primary" />
@@ -72,25 +72,23 @@ export const ServiceOrderFields = React.memo(function ServiceOrderFields({
 
         <CardContent className="space-y-4 pt-4">
           {/* PO, RO, TAG inline */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2">
             {serviceInfo.map((info, index) => {
               const Icon = info.icon;
               return (
                 <div
                   key={index}
-                  className="flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-background to-muted/30 border border-border/50 shadow-sm hover:shadow-md transition-shadow"
+                  className="flex flex-col items-center p-3 rounded-xl bg-muted/30 border border-border/50 shadow-sm hover:shadow-md transition-shadow text-center"
                 >
-                  <div className="p-2 rounded-lg bg-primary/10 flex-shrink-0">
-                    <Icon className="h-4 w-4 text-primary" />
+                  <div className="p-1.5 rounded-md bg-primary/10 mb-2">
+                    <Icon className="h-3.5 w-3.5 text-primary" />
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
-                      {info.label}
-                    </p>
-                    <p className="text-sm font-bold text-foreground font-mono truncate">
-                      {info.value}
-                    </p>
-                  </div>
+                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                    {info.label}
+                  </p>
+                  <p className="text-sm font-bold text-foreground font-mono break-all leading-tight">
+                    {info.value}
+                  </p>
                 </div>
               );
             })}
@@ -115,8 +113,8 @@ export const ServiceOrderFields = React.memo(function ServiceOrderFields({
         </CardContent>
       </Card>
 
-      {/* Modified Vehicle Information */}
-      <ModifiedVehicleInfoBlock order={order} />
+      {/* Modified Vehicle Information - Hide stock number for service orders */}
+      <ModifiedVehicleInfoBlock order={order} hideStockNumber={true} />
     </div>
   );
 });

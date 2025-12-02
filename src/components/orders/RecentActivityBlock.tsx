@@ -607,7 +607,7 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
 
   return (
     <Card className="shadow-sm border-border/60">
-      <CardHeader className="pb-3 bg-gradient-to-br from-background to-muted/20">
+      <CardHeader className="pb-3 bg-muted/30">
         <CardTitle className="flex items-center gap-2 text-sm">
           <div className="p-1.5 rounded-lg bg-primary/10">
             <Activity className="h-4 w-4 text-primary" />
@@ -687,7 +687,7 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
               >
                 <div className="flex items-start gap-2">
                   {/* Icon with circle background - Compact */}
-                  <div className="w-8 h-8 rounded-md bg-gradient-to-br from-background to-muted/40 flex items-center justify-center flex-shrink-0 shadow-sm ring-1 ring-border/50">
+                  <div className="w-8 h-8 rounded-md bg-muted/40 flex items-center justify-center flex-shrink-0 shadow-sm ring-1 ring-border/50">
                     {getActivityIcon(activity.action_type)}
                   </div>
 

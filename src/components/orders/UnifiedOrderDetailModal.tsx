@@ -3,6 +3,7 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePermissionContext } from '@/contexts/PermissionContext';
+import { useToast } from '@/hooks/use-toast';
 import { usePrintOrder } from '@/hooks/usePrintOrder';
 import { useOrderDetailsPolling } from '@/hooks/useSmartPolling';
 import { supabase } from '@/integrations/supabase/client';
@@ -15,7 +16,6 @@ import {
 } from 'lucide-react';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useToast } from '@/hooks/use-toast';
 import { OrderTasksSection } from './OrderTasksSection';
 import { SkeletonLoader } from './SkeletonLoader';
 
@@ -563,7 +563,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
         </div>
 
         {/* Footer with Actions - Sticky at bottom of modal */}
-        <footer className="flex-none border-t bg-gradient-to-br from-background to-muted/20 p-3 sm:p-4 z-10">
+        <footer className="flex-none border-t bg-background p-3 sm:p-4 z-10">
             <div className="flex flex-row items-center gap-2">
               {/* Left: Icon buttons - 70% */}
               <div className="flex gap-2 flex-1">
@@ -620,7 +620,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
               {/* Right: Close Button - 30% */}
               <Button
                 onClick={onClose}
-                className="w-[30%] sm:w-auto h-11 sm:h-9 px-4 sm:px-6 gap-2 sm:min-w-[120px] bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 shadow-sm hover:shadow-md transition-all font-semibold"
+                className="w-[30%] sm:w-auto h-11 sm:h-9 px-4 sm:px-6 gap-2 sm:min-w-[120px] bg-primary hover:bg-primary/90 shadow-sm transition-all font-semibold"
               >
                 <span className="text-sm">{t('common.action_buttons.close')}</span>
               </Button>

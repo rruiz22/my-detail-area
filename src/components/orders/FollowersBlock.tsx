@@ -3,6 +3,7 @@ import { AvatarSystem } from '@/components/ui/avatar-system';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
 import { useFollowers } from '@/hooks/useFollowers';
 import {
     Bell,
@@ -17,7 +18,6 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useToast } from '@/hooks/use-toast';
 
 interface FollowersBlockProps {
   orderId: string;
@@ -103,7 +103,7 @@ export function FollowersBlock({ orderId, dealerId }: FollowersBlockProps) {
 
   return (
     <Card className="shadow-sm border-border/60">
-      <CardHeader className="pb-4 bg-gradient-to-br from-background to-muted/20">
+      <CardHeader className="pb-4 bg-muted/30">
         <CardTitle className="flex items-center justify-between text-base">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-lg bg-primary/10">

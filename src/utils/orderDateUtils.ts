@@ -1,5 +1,5 @@
-import { safeFormatDate, safeParseDate } from './dateUtils';
 import type { OrderData } from '@/types/order';
+import { safeFormatDate, safeParseDate } from './dateUtils';
 
 /**
  * Enhanced date access utility for order objects
@@ -25,13 +25,10 @@ export const getOrderCreatedDate = (order: OrderData): DateAccessResult => {
     { key: 'dateCreated', value: (order as any).dateCreated }
   ];
 
-  console.log('🔍 [DATE DEBUG] Looking for created date in:', possibleFields);
-
   for (const field of possibleFields) {
     if (field.value) {
       const parsed = safeParseDate(field.value);
       if (parsed) {
-        console.log(`✅ [DATE DEBUG] Found valid created date: ${field.key} = ${field.value}`);
         return {
           value: safeFormatDate(field.value),
           rawValue: field.value,
@@ -42,7 +39,6 @@ export const getOrderCreatedDate = (order: OrderData): DateAccessResult => {
     }
   }
 
-  console.log('❌ [DATE DEBUG] No valid created date found');
   return {
     value: 'Not available',
     rawValue: null,
@@ -64,13 +60,10 @@ export const getOrderUpdatedDate = (order: OrderData): DateAccessResult => {
     { key: 'lastModified', value: (order as any).lastModified }
   ];
 
-  console.log('🔍 [DATE DEBUG] Looking for updated date in:', possibleFields);
-
   for (const field of possibleFields) {
     if (field.value) {
       const parsed = safeParseDate(field.value);
       if (parsed) {
-        console.log(`✅ [DATE DEBUG] Found valid updated date: ${field.key} = ${field.value}`);
         return {
           value: safeFormatDate(field.value),
           rawValue: field.value,
@@ -81,7 +74,6 @@ export const getOrderUpdatedDate = (order: OrderData): DateAccessResult => {
     }
   }
 
-  console.log('❌ [DATE DEBUG] No valid updated date found');
   return {
     value: 'Not available',
     rawValue: null,
@@ -103,13 +95,10 @@ export const getOrderDueDate = (order: OrderData): DateAccessResult => {
     { key: 'completionDate', value: (order as any).completionDate }
   ];
 
-  console.log('🔍 [DATE DEBUG] Looking for due date in:', possibleFields);
-
   for (const field of possibleFields) {
     if (field.value) {
       const parsed = safeParseDate(field.value);
       if (parsed) {
-        console.log(`✅ [DATE DEBUG] Found valid due date: ${field.key} = ${field.value}`);
         return {
           value: safeFormatDate(field.value),
           rawValue: field.value,
@@ -120,7 +109,6 @@ export const getOrderDueDate = (order: OrderData): DateAccessResult => {
     }
   }
 
-  console.log('❌ [DATE DEBUG] No valid due date found');
   return {
     value: 'Not set',
     rawValue: null,
@@ -140,13 +128,10 @@ export const getOrderCompletedDate = (order: OrderData): DateAccessResult => {
     { key: 'dateCompleted', value: (order as any).dateCompleted }
   ];
 
-  console.log('🔍 [DATE DEBUG] Looking for completed date in:', possibleFields);
-
   for (const field of possibleFields) {
     if (field.value) {
       const parsed = safeParseDate(field.value);
       if (parsed) {
-        console.log(`✅ [DATE DEBUG] Found valid completed date: ${field.key} = ${field.value}`);
         return {
           value: safeFormatDate(field.value),
           rawValue: field.value,
@@ -157,7 +142,6 @@ export const getOrderCompletedDate = (order: OrderData): DateAccessResult => {
     }
   }
 
-  console.log('❌ [DATE DEBUG] No valid completed date found');
   return {
     value: 'Not set',
     rawValue: null,
@@ -174,15 +158,6 @@ export const getOrderDateSummary = (order: OrderData) => {
   const updated = getOrderUpdatedDate(order);
   const due = getOrderDueDate(order);
   const completed = getOrderCompletedDate(order);
-
-  console.log('📊 [DATE SUMMARY]', {
-    orderId: order.id,
-    created: { value: created.value, source: created.source, raw: created.rawValue },
-    updated: { value: updated.value, source: updated.source, raw: updated.rawValue },
-    due: { value: due.value, source: due.source, raw: due.rawValue },
-    completed: { value: completed.value, source: completed.source, raw: completed.rawValue },
-    allFields: Object.keys(order).filter(key => key.includes('date') || key.includes('created') || key.includes('updated'))
-  });
 
   return { created, updated, due, completed };
 };
