@@ -1,8 +1,8 @@
 {
   "scannedFiles": 933,
-  "totalStrings": 9777,
-  "hardcodedStrings": 2106,
-  "translatedStrings": 7671,
+  "totalStrings": 9786,
+  "hardcodedStrings": 2105,
+  "translatedStrings": 7681,
   "issues": {
     "critical": [
       {
@@ -37828,233 +37828,274 @@
         "hardcodedStrings": [
           {
             "text": "ST-001",
-            "line": 519,
-            "context": "518: className=\"border-input bg-background uppercase\"\n519: placeholder=\"ST-001\"\n520: />"
+            "line": 507,
+            "context": "506: className=\"border-input bg-background uppercase\"\n507: placeholder=\"ST-001\"\n508: />"
           },
           {
-            "text": ", error);\n      const errorMessage = error?.message || ",
-            "line": 385,
-            "context": "384: // Keep modal open and show error\n385: console.error('Submit error:', error);\n386: const errorMessage = error?.message || 'Failed to save order';"
+            "text": ", error);\n      const errorMessage = error?.message || t(",
+            "line": 373,
+            "context": "372: // Keep modal open and show error\n373: logger.error('Submit error:', error);\n374: const errorMessage = error?.message || t('car_wash_orders.save_failed');"
           }
         ],
         "translationCalls": [
           {
             "key": "car_wash_orders.max_one_service",
-            "line": 298,
+            "line": 299,
             "exists": true
           },
           {
             "key": "validation.option_required",
-            "line": 360,
+            "line": 361,
             "exists": true
           },
           {
+            "key": "car_wash_orders.save_failed",
+            "line": 374,
+            "exists": false
+          },
+          {
             "key": "car_wash_orders.edit_order",
-            "line": 402,
+            "line": 390,
             "exists": true
           },
           {
             "key": "car_wash_orders.quick_car_wash_order",
-            "line": 402,
+            "line": 390,
             "exists": true
           },
           {
             "key": "car_wash_orders.waiter_priority",
-            "line": 406,
+            "line": 394,
+            "exists": true
+          },
+          {
+            "key": "car_wash_orders.modal_description_edit",
+            "line": 399,
+            "exists": false
+          },
+          {
+            "key": "car_wash_orders.modal_description_create",
+            "line": 399,
+            "exists": false
+          },
+          {
+            "key": "car_wash_orders.dealership",
+            "line": 425,
             "exists": true
           },
           {
             "key": "car_wash_orders.dealership",
-            "line": 437,
-            "exists": true
-          },
-          {
-            "key": "car_wash_orders.dealership",
-            "line": 443,
+            "line": 431,
             "exists": true
           },
           {
             "key": "dealerships.auto_selected",
-            "line": 446,
+            "line": 434,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 456,
+            "line": 444,
             "exists": true
           },
           {
             "key": "car_wash_orders.select_dealership",
-            "line": 456,
+            "line": 444,
             "exists": true
           },
           {
             "key": "orders.vehicleInfo",
-            "line": 475,
+            "line": 463,
             "exists": true
           },
           {
             "key": "orders.vin",
-            "line": 481,
+            "line": 469,
             "exists": true
           },
           {
             "key": "car_wash_orders.decoded",
-            "line": 486,
+            "line": 474,
             "exists": true
           },
           {
+            "key": "car_wash_orders.characters_remaining",
+            "line": 494,
+            "exists": false
+          },
+          {
             "key": "car_wash_orders.stock_number",
-            "line": 513,
+            "line": 501,
             "exists": true
           },
           {
             "key": "car_wash_orders.vehicle_display",
-            "line": 524,
+            "line": 512,
             "exists": true
           },
           {
             "key": "car_wash_orders.auto_populated",
-            "line": 543,
+            "line": 531,
             "exists": true
           },
           {
             "key": "car_wash.service_date",
-            "line": 550,
+            "line": 538,
             "exists": true
           },
           {
             "key": "car_wash.select_service_date",
-            "line": 554,
+            "line": 542,
             "exists": true
           },
           {
             "key": "car_wash.service_date_help",
-            "line": 559,
+            "line": 547,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 573,
+            "line": 561,
             "exists": true
           },
           {
             "key": "orders.status",
-            "line": 580,
+            "line": 568,
             "exists": true
           },
           {
             "key": "common.status.pending",
-            "line": 589,
+            "line": 577,
             "exists": true
           },
           {
             "key": "common.status.in_progress",
-            "line": 590,
+            "line": 578,
             "exists": true
           },
           {
             "key": "common.status.completed",
-            "line": 591,
+            "line": 579,
             "exists": true
           },
           {
             "key": "common.status.cancelled",
-            "line": 592,
+            "line": 580,
             "exists": true
           },
           {
             "key": "car_wash_orders.waiter_priority",
-            "line": 608,
+            "line": 596,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 616,
+            "line": 604,
             "exists": true
           },
           {
             "key": "orders.available",
-            "line": 620,
+            "line": 608,
             "exists": true
           },
           {
             "key": "orders.selected",
-            "line": 625,
+            "line": 613,
             "exists": true
           },
           {
             "key": "car_wash_orders.one_service_limit",
-            "line": 632,
+            "line": 620,
             "exists": true
           },
           {
             "key": "orders.selectDealershipFirst",
-            "line": 638,
+            "line": 626,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 643,
+            "line": 631,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 651,
+            "line": 639,
             "exists": true
           },
           {
             "key": "services.minutes",
-            "line": 683,
+            "line": 671,
             "exists": true
           },
           {
             "key": "validation.option_required",
-            "line": 700,
+            "line": 688,
             "exists": true
           },
           {
             "key": "orders.total",
-            "line": 711,
+            "line": 699,
             "exists": true
           },
           {
             "key": "orders.servicesSelected",
+            "line": 708,
+            "exists": true
+          },
+          {
+            "key": "orders.notes",
             "line": 720,
             "exists": true
           },
           {
             "key": "orders.notes",
-            "line": 732,
-            "exists": true
-          },
-          {
-            "key": "orders.notes",
-            "line": 737,
+            "line": 725,
             "exists": true
           },
           {
             "key": "car_wash_orders.notes_placeholder",
-            "line": 744,
+            "line": 732,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 817,
+            "line": 805,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 825,
+            "line": 813,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 825,
+            "line": 813,
             "exists": true
           }
         ],
-        "missingKeys": [],
+        "missingKeys": [
+          {
+            "key": "car_wash_orders.save_failed",
+            "line": 374,
+            "context": "373: logger.error('Submit error:', error);\n374: const errorMessage = error?.message || t('car_wash_orders.save_failed');\n375: setSubmitError(errorMessage);"
+          },
+          {
+            "key": "car_wash_orders.modal_description_edit",
+            "line": 399,
+            "context": "398: <DialogDescription className=\"sr-only\" id=\"carwash-order-modal-description\">\n399: {order ? t('car_wash_orders.modal_description_edit') : t('car_wash_orders.modal_description_create')}\n400: </DialogDescription>"
+          },
+          {
+            "key": "car_wash_orders.modal_description_create",
+            "line": 399,
+            "context": "398: <DialogDescription className=\"sr-only\" id=\"carwash-order-modal-description\">\n399: {order ? t('car_wash_orders.modal_description_edit') : t('car_wash_orders.modal_description_create')}\n400: </DialogDescription>"
+          },
+          {
+            "key": "car_wash_orders.characters_remaining",
+            "line": 494,
+            "context": "493: <div className=\"text-sm text-muted-foreground mt-1\">\n494: {t('car_wash_orders.characters_remaining', { count: 17 - formData.vehicleVin.length })}\n495: </div>"
+          }
+        ],
         "coverage": 96,
         "severity": "low"
       },
@@ -40284,127 +40325,122 @@
           },
           {
             "key": "sales_orders.vehicle",
-            "line": 1617,
-            "exists": true
-          },
-          {
-            "key": "sales_orders.vehicle",
-            "line": 1623,
+            "line": 1612,
             "exists": true
           },
           {
             "key": "sales_orders.manual_vehicle_entry",
-            "line": 1635,
+            "line": 1619,
             "exists": true
           },
           {
             "key": "due_date.title",
-            "line": 1647,
+            "line": 1631,
             "exists": true
           },
           {
             "key": "due_date.date_placeholder",
-            "line": 1655,
+            "line": 1639,
             "exists": true
           },
           {
             "key": "orders.servicesAndNotes",
-            "line": 1670,
+            "line": 1654,
             "exists": true
           },
           {
             "key": "service_orders.service_selection",
-            "line": 1679,
+            "line": 1663,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 1686,
+            "line": 1670,
             "exists": true
           },
           {
             "key": "orders.available",
-            "line": 1689,
+            "line": 1673,
             "exists": true
           },
           {
             "key": "orders.max_services_info",
-            "line": 1701,
+            "line": 1685,
             "exists": true
           },
           {
             "key": "orders.selectDealershipFirst",
-            "line": 1707,
+            "line": 1691,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 1712,
+            "line": 1696,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 1719,
+            "line": 1703,
             "exists": true
           },
           {
             "key": "services.duration_label",
-            "line": 1754,
+            "line": 1738,
             "exists": true
           },
           {
             "key": "services.minutes",
-            "line": 1755,
+            "line": 1739,
             "exists": true
           },
           {
             "key": "services.price",
-            "line": 1760,
+            "line": 1744,
             "exists": true
           },
           {
             "key": "orders.total",
-            "line": 1781,
+            "line": 1765,
             "exists": true
           },
           {
             "key": "orders.servicesSelected",
-            "line": 1787,
+            "line": 1771,
             "exists": true
           },
           {
             "key": "service_orders.additional_notes",
-            "line": 1800,
+            "line": 1784,
             "exists": true
           },
           {
             "key": "orders.notes_placeholder",
-            "line": 1811,
+            "line": 1795,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 1867,
+            "line": 1851,
             "exists": true
           },
           {
             "key": "orders.updating",
-            "line": 1887,
+            "line": 1871,
             "exists": true
           },
           {
             "key": "orders.creating",
-            "line": 1887,
+            "line": 1871,
             "exists": true
           },
           {
             "key": "common.action_buttons.update",
-            "line": 1890,
+            "line": 1874,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 1890,
+            "line": 1874,
             "exists": true
           }
         ],
@@ -58056,53 +58092,102 @@
       },
       {
         "file": "src\\components\\ui\\vehicle-search-input.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Vehicle",
-            "line": 284,
-            "context": "283: src={expandedImage}\n284: alt=\"Vehicle\"\n285: className=\"w-full h-auto max-h-[80vh] object-contain\""
-          }
-        ],
+        "hardcodedStrings": [],
         "translationCalls": [
           {
             "key": "stock.autopop.searchVehicle",
-            "line": 147,
+            "line": 150,
             "exists": true
           },
           {
+            "key": "common.vehicle",
+            "line": 182,
+            "exists": false
+          },
+          {
             "key": "stock.autopop.confidence.${result.confidence}",
-            "line": 211,
+            "line": 214,
+            "exists": false
+          },
+          {
+            "key": "common.stock",
+            "line": 220,
+            "exists": false
+          },
+          {
+            "key": "orders.vin",
+            "line": 222,
+            "exists": true
+          },
+          {
+            "key": "stock.autopop.useVehicle_short",
+            "line": 244,
+            "exists": false
+          },
+          {
+            "key": "stock.autopop.minCharacters",
+            "line": 260,
             "exists": false
           },
           {
             "key": "stock.autopop.noResults",
-            "line": 255,
+            "line": 271,
             "exists": true
           },
           {
             "key": "stock.autopop.tryDifferentSearch",
-            "line": 260,
+            "line": 276,
             "exists": true
           },
           {
             "key": "stock.vehicle_image",
-            "line": 271,
+            "line": 287,
+            "exists": false
+          },
+          {
+            "key": "common.vehicle",
+            "line": 300,
             "exists": false
           }
         ],
         "missingKeys": [
           {
+            "key": "common.vehicle",
+            "line": 182,
+            "context": "181: src={result.data.imageUrl}\n182: alt={result.preview?.title || t('common.vehicle', 'Vehicle')}\n183: className=\"w-full h-full object-cover\""
+          },
+          {
             "key": "stock.autopop.confidence.${result.confidence}",
-            "line": 211,
-            "context": "210: >\n211: {t(`stock.autopop.confidence.${result.confidence}`)}\n212: </Badge>"
+            "line": 214,
+            "context": "213: >\n214: {t(`stock.autopop.confidence.${result.confidence}`)}\n215: </Badge>"
+          },
+          {
+            "key": "common.stock",
+            "line": 220,
+            "context": "219: <div className=\"text-[10px] text-muted-foreground truncate\">\n220: {result.data.stockNumber && `${t('common.stock', 'Stock')}: ${result.data.stockNumber}`}\n221: {result.data.stockNumber && result.data.vin && ' • '}"
+          },
+          {
+            "key": "stock.autopop.useVehicle_short",
+            "line": 244,
+            "context": "243: >\n244: {t('stock.autopop.useVehicle_short', 'Use')}\n245: </Button>"
+          },
+          {
+            "key": "stock.autopop.minCharacters",
+            "line": 260,
+            "context": "259: <p className=\"text-sm text-muted-foreground\">\n260: {t('stock.autopop.minCharacters', 'Type at least 2 characters to search')}\n261: </p>"
           },
           {
             "key": "stock.vehicle_image",
-            "line": 271,
-            "context": "270: <span id=\"vehicle-image-description\" className=\"sr-only\">\n271: {t('stock.vehicle_image', 'Vehicle image preview')}\n272: </span>"
+            "line": 287,
+            "context": "286: <span id=\"vehicle-image-description\" className=\"sr-only\">\n287: {t('stock.vehicle_image', 'Vehicle image preview')}\n288: </span>"
+          },
+          {
+            "key": "common.vehicle",
+            "line": 300,
+            "context": "299: src={expandedImage}\n300: alt={t('common.vehicle', 'Vehicle')}\n301: className=\"w-full h-auto max-h-[80vh] object-contain\""
           }
         ],
-        "coverage": 83,
+        "coverage": 100,
         "severity": "low"
       },
       {
@@ -58111,20 +58196,20 @@
         "translationCalls": [
           {
             "key": "vin_input.placeholder",
-            "line": 57,
+            "line": 59,
             "exists": true
           },
           {
             "key": "vin_input.scan_vin",
-            "line": 67,
+            "line": 70,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "vin_input.scan_vin",
-            "line": 67,
-            "context": "66: onClick={() => setScannerOpen(true)}\n67: aria-label={t('vin_input.scan_vin', 'Scan VIN with camera')}\n68: >"
+            "line": 70,
+            "context": "69: onClick={() => setScannerOpen(true)}\n70: aria-label={t('vin_input.scan_vin', 'Scan VIN with camera')}\n71: >"
           }
         ],
         "coverage": 100,
@@ -64026,6 +64111,11 @@
             "exists": true
           },
           {
+            "key": "car_wash_orders.search.showing_results",
+            "line": 516,
+            "exists": false
+          },
+          {
             "key": "orders.confirm_delete_title",
             "line": 571,
             "exists": false
@@ -64086,6 +64176,11 @@
             "key": "sales_orders.tabs.pending",
             "line": 505,
             "context": "504: <h2 className=\"text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight\">\n505: {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'pending' ? t('sales_orders.tabs.pending') : activeFilter === 'in_process' ? t('sales_orders.in_process_orders') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}\n506: </h2>"
+          },
+          {
+            "key": "car_wash_orders.search.showing_results",
+            "line": 516,
+            "context": "515: <p className=\"text-sm text-muted-foreground\">\n516: {t('car_wash_orders.search.showing_results', { searchTerm })}\n517: </p>"
           },
           {
             "key": "orders.confirm_delete_title",
@@ -69289,7 +69384,6 @@
         "src\\components\\ui\\dialog.tsx",
         "src\\components\\ui\\duplicate-popover.tsx",
         "src\\components\\ui\\sheet.tsx",
-        "src\\components\\ui\\vehicle-search-input.tsx",
         "src\\components\\UserProfilePopover.tsx",
         "src\\components\\version\\UpdateBanner.tsx",
         "src\\components\\workflows\\VisualWorkflowBuilder.tsx",
@@ -69447,6 +69541,7 @@
         "src\\components\\stock\\vehicle-details\\VehicleActivityTab.tsx",
         "src\\components\\stock\\vehicle-details\\VehicleInfoTab.tsx",
         "src\\components\\stock\\VehiclePhotoUploader.tsx",
+        "src\\components\\ui\\vehicle-search-input.tsx",
         "src\\components\\ui\\vin-input-with-scanner.tsx",
         "src\\components\\users\\password\\BulkPasswordOperations.tsx",
         "src\\components\\users\\password\\PasswordResetActions.tsx",
@@ -69481,7 +69576,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3007 translation keys are referenced but missing",
+      "description": "3017 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "151 hours"
     }

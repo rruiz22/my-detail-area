@@ -113,6 +113,8 @@
   "make": "Marca",
   "model": "Modelo",
   "color": "Color",
+  "vehicle": "Vehículo",
+  "stock": "Stock",
   "scheduled_date": "Fecha Programada",
   "created_at": "Fecha de Creación",
   "advisor": "Asesor",

@@ -106,6 +106,8 @@
   "make": "Marca",
   "model": "Modelo",
   "color": "Cor",
+  "vehicle": "Veículo",
+  "stock": "Estoque",
   "optional": "Opcional",
   "loading": "Carregando...",
   "last_updated": "Última atualização",

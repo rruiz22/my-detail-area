@@ -27,6 +27,7 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
   const [query, setQuery] = useState(value);
   const [results, setResults] = useState<VehicleSearchResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [expandedImage, setExpandedImage] = useState<string | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -50,14 +51,16 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
         try {
           const searchResults = await searchVehicle(query);
           setResults(searchResults);
-          setIsOpen(searchResults.length > 0);
+          setIsOpen(true);
+          setHasSearched(true);
           setSelectedIndex(-1);
         } finally {
           searchInProgress.current = false;
         }
       } else if (query.length < 2) {
         setResults([]);
-        setIsOpen(false);
+        setIsOpen(query.length > 0);
+        setHasSearched(false);
         lastSearchQuery.current = '';
       }
     }, 300);
@@ -153,7 +156,7 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
       </div>
 
       {isOpen && results.length > 0 && (
-        <Card className="absolute top-full left-0 w-full sm:w-[360px] lg:w-[420px] z-50 mt-1 shadow-lg border border-border">
+        <Card className="absolute top-full right-0 w-full sm:w-[360px] lg:w-[420px] z-50 mt-1 shadow-lg border border-border">
           <CardContent className="p-0">
             <div className="max-h-[280px] overflow-y-auto">
               {results.map((result, index) => (
@@ -176,7 +179,7 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
                       >
                         <img
                           src={result.data.imageUrl}
-                          alt={result.preview?.title || 'Vehicle'}
+                          alt={result.preview?.title || t('common.vehicle', 'Vehicle')}
                           className="w-full h-full object-cover"
                           onError={(e) => {
                             e.currentTarget.style.display = 'none';
@@ -214,9 +217,9 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
 
                       {/* Stock/VIN compacto en una línea */}
                       <div className="text-[10px] text-muted-foreground truncate">
-                        {result.data.stockNumber && `Stock: ${result.data.stockNumber}`}
+                        {result.data.stockNumber && `${t('common.stock', 'Stock')}: ${result.data.stockNumber}`}
                         {result.data.stockNumber && result.data.vin && ' • '}
-                        {result.data.vin && `VIN: ...${result.data.vin.slice(-8)}`}
+                        {result.data.vin && `${t('orders.vin', 'VIN')}: ...${result.data.vin.slice(-8)}`}
                       </div>
 
                       {result.preview?.badge && (
@@ -238,7 +241,7 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
                         handleResultSelect(result);
                       }}
                     >
-                      Use
+                      {t('stock.autopop.useVehicle_short', 'Use')}
                     </Button>
                   </div>
                 </div>
@@ -248,8 +251,21 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
         </Card>
       )}
 
-      {isOpen && query.length >= 2 && results.length === 0 && !loading && (
-        <Card className="absolute top-full left-0 right-0 z-50 mt-1 shadow-lg border border-border">
+      {/* Minimum characters message */}
+      {isOpen && query.length > 0 && query.length < 2 && !loading && (
+        <Card className="absolute top-full right-0 w-full sm:w-[360px] lg:w-[420px] z-50 mt-1 shadow-lg border border-border">
+          <CardContent className="p-3 text-center">
+            <Search className="h-6 w-6 mx-auto mb-1.5 opacity-50 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">
+              {t('stock.autopop.minCharacters', 'Type at least 2 characters to search')}
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* No results message */}
+      {isOpen && query.length >= 2 && hasSearched && results.length === 0 && !loading && (
+        <Card className="absolute top-full right-0 w-full sm:w-[360px] lg:w-[420px] z-50 mt-1 shadow-lg border border-border">
           <CardContent className="p-4 text-center">
             <AlertCircle className="h-8 w-8 mx-auto mb-2 opacity-50 text-muted-foreground" />
             <p className="text-sm font-medium">{t('stock.autopop.noResults')}</p>
@@ -281,7 +297,7 @@ export const VehicleSearchInput: React.FC<VehicleSearchInputProps> = ({
             {expandedImage && (
               <img
                 src={expandedImage}
-                alt="Vehicle"
+                alt={t('common.vehicle', 'Vehicle')}
                 className="w-full h-auto max-h-[80vh] object-contain"
               />
             )}

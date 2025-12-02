@@ -5,11 +5,11 @@
  * Uses SHORT cache time (1 minute) for frequently changing data.
  */
 
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { useDealerFilter } from '@/contexts/DealerFilterContext';
-import { useAuth } from '@/contexts/AuthContext';
 import { CACHE_TIMES, GC_TIMES } from '@/constants/cacheConfig';
+import { useAuth } from '@/contexts/AuthContext';
+import { useDealerFilter } from '@/contexts/DealerFilterContext';
+import { supabase } from '@/integrations/supabase/client';
+import { useQuery } from '@tanstack/react-query';
 
 export function useActiveClockedInCount() {
   const { selectedDealerId } = useDealerFilter();
@@ -37,6 +37,7 @@ export function useActiveClockedInCount() {
     },
     enabled: !!user,
     staleTime: CACHE_TIMES.SHORT, // 1 minute - frequently changing data
-    gcTime: GC_TIMES.MEDIUM
+    gcTime: GC_TIMES.MEDIUM,
+    refetchInterval: 30 * 1000, // Auto-refresh every 30 seconds
   });
 }

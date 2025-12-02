@@ -113,6 +113,8 @@
   "make": "Make",
   "model": "Model",
   "color": "Color",
+  "vehicle": "Vehicle",
+  "stock": "Stock",
   "scheduled_date": "Scheduled Date",
   "created_at": "Created Date",
   "advisor": "Advisor",

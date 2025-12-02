@@ -1,21 +1,23 @@
-import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { QrCode } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import { ModernVinScanner } from '@/components/scanner/modern/ModernVinScanner';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { normalizeVin, VIN_LENGTH } from '@/utils/vinValidation';
+import { QrCode } from 'lucide-react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface VinInputWithScannerProps extends React.ComponentProps<typeof Input> {
   onVinScanned?: (vin: string) => void;
   stickerMode?: boolean;
+  hideIcon?: boolean;
 }
 
 export function VinInputWithScanner({
   onVinScanned,
   className,
   stickerMode = false,
+  hideIcon = false,
   ...props
 }: VinInputWithScannerProps) {
   const { t } = useTranslation();
@@ -53,22 +55,24 @@ export function VinInputWithScanner({
           <Input
             {...props}
             onChange={handleInputChange}
-            className={cn('pr-10 font-mono tracking-wide uppercase', className)}
+            className={cn(hideIcon ? 'font-mono tracking-wide uppercase placeholder:normal-case placeholder:font-sans placeholder:tracking-normal' : 'pr-10 font-mono tracking-wide uppercase placeholder:normal-case placeholder:font-sans placeholder:tracking-normal', className)}
             placeholder={t('vin_input.placeholder', 'Enter 17-character VIN')}
             maxLength={VIN_LENGTH}
           />
-          <div className="absolute inset-y-0 right-1 flex items-center gap-1">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0"
-              onClick={() => setScannerOpen(true)}
-              aria-label={t('vin_input.scan_vin', 'Scan VIN with camera')}
-            >
-              <QrCode className="h-4 w-4" />
-            </Button>
-          </div>
+          {!hideIcon && (
+            <div className="absolute inset-y-0 right-1 flex items-center gap-1">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0"
+                onClick={() => setScannerOpen(true)}
+                aria-label={t('vin_input.scan_vin', 'Scan VIN with camera')}
+              >
+                <QrCode className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 

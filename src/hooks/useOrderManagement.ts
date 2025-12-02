@@ -12,14 +12,14 @@ import type { Database } from '@/integrations/supabase/types';
 import { followersService } from '@/services/followersService';
 import { orderNumberService, OrderType } from '@/services/orderNumberService';
 import { pushNotificationHelper } from '@/services/pushNotificationHelper';
-import { sendOrderCreatedSMS } from '@/services/smsNotificationHelper';
 import { slackNotificationService } from '@/services/slackNotificationService';
+import { sendOrderCreatedSMS } from '@/services/smsNotificationHelper';
 import { getSystemTimezone } from '@/utils/dateUtils';
 import { dev, error as logError, warn } from '@/utils/logger';
 import {
-  createAssignmentNotification,
-  createOrderNotification,
-  createStatusChangeNotification
+    createAssignmentNotification,
+    createOrderNotification,
+    createStatusChangeNotification
 } from '@/utils/notificationHelper';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -955,7 +955,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
             .from('dealer_groups')
             .select('name')
             .eq('id', data.assigned_group_id)
-            .single();
+            .maybeSingle();
           assignedToName = groupData?.name || undefined;
         } catch (error) {
           console.warn('⚠️ Failed to fetch group name:', error);
@@ -966,7 +966,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
             .from('dealership_contacts')
             .select('first_name, last_name')
             .eq('id', data.assigned_contact_id)
-            .single();
+            .maybeSingle();
           if (contactData) {
             assignedToName = `${contactData.first_name || ''} ${contactData.last_name || ''}`.trim();
           }

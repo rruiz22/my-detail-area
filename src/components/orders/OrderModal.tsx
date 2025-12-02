@@ -1606,18 +1606,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       </p>
                     )}
                       </div>
-                        </div>
-                      </div>
 
-                      {/* Box 2: Vehicle Information */}
-                      <div className="relative p-4 bg-gradient-to-br from-emerald-50 to-emerald-50/30 rounded-lg border-2 border-emerald-200">
-                        <div className="absolute -top-3 left-3 px-2 bg-emerald-50 rounded-full">
-                          <Badge variant="outline" className="border-emerald-300 text-emerald-700 font-semibold flex items-center gap-1">
-                            <Car className="h-3 w-3" />
-                            {t('sales_orders.vehicle')}
-                          </Badge>
-                        </div>
-                        <div className="space-y-3 mt-2">
                   <div className="min-w-0">
                     <Label htmlFor="vehicleInfo" className="text-sm">
                       {t('sales_orders.vehicle')} <span className="text-destructive">*</span>
@@ -1627,19 +1616,14 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       value={formData.vehicleInfo}
                       onChange={(e) => handleInputChange('vehicleInfo', e.target.value)}
                       className={selectedVehicle ? "border-input bg-muted/30 w-full" : "border-input bg-background w-full"}
-                      placeholder=""
+                      placeholder={t('sales_orders.manual_vehicle_entry')}
                       readOnly={!!selectedVehicle}
                     />
-                    {!formData.vehicleInfo && !selectedVehicle && (
-                      <div className="text-xs text-muted-foreground mt-1 truncate">
-                        {t('sales_orders.manual_vehicle_entry')}
-                      </div>
-                    )}
                   </div>
                         </div>
                       </div>
 
-                      {/* Box 3: Schedule (Due Date & Time) */}
+                      {/* Box 2: Schedule (Due Date & Time) */}
                       <div className="relative p-4 bg-gradient-to-br from-blue-50 to-blue-50/30 rounded-lg border-2 border-blue-200">
                         <div className="absolute -top-3 left-3 px-2 bg-blue-50 rounded-full">
                           <Badge variant="outline" className="border-blue-300 text-blue-700 font-semibold flex items-center gap-1">

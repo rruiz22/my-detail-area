@@ -28,7 +28,7 @@ export class FollowersService {
         .eq('entity_id', orderId)
         .eq('user_id', assignedUserId)
         .eq('is_active', true)
-        .single();
+        .maybeSingle();
 
       if (existingFollow) {
         console.log('ℹ️ User already following this order');
@@ -40,7 +40,7 @@ export class FollowersService {
         .from('profiles')
         .select('dealership_id')
         .eq('id', assignedUserId)
-        .single();
+        .maybeSingle();
 
       const dealerId = userProfile?.dealership_id || 5;
 
@@ -71,12 +71,27 @@ export class FollowersService {
     try {
       console.log(`🎯 Auto-following creator ${creatorUserId} on order ${orderId}`);
 
+      // Check if already following to avoid duplicates
+      const { data: existingFollow } = await supabase
+        .from('entity_followers')
+        .select('id')
+        .eq('entity_type', 'order')
+        .eq('entity_id', orderId)
+        .eq('user_id', creatorUserId)
+        .eq('is_active', true)
+        .maybeSingle();
+
+      if (existingFollow) {
+        console.log('ℹ️ Creator already following this order');
+        return;
+      }
+
       // Get creator's dealership
       const { data: userProfile } = await supabase
         .from('profiles')
         .select('dealership_id')
         .eq('id', creatorUserId)
-        .single();
+        .maybeSingle();
 
       const dealerId = userProfile?.dealership_id || 5;
 
