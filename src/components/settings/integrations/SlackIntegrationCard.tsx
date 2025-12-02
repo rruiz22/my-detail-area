@@ -20,6 +20,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { usePermissions } from '@/hooks/usePermissions';
 import { generateOAuthState } from '@/lib/crypto/encryption';
 import { Loader2, CheckCircle2, XCircle, ExternalLink, AlertTriangle } from 'lucide-react';
+import { SlackEventSelector } from './slack/SlackEventSelector';
 
 interface SlackIntegration {
   id: string;
@@ -146,7 +147,9 @@ export function SlackIntegrationCard() {
         throw new Error('Slack client ID not configured');
       }
 
-      const redirectUri = `${window.location.origin}/api/slack/callback`;
+      // Use Supabase Edge Function for callback
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const redirectUri = `${supabaseUrl}/functions/v1/slack-oauth-callback`;
       const scopes = [
         'chat:write',
         'channels:read',
@@ -404,6 +407,16 @@ export function SlackIntegrationCard() {
                 {t('integrations.slack.manage')}
               </Button>
             </div>
+
+            {/* Event Configuration Section */}
+            {integration.enabled && enhancedUser?.dealership_id && (
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <SlackEventSelector
+                  webhookId={integration.id}
+                  dealerId={enhancedUser.dealership_id}
+                />
+              </div>
+            )}
           </>
         ) : (
           <>
@@ -469,5 +482,6 @@ export function SlackIntegrationCard() {
       onConfirm={confirmDisconnect}
       variant="destructive"
     />
+    </>
   );
 }

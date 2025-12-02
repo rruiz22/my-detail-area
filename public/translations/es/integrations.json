@@ -43,5 +43,83 @@
   "api_keys": {
     "title": "Claves API",
     "description": "Gestionar sus claves API"
+  },
+  "slack_events": {
+    "modules": {
+      "orders": "Órdenes",
+      "vehicles": "Vehículos"
+    },
+    "categories": {
+      "orders": "Órdenes",
+      "collaboration": "Colaboración",
+      "vehicles": "Vehículos",
+      "admin": "Administración"
+    },
+    "selector": {
+      "title": "Configurar Notificaciones de Eventos de Slack",
+      "description": "Elija qué eventos activan notificaciones en sus canales de Slack. Los eventos están organizados por módulo y categoría.",
+      "events_enabled": "{{count}} de {{total}} eventos habilitados",
+      "summary": "{{enabled}} de {{total}} eventos están actualmente habilitados"
+    },
+    "errors": {
+      "load_failed": "Error al cargar las preferencias de eventos",
+      "update_failed": "Error al actualizar la preferencia de evento",
+      "batch_update_failed": "Error al actualizar las preferencias del módulo"
+    },
+    "messages": {
+      "batch_update_success": "Preferencias del módulo actualizadas exitosamente"
+    },
+    "order_created": {
+      "title": "Orden Creada",
+      "description": "Notificar cuando se crea una nueva orden en el sistema"
+    },
+    "order_status_changed": {
+      "title": "Estado de Orden Cambiado",
+      "description": "Notificar cuando el estado de una orden cambia (ej., pendiente → en progreso)"
+    },
+    "order_completed": {
+      "title": "Orden Completada",
+      "description": "Notificar cuando una orden se marca como completada"
+    },
+    "order_deleted": {
+      "title": "Orden Eliminada",
+      "description": "Notificar cuando se elimina una orden del sistema"
+    },
+    "order_assigned": {
+      "title": "Orden Asignada",
+      "description": "Notificar cuando se asigna una orden a un miembro del equipo"
+    },
+    "comment_added": {
+      "title": "Comentario Agregado",
+      "description": "Notificar cuando alguien agrega un comentario a una orden"
+    },
+    "file_uploaded": {
+      "title": "Archivo Subido",
+      "description": "Notificar cuando se adjunta un archivo a una orden"
+    },
+    "user_mentioned": {
+      "title": "Usuario Mencionado",
+      "description": "Notificar cuando se menciona a un usuario en un comentario usando @mención"
+    },
+    "follower_added": {
+      "title": "Seguidor Agregado",
+      "description": "Notificar cuando se agrega a alguien como seguidor de una orden"
+    },
+    "vehicle_added": {
+      "title": "Vehículo Agregado",
+      "description": "Notificar cuando se agrega un nuevo vehículo al sistema"
+    },
+    "vehicle_step_changed": {
+      "title": "Paso de Vehículo Cambiado",
+      "description": "Notificar cuando cambia el paso del flujo de trabajo de un vehículo"
+    },
+    "vehicle_completed": {
+      "title": "Vehículo Completado",
+      "description": "Notificar cuando un vehículo completa todos los pasos del flujo de trabajo"
+    },
+    "vehicle_blocked": {
+      "title": "Vehículo Bloqueado",
+      "description": "Notificar cuando un vehículo está bloqueado o encuentra un problema"
+    }
   }
 }

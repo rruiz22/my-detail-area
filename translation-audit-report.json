@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 933,
-  "totalStrings": 9784,
-  "hardcodedStrings": 2105,
-  "translatedStrings": 7679,
+  "scannedFiles": 934,
+  "totalStrings": 9798,
+  "hardcodedStrings": 2107,
+  "translatedStrings": 7691,
   "issues": {
     "critical": [
       {
@@ -9708,68 +9708,68 @@
           },
           {
             "text": "Webhook integration coming soon",
-            "line": 588,
-            "context": "587: <Webhook className=\"h-12 w-12 mx-auto mb-4 opacity-50\" />\n588: <p>Webhook integration coming soon</p>\n589: </div>"
+            "line": 499,
+            "context": "498: <Webhook className=\"h-12 w-12 mx-auto mb-4 opacity-50\" />\n499: <p>Webhook integration coming soon</p>\n500: </div>"
           },
           {
             "text": "API key management coming soon",
-            "line": 607,
-            "context": "606: <Key className=\"h-12 w-12 mx-auto mb-4 opacity-50\" />\n607: <p>API key management coming soon</p>\n608: </div>"
+            "line": 518,
+            "context": "517: <Key className=\"h-12 w-12 mx-auto mb-4 opacity-50\" />\n518: <p>API key management coming soon</p>\n519: </div>"
           },
           {
             "text": "Resend",
-            "line": 650,
-            "context": "649: <SelectContent>\n650: <SelectItem value=\"resend\">Resend</SelectItem>\n651: <SelectItem value=\"sendgrid\">SendGrid</SelectItem>"
+            "line": 561,
+            "context": "560: <SelectContent>\n561: <SelectItem value=\"resend\">Resend</SelectItem>\n562: <SelectItem value=\"sendgrid\">SendGrid</SelectItem>"
           },
           {
             "text": "SendGrid",
-            "line": 651,
-            "context": "650: <SelectItem value=\"resend\">Resend</SelectItem>\n651: <SelectItem value=\"sendgrid\">SendGrid</SelectItem>\n652: <SelectItem value=\"mailgun\">Mailgun</SelectItem>"
+            "line": 562,
+            "context": "561: <SelectItem value=\"resend\">Resend</SelectItem>\n562: <SelectItem value=\"sendgrid\">SendGrid</SelectItem>\n563: <SelectItem value=\"mailgun\">Mailgun</SelectItem>"
           },
           {
             "text": "Mailgun",
-            "line": 652,
-            "context": "651: <SelectItem value=\"sendgrid\">SendGrid</SelectItem>\n652: <SelectItem value=\"mailgun\">Mailgun</SelectItem>\n653: </SelectContent>"
+            "line": 563,
+            "context": "562: <SelectItem value=\"sendgrid\">SendGrid</SelectItem>\n563: <SelectItem value=\"mailgun\">Mailgun</SelectItem>\n564: </SelectContent>"
           },
           {
             "text": "SMS Notifications",
-            "line": 714,
-            "context": "713: <CardTitle className=\"flex items-center gap-2\">\n714: <MessageSquare className=\"h-5 w-5\" />\n715: SMS Notifications"
+            "line": 625,
+            "context": "624: <CardTitle className=\"flex items-center gap-2\">\n625: <MessageSquare className=\"h-5 w-5\" />\n626: SMS Notifications"
           },
           {
             "text": "Configure SMS notification settings and channel preferences",
-            "line": 717,
-            "context": "716: </CardTitle>\n717: <CardDescription>\n718: Configure SMS notification settings and channel preferences"
+            "line": 628,
+            "context": "627: </CardTitle>\n628: <CardDescription>\n629: Configure SMS notification settings and channel preferences"
           },
           {
             "text": "Twilio Credentials",
-            "line": 724,
-            "context": "723: <TabsList className=\"grid w-full grid-cols-2\">\n724: <TabsTrigger value=\"credentials\">Twilio Credentials</TabsTrigger>\n725: <TabsTrigger value=\"channel-config\">Event Channels</TabsTrigger>"
+            "line": 635,
+            "context": "634: <TabsList className=\"grid w-full grid-cols-2\">\n635: <TabsTrigger value=\"credentials\">Twilio Credentials</TabsTrigger>\n636: <TabsTrigger value=\"channel-config\">Event Channels</TabsTrigger>"
           },
           {
             "text": "Event Channels",
-            "line": 725,
-            "context": "724: <TabsTrigger value=\"credentials\">Twilio Credentials</TabsTrigger>\n725: <TabsTrigger value=\"channel-config\">Event Channels</TabsTrigger>\n726: </TabsList>"
+            "line": 636,
+            "context": "635: <TabsTrigger value=\"credentials\">Twilio Credentials</TabsTrigger>\n636: <TabsTrigger value=\"channel-config\">Event Channels</TabsTrigger>\n637: </TabsList>"
           },
           {
             "text": "Twilio",
-            "line": 751,
-            "context": "750: <SelectContent>\n751: <SelectItem value=\"twilio\">Twilio</SelectItem>\n752: <SelectItem value=\"aws_sns\">AWS SNS</SelectItem>"
+            "line": 662,
+            "context": "661: <SelectContent>\n662: <SelectItem value=\"twilio\">Twilio</SelectItem>\n663: <SelectItem value=\"aws_sns\">AWS SNS</SelectItem>"
           },
           {
             "text": "AWS SNS",
-            "line": 752,
-            "context": "751: <SelectItem value=\"twilio\">Twilio</SelectItem>\n752: <SelectItem value=\"aws_sns\">AWS SNS</SelectItem>\n753: </SelectContent>"
+            "line": 663,
+            "context": "662: <SelectItem value=\"twilio\">Twilio</SelectItem>\n663: <SelectItem value=\"aws_sns\">AWS SNS</SelectItem>\n664: </SelectContent>"
           },
           {
             "text": "My Detail Area",
-            "line": 685,
-            "context": "684: onChange={(e) => setSMTPConfig(prev => ({ ...prev, from_name: e.target.value }))}\n685: placeholder=\"My Detail Area\"\n686: />"
+            "line": 596,
+            "context": "595: onChange={(e) => setSMTPConfig(prev => ({ ...prev, from_name: e.target.value }))}\n596: placeholder=\"My Detail Area\"\n597: />"
           },
           {
             "text": "ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-            "line": 764,
-            "context": "763: onChange={(e) => setSMSConfig(prev => ({ ...prev, account_sid: e.target.value }))}\n764: placeholder=\"ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n765: />"
+            "line": 675,
+            "context": "674: onChange={(e) => setSMSConfig(prev => ({ ...prev, account_sid: e.target.value }))}\n675: placeholder=\"ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"\n676: />"
           },
           {
             "text": ", error);\n        throw error;\n      }\n\n      console.log(",
@@ -9899,313 +9899,248 @@
             "exists": true
           },
           {
-            "key": "integrations.slack.title",
-            "line": 487,
-            "exists": true
-          },
-          {
-            "key": "common.enabled",
-            "line": 490,
-            "exists": true
-          },
-          {
-            "key": "common.disabled",
-            "line": 490,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.description",
-            "line": 494,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.enable_notifications",
-            "line": 502,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.enable_description",
-            "line": 505,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.webhook_url",
-            "line": 518,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.webhook_help",
-            "line": 530,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.learn_more",
-            "line": 537,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.channel",
-            "line": 545,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.channel_help",
-            "line": 556,
-            "exists": true
-          },
-          {
-            "key": "common.saving",
-            "line": 568,
-            "exists": true
-          },
-          {
-            "key": "common.action_buttons.save",
-            "line": 568,
-            "exists": true
-          },
-          {
             "key": "integrations.webhook.title",
-            "line": 579,
+            "line": 490,
             "exists": true
           },
           {
             "key": "integrations.webhook.description",
-            "line": 582,
+            "line": 493,
             "exists": true
           },
           {
             "key": "integrations.api_keys.title",
-            "line": 598,
+            "line": 509,
             "exists": true
           },
           {
             "key": "integrations.api_keys.description",
-            "line": 601,
+            "line": 512,
             "exists": true
           },
           {
             "key": "settings.smtp_configuration",
-            "line": 621,
+            "line": 532,
             "exists": true
           },
           {
             "key": "settings.smtp_description",
-            "line": 624,
+            "line": 535,
             "exists": true
           },
           {
             "key": "settings.smtp_enabled",
-            "line": 630,
+            "line": 541,
             "exists": true
           },
           {
             "key": "settings.smtp_enabled_description",
-            "line": 631,
+            "line": 542,
             "exists": true
           },
           {
             "key": "settings.smtp_provider",
-            "line": 641,
+            "line": 552,
             "exists": true
           },
           {
             "key": "settings.api_key",
-            "line": 658,
+            "line": 569,
             "exists": true
           },
           {
             "key": "settings.enter_api_key",
-            "line": 664,
+            "line": 575,
             "exists": true
           },
           {
             "key": "settings.from_email",
-            "line": 669,
+            "line": 580,
             "exists": true
           },
           {
             "key": "settings.from_name",
-            "line": 680,
+            "line": 591,
             "exists": true
           },
           {
             "key": "settings.save_smtp",
-            "line": 696,
+            "line": 607,
             "exists": true
           },
           {
             "key": "settings.test_smtp",
-            "line": 704,
+            "line": 615,
             "exists": true
           },
           {
             "key": "settings.sms_enabled",
-            "line": 731,
+            "line": 642,
             "exists": true
           },
           {
             "key": "settings.sms_enabled_description",
-            "line": 732,
+            "line": 643,
             "exists": true
           },
           {
             "key": "settings.sms_provider",
-            "line": 742,
+            "line": 653,
             "exists": true
           },
           {
             "key": "settings.account_sid",
-            "line": 758,
+            "line": 669,
             "exists": true
           },
           {
             "key": "settings.auth_token",
-            "line": 769,
+            "line": 680,
             "exists": true
           },
           {
             "key": "settings.enter_auth_token",
-            "line": 775,
+            "line": 686,
             "exists": true
           },
           {
             "key": "settings.from_number",
-            "line": 780,
+            "line": 691,
             "exists": true
           },
           {
             "key": "settings.save_sms",
-            "line": 796,
+            "line": 707,
             "exists": true
           },
           {
             "key": "settings.test_sms",
-            "line": 804,
+            "line": 715,
             "exists": true
           },
           {
             "key": "settings.feature_flags",
-            "line": 821,
+            "line": 732,
             "exists": true
           },
           {
             "key": "settings.feature_flags_description",
-            "line": 824,
+            "line": 735,
             "exists": true
           },
           {
             "key": "settings.feature_${key}",
-            "line": 832,
+            "line": 743,
             "exists": false
           },
           {
             "key": "settings.feature_${key}_description",
-            "line": 834,
+            "line": 745,
             "exists": false
           },
           {
             "key": "settings.save_features",
-            "line": 853,
+            "line": 764,
             "exists": true
           },
           {
             "key": "settings.security_settings",
-            "line": 864,
+            "line": 775,
             "exists": true
           },
           {
             "key": "settings.security_description",
-            "line": 867,
+            "line": 778,
             "exists": true
           },
           {
             "key": "settings.max_login_attempts",
-            "line": 873,
+            "line": 784,
             "exists": true
           },
           {
             "key": "settings.session_timeout",
-            "line": 888,
+            "line": 799,
             "exists": true
           },
           {
             "key": "settings.password_min_length",
-            "line": 903,
+            "line": 814,
             "exists": true
           },
           {
             "key": "settings.require_mfa",
-            "line": 921,
+            "line": 832,
             "exists": true
           },
           {
             "key": "settings.mfa_description",
-            "line": 922,
+            "line": 833,
             "exists": true
           },
           {
             "key": "settings.allow_password_reset",
-            "line": 932,
+            "line": 843,
             "exists": true
           },
           {
             "key": "settings.password_reset_description",
-            "line": 933,
+            "line": 844,
             "exists": true
           },
           {
             "key": "settings.save_security",
-            "line": 948,
+            "line": 859,
             "exists": true
           },
           {
             "key": "settings.integration_status",
-            "line": 959,
+            "line": 870,
             "exists": true
           },
           {
             "key": "settings.email_service",
-            "line": 968,
+            "line": 879,
             "exists": true
           },
           {
             "key": "settings.configured",
-            "line": 974,
+            "line": 885,
             "exists": true
           },
           {
             "key": "settings.not_configured",
-            "line": 976,
+            "line": 887,
             "exists": true
           },
           {
             "key": "settings.sms_service",
-            "line": 985,
+            "line": 896,
             "exists": true
           },
           {
             "key": "settings.configured",
-            "line": 991,
+            "line": 902,
             "exists": true
           },
           {
             "key": "settings.not_configured",
-            "line": 993,
+            "line": 904,
             "exists": true
           },
           {
             "key": "settings.push_notifications",
-            "line": 1002,
+            "line": 913,
             "exists": true
           },
           {
             "key": "settings.configured",
-            "line": 1008,
+            "line": 919,
             "exists": true
           },
           {
             "key": "settings.not_configured",
-            "line": 1010,
+            "line": 921,
             "exists": true
           }
         ],
@@ -10217,16 +10152,16 @@
           },
           {
             "key": "settings.feature_${key}",
-            "line": 832,
-            "context": "831: <div>\n832: <Label>{t(`settings.feature_${key}`)}</Label>\n833: <p className=\"text-sm text-muted-foreground\">"
+            "line": 743,
+            "context": "742: <div>\n743: <Label>{t(`settings.feature_${key}`)}</Label>\n744: <p className=\"text-sm text-muted-foreground\">"
           },
           {
             "key": "settings.feature_${key}_description",
-            "line": 834,
-            "context": "833: <p className=\"text-sm text-muted-foreground\">\n834: {t(`settings.feature_${key}_description`)}\n835: </p>"
+            "line": 745,
+            "context": "744: <p className=\"text-sm text-muted-foreground\">\n745: {t(`settings.feature_${key}_description`)}\n746: </p>"
           }
         ],
-        "coverage": 81,
+        "coverage": 78,
         "severity": "high"
       },
       {
@@ -41854,202 +41789,242 @@
         "hardcodedStrings": [
           {
             "text": "Reply",
-            "line": 290,
-            "context": "289: >\n290: <Reply className=\"h-3.5 w-3.5 mr-1\" />\n291: Reply"
+            "line": 333,
+            "context": "332: >\n333: <Reply className=\"h-3.5 w-3.5 mr-1\" />\n334: Reply"
           },
           {
             "text": "Cancel",
-            "line": 351,
-            "context": "350: className=\"h-8 text-xs\"\n351: >\n352: Cancel"
+            "line": 394,
+            "context": "393: className=\"h-8 text-xs\"\n394: >\n395: Cancel"
           }
         ],
         "translationCalls": [
           {
-            "key": "order_comments.comment_added",
-            "line": 118,
-            "exists": true
-          },
-          {
-            "key": "order_comments.note_added",
-            "line": 119,
-            "exists": true
-          },
-          {
             "key": "order_comments.comment_failed",
-            "line": 126,
+            "line": 103,
             "exists": true
           },
           {
             "key": "order_comments.note_failed",
-            "line": 127,
+            "line": 104,
+            "exists": true
+          },
+          {
+            "key": "order_comments.comment_saved_attachments_failed",
+            "line": 144,
+            "exists": false
+          },
+          {
+            "key": "order_comments.note_saved_attachments_failed",
+            "line": 145,
+            "exists": false
+          },
+          {
+            "key": "order_comments.comment_added",
+            "line": 150,
+            "exists": true
+          },
+          {
+            "key": "order_comments.note_added",
+            "line": 151,
+            "exists": true
+          },
+          {
+            "key": "order_comments.comment_saved_error_occurred",
+            "line": 162,
+            "exists": false
+          },
+          {
+            "key": "order_comments.comment_failed",
+            "line": 168,
+            "exists": true
+          },
+          {
+            "key": "order_comments.note_failed",
+            "line": 169,
             "exists": true
           },
           {
             "key": "order_comments.reply_added",
-            "line": 147,
+            "line": 190,
             "exists": true
           },
           {
             "key": "order_comments.reply_failed",
-            "line": 149,
+            "line": 192,
             "exists": true
           },
           {
             "key": "order_comments.comment_deleted",
-            "line": 175,
+            "line": 218,
             "exists": true
           },
           {
             "key": "order_comments.note_deleted",
-            "line": 176,
-            "exists": true
-          },
-          {
-            "key": "order_comments.delete_failed",
-            "line": 180,
-            "exists": true
-          },
-          {
-            "key": "order_comments.no_comments",
-            "line": 211,
-            "exists": true
-          },
-          {
-            "key": "order_comments.start_conversation",
-            "line": 212,
-            "exists": true
-          },
-          {
-            "key": "order_comments.no_internal_notes",
             "line": 219,
             "exists": true
           },
           {
-            "key": "order_comments.add_private_notes",
-            "line": 220,
+            "key": "order_comments.delete_failed",
+            "line": 223,
             "exists": true
           },
           {
-            "key": "order_comments.detail_team",
+            "key": "order_comments.no_comments",
             "line": 254,
             "exists": true
           },
           {
+            "key": "order_comments.start_conversation",
+            "line": 255,
+            "exists": true
+          },
+          {
+            "key": "order_comments.no_internal_notes",
+            "line": 262,
+            "exists": true
+          },
+          {
+            "key": "order_comments.add_private_notes",
+            "line": 263,
+            "exists": true
+          },
+          {
+            "key": "order_comments.detail_team",
+            "line": 297,
+            "exists": true
+          },
+          {
             "key": "order_comments.delete",
-            "line": 312,
+            "line": 355,
             "exists": true
           },
           {
             "key": "order_comments.reply_placeholder",
-            "line": 335,
+            "line": 378,
             "exists": true
           },
           {
             "key": "order_comments.title",
-            "line": 421,
+            "line": 464,
             "exists": true
           },
           {
             "key": "order_comments.comments",
-            "line": 430,
+            "line": 473,
             "exists": true
           },
           {
             "key": "order_comments.internal_notes",
-            "line": 440,
+            "line": 483,
             "exists": true
           },
           {
             "key": "order_comments.add_comment_placeholder",
-            "line": 461,
+            "line": 504,
             "exists": true
           },
           {
             "key": "order_comments.mention",
-            "line": 487,
+            "line": 530,
             "exists": true
           },
           {
             "key": "order_comments.loading_comments",
-            "line": 507,
+            "line": 550,
             "exists": true
           },
           {
             "key": "order_comments.comments_count",
-            "line": 519,
+            "line": 562,
             "exists": true
           },
           {
             "key": "order_comments.team_discussion",
-            "line": 523,
+            "line": 566,
             "exists": true
           },
           {
             "key": "order_comments.add_internal_placeholder",
-            "line": 541,
+            "line": 584,
             "exists": true
           },
           {
             "key": "order_comments.mention_team",
-            "line": 569,
+            "line": 612,
             "exists": true
           },
           {
             "key": "order_comments.loading_notes",
-            "line": 589,
+            "line": 632,
             "exists": true
           },
           {
             "key": "order_comments.internal_count",
-            "line": 601,
+            "line": 644,
             "exists": true
           },
           {
             "key": "order_comments.confidential",
-            "line": 605,
+            "line": 648,
             "exists": true
           },
           {
             "key": "order_comments.access_denied",
-            "line": 619,
+            "line": 662,
             "exists": true
           },
           {
             "key": "order_comments.detail_access_required",
-            "line": 621,
+            "line": 664,
             "exists": true
           },
           {
             "key": "order_comments.restricted_access",
-            "line": 625,
+            "line": 668,
             "exists": true
           },
           {
             "key": "order_comments.confirm_delete_title",
-            "line": 635,
+            "line": 678,
             "exists": true
           },
           {
             "key": "order_comments.confirm_delete_description",
-            "line": 636,
+            "line": 679,
             "exists": true
           },
           {
             "key": "order_comments.delete_confirm",
-            "line": 637,
+            "line": 680,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 638,
+            "line": 681,
             "exists": true
           }
         ],
         "missingKeys": [
           {
+            "key": "order_comments.comment_saved_attachments_failed",
+            "line": 144,
+            "context": "143: description: activeTab === 'comments'\n144: ? t('order_comments.comment_saved_attachments_failed', 'Comment added but attachments failed to upload. You can try adding attachments again.')\n145: : t('order_comments.note_saved_attachments_failed', 'Note added but attachments failed to upload. You can try adding attachments again.')"
+          },
+          {
+            "key": "order_comments.note_saved_attachments_failed",
+            "line": 145,
+            "context": "144: ? t('order_comments.comment_saved_attachments_failed', 'Comment added but attachments failed to upload. You can try adding attachments again.')\n145: : t('order_comments.note_saved_attachments_failed', 'Note added but attachments failed to upload. You can try adding attachments again.')\n146: });"
+          },
+          {
+            "key": "order_comments.comment_saved_error_occurred",
+            "line": 162,
+            "context": "161: title: '⚠️ Partial Success',\n162: description: t('order_comments.comment_saved_error_occurred', 'Comment was saved but an error occurred. Please refresh the page.')\n163: });"
+          },
+          {
             "key": "order_comments.delete_confirm",
-            "line": 637,
-            "context": "636: description={t('order_comments.confirm_delete_description', 'Are you sure you want to delete this comment? This action cannot be undone.')}\n637: confirmText={t('order_comments.delete_confirm', 'Delete')}\n638: cancelText={t('common.cancel', 'Cancel')}"
+            "line": 680,
+            "context": "679: description={t('order_comments.confirm_delete_description', 'Are you sure you want to delete this comment? This action cannot be undone.')}\n680: confirmText={t('order_comments.delete_confirm', 'Delete')}\n681: cancelText={t('common.cancel', 'Cancel')}"
           }
         ],
         "coverage": 95,
@@ -53254,290 +53229,491 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\settings\\integrations\\slack\\SlackEventSelector.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 366,
+            "context": "365: onToggleExpand: () => void;\n366: onUpdateEvent: (eventType: string, enabled: boolean) => Promise<void>;\n367: onToggleAll: (module: string, enabled: boolean) => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 367,
+            "context": "366: onUpdateEvent: (eventType: string, enabled: boolean) => Promise<void>;\n367: onToggleAll: (module: string, enabled: boolean) => Promise<void>;\n368: isUpdating: boolean;"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "integrations.slack_events.modules.${module}",
+            "line": 116,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.errors.load_failed",
+            "line": 140,
+            "exists": false
+          },
+          {
+            "key": "common.error",
+            "line": 143,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack_events.errors.load_failed",
+            "line": 144,
+            "exists": false
+          },
+          {
+            "key": "common.error",
+            "line": 187,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack_events.errors.update_failed",
+            "line": 188,
+            "exists": false
+          },
+          {
+            "key": "common.success",
+            "line": 233,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack_events.messages.batch_update_success",
+            "line": 234,
+            "exists": false
+          },
+          {
+            "key": "common.error",
+            "line": 242,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack_events.errors.batch_update_failed",
+            "line": 243,
+            "exists": false
+          },
+          {
+            "key": "common.action_buttons.retry",
+            "line": 297,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.selector.title",
+            "line": 313,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.selector.description",
+            "line": 316,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.selector.summary",
+            "line": 343,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.selector.events_enabled",
+            "line": 406,
+            "exists": false
+          },
+          {
+            "key": "common.action_buttons.disable_all",
+            "line": 434,
+            "exists": false
+          },
+          {
+            "key": "common.action_buttons.enable_all",
+            "line": 435,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.categories.${category}",
+            "line": 453,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.${event.eventType}.title",
+            "line": 496,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.${event.eventType}.description",
+            "line": 499,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "integrations.slack_events.modules.${module}",
+            "line": 116,
+            "context": "115: module,\n116: moduleName: t(`integrations.slack_events.modules.${module}`, { defaultValue: module }),\n117: events: [],"
+          },
+          {
+            "key": "integrations.slack_events.errors.load_failed",
+            "line": 140,
+            "context": "139: console.error('Failed to load event preferences:', err);\n140: setError(t('integrations.slack_events.errors.load_failed', { defaultValue: 'Failed to load event preferences' }));\n141: toast({"
+          },
+          {
+            "key": "integrations.slack_events.errors.load_failed",
+            "line": 144,
+            "context": "143: title: t('common.error'),\n144: description: t('integrations.slack_events.errors.load_failed')\n145: });"
+          },
+          {
+            "key": "integrations.slack_events.errors.update_failed",
+            "line": 188,
+            "context": "187: title: t('common.error'),\n188: description: t('integrations.slack_events.errors.update_failed')\n189: });"
+          },
+          {
+            "key": "integrations.slack_events.messages.batch_update_success",
+            "line": 234,
+            "context": "233: title: t('common.success'),\n234: description: t('integrations.slack_events.messages.batch_update_success')\n235: });"
+          },
+          {
+            "key": "integrations.slack_events.errors.batch_update_failed",
+            "line": 243,
+            "context": "242: title: t('common.error'),\n243: description: t('integrations.slack_events.errors.batch_update_failed')\n244: });"
+          },
+          {
+            "key": "common.action_buttons.retry",
+            "line": 297,
+            "context": "296: >\n297: {t('common.action_buttons.retry', { defaultValue: 'Retry' })}\n298: </Button>"
+          },
+          {
+            "key": "integrations.slack_events.selector.title",
+            "line": 313,
+            "context": "312: <CardTitle className=\"text-base font-medium text-gray-900\">\n313: {t('integrations.slack_events.selector.title')}\n314: </CardTitle>"
+          },
+          {
+            "key": "integrations.slack_events.selector.description",
+            "line": 316,
+            "context": "315: <CardDescription className=\"text-sm text-gray-600 mt-1\">\n316: {t('integrations.slack_events.selector.description')}\n317: </CardDescription>"
+          },
+          {
+            "key": "integrations.slack_events.selector.summary",
+            "line": 343,
+            "context": "342: <span className=\"text-sm font-medium text-emerald-900\">\n343: {t('integrations.slack_events.selector.summary', {\n344: enabled: totalEnabled,"
+          },
+          {
+            "key": "integrations.slack_events.selector.events_enabled",
+            "line": 406,
+            "context": "405: <CardDescription className=\"text-sm text-gray-500 mt-0.5\">\n406: {t('integrations.slack_events.selector.events_enabled', {\n407: count: group.enabledCount,"
+          },
+          {
+            "key": "common.action_buttons.disable_all",
+            "line": 434,
+            "context": "433: {allEnabled\n434: ? t('common.action_buttons.disable_all', { defaultValue: 'Disable All' })\n435: : t('common.action_buttons.enable_all', { defaultValue: 'Enable All' })}"
+          },
+          {
+            "key": "common.action_buttons.enable_all",
+            "line": 435,
+            "context": "434: ? t('common.action_buttons.disable_all', { defaultValue: 'Disable All' })\n435: : t('common.action_buttons.enable_all', { defaultValue: 'Enable All' })}\n436: </Button>"
+          },
+          {
+            "key": "integrations.slack_events.categories.${category}",
+            "line": 453,
+            "context": "452: <Badge variant=\"outline\" className=\"text-xs font-medium\">\n453: {t(`integrations.slack_events.categories.${category}`)}\n454: </Badge>"
+          },
+          {
+            "key": "integrations.slack_events.${event.eventType}.title",
+            "line": 496,
+            "context": "495: >\n496: {t(`integrations.slack_events.${event.eventType}.title`)}\n497: </Label>"
+          },
+          {
+            "key": "integrations.slack_events.${event.eventType}.description",
+            "line": 499,
+            "context": "498: <p className=\"text-xs text-gray-500 mt-0.5\">\n499: {t(`integrations.slack_events.${event.eventType}.description`)}\n500: </p>"
+          }
+        ],
+        "coverage": 91,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\settings\\integrations\\SlackIntegrationCard.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
           {
             "key": "integrations.slack.connected_title",
-            "line": 61,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.connected_description",
             "line": 62,
             "exists": true
           },
           {
-            "key": "integrations.slack.error_title",
-            "line": 70,
+            "key": "integrations.slack.connected_description",
+            "line": 63,
             "exists": true
           },
           {
-            "key": "integrations.slack.error_description",
+            "key": "integrations.slack.error_title",
             "line": 71,
             "exists": true
           },
           {
+            "key": "integrations.slack.error_description",
+            "line": 72,
+            "exists": true
+          },
+          {
             "key": "common.error",
-            "line": 99,
+            "line": 100,
             "exists": true
           },
           {
             "key": "integrations.load_error",
-            "line": 100,
+            "line": 101,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 116,
+            "line": 117,
             "exists": true
           },
           {
             "key": "integrations.user_not_found",
-            "line": 117,
+            "line": 118,
             "exists": false
           },
           {
             "key": "integrations.slack.connect_error",
-            "line": 171,
+            "line": 174,
             "exists": true
           },
           {
             "key": "common.unknown_error",
-            "line": 172,
+            "line": 175,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 195,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.enabled",
-            "line": 197,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.disabled",
             "line": 198,
             "exists": true
           },
           {
+            "key": "integrations.slack.enabled",
+            "line": 200,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.disabled",
+            "line": 201,
+            "exists": true
+          },
+          {
             "key": "common.error",
-            "line": 204,
+            "line": 207,
             "exists": true
           },
           {
             "key": "integrations.update_error",
-            "line": 205,
+            "line": 208,
             "exists": false
           },
           {
             "key": "common.success",
-            "line": 232,
+            "line": 235,
             "exists": true
           },
           {
             "key": "integrations.slack.disconnected",
-            "line": 233,
+            "line": 236,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 239,
+            "line": 242,
             "exists": true
           },
           {
             "key": "integrations.delete_error",
-            "line": 240,
+            "line": 243,
             "exists": false
           },
           {
             "key": "integrations.status.active",
-            "line": 250,
-            "exists": false
-          },
-          {
-            "key": "integrations.status.inactive",
-            "line": 251,
-            "exists": false
-          },
-          {
-            "key": "integrations.status.error",
-            "line": 252,
-            "exists": false
-          },
-          {
-            "key": "integrations.status.pending",
             "line": 253,
             "exists": false
           },
           {
-            "key": "integrations.status.revoked",
+            "key": "integrations.status.inactive",
             "line": 254,
             "exists": false
           },
           {
-            "key": "integrations.slack.title",
-            "line": 295,
-            "exists": true
+            "key": "integrations.status.error",
+            "line": 255,
+            "exists": false
           },
           {
-            "key": "integrations.slack.description",
+            "key": "integrations.status.pending",
+            "line": 256,
+            "exists": false
+          },
+          {
+            "key": "integrations.status.revoked",
+            "line": 257,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack.title",
             "line": 298,
             "exists": true
           },
           {
+            "key": "integrations.slack.description",
+            "line": 301,
+            "exists": true
+          },
+          {
             "key": "integrations.slack.workspace",
-            "line": 313,
+            "line": 316,
             "exists": true
           },
           {
             "key": "integrations.slack.channel",
-            "line": 322,
+            "line": 325,
             "exists": true
           },
           {
             "key": "integrations.slack.bot_id",
-            "line": 331,
+            "line": 334,
             "exists": true
           },
           {
             "key": "integrations.slack.scopes",
-            "line": 343,
+            "line": 346,
             "exists": true
           },
           {
             "key": "integrations.slack.error_occurred",
-            "line": 362,
+            "line": 365,
             "exists": true
           },
           {
             "key": "integrations.slack.enable_integration",
-            "line": 376,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.enable_description",
             "line": 379,
             "exists": true
           },
           {
+            "key": "integrations.slack.enable_description",
+            "line": 382,
+            "exists": true
+          },
+          {
             "key": "integrations.slack.disconnect",
-            "line": 397,
+            "line": 400,
             "exists": true
           },
           {
             "key": "integrations.slack.manage",
-            "line": 404,
+            "line": 407,
             "exists": true
           },
           {
             "key": "integrations.slack.not_connected",
-            "line": 413,
+            "line": 426,
             "exists": true
           },
           {
             "key": "integrations.slack.connecting",
-            "line": 423,
+            "line": 436,
             "exists": true
           },
           {
             "key": "integrations.slack.connect",
-            "line": 430,
+            "line": 443,
             "exists": true
           },
           {
             "key": "integrations.slack.benefits_title",
-            "line": 439,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.benefit_1",
-            "line": 444,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.benefit_2",
-            "line": 448,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.benefit_3",
             "line": 452,
             "exists": true
           },
           {
-            "key": "integrations.slack.disconnect_title",
+            "key": "integrations.slack.benefit_1",
+            "line": 457,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.benefit_2",
+            "line": 461,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.benefit_3",
             "line": 465,
             "exists": true
           },
           {
+            "key": "integrations.slack.disconnect_title",
+            "line": 478,
+            "exists": true
+          },
+          {
             "key": "integrations.slack.disconnect_confirm",
-            "line": 466,
+            "line": 479,
             "exists": true
           },
           {
             "key": "common.action_buttons.disconnect",
-            "line": 467,
+            "line": 480,
             "exists": false
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 468,
+            "line": 481,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "integrations.load_error",
-            "line": 100,
-            "context": "99: title: t('common.error'),\n100: description: t('integrations.load_error'),\n101: });"
+            "line": 101,
+            "context": "100: title: t('common.error'),\n101: description: t('integrations.load_error'),\n102: });"
           },
           {
             "key": "integrations.user_not_found",
-            "line": 117,
-            "context": "116: title: t('common.error'),\n117: description: t('integrations.user_not_found'),\n118: });"
+            "line": 118,
+            "context": "117: title: t('common.error'),\n118: description: t('integrations.user_not_found'),\n119: });"
           },
           {
             "key": "integrations.update_error",
-            "line": 205,
-            "context": "204: title: t('common.error'),\n205: description: t('integrations.update_error'),\n206: });"
+            "line": 208,
+            "context": "207: title: t('common.error'),\n208: description: t('integrations.update_error'),\n209: });"
           },
           {
             "key": "integrations.delete_error",
-            "line": 240,
-            "context": "239: title: t('common.error'),\n240: description: t('integrations.delete_error'),\n241: });"
+            "line": 243,
+            "context": "242: title: t('common.error'),\n243: description: t('integrations.delete_error'),\n244: });"
           },
           {
             "key": "integrations.status.active",
-            "line": 250,
-            "context": "249: const statusConfig = {\n250: active: { icon: CheckCircle2, variant: 'default' as const, label: t('integrations.status.active') },\n251: inactive: { icon: XCircle, variant: 'secondary' as const, label: t('integrations.status.inactive') },"
+            "line": 253,
+            "context": "252: const statusConfig = {\n253: active: { icon: CheckCircle2, variant: 'default' as const, label: t('integrations.status.active') },\n254: inactive: { icon: XCircle, variant: 'secondary' as const, label: t('integrations.status.inactive') },"
           },
           {
             "key": "integrations.status.inactive",
-            "line": 251,
-            "context": "250: active: { icon: CheckCircle2, variant: 'default' as const, label: t('integrations.status.active') },\n251: inactive: { icon: XCircle, variant: 'secondary' as const, label: t('integrations.status.inactive') },\n252: error: { icon: AlertTriangle, variant: 'destructive' as const, label: t('integrations.status.error') },"
+            "line": 254,
+            "context": "253: active: { icon: CheckCircle2, variant: 'default' as const, label: t('integrations.status.active') },\n254: inactive: { icon: XCircle, variant: 'secondary' as const, label: t('integrations.status.inactive') },\n255: error: { icon: AlertTriangle, variant: 'destructive' as const, label: t('integrations.status.error') },"
           },
           {
             "key": "integrations.status.error",
-            "line": 252,
-            "context": "251: inactive: { icon: XCircle, variant: 'secondary' as const, label: t('integrations.status.inactive') },\n252: error: { icon: AlertTriangle, variant: 'destructive' as const, label: t('integrations.status.error') },\n253: pending_auth: { icon: Loader2, variant: 'secondary' as const, label: t('integrations.status.pending') },"
+            "line": 255,
+            "context": "254: inactive: { icon: XCircle, variant: 'secondary' as const, label: t('integrations.status.inactive') },\n255: error: { icon: AlertTriangle, variant: 'destructive' as const, label: t('integrations.status.error') },\n256: pending_auth: { icon: Loader2, variant: 'secondary' as const, label: t('integrations.status.pending') },"
           },
           {
             "key": "integrations.status.pending",
-            "line": 253,
-            "context": "252: error: { icon: AlertTriangle, variant: 'destructive' as const, label: t('integrations.status.error') },\n253: pending_auth: { icon: Loader2, variant: 'secondary' as const, label: t('integrations.status.pending') },\n254: revoked: { icon: XCircle, variant: 'destructive' as const, label: t('integrations.status.revoked') },"
+            "line": 256,
+            "context": "255: error: { icon: AlertTriangle, variant: 'destructive' as const, label: t('integrations.status.error') },\n256: pending_auth: { icon: Loader2, variant: 'secondary' as const, label: t('integrations.status.pending') },\n257: revoked: { icon: XCircle, variant: 'destructive' as const, label: t('integrations.status.revoked') },"
           },
           {
             "key": "integrations.status.revoked",
-            "line": 254,
-            "context": "253: pending_auth: { icon: Loader2, variant: 'secondary' as const, label: t('integrations.status.pending') },\n254: revoked: { icon: XCircle, variant: 'destructive' as const, label: t('integrations.status.revoked') },\n255: };"
+            "line": 257,
+            "context": "256: pending_auth: { icon: Loader2, variant: 'secondary' as const, label: t('integrations.status.pending') },\n257: revoked: { icon: XCircle, variant: 'destructive' as const, label: t('integrations.status.revoked') },\n258: };"
           },
           {
             "key": "common.action_buttons.disconnect",
-            "line": 467,
-            "context": "466: description={t('integrations.slack.disconnect_confirm', { defaultValue: 'Are you sure you want to disconnect your Slack integration? This action cannot be undone.' })}\n467: confirmText={t('common.action_buttons.disconnect', { defaultValue: 'Disconnect' })}\n468: cancelText={t('common.action_buttons.cancel')}"
+            "line": 480,
+            "context": "479: description={t('integrations.slack.disconnect_confirm', { defaultValue: 'Are you sure you want to disconnect your Slack integration? This action cannot be undone.' })}\n480: confirmText={t('common.action_buttons.disconnect', { defaultValue: 'Disconnect' })}\n481: cancelText={t('common.action_buttons.cancel')}"
           }
         ],
         "coverage": 100,
@@ -69118,7 +69294,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "439 Component components need translation",
+      "description": "440 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\detail-hub\\InvoiceCenter.BACKUP.tsx",
@@ -69301,6 +69477,7 @@
         "src\\components\\reports\\invoices\\ReinvoiceHistoryTimeline.tsx",
         "src\\components\\reports\\sections\\ExportCenter.tsx",
         "src\\components\\scanner\\QuickScanMode.tsx",
+        "src\\components\\settings\\integrations\\slack\\SlackEventSelector.tsx",
         "src\\components\\stock\\StockInventoryTable.tsx",
         "src\\components\\testing\\TestSMSButton.tsx",
         "src\\components\\ui\\badge.tsx",
@@ -69565,9 +69742,9 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3019 translation keys are referenced but missing",
+      "description": "3038 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "151 hours"
+      "estimatedEffort": "152 hours"
     }
   ],
   "coverage": 78

@@ -43,5 +43,83 @@
   "api_keys": {
     "title": "API Keys",
     "description": "Manage your API keys"
+  },
+  "slack_events": {
+    "modules": {
+      "orders": "Orders",
+      "vehicles": "Vehicles"
+    },
+    "categories": {
+      "orders": "Orders",
+      "collaboration": "Collaboration",
+      "vehicles": "Vehicles",
+      "admin": "Administration"
+    },
+    "selector": {
+      "title": "Configure Slack Event Notifications",
+      "description": "Choose which events trigger notifications in your Slack channels. Events are organized by module and category.",
+      "events_enabled": "{{count}} of {{total}} events enabled",
+      "summary": "{{enabled}} of {{total}} events are currently enabled"
+    },
+    "errors": {
+      "load_failed": "Failed to load event preferences",
+      "update_failed": "Failed to update event preference",
+      "batch_update_failed": "Failed to update module preferences"
+    },
+    "messages": {
+      "batch_update_success": "Module preferences updated successfully"
+    },
+    "order_created": {
+      "title": "Order Created",
+      "description": "Notify when a new order is created in the system"
+    },
+    "order_status_changed": {
+      "title": "Order Status Changed",
+      "description": "Notify when an order's status changes (e.g., pending → in progress)"
+    },
+    "order_completed": {
+      "title": "Order Completed",
+      "description": "Notify when an order is marked as completed"
+    },
+    "order_deleted": {
+      "title": "Order Deleted",
+      "description": "Notify when an order is deleted from the system"
+    },
+    "order_assigned": {
+      "title": "Order Assigned",
+      "description": "Notify when an order is assigned to a team member"
+    },
+    "comment_added": {
+      "title": "Comment Added",
+      "description": "Notify when someone adds a comment to an order"
+    },
+    "file_uploaded": {
+      "title": "File Uploaded",
+      "description": "Notify when a file is attached to an order"
+    },
+    "user_mentioned": {
+      "title": "User Mentioned",
+      "description": "Notify when a user is mentioned in a comment using @mention"
+    },
+    "follower_added": {
+      "title": "Follower Added",
+      "description": "Notify when someone is added as a follower to an order"
+    },
+    "vehicle_added": {
+      "title": "Vehicle Added",
+      "description": "Notify when a new vehicle is added to the system"
+    },
+    "vehicle_step_changed": {
+      "title": "Vehicle Step Changed",
+      "description": "Notify when a vehicle's workflow step changes"
+    },
+    "vehicle_completed": {
+      "title": "Vehicle Completed",
+      "description": "Notify when a vehicle completes all workflow steps"
+    },
+    "vehicle_blocked": {
+      "title": "Vehicle Blocked",
+      "description": "Notify when a vehicle is blocked or encounters an issue"
+    }
   }
 }

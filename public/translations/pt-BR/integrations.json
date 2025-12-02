@@ -57,7 +57,7 @@
       "orders": "Pedidos",
       "collaboration": "Colaboração",
       "vehicles": "Veículos",
-      "admin": "Admin"
+      "admin": "Administração"
     }
   },
   "webhook": {
@@ -67,5 +67,83 @@
   "api_keys": {
     "title": "Chaves API",
     "description": "Gerenciar suas chaves API"
+  },
+  "slack_events": {
+    "modules": {
+      "orders": "Pedidos",
+      "vehicles": "Veículos"
+    },
+    "categories": {
+      "orders": "Pedidos",
+      "collaboration": "Colaboração",
+      "vehicles": "Veículos",
+      "admin": "Administração"
+    },
+    "selector": {
+      "title": "Configurar Notificações de Eventos do Slack",
+      "description": "Escolha quais eventos acionam notificações em seus canais do Slack. Os eventos são organizados por módulo e categoria.",
+      "events_enabled": "{{count}} de {{total}} eventos habilitados",
+      "summary": "{{enabled}} de {{total}} eventos estão atualmente habilitados"
+    },
+    "errors": {
+      "load_failed": "Falha ao carregar as preferências de eventos",
+      "update_failed": "Falha ao atualizar a preferência de evento",
+      "batch_update_failed": "Falha ao atualizar as preferências do módulo"
+    },
+    "messages": {
+      "batch_update_success": "Preferências do módulo atualizadas com sucesso"
+    },
+    "order_created": {
+      "title": "Pedido Criado",
+      "description": "Notificar quando um novo pedido é criado no sistema"
+    },
+    "order_status_changed": {
+      "title": "Status do Pedido Alterado",
+      "description": "Notificar quando o status de um pedido muda (ex., pendente → em andamento)"
+    },
+    "order_completed": {
+      "title": "Pedido Concluído",
+      "description": "Notificar quando um pedido é marcado como concluído"
+    },
+    "order_deleted": {
+      "title": "Pedido Excluído",
+      "description": "Notificar quando um pedido é excluído do sistema"
+    },
+    "order_assigned": {
+      "title": "Pedido Atribuído",
+      "description": "Notificar quando um pedido é atribuído a um membro da equipe"
+    },
+    "comment_added": {
+      "title": "Comentário Adicionado",
+      "description": "Notificar quando alguém adiciona um comentário a um pedido"
+    },
+    "file_uploaded": {
+      "title": "Arquivo Enviado",
+      "description": "Notificar quando um arquivo é anexado a um pedido"
+    },
+    "user_mentioned": {
+      "title": "Usuário Mencionado",
+      "description": "Notificar quando um usuário é mencionado em um comentário usando @menção"
+    },
+    "follower_added": {
+      "title": "Seguidor Adicionado",
+      "description": "Notificar quando alguém é adicionado como seguidor de um pedido"
+    },
+    "vehicle_added": {
+      "title": "Veículo Adicionado",
+      "description": "Notificar quando um novo veículo é adicionado ao sistema"
+    },
+    "vehicle_step_changed": {
+      "title": "Etapa do Veículo Alterada",
+      "description": "Notificar quando a etapa do fluxo de trabalho de um veículo muda"
+    },
+    "vehicle_completed": {
+      "title": "Veículo Concluído",
+      "description": "Notificar quando um veículo completa todas as etapas do fluxo de trabalho"
+    },
+    "vehicle_blocked": {
+      "title": "Veículo Bloqueado",
+      "description": "Notificar quando um veículo está bloqueado ou encontra um problema"
+    }
   }
 }
