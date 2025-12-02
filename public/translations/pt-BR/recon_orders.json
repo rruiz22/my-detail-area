@@ -1,6 +1,13 @@
 {
   "title": "Pedidos de Recondicionamento",
   "description": "Gerenciar pedidos de recondicionamento de veículos",
+  "department_label": "Depto. Recon",
+  "tabs": {
+    "week": "Semana"
+  },
+  "search": {
+    "showing_results": "Mostrando resultados correspondentes a \"{{searchTerm}}\""
+  },
   "toast": {
     "create_success": "Pedido de Recon Criado",
     "create_success_description": "O pedido de recondicionamento foi criado com sucesso",

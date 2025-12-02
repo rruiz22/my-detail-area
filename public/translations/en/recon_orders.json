@@ -1,6 +1,13 @@
 {
   "title": "Recon Orders",
   "description": "Manage vehicle reconditioning orders",
+  "department_label": "Recon Dept",
+  "tabs": {
+    "week": "Week"
+  },
+  "search": {
+    "showing_results": "Showing results matching \"{{searchTerm}}\""
+  },
   "toast": {
     "create_success": "Recon Order Created",
     "create_success_description": "The reconditioning order has been created successfully",

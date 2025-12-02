@@ -1,6 +1,13 @@
 {
   "title": "Órdenes de Reacondicionamiento",
   "description": "Gestionar órdenes de reacondicionamiento de vehículos",
+  "department_label": "Dpto. Reacon",
+  "tabs": {
+    "week": "Semana"
+  },
+  "search": {
+    "showing_results": "Mostrando resultados que coinciden con \"{{searchTerm}}\""
+  },
   "toast": {
     "create_success": "Orden de Reacondicionamiento Creada",
     "create_success_description": "La orden de reacondicionamiento ha sido creada exitosamente",

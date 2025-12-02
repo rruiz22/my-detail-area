@@ -611,7 +611,7 @@ export default function ReconOrders() {
             {/* Responsive Table Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2">
               <h2 className="text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight">
-                {activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'queue' ? t('sales_orders.tabs.queue') : activeFilter === 'week' ? 'Week' : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}
+                {activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'queue' ? t('sales_orders.tabs.queue') : activeFilter === 'week' ? t('recon_orders.tabs.week') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}
               </h2>
               <Badge variant="secondary" className="text-base sm:text-lg font-bold self-center sm:self-auto px-2 sm:px-3 py-1">
                 {filteredOrders.length}
@@ -622,7 +622,7 @@ export default function ReconOrders() {
             {searchTerm && (
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">
-                  Showing results matching "{searchTerm}"
+                  {t('recon_orders.search.showing_results', { searchTerm })}
                 </p>
               </div>
             )}

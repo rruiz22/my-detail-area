@@ -21,6 +21,7 @@ import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { type ModulePermissionKey } from '@/types/permissions';
 import { safeParseDate } from '@/utils/dateUtils';
+import { logger } from '@/utils/logger';
 import { AlertCircle, Building2, Car, FileText, Loader2, Wrench, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -163,7 +164,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
   const { data: dealerships = [], isLoading: dealershipsLoading } = useDealerships();
   const { data: services = [], isLoading: servicesLoading } = useDealerServices(
     selectedDealership ? parseInt(selectedDealership) : null,
-    'Recon Dept'
+    t('recon_orders.department_label', 'Recon Dept')
   );
 
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
@@ -336,11 +337,11 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
       );
 
       if (validServiceIds.length > 0) {
-        console.log('✅ Recon Modal: Applying pending service IDs:', validServiceIds);
+        logger.dev('✅ Recon Modal: Applying pending service IDs:', validServiceIds);
         setSelectedServices(validServiceIds);
         setPendingServiceIds([]); // Clear pending state
       } else {
-        console.warn('⚠️ Recon Modal: No valid service IDs found in loaded services');
+        logger.warn('⚠️ Recon Modal: No valid service IDs found in loaded services');
         setPendingServiceIds([]); // Clear pending state even if no matches
       }
     }
@@ -565,11 +566,6 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
           };
         });
 
-        console.log('📤 Modal sending multiple orders data to hook:', {
-          count: ordersData.length,
-          services: ordersData.map(d => d.services)
-        });
-
         // Show immediate success feedback
         toast({ description: t('orders.creating_multiple_orders', { count: selectedServices.length }) || `Creating ${selectedServices.length} orders...` });
 
@@ -582,23 +578,6 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
         // Single service or editing - proceed as normal
       const dbData = transformToDbFormat(formData);
 
-      console.log('📤 Modal sending data to hook:', {
-        dealerId: dbData.dealerId,
-        stockNumber: dbData.stockNumber,
-        vehicleInfo: dbData.vehicleInfo,
-        services: dbData.services,
-        servicesLength: dbData.services?.length,
-        servicesContent: JSON.stringify(dbData.services),
-        selectedServicesState: selectedServices,
-        selectedServicesContent: JSON.stringify(selectedServices),
-        selectedServicesLength: selectedServices.length,
-        completedAt: dbData.completedAt,
-        completedAtType: typeof dbData.completedAt,
-        completedAtISO: dbData.completedAt instanceof Date ? dbData.completedAt.toISOString() : dbData.completedAt,
-        totalAmount: dbData.totalAmount,
-        notes: dbData.notes
-      });
-
       // Show immediate success feedback
       toast({ description: t('orders.creating_order') });
 
@@ -610,7 +589,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
 
     } catch (error: any) {
       // Keep modal open and show error
-      console.error('Submit error:', error);
+      logger.error('Submit error:', error);
       const errorMessage = error?.message || t('orders.creation_failed') || 'Failed to save order';
       setSubmitError(errorMessage);
       toast({ variant: 'destructive', description: errorMessage });
