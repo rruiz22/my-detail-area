@@ -18,5 +18,12 @@
   "waiter": "Espera",
   "standard_wash": "Lavado Estándar",
   "max_one_service": "Las órdenes de lavado solo pueden tener un servicio",
-  "one_service_limit": "Las órdenes de lavado solo pueden tener un servicio. Desmarque para seleccionar otro."
+  "one_service_limit": "Las órdenes de lavado solo pueden tener un servicio. Desmarque para seleccionar otro.",
+  "save_failed": "Error al guardar orden de lavado",
+  "modal_description_edit": "Actualizar detalles del servicio de lavado incluyendo información del vehículo y fecha de finalización",
+  "modal_description_create": "Crear una orden rápida de servicio de lavado con información del vehículo y servicio",
+  "characters_remaining": "{{count}} caracteres restantes",
+  "search": {
+    "showing_results": "Mostrando resultados que coinciden con \"{{searchTerm}}\""
+  }
 }

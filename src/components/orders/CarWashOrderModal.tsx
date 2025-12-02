@@ -16,6 +16,7 @@ import { useDealerServices, useDealerships } from '@/hooks/useDealerships';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { safeParseDate } from '@/utils/dateUtils';
 import { formatVehicleDisplay } from '@/utils/vehicleUtils';
+import { logger } from '@/utils/logger';
 import { AlertCircle, Building2, Car, Clock, FileText, Loader2, Wrench, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -363,27 +364,14 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
     const dbData = transformToDbFormat(formData);
 
-    console.log('📤 [CarWash Modal] Sending data to handleSaveOrder:', {
-      dealerId: dbData.dealerId,
-      stockNumber: dbData.stockNumber,
-      tag: dbData.tag,
-      vehicleInfo: dbData.vehicleInfo,
-      isWaiter: dbData.isWaiter,
-      services: dbData.services,
-      servicesLength: dbData.services?.length,
-      completedAt: dbData.completedAt,
-      totalAmount: dbData.totalAmount,
-      fullData: dbData
-    });
-
     try {
       await onSave(dbData);
       // Only close on success
       onClose();
     } catch (error: any) {
       // Keep modal open and show error
-      console.error('Submit error:', error);
-      const errorMessage = error?.message || 'Failed to save order';
+      logger.error('Submit error:', error);
+      const errorMessage = error?.message || t('car_wash_orders.save_failed');
       setSubmitError(errorMessage);
       toast({ variant: 'destructive', description: errorMessage });
       // Modal stays open with data intact
@@ -408,7 +396,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
             )}
           </DialogTitle>
           <DialogDescription className="sr-only" id="carwash-order-modal-description">
-            {order ? 'Update car wash service details' : 'Create a quick car wash service order'}
+            {order ? t('car_wash_orders.modal_description_edit') : t('car_wash_orders.modal_description_create')}
           </DialogDescription>
         </DialogHeader>
 
@@ -503,7 +491,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                   )}
                   {formData.vehicleVin.length > 0 && formData.vehicleVin.length < 17 && (
                     <div className="text-sm text-muted-foreground mt-1">
-                      {17 - formData.vehicleVin.length} characters remaining
+                      {t('car_wash_orders.characters_remaining', { count: 17 - formData.vehicleVin.length })}
                     </div>
                   )}
                 </div>

@@ -18,5 +18,12 @@
   "waiter": "Waiter",
   "standard_wash": "Standard Wash",
   "max_one_service": "Car wash orders can only have one service",
-  "one_service_limit": "Car wash orders can only have one service. Uncheck to select another."
+  "one_service_limit": "Car wash orders can only have one service. Uncheck to select another.",
+  "save_failed": "Failed to save car wash order",
+  "modal_description_edit": "Update car wash service details including vehicle information and completion date",
+  "modal_description_create": "Create a quick car wash service order with vehicle and service information",
+  "characters_remaining": "{{count}} characters remaining",
+  "search": {
+    "showing_results": "Showing results matching \"{{searchTerm}}\""
+  }
 }

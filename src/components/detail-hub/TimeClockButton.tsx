@@ -12,15 +12,15 @@
  * - Real-time count updates (1-minute cache)
  */
 
-import { useState } from 'react';
-import { Clock } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Badge } from '@/components/ui/badge';
+import { useActiveClockedInCount } from '@/hooks/useActiveClockedInCount';
+import { useKioskConfig } from '@/hooks/useKioskConfig';
+import { Clock } from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PunchClockKioskModal } from './PunchClockKioskModal';
-import { useKioskConfig } from '@/hooks/useKioskConfig';
-import { useActiveClockedInCount } from '@/hooks/useActiveClockedInCount';
 
 interface TimeClockButtonProps {
   dealerId?: number;
@@ -60,7 +60,7 @@ export function TimeClockButton({ dealerId }: TimeClockButtonProps) {
               {activeCount > 0 && (
                 <Badge
                   variant="secondary"
-                  className="absolute -right-1 -top-1 h-5 min-w-5 px-1.5 bg-amber-500 text-white text-xs font-bold pointer-events-none animate-pulse shadow-sm"
+                  className="absolute -right-1 -top-1 h-5 min-w-5 px-1.5 bg-amber-500 text-white text-xs font-bold pointer-events-none shadow-sm"
                 >
                   {activeCount}
                 </Badge>

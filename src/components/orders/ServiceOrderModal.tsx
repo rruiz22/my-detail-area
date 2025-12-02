@@ -722,10 +722,10 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                     {t('sales_orders.dealership')} & {t('orders.clientInfo')}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-6">
                   {/* Box 1: Dealership & Assignment */}
                   <div className="relative p-4 bg-gradient-to-br from-indigo-50 to-indigo-50/30 rounded-lg border-2 border-indigo-200">
-                    <div className="absolute -top-3 left-3 px-2 bg-background">
+                    <div className="absolute -top-3 left-3 px-2 bg-indigo-50 rounded-full">
                       <Badge variant="outline" className="border-indigo-300 text-indigo-700 font-semibold flex items-center gap-1">
                         <Building2 className="h-3 w-3" />
                         {t('service_orders.dealership_assignment')}
@@ -907,7 +907,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
 
                   {/* Box 2: Customer Details */}
                   <div className="relative p-4 bg-gradient-to-br from-rose-50 to-rose-50/30 rounded-lg border-2 border-rose-200">
-                    <div className="absolute -top-3 left-3 px-2 bg-background">
+                    <div className="absolute -top-3 left-3 px-2 bg-rose-50 rounded-full">
                       <Badge variant="outline" className="border-rose-300 text-rose-700 font-semibold flex items-center gap-1">
                         <User className="h-3 w-3" />
                         {t('service_orders.customer_details')}
@@ -971,10 +971,10 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                     </Badge>}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-6">
                   {/* Box 1: Order Identifiers (PO/RO/TAG) */}
                   <div className="relative p-4 bg-gradient-to-br from-blue-50 to-blue-50/30 rounded-lg border-2 border-blue-200">
-                    <div className="absolute -top-3 left-3 px-2 bg-background">
+                    <div className="absolute -top-3 left-3 px-2 bg-blue-50 rounded-full">
                       <Badge variant="outline" className="border-blue-300 text-blue-700 font-semibold">
                         {t('service_orders.order_identifiers')}
                       </Badge>
@@ -1026,7 +1026,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
 
                   {/* Box 2: Vehicle Identification (VIN + Vehicle Info) */}
                   <div className="relative p-4 bg-gradient-to-br from-purple-50 to-purple-50/30 rounded-lg border-2 border-purple-200">
-                    <div className="absolute -top-3 left-3 px-2 bg-background">
+                    <div className="absolute -top-3 left-3 px-2 bg-purple-50 rounded-full">
                       <Badge variant="outline" className="border-purple-300 text-purple-700 font-semibold flex items-center gap-1">
                         <Scan className="h-3 w-3" />
                         {t('service_orders.vehicle_identification')}
@@ -1046,6 +1046,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                           onVinScanned={(vin) => handleVinChange(vin.toUpperCase())}
                           className={selectedVehicle ? "border-input bg-muted/30 font-mono uppercase" : "border-input bg-background font-mono uppercase"}
                           disabled={!!selectedVehicle}
+                          hideIcon={true}
                         />
                         {vinError && (
                           <div className="flex items-center gap-1 text-sm text-destructive mt-1">
@@ -1082,7 +1083,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
 
                   {/* Box 3: Schedule (Due Date & Time) */}
                   <div className="relative p-4 bg-gradient-to-br from-amber-50 to-amber-50/30 rounded-lg border-2 border-amber-200">
-                    <div className="absolute -top-3 left-3 px-2 bg-background">
+                    <div className="absolute -top-3 left-3 px-2 bg-amber-50 rounded-full">
                       <Badge variant="outline" className="border-amber-300 text-amber-700 font-semibold flex items-center gap-1">
                         <CalendarClock className="h-3 w-3" />
                         {t('due_date.title')}
@@ -1113,10 +1114,10 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
                     {t('orders.servicesAndNotes')}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-6">
                   {/* Box 3: Service Selection */}
                   <div className="relative p-4 bg-gradient-to-br from-emerald-50 to-emerald-50/30 rounded-lg border-2 border-emerald-200">
-                    <div className="absolute -top-3 left-3 px-2 bg-background">
+                    <div className="absolute -top-3 left-3 px-2 bg-emerald-50 rounded-full">
                       <Badge variant="outline" className="border-emerald-300 text-emerald-700 font-semibold flex items-center gap-1">
                         <Wrench className="h-3 w-3" />
                         {t('service_orders.service_selection')}
@@ -1218,7 +1219,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
 
                   {/* Box 4: Additional Notes */}
                   <div className="relative p-4 bg-gradient-to-br from-slate-50 to-slate-50/30 rounded-lg border-2 border-slate-200">
-                    <div className="absolute -top-3 left-3 px-2 bg-background">
+                    <div className="absolute -top-3 left-3 px-2 bg-slate-50 rounded-full">
                       <Badge variant="outline" className="border-slate-300 text-slate-700 font-semibold flex items-center gap-1">
                         <FileText className="h-3 w-3" />
                         {t('service_orders.additional_notes')}

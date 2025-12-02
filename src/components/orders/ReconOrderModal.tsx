@@ -636,7 +636,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
             {isEditing ? t('recon.edit_recon_order') : t('recon.create_recon_order')}
           </DialogTitle>
           <div id="recon-order-modal-description" className="text-xs sm:text-sm text-muted-foreground">
-            {isEditing ? 'Update reconditioning order details and services' : 'Create a new reconditioning order for dealer inventory'}
+            {isEditing ? t('recon.edit_order_description', 'Update reconditioning order details and services') : t('recon.create_order_description', 'Create a new reconditioning order for dealer inventory')}
           </div>
         </DialogHeader>
 
@@ -656,10 +656,10 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4">
 
                   {/* Column 1: Dealership & Vehicle Info */}
-                  <div className="space-y-3">
+                  <div className="space-y-6">
                     {/* Box 1: Dealership */}
                     <div className="relative p-4 bg-gradient-to-br from-indigo-50 to-indigo-50/30 rounded-lg border-2 border-indigo-200">
-                      <div className="absolute -top-3 left-3 px-2 bg-background">
+                      <div className="absolute -top-3 left-3 px-2 bg-indigo-50 rounded-full">
                         <Badge variant="outline" className="border-indigo-300 text-indigo-700 font-semibold flex items-center gap-1">
                           <Building2 className="h-3 w-3" />
                           {t('sales_orders.dealership')}
@@ -713,7 +713,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
 
                     {/* Box 2: Vehicle Information */}
                     <div className="relative p-4 bg-gradient-to-br from-emerald-50 to-emerald-50/30 rounded-lg border-2 border-emerald-200">
-                      <div className="absolute -top-3 left-3 px-2 bg-background">
+                      <div className="absolute -top-3 left-3 px-2 bg-emerald-50 rounded-full">
                         <Badge variant="outline" className="border-emerald-300 text-emerald-700 font-semibold flex items-center gap-1">
                           <Car className="h-3 w-3" />
                           {t('orders.vehicleInfo')}
@@ -727,7 +727,6 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                         value={formData.stockNumber}
                         onChange={(e) => handleInputChange('stockNumber', e.target.value)}
                         className={selectedVehicle ? "border-input bg-muted/30" : "border-input bg-background"}
-                        placeholder="ST-001"
                         readOnly={!!selectedVehicle}
                       />
                       {selectedVehicle && (
@@ -757,6 +756,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                         className={selectedVehicle ? "border-input bg-muted/30 font-mono uppercase" : "border-input bg-background font-mono uppercase"}
                         stickerMode={true}
                         disabled={!!selectedVehicle}
+                        hideIcon={true}
                       />
                       {vinError && (
                         <div className="flex items-center gap-1 text-sm text-destructive mt-1">
@@ -797,10 +797,10 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                   </div>
 
                   {/* Column 2: Completion Date, Services & Notes */}
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {/* Box 1: Completion Date & Services */}
                     <div className="relative p-4 bg-gradient-to-br from-purple-50 to-purple-50/30 rounded-lg border-2 border-purple-200">
-                      <div className="absolute -top-3 left-3 px-2 bg-background">
+                      <div className="absolute -top-3 left-3 px-2 bg-purple-50 rounded-full">
                         <Badge variant="outline" className="border-purple-300 text-purple-700 font-semibold flex items-center gap-1">
                           <Wrench className="h-3 w-3" />
                           {t('orders.services')}
@@ -927,7 +927,7 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
 
                     {/* Box 2: Notes */}
                     <div className="relative p-4 bg-gradient-to-br from-amber-50 to-amber-50/30 rounded-lg border-2 border-amber-200">
-                      <div className="absolute -top-3 left-3 px-2 bg-background">
+                      <div className="absolute -top-3 left-3 px-2 bg-amber-50 rounded-full">
                         <Badge variant="outline" className="border-amber-300 text-amber-700 font-semibold flex items-center gap-1">
                           <FileText className="h-3 w-3" />
                           {t('orders.notes')}
@@ -942,10 +942,8 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
                       value={formData.notes}
                       onChange={(e) => handleInputChange('notes', e.target.value)}
                       rows={4}
-                      className="border-input bg-muted/50 resize-none cursor-not-allowed"
-                      placeholder={t('orders.notes_instruction', 'To add notes or instructions, use the Comments section in the order details view')}
-                      readOnly
-                      disabled
+                      className="border-input bg-background resize-none"
+                      placeholder={t('orders.notes_placeholder')}
                     />
                   </div>
                       </div>

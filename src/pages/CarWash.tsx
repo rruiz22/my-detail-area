@@ -513,7 +513,7 @@ export default function CarWash() {
             {searchTerm && (
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">
-                  Showing results matching "{searchTerm}"
+                  {t('car_wash_orders.search.showing_results', { searchTerm })}
                 </p>
               </div>
             )}

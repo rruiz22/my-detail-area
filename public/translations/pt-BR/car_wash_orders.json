@@ -18,5 +18,12 @@
   "waiter": "Espera",
   "standard_wash": "Lavagem Padrão",
   "max_one_service": "Pedidos de lavagem só podem ter um serviço",
-  "one_service_limit": "Pedidos de lavagem só podem ter um serviço. Desmarque para selecionar outro."
+  "one_service_limit": "Pedidos de lavagem só podem ter um serviço. Desmarque para selecionar outro.",
+  "save_failed": "Falha ao salvar pedido de lavagem",
+  "modal_description_edit": "Atualizar detalhes do serviço de lavagem incluindo informações do veículo e data de conclusão",
+  "modal_description_create": "Criar um pedido rápido de serviço de lavagem com informações do veículo e serviço",
+  "characters_remaining": "{{count}} caracteres restantes",
+  "search": {
+    "showing_results": "Mostrando resultados correspondentes a \"{{searchTerm}}\""
+  }
 }
