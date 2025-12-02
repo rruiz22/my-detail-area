@@ -1,10 +1,10 @@
 {
   "title": "Pedidos de Recondicionamento",
-  "description": "Gerenciar pedidos de recondicionamento de veÃ­culos",
+  "description": "Gerenciar pedidos de recondicionamento de veículos",
   "toast": {
     "create_success": "Pedido de Recon Criado",
     "create_success_description": "O pedido de recondicionamento foi criado com sucesso",
     "create_error": "Falha ao Criar Pedido",
-    "create_error_description": "NÃ£o foi possÃ­vel criar o pedido de recondicionamento. Por favor, tente novamente."
+    "create_error_description": "Não foi possível criar o pedido de recondicionamento. Por favor, tente novamente."
   }
 }

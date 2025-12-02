@@ -1,13 +1,13 @@
 {
   "translation_loading_failed": {
-    "title": "Falha ao Carregar TraduÃ§Ãµes",
-    "description": "NÃ£o conseguimos carregar as traduÃ§Ãµes da aplicaÃ§Ã£o. Isso pode ser devido a um problema de rede ou conteÃºdo em cache.",
-    "refresh_button": "Atualizar PÃ¡gina",
+    "title": "Falha ao Carregar Traduções",
+    "description": "Não conseguimos carregar as traduções da aplicação. Isso pode ser devido a um problema de rede ou conteúdo em cache.",
+    "refresh_button": "Atualizar Página",
     "clear_cache_button": "Limpar Cache e Reiniciar",
-    "help_text": "Se atualizar nÃ£o funcionar, tente limpar o cache. Isso redefinirÃ¡ todos os dados da aplicaÃ§Ã£o, mas corrigirÃ¡ os problemas de carregamento."
+    "help_text": "Se atualizar não funcionar, tente limpar o cache. Isso redefinirá todos os dados da aplicação, mas corrigirá os problemas de carregamento."
   },
   "private_mode": {
-    "title": "Modo Privado/AnÃ´nimo Detectado",
-    "description": "VocÃª estÃ¡ navegando em modo privado. Alguns recursos podem estar limitados. Para a melhor experiÃªncia, por favor use o modo de navegaÃ§Ã£o normal."
+    "title": "Modo Privado/Anônimo Detectado",
+    "description": "Você está navegando em modo privado. Alguns recursos podem estar limitados. Para a melhor experiência, por favor use o modo de navegação normal."
   }
 }

@@ -1,82 +1,82 @@
 {
   "privacy_policy": {
-    "title": "PolÃ­tica de Privacidade",
-    "last_updated": "Ãšltima atualizaÃ§Ã£o: 24 de outubro de 2025",
+    "title": "Política de Privacidade",
+    "last_updated": "Última atualização: 24 de outubro de 2025",
     "intro": {
-      "title": "IntroduÃ§Ã£o",
-      "content": "My Detail Area estÃ¡ comprometido com a proteÃ§Ã£o da sua privacidade. Esta PolÃ­tica de Privacidade explica como coletamos, usamos, divulgamos e protegemos suas informaÃ§Ãµes quando vocÃª usa nossa plataforma de gestÃ£o para concessionÃ¡rias."
+      "title": "Introdução",
+      "content": "My Detail Area está comprometido com a proteção da sua privacidade. Esta Política de Privacidade explica como coletamos, usamos, divulgamos e protegemos suas informações quando você usa nossa plataforma de gestão para concessionárias."
     },
     "collection": {
-      "title": "InformaÃ§Ãµes que Coletamos",
-      "content": "Coletamos informaÃ§Ãµes que vocÃª nos fornece diretamente, incluindo:",
-      "item1": "InformaÃ§Ãµes pessoais (nome, endereÃ§o de e-mail, nÃºmero de telefone)",
-      "item2": "InformaÃ§Ãµes da concessionÃ¡ria (nome comercial, endereÃ§o, CNPJ)",
-      "item3": "Dados de veÃ­culos e clientes inseridos no sistema",
-      "item4": "Dados de uso e anÃ¡lise para melhorar nosso serviÃ§o"
+      "title": "Informações que Coletamos",
+      "content": "Coletamos informações que você nos fornece diretamente, incluindo:",
+      "item1": "Informações pessoais (nome, endereço de e-mail, número de telefone)",
+      "item2": "Informações da concessionária (nome comercial, endereço, CNPJ)",
+      "item3": "Dados de veículos e clientes inseridos no sistema",
+      "item4": "Dados de uso e análise para melhorar nosso serviço"
     },
     "usage": {
-      "title": "Como Usamos suas InformaÃ§Ãµes",
-      "content": "Usamos as informaÃ§Ãµes que coletamos para:",
-      "item1": "Fornecer, manter e melhorar nossos serviÃ§os de gestÃ£o para concessionÃ¡rias",
-      "item2": "Processar transaÃ§Ãµes e enviar informaÃ§Ãµes relacionadas",
-      "item3": "Enviar avisos tÃ©cnicos, atualizaÃ§Ãµes, alertas de seguranÃ§a e mensagens de suporte",
-      "item4": "Responder aos seus comentÃ¡rios, perguntas e solicitaÃ§Ãµes de atendimento ao cliente"
+      "title": "Como Usamos suas Informações",
+      "content": "Usamos as informações que coletamos para:",
+      "item1": "Fornecer, manter e melhorar nossos serviços de gestão para concessionárias",
+      "item2": "Processar transações e enviar informações relacionadas",
+      "item3": "Enviar avisos técnicos, atualizações, alertas de segurança e mensagens de suporte",
+      "item4": "Responder aos seus comentários, perguntas e solicitações de atendimento ao cliente"
     },
     "security": {
-      "title": "SeguranÃ§a de Dados",
-      "content": "Implementamos medidas tÃ©cnicas e organizacionais apropriadas para proteger suas informaÃ§Ãµes pessoais contra acesso nÃ£o autorizado, alteraÃ§Ã£o, divulgaÃ§Ã£o ou destruiÃ§Ã£o. Todos os dados sÃ£o criptografados em trÃ¢nsito e em repouso usando protocolos padrÃ£o da indÃºstria."
+      "title": "Segurança de Dados",
+      "content": "Implementamos medidas técnicas e organizacionais apropriadas para proteger suas informações pessoais contra acesso não autorizado, alteração, divulgação ou destruição. Todos os dados são criptografados em trânsito e em repouso usando protocolos padrão da indústria."
     },
     "rights": {
       "title": "Seus Direitos",
-      "content": "VocÃª tem o direito de:",
-      "item1": "Acessar e receber uma cÃ³pia dos seus dados pessoais",
+      "content": "Você tem o direito de:",
+      "item1": "Acessar e receber uma cópia dos seus dados pessoais",
       "item2": "Retificar dados pessoais imprecisos ou incompletos",
-      "item3": "Solicitar a exclusÃ£o dos seus dados pessoais",
+      "item3": "Solicitar a exclusão dos seus dados pessoais",
       "item4": "Opor-se ou restringir o processamento dos seus dados pessoais"
     },
     "contact": {
       "title": "Contato",
-      "content": "Se vocÃª tiver alguma dÃºvida sobre esta PolÃ­tica de Privacidade, entre em contato conosco em:",
+      "content": "Se você tiver alguma dúvida sobre esta Política de Privacidade, entre em contato conosco em:",
       "email": "privacy@mydetailarea.com"
     }
   },
   "terms_of_service": {
-    "title": "Termos de ServiÃ§o",
-    "last_updated": "Ãšltima atualizaÃ§Ã£o: 24 de outubro de 2025",
+    "title": "Termos de Serviço",
+    "last_updated": "Última atualização: 24 de outubro de 2025",
     "acceptance": {
-      "title": "AceitaÃ§Ã£o dos Termos",
-      "content": "Ao acessar e usar o My Detail Area, vocÃª aceita e concorda em cumprir estes Termos de ServiÃ§o. Se vocÃª nÃ£o concordar com estes termos, por favor nÃ£o use nosso serviÃ§o."
+      "title": "Aceitação dos Termos",
+      "content": "Ao acessar e usar o My Detail Area, você aceita e concorda em cumprir estes Termos de Serviço. Se você não concordar com estes termos, por favor não use nosso serviço."
     },
     "usage": {
-      "title": "Uso do ServiÃ§o",
-      "content": "VocÃª concorda em usar o My Detail Area apenas para fins legais e de acordo com estes Termos. VocÃª concorda em nÃ£o:",
-      "item1": "Usar o serviÃ§o de forma que viole leis ou regulamentos aplicÃ¡veis",
-      "item2": "Tentar obter acesso nÃ£o autorizado a qualquer parte do serviÃ§o",
-      "item3": "Interferir ou interromper o serviÃ§o ou os servidores",
-      "item4": "Fazer upload ou transmitir vÃ­rus ou qualquer outro cÃ³digo malicioso"
+      "title": "Uso do Serviço",
+      "content": "Você concorda em usar o My Detail Area apenas para fins legais e de acordo com estes Termos. Você concorda em não:",
+      "item1": "Usar o serviço de forma que viole leis ou regulamentos aplicáveis",
+      "item2": "Tentar obter acesso não autorizado a qualquer parte do serviço",
+      "item3": "Interferir ou interromper o serviço ou os servidores",
+      "item4": "Fazer upload ou transmitir vírus ou qualquer outro código malicioso"
     },
     "accounts": {
-      "title": "Contas de UsuÃ¡rio",
-      "content": "Quando vocÃª cria uma conta conosco, deve fornecer informaÃ§Ãµes precisas e completas. VocÃª Ã© responsÃ¡vel por:",
+      "title": "Contas de Usuário",
+      "content": "Quando você cria uma conta conosco, deve fornecer informações precisas e completas. Você é responsável por:",
       "item1": "Manter a confidencialidade das credenciais da sua conta",
       "item2": "Todas as atividades que ocorrem sob sua conta",
-      "item3": "Nos notificar imediatamente de qualquer uso nÃ£o autorizado"
+      "item3": "Nos notificar imediatamente de qualquer uso não autorizado"
     },
     "intellectual_property": {
       "title": "Propriedade Intelectual",
-      "content": "O serviÃ§o e seu conteÃºdo original, recursos e funcionalidade sÃ£o de propriedade do My Detail Area e sÃ£o protegidos por leis internacionais de direitos autorais, marcas registradas, patentes, segredos comerciais e outras leis de propriedade intelectual."
+      "content": "O serviço e seu conteúdo original, recursos e funcionalidade são de propriedade do My Detail Area e são protegidos por leis internacionais de direitos autorais, marcas registradas, patentes, segredos comerciais e outras leis de propriedade intelectual."
     },
     "liability": {
-      "title": "LimitaÃ§Ã£o de Responsabilidade",
-      "content": "My Detail Area nÃ£o serÃ¡ responsÃ¡vel por quaisquer danos indiretos, incidentais, especiais, consequentes ou punitivos resultantes do seu uso ou incapacidade de usar o serviÃ§o, mesmo que tenhamos sido avisados da possibilidade de tais danos."
+      "title": "Limitação de Responsabilidade",
+      "content": "My Detail Area não será responsável por quaisquer danos indiretos, incidentais, especiais, consequentes ou punitivos resultantes do seu uso ou incapacidade de usar o serviço, mesmo que tenhamos sido avisados da possibilidade de tais danos."
     },
     "changes": {
-      "title": "AlteraÃ§Ãµes nos Termos",
-      "content": "Reservamo-nos o direito de modificar ou substituir estes Termos a qualquer momento. Se uma revisÃ£o for material, forneceremos pelo menos 30 dias de aviso antes que os novos termos entrem em vigor. O uso continuado do serviÃ§o apÃ³s as alteraÃ§Ãµes constitui aceitaÃ§Ã£o dos novos Termos."
+      "title": "Alterações nos Termos",
+      "content": "Reservamo-nos o direito de modificar ou substituir estes Termos a qualquer momento. Se uma revisão for material, forneceremos pelo menos 30 dias de aviso antes que os novos termos entrem em vigor. O uso continuado do serviço após as alterações constitui aceitação dos novos Termos."
     },
     "contact": {
       "title": "Contato",
-      "content": "Se vocÃª tiver alguma dÃºvida sobre estes Termos, entre em contato conosco em:",
+      "content": "Se você tiver alguma dúvida sobre estes Termos, entre em contato conosco em:",
       "email": "legal@mydetailarea.com"
     }
   }

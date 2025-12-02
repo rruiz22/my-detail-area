@@ -1,5 +1,5 @@
 {
-  "global_placeholder": "Pesquisar pedidos, contatos, usuÃ¡rios... (Ctrl+S)",
+  "global_placeholder": "Pesquisar pedidos, contatos, usuários... (Ctrl+S)",
   "no_results": "Nenhum resultado encontrado",
   "try_different_keywords": "Tente outros termos de pesquisa ou verifique seus filtros",
   "searching": "Buscando...",
@@ -9,32 +9,32 @@
   "stock": "Stock",
   "vin": "VIN",
   "due_date": "Vencimento",
-  "completed": "ConcluÃ­do",
-  "services": "ServiÃ§os",
+  "completed": "Concluído",
+  "services": "Serviços",
   "status": {
     "pending": "Pendente",
     "in_progress": "Em Andamento",
-    "completed": "ConcluÃ­do",
+    "completed": "Concluído",
     "delivered": "Entregue",
     "cancelled": "Cancelado",
     "active": "Ativo",
     "new": "Novo",
     "in_stock": "Em Estoque",
-    "in_transit": "Em TrÃ¢nsito",
+    "in_transit": "Em Trânsito",
     "retail": "Vendido (Varejo)",
     "wholesale": "Vendido (Atacado)",
     "hold": "Em Espera",
-    "unavailable": "IndisponÃ­vel"
+    "unavailable": "Indisponível"
   },
   "categories": {
     "sales_order": "Pedidos de Venda",
-    "service_order": "Pedidos de ServiÃ§o",
+    "service_order": "Pedidos de Serviço",
     "recon_order": "Pedidos de Recondicionamento",
     "car_wash": "Lavagem de Carros",
     "contact": "Contatos",
-    "user": "UsuÃ¡rios",
-    "get_ready": "VeÃ­culos em PreparaÃ§Ã£o",
-    "stock": "Estoque DisponÃ­vel"
+    "user": "Usuários",
+    "get_ready": "Veículos em Preparação",
+    "stock": "Estoque Disponível"
   },
   "shortcuts": {
     "open": "Abrir busca",

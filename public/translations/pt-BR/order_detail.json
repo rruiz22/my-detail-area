@@ -4,14 +4,14 @@
   "words": "palavras",
   "characters": "caracteres",
   "added": "Adicionado",
-  "short_link_created": "CÃ³digo QR gerado com sucesso",
-  "qr_generation_failed": "Falha ao gerar cÃ³digo QR",
-  "regenerate_qr": "CÃ³digo QR regenerado com sucesso",
-  "qr_regeneration_failed": "Falha ao regenerar cÃ³digo QR",
-  "copy_link": "Link copiado para a Ã¡rea de transferÃªncia",
+  "short_link_created": "Código QR gerado com sucesso",
+  "qr_generation_failed": "Falha ao gerar código QR",
+  "regenerate_qr": "Código QR regenerado com sucesso",
+  "qr_regeneration_failed": "Falha ao regenerar código QR",
+  "copy_link": "Link copiado para a área de transferência",
   "copy_failed": "Falha ao copiar link",
-  "qr_analytics": "AnalÃ­ticas",
-  "total_scans": "Total de EscaneaÃ§Ãµes",
-  "unique_visitors": "Visitantes Ãšnicos",
-  "last_accessed": "Ãšltimo acesso"
+  "qr_analytics": "Analíticas",
+  "total_scans": "Total de Escaneações",
+  "unique_visitors": "Visitantes Únicos",
+  "last_accessed": "Último acesso"
 }

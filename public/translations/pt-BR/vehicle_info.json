@@ -1,11 +1,11 @@
 {
-  "vehicle_information": "InformaÃ§Ãµes do VeÃ­culo",
+  "vehicle_information": "Informações do Veículo",
   "decoded_from_vin": "Decodificado do VIN",
   "vin_status": "Status do VIN",
   "manual_entry": "Entrada Manual",
-  "manually_entered": "InformaÃ§Ãµes inseridas manualmente",
-  "no_image_available": "Imagem do veÃ­culo nÃ£o disponÃ­vel",
-  "vehicle_image": "Imagem do VeÃ­culo",
-  "vehicle_image_alt": "Foto do veÃ­culo",
-  "display_preview": "Visualizar prÃ©via"
+  "manually_entered": "Informações inseridas manualmente",
+  "no_image_available": "Imagem do veículo não disponível",
+  "vehicle_image": "Imagem do Veículo",
+  "vehicle_image_alt": "Foto do veículo",
+  "display_preview": "Visualizar prévia"
 }

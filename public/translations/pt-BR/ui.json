@@ -1,14 +1,14 @@
 {
   "headers": {
     "welcome": "Bem-vindo",
-    "overview": "VisÃ£o Geral",
+    "overview": "Visão Geral",
     "details": "Detalhes",
-    "settings": "ConfiguraÃ§Ãµes",
-    "advanced": "AvanÃ§ado",
+    "settings": "Configurações",
+    "advanced": "Avançado",
     "summary": "Resumo"
   },
   "buttons": {
-    "get_started": "ComeÃ§ar",
+    "get_started": "Começar",
     "learn_more": "Saiba Mais",
     "try_again": "Tentar Novamente",
     "go_back": "Voltar",

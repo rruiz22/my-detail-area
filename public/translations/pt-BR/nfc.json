@@ -3,17 +3,17 @@
     "title": "Gravador de Tag NFC",
     "preparing": "Preparando...",
     "writing": "Gravando em Tag...",
-    "success": "GravaÃ§Ã£o Bem-Sucedida!",
-    "error": "Erro de GravaÃ§Ã£o",
+    "success": "Gravação Bem-Sucedida!",
+    "error": "Erro de Gravação",
     "ready": "Pronto para Gravar",
     "write_tag": "Gravar Tag",
     "retry": "Tentar Novamente",
     "instructions": {
-      "ready": "Clique em 'Gravar Tag' e entÃ£o aproxime a tag NFC fÃ­sica do seu dispositivo.",
-      "preparing": "Preparando tag para gravaÃ§Ã£o...",
-      "writing": "Mantenha a tag prÃ³xima ao dispositivo atÃ© que a gravaÃ§Ã£o seja concluÃ­da.",
-      "success": "Tag gravada com sucesso! Agora vocÃª pode usÃ¡-la para rastreamento.",
-      "error": "Falha ao gravar na tag. Verifique a conexÃ£o e tente novamente."
+      "ready": "Clique em 'Gravar Tag' e então aproxime a tag NFC física do seu dispositivo.",
+      "preparing": "Preparando tag para gravação...",
+      "writing": "Mantenha a tag próxima ao dispositivo até que a gravação seja concluída.",
+      "success": "Tag gravada com sucesso! Agora você pode usá-la para rastreamento.",
+      "error": "Falha ao gravar na tag. Verifique a conexão e tente novamente."
     }
   },
   "reader": {
@@ -28,10 +28,10 @@
     "retry": "Tentar Novamente",
     "tag_data": "Dados da Tag",
     "instructions": {
-      "ready": "Clique em 'Iniciar Leitura' e entÃ£o aproxime uma tag NFC do seu dispositivo.",
+      "ready": "Clique em 'Iniciar Leitura' e então aproxime uma tag NFC do seu dispositivo.",
       "scanning": "Aproxime uma tag NFC do seu dispositivo...",
       "success": "Tag lida com sucesso! Dados exibidos abaixo.",
-      "error": "Falha ao ler a tag. Verifique a conexÃ£o e tente novamente."
+      "error": "Falha ao ler a tag. Verifique a conexão e tente novamente."
     }
   },
   "tag_info": {
@@ -39,18 +39,18 @@
     "name": "Nome",
     "type": "Tipo",
     "vin": "VIN",
-    "location": "LocalizaÃ§Ã£o",
+    "location": "Localização",
     "url": "URL"
   },
   "templates": {
-    "quick_create": "CriaÃ§Ã£o RÃ¡pida",
-    "vehicle_tag": "Tag de VeÃ­culo",
-    "location_tag": "Tag de LocalizaÃ§Ã£o",
-    "generic_tag": "Tag GenÃ©rica"
+    "quick_create": "Criação Rápida",
+    "vehicle_tag": "Tag de Veículo",
+    "location_tag": "Tag de Localização",
+    "generic_tag": "Tag Genérica"
   },
   "errors": {
-    "not_supported": "Tecnologia NFC nÃ£o Ã© suportada neste dispositivo ou navegador.",
-    "permission_denied": "PermissÃ£o NFC negada. Verifique as configuraÃ§Ãµes do seu dispositivo.",
+    "not_supported": "Tecnologia NFC não é suportada neste dispositivo ou navegador.",
+    "permission_denied": "Permissão NFC negada. Verifique as configurações do seu dispositivo.",
     "read_failed": "Falha ao ler a tag NFC. Por favor, tente novamente.",
     "write_failed": "Falha ao gravar na tag NFC. Por favor, tente novamente."
   }

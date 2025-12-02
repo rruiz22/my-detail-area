@@ -5,41 +5,41 @@
   "error": {
     "something_went_wrong": "Algo deu errado",
     "please_try_again": "Por favor, tente novamente",
-    "operation_failed": "A operaÃ§Ã£o falhou",
+    "operation_failed": "A operação falhou",
     "network_error": "Erro de rede",
     "server_error": "Erro do servidor",
-    "invalid_request": "SolicitaÃ§Ã£o invÃ¡lida",
+    "invalid_request": "Solicitação inválida",
     "access_denied": "Acesso negado",
-    "insufficient_permissions": "VocÃª nÃ£o tem permissÃ£o para acessar este recurso",
+    "insufficient_permissions": "Você não tem permissão para acessar este recurso",
     "back_to_dashboard": "Voltar ao Painel",
-    "not_found": "NÃ£o encontrado",
+    "not_found": "Não encontrado",
     "forbidden": "Proibido",
-    "unauthorized": "NÃ£o autorizado",
-    "session_expired": "SessÃ£o expirada",
-    "connection_failed": "ConexÃ£o falhou",
+    "unauthorized": "Não autorizado",
+    "session_expired": "Sessão expirada",
+    "connection_failed": "Conexão falhou",
     "timeout": "Erro de timeout",
-    "fix_validation_errors": "Por favor, corrija os erros de validaÃ§Ã£o"
+    "fix_validation_errors": "Por favor, corrija os erros de validação"
   },
   "errors": {
-    "no_permission": "Sem PermissÃ£o",
-    "no_permission_create_order": "VocÃª nÃ£o tem permissÃ£o para criar pedidos",
-    "no_permission_status_change": "VocÃª nÃ£o tem permissÃ£o para alterar o status do pedido",
+    "no_permission": "Sem Permissão",
+    "no_permission_create_order": "Você não tem permissão para criar pedidos",
+    "no_permission_status_change": "Você não tem permissão para alterar o status do pedido",
     "status_update_failed": "Falha ao atualizar o status do pedido",
-    "permission_system_error": "Erro no Sistema de PermissÃµes",
-    "permission_system_error_description": "Houve um erro ao carregar suas permissÃµes. Isso pode ser temporÃ¡rio.",
-    "what_you_can_do": "O que vocÃª pode fazer:",
-    "try_refresh": "Tente atualizar a pÃ¡gina",
+    "permission_system_error": "Erro no Sistema de Permissões",
+    "permission_system_error_description": "Houve um erro ao carregar suas permissões. Isso pode ser temporário.",
+    "what_you_can_do": "O que você pode fazer:",
+    "try_refresh": "Tente atualizar a página",
     "clear_cache": "Limpe o cache do seu navegador",
     "contact_admin": "Entre em contato com o administrador do sistema se o problema persistir"
   },
   "info": {
     "loading": "Carregando...",
-    "no_data": "Nenhum dado disponÃ­vel",
+    "no_data": "Nenhum dado disponível",
     "processing": "Processando..."
   },
   "descriptions": {
-    "network_error": "Verifique sua conexÃ£o com a internet e tente novamente",
-    "server_error": "Nossos servidores estÃ£o enfrentando problemas. Por favor, tente novamente mais tarde."
+    "network_error": "Verifique sua conexão com a internet e tente novamente",
+    "server_error": "Nossos servidores estão enfrentando problemas. Por favor, tente novamente mais tarde."
   },
   "confirm_delete_order": "Tem certeza que deseja excluir este pedido?"
 }

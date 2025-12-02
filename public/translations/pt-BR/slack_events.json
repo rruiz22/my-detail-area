@@ -1,0 +1,90 @@
+{
+  "selector": {
+    "title": "Configurar Notificações do Slack",
+    "description": "Escolha quais eventos acionam notificações para este webhook",
+    "help_text": "Ative eventos específicos para receber notificações no Slack. Você pode personalizar isso por webhook se tiver vários canais.",
+    "events_enabled": "eventos ativados",
+    "summary": "{{enabled}} de {{total}} eventos ativados"
+  },
+
+  "categories": {
+    "orders": "Pedidos",
+    "collaboration": "Colaboração",
+    "vehicles": "Veículos",
+    "admin": "Administração"
+  },
+
+  "order_created": {
+    "title": "Pedido Criado",
+    "description": "Notificar quando um novo pedido é criado"
+  },
+
+  "order_status_changed": {
+    "title": "Status Alterado",
+    "description": "Notificar quando o status do pedido muda (ex., Pendente → Em Andamento)"
+  },
+
+  "order_completed": {
+    "title": "Pedido Concluído",
+    "description": "Notificar quando um pedido é marcado como concluído"
+  },
+
+  "order_deleted": {
+    "title": "Pedido Excluído",
+    "description": "Notificar quando um pedido é excluído"
+  },
+
+  "order_assigned": {
+    "title": "Pedido Atribuído",
+    "description": "Notificar quando um pedido é atribuído a um usuário"
+  },
+
+  "comment_added": {
+    "title": "Comentário Adicionado",
+    "description": "Notificar quando alguém adiciona um comentário a um pedido"
+  },
+
+  "file_uploaded": {
+    "title": "Arquivo Enviado",
+    "description": "Notificar quando um arquivo é enviado para um pedido"
+  },
+
+  "user_mentioned": {
+    "title": "Usuário Mencionado",
+    "description": "Notificar quando você é mencionado com @ em um comentário"
+  },
+
+  "follower_added": {
+    "title": "Seguidor Adicionado",
+    "description": "Notificar quando um seguidor é adicionado a um pedido"
+  },
+
+  "vehicle_added": {
+    "title": "Veículo Adicionado",
+    "description": "Notificar quando um veículo é adicionado ao Get Ready"
+  },
+
+  "vehicle_step_changed": {
+    "title": "Etapa Alterada",
+    "description": "Notificar quando um veículo se move para uma etapa diferente"
+  },
+
+  "vehicle_completed": {
+    "title": "Veículo Concluído",
+    "description": "Notificar quando um veículo completa o processo Get Ready"
+  },
+
+  "vehicle_blocked": {
+    "title": "Veículo Bloqueado",
+    "description": "Notificar quando um veículo está bloqueado devido a um problema"
+  },
+
+  "messages": {
+    "batch_update_success": "Todos os eventos foram atualizados com sucesso"
+  },
+
+  "errors": {
+    "update_failed": "Falha ao atualizar preferência de evento",
+    "batch_update_failed": "Falha ao atualizar todos os eventos"
+  }
+}

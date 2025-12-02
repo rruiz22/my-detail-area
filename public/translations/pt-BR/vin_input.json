@@ -1,7 +1,7 @@
 {
   "placeholder": "Digite um VIN com 17 caracteres",
   "paste_button": "Colar VIN",
-  "clipboard_error": "NÃ£o foi possÃ­vel ler a Ã¡rea de transferÃªncia.",
-  "clipboard_no_vin": "Nenhum VIN completo foi encontrado na Ã¡rea de transferÃªncia.",
-  "clipboard_unsupported": "O acesso Ã  Ã¡rea de transferÃªncia nÃ£o estÃ¡ disponÃ­vel neste navegador."
+  "clipboard_error": "Não foi possível ler a área de transferência.",
+  "clipboard_no_vin": "Nenhum VIN completo foi encontrado na área de transferência.",
+  "clipboard_unsupported": "O acesso Á  área de transferência não está disponível neste navegador."
 }

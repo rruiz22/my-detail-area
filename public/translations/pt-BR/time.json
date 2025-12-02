@@ -1,14 +1,14 @@
 {
   "today": "Hoje",
   "yesterday": "Ontem",
-  "tomorrow": "AmanhÃ£",
+  "tomorrow": "Amanhã",
   "this_week": "Esta Semana",
   "last_week": "Semana Passada",
-  "next_week": "PrÃ³xima Semana",
-  "this_month": "Este MÃªs",
-  "last_month": "MÃªs Passado",
-  "next_month": "PrÃ³ximo MÃªs",
+  "next_week": "Próxima Semana",
+  "this_month": "Este Mês",
+  "last_month": "Mês Passado",
+  "next_month": "Próximo Mês",
   "this_year": "Este Ano",
   "last_year": "Ano Passado",
-  "next_year": "PrÃ³ximo Ano"
+  "next_year": "Próximo Ano"
 }

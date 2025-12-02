@@ -1,0 +1,10 @@
+{
+  "sales_orders": "Pedidos de Venda",
+  "service_orders": "Ordens de Serviço",
+  "recon_orders": "Ordens de Recondicionamento",
+  "car_wash": "Lava-Jato",
+  "get_ready": "Preparar Veículo",
+  "collaboration": "Colaboração",
+  "contacts": "Contatos",
+  "general": "Geral"
+}

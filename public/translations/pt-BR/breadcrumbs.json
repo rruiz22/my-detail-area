@@ -1,16 +1,16 @@
 {
-  "home": "InÃ­cio",
-  "administration": "AdministraÃ§Ã£o",
-  "dealerships": "ConcessionÃ¡rias",
+  "home": "Início",
+  "administration": "Administração",
+  "dealerships": "Concessionárias",
   "sales_orders": "Pedidos de Venda",
-  "service_orders": "Pedidos de ServiÃ§o",
+  "service_orders": "Pedidos de Serviço",
   "recon_orders": "Pedidos de Recondicionamento",
   "car_wash": "Lavagem de Carros",
   "contacts": "Contatos",
-  "users": "UsuÃ¡rios",
-  "settings": "ConfiguraÃ§Ãµes",
-  "reports": "RelatÃ³rios",
+  "users": "Usuários",
+  "settings": "Configurações",
+  "reports": "Relatórios",
   "order": "Pedido",
   "contact": "Contato",
-  "user": "UsuÃ¡rio"
+  "user": "Usuário"
 }

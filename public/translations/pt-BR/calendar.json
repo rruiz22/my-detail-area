@@ -1,15 +1,15 @@
 {
-  "month": "MÃªs",
+  "month": "Mês",
   "week": "Semana",
   "day": "Dia",
   "today": "Hoje",
   "previous": "Anterior",
-  "next": "PrÃ³ximo",
+  "next": "Próximo",
   "agenda": "Agenda",
   "date": "Data",
   "time": "Hora",
   "event": "Evento",
-  "noEventsInRange": "Nenhum pedido neste perÃ­odo",
+  "noEventsInRange": "Nenhum pedido neste período",
   "showMore": "Mostrar mais",
-  "clickToCreateOrder": "Clique em um espaÃ§o vazio para criar um novo pedido"
+  "clickToCreateOrder": "Clique em um espaço vazio para criar um novo pedido"
 }
