@@ -556,7 +556,7 @@ export default function SalesOrders() {
                 {searchTerm && (
                   <div className="text-center">
                     <p className="text-sm text-muted-foreground">
-                      Showing results matching "{searchTerm}"
+                      {t('sales_orders.search.showing_results', { searchTerm })}
                     </p>
                   </div>
                 )}

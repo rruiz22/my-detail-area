@@ -75,42 +75,42 @@ export const QuickFilterBar = memo(function QuickFilterBar({
   const allFilterOptions: FilterOption[] = [
     {
       id: 'dashboard',
-      label: 'Overview',
+      label: t('sales_orders.filters.overview'),
       count: 0,
       icon: BarChart3,
       color: 'bg-primary/10 text-primary border-primary/20'
     },
     {
       id: 'today',
-      label: 'Today',
+      label: t('sales_orders.filters.today'),
       count: tabCounts.today || 0,
       icon: Calendar,
       color: 'bg-success/10 text-success border-success/20'
     },
     {
       id: 'tomorrow',
-      label: 'Tomorrow',
+      label: t('sales_orders.filters.tomorrow'),
       count: tabCounts.tomorrow || 0,
       icon: Clock,
       color: 'bg-primary/10 text-primary border-primary/20'
     },
     {
       id: 'queue',
-      label: 'Queue',
+      label: t('sales_orders.tabs.queue'),
       count: tabCounts.queue || 0,
       icon: AlertCircle,
       color: 'bg-warning/10 text-warning border-warning/20'
     },
     {
       id: 'week',
-      label: 'Week',
+      label: t('sales_orders.filters.week'),
       count: tabCounts.week || 0,
       icon: BarChart3,
       color: 'bg-accent/10 text-accent border-accent/20'
     },
     {
       id: 'all',
-      label: 'All Orders',
+      label: t('sales_orders.filters.all_orders'),
       count: 0,
       icon: List,
       color: 'bg-muted/50 text-foreground border-border'

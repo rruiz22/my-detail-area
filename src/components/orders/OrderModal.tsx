@@ -25,7 +25,9 @@ import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { supabase } from '@/integrations/supabase/client';
 import { getHourInTimezone, safeParseDate } from '@/utils/dateUtils';
+import { logger } from '@/utils/logger';
 import { canViewPricing } from '@/utils/permissions';
+import { sanitizeOrderForm } from '@/utils/sanitize';
 import { AlertCircle, Building2, CalendarClock, Car, Check, ChevronsUpDown, ClipboardList, FileText, Info, Loader2, Scan, Search, User, Wrench, X, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -318,7 +320,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           return typeof service === 'string' ? service : service.id || service.service_id;
         }).filter(Boolean);
 
-        console.log('🔍 [OrderModal] Loading order services:', {
+        logger.dev('🔍 [OrderModal] Loading order services:', {
           rawServicesData: servicesData,
           extractedServiceIds: serviceIds,
           orderDealerId: order.dealer_id || order.dealerId
@@ -396,7 +398,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         }
       }
     } catch (error) {
-      console.error('Error fetching dealerships:', error);
+      logger.error('Error fetching dealerships:', error);
     }
   };
 
@@ -419,11 +421,11 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       ]);
 
       if (usersResult.error) {
-        console.error('Error fetching users:', usersResult.error);
+        logger.error('Error fetching users:', usersResult.error);
       }
 
       if (servicesResult.error) {
-        console.error('Error fetching services:', servicesResult.error);
+        logger.error('Error fetching services:', servicesResult.error);
         toast({ variant: 'destructive', description: 'Error loading services' });
       }
 
@@ -451,14 +453,14 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           isSystemAdmin: user.is_system_admin
         }));
 
-        console.log(`✅ Loaded ${users.length} users with sales_orders access for dealership ${dealershipId}`);
+        logger.dev(`✅ Loaded ${users.length} users with sales_orders access for dealership ${dealershipId}`);
         setAssignedUsers(users);
       } else {
         setAssignedUsers([]);
       }
 
       if (servicesResult.data) {
-        console.log('🔍 [OrderModal] Loaded dealer services:', {
+        logger.dev('🔍 [OrderModal] Loaded dealer services:', {
           dealershipId,
           servicesCount: servicesResult.data.length,
           services: servicesResult.data.map(s => ({ id: s.id, name: s.name }))
@@ -468,7 +470,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         setServices([]);
       }
     } catch (error) {
-      console.error('Error fetching dealer data:', error);
+      logger.error('Error fetching dealer data:', error);
       toast({ variant: 'destructive', description: 'An unexpected error occurred' });
     } finally {
       setLoading(false);
@@ -535,7 +537,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     if (!order && assignedUsers.length > 0 && !selectedAssignedTo && authUser) {
       const currentUser = assignedUsers.find(u => u.id === authUser.id);
       if (currentUser) {
-        console.log('🎯 Auto-selecting current user for Assigned To:', currentUser.name);
+        logger.dev('🎯 Auto-selecting current user for Assigned To:', currentUser.name);
         setSelectedAssignedTo(currentUser.id);
         setFormData(prev => ({
           ...prev,
@@ -699,20 +701,23 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       return date instanceof Date ? date.toISOString() : null;
     };
 
+    // ✅ Sanitize user inputs before saving to database
+    const sanitized = sanitizeOrderForm(formData);
+
     return {
       // Map frontend camelCase to backend snake_case
       order_number: formData.orderNumber || null,
-      customer_name: formData.customerName || null,
-      customer_email: formData.customerEmail || null,
-      customer_phone: formData.customerPhone || null,
+      customer_name: sanitized.customerName || null,
+      customer_email: sanitized.customerEmail || null,
+      customer_phone: sanitized.customerPhone || null,
 
       // Vehicle information fields
-      vehicle_vin: formData.vehicleVin || null,
+      vehicle_vin: sanitized.vehicleVin || null,
       vehicle_year: formData.vehicleYear ? parseInt(formData.vehicleYear) : null,
       vehicle_make: formData.vehicleMake || null,
       vehicle_model: formData.vehicleModel || null,
       vehicle_info: vehicleInfo || null, // Primary consolidated field
-      stock_number: formData.stockNumber || null,
+      stock_number: sanitized.stockNumber || null,
 
       // Order management fields
       order_type: formData.orderType || 'sales',
@@ -731,14 +736,14 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       scheduled_time: formData.scheduledTime || null,
 
       // Notes and additional info
-      notes: formData.notes || null,
-      internal_notes: formData.internalNotes || null,
+      notes: sanitized.notes || null,
+      internal_notes: sanitized.internalNotes || null,
 
       // Related data
       dealer_id: selectedDealership ? parseInt(selectedDealership) : null,
       services: (() => {
         // Debug: Log service matching
-        console.log('🔍 [OrderModal] Service mapping debug:', {
+        logger.dev('🔍 [OrderModal] Service mapping debug:', {
           selectedServiceIds: selectedServices,
           availableServices: services.map(s => ({ id: s.id, name: s.name, price: s.price })),
           selectedServicesCount: selectedServices.length,
@@ -752,7 +757,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           );
 
           if (!service) {
-            console.warn('⚠️ [OrderModal] Service not found:', {
+            logger.warn('⚠️ [OrderModal] Service not found:', {
               searchingForId: serviceId,
               idType: typeof serviceId,
               availableServiceIds: services.map(s => ({ id: s.id, type: typeof s.id }))
@@ -761,7 +766,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
           // ✅ VALIDATION: Warn if service has no price
           if (service && (service.price === null || service.price === undefined)) {
-            console.warn('⚠️ [OrderModal] Service has NULL price:', {
+            logger.warn('⚠️ [OrderModal] Service has NULL price:', {
               serviceId: serviceId,
               serviceName: service.name,
               price: service.price
@@ -786,7 +791,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
         // ✅ VALIDATION: Log if we're adding a zero price
         if (servicePrice === 0 && service) {
-          console.warn('⚠️ [OrderModal] Adding service with $0 price to total:', {
+          logger.warn('⚠️ [OrderModal] Adding service with $0 price to total:', {
             serviceId,
             serviceName: service.name,
             price: service.price
@@ -817,6 +822,56 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     if (formData.vehicleVin.length !== 17) {
       toast({ variant: 'destructive', description: t('validation.vinInvalidLength') });
       return false;
+    }
+
+    // ✅ Check for VIN + service duplicate (ALERT only, not blocking)
+    if (formData.vehicleVin && selectedServices.length > 0 && selectedDealership) {
+      try {
+        const { data: existingOrders } = await supabase
+          .from('orders')
+          .select('id, order_number, services, status')
+          .eq('vehicle_vin', formData.vehicleVin.trim())
+          .eq('dealer_id', parseInt(selectedDealership))
+          .neq('status', 'cancelled');
+
+        if (existingOrders && existingOrders.length > 0) {
+          // Check if any existing order has the same service(s)
+          const duplicateOrders = existingOrders.filter(existingOrder => {
+            const existingServiceIds = existingOrder.services?.map((s: any) =>
+              String(s.id || s.service_id)
+            ) || [];
+
+            return selectedServices.some(selectedServiceId =>
+              existingServiceIds.includes(String(selectedServiceId))
+            );
+          });
+
+          if (duplicateOrders.length > 0) {
+            const duplicateOrderNumbers = duplicateOrders.map(o => o.order_number).join(', ');
+            const serviceNames = selectedServices
+              .map(serviceId => services.find(s => s.id === serviceId)?.name)
+              .filter(Boolean)
+              .join(', ');
+
+            // Show warning toast (not blocking)
+            toast({
+              variant: 'default',
+              title: '⚠️ Possible Duplicate',
+              description: `VIN ${formData.vehicleVin} already has order(s) with similar service(s): ${serviceNames}. Existing orders: ${duplicateOrderNumbers}`,
+              duration: 8000 // Show longer for user to read
+            });
+
+            logger.warn('VIN + Service duplicate detected:', {
+              vin: formData.vehicleVin,
+              selectedServices,
+              duplicateOrders: duplicateOrderNumbers
+            });
+          }
+        }
+      } catch (error) {
+        logger.error('Error checking VIN duplicates:', error);
+        // Don't block submission if check fails
+      }
     }
 
     // Validate dealership selection
@@ -925,7 +980,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
     // ✅ FIX: Debounce check to prevent double-submit
     if (isDebouncing) {
-      console.warn('⚠️ [OrderModal] Submit debounced - too fast, ignoring duplicate click');
+      logger.warn('⚠️ [OrderModal] Submit debounced - too fast, ignoring duplicate click');
       return;
     }
 
@@ -944,7 +999,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
       // ✅ FIX: Validate that at least one service is selected
       if (selectedServices.length === 0) {
-        console.error('❌ [OrderModal] No services selected - blocking submission');
+        logger.error('❌ [OrderModal] No services selected - blocking submission');
         toast({
           variant: 'destructive',
           title: t('validation.servicesRequired') || 'Services Required',
@@ -962,7 +1017,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
         });
 
         if (missingServices.length > 0) {
-          console.error('❌ [OrderModal] Missing services:', {
+          logger.error('❌ [OrderModal] Missing services:', {
             missingServiceIds: missingServices,
             selectedServices,
             availableServices: services.map(s => s.id)
@@ -978,7 +1033,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
         // Additional check: Ensure services array is not empty when we have selections
         if (services.length === 0) {
-          console.error('❌ [OrderModal] Services array is empty but we have selected services');
+          logger.error('❌ [OrderModal] Services array is empty but we have selected services');
           toast({
             variant: 'destructive',
             description: t('orders.servicesNotLoaded') || 'Services data is not available. Please refresh and try again.'
@@ -1025,7 +1080,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
           // ✅ FIX: Validate individual service has positive price
           if (individualAmount === 0) {
-            console.error('❌ [OrderModal] Service has $0 price:', {
+            logger.error('❌ [OrderModal] Service has $0 price:', {
               serviceId,
               serviceName: service?.name,
               price: service?.price
@@ -1053,7 +1108,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           await onSave(ordersData as unknown as OrderData);
           onClose(); // Only close if successful
         } catch (error: unknown) {
-          console.error('Error saving orders:', error);
+          logger.error('Error saving orders:', error);
           const errorMessage = error instanceof Error ? error.message : t('orders.save_error') || 'Failed to save orders';
           setSubmitError(errorMessage);
           toast({
@@ -1068,7 +1123,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
         // ✅ FIX: Validate total amount is positive
         if (dbData.total_amount === 0 && !isEditing) {
-          console.error('❌ [OrderModal] Zero amount order detected - blocking submission:', {
+          logger.error('❌ [OrderModal] Zero amount order detected - blocking submission:', {
             selectedServices,
             services: services.map(s => ({ id: s.id, name: s.name, price: s.price })),
             calculatedTotal: dbData.total_amount
@@ -1090,7 +1145,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
           await onSave(dbData);
           onClose(); // Only close if successful
         } catch (error: unknown) {
-          console.error('Error saving order:', error);
+          logger.error('Error saving order:', error);
           const errorMessage = error instanceof Error ? error.message : t('orders.save_error') || 'Failed to save order';
           setSubmitError(errorMessage);
           toast({
@@ -1102,7 +1157,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
       }
 
     } catch (error) {
-      console.error('Submit error:', error);
+      logger.error('Submit error:', error);
       toast({ variant: 'destructive', description: t('orders.creation_failed') });
     } finally {
       setSubmitting(false);

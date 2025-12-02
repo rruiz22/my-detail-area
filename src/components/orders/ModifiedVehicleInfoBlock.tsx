@@ -2,20 +2,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Car, Hash } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Order } from '@/hooks/useOrderManagement';
 
+// ✅ IMPROVED: Use explicit type-safe interface
 interface ModifiedVehicleInfoBlockProps {
-  order: {
+  order: Partial<Order> & {
     vehicle_info?: string;
-    vehicleInfo?: string;
     vehicle_vin?: string;
-    vehicleVin?: string;
     stock_number?: string;
-    stockNumber?: string;
     vehicle_image?: string;
-    vehicleImage?: string;
     vin_decoded?: boolean;
-    dealer_id?: number;
-    [key: string]: unknown;
   };
 }
 

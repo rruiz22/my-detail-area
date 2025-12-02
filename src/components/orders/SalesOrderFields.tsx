@@ -1,13 +1,10 @@
 import React from 'react';
 import { ModifiedVehicleInfoBlock } from './ModifiedVehicleInfoBlock';
+import { Order } from '@/hooks/useOrderManagement';
 
+// ✅ IMPROVED: Use explicit Order type instead of [key: string]: unknown
 interface SalesOrderFieldsProps {
-  order: {
-    [key: string]: unknown;
-    id: string;
-    dealer_id: string | number;
-    status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold';
-  };
+  order: Pick<Order, 'id' | 'dealer_id' | 'status'> & Partial<Omit<Order, 'id' | 'dealer_id' | 'status'>>;
 }
 
 // Sales Order specific fields component
