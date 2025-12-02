@@ -44,5 +44,8 @@
   "status_updated_successfully": "Status atualizado com sucesso",
   "status_change_failed": "Falha ao atualizar o status",
   "new_order": "Nova Ordem",
-  "today_orders": "Pedidos de Hoje"
+  "today_orders": "Pedidos de Hoje",
+  "comment_saved_attachments_failed": "Comentário adicionado mas os anexos falharam ao enviar. Você pode tentar adicionar os anexos novamente.",
+  "note_saved_attachments_failed": "Nota adicionada mas os anexos falharam ao enviar. Você pode tentar adicionar os anexos novamente.",
+  "comment_saved_error_occurred": "O comentário foi salvo mas ocorreu um erro. Por favor atualize a página."
 }

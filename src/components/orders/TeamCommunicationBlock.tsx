@@ -19,6 +19,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useAttachments } from '@/hooks/useAttachments';
 import { useOrderComments, type OrderComment } from '@/hooks/useOrderComments';
+import { logger } from '@/utils/logger';
 import {
     AtSign,
     Clock,
@@ -79,53 +80,95 @@ export function TeamCommunicationBlock({ orderId }: TeamCommunicationBlockProps)
     if (!newMessage.trim()) return;
 
     setLoading(true);
+    let commentId: string | null = null;
+    let commentCreated = false;
+    let attachmentsFailed = false;
+
     try {
       const currentAttachments = activeTab === 'comments' ? commentsAttachments : internalAttachments;
 
-      // 1. Create comment FIRST to get comment.id
-      const commentId = await addComment(
-        newMessage.trim(),
-        activeTab === 'comments' ? 'public' : 'internal'
-      );
-
-      console.log(`✅ Comment created with ID: ${commentId}`);
-
-      // 2. Upload selected files LINKED to the comment (if any)
-      if (currentAttachments.selectedFiles.length > 0) {
-        console.log(`📎 Uploading ${currentAttachments.selectedFiles.length} files linked to comment ${commentId}...`);
-        await currentAttachments.uploadSelectedFiles(
-          activeTab === 'comments' ? 'public_comment' : 'internal_note',
-          commentId  // Link files to this comment
+      // ✅ PHASE 1: Create comment FIRST to get comment.id
+      try {
+        commentId = await addComment(
+          newMessage.trim(),
+          activeTab === 'comments' ? 'public' : 'internal'
         );
-
-        // Wait for real-time to propagate (500ms)
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Dispatch event to force immediate refresh
-        window.dispatchEvent(new CustomEvent('attachmentUploaded', {
-          detail: { orderId, commentId }
-        }));
-
-        console.log('📡 Attachment upload completed, event dispatched');
+        commentCreated = true;
+        logger.info(`✅ Comment created with ID: ${commentId}`);
+      } catch (commentError) {
+        logger.error('❌ Comment creation failed:', commentError);
+        toast({
+          variant: 'destructive',
+          description: activeTab === 'comments'
+            ? t('order_comments.comment_failed', 'Failed to add comment')
+            : t('order_comments.note_failed', 'Failed to add internal note')
+        });
+        return; // Stop here - comment creation failed
       }
 
-      // 3. Clear message and files AFTER everything completes
+      // ✅ PHASE 2: Upload selected files LINKED to the comment (if any)
+      if (currentAttachments.selectedFiles.length > 0) {
+        logger.info(`📎 Uploading ${currentAttachments.selectedFiles.length} files linked to comment ${commentId}...`);
+
+        try {
+          await currentAttachments.uploadSelectedFiles(
+            activeTab === 'comments' ? 'public_comment' : 'internal_note',
+            commentId  // Link files to this comment
+          );
+
+          // Wait for real-time to propagate (500ms)
+          await new Promise(resolve => setTimeout(resolve, 500));
+
+          // Dispatch event to force immediate refresh
+          window.dispatchEvent(new CustomEvent('attachmentUploaded', {
+            detail: { orderId, commentId }
+          }));
+
+          logger.info('📡 Attachment upload completed, event dispatched');
+        } catch (uploadError) {
+          attachmentsFailed = true;
+          logger.error('❌ Attachment upload failed:', uploadError);
+        }
+      }
+
+      // ✅ PHASE 3: Clear message and files AFTER everything attempts
       setNewMessage('');
       currentAttachments.clearFiles();
 
-      toast({
-        description: activeTab === 'comments'
-          ? t('order_comments.comment_added', 'Comment added successfully')
-          : t('order_comments.note_added', 'Internal note added successfully')
-      });
+      // ✅ Show appropriate success/warning message
+      if (attachmentsFailed) {
+        toast({
+          variant: 'default',
+          title: '⚠️ Partial Success',
+          description: activeTab === 'comments'
+            ? t('order_comments.comment_saved_attachments_failed', 'Comment added but attachments failed to upload. You can try adding attachments again.')
+            : t('order_comments.note_saved_attachments_failed', 'Note added but attachments failed to upload. You can try adding attachments again.')
+        });
+      } else {
+        toast({
+          description: activeTab === 'comments'
+            ? t('order_comments.comment_added', 'Comment added successfully')
+            : t('order_comments.note_added', 'Internal note added successfully')
+        });
+      }
     } catch (error) {
-      console.error('❌ Failed to add message with attachments:', error);
-      toast({
-        variant: 'destructive',
-        description: activeTab === 'comments'
-          ? t('order_comments.comment_failed', 'Failed to add comment')
-          : t('order_comments.note_failed', 'Failed to add internal note')
-      });
+      logger.error('❌ Unexpected error in handleAddMessage:', error);
+
+      // If comment was created but something else failed
+      if (commentCreated) {
+        toast({
+          variant: 'default',
+          title: '⚠️ Partial Success',
+          description: t('order_comments.comment_saved_error_occurred', 'Comment was saved but an error occurred. Please refresh the page.')
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          description: activeTab === 'comments'
+            ? t('order_comments.comment_failed', 'Failed to add comment')
+            : t('order_comments.note_failed', 'Failed to add internal note')
+        });
+      }
     } finally {
       setLoading(false);
     }

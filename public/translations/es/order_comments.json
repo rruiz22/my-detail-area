@@ -36,5 +36,8 @@
   "note_deleted": "Nota interna eliminada exitosamente",
   "delete_failed": "Error al eliminar comentario",
   "confirm_delete_title": "Eliminar Comentario",
-  "confirm_delete_description": "¿Está seguro de que desea eliminar este comentario? Esta acción no se puede deshacer."
+  "confirm_delete_description": "¿Está seguro de que desea eliminar este comentario? Esta acción no se puede deshacer.",
+  "comment_saved_attachments_failed": "Comentario agregado pero los archivos adjuntos no se pudieron subir. Puede intentar agregar los archivos nuevamente.",
+  "note_saved_attachments_failed": "Nota agregada pero los archivos adjuntos no se pudieron subir. Puede intentar agregar los archivos nuevamente.",
+  "comment_saved_error_occurred": "El comentario se guardó pero ocurrió un error. Por favor actualice la página."
 }
