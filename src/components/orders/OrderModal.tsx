@@ -24,7 +24,7 @@ import { usePermissions } from '@/hooks/usePermissions';
 import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { supabase } from '@/integrations/supabase/client';
-import { getHourInTimezone, safeParseDate } from '@/utils/dateUtils';
+import { safeParseDate } from '@/utils/dateUtils';
 import { logger } from '@/utils/logger';
 import { canViewPricing } from '@/utils/permissions';
 import { sanitizeOrderForm } from '@/utils/sanitize';
@@ -1185,7 +1185,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                 {order ? t('orders.edit') : t('orders.create')}
               </DialogTitle>
               <div id="order-modal-description" className="text-xs sm:text-sm text-muted-foreground truncate">
-                {order ? t('orders.edit_order_description', 'Edit order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}
+                {order ? t('orders.edit_order_description', 'Update order details and information') : t('orders.create_order_description', 'Create a new order with customer and vehicle information')}
               </div>
             </div>
 
@@ -1253,6 +1253,18 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
         <ScrollArea className="flex-1 px-3 sm:px-6 overflow-y-auto">
           <form onSubmit={handleSubmit} className="py-4 sm:py-3 pb-6 space-y-2 sm:space-y-3">
+            {/* Accessibility: Live region for form validation errors */}
+            {submitError && (
+              <div
+                role="alert"
+                aria-live="assertive"
+                aria-atomic="true"
+                className="sr-only"
+              >
+                {submitError}
+              </div>
+            )}
+
             {/* Single Responsive Container */}
             <Card className="border-border">
               <CardContent className="p-2 sm:p-4">
@@ -1266,10 +1278,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         {t('sales_orders.dealership')} & {t('sales_orders.assignment')}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-6">
                       {/* Box 1: Dealership & Assignment */}
                       <div className="relative p-4 bg-gradient-to-br from-indigo-50 to-indigo-50/30 rounded-lg border-2 border-indigo-200">
-                        <div className="absolute -top-3 left-3 px-2 bg-background">
+                        <div className="absolute -top-3 left-3 px-2 bg-indigo-50 rounded-full">
                           <Badge variant="outline" className="border-indigo-300 text-indigo-700 font-semibold flex items-center gap-1">
                             <Building2 className="h-3 w-3" />
                             {t('service_orders.dealership_assignment')}
@@ -1451,7 +1463,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
                       {/* Box 2: Customer Details */}
                       <div className="relative p-4 bg-gradient-to-br from-rose-50 to-rose-50/30 rounded-lg border-2 border-rose-200">
-                        <div className="absolute -top-3 left-3 px-2 bg-background">
+                        <div className="absolute -top-3 left-3 px-2 bg-rose-50 rounded-full">
                           <Badge variant="outline" className="border-rose-300 text-rose-700 font-semibold flex items-center gap-1">
                             <User className="h-3 w-3" />
                             {t('service_orders.customer_details')}
@@ -1533,10 +1545,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         </Badge>}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-6">
                       {/* Box 1: Stock Number & VIN */}
                       <div className="relative p-4 bg-gradient-to-br from-amber-50 to-amber-50/30 rounded-lg border-2 border-amber-200">
-                        <div className="absolute -top-3 left-3 px-2 bg-background">
+                        <div className="absolute -top-3 left-3 px-2 bg-amber-50 rounded-full">
                           <Badge variant="outline" className="border-amber-300 text-amber-700 font-semibold flex items-center gap-1">
                             <Scan className="h-3 w-3" />
                             {t('service_orders.vehicle_identification')}
@@ -1552,7 +1564,6 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       value={formData.stockNumber}
                       onChange={(e) => handleInputChange('stockNumber', e.target.value.toUpperCase())}
                       className={selectedVehicle ? "border-input bg-muted/30 uppercase w-full" : "border-input bg-background uppercase w-full"}
-                      placeholder="ST-001"
                       readOnly={!!selectedVehicle}
                     />
                     {selectedVehicle && (
@@ -1576,6 +1587,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       className={selectedVehicle ? "border-input bg-muted/30 font-mono uppercase w-full" : "border-input bg-background font-mono uppercase w-full"}
                       stickerMode={true}
                       disabled={!!selectedVehicle}
+                      hideIcon={true}
                     />
                     {vinError && (
                       <div className="flex items-center gap-1 text-sm text-destructive mt-1">
@@ -1599,7 +1611,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
                       {/* Box 2: Vehicle Information */}
                       <div className="relative p-4 bg-gradient-to-br from-emerald-50 to-emerald-50/30 rounded-lg border-2 border-emerald-200">
-                        <div className="absolute -top-3 left-3 px-2 bg-background">
+                        <div className="absolute -top-3 left-3 px-2 bg-emerald-50 rounded-full">
                           <Badge variant="outline" className="border-emerald-300 text-emerald-700 font-semibold flex items-center gap-1">
                             <Car className="h-3 w-3" />
                             {t('sales_orders.vehicle')}
@@ -1629,7 +1641,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
                       {/* Box 3: Schedule (Due Date & Time) */}
                       <div className="relative p-4 bg-gradient-to-br from-blue-50 to-blue-50/30 rounded-lg border-2 border-blue-200">
-                        <div className="absolute -top-3 left-3 px-2 bg-background">
+                        <div className="absolute -top-3 left-3 px-2 bg-blue-50 rounded-full">
                           <Badge variant="outline" className="border-blue-300 text-blue-700 font-semibold flex items-center gap-1">
                             <CalendarClock className="h-3 w-3" />
                             {t('due_date.title')}
@@ -1658,10 +1670,10 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                         {t('orders.servicesAndNotes')}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-6">
                       {/* Box 1: Service Selection */}
                       <div className="relative p-4 bg-gradient-to-br from-emerald-50 to-emerald-50/30 rounded-lg border-2 border-emerald-200">
-                        <div className="absolute -top-3 left-3 px-2 bg-background">
+                        <div className="absolute -top-3 left-3 px-2 bg-emerald-50 rounded-full">
                           <Badge variant="outline" className="border-emerald-300 text-emerald-700 font-semibold flex items-center gap-1">
                             <Wrench className="h-3 w-3" />
                             {t('service_orders.service_selection')}
@@ -1782,7 +1794,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
 
                       {/* Box 2: Additional Notes */}
                       <div className="relative p-4 bg-gradient-to-br from-slate-50 to-slate-50/30 rounded-lg border-2 border-slate-200">
-                        <div className="absolute -top-3 left-3 px-2 bg-background">
+                        <div className="absolute -top-3 left-3 px-2 bg-slate-50 rounded-full">
                           <Badge variant="outline" className="border-slate-300 text-slate-700 font-semibold flex items-center gap-1">
                             <FileText className="h-3 w-3" />
                             {t('service_orders.additional_notes')}
@@ -1796,7 +1808,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
                       onChange={(e) => handleInputChange('notes', e.target.value)}
                       rows={4}
                       className="border-input bg-background resize-none w-full"
-                      placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions for this sales order...')}
+                      placeholder={t('orders.notes_placeholder', 'Add any additional notes or special instructions...')}
                     />
                   </div>
                         </div>

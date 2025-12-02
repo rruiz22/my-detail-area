@@ -64,6 +64,7 @@ export function VinInputWithScanner({
               size="sm"
               className="h-8 w-8 p-0"
               onClick={() => setScannerOpen(true)}
+              aria-label={t('vin_input.scan_vin', 'Scan VIN with camera')}
             >
               <QrCode className="h-4 w-4" />
             </Button>

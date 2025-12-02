@@ -542,6 +542,15 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                       getOrderAnimationClass(order.status, order.dueDate)
                     )}
                     onDoubleClick={() => onView(order)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        onView(order);
+                      }
+                    }}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`${t('data_table.view')} ${formatOrderNumber(order)}`}
                   >
                     {/* Row Number */}
                     <TableCell className="py-1 text-center text-sm font-medium text-muted-foreground">
