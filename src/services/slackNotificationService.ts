@@ -10,8 +10,8 @@ import { logger } from '@/utils/logger';
 export interface SlackNotificationOptions {
   dealerId: number;
   orderId: string;
-  module: 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash';
-  eventType: 'order_created' | 'status_changed' | 'comment_added';
+  module: 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash' | 'get_ready';
+  eventType: 'order_created' | 'order_status_changed' | 'order_completed' | 'order_deleted' | 'order_assigned' | 'comment_added' | 'file_uploaded' | 'user_mentioned' | 'follower_added' | 'vehicle_added' | 'vehicle_step_changed' | 'vehicle_completed' | 'vehicle_blocked';
   eventData: {
     orderNumber?: string;
     stockNumber?: string;
@@ -24,8 +24,23 @@ export interface SlackNotificationOptions {
     status?: string;
     oldStatus?: string;
     assignedTo?: string;
+    changedBy?: string;
     commenterName?: string;
     commentPreview?: string;
+    // New fields for enhanced notifications
+    fileName?: string;
+    createdBy?: string;
+    completedBy?: string;
+    deletedBy?: string;
+    assignedBy?: string;
+    uploadedBy?: string;
+    mentionedUser?: string;
+    followerName?: string;
+    addedBy?: string;
+    blockReason?: string;
+    blockedBy?: string;
+    stepName?: string;
+    oldStepName?: string;
   };
 }
 
@@ -58,21 +73,11 @@ export const slackNotificationService = {
         orderNumber: options.eventData.orderNumber
       });
 
-      // Map module to order type
-      const orderTypeMap: Record<string, 'sales' | 'service' | 'recon' | 'carwash'> = {
-        sales_orders: 'sales',
-        service_orders: 'service',
-        recon_orders: 'recon',
-        car_wash: 'carwash'
-      };
-
-      const orderType = orderTypeMap[options.module] || 'sales';
-
-      // Invoke Edge Function
+      // Invoke Edge Function with module-based routing
       const { data, error } = await supabase.functions.invoke('slack-send-message', {
         body: {
           dealerId: options.dealerId,
-          orderType,
+          module: options.module, // Now using module instead of orderType
           eventType: options.eventType,
           eventData: options.eventData
         }
@@ -130,7 +135,7 @@ export const slackNotificationService = {
   ): Promise<SlackNotificationResponse> {
     return this.sendNotification({
       ...options,
-      eventType: 'status_changed'
+      eventType: 'order_status_changed'
     });
   },
 

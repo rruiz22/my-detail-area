@@ -4,6 +4,7 @@ import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { supabase } from '@/integrations/supabase/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { slackNotificationService } from '@/services/slackNotificationService';
 
 // Types based on database schema
 // ✨ SIMPLIFIED WORKFLOW - Direct path from approval to pending
@@ -353,6 +354,7 @@ export function useCreateWorkItem() {
 export function useUpdateWorkItem() {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const { user } = useAuth();
   const { currentDealership } = useAccessibleDealerships();
   const queryClient = useQueryClient();
 
@@ -382,7 +384,7 @@ export function useUpdateWorkItem() {
 
       return data;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.invalidateQueries({ queryKey: ['work-items', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-detail', data.vehicle_id] });
       queryClient.invalidateQueries({ queryKey: ['vehicle-timeline', data.vehicle_id] });
@@ -398,6 +400,57 @@ export function useUpdateWorkItem() {
         description: t('get_ready.work_items.updated_successfully'),
         variant: 'default',
       });
+
+      // 📤 SLACK NOTIFICATION: Vehicle Blocked (when work item is blocked)
+      if (data.status === 'blocked' && currentDealership?.id && user?.id) {
+        try {
+          // Get vehicle data
+          const { data: vehicleData } = await supabase
+            .from('get_ready_vehicles')
+            .select('stock_number, vin, vehicle_year, vehicle_make, vehicle_model')
+            .eq('id', data.vehicle_id)
+            .single();
+
+          if (vehicleData) {
+            // Get user's name who blocked the work item
+            const { data: userProfile } = await supabase
+              .from('profiles')
+              .select('first_name, last_name, email')
+              .eq('id', user.id)
+              .single();
+
+            const blockedByName = userProfile?.first_name
+              ? `${userProfile.first_name} ${userProfile.last_name || ''}`.trim()
+              : user.email || 'Someone';
+
+            const isEnabled = await slackNotificationService.isEnabled(
+              currentDealership.id,
+              'get_ready',
+              'vehicle_blocked'
+            );
+
+            if (isEnabled) {
+              await slackNotificationService.sendNotification({
+                orderId: data.vehicle_id,
+                dealerId: currentDealership.id,
+                module: 'get_ready',
+                eventType: 'vehicle_blocked',
+                eventData: {
+                  stockNumber: vehicleData.stock_number,
+                  vinNumber: vehicleData.vin,
+                  vehicleInfo: `${vehicleData.vehicle_year} ${vehicleData.vehicle_make} ${vehicleData.vehicle_model}`.trim(),
+                  shortLink: `${window.location.origin}/get-ready?vehicle=${data.vehicle_id}`,
+                  blockReason: data.blocked_reason || `Work item "${data.title}" is blocked`,
+                  blockedBy: blockedByName
+                }
+              });
+            }
+          }
+        } catch (notifError) {
+          console.error('❌ [Slack] Failed to send vehicle blocked notification:', notifError);
+          // Don't fail work item update if Slack notification fails
+        }
+      }
     },
     onError: (error) => {
       console.error('Update work item mutation error:', error);

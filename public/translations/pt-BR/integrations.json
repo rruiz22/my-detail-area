@@ -70,8 +70,14 @@
   },
   "slack_events": {
     "modules": {
-      "orders": "Pedidos",
-      "vehicles": "Veículos"
+      "sales_orders": "Pedidos de Venda",
+      "service_orders": "Pedidos de Serviço",
+      "recon_orders": "Pedidos de Recon",
+      "car_wash": "Lavagem de Carros",
+      "get_ready": "Preparação (Veículos)",
+      "collaboration": "Colaboração",
+      "contacts": "Contatos",
+      "general": "Geral"
     },
     "categories": {
       "orders": "Pedidos",
@@ -145,5 +151,17 @@
       "title": "Veículo Bloqueado",
       "description": "Notificar quando um veículo está bloqueado ou encontra um problema"
     }
+  },
+  "slack_channel_selector": {
+    "title": "Configurar Canais por Módulo",
+    "description": "Mapear diferentes módulos para canais específicos do Slack para notificações direcionadas",
+    "load_channels": "Carregar Canais",
+    "loading": "Carregando...",
+    "select_channel": "Selecionar canal",
+    "active": "Ativo",
+    "not_configured": "Não configurado",
+    "channels_loaded": "{{total}} canais carregados do Slack",
+    "channel_configured": "Canal configurado para {{module}}",
+    "load_channels_prompt": "Clique em 'Carregar Canais' para buscar os canais disponíveis do Slack"
   }
 }

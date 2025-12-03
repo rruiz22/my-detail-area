@@ -292,6 +292,55 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
               mentionerName: userName,
               commentPreview: text.trim().substring(0, 100)
             }).catch(err => console.error('[OrderComments] Failed to create mention notifications:', err));
+
+            // 📤 SLACK NOTIFICATION: User Mentioned (for each mentioned user)
+            for (const mentionedUserId of mentionedUserIds) {
+              // Get mentioned user's name
+              const { data: mentionedProfile } = await supabase
+                .from('profiles')
+                .select('first_name, last_name, email')
+                .eq('id', mentionedUserId)
+                .single();
+
+              const mentionedUserName = mentionedProfile?.first_name
+                ? `${mentionedProfile.first_name} ${mentionedProfile.last_name || ''}`.trim()
+                : mentionedProfile?.email || 'Someone';
+
+              void slackNotificationService.isEnabled(
+                orderData.dealer_id,
+                notifModule,
+                'user_mentioned'
+              ).then(async (slackEnabled) => {
+                if (slackEnabled) {
+                  // Get shortLink from order data
+                  let shortLink: string | undefined = undefined;
+                  try {
+                    const { data: orderShortLink } = await supabase
+                      .from('orders')
+                      .select('short_link')
+                      .eq('id', orderId)
+                      .single();
+                    shortLink = orderShortLink?.short_link || `${window.location.origin}/orders/${orderId}`;
+                  } catch (error) {
+                    shortLink = `${window.location.origin}/orders/${orderId}`;
+                  }
+
+                  await slackNotificationService.sendNotification({
+                    orderId,
+                    dealerId: orderData.dealer_id,
+                    module: notifModule,
+                    eventType: 'user_mentioned',
+                    eventData: {
+                      orderNumber: orderNumber,
+                      mentionedUser: mentionedUserName,
+                      commenterName: userName,
+                      commentPreview: text.trim().substring(0, 100),
+                      shortLink: shortLink || `${window.location.origin}/orders/${orderId}`
+                    }
+                  });
+                }
+              }).catch(err => console.error('[OrderComments] Failed to send Slack mention notification:', err));
+            }
           }
         }
       }

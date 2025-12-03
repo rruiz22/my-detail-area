@@ -15,12 +15,15 @@ import { Badge } from '@/components/ui/badge';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { usePermissions } from '@/hooks/usePermissions';
+import { useDealerships } from '@/hooks/useDealerships';
 import { generateOAuthState } from '@/lib/crypto/encryption';
-import { Loader2, CheckCircle2, XCircle, ExternalLink, AlertTriangle } from 'lucide-react';
+import { Loader2, CheckCircle2, XCircle, ExternalLink, AlertTriangle, Building2 } from 'lucide-react';
 import { SlackEventSelector } from './slack/SlackEventSelector';
+import { SlackChannelSelector } from './slack/SlackChannelSelector';
 
 interface SlackIntegration {
   id: string;
@@ -44,12 +47,21 @@ export function SlackIntegrationCard() {
   const { t } = useTranslation();
   const { toast } = useToast();
   const { enhancedUser } = usePermissions();
+  const { data: dealerships, isLoading: isLoadingDealerships } = useDealerships();
 
   const [integration, setIntegration] = useState<SlackIntegration | null>(null);
   const [loading, setLoading] = useState(true);
   const [connecting, setConnecting] = useState(false);
   const [toggling, setToggling] = useState(false);
   const [disconnectDialogOpen, setDisconnectDialogOpen] = useState(false);
+  const [selectedDealerId, setSelectedDealerId] = useState<number | null>(null);
+
+  // Initialize selectedDealerId with user's dealership on mount
+  useEffect(() => {
+    if (enhancedUser?.dealership_id && selectedDealerId === null) {
+      setSelectedDealerId(enhancedUser.dealership_id);
+    }
+  }, [enhancedUser?.dealership_id, selectedDealerId]);
 
   // Check for OAuth callback status in URL
   useEffect(() => {
@@ -76,19 +88,17 @@ export function SlackIntegrationCard() {
     }
   }, []);
 
-  // Load existing integration
+  // Load existing integration (shared across all dealers)
   const loadIntegration = async () => {
-    if (!enhancedUser?.dealership_id) {
-      setLoading(false);
-      return;
-    }
-
     try {
+      // Load ANY active Slack integration (shared model)
+      // All dealers use the same OAuth connection
       const { data, error } = await supabase
         .from('dealer_integrations')
         .select('*')
-        .eq('dealer_id', enhancedUser.dealership_id)
         .eq('integration_type', 'slack')
+        .eq('status', 'active')
+        .limit(1)
         .maybeSingle();
 
       if (error) throw error;
@@ -105,13 +115,14 @@ export function SlackIntegrationCard() {
     }
   };
 
+  // Load integration on mount (once, shared across all dealers)
   useEffect(() => {
     loadIntegration();
-  }, [enhancedUser?.dealership_id]);
+  }, []);
 
   // Initiate OAuth flow
   const handleConnect = async () => {
-    if (!enhancedUser?.dealership_id || !enhancedUser?.id) {
+    if (!selectedDealerId || !enhancedUser?.id) {
       toast({
         variant: 'destructive',
         title: t('common.error'),
@@ -123,9 +134,27 @@ export function SlackIntegrationCard() {
     setConnecting(true);
 
     try {
+      // Check if a Slack integration already exists (shared model)
+      const { data: existingIntegration } = await supabase
+        .from('dealer_integrations')
+        .select('id, dealer_id')
+        .eq('integration_type', 'slack')
+        .eq('status', 'active')
+        .maybeSingle();
+
+      if (existingIntegration) {
+        toast({
+          variant: 'destructive',
+          title: t('common.error'),
+          description: 'Slack is already connected. Only one Slack workspace can be connected at a time. Disconnect the existing integration first.',
+        });
+        setConnecting(false);
+        return;
+      }
+
       // Generate CSRF-protected state token
       const stateToken = generateOAuthState(
-        enhancedUser.dealership_id,
+        selectedDealerId,
         enhancedUser.id
       );
 
@@ -134,7 +163,7 @@ export function SlackIntegrationCard() {
         .from('oauth_states')
         .insert({
           state_token: stateToken,
-          dealer_id: enhancedUser.dealership_id,
+          dealer_id: selectedDealerId,
           user_id: enhancedUser.id,
           integration_type: 'slack',
         });
@@ -304,11 +333,54 @@ export function SlackIntegrationCard() {
           </div>
           {renderStatusBadge()}
         </div>
+
+        {/* Dealer Selector - Only for system_admin */}
+        {enhancedUser?.is_system_admin && dealerships && dealerships.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="flex items-center gap-3">
+              <Building2 className="h-4 w-4 text-gray-500" />
+              <Label htmlFor="dealer-select" className="text-sm font-medium">
+                Dealership
+              </Label>
+              <Select
+                value={selectedDealerId?.toString() || ''}
+                onValueChange={(value) => setSelectedDealerId(Number(value))}
+                disabled={isLoadingDealerships}
+              >
+                <SelectTrigger id="dealer-select" className="w-[280px]">
+                  <SelectValue placeholder="Select dealership" />
+                </SelectTrigger>
+                <SelectContent>
+                  {dealerships.map((dealer) => (
+                    <SelectItem key={dealer.id} value={dealer.id.toString()}>
+                      {dealer.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        )}
       </CardHeader>
 
       <CardContent className="space-y-6">
         {integration ? (
           <>
+            {/* Shared Integration Notice */}
+            <div className="rounded-lg bg-blue-50 border border-blue-200 p-3 mb-4">
+              <div className="flex items-start gap-2">
+                <Building2 className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-blue-900">
+                    Shared Workspace Integration
+                  </p>
+                  <p className="text-xs text-blue-700 mt-1">
+                    This Slack workspace is shared across all dealerships. Each dealer can configure their own channels and events.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* Connected workspace info */}
             <div className="rounded-lg bg-gray-50 p-4 space-y-2">
               <div className="flex items-center justify-between">
@@ -408,12 +480,20 @@ export function SlackIntegrationCard() {
               </Button>
             </div>
 
-            {/* Event Configuration Section */}
-            {integration.enabled && enhancedUser?.dealership_id && (
+            {/* Channel & Event Configuration Section */}
+            {integration.enabled && selectedDealerId && (
               <div className="mt-6 pt-6 border-t border-gray-200">
+                {/* Channel Selector - Only for system_admin and supermanager */}
+                <SlackChannelSelector
+                  integrationId={integration.id}
+                  dealerId={selectedDealerId}
+                  userRole={enhancedUser?.is_system_admin ? 'system_admin' : enhancedUser?.is_supermanager ? 'supermanager' : null}
+                />
+
+                {/* Event Selector - For all users */}
                 <SlackEventSelector
                   webhookId={integration.id}
-                  dealerId={enhancedUser.dealership_id}
+                  dealerId={selectedDealerId}
                 />
               </div>
             )}
@@ -476,7 +556,7 @@ export function SlackIntegrationCard() {
       open={disconnectDialogOpen}
       onOpenChange={setDisconnectDialogOpen}
       title={t('integrations.slack.disconnect_title', { defaultValue: 'Disconnect Slack?' })}
-      description={t('integrations.slack.disconnect_confirm', { defaultValue: 'Are you sure you want to disconnect your Slack integration? This action cannot be undone.' })}
+      description="⚠️ This will disconnect Slack for ALL dealerships. All channel configurations and event preferences will be lost. This action cannot be undone."
       confirmText={t('common.action_buttons.disconnect', { defaultValue: 'Disconnect' })}
       cancelText={t('common.action_buttons.cancel')}
       onConfirm={confirmDisconnect}

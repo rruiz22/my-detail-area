@@ -975,6 +975,24 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         }
       }
 
+      // 🔍 Fetch creator name for Slack notification
+      let createdByName: string | undefined = undefined;
+      try {
+        const { data: creatorProfile } = await supabase
+          .from('profiles')
+          .select('first_name, last_name, email')
+          .eq('id', user.id)
+          .single();
+
+        if (creatorProfile?.first_name) {
+          createdByName = `${creatorProfile.first_name} ${creatorProfile.last_name || ''}`.trim();
+        } else if (creatorProfile?.email) {
+          createdByName = creatorProfile.email;
+        }
+      } catch (error) {
+        console.warn('⚠️ Failed to fetch creator profile:', error);
+      }
+
       // Send Slack notification (if enabled)
       const moduleForNotif = getNotificationModule(data.order_type || 'sales');
       console.log('🔍 [DEBUG] Checking Slack for Sales order:', {
@@ -1006,7 +1024,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
               services: servicesText,
               dueDateTime: data.due_date,
               shortLink: shortLink || undefined,
-              assignedTo: assignedToName
+              assignedTo: assignedToName,
+              createdBy: createdByName
             }
           });
         }
@@ -1187,7 +1206,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         void slackNotificationService.isEnabled(
           data.dealer_id,
           notifModule,
-          'status_changed'
+          'order_status_changed'
         ).then(async (slackEnabled) => {
           if (slackEnabled) {
             console.log('📤 Slack enabled for status change, sending notification...');
@@ -1234,6 +1253,11 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
               }
             }
 
+            // 🔍 Get name of user who changed the status
+            const changedByName = enhancedUser?.first_name
+              ? `${enhancedUser.first_name} ${enhancedUser.last_name || ''}`.trim()
+              : user.email || 'Someone';
+
             await slackNotificationService.notifyStatusChange({
               orderId: data.id,
               dealerId: data.dealer_id,
@@ -1246,9 +1270,37 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
                 status: orderData.status,
                 oldStatus: oldStatus,
                 shortLink: shortLink || `${window.location.origin}/orders/${orderId}`,
-                assignedTo: assignedToName
+                assignedTo: assignedToName,
+                changedBy: changedByName
               }
             });
+
+            // 📤 SLACK NOTIFICATION: Order Completed (if status changed to completed)
+            if (orderData.status === 'completed') {
+              const completedByName = changedByName; // Same person who changed status
+
+              const isCompletedEnabled = await slackNotificationService.isEnabled(
+                data.dealer_id,
+                notifModule,
+                'order_completed'
+              );
+
+              if (isCompletedEnabled) {
+                await slackNotificationService.sendNotification({
+                  orderId: data.id,
+                  dealerId: data.dealer_id,
+                  module: notifModule,
+                  eventType: 'order_completed',
+                  eventData: {
+                    orderNumber: data.order_number || data.custom_order_number || data.id,
+                    stockNumber: data.stock_number,
+                    vehicleInfo: `${data.vehicle_year || ''} ${data.vehicle_make || ''} ${data.vehicle_model || ''}`.trim(),
+                    shortLink: shortLink || `${window.location.origin}/orders/${orderId}`,
+                    completedBy: completedByName
+                  }
+                });
+              }
+            }
           }
         }).catch((error) => {
           console.error('❌ [Slack] Failed to send status change notification:', error);
@@ -1277,6 +1329,62 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         }).catch(err =>
           console.error('[OrderManagement] Failed to create assignment notification:', err)
         );
+
+        // 📤 SLACK NOTIFICATION: Order Assigned
+        void slackNotificationService.isEnabled(
+          data.dealer_id,
+          notifModule,
+          'order_assigned'
+        ).then(async (slackEnabled) => {
+          if (slackEnabled) {
+            // Get shortLink from order data
+            let shortLink: string | undefined = undefined;
+            try {
+              const { data: orderShortLink } = await supabase
+                .from('orders')
+                .select('short_link, vehicle_year, vehicle_make, vehicle_model, stock_number')
+                .eq('id', orderId)
+                .single();
+
+              shortLink = orderShortLink?.short_link || `${window.location.origin}/orders/${orderId}`;
+
+              // Get assigned user's name
+              let assignedToName: string | undefined = undefined;
+              if (orderData.assigned_group_id) {
+                const { data: assignedProfile } = await supabase
+                  .from('profiles')
+                  .select('first_name, last_name, email')
+                  .eq('id', orderData.assigned_group_id)
+                  .single();
+
+                if (assignedProfile?.first_name) {
+                  assignedToName = `${assignedProfile.first_name} ${assignedProfile.last_name || ''}`.trim();
+                } else if (assignedProfile?.email) {
+                  assignedToName = assignedProfile.email;
+                }
+              }
+
+              await slackNotificationService.sendNotification({
+                orderId: data.id,
+                dealerId: data.dealer_id,
+                module: notifModule,
+                eventType: 'order_assigned',
+                eventData: {
+                  orderNumber: data.order_number || data.custom_order_number || data.id,
+                  stockNumber: orderShortLink?.stock_number,
+                  vehicleInfo: `${orderShortLink?.vehicle_year || ''} ${orderShortLink?.vehicle_make || ''} ${orderShortLink?.vehicle_model || ''}`.trim() || undefined,
+                  shortLink: shortLink,
+                  assignedTo: assignedToName,
+                  assignedBy: assignedByName
+                }
+              });
+            } catch (error) {
+              console.warn('⚠️ Failed to send Slack assignment notification:', error);
+            }
+          }
+        }).catch((error) => {
+          console.error('❌ [Slack] Failed to check if assignment notification is enabled:', error);
+        });
       }
 
       // Enrich updated order
@@ -1339,6 +1447,13 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
     setLoading(true);
 
     try {
+      // Get order data before deleting (for notifications)
+      const { data: orderData } = await supabase
+        .from('orders')
+        .select('order_number, custom_order_number, dealer_id, order_type, stock_number, vehicle_year, vehicle_make, vehicle_model, short_link')
+        .eq('id', orderId)
+        .single();
+
       const { error } = await supabase
         .from('orders')
         .delete()
@@ -1350,6 +1465,39 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       }
 
       dev('Order deleted successfully');
+
+      // 📤 SLACK NOTIFICATION: Order Deleted
+      if (orderData) {
+        const deletedByName = enhancedUser?.first_name
+          ? `${enhancedUser.first_name} ${enhancedUser.last_name || ''}`.trim()
+          : user.email || 'Someone';
+
+        const notifModule = getNotificationModule(orderData.order_type || 'sales');
+
+        void slackNotificationService.isEnabled(
+          orderData.dealer_id,
+          notifModule,
+          'order_deleted'
+        ).then(async (slackEnabled) => {
+          if (slackEnabled) {
+            await slackNotificationService.sendNotification({
+              orderId: orderId,
+              dealerId: orderData.dealer_id,
+              module: notifModule,
+              eventType: 'order_deleted',
+              eventData: {
+                orderNumber: orderData.order_number || orderData.custom_order_number || orderId,
+                stockNumber: orderData.stock_number,
+                vehicleInfo: `${orderData.vehicle_year || ''} ${orderData.vehicle_make || ''} ${orderData.vehicle_model || ''}`.trim() || undefined,
+                shortLink: orderData.short_link || `${window.location.origin}/orders/${orderId}`,
+                deletedBy: deletedByName
+              }
+            });
+          }
+        }).catch((error) => {
+          console.error('❌ [Slack] Failed to send order deletion notification:', error);
+        });
+      }
 
       // Optimistic update: Remove order from cache immediately
       // ✅ FIX: Include selectedDealerId in queryKey to match polling query
@@ -1372,7 +1520,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
     } finally {
       setLoading(false);
     }
-  }, [user, queryClient, selectedDealerId]);
+  }, [user, queryClient, selectedDealerId, enhancedUser]);
 
   // DISABLED: Initialize data on mount - now using ONLY polling system to prevent double refresh
   // useEffect(() => {

@@ -49,21 +49,23 @@ interface SlackEventSelectorProps {
   onSave?: () => void;
 }
 
-// Event definitions with their categories
-const EVENT_DEFINITIONS: Record<string, { category: 'orders' | 'collaboration' | 'vehicles' | 'admin', module: string }> = {
-  order_created: { category: 'orders', module: 'orders' },
-  order_status_changed: { category: 'orders', module: 'orders' },
-  order_completed: { category: 'orders', module: 'orders' },
-  order_deleted: { category: 'orders', module: 'orders' },
-  order_assigned: { category: 'orders', module: 'orders' },
-  comment_added: { category: 'collaboration', module: 'orders' },
-  file_uploaded: { category: 'collaboration', module: 'orders' },
-  user_mentioned: { category: 'collaboration', module: 'orders' },
-  follower_added: { category: 'collaboration', module: 'orders' },
-  vehicle_added: { category: 'vehicles', module: 'vehicles' },
-  vehicle_step_changed: { category: 'vehicles', module: 'vehicles' },
-  vehicle_completed: { category: 'vehicles', module: 'vehicles' },
-  vehicle_blocked: { category: 'vehicles', module: 'vehicles' },
+// Event definitions with their categories and applicable modules
+// Module values must match CHECK constraint: sales_orders, service_orders, recon_orders, car_wash, get_ready, collaboration, contacts, general
+// Each event can apply to multiple modules (e.g., order_created for all order types)
+const EVENT_DEFINITIONS: Record<string, { category: 'orders' | 'collaboration' | 'vehicles' | 'admin', modules: string[] }> = {
+  order_created: { category: 'orders', modules: ['sales_orders', 'service_orders', 'recon_orders', 'car_wash'] },
+  order_status_changed: { category: 'orders', modules: ['sales_orders', 'service_orders', 'recon_orders', 'car_wash'] },
+  order_completed: { category: 'orders', modules: ['sales_orders', 'service_orders', 'recon_orders', 'car_wash'] },
+  order_deleted: { category: 'orders', modules: ['sales_orders', 'service_orders', 'recon_orders', 'car_wash'] },
+  order_assigned: { category: 'orders', modules: ['sales_orders', 'service_orders', 'recon_orders', 'car_wash'] },
+  comment_added: { category: 'collaboration', modules: ['sales_orders', 'service_orders', 'recon_orders', 'car_wash', 'get_ready'] },
+  file_uploaded: { category: 'collaboration', modules: ['sales_orders', 'service_orders', 'recon_orders', 'car_wash', 'get_ready'] },
+  user_mentioned: { category: 'collaboration', modules: ['sales_orders', 'service_orders', 'recon_orders', 'car_wash', 'get_ready'] },
+  follower_added: { category: 'collaboration', modules: ['sales_orders', 'service_orders', 'recon_orders', 'car_wash', 'get_ready'] },
+  vehicle_added: { category: 'vehicles', modules: ['get_ready'] },
+  vehicle_step_changed: { category: 'vehicles', modules: ['get_ready'] },
+  vehicle_completed: { category: 'vehicles', modules: ['get_ready'] },
+  vehicle_blocked: { category: 'vehicles', modules: ['get_ready'] },
 };
 
 export function SlackEventSelector({ webhookId, dealerId, onSave }: SlackEventSelectorProps) {
@@ -71,14 +73,16 @@ export function SlackEventSelector({ webhookId, dealerId, onSave }: SlackEventSe
   const { toast } = useToast();
 
   const [eventGroups, setEventGroups] = useState<EventGroup[]>([]);
+  const [channelMappings, setChannelMappings] = useState<Map<string, string>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['orders']));
   const [error, setError] = useState<string | null>(null);
 
-  // Load event preferences on mount
+  // Load event preferences and channel mappings on mount
   React.useEffect(() => {
     loadEventPreferences();
+    loadChannelMappings();
   }, [webhookId, dealerId]);
 
   /**
@@ -89,49 +93,54 @@ export function SlackEventSelector({ webhookId, dealerId, onSave }: SlackEventSe
     setError(null);
 
     try {
-      // Fetch existing preferences
+      // Fetch existing preferences (INCLUDE MODULE to differentiate per-module settings)
       const { data: preferences, error: fetchError } = await supabase
         .from('dealer_slack_event_preferences')
-        .select('event_type, enabled')
+        .select('module, event_type, enabled')
         .eq('webhook_id', webhookId)
         .eq('dealer_id', dealerId);
 
       if (fetchError) throw fetchError;
 
-      // Build preference map
+      // Build preference map with module+eventType key to support per-module configuration
       const preferenceMap = new Map<string, boolean>();
       preferences?.forEach(pref => {
-        preferenceMap.set(pref.event_type, pref.enabled);
+        // Key format: "module:eventType" (e.g., "sales_orders:order_created")
+        const key = `${pref.module}:${pref.event_type}`;
+        preferenceMap.set(key, pref.enabled);
       });
 
-      // Group events by module
+      // Group events by module (expand events that apply to multiple modules)
       const groups: Record<string, EventGroup> = {};
 
       Object.entries(EVENT_DEFINITIONS).forEach(([eventType, config]) => {
-        const module = config.module;
+        // Each event can apply to multiple modules
+        config.modules.forEach(module => {
+          if (!groups[module]) {
+            groups[module] = {
+              module,
+              moduleName: t(`integrations.slack_events.modules.${module}`, { defaultValue: module }),
+              events: [],
+              enabledCount: 0,
+              totalCount: 0
+            };
+          }
 
-        if (!groups[module]) {
-          groups[module] = {
-            module,
-            moduleName: t(`integrations.slack_events.modules.${module}`, { defaultValue: module }),
-            events: [],
-            enabledCount: 0,
-            totalCount: 0
-          };
-        }
+          // Get module-specific enabled state using compound key
+          const key = `${module}:${eventType}`;
+          const enabled = preferenceMap.get(key) ?? false;
 
-        const enabled = preferenceMap.get(eventType) ?? false;
+          groups[module].events.push({
+            eventType,
+            category: config.category,
+            enabled
+          });
 
-        groups[module].events.push({
-          eventType,
-          category: config.category,
-          enabled
+          groups[module].totalCount++;
+          if (enabled) {
+            groups[module].enabledCount++;
+          }
         });
-
-        groups[module].totalCount++;
-        if (enabled) {
-          groups[module].enabledCount++;
-        }
       });
 
       setEventGroups(Object.values(groups));
@@ -149,9 +158,44 @@ export function SlackEventSelector({ webhookId, dealerId, onSave }: SlackEventSe
   };
 
   /**
-   * Update a single event preference
+   * Load channel mappings for modules
    */
-  const updateEventPreference = async (eventType: string, enabled: boolean) => {
+  const loadChannelMappings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('dealer_slack_channel_mappings')
+        .select('module, channel_name')
+        .eq('dealer_id', dealerId)
+        .eq('integration_id', webhookId)
+        .eq('enabled', true);
+
+      if (error) {
+        console.error('Failed to load channel mappings:', error);
+        return;
+      }
+
+      const mappings = new Map<string, string>();
+      data?.forEach(mapping => {
+        // Map module to standardized module name (e.g., 'sales_orders' -> 'orders')
+        const moduleKey = mapping.module === 'sales_orders' || mapping.module === 'service_orders' || mapping.module === 'recon_orders' || mapping.module === 'car_wash'
+          ? 'orders'
+          : mapping.module === 'stock' || mapping.module === 'get_ready'
+          ? 'vehicles'
+          : mapping.module;
+
+        mappings.set(moduleKey, mapping.channel_name);
+      });
+
+      setChannelMappings(mappings);
+    } catch (error) {
+      console.error('Error loading channel mappings:', error);
+    }
+  };
+
+  /**
+   * Update a single event preference for a specific module
+   */
+  const updateEventPreference = async (module: string, eventType: string, enabled: boolean) => {
     setIsUpdating(true);
 
     try {
@@ -160,24 +204,29 @@ export function SlackEventSelector({ webhookId, dealerId, onSave }: SlackEventSe
         .upsert({
           webhook_id: webhookId,
           dealer_id: dealerId,
+          module: module,
           event_type: eventType,
           enabled
         }, {
-          onConflict: 'webhook_id,dealer_id,event_type'
+          onConflict: 'webhook_id,dealer_id,module,event_type'
         });
 
       if (upsertError) throw upsertError;
 
-      // Update local state
-      setEventGroups(prev => prev.map(group => ({
-        ...group,
-        events: group.events.map(event =>
-          event.eventType === eventType ? { ...event, enabled } : event
-        ),
-        enabledCount: group.events.reduce((count, event) =>
-          count + ((event.eventType === eventType ? enabled : event.enabled) ? 1 : 0)
-        , 0)
-      })));
+      // Update local state - only for the specific module
+      setEventGroups(prev => prev.map(group => {
+        if (group.module !== module) return group;
+
+        return {
+          ...group,
+          events: group.events.map(event =>
+            event.eventType === eventType ? { ...event, enabled } : event
+          ),
+          enabledCount: group.events.reduce((count, event) =>
+            count + ((event.eventType === eventType ? enabled : event.enabled) ? 1 : 0)
+          , 0)
+        };
+      }));
 
       onSave?.();
     } catch (err) {
@@ -206,6 +255,7 @@ export function SlackEventSelector({ webhookId, dealerId, onSave }: SlackEventSe
       const upsertData = group.events.map(event => ({
         webhook_id: webhookId,
         dealer_id: dealerId,
+        module: module,
         event_type: event.eventType,
         enabled
       }));
@@ -213,7 +263,7 @@ export function SlackEventSelector({ webhookId, dealerId, onSave }: SlackEventSe
       const { error: upsertError } = await supabase
         .from('dealer_slack_event_preferences')
         .upsert(upsertData, {
-          onConflict: 'webhook_id,dealer_id,event_type'
+          onConflict: 'webhook_id,dealer_id,module,event_type'
         });
 
       if (upsertError) throw upsertError;
@@ -325,6 +375,7 @@ export function SlackEventSelector({ webhookId, dealerId, onSave }: SlackEventSe
         <EventGroupCard
           key={group.module}
           group={group}
+          channelName={channelMappings.get(group.module)}
           expanded={expandedGroups.has(group.module)}
           onToggleExpand={() => toggleGroup(group.module)}
           onUpdateEvent={updateEventPreference}
@@ -361,15 +412,17 @@ export function SlackEventSelector({ webhookId, dealerId, onSave }: SlackEventSe
  */
 interface EventGroupCardProps {
   group: EventGroup;
+  channelName?: string;
   expanded: boolean;
   onToggleExpand: () => void;
-  onUpdateEvent: (eventType: string, enabled: boolean) => Promise<void>;
+  onUpdateEvent: (module: string, eventType: string, enabled: boolean) => Promise<void>;
   onToggleAll: (module: string, enabled: boolean) => Promise<void>;
   isUpdating: boolean;
 }
 
 function EventGroupCard({
   group,
+  channelName,
   expanded,
   onToggleExpand,
   onUpdateEvent,
@@ -401,6 +454,11 @@ function EventGroupCard({
                 <div>
                   <CardTitle className="text-base font-medium text-gray-900">
                     {group.moduleName}
+                    {channelName && (
+                      <span className="ml-2 text-sm font-normal text-gray-500">
+                        → {channelName}
+                      </span>
+                    )}
                   </CardTitle>
                   <CardDescription className="text-sm text-gray-500 mt-0.5">
                     {t('integrations.slack_events.selector.events_enabled', {
@@ -459,7 +517,7 @@ function EventGroupCard({
                       <EventRow
                         key={event.eventType}
                         event={event}
-                        onToggle={(enabled) => onUpdateEvent(event.eventType, enabled)}
+                        onToggle={(enabled) => onUpdateEvent(group.module, event.eventType, enabled)}
                         disabled={isUpdating}
                       />
                     ))}

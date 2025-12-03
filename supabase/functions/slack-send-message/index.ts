@@ -1,7 +1,7 @@
 // =====================================================
-// SLACK WEBHOOK NOTIFICATION SENDER
-// Created: 2025-11-10
-// Description: Send order notifications to Slack via webhook
+// SLACK MULTI-CHANNEL NOTIFICATION SENDER
+// Updated: 2025-12-02
+// Description: Send order notifications to specific Slack channels based on module routing
 // =====================================================
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
@@ -44,8 +44,8 @@ function formatDueDate(isoString: string): string {
 
 interface SlackNotificationRequest {
   dealerId: number;
-  orderType: 'sales' | 'service' | 'recon' | 'carwash';
-  eventType: 'order_created' | 'status_changed' | 'comment_added';
+  module: 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash' | 'get_ready' | 'stock' | 'contacts';
+  eventType: 'order_created' | 'order_status_changed' | 'order_completed' | 'order_deleted' | 'order_assigned' | 'comment_added' | 'file_uploaded' | 'user_mentioned' | 'follower_added' | 'vehicle_added' | 'vehicle_step_changed' | 'vehicle_completed' | 'vehicle_blocked';
   eventData: {
     orderNumber?: string;
     stockNumber?: string;
@@ -58,15 +58,31 @@ interface SlackNotificationRequest {
     status?: string;
     oldStatus?: string;
     assignedTo?: string;
+    changedBy?: string;
     commenterName?: string;
     commentPreview?: string;
+    // New fields for enhanced notifications
+    fileName?: string;
+    createdBy?: string;
+    completedBy?: string;
+    deletedBy?: string;
+    assignedBy?: string;
+    uploadedBy?: string;
+    mentionedUser?: string;
+    followerName?: string;
+    addedBy?: string;
+    blockReason?: string;
+    blockedBy?: string;
+    stepName?: string;
+    oldStepName?: string;
   };
 }
 
-interface SlackWebhookConfig {
-  url: string;
-  enabled: boolean;
+interface SlackPostMessageResponse {
+  ok: boolean;
   channel?: string;
+  ts?: string;
+  error?: string;
 }
 
 serve(async (req) => {
@@ -88,82 +104,254 @@ serve(async (req) => {
 
     // Parse request body
     const payload: SlackNotificationRequest = await req.json();
-    const { dealerId, orderType, eventType, eventData } = payload;
+    const { dealerId, module, eventType, eventData } = payload;
 
-    console.log('=� Slack notification request:', { dealerId, orderType, eventType });
+    console.log('📨 Slack notification request:', { dealerId, module, eventType });
 
-    // 1. Get Slack webhook configuration from system_settings (global config, no dealer_id)
-    const { data: settings, error: settingsError } = await supabase
-      .from('system_settings')
-      .select('setting_value')
-      .eq('setting_key', 'slack_webhook_url')
+    // Validate required parameters
+    if (!dealerId || !module || !eventType) {
+      return new Response(
+        JSON.stringify({ error: 'Missing required parameters: dealerId, module, eventType' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // 1. Get webhook_id from event preferences (supports shared OAuth model)
+    const { data: eventPref, error: eventPrefError } = await supabase
+      .from('dealer_slack_event_preferences')
+      .select('webhook_id, enabled')
+      .eq('dealer_id', dealerId)
+      .eq('module', module)
+      .eq('event_type', eventType)
       .single();
 
-    if (settingsError) {
-      console.error('❌ Error fetching Slack settings:', settingsError);
+    if (eventPrefError || !eventPref || !eventPref.webhook_id) {
+      console.warn('⚠️ No event preference found for dealer:', dealerId, 'module:', module, 'event:', eventType);
       return new Response(
-        JSON.stringify({ error: 'Slack webhook not configured', details: settingsError.message }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const config: SlackWebhookConfig = settings?.setting_value;
-
-    if (!config?.url) {
-      console.warn('� Slack webhook URL not found');
-      return new Response(
-        JSON.stringify({ error: 'Slack webhook URL not configured' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    if (!config.enabled) {
-      console.log('� Slack notifications disabled for this dealership');
-      return new Response(
-        JSON.stringify({ success: true, message: 'Slack notifications are disabled' }),
+        JSON.stringify({
+          success: false,
+          message: 'No Slack configuration found for this event'
+        }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // 2. Format message (same format as SMS notifications)
+    // Check if event is enabled
+    if (!eventPref.enabled) {
+      console.log(`🔕 Event ${eventType} is disabled for module ${module}`);
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: `Event ${eventType} is disabled for this module`,
+          skipped: true
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // 2. Get active Slack integration (shared OAuth model - may belong to different dealer)
+    const { data: integration, error: integrationError } = await supabase
+      .from('dealer_integrations')
+      .select('id, oauth_access_token, enabled, status')
+      .eq('id', eventPref.webhook_id)
+      .eq('integration_type', 'slack')
+      .eq('status', 'active')
+      .eq('enabled', true)
+      .single();
+
+    if (integrationError || !integration) {
+      console.warn('⚠️ Slack integration not active:', eventPref.webhook_id);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: 'Slack integration is not active'
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!integration.oauth_access_token) {
+      console.error('❌ Missing Slack access token for integration:', integration.id);
+      return new Response(
+        JSON.stringify({ error: 'Slack integration missing access token' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // 3. Get channel mapping for this dealer + module
+    const { data: channelMapping, error: mappingError } = await supabase
+      .from('dealer_slack_channel_mappings')
+      .select('channel_id, channel_name, enabled')
+      .eq('dealer_id', dealerId)
+      .eq('integration_id', integration.id)
+      .eq('module', module)
+      .eq('enabled', true)
+      .single();
+
+    if (mappingError || !channelMapping) {
+      console.warn(`⚠️ No channel mapping found for dealer ${dealerId}, module ${module}`);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: `No Slack channel configured for module: ${module}`
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log(`📢 Sending to channel: ${channelMapping.channel_name} (${channelMapping.channel_id})`);
+
+    // Event is already verified as enabled in step 1 (eventPref exists)
+    // No need to check again - proceed with sending message
+
+    // 4. Format message text
     let messageText = '';
     const orderIdentifier = eventData.orderNumber || eventData.stockNumber || eventData.tag || 'N/A';
+    const moduleDisplay = module.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    const formattedDueDate = eventData.dueDateTime ? formatDueDate(eventData.dueDateTime) : null;
+
+    // =======================
+    // ORDER EVENTS (Grupo 1)
+    // =======================
 
     if (eventType === 'order_created') {
-      // Format due date if available
-      const formattedDate = eventData.dueDateTime ? formatDueDate(eventData.dueDateTime) : null;
+      const emoji = module === 'sales_orders' ? '🚗' : module === 'service_orders' ? '🔧' : module === 'car_wash' ? '💦' : '✨';
 
-      // Build details string with VIN, formatted date, and assigned user
       const details = [
-        eventData.vinNumber ? `VIN: ${eventData.vinNumber}` : null,
         eventData.vehicleInfo,
-        eventData.services,
-        formattedDate,
-        eventData.assignedTo ? `Assigned: ${eventData.assignedTo}` : null
-      ].filter(Boolean).join(' - ');
+        formattedDueDate ? `Due: ${formattedDueDate}` : null,
+        eventData.assignedTo ? `Assigned to: ${eventData.assignedTo}` : null,
+        eventData.createdBy ? `Created by: ${eventData.createdBy}` : null
+      ].filter(Boolean).join(' • ');
 
-      const emoji = orderType === 'sales' ? '🚗' : orderType === 'service' ? '🔧' : '✨';
-      messageText = `${emoji} New ${orderType.charAt(0).toUpperCase() + orderType.slice(1)} Order ${orderIdentifier}${details ? ` - ${details}` : ''} View: ${eventData.shortLink}`;
-    } else if (eventType === 'status_changed') {
+      messageText = `${emoji} New ${moduleDisplay} Order ${orderIdentifier} created${details ? `\n${details}` : ''}`;
+
+    } else if (eventType === 'order_status_changed') {
       const oldStatusFormatted = eventData.oldStatus?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Unknown';
       const newStatusFormatted = eventData.status?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Unknown';
 
-      // Build details string with VIN and assigned user
       const details = [
-        eventData.vinNumber ? `VIN: ${eventData.vinNumber}` : null,
         eventData.vehicleInfo,
-        eventData.assignedTo ? `Assigned: ${eventData.assignedTo}` : null
-      ].filter(Boolean).join(' - ');
+        eventData.vinNumber ? `VIN: ${eventData.vinNumber}` : null,
+        formattedDueDate ? `Due: ${formattedDueDate}` : null,
+        eventData.assignedTo ? `Assigned to: ${eventData.assignedTo}` : null,
+        eventData.changedBy ? `Changed by: ${eventData.changedBy}` : null
+      ].filter(Boolean).join(' • ');
 
-      messageText = `📊 Order ${orderIdentifier} status: "${oldStatusFormatted}" → "${newStatusFormatted}"${details ? ` - ${details}` : ''}. View: ${eventData.shortLink}`;
+      messageText = `📊 Order ${orderIdentifier} status changed: "${oldStatusFormatted}" → "${newStatusFormatted}"${details ? `\n${details}` : ''}`;
+
+    } else if (eventType === 'order_completed') {
+      const details = [
+        eventData.vehicleInfo,
+        eventData.completedBy ? `Completed by: ${eventData.completedBy}` : null
+      ].filter(Boolean).join(' • ');
+
+      messageText = `✅ Order ${orderIdentifier} completed${details ? `\n${details}` : ''}`;
+
+    } else if (eventType === 'order_assigned') {
+      const details = [
+        eventData.vehicleInfo,
+        eventData.assignedBy ? `Assigned by: ${eventData.assignedBy}` : null
+      ].filter(Boolean).join(' • ');
+
+      messageText = `👤 Order ${orderIdentifier} assigned to ${eventData.assignedTo || 'team member'}${details ? `\n${details}` : ''}`;
+
+    } else if (eventType === 'order_deleted') {
+      const details = [
+        eventData.vehicleInfo,
+        eventData.deletedBy ? `Deleted by: ${eventData.deletedBy}` : null
+      ].filter(Boolean).join(' • ');
+
+      messageText = `🗑️ Order ${orderIdentifier} deleted${details ? `\n${details}` : ''}`;
+
     } else if (eventType === 'comment_added') {
       const commenterName = eventData.commenterName || 'Someone';
-      const preview = eventData.commentPreview ? `: "${eventData.commentPreview}"` : '';
-      messageText = `💬 ${commenterName} commented on Order ${orderIdentifier}${preview}. View: ${eventData.shortLink}`;
+      const preview = eventData.commentPreview ? `\n"${eventData.commentPreview}"` : '';
+      const details = eventData.vehicleInfo ? `\n${eventData.vehicleInfo}` : '';
+
+      messageText = `💬 ${commenterName} commented on Order ${orderIdentifier}${preview}${details}`;
+
+    } else if (eventType === 'file_uploaded') {
+      const details = [
+        eventData.uploadedBy ? `Uploaded by: ${eventData.uploadedBy}` : null,
+        eventData.fileName ? `File: ${eventData.fileName}` : null,
+        eventData.vehicleInfo
+      ].filter(Boolean).join(' • ');
+
+      messageText = `📎 File uploaded to Order ${orderIdentifier}${details ? `\n${details}` : ''}`;
+
+    } else if (eventType === 'user_mentioned') {
+      const mentionedUser = eventData.mentionedUser || 'You';
+      const preview = eventData.commentPreview ? `\n"${eventData.commentPreview}"` : '';
+      const details = eventData.vehicleInfo ? `\n${eventData.vehicleInfo}` : '';
+
+      messageText = `@${mentionedUser} mentioned you in Order ${orderIdentifier}${preview}${details}`;
+
+    // =======================
+    // FOLLOWER EVENTS (Grupo 2)
+    // =======================
+
+    } else if (eventType === 'follower_added') {
+      const followerName = eventData.followerName || 'Someone';
+      const details = [
+        eventData.vehicleInfo,
+        eventData.addedBy ? `Added by: ${eventData.addedBy}` : null
+      ].filter(Boolean).join(' • ');
+
+      messageText = `👁️ ${followerName} added as follower to Order ${orderIdentifier}${details ? `\n${details}` : ''}`;
+
+    // =======================
+    // GET READY EVENTS (Grupo 3)
+    // =======================
+
+    } else if (eventType === 'vehicle_added') {
+      const details = [
+        eventData.vehicleInfo,
+        eventData.vinNumber ? `VIN: ${eventData.vinNumber}` : null,
+        eventData.addedBy ? `Added by: ${eventData.addedBy}` : null
+      ].filter(Boolean).join(' • ');
+
+      messageText = `✨ New vehicle added to Get Ready${details ? `\n${details}` : ''}`;
+
+    } else if (eventType === 'vehicle_step_changed') {
+      const oldStep = eventData.oldStepName || 'Unknown';
+      const newStep = eventData.stepName || 'Unknown';
+
+      const details = [
+        eventData.vehicleInfo,
+        eventData.vinNumber ? `VIN: ${eventData.vinNumber}` : null,
+        eventData.changedBy ? `Changed by: ${eventData.changedBy}` : null
+      ].filter(Boolean).join(' • ');
+
+      messageText = `📋 Vehicle step changed: "${oldStep}" → "${newStep}"${details ? `\n${details}` : ''}`;
+
+    } else if (eventType === 'vehicle_completed') {
+      const details = [
+        eventData.vehicleInfo,
+        eventData.vinNumber ? `VIN: ${eventData.vinNumber}` : null,
+        eventData.completedBy ? `Completed by: ${eventData.completedBy}` : null
+      ].filter(Boolean).join(' • ');
+
+      messageText = `🎉 Vehicle ready for delivery${details ? `\n${details}` : ''}`;
+
+    } else if (eventType === 'vehicle_blocked') {
+      const details = [
+        eventData.vehicleInfo,
+        eventData.vinNumber ? `VIN: ${eventData.vinNumber}` : null,
+        eventData.blockReason ? `Reason: ${eventData.blockReason}` : null,
+        eventData.blockedBy ? `Blocked by: ${eventData.blockedBy}` : null
+      ].filter(Boolean).join(' • ');
+
+      messageText = `🚫 Vehicle blocked${details ? `\n${details}` : ''}`;
+
+    } else {
+      // Generic fallback
+      messageText = `📢 ${eventType.replace(/_/g, ' ')} - Order ${orderIdentifier}`;
     }
 
-    // 3. Create Slack message payload with blocks for rich formatting
+    // 5. Create Slack message payload with blocks for rich formatting
     const slackPayload = {
+      channel: channelMapping.channel_id,
       text: messageText, // Fallback text for notifications
       blocks: [
         {
@@ -191,55 +379,74 @@ serve(async (req) => {
       ]
     };
 
-    // Add context block for additional info
-    if (eventData.vehicleInfo || orderType) {
+    // Add context block for additional info (with timestamp for status changes)
+    if (eventData.vehicleInfo || module) {
+      // Get current time in Eastern Time for status changes
+      const now = new Date();
+      const timeFormatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/New_York',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+      const currentTime = timeFormatter.format(now);
+
+      // Add timestamp only for status change events
+      const timestampText = eventType === 'order_status_changed' ? ` | ${currentTime} ET` : '';
+
       slackPayload.blocks.splice(1, 0, {
         type: 'context',
         elements: [
           {
             type: 'mrkdwn',
-            text: `*Order Type:* ${orderType.charAt(0).toUpperCase() + orderType.slice(1)}${eventData.vehicleInfo ? ` | *Vehicle:* ${eventData.vehicleInfo}` : ''}`
+            text: `*Module:* ${moduleDisplay}${eventData.vehicleInfo ? ` | *Vehicle:* ${eventData.vehicleInfo}` : ''}${timestampText}`
           }
         ]
       });
     }
 
-    console.log('=� Sending to Slack webhook:', config.url.substring(0, 50) + '...');
+    console.log('📤 Sending to Slack API (chat.postMessage)...');
 
-    // 4. Send to Slack webhook
-    const slackResponse = await fetch(config.url, {
+    // 6. Send to Slack using chat.postMessage API
+    const slackResponse = await fetch('https://slack.com/api/chat.postMessage', {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${integration.oauth_access_token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(slackPayload)
     });
 
-    if (!slackResponse.ok) {
-      const errorText = await slackResponse.text();
-      console.error('L Slack API error:', slackResponse.status, errorText);
-      throw new Error(`Slack API error: ${slackResponse.status} - ${errorText}`);
+    const slackData: SlackPostMessageResponse = await slackResponse.json();
+
+    if (!slackData.ok) {
+      console.error('❌ Slack API error:', slackData.error);
+      throw new Error(`Slack API error: ${slackData.error}`);
     }
 
-    console.log(' Slack notification sent successfully');
+    console.log('✅ Slack notification sent successfully to', channelMapping.channel_name);
 
-    // 5. Log notification delivery (optional, for audit)
+    // 7. Log notification delivery (optional, for audit)
     try {
       await supabase.from('notification_delivery_logs').insert({
         dealer_id: dealerId,
         notification_type: 'slack',
         event_type: eventType,
-        recipient: config.channel || 'default',
+        recipient: channelMapping.channel_name,
         status: 'delivered',
         message_preview: messageText.substring(0, 100),
         metadata: {
-          orderType,
+          module,
           orderIdentifier,
-          webhookUrl: config.url.substring(0, 50) + '...' // Log partial URL for security
+          channelId: channelMapping.channel_id,
+          channelName: channelMapping.channel_name,
+          slackTs: slackData.ts
         }
       });
     } catch (logError) {
-      console.warn('� Failed to log notification delivery:', logError);
+      console.warn('⚠️ Failed to log notification delivery:', logError);
       // Don't fail the request if logging fails
     }
 
@@ -247,6 +454,7 @@ serve(async (req) => {
       JSON.stringify({
         success: true,
         message: 'Slack notification sent successfully',
+        channel: channelMapping.channel_name,
         messagePreview: messageText
       }),
       {
@@ -256,7 +464,7 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('L Error in slack-send-message:', error);
+    console.error('❌ Error in slack-send-message:', error);
 
     return new Response(
       JSON.stringify({

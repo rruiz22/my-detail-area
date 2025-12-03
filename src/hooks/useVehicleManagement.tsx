@@ -5,6 +5,7 @@ import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { supabase } from '@/integrations/supabase/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { slackNotificationService } from '@/services/slackNotificationService';
 
 interface CreateVehicleInput {
   stock_number: string;
@@ -127,7 +128,7 @@ export function useVehicleManagement() {
 
       return vehicle;
     },
-    onSuccess: (newVehicle) => {
+    onSuccess: async (newVehicle) => {
       // ✅ FIXED: Predicate-based invalidation to match infinite query keys
       queryClient.invalidateQueries({
         predicate: (query) =>
@@ -141,6 +142,47 @@ export function useVehicleManagement() {
         title: t('common.success'),
         description: t('get_ready.vehicle_form.success.created'),
       });
+
+      // 📤 SLACK NOTIFICATION: Vehicle Added
+      if (currentDealership?.id && user?.id) {
+        try {
+          // Get creator's name
+          const { data: creatorProfile } = await supabase
+            .from('profiles')
+            .select('first_name, last_name, email')
+            .eq('id', user.id)
+            .single();
+
+          const createdByName = creatorProfile?.first_name
+            ? `${creatorProfile.first_name} ${creatorProfile.last_name || ''}`.trim()
+            : user.email || 'Someone';
+
+          const isEnabled = await slackNotificationService.isEnabled(
+            currentDealership.id,
+            'get_ready',
+            'vehicle_added'
+          );
+
+          if (isEnabled) {
+            await slackNotificationService.sendNotification({
+              orderId: newVehicle.id,
+              dealerId: currentDealership.id,
+              module: 'get_ready',
+              eventType: 'vehicle_added',
+              eventData: {
+                stockNumber: newVehicle.stock_number,
+                vinNumber: newVehicle.vin,
+                vehicleInfo: `${newVehicle.vehicle_year} ${newVehicle.vehicle_make} ${newVehicle.vehicle_model}`.trim(),
+                shortLink: `${window.location.origin}/get-ready?vehicle=${newVehicle.id}`,
+                createdBy: createdByName
+              }
+            });
+          }
+        } catch (notifError) {
+          console.error('❌ [Slack] Failed to send vehicle added notification:', notifError);
+          // Don't fail vehicle creation if Slack notification fails
+        }
+      }
     },
     onError: (error: Error) => {
       console.error('Failed to create vehicle:', error);
@@ -292,6 +334,27 @@ export function useVehicleManagement() {
   // Move Vehicle to Step
   const moveVehicleMutation = useMutation({
     mutationFn: async ({ vehicleId, stepId }: { vehicleId: string; stepId: string }) => {
+      // 🔍 Get old step info BEFORE updating
+      const { data: vehicleBeforeUpdate } = await supabase
+        .from('get_ready_vehicles')
+        .select(`
+          step_id,
+          stock_number,
+          vin,
+          vehicle_year,
+          vehicle_make,
+          vehicle_model,
+          status,
+          get_ready_steps!inner (
+            name,
+            order_index
+          )
+        `)
+        .eq('id', vehicleId)
+        .single();
+
+      const oldStepName = vehicleBeforeUpdate?.get_ready_steps?.name || 'Unknown';
+
       // ✨ NEW: Check for pending or in-progress work items before moving
       const { data: workItems, error: workItemsError } = await supabase
         .from('get_ready_work_items')
@@ -346,13 +409,21 @@ export function useVehicleManagement() {
           // ❌ REMOVED: intake_date reset (preserves original intake date)
         })
         .eq('id', vehicleId)
-        .select()
+        .select(`
+          *,
+          get_ready_steps!inner (
+            name,
+            order_index
+          )
+        `)
         .single();
 
       if (error) throw error;
-      return data;
+
+      // Return both old step name and updated vehicle data
+      return { ...data, oldStepName };
     },
-    onSuccess: (movedVehicle) => {
+    onSuccess: async (movedVehicle) => {
       // ✅ FIXED: Predicate-based invalidation to match infinite query keys
       queryClient.invalidateQueries({
         predicate: (query) =>
@@ -379,6 +450,76 @@ export function useVehicleManagement() {
         title: t('common.success'),
         description: t('get_ready.vehicle_form.success.moved'),
       });
+
+      // 📤 SLACK NOTIFICATION: Vehicle Step Changed
+      if (currentDealership?.id && user?.id) {
+        try {
+          // Get user's name who moved the vehicle
+          const { data: userProfile } = await supabase
+            .from('profiles')
+            .select('first_name, last_name, email')
+            .eq('id', user.id)
+            .single();
+
+          const changedByName = userProfile?.first_name
+            ? `${userProfile.first_name} ${userProfile.last_name || ''}`.trim()
+            : user.email || 'Someone';
+
+          const newStepName = movedVehicle.get_ready_steps?.name || 'Unknown';
+
+          const isStepChangeEnabled = await slackNotificationService.isEnabled(
+            currentDealership.id,
+            'get_ready',
+            'vehicle_step_changed'
+          );
+
+          if (isStepChangeEnabled) {
+            await slackNotificationService.sendNotification({
+              orderId: movedVehicle.id,
+              dealerId: currentDealership.id,
+              module: 'get_ready',
+              eventType: 'vehicle_step_changed',
+              eventData: {
+                stockNumber: movedVehicle.stock_number,
+                vinNumber: movedVehicle.vin,
+                vehicleInfo: `${movedVehicle.vehicle_year} ${movedVehicle.vehicle_make} ${movedVehicle.vehicle_model}`.trim(),
+                shortLink: `${window.location.origin}/get-ready?vehicle=${movedVehicle.id}`,
+                stepName: newStepName,
+                oldStepName: movedVehicle.oldStepName,
+                changedBy: changedByName
+              }
+            });
+          }
+
+          // 📤 SLACK NOTIFICATION: Vehicle Completed (if status is completed)
+          if (movedVehicle.status === 'completed') {
+            const isCompletedEnabled = await slackNotificationService.isEnabled(
+              currentDealership.id,
+              'get_ready',
+              'vehicle_completed'
+            );
+
+            if (isCompletedEnabled) {
+              await slackNotificationService.sendNotification({
+                orderId: movedVehicle.id,
+                dealerId: currentDealership.id,
+                module: 'get_ready',
+                eventType: 'vehicle_completed',
+                eventData: {
+                  stockNumber: movedVehicle.stock_number,
+                  vinNumber: movedVehicle.vin,
+                  vehicleInfo: `${movedVehicle.vehicle_year} ${movedVehicle.vehicle_make} ${movedVehicle.vehicle_model}`.trim(),
+                  shortLink: `${window.location.origin}/get-ready?vehicle=${movedVehicle.id}`,
+                  completedBy: changedByName
+                }
+              });
+            }
+          }
+        } catch (notifError) {
+          console.error('❌ [Slack] Failed to send vehicle step change notification:', notifError);
+          // Don't fail vehicle movement if Slack notification fails
+        }
+      }
     },
     onError: (error: Error) => {
       console.error('Failed to move vehicle:', error);

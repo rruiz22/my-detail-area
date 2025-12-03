@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { compressImage, shouldCompressImage } from '@/utils/imageCompression';
+import { slackNotificationService } from '@/services/slackNotificationService';
 
 export interface AttachmentUploadResult {
   success: boolean;
@@ -91,6 +92,68 @@ export const useAttachments = (orderId: string) => {
       }
 
       console.log('✅ File uploaded successfully:', data.attachment.id);
+
+      // 📤 SLACK NOTIFICATION: File Uploaded
+      try {
+        // Get order data for notification
+        const { data: orderData } = await supabase
+          .from('orders')
+          .select('order_number, custom_order_number, dealer_id, order_type, stock_number, vehicle_year, vehicle_make, vehicle_model, short_link')
+          .eq('id', orderId)
+          .single();
+
+        if (orderData) {
+          // Get uploader's name
+          const { data: uploaderProfile } = await supabase
+            .from('profiles')
+            .select('first_name, last_name, email')
+            .eq('id', user.id)
+            .single();
+
+          const uploadedByName = uploaderProfile?.first_name
+            ? `${uploaderProfile.first_name} ${uploaderProfile.last_name || ''}`.trim()
+            : user.email || 'Someone';
+
+          const getNotificationModule = (orderType: string): 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash' => {
+            const mapping: Record<string, 'sales_orders' | 'service_orders' | 'recon_orders' | 'car_wash'> = {
+              'sales': 'sales_orders',
+              'service': 'service_orders',
+              'recon': 'recon_orders',
+              'carwash': 'car_wash'
+            };
+            return mapping[orderType] || 'sales_orders';
+          };
+
+          const notifModule = getNotificationModule(orderData.order_type || 'sales');
+
+          const isEnabled = await slackNotificationService.isEnabled(
+            orderData.dealer_id,
+            notifModule,
+            'file_uploaded'
+          );
+
+          if (isEnabled) {
+            await slackNotificationService.sendNotification({
+              orderId: orderId,
+              dealerId: orderData.dealer_id,
+              module: notifModule,
+              eventType: 'file_uploaded',
+              eventData: {
+                orderNumber: orderData.order_number || orderData.custom_order_number || orderId,
+                stockNumber: orderData.stock_number,
+                vehicleInfo: `${orderData.vehicle_year || ''} ${orderData.vehicle_make || ''} ${orderData.vehicle_model || ''}`.trim() || undefined,
+                shortLink: orderData.short_link || `${window.location.origin}/orders/${orderId}`,
+                fileName: file.name,
+                uploadedBy: uploadedByName
+              }
+            });
+          }
+        }
+      } catch (notifError) {
+        console.error('❌ [Slack] Failed to send file upload notification:', notifError);
+        // Don't fail the upload if Slack notification fails
+      }
+
       return { success: true, attachment: data.attachment };
 
     } catch (error: unknown) {

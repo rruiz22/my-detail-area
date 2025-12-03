@@ -74,11 +74,35 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Handle GET requests (Slack URL validation)
+  if (req.method === 'GET') {
+    const url = new URL(req.url);
+    const code = url.searchParams.get('code');
+
+    // If no OAuth code, return 200 OK for Slack URL validation
+    if (!code) {
+      return new Response(
+        JSON.stringify({
+          status: 'ok',
+          message: 'Slack OAuth callback endpoint is ready',
+          service: 'slack-oauth-callback'
+        }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+  }
+
   try {
     const url = new URL(req.url);
     const code = url.searchParams.get('code');
     const state = url.searchParams.get('state');
     const error = url.searchParams.get('error');
+
+    // Get the app's base URL for redirects
+    const appBaseUrl = Deno.env.get('BASE_URL') || Deno.env.get('PUBLIC_APP_URL') || 'https://dds.mydetailarea.com';
 
     // Check for OAuth errors
     if (error) {
@@ -87,7 +111,7 @@ serve(async (req) => {
         status: 302,
         headers: {
           ...corsHeaders,
-          Location: `${url.origin}/settings?tab=integrations&slack=error&reason=${encodeURIComponent(error)}`
+          Location: `${appBaseUrl}/settings?tab=integrations&slack=error&reason=${encodeURIComponent(error)}`
         }
       });
     }
@@ -140,7 +164,7 @@ serve(async (req) => {
         status: 302,
         headers: {
           ...corsHeaders,
-          Location: `${url.origin}/settings?tab=integrations&slack=error&reason=state_expired`
+          Location: `${appBaseUrl}/settings?tab=integrations&slack=error&reason=state_expired`
         }
       });
     }
@@ -170,7 +194,7 @@ serve(async (req) => {
         status: 302,
         headers: {
           ...corsHeaders,
-          Location: `${url.origin}/settings?tab=integrations&slack=error&reason=invalid_state`
+          Location: `${appBaseUrl}/settings?tab=integrations&slack=error&reason=invalid_state`
         }
       });
     }
@@ -190,6 +214,9 @@ serve(async (req) => {
       throw new Error('Server configuration error');
     }
 
+    // Build Edge Function redirect URI for Slack token exchange
+    const edgeFunctionRedirectUri = `${supabaseUrl}/functions/v1/slack-oauth-callback`;
+
     const tokenResponse = await fetch('https://slack.com/api/oauth.v2.access', {
       method: 'POST',
       headers: {
@@ -199,7 +226,7 @@ serve(async (req) => {
         client_id: slackClientId,
         client_secret: slackClientSecret,
         code: code,
-        redirect_uri: `${url.origin}/api/slack/callback`
+        redirect_uri: edgeFunctionRedirectUri
       }).toString()
     });
 
@@ -219,7 +246,7 @@ serve(async (req) => {
         status: 302,
         headers: {
           ...corsHeaders,
-          Location: `${url.origin}/settings?tab=integrations&slack=error&reason=${encodeURIComponent(tokenData.error || 'unknown')}`
+          Location: `${appBaseUrl}/settings?tab=integrations&slack=error&reason=${encodeURIComponent(tokenData.error || 'unknown')}`
         }
       });
     }
@@ -281,7 +308,7 @@ serve(async (req) => {
       status: 302,
       headers: {
         ...corsHeaders,
-        Location: `${url.origin}/settings?tab=integrations&slack=connected`
+        Location: `${appBaseUrl}/settings?tab=integrations&slack=connected`
       }
     });
 
