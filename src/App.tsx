@@ -1,5 +1,6 @@
 import { RouteLogger } from "@/components/debug/RouteLogger";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { FirebaseMessagingProvider } from "@/components/FirebaseMessagingProvider";
 import { GlobalChatWrapper } from "@/components/GlobalChatWrapper";
 import { NotificationProvider } from "@/components/NotificationProvider";
 import { PermissionGuard } from "@/components/permissions/PermissionGuard";
@@ -312,8 +313,10 @@ const App = () => (
     )}
     <TooltipProvider>
       <AuthProvider>
-        {/* ✅ DealershipProvider MUST come after AuthProvider (needs user.id) */}
-        <DealershipProvider>
+        {/* ✅ FirebaseMessagingProvider - Registers FCM tokens and handles push notifications */}
+        <FirebaseMessagingProvider>
+          {/* ✅ DealershipProvider MUST come after AuthProvider (needs user.id) */}
+          <DealershipProvider>
           <DealerFilterProvider>
             <PermissionProvider>
               <ServicesProvider>
@@ -340,6 +343,7 @@ const App = () => (
             </PermissionProvider>
           </DealerFilterProvider>
         </DealershipProvider>
+        </FirebaseMessagingProvider>
       </AuthProvider>
     </TooltipProvider>
     {/* Sistema de toast shadcn/ui - Sistema unificado */}

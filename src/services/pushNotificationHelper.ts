@@ -213,6 +213,7 @@ class PushNotificationHelper {
       url?: string;
       data?: Record<string, any>;
       notificationLevel?: 'all' | 'important';
+      triggeredBy?: string;
     }
   ): Promise<NotificationResponse> {
     try {
@@ -220,6 +221,7 @@ class PushNotificationHelper {
         orderId,
         title,
         notificationLevel: options?.notificationLevel,
+        triggeredBy: options?.triggeredBy,
       });
 
       // Query active followers for this order
@@ -234,6 +236,12 @@ class PushNotificationHelper {
       // Filter by notification level if specified
       if (options?.notificationLevel) {
         query = query.eq('notification_level', options.notificationLevel);
+      }
+
+      // Filter out the user who triggered the change (self-exclusion)
+      if (options?.triggeredBy) {
+        query = query.neq('user_id', options.triggeredBy);
+        console.log('``[PushNotificationHelper]`` Excluding trigger user: ' + options.triggeredBy);
       }
 
       const { data: followers, error: followersError } = await query;
@@ -395,7 +403,8 @@ class PushNotificationHelper {
     orderId: string,
     orderNumber: string,
     newStatus: string,
-    changedBy: string
+    changedBy: string,
+    triggeredBy?: string
   ): Promise<void> {
     try {
       console.log('[PushNotificationHelper] Notifying order status change:', {
@@ -405,10 +414,14 @@ class PushNotificationHelper {
         changedBy,
       });
 
+      // Format status for display (e.g., "in_progress" → "In Progress")
+      const { getStatusLabel } = await import('@/constants/orderStatus');
+      const formattedStatus = getStatusLabel(newStatus as any) || newStatus;
+
       await this.notifyOrderFollowers(
         orderId,
         `Order ${orderNumber} Status Updated`,
-        `${changedBy} changed status to ${newStatus}`,
+        `${changedBy} changed status to ${formattedStatus}`,
         {
           url: `/orders/${orderId}`,
           data: {
@@ -418,6 +431,7 @@ class PushNotificationHelper {
             notificationType: 'status_change',
           },
           notificationLevel: 'all', // Status changes go to all followers
+          triggeredBy, // Exclude user who made the change
         }
       );
 

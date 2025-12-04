@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useCallback } from 'react';
 import { pushNotificationHelper } from '@/services/pushNotificationHelper';
 import { sendStatusChangedSMS } from '@/services/smsNotificationHelper';
+import { slackNotificationService } from '@/services/slackNotificationService';
 import { dev, error as logError } from '@/utils/logger';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
@@ -96,7 +97,7 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
       // Get current order before updating (to get order_number, old_status, type, and vehicle info)
       const { data: currentOrder } = await supabase
         .from('orders')
-        .select('order_number, stock_number, tag, status, customer_name, order_type, vehicle_year, vehicle_make, vehicle_model, short_link')
+        .select('order_number, stock_number, tag, status, customer_name, order_type, vehicle_year, vehicle_make, vehicle_model, short_link, assigned_group_id, assigned_contact_id, created_by, due_date')
         .eq('id', orderId)
         .single();
 
@@ -118,24 +119,24 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
 
       // Send notifications after successful update
       if (currentOrder?.order_number && enhancedUser) {
-        const userName = enhancedUser.first_name
-          ? `${enhancedUser.first_name} ${enhancedUser.last_name || ''}`.trim()
-          : enhancedUser.email || 'Someone';
+        // Fetch user's full name from profiles table
+        let userName = enhancedUser.email || 'Someone';
+        try {
+          const { data: profileData } = await supabase
+            .from('profiles')
+            .select('first_name, last_name')
+            .eq('id', enhancedUser.id)
+            .single();
 
-        // Send push notifications to followers (non-blocking)
-        pushNotificationHelper
-          .notifyOrderStatusChange(
-            orderId,
-            currentOrder.order_number,
-            newStatus,
-            userName
-          )
-          .catch((notifError) => {
-            logError('❌ Push notification failed (non-critical):', notifError);
-          });
+          if (profileData?.first_name) {
+            userName = `${profileData.first_name} ${profileData.last_name || ''}`.trim();
+          }
+        } catch (error) {
+          console.warn('⚠️ Failed to fetch user profile:', error);
+        }
 
         // Determine module based on order type
-        const moduleMap: Record<string, OrderModule> = {
+        const moduleMap: Record<string, AppModule> = {
           'sales': 'sales_orders',
           'service': 'service_orders',
           'recon': 'recon_orders',
@@ -199,6 +200,126 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
         } else {
           console.log(`ℹ️ [SMS] Status changed to "${newStatus}" - SMS not sent (only sent for "completed" status in ${module})`);
         }
+
+        // 🔔 PUSH NOTIFICATION: Send push notification to followers
+        try {
+          console.log(`🔔 [PUSH] Sending push notification for status change to "${newStatus}"`);
+
+          const { pushNotificationHelper } = await import('@/services/pushNotificationHelper');
+
+          // Send push notification asynchronously (don't block the status update)
+          pushNotificationHelper.notifyOrderStatusChange(
+            orderId,
+            currentOrder.order_number || orderId,
+            newStatus,
+            userName,
+            enhancedUser.id  // ✅ Exclude user who made the change
+          ).catch(error => {
+            console.error('[PUSH] Failed to send push notification (non-critical):', error);
+          });
+
+          console.log('✅ [PUSH] Push notification triggered successfully');
+        } catch (error) {
+          console.error('[PUSH] Error triggering push notification (non-critical):', error);
+        }
+
+        // 📤 SLACK NOTIFICATION: Status Changed
+        console.log('🔍 [DEBUG] Checking Slack for status change:', {
+          dealerId,
+          module,
+          oldStatus,
+          newStatus
+        });
+
+        void slackNotificationService.isEnabled(
+          parseInt(dealerId),
+          module,
+          'order_status_changed'
+        ).then(async (slackEnabled) => {
+          console.log('🔍 [DEBUG] Slack enabled result:', slackEnabled);
+
+          if (slackEnabled) {
+            console.log('📤 Slack enabled for status change, sending notification...');
+
+            // 🔍 Fetch assigned user/group name (or creator if not assigned)
+            let assignedToName: string | undefined = undefined;
+            if (currentOrder.assigned_group_id) {
+              try {
+                const { data: groupData, error: groupError } = await supabase
+                  .from('dealer_groups')
+                  .select('name')
+                  .eq('id', currentOrder.assigned_group_id)
+                  .single();
+
+                if (groupError) {
+                  console.warn('⚠️ Group not found:', currentOrder.assigned_group_id, groupError);
+                } else if (groupData?.name) {
+                  assignedToName = groupData.name;
+                }
+              } catch (error) {
+                console.warn('⚠️ Failed to fetch group name:', error);
+              }
+            } else if (currentOrder.assigned_contact_id) {
+              try {
+                const { data: contactData, error: contactError } = await supabase
+                  .from('dealership_contacts')
+                  .select('first_name, last_name')
+                  .eq('id', currentOrder.assigned_contact_id)
+                  .single();
+
+                if (contactError) {
+                  console.warn('⚠️ Contact not found:', currentOrder.assigned_contact_id, contactError);
+                } else if (contactData) {
+                  assignedToName = `${contactData.first_name || ''} ${contactData.last_name || ''}`.trim();
+                }
+              } catch (error) {
+                console.warn('⚠️ Failed to fetch contact name:', error);
+              }
+            }
+
+            // If no assignment, use creator name
+            if (!assignedToName && currentOrder.created_by) {
+              try {
+                const { data: creatorData } = await supabase
+                  .from('profiles')
+                  .select('first_name, last_name, email')
+                  .eq('id', currentOrder.created_by)
+                  .single();
+
+                if (creatorData?.first_name) {
+                  assignedToName = `${creatorData.first_name} ${creatorData.last_name || ''}`.trim();
+                } else if (creatorData?.email) {
+                  assignedToName = creatorData.email;
+                }
+              } catch (error) {
+                console.warn('⚠️ Failed to fetch creator name:', error);
+              }
+            }
+
+            await slackNotificationService.notifyStatusChange({
+              orderId: orderId,
+              dealerId: parseInt(dealerId),
+              module: module as any,
+              eventData: {
+                orderNumber: currentOrder.order_number,
+                stockNumber: currentOrder.stock_number,
+                tag: currentOrder.tag,
+                vinNumber: undefined, // Not available in this context
+                vehicleInfo: vehicleInfo,
+                status: newStatus,
+                oldStatus: oldStatus,
+                shortLink: shortLink,
+                assignedTo: assignedToName,
+                changedBy: userName, // Add who made the change
+                dueDateTime: currentOrder.due_date
+              }
+            });
+          } else {
+            console.log('🔕 Slack NOT enabled for status change');
+          }
+        }).catch(err => {
+          logError('❌ [Slack] Error sending status change notification:', err);
+        });
       }
 
       return true;

@@ -207,21 +207,21 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
     // Listen for foreground messages
     const unsubscribe = onForegroundMessage((payload) => {
       console.log('[FCM] Foreground message:', payload);
+      console.log('[FCM] Notification object:', payload.notification);
+      console.log('[FCM] Data object:', payload.data);
 
       // Show toast notification for foreground messages
       const title = payload.notification?.title || t('notifications.new_message');
       const body = payload.notification?.body || '';
 
-      toast(title, {
+      console.log('[FCM] Extracted title:', title);
+      console.log('[FCM] Extracted body:', body);
+      console.log('[FCM] URL:', payload.data?.url);
+
+      // Show toast notification (click to navigate is handled by background click)
+      toast({
+        title,
         description: body,
-        action: payload.data?.url
-          ? {
-              label: t('common.view'),
-              onClick: () => {
-                window.location.href = payload.data.url;
-              },
-            }
-          : undefined,
       });
     });
 

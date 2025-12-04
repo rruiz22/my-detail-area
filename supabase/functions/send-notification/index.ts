@@ -49,8 +49,10 @@ const corsHeaders = {
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-const FIREBASE_SERVICE_ACCOUNT = Deno.env.get('FIREBASE_SERVICE_ACCOUNT') // JSON string
+const FIREBASE_SERVICE_ACCOUNT = Deno.env.get('FIREBASE_SERVICE_ACCOUNT') // JSON string (fallback)
 const FIREBASE_PROJECT_ID = Deno.env.get('FIREBASE_PROJECT_ID') || 'my-detail-area'
+const FIREBASE_CLIENT_EMAIL = Deno.env.get('FIREBASE_CLIENT_EMAIL')
+const FIREBASE_PRIVATE_KEY = Deno.env.get('FIREBASE_PRIVATE_KEY')
 
 // ============================================================================
 // SUPABASE CLIENT (Service Role)
@@ -87,12 +89,28 @@ async function logToDatabase(
 // ============================================================================
 
 async function getFirebaseAccessToken(): Promise<string> {
-  if (!FIREBASE_SERVICE_ACCOUNT) {
-    throw new Error('FIREBASE_SERVICE_ACCOUNT environment variable is not configured')
+  // Build service account object from separate env vars (avoids JSON parsing issues)
+  let serviceAccount: any
+
+  if (FIREBASE_CLIENT_EMAIL && FIREBASE_PRIVATE_KEY) {
+    // Use separate credentials (preferred method)
+    serviceAccount = {
+      client_email: FIREBASE_CLIENT_EMAIL,
+      private_key: FIREBASE_PRIVATE_KEY,
+    }
+  } else if (FIREBASE_SERVICE_ACCOUNT) {
+    // Fallback: parse JSON
+    try {
+      serviceAccount = JSON.parse(FIREBASE_SERVICE_ACCOUNT)
+    } catch (parseError) {
+      console.error('[send-notification] Error parsing FIREBASE_SERVICE_ACCOUNT JSON:', parseError)
+      throw new Error('Invalid FIREBASE_SERVICE_ACCOUNT JSON. Use FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY instead.')
+    }
+  } else {
+    throw new Error('Firebase credentials not configured. Set FIREBASE_CLIENT_EMAIL and FIREBASE_PRIVATE_KEY')
   }
 
   try {
-    const serviceAccount = JSON.parse(FIREBASE_SERVICE_ACCOUNT)
 
     // Create JWT for OAuth2
     const header = {
