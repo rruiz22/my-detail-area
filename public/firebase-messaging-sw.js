@@ -60,6 +60,7 @@ messaging.onBackgroundMessage((payload) => {
     requireInteraction: false,
     silent: false,
     vibrate: [200, 100, 200],
+    renotify: true, // Allow sound even if notification with same tag exists
   };
 
   console.log('[FCM SW] Showing notification:', notificationTitle);
