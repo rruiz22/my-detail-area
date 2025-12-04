@@ -1405,12 +1405,16 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
           : user.email || 'Someone';
 
         // Send push notifications to followers
+        const notifModule = getNotificationModule(data.order_type || 'sales');
         pushNotificationHelper
           .notifyOrderStatusChange(
             orderId,
             data.order_number,
             orderData.status,
-            userName
+            userName,
+            enhancedUser?.id,           // ✅ Exclude user who made the change
+            notifModule,                 // ✅ Pass module for validation
+            'order_status_changed'       // ✅ Pass event type for validation
           )
           .catch((notifError) => {
             logError('❌ Push notification failed (non-critical):', notifError);

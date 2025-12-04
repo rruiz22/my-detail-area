@@ -47,18 +47,20 @@ import { generateInvoiceExcel } from '@/utils/generateInvoiceExcel';
 import { generateInvoicePDF } from '@/utils/generateInvoicePDF';
 import { format, parseISO } from 'date-fns';
 import { Download, FileSpreadsheet, FileText, Loader2, Mail, Printer, RefreshCw, Trash2, X } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SendInvoiceEmailDialog } from './email/SendInvoiceEmailDialog';
 import { InvoiceComments } from './InvoiceComments';
 import { InvoiceEmailLog } from './InvoiceEmailLog';
 import { ReinvoiceButton } from './ReinvoiceButton';
 import { ReinvoiceHistoryTimeline } from './ReinvoiceHistoryTimeline';
+import { InvoiceTagsManager } from './InvoiceTagsManager';
 
 interface InvoiceDetailsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   invoiceId: string;
+  scrollToEmailHistory?: boolean;
 }
 
 const getStatusBadge = (status: InvoiceStatus) => {
@@ -83,6 +85,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
   open,
   onOpenChange,
   invoiceId,
+  scrollToEmailHistory = false,
 }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -102,6 +105,19 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
   // ✅ Nested modal for viewing re-invoices
   const [nestedInvoiceId, setNestedInvoiceId] = useState<string | null>(null);
   const [showNestedInvoice, setShowNestedInvoice] = useState(false);
+
+  // ✅ Ref for email history section - allows auto-scroll when opened from email indicator
+  const emailHistoryRef = useRef<HTMLDivElement>(null);
+
+  // ✅ Auto-scroll to email history when opened from email sent indicator
+  useEffect(() => {
+    if (open && scrollToEmailHistory && emailHistoryRef.current) {
+      // Wait for dialog animation to complete, then scroll
+      setTimeout(() => {
+        emailHistoryRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    }
+  }, [open, scrollToEmailHistory]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -769,6 +785,12 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                         </span>
                       )}
                     </div>
+                    <div className="mt-2">
+                      <InvoiceTagsManager
+                        invoice={invoice}
+                        dealerId={invoice.dealerId}
+                      />
+                    </div>
                   </div>
                 </div>
               </DialogTitle>
@@ -1194,7 +1216,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
           )}
 
           {/* Email History */}
-          <div className="pt-6 border-t">
+          <div ref={emailHistoryRef} className="pt-6 border-t">
             <InvoiceEmailLog invoiceId={invoiceId} />
           </div>
 

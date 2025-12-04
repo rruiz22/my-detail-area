@@ -323,5 +323,28 @@
   "reset_to_defaults": "Configuração restaurada para padrões",
   "config_imported": "Configuração importada com sucesso",
   "invalid_config_file": "Arquivo de configuração inválido",
-  "cache_cleared": "Cache limpo com sucesso"
+  "cache_cleared": "Cache limpo com sucesso",
+  "integrations": {
+    "title": "Integrações",
+    "description": "Conectar serviços de terceiros e configurar notificações",
+    "select_dealer": "Selecionar Concessionária",
+    "select_dealer_placeholder": "Escolher uma concessionária",
+    "user_not_found": "Usuário não encontrado",
+    "load_error": "Falha ao carregar integração",
+    "push": {
+      "title": "Notificações Push",
+      "description": "Configurar quais eventos acionam notificações push para cada módulo",
+      "admin_only": "Apenas administradores da concessionária podem configurar notificações push",
+      "dealer_hint": "Configurar eventos de notificação push para esta concessionária",
+      "active_devices": "Dispositivos Ativos",
+      "configured": "Configurado",
+      "no_devices": "Sem dispositivos",
+      "devices_info": "Usuários nesta concessionária registraram dispositivos para notificações push",
+      "no_devices_info": "Nenhum usuário habilitou notificações push ainda. Os usuários podem habilitar push em suas configurações de Perfil.",
+      "how_it_works_title": "Como Funcionam as Notificações Push",
+      "step1": "Configurar quais eventos acionam notificações abaixo",
+      "step2": "Os usuários habilitam push em Perfil → Notificações",
+      "step3": "Notificações enviadas automaticamente quando eventos ocorrem"
+    }
+  }
 }

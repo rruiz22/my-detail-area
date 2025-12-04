@@ -5,7 +5,20 @@
       "Bash(git checkout:*)",
       "Bash(npm run build:dev:*)",
       "Bash(npm run test:run:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(supabase migration:*)",
+      "Bash(supabase db push:*)",
+      "mcp__supabase__apply_migration",
+      "Bash(supabase functions deploy:*)",
+      "mcp__supabase__execute_sql",
+      "mcp__supabase__list_edge_functions",
+      "mcp__supabase__get_logs",
+      "Bash(findstr:*)",
+      "Bash(dir:*)",
+      "Bash(supabase functions list:*)",
+      "Bash(timeout:*)",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -File patch-final.ps1)",
+      "Bash(npm run dev:*)"
     ],
     "deny": [],
     "ask": []

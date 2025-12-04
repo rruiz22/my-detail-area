@@ -16,6 +16,9 @@ import {
 } from '@/components/ui/table';
 import { InvoiceCommentsTooltip } from '@/components/ui/invoice-comments-tooltip';
 import { NotesTooltip } from '@/components/ui/notes-tooltip';
+import { EmailSentIndicator } from '@/components/reports/invoices/EmailSentIndicator';
+import { ReinvoiceSentIndicator } from '@/components/reports/invoices/ReinvoiceSentIndicator';
+import { InvoiceTagsDisplay } from '@/components/reports/invoices/InvoiceTagsDisplay';
 import type { InvoiceGroup } from '@/utils/invoiceGrouping';
 import type { Invoice, InvoiceStatus } from '@/types/invoices';
 import { format, parseISO } from 'date-fns';
@@ -40,7 +43,7 @@ interface InvoiceGroupAccordionProps {
   defaultValue: string[];
   onValueChange: (value: string[]) => void;
   onSelectInvoice: (invoice: Invoice) => void;
-  onShowDetails: (invoice: Invoice) => void;
+  onShowDetails: (invoice: Invoice, scrollToEmail?: boolean) => void;
   onShowPayment: (invoice: Invoice) => void;
   onDeleteInvoice: (invoice: Invoice) => void;
 }
@@ -106,7 +109,7 @@ export function InvoiceGroupAccordion({
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'N/A';
-    return format(parseISO(dateString), 'MMM dd, yyyy');
+    return format(parseISO(dateString), 'MMM dd, yy');
   };
 
   return (
@@ -166,6 +169,9 @@ export function InvoiceGroupAccordion({
                     {t('reports.invoices.table.date_range')}
                   </TableHead>
                   <TableHead className="text-center font-bold">
+                    {t('reports.invoices.tags.label')}
+                  </TableHead>
+                  <TableHead className="text-center font-bold">
                     {t('reports.invoices.issue_date')}
                   </TableHead>
                   <TableHead className="text-center font-bold">
@@ -183,7 +189,7 @@ export function InvoiceGroupAccordion({
                   <TableHead className="text-center font-bold">
                     {t('common.status_label')}
                   </TableHead>
-                  <TableHead className="text-center font-bold">
+                  <TableHead className="text-right font-bold">
                     {t('reports.invoices.actions')}
                   </TableHead>
                 </TableRow>
@@ -227,7 +233,7 @@ export function InvoiceGroupAccordion({
                       <TableCell className="text-center">
                         <div className="flex flex-col items-center">
                           <div className="flex items-center gap-2">
-                            <span className="font-mono text-sm font-medium">
+                            <span className="font-mono text-sm font-medium whitespace-nowrap">
                               {invoice.invoiceNumber}
                             </span>
 
@@ -246,24 +252,6 @@ export function InvoiceGroupAccordion({
                               </NotesTooltip>
                             )}
 
-                            {/* Comments Tooltip */}
-                            {invoice.commentsCount > 0 && (
-                              <InvoiceCommentsTooltip
-                                invoiceId={invoice.id}
-                                count={invoice.commentsCount}
-                                onViewAllClick={() => {
-                                  onSelectInvoice(invoice);
-                                  onShowDetails(invoice);
-                                }}
-                              >
-                                <span className="inline-flex items-center gap-0.5 cursor-pointer hover:bg-blue-50 px-1.5 py-0.5 rounded transition-colors">
-                                  <MessageSquare className="w-3.5 h-3.5 text-blue-500" />
-                                  <span className="text-[10px] font-semibold text-blue-600 min-w-[14px] text-center">
-                                    {invoice.commentsCount}
-                                  </span>
-                                </span>
-                              </InvoiceCommentsTooltip>
-                            )}
                           </div>
 
                           {/* Department badges */}
@@ -302,7 +290,7 @@ export function InvoiceGroupAccordion({
                                   <Badge
                                     key={dept}
                                     variant="outline"
-                                    className={`text-xs ${colorClasses}`}
+                                    className={`text-[10px] whitespace-nowrap ${colorClasses}`}
                                   >
                                     {translatedDept}
                                   </Badge>
@@ -314,16 +302,27 @@ export function InvoiceGroupAccordion({
                       </TableCell>
                       <TableCell className="text-center">
                         <div className="flex flex-col items-center">
-                          <span className="text-sm font-medium">{dateRangeText}</span>
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-sm font-medium whitespace-nowrap">{dateRangeText}</span>
+                          <span className="text-xs text-muted-foreground whitespace-nowrap">
                             {vehicleCount} vehicle{vehicleCount !== 1 ? 's' : ''}
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-sm text-center">
+                      <TableCell className="text-center">
+                        {invoice.tags && invoice.tags.length > 0 ? (
+                          <InvoiceTagsDisplay
+                            tags={invoice.tags}
+                            maxVisible={2}
+                            size="xs"
+                          />
+                        ) : (
+                          <span className="text-xs text-muted-foreground">-</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-sm text-center whitespace-nowrap">
                         {formatDate(invoice.issueDate)}
                       </TableCell>
-                      <TableCell className="text-sm text-center">
+                      <TableCell className="text-sm text-center whitespace-nowrap">
                         {formatDate(invoice.dueDate)}
                       </TableCell>
                       <TableCell className="text-center font-medium">
@@ -336,8 +335,39 @@ export function InvoiceGroupAccordion({
                         {formatCurrency(invoice.amountDue)}
                       </TableCell>
                       <TableCell className="text-center">{getStatusBadge(invoice.status)}</TableCell>
-                      <TableCell className="text-center">
-                        <div className="flex gap-1 justify-center">
+                      <TableCell className="text-right">
+                        <div className="flex gap-0 justify-end">
+                          <ReinvoiceSentIndicator
+                            invoice={invoice}
+                            onOpenReinvoiceHistory={() => {
+                              onSelectInvoice(invoice);
+                              onShowDetails(invoice, false);
+                            }}
+                          />
+                          {invoice.commentsCount > 0 && (
+                            <InvoiceCommentsTooltip
+                              invoiceId={invoice.id}
+                              count={invoice.commentsCount}
+                              onViewAllClick={() => {
+                                onSelectInvoice(invoice);
+                                onShowDetails(invoice);
+                              }}
+                            >
+                              <span className="inline-flex items-center justify-center gap-0.5 cursor-pointer hover:bg-blue-50 px-1.5 py-1 rounded transition-colors h-9">
+                                <MessageSquare className="w-3.5 h-3.5 text-blue-500" />
+                                <span className="text-[10px] font-semibold text-blue-600 min-w-[14px] text-center">
+                                  {invoice.commentsCount}
+                                </span>
+                              </span>
+                            </InvoiceCommentsTooltip>
+                          )}
+                          <EmailSentIndicator
+                            invoice={invoice}
+                            onOpenEmailHistory={() => {
+                              onSelectInvoice(invoice);
+                              onShowDetails(invoice, true);
+                            }}
+                          />
                           <Button
                             size="sm"
                             variant="ghost"
@@ -350,18 +380,6 @@ export function InvoiceGroupAccordion({
                             title={t('reports.add_payment')}
                           >
                             <DollarSign className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onSelectInvoice(invoice);
-                              onShowDetails(invoice);
-                            }}
-                            title={t('reports.view_details')}
-                          >
-                            <Eye className="h-4 w-4" />
                           </Button>
                           <Button
                             size="sm"

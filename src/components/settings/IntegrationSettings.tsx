@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { usePermissions } from '@/hooks/usePermissions';
 import { SlackIntegrationCard } from './integrations/SlackIntegrationCard';
+import { PushNotificationIntegrationCard } from './integrations/PushNotificationIntegrationCard';
 import { DealerChannelMatrix } from './notifications/DealerChannelMatrix';
 import {
   Mail,
@@ -472,8 +473,9 @@ export const IntegrationSettings: React.FC = () => {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="slack" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="slack">Slack</TabsTrigger>
+              <TabsTrigger value="push">Push Notifications</TabsTrigger>
               <TabsTrigger value="webhooks">Webhooks</TabsTrigger>
               <TabsTrigger value="api">API Keys</TabsTrigger>
             </TabsList>
@@ -481,6 +483,11 @@ export const IntegrationSettings: React.FC = () => {
             <TabsContent value="slack" className="mt-6">
               {/* NEW: Per-Dealer Slack Integration with Event Selection */}
               <SlackIntegrationCard />
+            </TabsContent>
+
+            <TabsContent value="push" className="mt-6">
+              {/* NEW: Per-Dealer Push Notification Configuration */}
+              <PushNotificationIntegrationCard />
             </TabsContent>
 
             <TabsContent value="webhooks" className="mt-6">

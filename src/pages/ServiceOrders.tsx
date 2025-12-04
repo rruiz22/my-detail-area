@@ -370,7 +370,7 @@ export default function ServiceOrders() {
       in_process: t('sales_orders.in_process_orders'),
       week: t('sales_orders.tabs.week'),
       all: t('sales_orders.tabs.all'),
-      queued: t('sales_orders.tabs.queued'),
+      queue: t('sales_orders.tabs.queue'),
       deleted: t('sales_orders.tabs.deleted')
     };
     return titleMap[filter] || filter;
@@ -479,6 +479,7 @@ export default function ServiceOrders() {
             onWeekChange={setWeekOffset}
             onPrintList={handlePrintList}
             isPrinting={isPrinting}
+            excludeFilters={['dashboard', 'tomorrow']}
           />
         </OrderViewErrorBoundary>
 
@@ -505,7 +506,7 @@ export default function ServiceOrders() {
                 {/* Responsive Table Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-2">
                   <h2 className="text-2xl sm:text-4xl font-bold text-center sm:text-left tracking-tight">
-                    {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'queued' ? t('sales_orders.tabs.queued') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}
+                    {activeFilter === 'week' ? 'Week' : activeFilter === 'today' ? t('sales_orders.tabs.today') : activeFilter === 'queue' ? t('sales_orders.tabs.queue') : activeFilter === 'all' ? t('sales_orders.tabs.all') : activeFilter}
                   </h2>
                   <Badge variant="secondary" className="text-base sm:text-lg font-bold self-center sm:self-auto px-2 sm:px-3 py-1">
                     {orders.length}

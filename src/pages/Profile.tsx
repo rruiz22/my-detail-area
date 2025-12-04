@@ -182,7 +182,7 @@ export default function Profile() {
 
         {/* Profile Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
+          <TabsList className={`grid w-full ${enhancedUser?.is_system_admin ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2 md:grid-cols-3'}`}>
             <TabsTrigger value="personal" className="flex items-center gap-2">
               <User className="h-4 w-4" />
               <span className="hidden sm:inline">{t('profile.personal_info', 'Personal Info')}</span>
@@ -195,14 +195,34 @@ export default function Profile() {
               <Bell className="h-4 w-4" />
               <span className="hidden sm:inline">{t('profile.notifications', 'Notifications')}</span>
             </TabsTrigger>
-            <TabsTrigger value="activity" className="flex items-center gap-2">
-              <Activity className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('profile.activity', 'Activity')}</span>
-            </TabsTrigger>
-            <TabsTrigger value="privacy" className="flex items-center gap-2">
-              <Database className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('profile.privacy', 'Privacy')}</span>
-            </TabsTrigger>
+            {enhancedUser?.is_system_admin && (
+              <TabsTrigger value="activity" className="flex items-center gap-2 relative">
+                <Activity className="h-4 w-4" />
+                <span className="hidden sm:inline">{t('profile.activity', 'Activity')}</span>
+
+                {/* Badge "Hidden" para recordar que está oculta temporalmente */}
+                <Badge
+                  variant="secondary"
+                  className="absolute -top-1 -right-1 text-[10px] px-1 py-0 h-4 bg-amber-500/10 text-amber-700 border-amber-300"
+                >
+                  Hidden
+                </Badge>
+              </TabsTrigger>
+            )}
+            {enhancedUser?.is_system_admin && (
+              <TabsTrigger value="privacy" className="flex items-center gap-2 relative">
+                <Database className="h-4 w-4" />
+                <span className="hidden sm:inline">{t('profile.privacy', 'Privacy')}</span>
+
+                {/* Badge "Hidden" para recordar que está oculta temporalmente */}
+                <Badge
+                  variant="secondary"
+                  className="absolute -top-1 -right-1 text-[10px] px-1 py-0 h-4 bg-amber-500/10 text-amber-700 border-amber-300"
+                >
+                  Hidden
+                </Badge>
+              </TabsTrigger>
+            )}
           </TabsList>
 
 
@@ -218,13 +238,17 @@ export default function Profile() {
             <NotificationsPreferencesTab />
           </TabsContent>
 
-          <TabsContent value="activity">
-            <ActivityAuditTab />
-          </TabsContent>
+          {enhancedUser?.is_system_admin && (
+            <TabsContent value="activity">
+              <ActivityAuditTab />
+            </TabsContent>
+          )}
 
-          <TabsContent value="privacy">
-            <DataPrivacyTab />
-          </TabsContent>
+          {enhancedUser?.is_system_admin && (
+            <TabsContent value="privacy">
+              <DataPrivacyTab />
+            </TabsContent>
+          )}
         </Tabs>
 
         {/* Avatar Selection Modal */}

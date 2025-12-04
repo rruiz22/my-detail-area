@@ -66,6 +66,7 @@ import {
   Plus,
   Printer,
   Receipt,
+  RefreshCw,
   Search,
   StickyNote,
   Trash2,
@@ -80,6 +81,7 @@ import { VehicleInvoiceSearch } from '../invoices/VehicleInvoiceSearch';
 import { InvoiceGroupAccordion } from '../invoices/InvoiceGroupAccordion';
 import { useInvoiceGrouping, useAccordionDefaultValue } from '@/hooks/useInvoiceGrouping';
 import { GroupByOption } from '@/utils/invoiceGrouping';
+import { TagsFilterSelect } from '../invoices/TagsFilterSelect';
 
 interface InvoicesReportProps {
   filters: ReportsFilters;
@@ -190,6 +192,19 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     }
   };
 
+  // Reset all filters to default values
+  const handleResetFilters = () => {
+    const { startDate: start, endDate: end } = calculateDateRange('this_week');
+    setOrderType('all');
+    setOrderStatus('completed');
+    setDateRange('this_week');
+    setStartDate(start);
+    setEndDate(end);
+    setSearchTerm('');
+    setSelectedService('all');
+    setExcludedServices(new Set());
+  };
+
   // Invoice list date range state (independent from global filters)
   const [invoiceDateRange, setInvoiceDateRange] = useState<'all' | 'today' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'custom'>('all');
   const [invoiceStartDate, setInvoiceStartDate] = useState<string>('');
@@ -227,6 +242,23 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       }));
     }
   }, [invoiceStartDate, invoiceEndDate, invoiceDateRange]);
+
+  // Reset invoice list filters to default values
+  const handleResetInvoiceFilters = () => {
+    setInvoiceDateRange('all');
+    setInvoiceStartDate('');
+    setInvoiceEndDate('');
+    setInvoiceFilters({
+      status: 'all',
+      orderType: 'all',
+      startDate: undefined,
+      endDate: undefined,
+      dealerId: dealerId || 'all',
+      searchTerm: '',
+      tags: []
+    });
+    setGroupBy('department');
+  };
 
   // Selected vehicles for new invoice
   const [selectedVehicleIds, setSelectedVehicleIds] = useState<Set<string>>(new Set());
@@ -1383,7 +1415,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
           </h2>
           <p className="text-muted-foreground text-sm">Manage invoices and billing for your dealership</p>
         </div>
-        <Button onClick={() => setShowQuickCreateDialog(true)}>
+        <Button onClick={() => setShowQuickCreateDialog(true)} className="hidden">
           <Plus className="h-4 w-4 mr-2" />
           Quick Invoice
         </Button>
@@ -1534,6 +1566,15 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                       </SelectContent>
                     </Select>
                   </div>
+
+                  <div className="space-y-1.5 w-[150px]">
+                    <Label className="text-xs font-medium">{t('reports.invoices.tags.label')}</Label>
+                    <TagsFilterSelect
+                      dealerId={typeof invoiceFilters.dealerId === 'string' ? parseInt(invoiceFilters.dealerId) : invoiceFilters.dealerId || 0}
+                      selectedTags={invoiceFilters.tags || []}
+                      onSelectedTagsChange={(tags) => setInvoiceFilters(prev => ({ ...prev, tags }))}
+                    />
+                  </div>
                 </div>
 
                 {/* Second Row: Custom Date Inputs (shown when custom is selected) */}
@@ -1559,6 +1600,19 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                     </div>
                   </div>
                 )}
+
+                {/* Reset Filters Button */}
+                <div className="pt-3 border-t flex justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleResetInvoiceFilters}
+                    className="gap-2"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                    Reset Filters
+                  </Button>
+                </div>
               </div>
             </CardHeader>
 
@@ -2010,6 +2064,19 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+
+              {/* Reset Filters Button */}
+              <div className="pt-4 border-t flex justify-end">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleResetFilters}
+                  className="gap-2"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  Reset Filters
+                </Button>
               </div>
             </CardContent>
           </Card>

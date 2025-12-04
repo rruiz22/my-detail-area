@@ -208,12 +208,15 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
           const { pushNotificationHelper } = await import('@/services/pushNotificationHelper');
 
           // Send push notification asynchronously (don't block the status update)
+          // NEW: Now includes module and eventType for 4-level validation
           pushNotificationHelper.notifyOrderStatusChange(
             orderId,
             currentOrder.order_number || orderId,
             newStatus,
             userName,
-            enhancedUser.id  // ✅ Exclude user who made the change
+            enhancedUser.id,  // ✅ Exclude user who made the change
+            module,           // ✅ Pass module for validation
+            'order_status_changed'  // ✅ Pass event type for validation
           ).catch(error => {
             console.error('[PUSH] Failed to send push notification (non-critical):', error);
           });

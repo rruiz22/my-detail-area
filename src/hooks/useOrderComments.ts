@@ -404,7 +404,9 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
                 orderId,
                 orderNumber,
                 userName,
-                text.trim()
+                text.trim(),
+                notifModule,           // ✅ Pass module for validation
+                'comment_added'        // ✅ Pass event type for validation
               );
 
               // Show appropriate message based on result

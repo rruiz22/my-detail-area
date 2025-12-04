@@ -55,7 +55,7 @@ export interface ServiceOrderData {
 interface ServiceTabCounts {
   all: number;
   today: number;
-  queued: number;
+  queue: number;
   week: number;
 }
 
@@ -321,16 +321,16 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
       if (orderDateString === todayString) acc.today++;
       if (isDateInWeek(orderDate, weekOffset)) acc.week++;
 
-      // Queued count: pending + in_progress (NOT completed or cancelled)
-      if (order.status === 'pending' || order.status === 'in_progress') {
-        acc.queued++;
+      // Queue count: NOT (complete OR completed OR cancelled) - matches Recon logic
+      if (order.status !== 'complete' && order.status !== 'completed' && order.status !== 'cancelled') {
+        acc.queue++;
       }
 
       return acc;
     }, {
       all: allOrders.length,
       today: 0,
-      queued: 0,
+      queue: 0,
       week: 0
     });
 
@@ -351,10 +351,10 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
             return orderDate.toDateString() === today.toDateString();
           });
           break;
-        case 'queued':
-          // Filter orders that are NOT completed or cancelled
+        case 'queue':
+          // Filter orders that are NOT completed or cancelled (matches Recon logic)
           filtered = filtered.filter(order =>
-            order.status === 'pending' || order.status === 'in_progress'
+            order.status !== 'complete' && order.status !== 'completed' && order.status !== 'cancelled'
           );
           break;
         case 'week':
@@ -403,7 +403,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
     }
 
     // Sort orders by due date ascending (earliest first) for time-sensitive filters
-    if (activeTab === 'today' || activeTab === 'queued' || activeTab === 'week') {
+    if (activeTab === 'today' || activeTab === 'queue' || activeTab === 'week') {
       filtered = filtered.sort((a, b) => {
         const dateA = new Date(a.dueDate || a.createdAt).getTime();
         const dateB = new Date(b.dueDate || b.createdAt).getTime();

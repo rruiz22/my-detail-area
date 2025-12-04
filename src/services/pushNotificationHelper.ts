@@ -178,29 +178,33 @@ class PushNotificationHelper {
    * This function queries the entity_followers table for active followers
    * and sends notifications to each follower respecting their notification level.
    *
+   * **NEW**: Supports 4-level validation when module and eventType are provided.
+   *
    * @param orderId - Order ID to fetch followers for
    * @param title - Notification title
    * @param body - Notification body text
-   * @param options - Optional configuration (url, data, notificationLevel filter)
+   * @param options - Optional configuration (url, data, notificationLevel filter, module, eventType)
    * @returns Promise with aggregated notification response
    *
    * @example
    * ```typescript
-   * // Notify all followers
+   * // Notify all followers (legacy - no validation)
    * await notifyOrderFollowers(
    *   '123',
    *   'Order Status Changed',
    *   'Order #ABC123 status changed to In Progress'
    * );
    *
-   * // Notify only 'all' level followers with custom URL
+   * // Notify with validation (NEW)
    * await notifyOrderFollowers(
    *   '123',
    *   'New Comment',
    *   'John Doe added a comment',
    *   {
    *     url: '/orders/123?tab=comments',
-   *     notificationLevel: 'all'
+   *     notificationLevel: 'all',
+   *     module: 'sales_orders',
+   *     eventType: 'comment_added'
    *   }
    * );
    * ```
@@ -214,6 +218,8 @@ class PushNotificationHelper {
       data?: Record<string, any>;
       notificationLevel?: 'all' | 'important';
       triggeredBy?: string;
+      module?: string;
+      eventType?: string;
     }
   ): Promise<NotificationResponse> {
     try {
@@ -263,9 +269,39 @@ class PushNotificationHelper {
 
       console.log(`[PushNotificationHelper] Found ${followers.length} follower(s) to notify`);
 
-      // Send notifications to all followers in parallel
+      // If module and eventType are provided, validate each follower
+      let validatedFollowers = followers;
+      if (options?.module && options?.eventType) {
+        console.log('[PushNotificationHelper] Validating followers with 4-level check...');
+
+        // Validate all followers in parallel
+        const validationResults = await Promise.allSettled(
+          followers.map(async (follower) => {
+            const isEnabled = await this.isEnabledForUser(
+              follower.user_id,
+              follower.dealer_id,
+              options.module!,
+              options.eventType!
+            );
+            return { follower, isEnabled };
+          })
+        );
+
+        // Filter to only enabled followers
+        validatedFollowers = validationResults
+          .filter((result): result is PromiseFulfilledResult<{ follower: any; isEnabled: boolean }> =>
+            result.status === 'fulfilled' && result.value.isEnabled
+          )
+          .map(result => result.value.follower);
+
+        console.log(`[PushNotificationHelper] After validation: ${validatedFollowers.length}/${followers.length} follower(s) eligible`);
+      } else {
+        console.log('[PushNotificationHelper] No module/eventType provided - skipping validation (legacy mode)');
+      }
+
+      // Send notifications to validated followers in parallel
       const results = await Promise.allSettled(
-        followers.map((follower) =>
+        validatedFollowers.map((follower) =>
           this.sendNotification({
             userId: follower.user_id,
             dealerId: follower.dealer_id,
@@ -383,19 +419,36 @@ class PushNotificationHelper {
    * Convenience method that formats the notification message and sends to all followers
    * with 'all' notification level.
    *
+   * **NEW**: Supports 4-level validation when module and eventType are provided.
+   *
    * @param orderId - Order ID
    * @param orderNumber - Human-readable order number (e.g., "ABC123")
    * @param newStatus - New order status
    * @param changedBy - Name of user who changed the status
+   * @param triggeredBy - User ID who triggered the change (excluded from notifications)
+   * @param module - Optional module name for validation (e.g., 'sales_orders')
+   * @param eventType - Optional event type for validation (default: 'order_status_changed')
    * @returns Promise with notification response
    *
    * @example
    * ```typescript
+   * // Legacy mode (no validation)
    * await notifyOrderStatusChange(
    *   '123',
    *   'ABC123',
    *   'In Progress',
    *   'John Doe'
+   * );
+   *
+   * // NEW: With validation
+   * await notifyOrderStatusChange(
+   *   '123',
+   *   'ABC123',
+   *   'In Progress',
+   *   'John Doe',
+   *   'user-id-123',
+   *   'sales_orders',
+   *   'order_status_changed'
    * );
    * ```
    */
@@ -404,7 +457,9 @@ class PushNotificationHelper {
     orderNumber: string,
     newStatus: string,
     changedBy: string,
-    triggeredBy?: string
+    triggeredBy?: string,
+    module?: string,
+    eventType: string = 'order_status_changed'
   ): Promise<void> {
     try {
       console.log('[PushNotificationHelper] Notifying order status change:', {
@@ -432,6 +487,8 @@ class PushNotificationHelper {
           },
           notificationLevel: 'all', // Status changes go to all followers
           triggeredBy, // Exclude user who made the change
+          module, // NEW: Pass module for validation
+          eventType, // NEW: Pass eventType for validation
         }
       );
 
@@ -468,7 +525,9 @@ class PushNotificationHelper {
     orderId: string,
     orderNumber: string,
     commenterName: string,
-    commentText: string
+    commentText: string,
+    module?: string,              // NEW: Optional module for validation
+    eventType: string = 'comment_added'  // NEW: Event type with default
   ): Promise<NotificationResponse> {
     try {
       // Validate commentText
@@ -489,6 +548,8 @@ class PushNotificationHelper {
         orderNumber,
         commenterName,
         commentLength: commentText.length,
+        module,        // NEW: Log module
+        eventType,     // NEW: Log eventType
       });
 
       // Truncate comment for notification (keep it short)
@@ -508,6 +569,8 @@ class PushNotificationHelper {
             notificationType: 'new_comment',
           },
           notificationLevel: 'all', // Comments go to all followers
+          module,      // NEW: Pass module for validation
+          eventType,   // NEW: Pass eventType for validation
         }
       );
 
@@ -554,7 +617,9 @@ class PushNotificationHelper {
     orderId: string,
     orderNumber: string,
     uploaderName: string,
-    fileName: string
+    fileName: string,
+    module?: string,              // NEW: Optional module for validation
+    eventType: string = 'file_uploaded'  // NEW: Event type with default
   ): Promise<void> {
     try {
       console.log('[PushNotificationHelper] Notifying new attachment:', {
@@ -562,6 +627,8 @@ class PushNotificationHelper {
         orderNumber,
         uploaderName,
         fileName,
+        module,        // NEW: Log module
+        eventType,     // NEW: Log eventType
       });
 
       await this.notifyOrderFollowers(
@@ -577,6 +644,8 @@ class PushNotificationHelper {
             notificationType: 'new_attachment',
           },
           notificationLevel: 'all', // Attachments go to all followers
+          module,      // NEW: Pass module for validation
+          eventType,   // NEW: Pass eventType for validation
         }
       );
 
@@ -613,7 +682,9 @@ class PushNotificationHelper {
     dealerId: number,
     orderId: string,
     orderNumber: string,
-    assignedBy: string
+    assignedBy: string,
+    module?: string,              // NEW: Optional module for validation
+    eventType: string = 'order_assigned'  // NEW: Event type with default
   ): Promise<void> {
     try {
       console.log('[PushNotificationHelper] Notifying order assignment:', {
@@ -622,7 +693,18 @@ class PushNotificationHelper {
         orderId,
         orderNumber,
         assignedBy,
+        module,        // NEW: Log module
+        eventType,     // NEW: Log eventType
       });
+
+      // NEW: Validate if push enabled for user (if module provided)
+      if (module && eventType) {
+        const isEnabled = await this.isEnabledForUser(userId, dealerId, module, eventType);
+        if (!isEnabled) {
+          console.log(`[PushNotificationHelper] Push disabled for user ${userId} - skipping assignment notification`);
+          return;
+        }
+      }
 
       await this.sendNotification({
         userId,
@@ -642,6 +724,131 @@ class PushNotificationHelper {
     } catch (error) {
       console.error('[PushNotificationHelper] Error notifying assignment:', error);
       // Don't throw - notification failures should not break the main flow
+    }
+  }
+
+  /**
+   * Check if push notifications are enabled for a specific user and event
+   *
+   * Implements 4-level validation cascade:
+   * 1. Dealer enabled event for module (dealer_push_notification_preferences)
+   * 2. User enabled push notifications (user_push_notification_preferences.push_enabled)
+   * 3. User has active FCM token (fcm_tokens.is_active)
+   * 4. Not within user's quiet hours (if enabled)
+   *
+   * @param userId - User ID to check
+   * @param dealerId - Dealer ID to check
+   * @param module - Module name (e.g., 'sales_orders', 'service_orders')
+   * @param eventType - Event type (e.g., 'order_created', 'comment_added')
+   * @returns Promise<boolean> - true if all validation levels pass, false otherwise
+   *
+   * @example
+   * ```typescript
+   * const canSend = await pushNotificationHelper.isEnabledForUser(
+   *   'user-123',
+   *   5,
+   *   'sales_orders',
+   *   'order_status_changed'
+   * );
+   *
+   * if (canSend) {
+   *   await pushNotificationHelper.sendNotification({...});
+   * }
+   * ```
+   */
+  async isEnabledForUser(
+    userId: string,
+    dealerId: number,
+    module: string,
+    eventType: string
+  ): Promise<boolean> {
+    try {
+      console.log('[PushNotificationHelper] Checking if push enabled:', {
+        userId,
+        dealerId,
+        module,
+        eventType,
+      });
+
+      // Call Supabase RPC function for validation
+      const { data, error } = await supabase.rpc('is_push_enabled_for_event', {
+        p_user_id: userId,
+        p_dealer_id: dealerId,
+        p_module: module,
+        p_event_type: eventType,
+      });
+
+      if (error) {
+        console.error('[PushNotificationHelper] Error checking push enabled:', error);
+        // Default to false on error (fail-safe)
+        return false;
+      }
+
+      console.log('[PushNotificationHelper] Push enabled check result:', data);
+      return data === true;
+    } catch (error) {
+      console.error('[PushNotificationHelper] Unexpected error in isEnabledForUser:', error);
+      // Default to false on error (fail-safe)
+      return false;
+    }
+  }
+
+  /**
+   * Get list of registered push notification devices for a user
+   *
+   * Returns active FCM tokens with device metadata (name, browser, OS, last used)
+   *
+   * @param userId - User ID to fetch devices for
+   * @param dealerId - Dealer ID for scope validation
+   * @returns Promise with array of device information
+   *
+   * @example
+   * ```typescript
+   * const devices = await pushNotificationHelper.getUserDevices('user-123', 5);
+   * console.log(`User has ${devices.length} registered device(s)`);
+   * devices.forEach(device => {
+   *   console.log(`- ${device.device_name}: ${device.browser} on ${device.os}`);
+   * });
+   * ```
+   */
+  async getUserDevices(
+    userId: string,
+    dealerId: number
+  ): Promise<
+    Array<{
+      id: string;
+      device_name: string | null;
+      browser: string | null;
+      os: string | null;
+      fcm_token: string;
+      last_used_at: string | null;
+      created_at: string;
+    }>
+  > {
+    try {
+      console.log('[PushNotificationHelper] Fetching user devices:', {
+        userId,
+        dealerId,
+      });
+
+      const { data: devices, error } = await supabase
+        .from('fcm_tokens')
+        .select('id, device_name, browser, os, fcm_token, last_used_at, created_at')
+        .eq('user_id', userId)
+        .eq('dealer_id', dealerId)
+        .eq('is_active', true)
+        .order('last_used_at', { ascending: false, nullsFirst: false });
+
+      if (error) {
+        console.error('[PushNotificationHelper] Error fetching devices:', error);
+        return [];
+      }
+
+      console.log(`[PushNotificationHelper] Found ${devices?.length || 0} active device(s)`);
+      return devices || [];
+    } catch (error) {
+      console.error('[PushNotificationHelper] Unexpected error in getUserDevices:', error);
+      return [];
     }
   }
 

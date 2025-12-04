@@ -117,9 +117,13 @@ export interface Invoice {
   payments?: Payment[];
   childInvoices?: Invoice[];
   reinvoiceHistory?: ReinvoiceHistory[];
+  tags?: InvoiceTag[]; // Tags asociados al invoice
 
   // Comments count (from RPC query)
   commentsCount?: number;
+
+  // Child invoices count (from RPC query)
+  childInvoicesCount?: number;
 }
 
 // =====================================================
@@ -357,6 +361,7 @@ export interface InvoiceFilters {
   endDate?: Date;
   dealerId?: number | 'all';
   searchTerm?: string;
+  tags?: string[]; // Filter by tag names
 }
 
 // =====================================================
@@ -494,4 +499,24 @@ export interface InvoiceComment {
     last_name: string;
     email: string;
   };
+}
+
+// =====================================================
+// INVOICE TAGS
+// =====================================================
+export interface InvoiceTag {
+  id: string;
+  tagName: string;
+  colorIndex: number; // 0-9, índice para array de colores
+  usageCount?: number; // Número de veces que se ha usado el tag
+}
+
+export interface InvoiceTagRow {
+  id: string;
+  dealer_id: number;
+  tag_name: string;
+  color_index: number;
+  usage_count: number;
+  created_at: string;
+  updated_at: string;
 }

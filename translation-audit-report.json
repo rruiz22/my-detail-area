@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 934,
-  "totalStrings": 9798,
-  "hardcodedStrings": 2107,
-  "translatedStrings": 7691,
+  "scannedFiles": 936,
+  "totalStrings": 9815,
+  "hardcodedStrings": 2112,
+  "translatedStrings": 7703,
   "issues": {
     "critical": [
       {
@@ -10478,229 +10478,229 @@
         "hardcodedStrings": [
           {
             "text": ", error);\n\n      // Show specific error message if it",
-            "line": 330,
-            "context": "329: onError: (error) => {\n330: console.error('Create work item mutation error:', error);\n331: "
+            "line": 331,
+            "context": "330: onError: (error) => {\n331: console.error('Create work item mutation error:', error);\n332: "
           },
           {
             "text": ", error);\n      toast({\n        description: t(",
-            "line": 403,
-            "context": "402: onError: (error) => {\n403: console.error('Update work item mutation error:', error);\n404: toast({"
+            "line": 456,
+            "context": "455: onError: (error) => {\n456: console.error('Update work item mutation error:', error);\n457: toast({"
           },
           {
             "text": ", error);\n      toast({\n        description: t(",
-            "line": 469,
-            "context": "468: onError: (error) => {\n469: console.error('Approve work item mutation error:', error);\n470: toast({"
+            "line": 522,
+            "context": "521: onError: (error) => {\n522: console.error('Approve work item mutation error:', error);\n523: toast({"
           },
           {
             "text": ", error);\n      toast({\n        description: t(",
-            "line": 536,
-            "context": "535: onError: (error) => {\n536: console.error('Decline work item mutation error:', error);\n537: toast({"
+            "line": 589,
+            "context": "588: onError: (error) => {\n589: console.error('Decline work item mutation error:', error);\n590: toast({"
           },
           {
             "text": ", error);\n      toast({\n        description: t(",
-            "line": 583,
-            "context": "582: onError: (error) => {\n583: console.error('Start work item mutation error:', error);\n584: toast({"
+            "line": 636,
+            "context": "635: onError: (error) => {\n636: console.error('Start work item mutation error:', error);\n637: toast({"
           },
           {
             "text": ", error);\n      toast({\n        description: t(",
-            "line": 664,
-            "context": "663: onError: (error) => {\n664: console.error('Complete work item mutation error:', error);\n665: toast({"
+            "line": 717,
+            "context": "716: onError: (error) => {\n717: console.error('Complete work item mutation error:', error);\n718: toast({"
           },
           {
             "text": ", error);\n      // ✅ Toast handled by component (ConfirmDialog)\n      // toast({ variant: ",
-            "line": 702,
-            "context": "701: onError: (error) => {\n702: console.error('Delete work item mutation error:', error);\n703: // ✅ Toast handled by component (ConfirmDialog)"
+            "line": 755,
+            "context": "754: onError: (error) => {\n755: console.error('Delete work item mutation error:', error);\n756: // ✅ Toast handled by component (ConfirmDialog)"
           },
           {
             "text": ", error);\n      // ✅ Toast handled by component (VehicleWorkItemsTab)\n      // toast({ variant: ",
-            "line": 744,
-            "context": "743: onError: (error) => {\n744: console.error('Pause work item mutation error:', error);\n745: // ✅ Toast handled by component (VehicleWorkItemsTab)"
+            "line": 797,
+            "context": "796: onError: (error) => {\n797: console.error('Pause work item mutation error:', error);\n798: // ✅ Toast handled by component (VehicleWorkItemsTab)"
           },
           {
             "text": ", error);\n      // ✅ Toast handled by component (VehicleWorkItemsTab)\n      // toast({ variant: ",
-            "line": 786,
-            "context": "785: onError: (error) => {\n786: console.error('Block work item mutation error:', error);\n787: // ✅ Toast handled by component (VehicleWorkItemsTab)"
+            "line": 839,
+            "context": "838: onError: (error) => {\n839: console.error('Block work item mutation error:', error);\n840: // ✅ Toast handled by component (VehicleWorkItemsTab)"
           },
           {
             "text": ", error);\n      toast({\n        description: t(",
-            "line": 831,
-            "context": "830: onError: (error) => {\n831: console.error('Resume work item mutation error:', error);\n832: toast({"
+            "line": 884,
+            "context": "883: onError: (error) => {\n884: console.error('Resume work item mutation error:', error);\n885: toast({"
           },
           {
             "text": ", error);\n      toast({\n        description: t(",
-            "line": 878,
-            "context": "877: onError: (error) => {\n878: console.error('Unblock work item mutation error:', error);\n879: toast({"
+            "line": 931,
+            "context": "930: onError: (error) => {\n931: console.error('Unblock work item mutation error:', error);\n932: toast({"
           },
           {
             "text": ", error);\n      // ✅ Toast handled by component (VehicleWorkItemsTab)\n      // toast({ variant: ",
-            "line": 929,
-            "context": "928: onError: (error) => {\n929: console.error('Cancel work item mutation error:', error);\n930: // ✅ Toast handled by component (VehicleWorkItemsTab)"
+            "line": 982,
+            "context": "981: onError: (error) => {\n982: console.error('Cancel work item mutation error:', error);\n983: // ✅ Toast handled by component (VehicleWorkItemsTab)"
           },
           {
             "text": ", error);\n      toast({\n        description: t(",
-            "line": 984,
-            "context": "983: onError: (error) => {\n984: console.error('Assign vendor mutation error:', error);\n985: toast({"
+            "line": 1037,
+            "context": "1036: onError: (error) => {\n1037: console.error('Assign vendor mutation error:', error);\n1038: toast({"
           }
         ],
         "translationCalls": [
           {
             "key": "get_ready.work_items.error_loading",
-            "line": 169,
+            "line": 170,
             "exists": true
           },
           {
             "key": "get_ready.work_items.duplicate_error",
-            "line": 279,
+            "line": 280,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 325,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.created_successfully",
             "line": 326,
             "exists": true
           },
           {
-            "key": "common.error",
-            "line": 335,
+            "key": "get_ready.work_items.created_successfully",
+            "line": 327,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 341,
+            "line": 336,
             "exists": true
           },
           {
-            "key": "get_ready.work_items.error_creating",
+            "key": "common.error",
             "line": 342,
             "exists": true
           },
           {
+            "key": "get_ready.work_items.error_creating",
+            "line": 343,
+            "exists": true
+          },
+          {
             "key": "get_ready.work_items.updated_successfully",
-            "line": 398,
+            "line": 400,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_updating",
-            "line": 405,
+            "line": 458,
             "exists": true
           },
           {
             "key": "get_ready.work_items.approved_successfully",
-            "line": 464,
+            "line": 517,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_approving",
-            "line": 471,
+            "line": 524,
             "exists": true
           },
           {
             "key": "get_ready.work_items.declined_successfully",
-            "line": 531,
+            "line": 584,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_declining",
-            "line": 538,
+            "line": 591,
             "exists": true
           },
           {
             "key": "get_ready.work_items.started_successfully",
-            "line": 578,
+            "line": 631,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_starting",
-            "line": 585,
+            "line": 638,
             "exists": true
           },
           {
             "key": "get_ready.work_items.completed_successfully",
-            "line": 659,
+            "line": 712,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_completing",
-            "line": 666,
+            "line": 719,
             "exists": true
           },
           {
             "key": "get_ready.work_items.deleted_successfully",
-            "line": 699,
+            "line": 752,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_deleting",
-            "line": 704,
+            "line": 757,
             "exists": true
           },
           {
             "key": "get_ready.work_items.paused_successfully",
-            "line": 741,
+            "line": 794,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_pausing",
-            "line": 746,
+            "line": 799,
             "exists": true
           },
           {
             "key": "get_ready.work_items.blocked_successfully",
-            "line": 783,
+            "line": 836,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_blocking",
-            "line": 788,
+            "line": 841,
             "exists": true
           },
           {
             "key": "get_ready.work_items.resumed_successfully",
-            "line": 826,
+            "line": 879,
             "exists": true
           },
           {
             "key": "get_ready.work_items.error_resuming",
-            "line": 833,
+            "line": 886,
             "exists": true
           },
           {
             "key": "get_ready.work_items.unblocked_successfully",
-            "line": 873,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.error_unblocking",
-            "line": 880,
-            "exists": true
-          },
-          {
-            "key": "get_ready.work_items.cancelled_successfully",
             "line": 926,
             "exists": true
           },
           {
-            "key": "get_ready.work_items.error_cancelling",
-            "line": 931,
+            "key": "get_ready.work_items.error_unblocking",
+            "line": 933,
             "exists": true
           },
           {
-            "key": "get_ready.vendors.vendor_assigned_successfully",
-            "line": 978,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vendors.vendor_unassigned_successfully",
+            "key": "get_ready.work_items.cancelled_successfully",
             "line": 979,
             "exists": true
           },
           {
+            "key": "get_ready.work_items.error_cancelling",
+            "line": 984,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vendors.vendor_assigned_successfully",
+            "line": 1031,
+            "exists": true
+          },
+          {
+            "key": "get_ready.vendors.vendor_unassigned_successfully",
+            "line": 1032,
+            "exists": true
+          },
+          {
             "key": "get_ready.vendors.error_assigning_vendor",
-            "line": 986,
+            "line": 1039,
             "exists": true
           }
         ],
@@ -17393,139 +17393,139 @@
         "hardcodedStrings": [
           {
             "text": "Duplicate Stock Number",
-            "line": 151,
-            "context": "150: if (error.message.includes('Stock number') || error.message.includes('stock_number')) {\n151: title = 'Duplicate Stock Number';\n152: } else if (error.message.includes('VIN') || error.message.includes('vin')) {"
+            "line": 193,
+            "context": "192: if (error.message.includes('Stock number') || error.message.includes('stock_number')) {\n193: title = 'Duplicate Stock Number';\n194: } else if (error.message.includes('VIN') || error.message.includes('vin')) {"
           },
           {
             "text": "Duplicate VIN",
-            "line": 153,
-            "context": "152: } else if (error.message.includes('VIN') || error.message.includes('vin')) {\n153: title = 'Duplicate VIN';\n154: } else if (error.message.includes('Invalid step')) {"
+            "line": 195,
+            "context": "194: } else if (error.message.includes('VIN') || error.message.includes('vin')) {\n195: title = 'Duplicate VIN';\n196: } else if (error.message.includes('Invalid step')) {"
           },
           {
             "text": "Invalid Configuration",
-            "line": 155,
-            "context": "154: } else if (error.message.includes('Invalid step')) {\n155: title = 'Invalid Configuration';\n156: }"
+            "line": 197,
+            "context": "196: } else if (error.message.includes('Invalid step')) {\n197: title = 'Invalid Configuration';\n198: }"
           },
           {
             "text": "Duplicate Stock Number",
-            "line": 236,
-            "context": "235: if (error.message.includes('Stock number') || error.message.includes('stock_number')) {\n236: title = 'Duplicate Stock Number';\n237: } else if (error.message.includes('VIN') || error.message.includes('vin')) {"
+            "line": 278,
+            "context": "277: if (error.message.includes('Stock number') || error.message.includes('stock_number')) {\n278: title = 'Duplicate Stock Number';\n279: } else if (error.message.includes('VIN') || error.message.includes('vin')) {"
           },
           {
             "text": "Duplicate VIN",
-            "line": 238,
-            "context": "237: } else if (error.message.includes('VIN') || error.message.includes('vin')) {\n238: title = 'Duplicate VIN';\n239: } else if (error.message.includes('Invalid step')) {"
+            "line": 280,
+            "context": "279: } else if (error.message.includes('VIN') || error.message.includes('vin')) {\n280: title = 'Duplicate VIN';\n281: } else if (error.message.includes('Invalid step')) {"
           },
           {
             "text": "Invalid Configuration",
-            "line": 240,
-            "context": "239: } else if (error.message.includes('Invalid step')) {\n240: title = 'Invalid Configuration';\n241: }"
+            "line": 282,
+            "context": "281: } else if (error.message.includes('Invalid step')) {\n282: title = 'Invalid Configuration';\n283: }"
           }
         ],
         "translationCalls": [
           {
             "key": "common.success",
-            "line": 141,
-            "exists": true
-          },
-          {
-            "key": "get_ready.vehicle_form.success.created",
             "line": 142,
             "exists": true
           },
           {
+            "key": "get_ready.vehicle_form.success.created",
+            "line": 143,
+            "exists": true
+          },
+          {
             "key": "common.error",
-            "line": 149,
+            "line": 191,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.errors.save_failed",
-            "line": 160,
+            "line": 202,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 226,
+            "line": 268,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.success.updated",
-            "line": 227,
+            "line": 269,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 234,
+            "line": 276,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.errors.save_failed",
-            "line": 245,
+            "line": 287,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.success.deleted",
-            "line": 284,
+            "line": 326,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.errors.delete_failed",
-            "line": 288,
+            "line": 330,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 379,
+            "line": 450,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.success.moved",
-            "line": 380,
+            "line": 451,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 389,
+            "line": 530,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 395,
+            "line": 536,
             "exists": true
           },
           {
             "key": "get_ready.vehicle_form.errors.move_failed",
-            "line": 396,
+            "line": 537,
             "exists": true
           },
           {
             "key": "get_ready.approvals.success.approved",
-            "line": 445,
+            "line": 586,
             "exists": true
           },
           {
             "key": "get_ready.approvals.errors.approve_failed",
-            "line": 449,
+            "line": 590,
             "exists": true
           },
           {
             "key": "get_ready.approvals.success.rejected",
-            "line": 500,
+            "line": 641,
             "exists": true
           },
           {
             "key": "get_ready.approvals.errors.reject_failed",
-            "line": 504,
+            "line": 645,
             "exists": true
           },
           {
             "key": "get_ready.approvals.success.requested",
-            "line": 550,
+            "line": 691,
             "exists": true
           },
           {
             "key": "get_ready.approvals.errors.request_failed",
-            "line": 554,
+            "line": 695,
             "exists": true
           }
         ],
@@ -53229,239 +53229,19 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\settings\\integrations\\slack\\SlackEventSelector.tsx",
+        "file": "src\\components\\settings\\integrations\\slack\\SlackChannelSelector.tsx",
         "hardcodedStrings": [
           {
-            "text": "Promise",
-            "line": 366,
-            "context": "365: onToggleExpand: () => void;\n366: onUpdateEvent: (eventType: string, enabled: boolean) => Promise<void>;\n367: onToggleAll: (module: string, enabled: boolean) => Promise<void>;"
-          },
-          {
-            "text": "Promise",
-            "line": 367,
-            "context": "366: onUpdateEvent: (eventType: string, enabled: boolean) => Promise<void>;\n367: onToggleAll: (module: string, enabled: boolean) => Promise<void>;\n368: isUpdating: boolean;"
+            "text": "Private",
+            "line": 256,
+            "context": "255: {channel.is_private && (\n256: <Badge variant=\"outline\" className=\"text-xs\">Private</Badge>\n257: )}"
           }
         ],
         "translationCalls": [
-          {
-            "key": "integrations.slack_events.modules.${module}",
-            "line": 116,
-            "exists": false
-          },
-          {
-            "key": "integrations.slack_events.errors.load_failed",
-            "line": 140,
-            "exists": false
-          },
-          {
-            "key": "common.error",
-            "line": 143,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack_events.errors.load_failed",
-            "line": 144,
-            "exists": false
-          },
-          {
-            "key": "common.error",
-            "line": 187,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack_events.errors.update_failed",
-            "line": 188,
-            "exists": false
-          },
           {
             "key": "common.success",
-            "line": 233,
+            "line": 107,
             "exists": true
-          },
-          {
-            "key": "integrations.slack_events.messages.batch_update_success",
-            "line": 234,
-            "exists": false
-          },
-          {
-            "key": "common.error",
-            "line": 242,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack_events.errors.batch_update_failed",
-            "line": 243,
-            "exists": false
-          },
-          {
-            "key": "common.action_buttons.retry",
-            "line": 297,
-            "exists": false
-          },
-          {
-            "key": "integrations.slack_events.selector.title",
-            "line": 313,
-            "exists": false
-          },
-          {
-            "key": "integrations.slack_events.selector.description",
-            "line": 316,
-            "exists": false
-          },
-          {
-            "key": "integrations.slack_events.selector.summary",
-            "line": 343,
-            "exists": false
-          },
-          {
-            "key": "integrations.slack_events.selector.events_enabled",
-            "line": 406,
-            "exists": false
-          },
-          {
-            "key": "common.action_buttons.disable_all",
-            "line": 434,
-            "exists": false
-          },
-          {
-            "key": "common.action_buttons.enable_all",
-            "line": 435,
-            "exists": false
-          },
-          {
-            "key": "integrations.slack_events.categories.${category}",
-            "line": 453,
-            "exists": false
-          },
-          {
-            "key": "integrations.slack_events.${event.eventType}.title",
-            "line": 496,
-            "exists": false
-          },
-          {
-            "key": "integrations.slack_events.${event.eventType}.description",
-            "line": 499,
-            "exists": false
-          }
-        ],
-        "missingKeys": [
-          {
-            "key": "integrations.slack_events.modules.${module}",
-            "line": 116,
-            "context": "115: module,\n116: moduleName: t(`integrations.slack_events.modules.${module}`, { defaultValue: module }),\n117: events: [],"
-          },
-          {
-            "key": "integrations.slack_events.errors.load_failed",
-            "line": 140,
-            "context": "139: console.error('Failed to load event preferences:', err);\n140: setError(t('integrations.slack_events.errors.load_failed', { defaultValue: 'Failed to load event preferences' }));\n141: toast({"
-          },
-          {
-            "key": "integrations.slack_events.errors.load_failed",
-            "line": 144,
-            "context": "143: title: t('common.error'),\n144: description: t('integrations.slack_events.errors.load_failed')\n145: });"
-          },
-          {
-            "key": "integrations.slack_events.errors.update_failed",
-            "line": 188,
-            "context": "187: title: t('common.error'),\n188: description: t('integrations.slack_events.errors.update_failed')\n189: });"
-          },
-          {
-            "key": "integrations.slack_events.messages.batch_update_success",
-            "line": 234,
-            "context": "233: title: t('common.success'),\n234: description: t('integrations.slack_events.messages.batch_update_success')\n235: });"
-          },
-          {
-            "key": "integrations.slack_events.errors.batch_update_failed",
-            "line": 243,
-            "context": "242: title: t('common.error'),\n243: description: t('integrations.slack_events.errors.batch_update_failed')\n244: });"
-          },
-          {
-            "key": "common.action_buttons.retry",
-            "line": 297,
-            "context": "296: >\n297: {t('common.action_buttons.retry', { defaultValue: 'Retry' })}\n298: </Button>"
-          },
-          {
-            "key": "integrations.slack_events.selector.title",
-            "line": 313,
-            "context": "312: <CardTitle className=\"text-base font-medium text-gray-900\">\n313: {t('integrations.slack_events.selector.title')}\n314: </CardTitle>"
-          },
-          {
-            "key": "integrations.slack_events.selector.description",
-            "line": 316,
-            "context": "315: <CardDescription className=\"text-sm text-gray-600 mt-1\">\n316: {t('integrations.slack_events.selector.description')}\n317: </CardDescription>"
-          },
-          {
-            "key": "integrations.slack_events.selector.summary",
-            "line": 343,
-            "context": "342: <span className=\"text-sm font-medium text-emerald-900\">\n343: {t('integrations.slack_events.selector.summary', {\n344: enabled: totalEnabled,"
-          },
-          {
-            "key": "integrations.slack_events.selector.events_enabled",
-            "line": 406,
-            "context": "405: <CardDescription className=\"text-sm text-gray-500 mt-0.5\">\n406: {t('integrations.slack_events.selector.events_enabled', {\n407: count: group.enabledCount,"
-          },
-          {
-            "key": "common.action_buttons.disable_all",
-            "line": 434,
-            "context": "433: {allEnabled\n434: ? t('common.action_buttons.disable_all', { defaultValue: 'Disable All' })\n435: : t('common.action_buttons.enable_all', { defaultValue: 'Enable All' })}"
-          },
-          {
-            "key": "common.action_buttons.enable_all",
-            "line": 435,
-            "context": "434: ? t('common.action_buttons.disable_all', { defaultValue: 'Disable All' })\n435: : t('common.action_buttons.enable_all', { defaultValue: 'Enable All' })}\n436: </Button>"
-          },
-          {
-            "key": "integrations.slack_events.categories.${category}",
-            "line": 453,
-            "context": "452: <Badge variant=\"outline\" className=\"text-xs font-medium\">\n453: {t(`integrations.slack_events.categories.${category}`)}\n454: </Badge>"
-          },
-          {
-            "key": "integrations.slack_events.${event.eventType}.title",
-            "line": 496,
-            "context": "495: >\n496: {t(`integrations.slack_events.${event.eventType}.title`)}\n497: </Label>"
-          },
-          {
-            "key": "integrations.slack_events.${event.eventType}.description",
-            "line": 499,
-            "context": "498: <p className=\"text-xs text-gray-500 mt-0.5\">\n499: {t(`integrations.slack_events.${event.eventType}.description`)}\n500: </p>"
-          }
-        ],
-        "coverage": 91,
-        "severity": "low"
-      },
-      {
-        "file": "src\\components\\settings\\integrations\\SlackIntegrationCard.tsx",
-        "hardcodedStrings": [],
-        "translationCalls": [
-          {
-            "key": "integrations.slack.connected_title",
-            "line": 62,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.connected_description",
-            "line": 63,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.error_title",
-            "line": 71,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.error_description",
-            "line": 72,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 100,
-            "exists": true
-          },
-          {
-            "key": "integrations.load_error",
-            "line": 101,
-            "exists": false
           },
           {
             "key": "common.error",
@@ -53469,254 +53249,621 @@
             "exists": true
           },
           {
-            "key": "integrations.user_not_found",
-            "line": 118,
-            "exists": false
-          },
-          {
-            "key": "integrations.slack.connect_error",
-            "line": 174,
-            "exists": true
-          },
-          {
-            "key": "common.unknown_error",
-            "line": 175,
-            "exists": true
-          },
-          {
             "key": "common.success",
-            "line": 198,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.enabled",
-            "line": 200,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.disabled",
-            "line": 201,
+            "line": 155,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 207,
+            "line": 162,
             "exists": true
           },
           {
-            "key": "integrations.update_error",
-            "line": 208,
+            "key": "integrations.slack_channel_selector.title",
+            "line": 180,
             "exists": false
           },
           {
-            "key": "common.success",
-            "line": 235,
+            "key": "integrations.slack_channel_selector.description",
+            "line": 182,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_channel_selector.loading",
+            "line": 196,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_channel_selector.load_channels",
+            "line": 196,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_channel_selector.load_channels_prompt",
+            "line": 205,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.modules.${key}",
+            "line": 217,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_channel_selector.active",
+            "line": 222,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_channel_selector.not_configured",
+            "line": 226,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_channel_selector.select_channel",
+            "line": 248,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "integrations.slack_channel_selector.title",
+            "line": 180,
+            "context": "179: <div>\n180: <CardTitle className=\"text-lg\">{t('integrations.slack_channel_selector.title')}</CardTitle>\n181: <CardDescription className=\"text-sm mt-1\">"
+          },
+          {
+            "key": "integrations.slack_channel_selector.description",
+            "line": 182,
+            "context": "181: <CardDescription className=\"text-sm mt-1\">\n182: {t('integrations.slack_channel_selector.description')}\n183: </CardDescription>"
+          },
+          {
+            "key": "integrations.slack_channel_selector.loading",
+            "line": 196,
+            "context": "195: )}\n196: {isLoadingChannels ? t('integrations.slack_channel_selector.loading') : t('integrations.slack_channel_selector.load_channels')}\n197: </Button>"
+          },
+          {
+            "key": "integrations.slack_channel_selector.load_channels",
+            "line": 196,
+            "context": "195: )}\n196: {isLoadingChannels ? t('integrations.slack_channel_selector.loading') : t('integrations.slack_channel_selector.load_channels')}\n197: </Button>"
+          },
+          {
+            "key": "integrations.slack_channel_selector.load_channels_prompt",
+            "line": 205,
+            "context": "204: <AlertCircle className=\"h-8 w-8 mx-auto mb-2 text-gray-400\" />\n205: <p className=\"text-sm\">{t('integrations.slack_channel_selector.load_channels_prompt')}</p>\n206: </div>"
+          },
+          {
+            "key": "integrations.slack_events.modules.${key}",
+            "line": 217,
+            "context": "216: <span className=\"font-medium text-gray-900\">\n217: {t(`integrations.slack_events.modules.${key}`)}\n218: </span>"
+          },
+          {
+            "key": "integrations.slack_channel_selector.active",
+            "line": 222,
+            "context": "221: <CheckCircle2 className=\"h-3 w-3 mr-1\" />\n222: {t('integrations.slack_channel_selector.active')}\n223: </Badge>"
+          },
+          {
+            "key": "integrations.slack_channel_selector.not_configured",
+            "line": 226,
+            "context": "225: <Badge variant=\"outline\" className=\"text-gray-500\">\n226: {t('integrations.slack_channel_selector.not_configured')}\n227: </Badge>"
+          },
+          {
+            "key": "integrations.slack_channel_selector.select_channel",
+            "line": 248,
+            "context": "247: <SelectTrigger className=\"w-64\">\n248: <SelectValue placeholder={t('integrations.slack_channel_selector.select_channel')} />\n249: </SelectTrigger>"
+          }
+        ],
+        "coverage": 93,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\settings\\integrations\\slack\\SlackEventSelector.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 418,
+            "context": "417: onToggleExpand: () => void;\n418: onUpdateEvent: (module: string, eventType: string, enabled: boolean) => Promise<void>;\n419: onToggleAll: (module: string, enabled: boolean) => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 419,
+            "context": "418: onUpdateEvent: (module: string, eventType: string, enabled: boolean) => Promise<void>;\n419: onToggleAll: (module: string, enabled: boolean) => Promise<void>;\n420: isUpdating: boolean;"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "integrations.slack_events.modules.${module}",
+            "line": 122,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.errors.load_failed",
+            "line": 149,
+            "exists": false
+          },
+          {
+            "key": "common.error",
+            "line": 152,
             "exists": true
           },
           {
-            "key": "integrations.slack.disconnected",
+            "key": "integrations.slack_events.errors.load_failed",
+            "line": 153,
+            "exists": false
+          },
+          {
+            "key": "common.error",
             "line": 236,
             "exists": true
           },
           {
+            "key": "integrations.slack_events.errors.update_failed",
+            "line": 237,
+            "exists": false
+          },
+          {
+            "key": "common.success",
+            "line": 283,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack_events.messages.batch_update_success",
+            "line": 284,
+            "exists": false
+          },
+          {
             "key": "common.error",
-            "line": 242,
+            "line": 292,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack_events.errors.batch_update_failed",
+            "line": 293,
+            "exists": false
+          },
+          {
+            "key": "common.action_buttons.retry",
+            "line": 347,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.selector.title",
+            "line": 363,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.selector.description",
+            "line": 366,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.selector.summary",
+            "line": 394,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.selector.events_enabled",
+            "line": 464,
+            "exists": false
+          },
+          {
+            "key": "common.action_buttons.disable_all",
+            "line": 492,
+            "exists": false
+          },
+          {
+            "key": "common.action_buttons.enable_all",
+            "line": 493,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.categories.${category}",
+            "line": 511,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.${event.eventType}.title",
+            "line": 554,
+            "exists": false
+          },
+          {
+            "key": "integrations.slack_events.${event.eventType}.description",
+            "line": 557,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "integrations.slack_events.modules.${module}",
+            "line": 122,
+            "context": "121: module,\n122: moduleName: t(`integrations.slack_events.modules.${module}`, { defaultValue: module }),\n123: events: [],"
+          },
+          {
+            "key": "integrations.slack_events.errors.load_failed",
+            "line": 149,
+            "context": "148: console.error('Failed to load event preferences:', err);\n149: setError(t('integrations.slack_events.errors.load_failed', { defaultValue: 'Failed to load event preferences' }));\n150: toast({"
+          },
+          {
+            "key": "integrations.slack_events.errors.load_failed",
+            "line": 153,
+            "context": "152: title: t('common.error'),\n153: description: t('integrations.slack_events.errors.load_failed')\n154: });"
+          },
+          {
+            "key": "integrations.slack_events.errors.update_failed",
+            "line": 237,
+            "context": "236: title: t('common.error'),\n237: description: t('integrations.slack_events.errors.update_failed')\n238: });"
+          },
+          {
+            "key": "integrations.slack_events.messages.batch_update_success",
+            "line": 284,
+            "context": "283: title: t('common.success'),\n284: description: t('integrations.slack_events.messages.batch_update_success')\n285: });"
+          },
+          {
+            "key": "integrations.slack_events.errors.batch_update_failed",
+            "line": 293,
+            "context": "292: title: t('common.error'),\n293: description: t('integrations.slack_events.errors.batch_update_failed')\n294: });"
+          },
+          {
+            "key": "common.action_buttons.retry",
+            "line": 347,
+            "context": "346: >\n347: {t('common.action_buttons.retry', { defaultValue: 'Retry' })}\n348: </Button>"
+          },
+          {
+            "key": "integrations.slack_events.selector.title",
+            "line": 363,
+            "context": "362: <CardTitle className=\"text-base font-medium text-gray-900\">\n363: {t('integrations.slack_events.selector.title')}\n364: </CardTitle>"
+          },
+          {
+            "key": "integrations.slack_events.selector.description",
+            "line": 366,
+            "context": "365: <CardDescription className=\"text-sm text-gray-600 mt-1\">\n366: {t('integrations.slack_events.selector.description')}\n367: </CardDescription>"
+          },
+          {
+            "key": "integrations.slack_events.selector.summary",
+            "line": 394,
+            "context": "393: <span className=\"text-sm font-medium text-emerald-900\">\n394: {t('integrations.slack_events.selector.summary', {\n395: enabled: totalEnabled,"
+          },
+          {
+            "key": "integrations.slack_events.selector.events_enabled",
+            "line": 464,
+            "context": "463: <CardDescription className=\"text-sm text-gray-500 mt-0.5\">\n464: {t('integrations.slack_events.selector.events_enabled', {\n465: count: group.enabledCount,"
+          },
+          {
+            "key": "common.action_buttons.disable_all",
+            "line": 492,
+            "context": "491: {allEnabled\n492: ? t('common.action_buttons.disable_all', { defaultValue: 'Disable All' })\n493: : t('common.action_buttons.enable_all', { defaultValue: 'Enable All' })}"
+          },
+          {
+            "key": "common.action_buttons.enable_all",
+            "line": 493,
+            "context": "492: ? t('common.action_buttons.disable_all', { defaultValue: 'Disable All' })\n493: : t('common.action_buttons.enable_all', { defaultValue: 'Enable All' })}\n494: </Button>"
+          },
+          {
+            "key": "integrations.slack_events.categories.${category}",
+            "line": 511,
+            "context": "510: <Badge variant=\"outline\" className=\"text-xs font-medium\">\n511: {t(`integrations.slack_events.categories.${category}`)}\n512: </Badge>"
+          },
+          {
+            "key": "integrations.slack_events.${event.eventType}.title",
+            "line": 554,
+            "context": "553: >\n554: {t(`integrations.slack_events.${event.eventType}.title`)}\n555: </Label>"
+          },
+          {
+            "key": "integrations.slack_events.${event.eventType}.description",
+            "line": 557,
+            "context": "556: <p className=\"text-xs text-gray-500 mt-0.5\">\n557: {t(`integrations.slack_events.${event.eventType}.description`)}\n558: </p>"
+          }
+        ],
+        "coverage": 91,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\settings\\integrations\\SlackIntegrationCard.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Dealership",
+            "line": 342,
+            "context": "341: <Building2 className=\"h-4 w-4 text-gray-500\" />\n342: <Label htmlFor=\"dealer-select\" className=\"text-sm font-medium\">\n343: Dealership"
+          },
+          {
+            "text": "Shared Workspace Integration",
+            "line": 374,
+            "context": "373: <div className=\"flex-1\">\n374: <p className=\"text-sm font-medium text-blue-900\">\n375: Shared Workspace Integration"
+          },
+          {
+            "text": "Select dealership",
+            "line": 351,
+            "context": "350: <SelectTrigger id=\"dealer-select\" className=\"w-[280px]\">\n351: <SelectValue placeholder=\"Select dealership\" />\n352: </SelectTrigger>"
+          },
+          {
+            "text": "Dealership\r\n              ",
+            "line": 342,
+            "context": "341: <Building2 className=\"h-4 w-4 text-gray-500\" />\n342: <Label htmlFor=\"dealer-select\" className=\"text-sm font-medium\">\n343: Dealership"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "integrations.slack.connected_title",
+            "line": 74,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.connected_description",
+            "line": 75,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.error_title",
+            "line": 83,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.error_description",
+            "line": 84,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 110,
+            "exists": true
+          },
+          {
+            "key": "integrations.load_error",
+            "line": 111,
+            "exists": false
+          },
+          {
+            "key": "common.error",
+            "line": 128,
+            "exists": true
+          },
+          {
+            "key": "integrations.user_not_found",
+            "line": 129,
+            "exists": false
+          },
+          {
+            "key": "common.error",
+            "line": 148,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.connect_error",
+            "line": 203,
+            "exists": true
+          },
+          {
+            "key": "common.unknown_error",
+            "line": 204,
+            "exists": true
+          },
+          {
+            "key": "common.success",
+            "line": 227,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.enabled",
+            "line": 229,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.disabled",
+            "line": 230,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 236,
+            "exists": true
+          },
+          {
+            "key": "integrations.update_error",
+            "line": 237,
+            "exists": false
+          },
+          {
+            "key": "common.success",
+            "line": 264,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.disconnected",
+            "line": 265,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 271,
             "exists": true
           },
           {
             "key": "integrations.delete_error",
-            "line": 243,
+            "line": 272,
             "exists": false
           },
           {
             "key": "integrations.status.active",
-            "line": 253,
+            "line": 282,
             "exists": false
           },
           {
             "key": "integrations.status.inactive",
-            "line": 254,
+            "line": 283,
             "exists": false
           },
           {
             "key": "integrations.status.error",
-            "line": 255,
+            "line": 284,
             "exists": false
           },
           {
             "key": "integrations.status.pending",
-            "line": 256,
+            "line": 285,
             "exists": false
           },
           {
             "key": "integrations.status.revoked",
-            "line": 257,
+            "line": 286,
             "exists": false
           },
           {
             "key": "integrations.slack.title",
-            "line": 298,
+            "line": 327,
             "exists": true
           },
           {
             "key": "integrations.slack.description",
-            "line": 301,
+            "line": 330,
             "exists": true
           },
           {
             "key": "integrations.slack.workspace",
-            "line": 316,
+            "line": 388,
             "exists": true
           },
           {
             "key": "integrations.slack.channel",
-            "line": 325,
+            "line": 397,
             "exists": true
           },
           {
             "key": "integrations.slack.bot_id",
-            "line": 334,
+            "line": 406,
             "exists": true
           },
           {
             "key": "integrations.slack.scopes",
-            "line": 346,
+            "line": 418,
             "exists": true
           },
           {
             "key": "integrations.slack.error_occurred",
-            "line": 365,
+            "line": 437,
             "exists": true
           },
           {
             "key": "integrations.slack.enable_integration",
-            "line": 379,
+            "line": 451,
             "exists": true
           },
           {
             "key": "integrations.slack.enable_description",
-            "line": 382,
+            "line": 454,
             "exists": true
           },
           {
             "key": "integrations.slack.disconnect",
-            "line": 400,
+            "line": 472,
             "exists": true
           },
           {
             "key": "integrations.slack.manage",
-            "line": 407,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.not_connected",
-            "line": 426,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.connecting",
-            "line": 436,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.connect",
-            "line": 443,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.benefits_title",
-            "line": 452,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.benefit_1",
-            "line": 457,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.benefit_2",
-            "line": 461,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.benefit_3",
-            "line": 465,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.disconnect_title",
-            "line": 478,
-            "exists": true
-          },
-          {
-            "key": "integrations.slack.disconnect_confirm",
             "line": 479,
             "exists": true
           },
           {
+            "key": "integrations.slack.not_connected",
+            "line": 506,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.connecting",
+            "line": 516,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.connect",
+            "line": 523,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.benefits_title",
+            "line": 532,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.benefit_1",
+            "line": 537,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.benefit_2",
+            "line": 541,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.benefit_3",
+            "line": 545,
+            "exists": true
+          },
+          {
+            "key": "integrations.slack.disconnect_title",
+            "line": 558,
+            "exists": true
+          },
+          {
             "key": "common.action_buttons.disconnect",
-            "line": 480,
+            "line": 560,
             "exists": false
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 481,
+            "line": 561,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "integrations.load_error",
-            "line": 101,
-            "context": "100: title: t('common.error'),\n101: description: t('integrations.load_error'),\n102: });"
+            "line": 111,
+            "context": "110: title: t('common.error'),\n111: description: t('integrations.load_error'),\n112: });"
           },
           {
             "key": "integrations.user_not_found",
-            "line": 118,
-            "context": "117: title: t('common.error'),\n118: description: t('integrations.user_not_found'),\n119: });"
+            "line": 129,
+            "context": "128: title: t('common.error'),\n129: description: t('integrations.user_not_found'),\n130: });"
           },
           {
             "key": "integrations.update_error",
-            "line": 208,
-            "context": "207: title: t('common.error'),\n208: description: t('integrations.update_error'),\n209: });"
+            "line": 237,
+            "context": "236: title: t('common.error'),\n237: description: t('integrations.update_error'),\n238: });"
           },
           {
             "key": "integrations.delete_error",
-            "line": 243,
-            "context": "242: title: t('common.error'),\n243: description: t('integrations.delete_error'),\n244: });"
+            "line": 272,
+            "context": "271: title: t('common.error'),\n272: description: t('integrations.delete_error'),\n273: });"
           },
           {
             "key": "integrations.status.active",
-            "line": 253,
-            "context": "252: const statusConfig = {\n253: active: { icon: CheckCircle2, variant: 'default' as const, label: t('integrations.status.active') },\n254: inactive: { icon: XCircle, variant: 'secondary' as const, label: t('integrations.status.inactive') },"
+            "line": 282,
+            "context": "281: const statusConfig = {\n282: active: { icon: CheckCircle2, variant: 'default' as const, label: t('integrations.status.active') },\n283: inactive: { icon: XCircle, variant: 'secondary' as const, label: t('integrations.status.inactive') },"
           },
           {
             "key": "integrations.status.inactive",
-            "line": 254,
-            "context": "253: active: { icon: CheckCircle2, variant: 'default' as const, label: t('integrations.status.active') },\n254: inactive: { icon: XCircle, variant: 'secondary' as const, label: t('integrations.status.inactive') },\n255: error: { icon: AlertTriangle, variant: 'destructive' as const, label: t('integrations.status.error') },"
+            "line": 283,
+            "context": "282: active: { icon: CheckCircle2, variant: 'default' as const, label: t('integrations.status.active') },\n283: inactive: { icon: XCircle, variant: 'secondary' as const, label: t('integrations.status.inactive') },\n284: error: { icon: AlertTriangle, variant: 'destructive' as const, label: t('integrations.status.error') },"
           },
           {
             "key": "integrations.status.error",
-            "line": 255,
-            "context": "254: inactive: { icon: XCircle, variant: 'secondary' as const, label: t('integrations.status.inactive') },\n255: error: { icon: AlertTriangle, variant: 'destructive' as const, label: t('integrations.status.error') },\n256: pending_auth: { icon: Loader2, variant: 'secondary' as const, label: t('integrations.status.pending') },"
+            "line": 284,
+            "context": "283: inactive: { icon: XCircle, variant: 'secondary' as const, label: t('integrations.status.inactive') },\n284: error: { icon: AlertTriangle, variant: 'destructive' as const, label: t('integrations.status.error') },\n285: pending_auth: { icon: Loader2, variant: 'secondary' as const, label: t('integrations.status.pending') },"
           },
           {
             "key": "integrations.status.pending",
-            "line": 256,
-            "context": "255: error: { icon: AlertTriangle, variant: 'destructive' as const, label: t('integrations.status.error') },\n256: pending_auth: { icon: Loader2, variant: 'secondary' as const, label: t('integrations.status.pending') },\n257: revoked: { icon: XCircle, variant: 'destructive' as const, label: t('integrations.status.revoked') },"
+            "line": 285,
+            "context": "284: error: { icon: AlertTriangle, variant: 'destructive' as const, label: t('integrations.status.error') },\n285: pending_auth: { icon: Loader2, variant: 'secondary' as const, label: t('integrations.status.pending') },\n286: revoked: { icon: XCircle, variant: 'destructive' as const, label: t('integrations.status.revoked') },"
           },
           {
             "key": "integrations.status.revoked",
-            "line": 257,
-            "context": "256: pending_auth: { icon: Loader2, variant: 'secondary' as const, label: t('integrations.status.pending') },\n257: revoked: { icon: XCircle, variant: 'destructive' as const, label: t('integrations.status.revoked') },\n258: };"
+            "line": 286,
+            "context": "285: pending_auth: { icon: Loader2, variant: 'secondary' as const, label: t('integrations.status.pending') },\n286: revoked: { icon: XCircle, variant: 'destructive' as const, label: t('integrations.status.revoked') },\n287: };"
           },
           {
             "key": "common.action_buttons.disconnect",
-            "line": 480,
-            "context": "479: description={t('integrations.slack.disconnect_confirm', { defaultValue: 'Are you sure you want to disconnect your Slack integration? This action cannot be undone.' })}\n480: confirmText={t('common.action_buttons.disconnect', { defaultValue: 'Disconnect' })}\n481: cancelText={t('common.action_buttons.cancel')}"
+            "line": 560,
+            "context": "559: description=\"⚠️ This will disconnect Slack for ALL dealerships. All channel configurations and event preferences will be lost. This action cannot be undone.\"\n560: confirmText={t('common.action_buttons.disconnect', { defaultValue: 'Disconnect' })}\n561: cancelText={t('common.action_buttons.cancel')}"
           }
         ],
-        "coverage": 100,
+        "coverage": 92,
         "severity": "low"
       },
       {
@@ -61127,23 +61274,23 @@
         "hardcodedStrings": [
           {
             "text": "User not authenticated",
-            "line": 40,
-            "context": "39: if (!user) {\n40: return { success: false, error: 'User not authenticated' };\n41: }"
+            "line": 41,
+            "context": "40: if (!user) {\n41: return { success: false, error: 'User not authenticated' };\n42: }"
           },
           {
             "text": ", error);\n      return { success: false, error: error.message };\n    }\n  };\n\n  // Upload multiple files with optional comment linking\n  const uploadFiles = async (\n    files: File[],\n    uploadContext: string = ",
-            "line": 97,
-            "context": "96: } catch (error: unknown) {\n97: console.error('❌ File upload error:', error);\n98: return { success: false, error: error.message };"
+            "line": 160,
+            "context": "159: } catch (error: unknown) {\n160: console.error('❌ File upload error:', error);\n161: return { success: false, error: error.message };"
           },
           {
             "text": ", error);\n      toast({ variant: ",
-            "line": 139,
-            "context": "138: } catch (error: unknown) {\n139: console.error('❌ Bulk upload error:', error);\n140: toast({ variant: 'destructive', description: 'Failed to upload files' });"
+            "line": 202,
+            "context": "201: } catch (error: unknown) {\n202: console.error('❌ Bulk upload error:', error);\n203: toast({ variant: 'destructive', description: 'Failed to upload files' });"
           },
           {
             "text": ", error);\n      toast({ variant: ",
-            "line": 213,
-            "context": "212: } catch (error: unknown) {\n213: console.error('❌ Delete error:', error);\n214: toast({ variant: 'destructive', description: 'Failed to delete attachment' });"
+            "line": 276,
+            "context": "275: } catch (error: unknown) {\n276: console.error('❌ Delete error:', error);\n277: toast({ variant: 'destructive', description: 'Failed to delete attachment' });"
           }
         ],
         "translationCalls": [],
@@ -61605,23 +61752,12 @@
           },
           {
             "key": "notifications.new_message",
-            "line": 212,
+            "line": 214,
             "exists": true
-          },
-          {
-            "key": "common.view",
-            "line": 219,
-            "exists": false
           }
         ],
-        "missingKeys": [
-          {
-            "key": "common.view",
-            "line": 219,
-            "context": "218: ? {\n219: label: t('common.view'),\n220: onClick: () => {"
-          }
-        ],
-        "coverage": 79,
+        "missingKeys": [],
+        "coverage": 77,
         "severity": "low"
       },
       {
@@ -61629,23 +61765,23 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 24,
-            "context": "23: error: string | null;\n24: addFollower: (userId: string, followType?: string, notificationLevel?: string) => Promise<void>;\n25: removeFollower: (userId: string) => Promise<void>;"
-          },
-          {
-            "text": "Promise",
             "line": 25,
-            "context": "24: addFollower: (userId: string, followType?: string, notificationLevel?: string) => Promise<void>;\n25: removeFollower: (userId: string) => Promise<void>;\n26: updateNotificationLevel: (userId: string, level: string) => Promise<void>;"
+            "context": "24: error: string | null;\n25: addFollower: (userId: string, followType?: string, notificationLevel?: string) => Promise<void>;\n26: removeFollower: (userId: string) => Promise<void>;"
           },
           {
             "text": "Promise",
             "line": 26,
-            "context": "25: removeFollower: (userId: string) => Promise<void>;\n26: updateNotificationLevel: (userId: string, level: string) => Promise<void>;\n27: refreshFollowers: () => Promise<void>;"
+            "context": "25: addFollower: (userId: string, followType?: string, notificationLevel?: string) => Promise<void>;\n26: removeFollower: (userId: string) => Promise<void>;\n27: updateNotificationLevel: (userId: string, level: string) => Promise<void>;"
           },
           {
             "text": "Promise",
             "line": 27,
-            "context": "26: updateNotificationLevel: (userId: string, level: string) => Promise<void>;\n27: refreshFollowers: () => Promise<void>;\n28: isUserFollowing: (userId: string) => boolean;"
+            "context": "26: removeFollower: (userId: string) => Promise<void>;\n27: updateNotificationLevel: (userId: string, level: string) => Promise<void>;\n28: refreshFollowers: () => Promise<void>;"
+          },
+          {
+            "text": "Promise",
+            "line": 28,
+            "context": "27: updateNotificationLevel: (userId: string, level: string) => Promise<void>;\n28: refreshFollowers: () => Promise<void>;\n29: isUserFollowing: (userId: string) => boolean;"
           }
         ],
         "translationCalls": [],
@@ -62920,27 +63056,27 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 11,
-            "context": "10: interface UseStatusPermissionsReturn {\n11: canUpdateStatus: (dealerId: string, currentStatus: string, newStatus: string, orderType?: string) => Promise<boolean>;\n12: updateOrderStatus: (orderId: string, newStatus: string, dealerId: string) => Promise<boolean>;"
+            "line": 12,
+            "context": "11: interface UseStatusPermissionsReturn {\n12: canUpdateStatus: (dealerId: string, currentStatus: string, newStatus: string, orderType?: string) => Promise<boolean>;\n13: updateOrderStatus: (orderId: string, newStatus: string, dealerId: string) => Promise<boolean>;"
           },
           {
             "text": "Promise",
-            "line": 12,
-            "context": "11: canUpdateStatus: (dealerId: string, currentStatus: string, newStatus: string, orderType?: string) => Promise<boolean>;\n12: updateOrderStatus: (orderId: string, newStatus: string, dealerId: string) => Promise<boolean>;\n13: loading: boolean;"
+            "line": 13,
+            "context": "12: canUpdateStatus: (dealerId: string, currentStatus: string, newStatus: string, orderType?: string) => Promise<boolean>;\n13: updateOrderStatus: (orderId: string, newStatus: string, dealerId: string) => Promise<boolean>;\n14: loading: boolean;"
           }
         ],
         "translationCalls": [
           {
             "key": "notifications.sms_sent_to_followers",
-            "line": 193,
+            "line": 194,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "notifications.sms_sent_to_followers",
-            "line": 193,
-            "context": "192: toast({\n193: description: t('notifications.sms_sent_to_followers', {\n194: count: smsResult.sent,"
+            "line": 194,
+            "context": "193: toast({\n194: description: t('notifications.sms_sent_to_followers', {\n195: count: smsResult.sent,"
           }
         ],
         "coverage": 33,
@@ -69294,7 +69430,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "440 Component components need translation",
+      "description": "441 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\detail-hub\\InvoiceCenter.BACKUP.tsx",
@@ -69409,6 +69545,7 @@
         "src\\components\\reports\\RecalculateOrderTotals.tsx",
         "src\\components\\scanner\\enhanced\\SmartFocusVinScanner.tsx",
         "src\\components\\scanner\\enhanced\\VinHistory.tsx",
+        "src\\components\\settings\\integrations\\SlackIntegrationCard.tsx",
         "src\\components\\ui\\duplicate-tooltip.tsx",
         "src\\components\\ui\\WeekNavigator.tsx",
         "src\\config\\supabaseOptimized.ts",
@@ -69540,6 +69677,7 @@
         "src\\components\\scanner\\enhanced\\BatchVinProcessor.tsx",
         "src\\components\\scanner\\modern\\ModernVinScanner.tsx",
         "src\\components\\scanner\\VinOrderIntegration.tsx",
+        "src\\components\\settings\\integrations\\slack\\SlackChannelSelector.tsx",
         "src\\components\\settings\\platform\\PlatformGeneralSettings.tsx",
         "src\\components\\StatusBadgeInteractive.tsx",
         "src\\components\\stock\\CarouselFlow.tsx",
@@ -69695,7 +69833,6 @@
         "src\\components\\scanner\\modern\\VinConfidenceIndicator.tsx",
         "src\\components\\scanner\\modern\\VinTargetingGuides.tsx",
         "src\\components\\search\\GlobalSearch.tsx",
-        "src\\components\\settings\\integrations\\SlackIntegrationCard.tsx",
         "src\\components\\settings\\notifications\\PushNotificationSettings.tsx",
         "src\\components\\settings\\NotificationSoundSettings.tsx",
         "src\\components\\settings\\security\\SecurityAuditLogViewer.tsx",
@@ -69737,14 +69874,14 @@
         "src\\utils\\stockCSVHelpers.ts",
         "src\\utils\\translationAudit.ts"
       ],
-      "estimatedEffort": "220 hours"
+      "estimatedEffort": "221 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3038 translation keys are referenced but missing",
+      "description": "3046 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "152 hours"
+      "estimatedEffort": "153 hours"
     }
   ],
   "coverage": 78

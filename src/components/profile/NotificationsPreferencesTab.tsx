@@ -7,6 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useToast } from '@/hooks/use-toast';
 import {
   Bell,
@@ -18,7 +19,12 @@ import {
   Calendar,
   Save,
   Filter,
-  AlertCircle
+  AlertCircle,
+  ChevronDown,
+  Settings,
+  Volume2,
+  Vibrate,
+  Moon
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
@@ -30,6 +36,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useEventBasedNotificationPreferences } from '@/hooks/useEventBasedNotificationPreferences';
 import { Info } from 'lucide-react';
 import { AlertTitle } from '@/components/ui/alert';
+import { useFirebaseMessaging } from '@/hooks/useFirebaseMessaging';
+import { PushNotificationDevices } from '@/components/profile/PushNotificationDevices';
 
 export function NotificationsPreferencesTab() {
   const { t } = useTranslation();
@@ -38,13 +46,28 @@ export function NotificationsPreferencesTab() {
   const { preferences, isLoading: preferencesLoading } = useUserPreferences();
   const { loading, updatePreferences, updateSMSPreferences } = useProfileMutations();
 
+  // Firebase messaging hook for push notifications
+  const { requestPermission, clearToken, loading: fcmLoading } = useFirebaseMessaging();
+  const [isPushToggling, setIsPushToggling] = useState(false);
+
+  // Advanced push notification preferences
+  const [advancedPushSettings, setAdvancedPushSettings] = useState({
+    allow_background: true,
+    allow_sound: true,
+    allow_vibration: true,
+    quiet_hours_enabled: false,
+    quiet_hours_start: '22:00',
+    quiet_hours_end: '08:00'
+  });
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
+
   // Get dealership ID for 3-level validation
   const [dealerId, setDealerId] = useState<number | null>(null);
 
   const [formData, setFormData] = useState({
     notification_email: true,
     notification_sms: false,
-    notification_push: true,
+    notification_push: false, // Changed from true → false to respect user's explicit disable choice
     notification_in_app: true,
     notification_frequency: 'immediate',
     quiet_hours_start: '',
@@ -88,6 +111,35 @@ export function NotificationsPreferencesTab() {
       });
     }
   }, [preferences]);
+
+  // Load push notification preferences from new table
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const loadPushPreferences = async () => {
+      const { data: pushPrefs } = await supabase
+        .from('user_push_notification_preferences')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      // Handle both cases: when row exists and when it doesn't
+      // Default to false if no preferences exist (user hasn't explicitly enabled)
+      const pushEnabled = pushPrefs?.push_enabled ?? false;
+
+      setFormData((prev) => ({ ...prev, notification_push: pushEnabled }));
+      setAdvancedPushSettings({
+        allow_background: pushPrefs?.allow_background ?? true,
+        allow_sound: pushPrefs?.allow_sound ?? true,
+        allow_vibration: pushPrefs?.allow_vibration ?? true,
+        quiet_hours_enabled: pushPrefs?.quiet_hours_enabled ?? false,
+        quiet_hours_start: pushPrefs?.quiet_hours_start || '22:00',
+        quiet_hours_end: pushPrefs?.quiet_hours_end || '08:00'
+      });
+    };
+
+    loadPushPreferences();
+  }, [user?.id]);
 
   // Fetch dealership ID for 3-level validation
   useEffect(() => {
@@ -141,6 +193,100 @@ export function NotificationsPreferencesTab() {
 
     // Use hook method to toggle channel
     toggleEventChannel(eventId, channel, value);
+  };
+
+  /**
+   * Handle push notification toggle with FCM token management
+   */
+  const handlePushToggle = async (enabled: boolean) => {
+    if (!user?.id) return;
+
+    setIsPushToggling(true);
+
+    try {
+      if (enabled) {
+        // Request notification permission and register FCM token
+        await requestPermission();
+      } else {
+        // Deactivate all user's FCM tokens
+        await clearToken();
+      }
+
+      // Update user_push_notification_preferences table
+      const { error } = await supabase
+        .from('user_push_notification_preferences')
+        .upsert(
+          {
+            user_id: user.id,
+            push_enabled: enabled,
+            updated_at: new Date().toISOString(),
+          },
+          {
+            onConflict: 'user_id',
+          }
+        );
+
+      if (error) throw error;
+
+      // Update local state
+      setFormData((prev) => ({ ...prev, notification_push: enabled }));
+
+      toast({
+        title: t('common.success'),
+        description: enabled
+          ? t('notifications.push_enabled', 'Push notifications enabled')
+          : t('notifications.push_disabled', 'Push notifications disabled'),
+      });
+    } catch (error) {
+      console.error('Failed to toggle push notifications:', error);
+      toast({
+        variant: 'destructive',
+        title: t('common.error'),
+        description: t('notifications.push_toggle_error', 'Failed to update push notification settings'),
+      });
+    } finally {
+      setIsPushToggling(false);
+    }
+  };
+
+  /**
+   * Handle advanced push notification settings update
+   */
+  const handleAdvancedPushSettingChange = async (
+    field: keyof typeof advancedPushSettings,
+    value: boolean | string
+  ) => {
+    if (!user?.id) return;
+
+    // Update local state
+    setAdvancedPushSettings((prev) => ({ ...prev, [field]: value }));
+
+    try {
+      // Update database
+      const { error } = await supabase
+        .from('user_push_notification_preferences')
+        .upsert(
+          {
+            user_id: user.id,
+            [field]: value,
+            updated_at: new Date().toISOString(),
+          },
+          {
+            onConflict: 'user_id',
+          }
+        );
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Failed to update advanced push setting:', error);
+      toast({
+        variant: 'destructive',
+        title: t('common.error'),
+        description: 'Failed to update push notification settings',
+      });
+      // Revert local state on error
+      setAdvancedPushSettings((prev) => ({ ...prev, [field]: !value }));
+    }
   };
 
   const handleSave = async () => {
@@ -275,6 +421,11 @@ export function NotificationsPreferencesTab() {
               <div className="flex items-center gap-2">
                 <Smartphone className="h-4 w-4" />
                 <Label className="font-medium">{t('profile.push_notifications')}</Label>
+                {isPushToggling && (
+                  <span className="text-xs text-muted-foreground animate-pulse">
+                    {formData.notification_push ? 'Disabling...' : 'Enabling...'}
+                  </span>
+                )}
               </div>
               <p className="text-sm text-muted-foreground">
                 {t('profile.push_notifications_desc')}
@@ -282,9 +433,148 @@ export function NotificationsPreferencesTab() {
             </div>
             <Switch
               checked={formData.notification_push}
-              onCheckedChange={(checked) => handleSwitchChange('notification_push', checked)}
+              onCheckedChange={handlePushToggle}
+              disabled={isPushToggling || fcmLoading}
             />
           </div>
+
+          {/* Advanced Push Notification Settings - Collapsible */}
+          {formData.notification_push && (
+            <div className="pl-8 mt-4">
+              <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
+                <CollapsibleTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex items-center gap-2 text-sm font-normal text-muted-foreground hover:text-foreground"
+                  >
+                    <Settings className="h-3.5 w-3.5" />
+                    Advanced Settings
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform ${
+                        isAdvancedOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="mt-3 space-y-3 pb-2">
+                  {/* Background notifications */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Moon className="h-3.5 w-3.5 text-muted-foreground" />
+                      <Label className="text-sm font-normal">Background Notifications</Label>
+                    </div>
+                    <Switch
+                      checked={advancedPushSettings.allow_background}
+                      onCheckedChange={(checked) =>
+                        handleAdvancedPushSettingChange('allow_background', checked)
+                      }
+                      className="scale-90"
+                    />
+                  </div>
+
+                  {/* Sound */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Volume2 className="h-3.5 w-3.5 text-muted-foreground" />
+                      <Label className="text-sm font-normal">Notification Sound</Label>
+                    </div>
+                    <Switch
+                      checked={advancedPushSettings.allow_sound}
+                      onCheckedChange={(checked) =>
+                        handleAdvancedPushSettingChange('allow_sound', checked)
+                      }
+                      className="scale-90"
+                    />
+                  </div>
+
+                  {/* Vibration */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Vibrate className="h-3.5 w-3.5 text-muted-foreground" />
+                      <Label className="text-sm font-normal">Vibration</Label>
+                    </div>
+                    <Switch
+                      checked={advancedPushSettings.allow_vibration}
+                      onCheckedChange={(checked) =>
+                        handleAdvancedPushSettingChange('allow_vibration', checked)
+                      }
+                      className="scale-90"
+                    />
+                  </div>
+
+                  <Separator className="my-2" />
+
+                  {/* Quiet Hours */}
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                        <Label className="text-sm font-normal">Quiet Hours</Label>
+                      </div>
+                      <Switch
+                        checked={advancedPushSettings.quiet_hours_enabled}
+                        onCheckedChange={(checked) =>
+                          handleAdvancedPushSettingChange('quiet_hours_enabled', checked)
+                        }
+                        className="scale-90"
+                      />
+                    </div>
+                    {advancedPushSettings.quiet_hours_enabled && (
+                      <div className="grid grid-cols-2 gap-2 mt-2 pl-6">
+                        <div className="space-y-1">
+                          <Label className="text-xs text-muted-foreground">Start</Label>
+                          <Select
+                            value={advancedPushSettings.quiet_hours_start}
+                            onValueChange={(value) =>
+                              handleAdvancedPushSettingChange('quiet_hours_start', value)
+                            }
+                          >
+                            <SelectTrigger className="h-8 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Array.from({ length: 24 }, (_, i) => (
+                                <SelectItem
+                                  key={i}
+                                  value={`${i.toString().padStart(2, '0')}:00`}
+                                >
+                                  {`${i.toString().padStart(2, '0')}:00`}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-xs text-muted-foreground">End</Label>
+                          <Select
+                            value={advancedPushSettings.quiet_hours_end}
+                            onValueChange={(value) =>
+                              handleAdvancedPushSettingChange('quiet_hours_end', value)
+                            }
+                          >
+                            <SelectTrigger className="h-8 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Array.from({ length: 24 }, (_, i) => (
+                                <SelectItem
+                                  key={i}
+                                  value={`${i.toString().padStart(2, '0')}:00`}
+                                >
+                                  {`${i.toString().padStart(2, '0')}:00`}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            </div>
+          )}
 
           <Separator />
 
@@ -305,6 +595,11 @@ export function NotificationsPreferencesTab() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Push Notification Devices - Show only if push is enabled */}
+      {formData.notification_push && (
+        <PushNotificationDevices />
+      )}
 
       {/* 3-Level Architecture Info Alert */}
       <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-950/20">

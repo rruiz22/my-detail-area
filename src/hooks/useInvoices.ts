@@ -110,48 +110,71 @@ export const useInvoices = (filters: InvoiceFilters) => {
         ? (typeof filters.dealerId === 'string' ? parseInt(filters.dealerId) : filters.dealerId)
         : null;
 
-      const { data, error } = await supabase.rpc('get_invoices_with_filters', {
+      const { data, error} = await supabase.rpc('get_invoices_with_filters', {
         p_dealer_id: dealerId,
         p_status: filters.status && filters.status !== 'all' ? filters.status : null,
         p_order_type: filters.orderType && filters.orderType !== 'all' ? filters.orderType : null,
         p_start_date: filters.startDate?.toISOString() || null,
         p_end_date: filters.endDate?.toISOString() || null,
         p_search_term: filters.searchTerm || null,
-        p_exclude_reinvoices: true // ✅ Filter out re-invoices from main list
+        p_exclude_reinvoices: true, // ✅ Filter out re-invoices from main list
+        p_tag_names: filters.tags && filters.tags.length > 0 ? filters.tags : null // ✅ Filter by tags
       });
 
       if (error) throw error;
 
       // Transform RPC results to Invoice type
-      return (data || []).map((row: any) => ({
-        id: row.id,
-        invoiceNumber: row.invoice_number,
-        orderId: row.order_id,
-        dealerId: row.dealer_id,
-        createdBy: row.created_by,
-        issueDate: row.issue_date,
-        dueDate: row.due_date,
-        subtotal: parseFloat(row.subtotal),
-        taxRate: parseFloat(row.tax_rate),
-        taxAmount: parseFloat(row.tax_amount),
-        discountAmount: parseFloat(row.discount_amount || 0),
-        totalAmount: parseFloat(row.total_amount),
-        amountPaid: parseFloat(row.amount_paid || 0),
-        amountDue: parseFloat(row.amount_due),
-        status: row.status,
-        invoiceNotes: row.invoice_notes,
-        termsAndConditions: row.terms_and_conditions,
-        emailSent: row.email_sent,
-        emailSentAt: row.email_sent_at,
-        emailSentCount: row.email_sent_count,
-        lastEmailRecipient: row.last_email_recipient,
-        metadata: row.metadata || {},
-        createdAt: row.created_at,
-        updatedAt: row.updated_at,
-        paidAt: row.paid_at,
-        cancelledAt: row.cancelled_at,
-        commentsCount: parseInt(row.comments_count || '0'),
-        order: row.order_number ? {
+      const invoices = (data || []).map((row: any) => {
+        // Parse tags from JSONB (can be array or need parsing)
+        let tags = [];
+        if (row.tags) {
+          if (Array.isArray(row.tags)) {
+            tags = row.tags;
+          } else if (typeof row.tags === 'string') {
+            try {
+              tags = JSON.parse(row.tags);
+            } catch (e) {
+              console.error('Failed to parse tags:', e);
+              tags = [];
+            }
+          }
+        }
+
+        return {
+          id: row.id,
+          invoiceNumber: row.invoice_number,
+          orderId: row.order_id,
+          dealerId: row.dealer_id,
+          createdBy: row.created_by,
+          issueDate: row.issue_date,
+          dueDate: row.due_date,
+          subtotal: parseFloat(row.subtotal),
+          taxRate: parseFloat(row.tax_rate),
+          taxAmount: parseFloat(row.tax_amount),
+          discountAmount: parseFloat(row.discount_amount || 0),
+          totalAmount: parseFloat(row.total_amount),
+          amountPaid: parseFloat(row.amount_paid || 0),
+          amountDue: parseFloat(row.amount_due),
+          status: row.status,
+          invoiceNotes: row.invoice_notes,
+          termsAndConditions: row.terms_and_conditions,
+          emailSent: row.email_sent,
+          emailSentAt: row.email_sent_at,
+          emailSentCount: row.email_sent_count,
+          lastEmailRecipient: row.last_email_recipient,
+          metadata: row.metadata || {},
+          createdAt: row.created_at,
+          updatedAt: row.updated_at,
+          paidAt: row.paid_at,
+          cancelledAt: row.cancelled_at,
+          parentInvoiceId: row.parent_invoice_id,
+          reinvoiceSequence: row.reinvoice_sequence,
+          isReinvoice: row.is_reinvoice || false,
+          originalInvoiceId: row.original_invoice_id,
+          commentsCount: parseInt(row.comments_count || '0'),
+          childInvoicesCount: parseInt(row.child_invoices_count || '0'),
+          tags: tags,
+          order: row.order_number ? {
           orderNumber: row.order_number || row.custom_order_number,
           orderType: row.order_type,
           customerName: row.customer_name,
@@ -174,7 +197,10 @@ export const useInvoices = (filters: InvoiceFilters) => {
           address: row.dealership_address,
           logo: row.dealership_logo_url
         } : undefined
-      } as Invoice));
+        } as Invoice;
+      });
+
+      return invoices;
     },
     staleTime: 30 * 1000, // 30 seconds
   });

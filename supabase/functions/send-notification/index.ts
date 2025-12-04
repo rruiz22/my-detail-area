@@ -33,6 +33,17 @@ interface FCMToken {
   updated_at: string
 }
 
+// NEW: User push notification preferences
+interface UserPushPreferences {
+  push_enabled: boolean
+  allow_background: boolean
+  allow_sound: boolean
+  allow_vibration: boolean
+  quiet_hours_enabled: boolean
+  quiet_hours_start: string | null
+  quiet_hours_end: string | null
+}
+
 // ============================================================================
 // CORS HEADERS
 // ============================================================================
@@ -251,6 +262,75 @@ function validateRequest(body: any): {
 }
 
 // ============================================================================
+// USER PREFERENCES & QUIET HOURS (NEW)
+// ============================================================================
+
+/**
+ * Fetch user's push notification preferences
+ * Returns null if user has no preferences (uses defaults)
+ */
+async function getUserPreferences(userId: string): Promise<UserPushPreferences | null> {
+  try {
+    const { data, error } = await supabase
+      .from('user_push_notification_preferences')
+      .select('*')
+      .eq('user_id', userId)
+      .single()
+
+    if (error) {
+      // No preferences found - this is OK, use defaults
+      if (error.code === 'PGRST116') {
+        console.log('[send-notification] No preferences found for user, using defaults')
+        return null
+      }
+      console.warn('[send-notification] Error fetching user preferences:', error)
+      return null
+    }
+
+    return data as UserPushPreferences
+  } catch (error) {
+    console.error('[send-notification] Exception fetching preferences:', error)
+    return null // Fail-safe: continue with defaults
+  }
+}
+
+/**
+ * Check if current time is within user's quiet hours
+ * Returns false if not in quiet hours OR if check fails (fail-safe)
+ */
+function isInQuietHours(preferences: UserPushPreferences | null): boolean {
+  try {
+    // No preferences or quiet hours disabled
+    if (!preferences || !preferences.quiet_hours_enabled) {
+      return false
+    }
+
+    // Missing quiet hours configuration
+    if (!preferences.quiet_hours_start || !preferences.quiet_hours_end) {
+      return false
+    }
+
+    const now = new Date()
+    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:00`
+
+    const start = preferences.quiet_hours_start
+    const end = preferences.quiet_hours_end
+
+    // Handle midnight-spanning ranges (e.g., 22:00 - 08:00)
+    if (start <= end) {
+      // Normal range (e.g., 08:00 - 22:00) - NOT in quiet hours
+      return currentTime >= start && currentTime <= end
+    } else {
+      // Midnight-spanning range (e.g., 22:00 - 08:00) - IN quiet hours
+      return currentTime >= start || currentTime <= end
+    }
+  } catch (error) {
+    console.error('[send-notification] Error checking quiet hours:', error)
+    return false // Fail-safe: allow notification if check fails
+  }
+}
+
+// ============================================================================
 // FCM NOTIFICATION SENDING (API v1)
 // ============================================================================
 
@@ -261,7 +341,8 @@ async function sendFCMNotificationV1(
   userId: string,
   dealerId: number,
   url?: string,
-  data?: Record<string, any>
+  data?: Record<string, any>,
+  preferences?: UserPushPreferences | null  // NEW: User preferences for sound/vibration/background
 ): Promise<{ success: boolean; error?: string; logId?: string }> {
   const startTime = Date.now()
   let deliveryLogId: string | undefined
@@ -291,7 +372,12 @@ async function sendFCMNotificationV1(
     // Get OAuth2 access token
     const accessToken = await getFirebaseAccessToken()
 
-    // Prepare FCM v1 payload
+    // Prepare FCM v1 payload with user preferences applied
+    // Default preferences (if none provided)
+    const allowSound = preferences?.allow_sound ?? true
+    const allowVibration = preferences?.allow_vibration ?? true
+    const allowBackground = preferences?.allow_background ?? true
+
     const payload = {
       message: {
         token: token,
@@ -308,6 +394,10 @@ async function sendFCMNotificationV1(
           notification: {
             icon: '/favicon-mda.svg',
             badge: '/favicon-mda.svg',
+            // NEW: Apply user preferences
+            silent: !allowSound,  // Silent notifications if sound disabled
+            requireInteraction: allowBackground,  // Persistent notification if background allowed
+            vibrate: allowVibration ? [200, 100, 200] : [0],  // Vibration pattern or none
           },
           fcm_options: {
             link: url || '/',
@@ -315,6 +405,14 @@ async function sendFCMNotificationV1(
         },
       },
     }
+
+    console.log('[send-notification] Applied user preferences:', {
+      allowSound,
+      allowVibration,
+      allowBackground,
+      silent: !allowSound,
+      requireInteraction: allowBackground,
+    })
 
     console.log('[send-notification] Sending FCM v1 notification to token:', token.substring(0, 20) + '...')
 
@@ -495,10 +593,49 @@ serve(async (req) => {
 
     console.log(`[send-notification] Found ${tokens.length} active token(s)`)
 
-    // Send notifications to all tokens (parallel)
+    // NEW: Fetch user preferences (fail-safe: continues if fails)
+    const userPreferences = await getUserPreferences(userId)
+    console.log('[send-notification] User preferences:', {
+      hasPreferences: !!userPreferences,
+      quietHoursEnabled: userPreferences?.quiet_hours_enabled,
+      allowSound: userPreferences?.allow_sound,
+      allowVibration: userPreferences?.allow_vibration,
+      allowBackground: userPreferences?.allow_background,
+    })
+
+    // NEW: Check quiet hours BEFORE sending (fail-safe: allows if check fails)
+    if (isInQuietHours(userPreferences)) {
+      console.log('[send-notification] User is in quiet hours - blocking notification')
+      await logToDatabase('info', 'Notification blocked by quiet hours', {
+        userId,
+        quietHoursStart: userPreferences?.quiet_hours_start,
+        quietHoursEnd: userPreferences?.quiet_hours_end,
+      })
+      return new Response(
+        JSON.stringify({
+          success: false,
+          sent: 0,
+          failed: 0,
+          tokens: [],
+          message: 'Notification blocked by user quiet hours',
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Send notifications to all tokens (parallel) with user preferences
     const results = await Promise.allSettled(
       tokens.map((tokenRecord: FCMToken) =>
-        sendFCMNotificationV1(tokenRecord.fcm_token, title, messageBody, userId, dealerId, url, data)
+        sendFCMNotificationV1(
+          tokenRecord.fcm_token,
+          title,
+          messageBody,
+          userId,
+          dealerId,
+          url,
+          data,
+          userPreferences  // NEW: Pass preferences to apply sound/vibration/background settings
+        )
       )
     )
 

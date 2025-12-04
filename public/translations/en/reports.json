@@ -146,7 +146,7 @@
     "actions": "Actions",
     "no_invoices": "No invoices found",
     "create_first": "Create your first invoice",
-    "search_placeholder": "Search invoices...",
+    "search_placeholder": "Search by invoice #, order #, stock, PO, RO, tag, customer, vehicle, VIN, services...",
     "all_status": "All Status",
     "all_types": "All Types",
     "total_billed": "Total Billed",
@@ -242,6 +242,19 @@
       "vehicles": "vehicles",
       "vehicle": "vehicle"
     },
+    "email_sent_indicator": "Email sent indicator",
+    "emails_sent_count": "{{count}} email sent",
+    "emails_sent_count_plural": "{{count}} emails sent",
+    "last_sent_at": "Last sent:",
+    "sent_to": "To:",
+    "view_email_history": "View email history",
+    "no_date": "N/A",
+    "reinvoice_indicator": "Reinvoice indicator",
+    "reinvoices_created_count": "{{count}} reinvoice created",
+    "reinvoices_created_count_plural": "{{count}} reinvoices created",
+    "last_created_at": "Last created:",
+    "unpaid_amount": "Unpaid amount:",
+    "view_reinvoice_history": "View reinvoice history",
     "messages": {
       "loading": "Loading invoices...",
       "view_manage": "View and manage all invoices",
@@ -272,6 +285,21 @@
         "filtered": "filtered from {{total}} total",
         "per_page": "per page"
       }
+    },
+    "tags": {
+      "label": "Tags",
+      "add_tag": "Add Tag",
+      "placeholder": "Type to create or select...",
+      "suggested": "Suggested tags",
+      "create_new": "Create new",
+      "remove": "Remove tag",
+      "max_tags_reached": "Maximum 10 tags per invoice",
+      "max_length": "Tag name too long (max 30 characters)",
+      "tags_used": "tags used",
+      "no_tags": "No tags found. Type to create new.",
+      "all_tags": "All tags",
+      "filter_placeholder": "Filter by tags...",
+      "no_suggested": "No suggested tags available"
     }
   },
   "analytics": {

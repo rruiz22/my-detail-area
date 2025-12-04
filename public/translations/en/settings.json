@@ -323,5 +323,28 @@
   "reset_to_defaults": "Configuration reset to defaults",
   "config_imported": "Configuration imported successfully",
   "invalid_config_file": "Invalid configuration file",
-  "cache_cleared": "Cache cleared successfully"
+  "cache_cleared": "Cache cleared successfully",
+  "integrations": {
+    "title": "Integrations",
+    "description": "Connect third-party services and configure notifications",
+    "select_dealer": "Select Dealer",
+    "select_dealer_placeholder": "Choose a dealership",
+    "user_not_found": "User not found",
+    "load_error": "Failed to load integration",
+    "push": {
+      "title": "Push Notifications",
+      "description": "Configure which events trigger push notifications for each module",
+      "admin_only": "Only dealer administrators can configure push notifications",
+      "dealer_hint": "Configure push notification events for this dealership",
+      "active_devices": "Active Devices",
+      "configured": "Configured",
+      "no_devices": "No devices",
+      "devices_info": "Users in this dealership have registered devices for push notifications",
+      "no_devices_info": "No users have enabled push notifications yet. Users can enable push in their Profile settings.",
+      "how_it_works_title": "How Push Notifications Work",
+      "step1": "Configure which events trigger notifications below",
+      "step2": "Users enable push in Profile → Notifications",
+      "step3": "Notifications sent automatically when events occur"
+    }
+  }
 }

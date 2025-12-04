@@ -146,7 +146,8 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
         error: null,
       }));
 
-      toast({ description: t('notifications.enabled') });
+      // Removed toast to avoid annoying notification on every page refresh
+      // toast({ description: t('notifications.enabled') });
     } catch (error) {
       console.error('[FCM] Error requesting permission:', error);
       setState((prev) => ({
@@ -181,7 +182,8 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
         loading: false,
       }));
 
-      toast({ description: t('notifications.disabled') });
+      // Removed toast - already shown by NotificationsPreferencesTab component to avoid duplicate
+      // toast({ description: t('notifications.disabled') });
     } catch (error) {
       console.error('[FCM] Error clearing token:', error);
       setState((prev) => ({ ...prev, loading: false }));
@@ -233,18 +235,37 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
   }, [state.isSupported, user?.id, t]);
 
   /**
-   * Auto-request permission if previously granted
+   * Auto-request permission if previously granted AND user has enabled push notifications
+   * Only auto-register if user explicitly enabled push_enabled in their preferences
    */
   useEffect(() => {
-    if (
-      state.isSupported &&
-      user?.id &&
-      state.permission === 'granted' &&
-      !state.token &&
-      !state.loading
-    ) {
-      requestPermission();
-    }
+    if (!state.isSupported || !user?.id) return;
+
+    const autoRegisterIfEnabled = async () => {
+      // Check if user has push notifications enabled in their preferences
+      const { data: pushPrefs } = await supabase
+        .from('user_push_notification_preferences')
+        .select('push_enabled')
+        .eq('user_id', user.id)
+        .single();
+
+      // Only auto-register if:
+      // 1. Browser permission is granted
+      // 2. User has explicitly enabled push_enabled in DB (or no preferences exist yet)
+      // 3. No active token yet
+      const pushEnabled = pushPrefs?.push_enabled ?? false; // Default to false to respect user choice
+
+      if (
+        state.permission === 'granted' &&
+        pushEnabled === true &&
+        !state.token &&
+        !state.loading
+      ) {
+        requestPermission();
+      }
+    };
+
+    autoRegisterIfEnabled();
   }, [state.isSupported, user?.id, state.permission, state.token, state.loading, requestPermission]);
 
   return {

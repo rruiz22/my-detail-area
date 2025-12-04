@@ -146,7 +146,7 @@
     "actions": "Acciones",
     "no_invoices": "No se encontraron facturas",
     "create_first": "Crear su primera factura",
-    "search_placeholder": "Buscar facturas...",
+    "search_placeholder": "Buscar por factura, orden, stock, PO, RO, tag, cliente, vehículo, VIN, servicios...",
     "all_status": "Todos los Estados",
     "all_types": "Todos los Tipos",
     "total_billed": "Total Facturado",
@@ -242,6 +242,19 @@
       "vehicles": "vehículos",
       "vehicle": "vehículo"
     },
+    "email_sent_indicator": "Indicador de email enviado",
+    "emails_sent_count": "{{count}} email enviado",
+    "emails_sent_count_plural": "{{count}} emails enviados",
+    "last_sent_at": "Último envío:",
+    "sent_to": "Para:",
+    "view_email_history": "Ver historial de emails",
+    "no_date": "N/D",
+    "reinvoice_indicator": "Indicador de refacturación",
+    "reinvoices_created_count": "{{count}} refacturación creada",
+    "reinvoices_created_count_plural": "{{count}} refacturaciones creadas",
+    "last_created_at": "Última creación:",
+    "unpaid_amount": "Monto impago:",
+    "view_reinvoice_history": "Ver historial de refacturación",
     "messages": {
       "loading": "Cargando facturas...",
       "view_manage": "Ver y gestionar todas las facturas",
@@ -272,6 +285,21 @@
         "filtered": "filtradas de {{total}} totales",
         "per_page": "por página"
       }
+    },
+    "tags": {
+      "label": "Etiquetas",
+      "add_tag": "Agregar Etiqueta",
+      "placeholder": "Escribe para crear o seleccionar...",
+      "suggested": "Etiquetas sugeridas",
+      "create_new": "Crear nueva",
+      "remove": "Eliminar etiqueta",
+      "max_tags_reached": "Máximo 10 etiquetas por factura",
+      "max_length": "Nombre de etiqueta demasiado largo (máx 30 caracteres)",
+      "tags_used": "etiquetas usadas",
+      "no_tags": "No se encontraron etiquetas. Escribe para crear una nueva.",
+      "all_tags": "Todas las etiquetas",
+      "filter_placeholder": "Filtrar por etiquetas...",
+      "no_suggested": "No hay etiquetas sugeridas disponibles"
     }
   },
   "analytics": {

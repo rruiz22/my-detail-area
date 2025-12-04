@@ -14,7 +14,7 @@ import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
 import { usePermissions } from '@/hooks/usePermissions';
 import { clearAllCachesSelective } from '@/utils/cacheManagement';
 import { useQueryClient } from '@tanstack/react-query';
-import { Building2, LogOut, RefreshCw, Settings, Shield, User } from 'lucide-react';
+import { Building2, LogOut, RefreshCw, Shield, User } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -41,14 +41,6 @@ export function UserDropdown() {
 
   const handleProfileClick = () => {
     navigate('/profile');
-  };
-
-  const handleSettingsClick = () => {
-    navigate('/management?tab=settings');
-  };
-
-  const handleClearCacheClick = () => {
-    navigate('/clearcache');
   };
 
   const handleQuickClearClick = async () => {
@@ -157,24 +149,13 @@ export function UserDropdown() {
 
         <DropdownMenuSeparator />
 
-        {/* Profile & Settings */}
+        {/* Profile */}
         <DropdownMenuItem onClick={handleProfileClick} className="cursor-pointer">
           <User className="mr-2 h-4 w-4" />
           <span>{t('navigation.profile')}</span>
         </DropdownMenuItem>
 
-        <DropdownMenuItem onClick={handleSettingsClick} className="cursor-pointer">
-          <Settings className="mr-2 h-4 w-4" />
-          <span>{t('navigation.settings')}</span>
-        </DropdownMenuItem>
-
         <DropdownMenuSeparator />
-
-        {/* Cache Management - Full Page */}
-        <DropdownMenuItem onClick={handleClearCacheClick} className="cursor-pointer">
-          <RefreshCw className="mr-2 h-4 w-4" />
-          <span>{t('cache.manage_cache', 'Manage Cache')}</span>
-        </DropdownMenuItem>
 
         {/* Quick Clear - Auto Clear */}
         <DropdownMenuItem onClick={handleQuickClearClick} className="cursor-pointer text-emerald-600 focus:text-emerald-600">

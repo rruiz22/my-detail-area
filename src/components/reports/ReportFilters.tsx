@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import type { ReportsFilters } from '@/hooks/useReportsData';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
-import { format, startOfWeek, endOfWeek, subDays } from 'date-fns';
+import { format, startOfWeek, endOfWeek, subDays, startOfMonth, endOfMonth, subMonths } from 'date-fns';
 import { CalendarIcon, Filter, X } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +18,7 @@ interface ReportFiltersProps {
   onFiltersChange: (filters: ReportsFilters) => void;
 }
 
-type DateRangeType = 'today' | 'this_week' | 'last_week' | 'last_30_days' | 'last_90_days' | 'this_year' | 'custom';
+type DateRangeType = 'today' | 'this_week' | 'last_week' | 'this_month' | 'last_3_months' | 'this_year' | 'custom';
 
 export const ReportFilters: React.FC<ReportFiltersProps> = ({
   filters,
