@@ -30,7 +30,7 @@ const DetailHubDashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [showTimeClock, setShowTimeClock] = useState(false); // Modal state
-  const { isSystemAdmin } = usePermissions();
+  const { enhancedUser } = usePermissions();
 
   // KIOSK SETUP WIZARD STATE
   const [showKioskSetup, setShowKioskSetup] = useState(false);
@@ -155,32 +155,41 @@ const DetailHubDashboard = () => {
 
       {/* Tabs for all Detail Hub functionality */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className={`grid w-full ${isSystemAdmin ? 'grid-cols-7' : 'grid-cols-4'}`}>
+        <TabsList className={`grid w-full ${enhancedUser?.is_system_admin ? 'grid-cols-7' : 'grid-cols-4'}`}>
           <TabsTrigger value="overview">{t('detail_hub.tabs.overview')}</TabsTrigger>
           <TabsTrigger value="employees">{t('detail_hub.tabs.employees')}</TabsTrigger>
           <TabsTrigger value="timecards">{t('detail_hub.tabs.timecards')}</TabsTrigger>
-          {isSystemAdmin && (
-            <TabsTrigger value="analytics">
-              <span className="flex items-center gap-2">
-                {t('detail_hub.tabs.analytics')}
-                <Badge variant="secondary" className="text-xs">hidden</Badge>
-              </span>
+          {enhancedUser?.is_system_admin && (
+            <TabsTrigger value="analytics" className="relative">
+              {t('detail_hub.tabs.analytics')}
+              <Badge
+                variant="secondary"
+                className="absolute -top-1 -right-1 text-[10px] px-1 py-0 h-4 bg-amber-500/10 text-amber-700 border-amber-300"
+              >
+                Hidden
+              </Badge>
             </TabsTrigger>
           )}
-          {isSystemAdmin && (
-            <TabsTrigger value="reports">
-              <span className="flex items-center gap-2">
-                {t('detail_hub.tabs.reports')}
-                <Badge variant="secondary" className="text-xs">hidden</Badge>
-              </span>
+          {enhancedUser?.is_system_admin && (
+            <TabsTrigger value="reports" className="relative">
+              {t('detail_hub.tabs.reports')}
+              <Badge
+                variant="secondary"
+                className="absolute -top-1 -right-1 text-[10px] px-1 py-0 h-4 bg-amber-500/10 text-amber-700 border-amber-300"
+              >
+                Hidden
+              </Badge>
             </TabsTrigger>
           )}
-          {isSystemAdmin && (
-            <TabsTrigger value="invoices">
-              <span className="flex items-center gap-2">
-                {t('detail_hub.tabs.invoices')}
-                <Badge variant="secondary" className="text-xs">hidden</Badge>
-              </span>
+          {enhancedUser?.is_system_admin && (
+            <TabsTrigger value="invoices" className="relative">
+              {t('detail_hub.tabs.invoices')}
+              <Badge
+                variant="secondary"
+                className="absolute -top-1 -right-1 text-[10px] px-1 py-0 h-4 bg-amber-500/10 text-amber-700 border-amber-300"
+              >
+                Hidden
+              </Badge>
             </TabsTrigger>
           )}
           <TabsTrigger value="kiosks">{t('detail_hub.tabs.kiosks')}</TabsTrigger>
@@ -202,21 +211,21 @@ const DetailHubDashboard = () => {
         </TabsContent>
 
         {/* TAB: Analytics - System Admin Only */}
-        {isSystemAdmin && (
+        {enhancedUser?.is_system_admin && (
           <TabsContent value="analytics">
             <DetailHubAnalytics />
           </TabsContent>
         )}
 
         {/* TAB: Reports - System Admin Only */}
-        {isSystemAdmin && (
+        {enhancedUser?.is_system_admin && (
           <TabsContent value="reports">
             <ReportsCenter />
           </TabsContent>
         )}
 
         {/* TAB: Invoices - System Admin Only */}
-        {isSystemAdmin && (
+        {enhancedUser?.is_system_admin && (
           <TabsContent value="invoices">
             <InvoiceCenter />
           </TabsContent>
