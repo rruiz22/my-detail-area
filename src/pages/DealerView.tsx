@@ -147,10 +147,10 @@ const DealerView = () => {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <BarChart3 className="h-5 w-5" />
-                  <span>{t('dealer.view.overview.title')}</span>
+                  <span>{t('dealer.overview.title')}</span>
                 </CardTitle>
                 <CardDescription>
-                  {t('dealer.view.overview.description')}
+                  {t('dealer.overview.description')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -164,20 +164,22 @@ const DealerView = () => {
           </TabsContent>
 
           <TabsContent value="users" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Users className="h-5 w-5" />
-                  <span>{t('dealer.view.users.title')}</span>
-                </CardTitle>
-                <CardDescription>
-                  {t('dealer.view.users.description')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <DealerUsers dealerId={id} />
-              </CardContent>
-            </Card>
+            <PermissionGuard module="users" permission="read">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Users className="h-5 w-5" />
+                    <span>{t('dealer.view.users.title')}</span>
+                  </CardTitle>
+                  <CardDescription>
+                    {t('dealer.view.users.description')}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <DealerUsers dealerId={id} />
+                </CardContent>
+              </Card>
+            </PermissionGuard>
           </TabsContent>
 
           <TabsContent value="invitations" className="space-y-6">

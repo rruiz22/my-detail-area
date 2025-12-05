@@ -7089,73 +7089,73 @@
         "hardcodedStrings": [
           {
             "text": "United States",
-            "line": 413,
-            "context": "412: <SelectContent>\n413: <SelectItem value=\"US\">United States</SelectItem>\n414: <SelectItem value=\"CA\">Canada</SelectItem>"
+            "line": 416,
+            "context": "415: <SelectContent>\n416: <SelectItem value=\"US\">United States</SelectItem>\n417: <SelectItem value=\"CA\">Canada</SelectItem>"
           },
           {
             "text": "Canada",
-            "line": 414,
-            "context": "413: <SelectItem value=\"US\">United States</SelectItem>\n414: <SelectItem value=\"CA\">Canada</SelectItem>\n415: <SelectItem value=\"MX\">Mexico</SelectItem>"
+            "line": 417,
+            "context": "416: <SelectItem value=\"US\">United States</SelectItem>\n417: <SelectItem value=\"CA\">Canada</SelectItem>\n418: <SelectItem value=\"MX\">Mexico</SelectItem>"
           },
           {
             "text": "Mexico",
-            "line": 415,
-            "context": "414: <SelectItem value=\"CA\">Canada</SelectItem>\n415: <SelectItem value=\"MX\">Mexico</SelectItem>\n416: <SelectItem value=\"BR\">Brazil</SelectItem>"
+            "line": 418,
+            "context": "417: <SelectItem value=\"CA\">Canada</SelectItem>\n418: <SelectItem value=\"MX\">Mexico</SelectItem>\n419: <SelectItem value=\"BR\">Brazil</SelectItem>"
           },
           {
             "text": "Brazil",
-            "line": 416,
-            "context": "415: <SelectItem value=\"MX\">Mexico</SelectItem>\n416: <SelectItem value=\"BR\">Brazil</SelectItem>\n417: <SelectItem value=\"ES\">Spain</SelectItem>"
+            "line": 419,
+            "context": "418: <SelectItem value=\"MX\">Mexico</SelectItem>\n419: <SelectItem value=\"BR\">Brazil</SelectItem>\n420: <SelectItem value=\"ES\">Spain</SelectItem>"
           },
           {
             "text": "Spain",
-            "line": 417,
-            "context": "416: <SelectItem value=\"BR\">Brazil</SelectItem>\n417: <SelectItem value=\"ES\">Spain</SelectItem>\n418: </SelectContent>"
+            "line": 420,
+            "context": "419: <SelectItem value=\"BR\">Brazil</SelectItem>\n420: <SelectItem value=\"ES\">Spain</SelectItem>\n421: </SelectContent>"
           },
           {
             "text": "Enter dealership name",
-            "line": 251,
-            "context": "250: onChange={(e) => handleInputChange('name', e.target.value)}\n251: placeholder=\"Enter dealership name\"\n252: required"
+            "line": 254,
+            "context": "253: onChange={(e) => handleInputChange('name', e.target.value)}\n254: placeholder=\"Enter dealership name\"\n255: required"
           },
           {
             "text": "Enter tax number",
-            "line": 262,
-            "context": "261: onChange={(e) => handleInputChange('tax_number', e.target.value)}\n262: placeholder=\"Enter tax number\"\n263: />"
+            "line": 265,
+            "context": "264: onChange={(e) => handleInputChange('tax_number', e.target.value)}\n265: placeholder=\"Enter tax number\"\n266: />"
           },
           {
             "text": "Enter email address",
-            "line": 291,
-            "context": "290: onChange={(e) => handleInputChange('email', e.target.value)}\n291: placeholder=\"Enter email address\"\n292: type=\"email\""
+            "line": 294,
+            "context": "293: onChange={(e) => handleInputChange('email', e.target.value)}\n294: placeholder=\"Enter email address\"\n295: type=\"email\""
           },
           {
             "text": "Enter phone number",
-            "line": 303,
-            "context": "302: onChange={(e) => handleInputChange('phone', e.target.value)}\n303: placeholder=\"Enter phone number\"\n304: />"
+            "line": 306,
+            "context": "305: onChange={(e) => handleInputChange('phone', e.target.value)}\n306: placeholder=\"Enter phone number\"\n307: />"
           },
           {
             "text": "Enter street address",
-            "line": 369,
-            "context": "368: onChange={(e) => handleInputChange('address', e.target.value)}\n369: placeholder=\"Enter street address\"\n370: />"
+            "line": 372,
+            "context": "371: onChange={(e) => handleInputChange('address', e.target.value)}\n372: placeholder=\"Enter street address\"\n373: />"
           },
           {
             "text": "Enter city",
-            "line": 380,
-            "context": "379: onChange={(e) => handleInputChange('city', e.target.value)}\n380: placeholder=\"Enter city\"\n381: />"
+            "line": 383,
+            "context": "382: onChange={(e) => handleInputChange('city', e.target.value)}\n383: placeholder=\"Enter city\"\n384: />"
           },
           {
             "text": "Enter state",
-            "line": 390,
-            "context": "389: onChange={(e) => handleInputChange('state', e.target.value)}\n390: placeholder=\"Enter state\"\n391: />"
+            "line": 393,
+            "context": "392: onChange={(e) => handleInputChange('state', e.target.value)}\n393: placeholder=\"Enter state\"\n394: />"
           },
           {
             "text": "Enter ZIP code",
-            "line": 402,
-            "context": "401: onChange={(e) => handleInputChange('zip_code', e.target.value)}\n402: placeholder=\"Enter ZIP code\"\n403: />"
+            "line": 405,
+            "context": "404: onChange={(e) => handleInputChange('zip_code', e.target.value)}\n405: placeholder=\"Enter ZIP code\"\n406: />"
           },
           {
             "text": "Enter internal notes or comments",
-            "line": 481,
-            "context": "480: onChange={(e) => handleInputChange('notes', e.target.value)}\n481: placeholder=\"Enter internal notes or comments\"\n482: className=\"min-h-[100px]\""
+            "line": 484,
+            "context": "483: onChange={(e) => handleInputChange('notes', e.target.value)}\n484: placeholder=\"Enter internal notes or comments\"\n485: className=\"min-h-[100px]\""
           }
         ],
         "translationCalls": [
@@ -7186,202 +7186,202 @@
           },
           {
             "key": "dealerships.duplicate_tax_number_title",
-            "line": 186,
+            "line": 189,
             "exists": false
           },
           {
             "key": "dealerships.duplicate_tax_number_error",
-            "line": 187,
+            "line": 190,
             "exists": false
           },
           {
             "key": "dealerships.duplicate_email_title",
-            "line": 192,
+            "line": 195,
             "exists": false
           },
           {
             "key": "dealerships.duplicate_email_error",
-            "line": 193,
+            "line": 196,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 198,
+            "line": 201,
             "exists": true
           },
           {
             "key": "dealerships.duplicate_field_error",
-            "line": 199,
+            "line": 202,
             "exists": false
           },
           {
             "key": "messages.error",
-            "line": 203,
+            "line": 206,
             "exists": true
           },
           {
             "key": "dealerships.edit",
-            "line": 232,
+            "line": 235,
             "exists": true
           },
           {
             "key": "dealerships.add_new",
-            "line": 232,
+            "line": 235,
             "exists": true
           },
           {
             "key": "dealerships.business_info",
-            "line": 243,
-            "exists": true
-          },
-          {
-            "key": "dealerships.name",
             "line": 246,
             "exists": true
           },
           {
+            "key": "dealerships.name",
+            "line": 249,
+            "exists": true
+          },
+          {
             "key": "dealerships.tax_number",
-            "line": 257,
+            "line": 260,
             "exists": true
           },
           {
             "key": "dealerships.website",
-            "line": 267,
+            "line": 270,
             "exists": true
           },
           {
             "key": "dealerships.contact_info",
-            "line": 283,
-            "exists": true
-          },
-          {
-            "key": "dealerships.email",
             "line": 286,
             "exists": true
           },
           {
+            "key": "dealerships.email",
+            "line": 289,
+            "exists": true
+          },
+          {
             "key": "dealerships.phone",
-            "line": 298,
+            "line": 301,
             "exists": true
           },
           {
             "key": "dealerships.subscription_settings",
-            "line": 313,
-            "exists": true
-          },
-          {
-            "key": "dealerships.subscription_plan",
             "line": 316,
             "exists": true
           },
           {
+            "key": "dealerships.subscription_plan",
+            "line": 319,
+            "exists": true
+          },
+          {
             "key": "dealerships.basic_plan",
-            "line": 322,
+            "line": 325,
             "exists": true
           },
           {
             "key": "dealerships.premium_plan",
-            "line": 323,
+            "line": 326,
             "exists": true
           },
           {
             "key": "dealerships.enterprise_plan",
-            "line": 324,
+            "line": 327,
             "exists": true
           },
           {
             "key": "dealerships.max_users",
-            "line": 330,
+            "line": 333,
             "exists": true
           },
           {
             "key": "dealerships.status",
-            "line": 341,
+            "line": 344,
             "exists": true
           },
           {
             "key": "dealerships.active",
-            "line": 347,
+            "line": 350,
             "exists": true
           },
           {
             "key": "dealerships.inactive",
-            "line": 348,
+            "line": 351,
             "exists": true
           },
           {
             "key": "dealerships.suspended",
-            "line": 349,
+            "line": 352,
             "exists": true
           },
           {
             "key": "dealerships.address_info",
-            "line": 361,
-            "exists": true
-          },
-          {
-            "key": "dealerships.address",
             "line": 364,
             "exists": true
           },
           {
+            "key": "dealerships.address",
+            "line": 367,
+            "exists": true
+          },
+          {
             "key": "dealerships.city",
-            "line": 375,
+            "line": 378,
             "exists": true
           },
           {
             "key": "dealerships.state",
-            "line": 385,
+            "line": 388,
             "exists": true
           },
           {
             "key": "dealerships.zip",
-            "line": 397,
+            "line": 400,
             "exists": true
           },
           {
             "key": "dealerships.country",
-            "line": 407,
+            "line": 410,
             "exists": true
           },
           {
             "key": "dealerships.branding",
-            "line": 429,
+            "line": 432,
             "exists": true
           },
           {
             "key": "dealerships.logo",
-            "line": 433,
+            "line": 436,
             "exists": true
           },
           {
             "key": "dealerships.logo_upload_after_creation",
-            "line": 443,
+            "line": 446,
             "exists": true
           },
           {
             "key": "dealerships.primary_color",
-            "line": 452,
+            "line": 455,
             "exists": true
           },
           {
             "key": "dealerships.notes",
-            "line": 476,
+            "line": 479,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 490,
+            "line": 493,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 493,
+            "line": 496,
             "exists": true
           },
           {
             "key": "common.save",
-            "line": 493,
+            "line": 496,
             "exists": true
           }
         ],
@@ -7413,28 +7413,28 @@
           },
           {
             "key": "dealerships.duplicate_tax_number_title",
-            "line": 186,
-            "context": "185: variant: 'destructive',\n186: title: t('dealerships.duplicate_tax_number_title'),\n187: description: t('dealerships.duplicate_tax_number_error')"
+            "line": 189,
+            "context": "188: variant: 'destructive',\n189: title: t('dealerships.duplicate_tax_number_title'),\n190: description: t('dealerships.duplicate_tax_number_error')"
           },
           {
             "key": "dealerships.duplicate_tax_number_error",
-            "line": 187,
-            "context": "186: title: t('dealerships.duplicate_tax_number_title'),\n187: description: t('dealerships.duplicate_tax_number_error')\n188: });"
+            "line": 190,
+            "context": "189: title: t('dealerships.duplicate_tax_number_title'),\n190: description: t('dealerships.duplicate_tax_number_error')\n191: });"
           },
           {
             "key": "dealerships.duplicate_email_title",
-            "line": 192,
-            "context": "191: variant: 'destructive',\n192: title: t('dealerships.duplicate_email_title'),\n193: description: t('dealerships.duplicate_email_error')"
+            "line": 195,
+            "context": "194: variant: 'destructive',\n195: title: t('dealerships.duplicate_email_title'),\n196: description: t('dealerships.duplicate_email_error')"
           },
           {
             "key": "dealerships.duplicate_email_error",
-            "line": 193,
-            "context": "192: title: t('dealerships.duplicate_email_title'),\n193: description: t('dealerships.duplicate_email_error')\n194: });"
+            "line": 196,
+            "context": "195: title: t('dealerships.duplicate_email_title'),\n196: description: t('dealerships.duplicate_email_error')\n197: });"
           },
           {
             "key": "dealerships.duplicate_field_error",
-            "line": 199,
-            "context": "198: title: t('common.error'),\n199: description: t('dealerships.duplicate_field_error')\n200: });"
+            "line": 202,
+            "context": "201: title: t('common.error'),\n202: description: t('dealerships.duplicate_field_error')\n203: });"
           }
         ],
         "coverage": 76,
@@ -28636,12 +28636,12 @@
           },
           {
             "key": "dealerships.dealership",
-            "line": 67,
+            "line": 71,
             "exists": true
           },
           {
             "key": "dealerships.all_dealerships",
-            "line": 74,
+            "line": 78,
             "exists": true
           }
         ],

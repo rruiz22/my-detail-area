@@ -390,37 +390,6 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
   return (
     <PermissionGuard module="users" permission="edit">
       <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight">
-              {dealerId ? t('invitations.dealer_invitations') : t('invitations.all_invitations')}
-            </h2>
-            <p className="text-muted-foreground">
-              {dealerId
-                ? t('invitations.manage_dealer_invitations_desc')
-                : t('invitations.manage_invitations_desc')}
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setIsTemplateModalOpen(true)}
-              className="flex items-center gap-2"
-            >
-              <Mail className="h-4 w-4" />
-              Templates
-            </Button>
-            <Button
-              onClick={() => setIsInviteModalOpen(true)}
-              className="flex items-center gap-2"
-            >
-              <Send className="h-4 w-4" />
-              Send Invitation
-            </Button>
-          </div>
-        </div>
-
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>

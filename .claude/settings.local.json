@@ -22,7 +22,9 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(find:*)",
-      "Bash(supabase db execute:*)"
+      "Bash(supabase db execute:*)",
+      "mcp__supabase__list_migrations",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

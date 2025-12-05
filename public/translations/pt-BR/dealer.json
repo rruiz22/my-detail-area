@@ -98,6 +98,7 @@
     "completed_orders": "Pedidos Concluídos",
     "cancelled_orders": "Pedidos Cancelados",
     "orders_by_module": "Pedidos por Módulo",
+    "orders_by_module_desc": "Distribuição de pedidos por módulos do sistema",
     "top_services": "Principais Serviços",
     "top_services_desc": "Serviços mais solicitados",
     "sales": "Vendas",

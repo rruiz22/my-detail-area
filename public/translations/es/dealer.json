@@ -124,6 +124,7 @@
     "completed_orders": "Órdenes Completadas",
     "cancelled_orders": "Órdenes Canceladas",
     "orders_by_module": "Órdenes por Módulo",
+    "orders_by_module_desc": "Distribución de órdenes por módulos del sistema",
     "top_services": "Servicios Principales",
     "top_services_desc": "Servicios más solicitados",
     "sales": "Ventas",

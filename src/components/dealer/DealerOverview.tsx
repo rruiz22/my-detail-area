@@ -82,18 +82,28 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
 
   const fetchOrdersByType = useCallback(async () => {
     try {
-      const { data, error } = await supabase
-        .from('orders')
-        .select('order_type')
-        .eq('dealer_id', parseInt(dealerId));
+      // Fetch counts for each order type separately to avoid 1000 row limit
+      const orderTypes = ['sales', 'service', 'recon', 'carwash'] as const;
+      const counts: OrdersByType = { sales: 0, service: 0, recon: 0, carwash: 0 };
 
-      if (error) throw error;
+      await Promise.all(
+        orderTypes.map(async (type) => {
+          const { count, error } = await supabase
+            .from('orders')
+            .select('*', { count: 'exact', head: true })
+            .eq('dealer_id', parseInt(dealerId))
+            .eq('order_type', type);
 
-      const counts = data.reduce((acc: OrdersByType, order) => {
-        acc[order.order_type as keyof OrdersByType] = (acc[order.order_type as keyof OrdersByType] || 0) + 1;
-        return acc;
-      }, { sales: 0, service: 0, recon: 0, carwash: 0 });
+          if (error) {
+            console.error(`Error fetching ${type} orders:`, error);
+            return;
+          }
 
+          counts[type] = count || 0;
+        })
+      );
+
+      console.log(`Orders by type for dealer ${dealerId}:`, counts);
       setOrdersByType(counts);
     } catch (error: Error | unknown) {
       console.error('Error fetching orders by type:', error);

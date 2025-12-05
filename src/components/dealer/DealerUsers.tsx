@@ -347,26 +347,20 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold">{t('dealer.view.users.title')}</h2>
-          <p className="text-muted-foreground">{t('dealer.view.users.description')}</p>
-        </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() => setShowArchivedModal(true)}
-            disabled={archivedUsers.length === 0}
-          >
-            <UserX className="h-4 w-4 mr-2" />
-            {t('dealer.view.users.view_archived')} ({archivedUsers.length})
-          </Button>
+      {/* Action Buttons */}
+      <div className="flex justify-end gap-2">
+        <Button
+          variant="outline"
+          onClick={() => setShowArchivedModal(true)}
+          disabled={archivedUsers.length === 0}
+        >
+          <UserX className="h-4 w-4 mr-2" />
+          {t('dealer.view.users.view_archived')} ({archivedUsers.length})
+        </Button>
         <Button onClick={() => setShowInviteModal(true)}>
           <Plus className="h-4 w-4 mr-2" />
-            {t('dealer.view.users.invite_user')}
+          {t('dealer.view.users.invite_user')}
         </Button>
-        </div>
       </div>
 
       {/* Tabs */}
