@@ -415,6 +415,7 @@
     "no_entries": "No se encontraron entradas de tiempo para esta fecha",
     "no_entries_for_date": "No hay entradas para esta fecha",
     "filters": {
+      "filters": "Filtros",
       "today": "Hoy",
       "this_week": "Esta Semana",
       "last_week": "Semana Pasada",

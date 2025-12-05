@@ -485,42 +485,71 @@ const TimecardSystem = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      {/* HEADER: Title + Primary Actions Only */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t('detail_hub.timecard.title')}</h1>
           <p className="text-muted-foreground">{t('detail_hub.timecard.subtitle')}</p>
         </div>
         <div className="flex gap-2">
-          {/* Quick Date Filters */}
-          <div className="flex gap-1 border rounded-md p-1">
-            <Button
-              variant={dateFilter === 'today' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setFilters({ dateFilter: 'today' })}
-            >
-              {t('detail_hub.timecard.filters.today')}
-            </Button>
-            <Button
-              variant={dateFilter === 'this_week' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setFilters({ dateFilter: 'this_week' })}
-            >
-              {t('detail_hub.timecard.filters.this_week')}
-            </Button>
-            <Button
-              variant={dateFilter === 'last_week' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setFilters({ dateFilter: 'last_week' })}
-            >
-              {t('detail_hub.timecard.filters.last_week')}
-            </Button>
-          </div>
+          <Button variant="outline" onClick={() => setShowManualEntryModal(true)}>
+            <Plus className="w-4 h-4 mr-2" />
+            {t('detail_hub.timecard.manual_entry.add_button')}
+          </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button>
+                <Download className="w-4 h-4 mr-2" />
+                {t('detail_hub.timecard.export')}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem onClick={handleExportPDF}>
+                <FileText className="w-4 h-4 mr-2" />
+                {t('detail_hub.timecard.export_pdf')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportExcel}>
+                <FileSpreadsheet className="w-4 h-4 mr-2" />
+                {t('detail_hub.timecard.export_excel')}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+
+      {/* FILTERS SECTION: Separated from header */}
+      <div className="space-y-4">
+        {/* Quick Date Filters - Full width row */}
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={dateFilter === 'today' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setFilters({ dateFilter: 'today' })}
+          >
+            {t('detail_hub.timecard.filters.today')}
+          </Button>
+          <Button
+            variant={dateFilter === 'this_week' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => setFilters({ dateFilter: 'this_week' })}
+          >
+            {t('detail_hub.timecard.filters.this_week')}
+          </Button>
+          <Button
+            variant={dateFilter === 'last_week' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => setFilters({ dateFilter: 'last_week' })}
+          >
+            {t('detail_hub.timecard.filters.last_week')}
+          </Button>
 
           {/* Custom Date Range Picker */}
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant={dateFilter === 'custom' ? 'default' : 'outline'}
+                size="sm"
                 onClick={() => setFilters({ dateFilter: 'custom' })}
               >
                 <CalendarIcon className="w-4 h-4 mr-2" />
@@ -552,50 +581,41 @@ const TimecardSystem = () => {
               />
             </PopoverContent>
           </Popover>
+        </div>
 
-          <Button variant="outline" onClick={() => setShowManualEntryModal(true)}>
-            <Plus className="w-4 h-4 mr-2" />
-            {t('detail_hub.timecard.manual_entry.add_button')}
-          </Button>
+        {/* Advanced Filters Bar */}
+        <div className="flex flex-col sm:flex-row gap-3 p-4 bg-muted/30 rounded-lg">
+          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+            <Filter className="h-4 w-4" />
+            {t('detail_hub.timecard.filters.filters')}:
+          </div>
 
-          <Button
-            variant="outline"
-            onClick={() => setShowDisabledEntriesModal(true)}
-            className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
-            title="Manage disabled entries to prevent overlap errors"
-          >
-            <Trash2 className="w-4 h-4 mr-2" />
-            Disabled Entries
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant={showAdvancedFilters ? "default" : "outline"}
+              size="sm"
+              onClick={() => setFilters({ showAdvancedFilters: !showAdvancedFilters })}
+            >
+              <Filter className="w-4 h-4 mr-2" />
+              {t('detail_hub.timecard.filters.advanced_filters')}
+              {getActiveFiltersCount() > 0 && (
+                <Badge variant="secondary" className="ml-2 px-1.5 py-0.5 text-xs">
+                  {getActiveFiltersCount()}
+                </Badge>
+              )}
+            </Button>
 
-          <Button variant={showAdvancedFilters ? "default" : "outline"} onClick={() => setFilters({ showAdvancedFilters: !showAdvancedFilters })}>
-            <Filter className="w-4 h-4 mr-2" />
-            {t('detail_hub.timecard.filters.advanced_filters')}
-            {getActiveFiltersCount() > 0 && (
-              <Badge variant="secondary" className="ml-2 px-1.5 py-0.5 text-xs">
-                {getActiveFiltersCount()}
-              </Badge>
-            )}
-          </Button>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button>
-                <Download className="w-4 h-4 mr-2" />
-                {t('detail_hub.timecard.export')}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem onClick={handleExportPDF}>
-                <FileText className="w-4 h-4 mr-2" />
-                {t('detail_hub.timecard.export_pdf')}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleExportExcel}>
-                <FileSpreadsheet className="w-4 h-4 mr-2" />
-                {t('detail_hub.timecard.export_excel')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowDisabledEntriesModal(true)}
+              className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+              title="Manage disabled entries to prevent overlap errors"
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              Disabled Entries
+            </Button>
+          </div>
         </div>
       </div>
 

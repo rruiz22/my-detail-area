@@ -424,6 +424,7 @@
     "no_entries": "Nenhum registro encontrado para esta data",
     "no_entries_for_date": "Nenhum registro para esta data",
     "filters": {
+      "filters": "Filtros",
       "today": "Hoje",
       "this_week": "Esta Semana",
       "last_week": "Semana Passada",

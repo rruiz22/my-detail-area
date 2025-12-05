@@ -415,6 +415,7 @@
     "no_entries": "No time entries found for this date",
     "no_entries_for_date": "No entries for this date",
     "filters": {
+      "filters": "Filters",
       "today": "Today",
       "this_week": "This Week",
       "last_week": "Last Week",
