@@ -244,7 +244,7 @@ const AppRoutes = () => {
           <Route
             path="admin"
             element={
-              <PermissionGuard module="management" permission="admin" checkDealerModule={true}>
+              <PermissionGuard module="management" permission="admin">
                 <AdminDashboard />
               </PermissionGuard>
             }

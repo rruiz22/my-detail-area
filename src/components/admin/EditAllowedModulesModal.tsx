@@ -64,6 +64,7 @@ const AVAILABLE_MODULES = [
   { id: 'reports', label: 'Reports', category: 'Analytics' },
   { id: 'users', label: 'User Management', category: 'Administration' },
   { id: 'dealerships', label: 'Dealerships', category: 'Administration' },
+  { id: 'management', label: 'Administration Panel', category: 'Administration' },
   { id: 'settings', label: 'Settings', category: 'Configuration' },
 ] as const;
 

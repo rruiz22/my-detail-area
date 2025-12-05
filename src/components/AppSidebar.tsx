@@ -222,8 +222,14 @@ export function AppSidebar() {
     // Profile (module: null) is always accessible
     return baseItems.filter(item => {
       if (!item.module) return true; // Profile always accessible
+
+      // Special handling for /admin route - allow supermanagers without module check
+      if (item.url === '/admin' && isSupermanager) {
+        return hasPermission(item.module, item.permission);
+      }
+
       return hasPermission(item.module, item.permission) &&
-        (isAdmin || isSupermanager || hasModuleAccess(item.module));  // ✅ FIX: Add supermanager bypass
+        (isAdmin || isSupermanager || hasModuleAccess(item.module));
     });
   }, [t, hasPermission, isAdmin, isSupermanager, hasModuleAccess]);
 
