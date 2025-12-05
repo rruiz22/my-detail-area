@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Clock, Users, DollarSign, Calendar, UserCheck, TrendingUp, AlertCircle, CheckCircle, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useTabPersistence } from "@/hooks/useTabPersistence";
+import { usePermissions } from "@/hooks/usePermissions";
 // REAL DATABASE INTEGRATION
 import { useDetailHubEmployees, useDetailHubTimeEntries, usePendingReviews, useRecentActivity } from "@/hooks/useDetailHubDatabase";
 // SUB-COMPONENTS (for tabs)
@@ -29,6 +30,7 @@ const DetailHubDashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [showTimeClock, setShowTimeClock] = useState(false); // Modal state
+  const { isSystemAdmin } = usePermissions();
 
   // KIOSK SETUP WIZARD STATE
   const [showKioskSetup, setShowKioskSetup] = useState(false);
@@ -153,13 +155,34 @@ const DetailHubDashboard = () => {
 
       {/* Tabs for all Detail Hub functionality */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-7">
+        <TabsList className={`grid w-full ${isSystemAdmin ? 'grid-cols-7' : 'grid-cols-4'}`}>
           <TabsTrigger value="overview">{t('detail_hub.tabs.overview')}</TabsTrigger>
           <TabsTrigger value="employees">{t('detail_hub.tabs.employees')}</TabsTrigger>
           <TabsTrigger value="timecards">{t('detail_hub.tabs.timecards')}</TabsTrigger>
-          <TabsTrigger value="analytics">{t('detail_hub.tabs.analytics')}</TabsTrigger>
-          <TabsTrigger value="reports">{t('detail_hub.tabs.reports')}</TabsTrigger>
-          <TabsTrigger value="invoices">{t('detail_hub.tabs.invoices')}</TabsTrigger>
+          {isSystemAdmin && (
+            <TabsTrigger value="analytics">
+              <span className="flex items-center gap-2">
+                {t('detail_hub.tabs.analytics')}
+                <Badge variant="secondary" className="text-xs">hidden</Badge>
+              </span>
+            </TabsTrigger>
+          )}
+          {isSystemAdmin && (
+            <TabsTrigger value="reports">
+              <span className="flex items-center gap-2">
+                {t('detail_hub.tabs.reports')}
+                <Badge variant="secondary" className="text-xs">hidden</Badge>
+              </span>
+            </TabsTrigger>
+          )}
+          {isSystemAdmin && (
+            <TabsTrigger value="invoices">
+              <span className="flex items-center gap-2">
+                {t('detail_hub.tabs.invoices')}
+                <Badge variant="secondary" className="text-xs">hidden</Badge>
+              </span>
+            </TabsTrigger>
+          )}
           <TabsTrigger value="kiosks">{t('detail_hub.tabs.kiosks')}</TabsTrigger>
         </TabsList>
 
@@ -178,20 +201,26 @@ const DetailHubDashboard = () => {
           <TimecardSystem />
         </TabsContent>
 
-        {/* TAB: Analytics */}
-        <TabsContent value="analytics">
-          <DetailHubAnalytics />
-        </TabsContent>
+        {/* TAB: Analytics - System Admin Only */}
+        {isSystemAdmin && (
+          <TabsContent value="analytics">
+            <DetailHubAnalytics />
+          </TabsContent>
+        )}
 
-        {/* TAB: Reports */}
-        <TabsContent value="reports">
-          <ReportsCenter />
-        </TabsContent>
+        {/* TAB: Reports - System Admin Only */}
+        {isSystemAdmin && (
+          <TabsContent value="reports">
+            <ReportsCenter />
+          </TabsContent>
+        )}
 
-        {/* TAB: Invoices */}
-        <TabsContent value="invoices">
-          <InvoiceCenter />
-        </TabsContent>
+        {/* TAB: Invoices - System Admin Only */}
+        {isSystemAdmin && (
+          <TabsContent value="invoices">
+            <InvoiceCenter />
+          </TabsContent>
+        )}
 
         {/* TAB: Kiosks */}
         <TabsContent value="kiosks">
