@@ -51,6 +51,9 @@ export const DealershipFilter = () => {
   }
 
   // Multi-dealer user or system_admin - show filter with badge + dropdown
+  // Create a stable key based on dealership IDs to force re-render when dealerships change
+  const dealershipsKey = dealerships.map(d => d.id).sort().join('-');
+
   return (
     <div className="flex items-center gap-2 shrink-0">
       <Badge variant="outline" className="gap-2 px-3 py-1 hidden lg:flex rounded-sm">
@@ -58,6 +61,7 @@ export const DealershipFilter = () => {
         <span className="font-medium text-xs">{getCurrentDealerName()}</span>
       </Badge>
       <Select
+        key={dealershipsKey}
         value={selectedDealerId.toString()}
         onValueChange={handleDealerChange}
       >

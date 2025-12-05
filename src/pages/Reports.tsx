@@ -4,9 +4,11 @@ import { ExportCenter } from '@/components/reports/sections/ExportCenter';
 import { FinancialReports } from '@/components/reports/sections/FinancialReports';
 import { InvoicesReport } from '@/components/reports/sections/InvoicesReport';
 import { OperationalReports } from '@/components/reports/sections/OperationalReports';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useDealerFilter } from '@/contexts/DealerFilterContext';
+import { usePermissions } from '@/hooks/usePermissions';
 import { useReportsData, type ReportsFilters } from '@/hooks/useReportsData';
 import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { RefreshCw } from 'lucide-react';
@@ -20,6 +22,7 @@ export default function Reports() {
   const { t } = useTranslation();
   const { dealerships, defaultDealerId } = useReportsData();
   const { selectedDealerId } = useDealerFilter();
+  const { enhancedUser } = usePermissions();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -152,7 +155,7 @@ export default function Reports() {
         <div className="space-y-6">
           {/* Main Reports Content */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className={`grid w-full ${enhancedUser?.is_system_admin ? 'grid-cols-4' : 'grid-cols-3'}`}>
               <TabsTrigger value="operational">
                 {t('reports.tabs.operational')}
               </TabsTrigger>
@@ -162,9 +165,17 @@ export default function Reports() {
               <TabsTrigger value="invoices">
                 {t('reports.tabs.invoices')}
               </TabsTrigger>
-              <TabsTrigger value="export">
-                {t('reports.tabs.export')}
-              </TabsTrigger>
+              {enhancedUser?.is_system_admin && (
+                <TabsTrigger value="export" className="relative">
+                  {t('reports.tabs.export')}
+                  <Badge
+                    variant="secondary"
+                    className="absolute -top-1 -right-1 text-[10px] px-1 py-0 h-4 bg-amber-500/10 text-amber-700 border-amber-300"
+                  >
+                    Hidden
+                  </Badge>
+                </TabsTrigger>
+              )}
             </TabsList>
 
             <TabsContent value="operational" className="space-y-6">
@@ -189,9 +200,11 @@ export default function Reports() {
               <InvoicesReport filters={filters} />
             </TabsContent>
 
-            <TabsContent value="export" className="space-y-6">
-              <ExportCenter filters={filters} />
-            </TabsContent>
+            {enhancedUser?.is_system_admin && (
+              <TabsContent value="export" className="space-y-6">
+                <ExportCenter filters={filters} />
+              </TabsContent>
+            )}
           </Tabs>
         </div>
       </ReportsLayout>

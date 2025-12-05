@@ -5,6 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useOperationalOrdersList, useOrdersAnalytics, usePerformanceTrends, type ReportsFilters, type VehicleForList } from '@/hooks/useReportsData';
+import { usePermissions } from '@/hooks/usePermissions';
 import { supabase } from '@/integrations/supabase/client';
 import type { UnifiedOrderData } from '@/types/unifiedOrder';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -38,6 +39,7 @@ interface OperationalReportsProps {
 export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters }) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const { enhancedUser } = usePermissions();
   const { data: orderAnalytics, isLoading: analyticsLoading } = useOrdersAnalytics(filters);
   const { data: performanceTrends, isLoading: trendsLoading } = usePerformanceTrends(filters);
 
@@ -184,14 +186,35 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
 
       {/* Charts Section */}
       <Tabs defaultValue="orders" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className={`grid w-full ${enhancedUser?.is_system_admin ? 'grid-cols-4' : 'grid-cols-2'}`}>
           <TabsTrigger value="orders">{t('reports.operational.tabs.orders')}</TabsTrigger>
-          <TabsTrigger value="volume">{t('reports.operational.tabs.volume')}</TabsTrigger>
+          {enhancedUser?.is_system_admin && (
+            <TabsTrigger value="volume" className="relative">
+              {t('reports.operational.tabs.volume')}
+              <Badge
+                variant="secondary"
+                className="absolute -top-1 -right-1 text-[10px] px-1 py-0 h-4 bg-amber-500/10 text-amber-700 border-amber-300"
+              >
+                Hidden
+              </Badge>
+            </TabsTrigger>
+          )}
           <TabsTrigger value="status">{t('reports.operational.tabs.status')}</TabsTrigger>
-          <TabsTrigger value="performance">{t('reports.operational.tabs.performance')}</TabsTrigger>
+          {enhancedUser?.is_system_admin && (
+            <TabsTrigger value="performance" className="relative">
+              {t('reports.operational.tabs.performance')}
+              <Badge
+                variant="secondary"
+                className="absolute -top-1 -right-1 text-[10px] px-1 py-0 h-4 bg-amber-500/10 text-amber-700 border-amber-300"
+              >
+                Hidden
+              </Badge>
+            </TabsTrigger>
+          )}
         </TabsList>
 
-        <TabsContent value="volume" className="space-y-4">
+        {enhancedUser?.is_system_admin && (
+          <TabsContent value="volume" className="space-y-4">
           {/* Volume Statistics */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
@@ -285,6 +308,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             </CardContent>
           </Card>
         </TabsContent>
+        )}
 
         <TabsContent value="status" className="space-y-4">
           {/* Status Overview Metrics */}
@@ -529,7 +553,8 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
           </Card>
         </TabsContent>
 
-        <TabsContent value="performance" className="space-y-4">
+        {enhancedUser?.is_system_admin && (
+          <TabsContent value="performance" className="space-y-4">
           {/* Performance Overview */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
@@ -737,6 +762,7 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             </CardContent>
           </Card>
         </TabsContent>
+        )}
 
         <TabsContent value="orders" className="space-y-4">
           {/* Summary Stats */}
@@ -865,7 +891,6 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                         </TableHead>
                         <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.vehicle')}</TableHead>
                         <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.vin')}</TableHead>
-                        <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.assigned')}</TableHead>
                         <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.dept')}</TableHead>
                         <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.status')}</TableHead>
                         <TableHead className="text-center font-bold text-slate-700 bg-slate-100">{t('reports.operational.orders_table.invoice')}</TableHead>
@@ -944,19 +969,42 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                             <TableCell className="font-mono text-sm font-semibold text-center">
                               {vehicle.vehicle_vin || 'N/A'}
                             </TableCell>
-                            <TableCell className="text-sm text-center">
-                              {vehicle.assigned_to_name ? (
-                                <Badge variant="secondary" className="text-xs">
-                                  {vehicle.assigned_to_name}
-                                </Badge>
-                              ) : (
-                                <span className="text-muted-foreground text-xs">{t('reports.operational.orders_table.unassigned')}</span>
-                              )}
-                            </TableCell>
                             <TableCell className="text-center">
-                              <Badge variant="outline" className="text-xs capitalize">
-                                {vehicle.order_type}
-                              </Badge>
+                              {(() => {
+                                const orderType = vehicle.order_type.toLowerCase().trim();
+                                let translatedDept = '';
+                                let colorClasses = '';
+
+                                switch (orderType) {
+                                  case 'sales':
+                                    translatedDept = t('services.departments.sales_dept');
+                                    colorClasses = 'bg-blue-100 text-blue-700 border-blue-200';
+                                    break;
+                                  case 'service':
+                                    translatedDept = t('services.departments.service_dept');
+                                    colorClasses = 'bg-green-100 text-green-700 border-green-200';
+                                    break;
+                                  case 'recon':
+                                    translatedDept = t('services.departments.recon_dept');
+                                    colorClasses = 'bg-orange-100 text-orange-700 border-orange-200';
+                                    break;
+                                  case 'carwash':
+                                  case 'car_wash':
+                                  case 'car wash':
+                                    translatedDept = t('services.departments.carwash_dept');
+                                    colorClasses = 'bg-cyan-100 text-cyan-700 border-cyan-200';
+                                    break;
+                                  default:
+                                    translatedDept = vehicle.order_type.charAt(0).toUpperCase() + vehicle.order_type.slice(1);
+                                    colorClasses = 'bg-gray-100 text-gray-700 border-gray-200';
+                                }
+
+                                return (
+                                  <Badge variant="outline" className={`text-xs whitespace-nowrap ${colorClasses}`}>
+                                    {translatedDept}
+                                  </Badge>
+                                );
+                              })()}
                             </TableCell>
                             <TableCell className="text-center">
                               <Badge variant={
@@ -964,13 +1012,15 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
                                 vehicle.status === 'in_progress' ? 'secondary' :
                                 vehicle.status === 'pending' ? 'outline' :
                                 'destructive'
-                              } className="text-xs capitalize">
+                              } className={`text-xs capitalize ${
+                                vehicle.status === 'completed' ? 'bg-green-600 hover:bg-green-700' : ''
+                              }`}>
                                 {vehicle.status.replace('_', ' ')}
                               </Badge>
                             </TableCell>
                             <TableCell className="text-center">
                               {vehicle.invoice_number ? (
-                                <Badge variant="default" className="text-xs bg-green-600 hover:bg-green-700">
+                                <Badge variant="default" className="text-[11px] bg-blue-600 hover:bg-blue-700 whitespace-nowrap px-2 py-0.5">
                                   {vehicle.invoice_number}
                                 </Badge>
                               ) : (

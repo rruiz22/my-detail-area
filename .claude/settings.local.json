@@ -18,7 +18,11 @@
       "Bash(supabase functions list:*)",
       "Bash(timeout:*)",
       "Bash(powershell.exe -ExecutionPolicy Bypass -File patch-final.ps1)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(find:*)",
+      "Bash(supabase db execute:*)"
     ],
     "deny": [],
     "ask": []

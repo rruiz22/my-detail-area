@@ -18,7 +18,7 @@ interface ReportFiltersProps {
   onFiltersChange: (filters: ReportsFilters) => void;
 }
 
-type DateRangeType = 'today' | 'this_week' | 'last_week' | 'this_month' | 'last_3_months' | 'this_year' | 'custom';
+type DateRangeType = 'today' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'last_3_months' | 'this_year' | 'custom';
 
 export const ReportFilters: React.FC<ReportFiltersProps> = ({
   filters,
@@ -147,13 +147,28 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
         const sundayTime = new Date(sunday.getFullYear(), sunday.getMonth(), sunday.getDate()).getTime();
         return filterStart.getTime() === mondayTime && filterEnd.getTime() === sundayTime;
       }
-      case 'last_30_days': {
-        const startDate = subDays(today, 30);
-        return filterStart.getTime() === startDate.getTime() && filterEnd.getTime() === today.getTime();
+      case 'this_month': {
+        const monthStart = startOfMonth(now);
+        const monthStartDay = new Date(monthStart.getFullYear(), monthStart.getMonth(), monthStart.getDate());
+        return filterStart.getTime() === monthStartDay.getTime() && filterEnd.getTime() === today.getTime();
       }
-      case 'last_90_days': {
-        const startDate = subDays(today, 90);
-        return filterStart.getTime() === startDate.getTime() && filterEnd.getTime() === today.getTime();
+      case 'last_month': {
+        const lastMonth = subMonths(now, 1);
+        const monthStart = startOfMonth(lastMonth);
+        const monthEnd = endOfMonth(lastMonth);
+        const startDay = new Date(monthStart.getFullYear(), monthStart.getMonth(), monthStart.getDate());
+        const endDay = new Date(monthEnd.getFullYear(), monthEnd.getMonth(), monthEnd.getDate());
+        return filterStart.getTime() === startDay.getTime() && filterEnd.getTime() === endDay.getTime();
+      }
+      case 'last_3_months': {
+        // Last 3 complete months (not including current month)
+        const threeMonthsAgo = subMonths(now, 3);
+        const startDate = startOfMonth(threeMonthsAgo);
+        const lastMonth = subMonths(now, 1);
+        const endDate = endOfMonth(lastMonth);
+        const startDay = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+        const endDay = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+        return filterStart.getTime() === startDay.getTime() && filterEnd.getTime() === endDay.getTime();
       }
       case 'this_year': {
         const yearStart = new Date(now.getFullYear(), 0, 1);
@@ -178,12 +193,16 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
       value: 'last_week',
     },
     {
-      label: 'Last 30 Days',
-      value: 'last_30_days',
+      label: 'This Month',
+      value: 'this_month',
     },
     {
-      label: 'Last 90 Days',
-      value: 'last_90_days',
+      label: 'Last Month',
+      value: 'last_month',
+    },
+    {
+      label: 'Last 3 Months',
+      value: 'last_3_months',
     },
     {
       label: 'This Year',
@@ -217,14 +236,35 @@ export const ReportFilters: React.FC<ReportFiltersProps> = ({
         endDate = sunday;
         break;
       }
-      case 'last_30_days':
+      case 'this_month': {
+        // First day of current month to today (in system timezone)
+        const monthStart = startOfMonth(todayInTimezone);
+        startDate = new Date(monthStart.getFullYear(), monthStart.getMonth(), monthStart.getDate());
         endDate = new Date(today);
-        startDate = subDays(today, 30);
         break;
-      case 'last_90_days':
-        endDate = new Date(today);
-        startDate = subDays(today, 90);
+      }
+      case 'last_month': {
+        // Complete previous month (first day to last day)
+        // Example: If today is Dec 4, 2025 -> Nov 1, 2025 to Nov 30, 2025
+        const lastMonth = subMonths(todayInTimezone, 1);
+        const monthStart = startOfMonth(lastMonth);
+        const monthEnd = endOfMonth(lastMonth);
+        startDate = new Date(monthStart.getFullYear(), monthStart.getMonth(), monthStart.getDate());
+        endDate = new Date(monthEnd.getFullYear(), monthEnd.getMonth(), monthEnd.getDate());
         break;
+      }
+      case 'last_3_months': {
+        // Last 3 complete months (not including current month)
+        // Example: If today is Dec 4, 2025 -> Sept 1, 2025 to Nov 30, 2025
+        const threeMonthsAgo = subMonths(todayInTimezone, 3);
+        const monthStart = startOfMonth(threeMonthsAgo);
+        startDate = new Date(monthStart.getFullYear(), monthStart.getMonth(), monthStart.getDate());
+
+        const lastMonth = subMonths(todayInTimezone, 1);
+        const monthEnd = endOfMonth(lastMonth);
+        endDate = new Date(monthEnd.getFullYear(), monthEnd.getMonth(), monthEnd.getDate());
+        break;
+      }
       case 'this_year':
         endDate = new Date(today);
         startDate = new Date(now.getFullYear(), 0, 1);

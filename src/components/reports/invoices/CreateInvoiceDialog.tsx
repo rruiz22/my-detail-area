@@ -166,6 +166,8 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
       if (ordersError) throw ordersError;
       if (!orders) return [];
 
+      console.log('[CreateInvoice] Orders fetched from DB:', orders.length);
+
       // Filter by appropriate date field based on order_type
       // Sales/Service: use due_date, Recon/CarWash: use completed_at
       const startDateTime = parseISO(startDate);
@@ -189,10 +191,16 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
         return reportDate >= startDateTime && reportDate <= endDateTime;
       });
 
+      console.log('[CreateInvoice] After date filter:', filteredByDate.length);
+
       // Get existing invoice items to filter out already invoiced orders
+      // Only check invoice_items from the current dealership
+      const orderIds = filteredByDate.map(o => o.id);
       const { data: existingInvoiceItems, error: itemsError } = await supabase
         .from('invoice_items')
-        .select('service_reference')
+        .select('service_reference, invoices!inner(dealer_id)')
+        .eq('invoices.dealer_id', dealerId)
+        .in('service_reference', orderIds)
         .not('service_reference', 'is', null);
 
       if (itemsError) throw itemsError;
@@ -204,15 +212,19 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
           .filter(Boolean) || []
       );
 
+      console.log('[CreateInvoice] Invoiced order IDs found:', invoicedOrderIds.size);
+
       // Filter out orders that are already invoiced
       const ordersWithoutInvoices = filteredByDate.filter(
         order => !invoicedOrderIds.has(order.id)
       );
 
+      console.log('[CreateInvoice] Final available orders:', ordersWithoutInvoices.length);
+
       return ordersWithoutInvoices as VehicleForInvoice[];
     },
     enabled: open && !!dealerId,
-    staleTime: 30 * 1000,
+    staleTime: 0, // Always fresh - critical for invoice creation to immediately remove invoiced orders
   });
 
   // Filter vehicles by search term

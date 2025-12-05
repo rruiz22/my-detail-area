@@ -388,6 +388,12 @@ export const DealershipProvider: React.FC<DealershipProviderProps> = ({ children
       console.warn('⚠️ [DealershipContext] Failed to clear localStorage cache:', error);
     }
 
+    // Invalidate ALL dealership-related queries
+    await queryClient.invalidateQueries({
+      queryKey: ['accessible_dealerships'],
+      refetchType: 'all'
+    });
+
     // Remove query data entirely to force fresh fetch
     queryClient.removeQueries({ queryKey: ['accessible_dealerships', user?.id] });
 

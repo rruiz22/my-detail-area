@@ -94,6 +94,11 @@ const queryClient = new QueryClient({
   },
 });
 
+// Expose queryClient globally in development for debugging
+if (import.meta.env.DEV) {
+  (window as any).queryClient = queryClient;
+}
+
 // Helper component to redirect /dealers/:id to /admin/:id
 const DealerRedirect = () => {
   const { id } = useParams();

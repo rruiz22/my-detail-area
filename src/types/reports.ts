@@ -277,8 +277,9 @@ export type DateRangeType =
   | 'today'
   | 'this_week'
   | 'last_week'
-  | 'last_30_days'
-  | 'last_90_days'
+  | 'this_month'
+  | 'last_month'
+  | 'last_3_months'
   | 'this_year'
   | 'custom';
 

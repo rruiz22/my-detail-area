@@ -88,8 +88,9 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   });
 
   const canViewPrices = canViewPricing(roles, enhancedUser?.is_system_admin ?? false);
-  // System admins can always manage services, otherwise check permissions
+  // System admins and supermanagers can always manage services, otherwise check permissions
   const canManageServices = enhancedUser?.is_system_admin ||
+    enhancedUser?.is_supermanager ||
     (permissions?.some(p =>
       p.module === 'dealerships' && ['write', 'delete', 'admin'].includes(p.permission_level)
     ) ?? false);
@@ -132,13 +133,13 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
 
   const fetchCategories = useCallback(async () => {
     try {
-      // Fetch categories available for all modules (for services management)
-      // For now, just fetch global categories (dealer_id IS NULL) which are available to all dealerships
+      // Fetch only the 4 main department categories
       const { data, error } = await supabase
         .from('service_categories')
         .select('id, name, description, is_system_category, color, icon')
         .eq('is_active', true)
         .is('dealer_id', null)
+        .in('name', ['CarWash Dept', 'Recon Dept', 'Sales Dept', 'Service Dept'])
         .order('name');
 
       if (error) throw error;

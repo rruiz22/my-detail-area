@@ -35,6 +35,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { MetricCard } from '../ReportsLayout';
 import { useRevenueAnalytics, useDepartmentRevenue, type ReportsFilters } from '@/hooks/useReportsData';
+import { usePermissions } from '@/hooks/usePermissions';
 import type { ChartTooltipProps } from '@/types/charts';
 import { useServerExport } from '@/hooks/useServerExport';
 import { useAccessibleDealerships } from '@/hooks/useAccessibleDealerships';
@@ -54,6 +55,7 @@ interface FinancialReportsProps {
 export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const { enhancedUser } = usePermissions();
 
   // Determine grouping based on date range for accurate metrics
   const getDaysInRange = (start: Date, end: Date) => {
@@ -972,11 +974,31 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
 
       {/* Revenue Analysis Charts */}
       <Tabs defaultValue="departments" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className={`grid w-full ${enhancedUser?.is_system_admin ? 'grid-cols-4' : 'grid-cols-2'}`}>
           <TabsTrigger value="departments">{t('reports.financial.tabs.departments')}</TabsTrigger>
-          <TabsTrigger value="trends">{t('reports.financial.tabs.trends')}</TabsTrigger>
+          {enhancedUser?.is_system_admin && (
+            <TabsTrigger value="trends" className="relative">
+              {t('reports.financial.tabs.trends')}
+              <Badge
+                variant="secondary"
+                className="absolute -top-1 -right-1 text-[10px] px-1 py-0 h-4 bg-amber-500/10 text-amber-700 border-amber-300"
+              >
+                Hidden
+              </Badge>
+            </TabsTrigger>
+          )}
           <TabsTrigger value="services">{t('reports.financial.tabs.services')}</TabsTrigger>
-          <TabsTrigger value="analysis">{t('reports.financial.tabs.analysis')}</TabsTrigger>
+          {enhancedUser?.is_system_admin && (
+            <TabsTrigger value="analysis" className="relative">
+              {t('reports.financial.tabs.analysis')}
+              <Badge
+                variant="secondary"
+                className="absolute -top-1 -right-1 text-[10px] px-1 py-0 h-4 bg-amber-500/10 text-amber-700 border-amber-300"
+              >
+                Hidden
+              </Badge>
+            </TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="departments" className="space-y-4">
@@ -1209,7 +1231,8 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
           </Card>
         </TabsContent>
 
-        <TabsContent value="trends" className="space-y-4">
+        {enhancedUser?.is_system_admin && (
+          <TabsContent value="trends" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>{t('reports.financial.charts.revenue_performance_over_time')}</CardTitle>
@@ -1281,6 +1304,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
             </CardContent>
           </Card>
         </TabsContent>
+        )}
 
         <TabsContent value="services" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1396,7 +1420,8 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
           </div>
         </TabsContent>
 
-        <TabsContent value="analysis" className="space-y-4">
+        {enhancedUser?.is_system_admin && (
+          <TabsContent value="analysis" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>{t('reports.financial.charts.avg_order_value_analysis')}</CardTitle>
@@ -1444,6 +1469,7 @@ export const FinancialReports: React.FC<FinancialReportsProps> = ({ filters }) =
             </CardContent>
           </Card>
         </TabsContent>
+        )}
       </Tabs>
     </div>
   );

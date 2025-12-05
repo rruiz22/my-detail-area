@@ -174,6 +174,9 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership, onRefr
         toast({ description: t('messages.saved') });
       }
 
+      // Small delay to ensure database triggers complete (auto-assignment)
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       onSuccess();
     } catch (error: any) {
       console.error('Error saving dealership:', error);
