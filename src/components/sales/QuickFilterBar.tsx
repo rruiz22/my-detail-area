@@ -95,6 +95,13 @@ export const QuickFilterBar = memo(function QuickFilterBar({
       color: 'bg-primary/10 text-primary border-primary/20'
     },
     {
+      id: 'queued',
+      label: t('sales_orders.tabs.queued'),
+      count: tabCounts.queued || 0,
+      icon: AlertCircle,
+      color: 'bg-warning/10 text-warning border-warning/20'
+    },
+    {
       id: 'queue',
       label: t('sales_orders.tabs.queue'),
       count: tabCounts.queue || 0,

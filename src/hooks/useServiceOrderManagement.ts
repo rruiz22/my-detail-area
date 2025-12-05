@@ -55,7 +55,7 @@ export interface ServiceOrderData {
 interface ServiceTabCounts {
   all: number;
   today: number;
-  queue: number;
+  queued: number;
   week: number;
 }
 
@@ -321,16 +321,16 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
       if (orderDateString === todayString) acc.today++;
       if (isDateInWeek(orderDate, weekOffset)) acc.week++;
 
-      // Queue count: NOT (complete OR completed OR cancelled) - matches Recon logic
-      if (order.status !== 'complete' && order.status !== 'completed' && order.status !== 'cancelled') {
-        acc.queue++;
+      // Queued count: pending OR in_progress
+      if (order.status === 'pending' || order.status === 'in_progress') {
+        acc.queued++;
       }
 
       return acc;
     }, {
       all: allOrders.length,
       today: 0,
-      queue: 0,
+      queued: 0,
       week: 0
     });
 
@@ -351,10 +351,10 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
             return orderDate.toDateString() === today.toDateString();
           });
           break;
-        case 'queue':
-          // Filter orders that are NOT completed or cancelled (matches Recon logic)
+        case 'queued':
+          // Filter orders that are pending or in_progress
           filtered = filtered.filter(order =>
-            order.status !== 'complete' && order.status !== 'completed' && order.status !== 'cancelled'
+            order.status === 'pending' || order.status === 'in_progress'
           );
           break;
         case 'week':
