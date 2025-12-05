@@ -35,14 +35,6 @@ export function OnlineUsersIndicator({
   const [open, setOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Permission guard: Any authenticated user with dealer membership can see this
-  // This allows all team members to see who's online and start chats
-  const canView = !!enhancedUser && !!dealerId;
-
-  if (!canView) {
-    return null;
-  }
-
   // Filter online users only
   const onlineUsers = useMemo(
     () => usersPresence.filter(user => user.is_online),
@@ -60,6 +52,15 @@ export function OnlineUsersIndicator({
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Permission guard: Any authenticated user with dealer membership can see this
+  // This allows all team members to see who's online and start chats
+  // IMPORTANT: This check must come AFTER all hooks to maintain consistent hook order
+  const canView = !!enhancedUser && !!dealerId;
+
+  if (!canView) {
+    return null;
+  }
 
   // Trigger button (shared between Popover and Sheet)
   const TriggerButton = (
