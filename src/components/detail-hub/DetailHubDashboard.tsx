@@ -93,7 +93,7 @@ const DetailHubDashboard = () => {
           <p className="text-muted-foreground">{t('detail_hub.subtitle')}</p>
         </div>
         <div className="flex gap-2">
-          {/* Kiosk Configuration Button */}
+          {/* Kiosk Configuration Button - Configure/Reconfigure kiosk on this PC */}
           <Button
             variant="outline"
             onClick={() => {
@@ -106,7 +106,7 @@ const DetailHubDashboard = () => {
             {isKioskConfigured() ? 'Kiosk Settings' : 'Setup Kiosk'}
           </Button>
 
-          {/* Time Clock Button */}
+          {/* Time Clock Button - Clock in/out for employees */}
           <Button
             onClick={() => {
               // Check if kiosk is configured before opening time clock

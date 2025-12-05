@@ -1,9 +1,9 @@
 {
-  "version": "1.3.69",
-  "buildTime": "2025-12-05T18:55:00.000Z",
-  "buildTimestamp": 1733427300000,
-  "gitCommit": "fix-detail-hub-hidden-tabs-badge",
+  "version": "1.3.70",
+  "buildTime": "2025-12-05T19:05:00.000Z",
+  "buildTimestamp": 1733427900000,
+  "gitCommit": "revert-keep-both-kiosk-buttons",
   "gitBranch": "main",
-  "buildNumber": "1733427300000",
+  "buildNumber": "1733427900000",
   "environment": "development"
 }
