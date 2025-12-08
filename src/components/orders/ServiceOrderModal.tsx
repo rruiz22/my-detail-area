@@ -25,7 +25,6 @@ import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { supabase } from '@/integrations/supabase/client';
 import { safeParseDate } from '@/utils/dateUtils';
 import { dev, error as logError, warn } from '@/utils/logger';
-import { canViewPricing } from '@/utils/permissions';
 import { AlertCircle, Building2, CalendarClock, Car, Check, ChevronsUpDown, ClipboardList, FileText, Info, Loader2, Scan, User, Wrench, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -103,7 +102,7 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
   const { toast } = useToast();
   const { user: authUser } = useAuth();
   const { hasPermission } = usePermissionContext();
-  const { enhancedUser } = usePermissions();
+  const { enhancedUser, hasModulePermission } = usePermissions();
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
 
   // Form state
@@ -146,10 +145,12 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
   const [needsAutopopulate, setNeedsAutopopulate] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const canViewPrices = canViewPricing(
-    enhancedUser?.custom_roles,
-    enhancedUser?.is_system_admin ?? false
-  );
+  // Check if user can view pricing (system admin or has view_pricing permission in any order module)
+  // ✅ FIXED: Use hasModulePermission hook instead of legacy canViewPricing function
+  const canViewPrices = enhancedUser?.is_system_admin ||
+    hasModulePermission('sales_orders', 'view_pricing') ||
+    hasModulePermission('service_orders', 'view_pricing') ||
+    hasModulePermission('recon_orders', 'view_pricing');
 
   const isEditing = Boolean(order);
 

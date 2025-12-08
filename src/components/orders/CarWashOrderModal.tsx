@@ -806,7 +806,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={loading || !selectedDealership || !formData.vehicleVin || selectedServices.length === 0}
+            disabled={loading || !selectedDealership || selectedServices.length === 0}
             className="w-1/2 sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
           >
             {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}

@@ -121,7 +121,7 @@ interface ReconOrderModalProps {
 export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, onClose, onSave, mode = 'create' }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
-  const { enhancedUser } = usePermissions();
+  const { enhancedUser, hasModulePermission } = usePermissions();
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
 
   // Get current dealership from context (more robust than localStorage)
@@ -178,19 +178,11 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
   const loading = dealershipsLoading || servicesLoading;
 
   // Check if user can view pricing (system admin or has view_pricing permission in any order module)
+  // ✅ FIXED: Use hasModulePermission hook instead of manual verification (respects permission hierarchy)
   const canViewPrices = enhancedUser?.is_system_admin ||
-    (enhancedUser?.custom_roles?.some(role => {
-      // ⚠️ DEFENSIVE: Check if module_permissions is actually a Map
-      if (!role.module_permissions || typeof role.module_permissions.get !== 'function') {
-        return false;
-      }
-      const salesPerms = role.module_permissions.get('sales_orders' satisfies AppModule);
-      const servicePerms = role.module_permissions.get('service_orders' satisfies AppModule);
-      const reconPerms = role.module_permissions.get('recon_orders' satisfies AppModule);
-      return salesPerms?.has('view_pricing' satisfies ModulePermissionKey) ||
-             servicePerms?.has('view_pricing' satisfies ModulePermissionKey) ||
-             reconPerms?.has('view_pricing' satisfies ModulePermissionKey);
-    }) ?? false);
+    hasModulePermission('sales_orders', 'view_pricing') ||
+    hasModulePermission('service_orders', 'view_pricing') ||
+    hasModulePermission('recon_orders', 'view_pricing');
 
   // Use mode prop to determine if editing, fallback to checking if order has ID
   const isEditing = mode === 'edit' || (order?.id !== undefined);

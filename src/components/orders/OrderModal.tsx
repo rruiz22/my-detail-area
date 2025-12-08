@@ -26,7 +26,6 @@ import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { supabase } from '@/integrations/supabase/client';
 import { safeParseDate } from '@/utils/dateUtils';
 import { logger } from '@/utils/logger';
-import { canViewPricing } from '@/utils/permissions';
 import { sanitizeOrderForm } from '@/utils/sanitize';
 import { AlertCircle, Building2, CalendarClock, Car, Check, ChevronsUpDown, ClipboardList, FileText, Info, Loader2, Scan, Search, User, Wrench, X, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
@@ -161,7 +160,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
   const { toast } = useToast();
   const { user: authUser } = useAuth();
   const { hasPermission } = usePermissionContext();
-  const { enhancedUser } = usePermissions();
+  const { enhancedUser, hasModulePermission } = usePermissions();
   const { decodeVin, loading: vinLoading, error: vinError } = useVinDecoding();
   const { checkSlotAvailability, reserveSlot } = useAppointmentCapacity();
 
@@ -219,10 +218,12 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     address?: string;
   }>({});
 
-  const canViewPrices = canViewPricing(
-    enhancedUser?.custom_roles,
-    enhancedUser?.is_system_admin ?? false
-  );
+  // Check if user can view pricing (system admin or has view_pricing permission in any order module)
+  // ✅ FIXED: Use hasModulePermission hook instead of legacy canViewPricing function
+  const canViewPrices = enhancedUser?.is_system_admin ||
+    hasModulePermission('sales_orders', 'view_pricing') ||
+    hasModulePermission('service_orders', 'view_pricing') ||
+    hasModulePermission('recon_orders', 'view_pricing');
 
   const isEditing = Boolean(order);
   const requiresDueDate = !isEditing && ['sales', 'service'].includes(formData.orderType);
@@ -1096,7 +1097,7 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
               price: service?.price,
               description: service?.description
             }],
-            totalAmount: individualAmount // Use individual service price
+            total_amount: individualAmount // Use individual service price (snake_case for DB)
           };
         });
 
