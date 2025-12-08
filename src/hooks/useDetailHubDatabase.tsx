@@ -306,6 +306,7 @@ export function useClockIn() {
       kioskId?: string;
       ipAddress?: string;
       scheduleId?: string; // Link to schedule
+      notes?: string; // Optional employee note explaining punch
       // GPS location (required for remote kiosk punches)
       latitude?: number;
       longitude?: number;
@@ -419,6 +420,7 @@ export function useClockIn() {
           kiosk_id: params.kioskId,
           ip_address: params.ipAddress,
           schedule_id: params.scheduleId,
+          notes: params.notes, // Employee note explaining punch
           // GPS location (for remote kiosk punches)
           punch_in_latitude: params.latitude,
           punch_in_longitude: params.longitude,
@@ -470,6 +472,7 @@ export function useClockOut() {
       faceConfidence?: number;
       kioskId?: string;
       ipAddress?: string;
+      notes?: string; // Optional employee note explaining clock out
       // GPS location (required for remote kiosk punches)
       latitude?: number;
       longitude?: number;
@@ -514,7 +517,7 @@ export function useClockOut() {
       }
 
       // Update with clock out
-      const { data, error } = await supabase
+      const { data, error} = await supabase
         .from('detail_hub_time_entries')
         .update({
           clock_out: clockOutTime.toISOString(),
@@ -523,6 +526,7 @@ export function useClockOut() {
           face_confidence_out: params.faceConfidence,
           kiosk_id: params.kioskId || activeEntry.kiosk_id,
           ip_address: params.ipAddress || activeEntry.ip_address,
+          notes: params.notes ? (activeEntry.notes ? `${activeEntry.notes}\n[Clock Out] ${params.notes}` : `[Clock Out] ${params.notes}`) : activeEntry.notes,
           // GPS location (for remote kiosk punches)
           punch_out_latitude: params.latitude,
           punch_out_longitude: params.longitude,
@@ -574,6 +578,7 @@ export function useStartBreak() {
       faceConfidence?: number;
       kioskId?: string;
       ipAddress?: string;
+      notes?: string; // Optional employee note explaining break start
       // GPS location (required for remote kiosk punches)
       latitude?: number;
       longitude?: number;
@@ -615,6 +620,7 @@ export function useStartBreak() {
           break_end: null,
           photo_start_url: params.photoUrl,
           kiosk_id: params.kioskId,
+          notes: params.notes, // Employee note explaining break start
           // GPS location (for remote kiosk punches)
           break_start_latitude: params.latitude,
           break_start_longitude: params.longitude,
@@ -677,6 +683,7 @@ export function useEndBreak() {
       faceConfidence?: number;
       kioskId?: string;
       ipAddress?: string;
+      notes?: string; // Optional employee note explaining break end
       // GPS location (required for remote kiosk punches)
       latitude?: number;
       longitude?: number;
@@ -696,7 +703,7 @@ export function useEndBreak() {
       // ✅ NEW: Find open break in detail_hub_breaks table
       const { data: openBreak, error: openBreakError } = await supabase
         .from('detail_hub_breaks')
-        .select('id, break_number, break_start, employee_id')
+        .select('id, break_number, break_start, employee_id, notes')
         .eq('time_entry_id', activeEntry.id)
         .is('break_end', null)
         .maybeSingle();
@@ -732,6 +739,7 @@ export function useEndBreak() {
         .update({
           break_end: breakEnd.toISOString(),
           photo_end_url: params.photoUrl,
+          notes: params.notes ? (openBreak.notes ? `${openBreak.notes}\n[Break End] ${params.notes}` : `[Break End] ${params.notes}`) : openBreak.notes,
           // GPS location (for remote kiosk punches)
           break_end_latitude: params.latitude,
           break_end_longitude: params.longitude,

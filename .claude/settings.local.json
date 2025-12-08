@@ -24,7 +24,11 @@
       "Bash(find:*)",
       "Bash(supabase db execute:*)",
       "mcp__supabase__list_migrations",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(npm run version:generate:*)",
+      "Bash(powershell -Command \"(Get-Content ''C:\\Users\\rudyr\\apps\\mydetailarea\\public\\translations\\en\\reports.json'' | Measure-Object -Line).Lines\")",
+      "Bash(netstat:*)",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 5; echo ''Compilation complete''\")"
     ],
     "deny": [],
     "ask": []

@@ -38,11 +38,15 @@ import type { InvoiceFormData } from '@/types/invoices';
 import { invalidateInvoiceQueries } from '@/utils/queryInvalidation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
-import { AlertCircle, Calendar, Car, DollarSign, FileText, Filter, Receipt, Search } from 'lucide-react';
+import { AlertCircle, AlertTriangle, Calendar, Car, DollarSign, FileText, Filter, Receipt, Search } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDateCalculations } from '@/hooks/useDateCalculations';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface CreateInvoiceDialogProps {
   open: boolean;
@@ -72,6 +76,82 @@ interface VehicleForInvoice {
   due_date: string | null;
 }
 
+// =====================================================
+// DUPLICATE DETECTION HELPER FUNCTIONS
+// =====================================================
+
+/**
+ * Detect duplicate orders by VIN, Stock Number, and Tag#
+ * Returns maps of duplicates for efficient lookup
+ */
+const detectDuplicates = (orders: VehicleForInvoice[]) => {
+  const vinMap = new Map<string, VehicleForInvoice[]>();
+  const stockMap = new Map<string, VehicleForInvoice[]>();
+  const tagMap = new Map<string, VehicleForInvoice[]>();
+
+  orders.forEach(order => {
+    // Track VIN duplicates (most critical - same vehicle)
+    if (order.vehicle_vin && order.vehicle_vin.trim() !== '') {
+      const vin = order.vehicle_vin.toUpperCase().trim();
+      const existing = vinMap.get(vin) || [];
+      vinMap.set(vin, [...existing, order]);
+    }
+
+    // Track Stock Number duplicates (same stock across services)
+    if (order.stock_number && order.stock_number.trim() !== '') {
+      const stock = order.stock_number.toUpperCase().trim();
+      const existing = stockMap.get(stock) || [];
+      stockMap.set(stock, [...existing, order]);
+    }
+
+    // Track Tag# duplicates (Car Wash specific identifier)
+    if (order.tag && order.tag.trim() !== '') {
+      const tag = order.tag.toUpperCase().trim();
+      const existing = tagMap.get(tag) || [];
+      tagMap.set(tag, [...existing, order]);
+    }
+  });
+
+  return { vinMap, stockMap, tagMap };
+};
+
+/**
+ * Check if specific order is a duplicate and get duplicate info
+ */
+const getDuplicateInfo = (
+  order: VehicleForInvoice,
+  vinMap: Map<string, VehicleForInvoice[]>,
+  stockMap: Map<string, VehicleForInvoice[]>,
+  tagMap: Map<string, VehicleForInvoice[]>
+) => {
+  const vinKey = order.vehicle_vin?.toUpperCase().trim() || '';
+  const stockKey = order.stock_number?.toUpperCase().trim() || '';
+  const tagKey = order.tag?.toUpperCase().trim() || '';
+
+  const vinDuplicates = vinKey ? vinMap.get(vinKey) || [] : [];
+  const stockDuplicates = stockKey ? stockMap.get(stockKey) || [] : [];
+  const tagDuplicates = tagKey ? tagMap.get(tagKey) || [] : [];
+
+  const hasVinDuplicate = vinDuplicates.length > 1;
+  const hasStockDuplicate = stockDuplicates.length > 1;
+  const hasTagDuplicate = tagDuplicates.length > 1;
+
+  const isDuplicate = hasVinDuplicate || hasStockDuplicate || hasTagDuplicate;
+
+  return {
+    isDuplicate,
+    hasVinDuplicate,
+    hasStockDuplicate,
+    hasTagDuplicate,
+    vinCount: vinDuplicates.length,
+    stockCount: stockDuplicates.length,
+    tagCount: tagDuplicates.length,
+    duplicateOrders: [...vinDuplicates, ...stockDuplicates, ...tagDuplicates]
+      .filter((v, i, a) => a.findIndex(t => t.id === v.id) === i) // Remove order duplicates
+      .filter(v => v.id !== order.id) // Exclude current order
+  };
+};
+
 export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
   open,
   onOpenChange,
@@ -81,6 +161,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
   const { toast } = useToast();
   const { calculateDateRange } = useDateCalculations();
   const queryClient = useQueryClient(); // ✅ Added for cache invalidation
+  const { t } = useTranslation(); // ✅ Translation hook for duplicate badge labels
 
   const today = new Date();
   const defaultDueDate = new Date(today);
@@ -154,7 +235,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
         .eq('dealer_id', dealerId)
         .eq('status', 'completed')
         .order('created_at', { ascending: false })
-        .limit(QUERY_LIMITS.STANDARD); // Standard limit - TODO: Implement server-side filtering or pagination
+        .limit(QUERY_LIMITS.EXTENDED); // ✅ FIX: Increased from 5K to 50K for historical date range support
 
       // Apply order type filter
       if (orderType !== 'all') {
@@ -241,6 +322,12 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
       vehicle.order_number?.toLowerCase().includes(term)
     );
   }, [availableVehicles, searchTerm]);
+
+  // Detect duplicates in filtered vehicles (VIN, Stock Number, Tag#)
+  const { vinMap, stockMap, tagMap } = useMemo(
+    () => detectDuplicates(filteredVehicles),
+    [filteredVehicles]
+  );
 
   // Get selected vehicles
   const selectedVehicles = useMemo(() => {
@@ -570,10 +657,18 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredVehicles.map((vehicle) => (
+                  {filteredVehicles.map((vehicle) => {
+                    const duplicateInfo = getDuplicateInfo(vehicle, vinMap, stockMap, tagMap);
+                    const isSelected = selectedVehicleIds.has(vehicle.id);
+
+                    return (
                     <TableRow
                       key={vehicle.id}
-                      className={selectedVehicleIds.has(vehicle.id) ? 'bg-emerald-50 border-l-2 border-l-emerald-500' : ''}
+                      className={cn(
+                        "cursor-pointer hover:bg-gray-50",
+                        isSelected && "bg-emerald-50 border-l-2 border-l-emerald-500",
+                        duplicateInfo.isDuplicate && !isSelected && "bg-amber-50/50 border-l-2 border-l-amber-400"
+                      )}
                     >
                       <TableCell>
                         <Checkbox
@@ -591,7 +686,44 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
                         {vehicle.vehicle_year} {vehicle.vehicle_make} {vehicle.vehicle_model}
                       </TableCell>
                       <TableCell className="font-mono text-xs">
-                        {vehicle.vehicle_vin || 'N/A'}
+                        <div className="flex items-center gap-1.5">
+                          <span>{vehicle.vehicle_vin || 'N/A'}</span>
+                          {duplicateInfo.isDuplicate && (
+                            <TooltipProvider delayDuration={200}>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Badge variant="warning" className="flex items-center gap-1 text-[10px] px-1.5 py-0.5 cursor-help">
+                                    <AlertTriangle className="h-2.5 w-2.5" />
+                                    {duplicateInfo.hasVinDuplicate && `${duplicateInfo.vinCount}x VIN`}
+                                    {!duplicateInfo.hasVinDuplicate && duplicateInfo.hasStockDuplicate && `${duplicateInfo.stockCount}x Stock`}
+                                    {!duplicateInfo.hasVinDuplicate && !duplicateInfo.hasStockDuplicate && duplicateInfo.hasTagDuplicate && `${duplicateInfo.tagCount}x Tag`}
+                                  </Badge>
+                                </TooltipTrigger>
+                                <TooltipContent side="top" className="max-w-xs">
+                                  <p className="font-semibold mb-1">{t('reports.invoices.duplicate_order_warning')}</p>
+                                  {duplicateInfo.hasVinDuplicate && (
+                                    <p className="text-xs mb-1">
+                                      • {t('reports.invoices.duplicate_vin_found', { count: duplicateInfo.vinCount })}
+                                    </p>
+                                  )}
+                                  {duplicateInfo.hasStockDuplicate && (
+                                    <p className="text-xs mb-1">
+                                      • {t('reports.invoices.duplicate_stock_found', { count: duplicateInfo.stockCount })}
+                                    </p>
+                                  )}
+                                  {duplicateInfo.hasTagDuplicate && (
+                                    <p className="text-xs mb-1">
+                                      • {t('reports.invoices.duplicate_tag_found', { count: duplicateInfo.tagCount })}
+                                    </p>
+                                  )}
+                                  <p className="text-xs text-muted-foreground mt-2">
+                                    {t('reports.invoices.duplicate_tooltip_hint')}
+                                  </p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          )}
+                        </div>
                       </TableCell>
                       <TableCell className="text-sm">{vehicle.customer_name}</TableCell>
                       <TableCell>
@@ -603,7 +735,8 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
                         {formatCurrency(vehicle.total_amount || 0)}
                       </TableCell>
                     </TableRow>
-                  ))}
+                    );
+                  })}
                 </TableBody>
               </Table>
             )}

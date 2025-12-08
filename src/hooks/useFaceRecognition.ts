@@ -330,15 +330,25 @@ export function useFaceRecognition(options: UseFaceRecognitionOptions = {}) {
     try {
       console.log('[FaceAPI] Finding best match...');
 
-      const detection = await faceapi
-        .detectSingleFace(imageElement, new faceapi.TinyFaceDetectorOptions({ inputSize: 416 }))
+      // First, detect ALL faces to ensure only one person is in frame
+      const allDetections = await faceapi
+        .detectAllFaces(imageElement, new faceapi.TinyFaceDetectorOptions({ inputSize: 416 }))
         .withFaceLandmarks()
-        .withFaceDescriptor();
+        .withFaceDescriptors();
 
-      if (!detection) {
+      if (!allDetections || allDetections.length === 0) {
         console.warn('[FaceAPI] No face detected');
         return null;
       }
+
+      // Security check: Multiple faces detected
+      if (allDetections.length > 1) {
+        console.warn('[FaceAPI] ⚠️ Multiple faces detected:', allDetections.length);
+        return { error: 'multiple_faces', count: allDetections.length } as any;
+      }
+
+      // Only one face detected - proceed with match
+      const detection = allDetections[0];
 
       const bestMatch = faceMatcher.current.findBestMatch(detection.descriptor);
 

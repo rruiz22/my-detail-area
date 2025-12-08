@@ -394,6 +394,7 @@
     "executive_metrics": {
       "efficiency_score": "Efficiency Score",
       "total_volume": "Total Volume",
+      "total_volume_tooltip": "Total number of individual services performed across all orders. Each order may include multiple services (e.g., exterior wash + interior detailing + wax).",
       "services_processed": "services processed",
       "per_order": "per order",
       "from_completed_orders": "from completed orders"
@@ -481,6 +482,7 @@
       "title": "Orders Report",
       "description": "Detailed vehicle orders matching your filters",
       "total_orders": "Total Orders",
+      "total_orders_tooltip": "Number of work orders/tickets created in the selected period. Each order represents a single vehicle or customer request and may contain one or more services.",
       "in_selected_period": "In selected period",
       "pending": "Pending",
       "of_total": "of total",
@@ -563,6 +565,13 @@
       "pdf_exported_successfully": "PDF exported successfully",
       "failed_to_export_excel": "Failed to export Excel",
       "failed_to_export_pdf": "Failed to export PDF"
+    },
+    "invoices": {
+      "duplicate_order_warning": "Duplicate Order Detected",
+      "duplicate_vin_found": "{{count}} orders share the same VIN",
+      "duplicate_stock_found": "{{count}} orders share the same Stock Number",
+      "duplicate_tag_found": "{{count}} orders share the same Tag#",
+      "duplicate_tooltip_hint": "Multiple orders for the same vehicle/stock may indicate progressive services (Recon → Sales) or data entry errors. Review before invoicing."
     }
   }
 }

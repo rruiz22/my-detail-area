@@ -27,7 +27,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Textarea } from "@/components/ui/textarea";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Camera,
   User,
@@ -38,9 +39,11 @@ import {
   RotateCcw,
   Loader2,
   X,
+  XCircle,
   Clock,
   AlertCircle,
-  AlertTriangle
+  AlertTriangle,
+  MessageSquare
 } from "lucide-react";
 
 // Photo capture utilities
@@ -70,6 +73,7 @@ import { useClockIn, useClockOut, useStartBreak, useEndBreak, DetailHubEmployee,
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
 import { useToast } from "@/hooks/use-toast";
 import { useLiveClock } from "@/hooks/useLiveClock";
+import { useCameraAvailability } from "@/hooks/useCameraAvailability";
 
 interface PunchClockKioskModalProps {
   open: boolean;
@@ -91,6 +95,15 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
   // Live clock (updates every second)
   const liveClock = useLiveClock();
+
+  // Camera availability detection
+  const {
+    status: cameraStatus,
+    hasCamera,
+    isReady: cameraReady,
+    error: cameraError,
+    checkCamera
+  } = useCameraAvailability();
 
   // Face recognition hook
   const {
@@ -119,12 +132,14 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     sleep_timeout_minutes: number;
     kiosk_code: string | null;
     name: string | null;
+    location: string | null;
   }>({
     face_recognition_enabled: true,
     allow_manual_entry: true,
     sleep_timeout_minutes: 10, // Default 10 seconds
     kiosk_code: null,
     name: null,
+    location: null,
   });
 
   // Fetch kiosk configuration from database
@@ -133,7 +148,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       debugLog('[Kiosk] Fetching configuration for kiosk ID:', KIOSK_ID);
       supabase
         .from('detail_hub_kiosks')
-        .select('face_recognition_enabled, allow_manual_entry, sleep_timeout_minutes, kiosk_code, name')
+        .select('face_recognition_enabled, allow_manual_entry, sleep_timeout_minutes, kiosk_code, name, location')
         .eq('id', KIOSK_ID)
         .single()
         .then(({ data, error }) => {
@@ -149,6 +164,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
               sleep_timeout_minutes: data.sleep_timeout_minutes ?? 10,
               kiosk_code: data.kiosk_code,
               name: data.name,
+              location: data.location,
             });
           }
         });
@@ -167,6 +183,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   // Face scan toggle (auto-starts when modal opens)
   const [showFaceScan, setShowFaceScan] = useState(false);
   const faceScanTimeoutRef = useRef<number | null>(null); // Changed from useState to useRef to fix timeout cleanup
+  const scanIntervalRef = useRef<number | null>(null); // Face scan interval ref for cleanup
+  const countdownIntervalRef = useRef<number | null>(null); // Countdown interval ref for cleanup
   const [faceMatchedEmployeeId, setFaceMatchedEmployeeId] = useState<string | null>(null);
 
   // Inactivity timer for employee detail view (uses kiosk config)
@@ -178,6 +196,11 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   const [photoUploadStatus, setPhotoUploadStatus] = useState("");
   const [captureAction, setCaptureAction] = useState<CaptureAction>('clock_in');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isCapturing, setIsCapturing] = useState(false);
+
+  // Punch notes (optional employee comments)
+  const [punchNote, setPunchNote] = useState("");
+  const [showNoteInput, setShowNoteInput] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -731,19 +754,26 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   };
 
   // Capture photo from video
-  const handleCapturePhoto = () => {
+  const handleCapturePhoto = async () => {
     if (!videoRef.current) return;
 
+    setIsCapturing(true);
     setPhotoUploadStatus(t('detail_hub.punch_clock.messages.capturing_photo'));
+
+    // Brief delay to show visual feedback
+    await new Promise(resolve => setTimeout(resolve, 100));
+
     const photoData = capturePhotoFromVideo(videoRef.current, 0.9);
 
     if (!photoData) {
       setPhotoUploadStatus(t('detail_hub.punch_clock.messages.photo_capture_failed'));
+      setIsCapturing(false);
       return;
     }
 
     setCapturedPhoto(photoData);
     setPhotoUploadStatus(t('detail_hub.punch_clock.messages.photo_captured'));
+    setIsCapturing(false);
 
     // Stop camera stream
     if (videoRef.current?.srcObject) {
@@ -836,7 +866,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
             method: 'photo_fallback',
             photoUrl: uploadResult.photoUrl,
             kioskId: KIOSK_ID || kioskConfig.kiosk_code || undefined, // Prefer UUID
-            ipAddress: currentIp || undefined
+            ipAddress: currentIp || undefined,
+            notes: punchNote || undefined
             // scheduleId: schedule?.id // Disabled until trigger is fixed
           });
           toast({
@@ -851,7 +882,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
             method: 'photo_fallback',
             photoUrl: uploadResult.photoUrl,
             kioskId: kioskConfig.kiosk_code || undefined,
-            ipAddress: currentIp || undefined
+            ipAddress: currentIp || undefined,
+            notes: punchNote || undefined
           });
           toast({
             title: t('detail_hub.toasts.clocked_out'),
@@ -865,7 +897,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
             method: 'photo_fallback',
             photoUrl: uploadResult.photoUrl,
             kioskId: kioskConfig.kiosk_code || undefined,
-            ipAddress: currentIp || undefined
+            ipAddress: currentIp || undefined,
+            notes: punchNote || undefined
           });
           toast({
             title: t('detail_hub.toasts.break_started'),
@@ -879,7 +912,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
             method: 'photo_fallback',
             photoUrl: uploadResult.photoUrl,
             kioskId: kioskConfig.kiosk_code || undefined,
-            ipAddress: currentIp || undefined
+            ipAddress: currentIp || undefined,
+            notes: punchNote || undefined
           });
           toast({
             title: t('detail_hub.toasts.break_ended'),
@@ -907,6 +941,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       setCurrentView('employee_detail');
       setCapturedPhoto(null);
       setPhotoUploadStatus("");
+      setPunchNote(""); // Clear note after successful punch
+      setShowNoteInput(false); // Reset note input visibility
 
     } catch (error) {
       console.error('Punch error:', error);
@@ -933,9 +969,18 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   };
 
   // Face recognition state
+  type FaceScanMessageType = 'info' | 'scanning' | 'error' | 'success' | 'warning';
   const [faceScanning, setFaceScanning] = useState(false);
   const [faceScanMessage, setFaceScanMessage] = useState("");
+  const [faceScanMessageType, setFaceScanMessageType] = useState<FaceScanMessageType>('info');
   const [faceScanSecondsLeft, setFaceScanSecondsLeft] = useState(15);
+  const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
+
+  // Helper to set message and type together
+  const updateFaceScanMessage = (message: string, type: FaceScanMessageType) => {
+    setFaceScanMessage(message);
+    setFaceScanMessageType(type);
+  };
 
   // Start face scan when showFaceScan is toggled on, with 15-second auto-stop
   useEffect(() => {
@@ -945,7 +990,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       // Set timeout to auto-stop after 15 seconds if no recognition
       const timeout = window.setTimeout(() => {
         console.log('[FaceScan] ⏰ 15-second timeout - no face recognized');
-        setFaceScanMessage(t('detail_hub.punch_clock.messages.face_not_recognized_timeout'));
+        updateFaceScanMessage(t('detail_hub.punch_clock.messages.face_not_recognized_timeout'), 'warning');
         handleStopFaceScan();
         setShowFaceScan(false);
 
@@ -976,7 +1021,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   const handleStartFaceScan = async () => {
     setFaceScanning(true);
     setFaceScanSecondsLeft(15);
-    setFaceScanMessage(t('detail_hub.punch_clock.messages.preparing_camera'));
+    updateFaceScanMessage(t('detail_hub.punch_clock.messages.preparing_camera'), 'info');
 
     try {
       // Step 1: Load enrolled employees and initialize face matcher
@@ -1001,7 +1046,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
       if (!enrolledEmployees || enrolledEmployees.length === 0) {
         console.warn('[FaceScan] ❌ No enrolled employees found');
-        setFaceScanMessage(t('detail_hub.punch_clock.messages.no_enrolled_faces'));
+        updateFaceScanMessage(t('detail_hub.punch_clock.messages.no_enrolled_faces'), 'error');
         toast({
           title: t('detail_hub.punch_clock.messages.no_enrolled_employees'),
           description: t('detail_hub.punch_clock.messages.try_again_or_search'),
@@ -1037,7 +1082,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
       if (employeesForMatcher.length === 0) {
         console.error('[FaceScan] ❌ No valid face descriptors found (all employees have corrupted data)');
-        setFaceScanMessage(t('detail_hub.punch_clock.messages.no_enrolled_faces'));
+        updateFaceScanMessage(t('detail_hub.punch_clock.messages.no_enrolled_faces'), 'error');
         toast({
           title: t('detail_hub.punch_clock.messages.face_scan_error'),
           description: 'Face recognition data is corrupted. Please re-enroll employees.',
@@ -1071,13 +1116,16 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        setFaceScanMessage(t('detail_hub.punch_clock.messages.position_face'));
+        updateFaceScanMessage(t('detail_hub.punch_clock.messages.position_face'), 'info');
 
         // Countdown timer
-        const countdownInterval = setInterval(() => {
+        countdownIntervalRef.current = setInterval(() => {
           setFaceScanSecondsLeft(prev => {
             if (prev <= 1) {
-              clearInterval(countdownInterval);
+              if (countdownIntervalRef.current) {
+                clearInterval(countdownIntervalRef.current);
+                countdownIntervalRef.current = null;
+              }
               return 0;
             }
             return prev - 1;
@@ -1085,17 +1133,30 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
         }, 1000);
 
         // Start continuous scanning every 2 seconds
-        const scanInterval = setInterval(async () => {
+        scanIntervalRef.current = setInterval(async () => {
           if (videoRef.current && findBestMatch) {
             try {
-              setFaceScanMessage(t('detail_hub.punch_clock.messages.detecting_face'));
+              updateFaceScanMessage(t('detail_hub.punch_clock.messages.detecting_face'), 'scanning');
 
               const match = await findBestMatch(videoRef.current);
+
+              // Check for multiple faces error
+              if (match && (match as any).error === 'multiple_faces') {
+                console.warn('[FaceScan] ⚠️ Multiple faces detected in frame');
+                updateFaceScanMessage(t('detail_hub.punch_clock.messages.multiple_faces_detected'), 'warning');
+                // Continue scanning - user needs to ensure only one person in frame
+                return;
+              }
 
               if (match) {
                 // Found a match!
                 console.log('[FaceScan] ✅ Match found:', match.employeeName);
-                clearInterval(scanInterval);
+
+                // Stop scanning intervals immediately
+                if (scanIntervalRef.current) {
+                  clearInterval(scanIntervalRef.current);
+                  scanIntervalRef.current = null;
+                }
 
                 // CRITICAL: Clear the auto-stop timeout since we found a match (using ref)
                 if (faceScanTimeoutRef.current !== null) {
@@ -1104,32 +1165,40 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                   faceScanTimeoutRef.current = null;
                 }
 
-                // Stop camera and clear srcObject
-                if (videoRef.current?.srcObject) {
-                  const stream = videoRef.current.srcObject as MediaStream;
-                  const tracks = stream.getTracks();
-                  tracks.forEach(track => track.stop());
-                  videoRef.current.srcObject = null;
-                  console.log('[FaceScan] ✓ Camera stopped after match');
-                }
+                // Show success overlay with checkmark (keep video visible)
+                setShowSuccessOverlay(true);
+                updateFaceScanMessage(t('detail_hub.punch_clock.messages.employee_recognized'), 'success');
 
-                // Show success message
-                toast({
-                  title: t('detail_hub.punch_clock.messages.employee_recognized'),
-                  description: t('detail_hub.punch_clock.messages.welcome_back', { name: match.employeeName }),
-                  className: "bg-emerald-50 border-emerald-500"
-                });
+                // Wait 500ms for success animation, then close
+                setTimeout(() => {
+                  // Stop camera and clear srcObject
+                  if (videoRef.current?.srcObject) {
+                    const stream = videoRef.current.srcObject as MediaStream;
+                    const tracks = stream.getTracks();
+                    tracks.forEach(track => track.stop());
+                    videoRef.current.srcObject = null;
+                    console.log('[FaceScan] ✓ Camera stopped after success overlay');
+                  }
 
-                // Hide face scan UI
-                setFaceScanning(false);
-                setShowFaceScan(false);
+                  // Show success toast
+                  toast({
+                    title: t('detail_hub.punch_clock.messages.employee_recognized'),
+                    description: t('detail_hub.punch_clock.messages.welcome_back', { name: match.employeeName }),
+                    className: "bg-emerald-50 border-emerald-500"
+                  });
 
-                // Trigger employee fetch by ID (useEffect will handle selection)
-                setFaceMatchedEmployeeId(match.employeeId);
+                  // Hide face scan UI
+                  setFaceScanning(false);
+                  setShowFaceScan(false);
+                  setShowSuccessOverlay(false);
+
+                  // Trigger employee fetch by ID (useEffect will handle selection)
+                  setFaceMatchedEmployeeId(match.employeeId);
+                }, 500);
               } else {
                 // No match found - show message
                 console.log('[FaceScan] ❌ No match found this scan');
-                setFaceScanMessage(t('detail_hub.punch_clock.messages.no_face_detected'));
+                updateFaceScanMessage(t('detail_hub.punch_clock.messages.no_face_detected'), 'info');
               }
             } catch (err) {
               const errorMessage = err instanceof Error ? err.message : String(err);
@@ -1140,16 +1209,22 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                 // Don't update UI - let scanning continue
               } else {
                 console.error('[FaceScan] ❌ Error during scan:', err);
-                setFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'));
+                updateFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'), 'error');
               }
             }
           }
         }, 2000);
 
-        // Store intervals to clear on unmount
+        // Cleanup function - now properly accesses refs
         return () => {
-          clearInterval(countdownInterval);
-          clearInterval(scanInterval);
+          if (countdownIntervalRef.current) {
+            clearInterval(countdownIntervalRef.current);
+            countdownIntervalRef.current = null;
+          }
+          if (scanIntervalRef.current) {
+            clearInterval(scanIntervalRef.current);
+            scanIntervalRef.current = null;
+          }
         };
       }
     } catch (error) {
@@ -1158,24 +1233,36 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       // Suppress TensorFlow internal errors (validation already handled above)
       if (errorMessage.includes('tensor should have') || errorMessage.includes('values but has')) {
         console.warn('[FaceScan] ⚠️ TensorFlow internal error (likely corrupted descriptor), stopping scan');
-        setFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'));
-        setFaceScanning(false);
+        updateFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'), 'error');
+        handleStopFaceScan(); // ✅ Release camera and intervals
         setShowFaceScan(false);
         return;
       }
 
       console.error('Camera access error:', error);
-      setFaceScanMessage(t('detail_hub.punch_clock.messages.camera_denied'));
+      updateFaceScanMessage(t('detail_hub.punch_clock.messages.camera_denied'), 'error');
       toast({
         title: t('detail_hub.punch_clock.camera_error'),
         description: t('detail_hub.punch_clock.messages.camera_denied'),
         variant: "destructive"
       });
-      setFaceScanning(false);
+      handleStopFaceScan(); // ✅ Release camera and intervals
     }
   };
 
   const handleStopFaceScan = () => {
+    // Clear scan and countdown intervals
+    if (scanIntervalRef.current) {
+      clearInterval(scanIntervalRef.current);
+      scanIntervalRef.current = null;
+      console.log('[FaceScan] ✓ Scan interval cleared');
+    }
+    if (countdownIntervalRef.current) {
+      clearInterval(countdownIntervalRef.current);
+      countdownIntervalRef.current = null;
+      console.log('[FaceScan] ✓ Countdown interval cleared');
+    }
+
     // Stop camera and clear srcObject
     if (videoRef.current?.srcObject) {
       const stream = videoRef.current.srcObject as MediaStream;
@@ -1193,7 +1280,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     }
 
     setFaceScanning(false);
-    setFaceScanMessage("");
+    updateFaceScanMessage("", 'info');
   };
 
   return (
@@ -1247,11 +1334,11 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                           {t('detail_hub.punch_clock.messages.use_face_recognition')}
                         </h2>
                         <p className={`text-sm font-medium ${
-                          faceScanMessage.includes('error') || faceScanMessage.includes('Error') || faceScanMessage.includes('No')
-                            ? 'text-red-600'
-                            : faceScanMessage.includes('Detecting') || faceScanMessage.includes('detecting')
-                            ? 'text-emerald-600 animate-pulse'
-                            : 'text-gray-600'
+                          faceScanMessageType === 'error' ? 'text-red-600' :
+                          faceScanMessageType === 'warning' ? 'text-amber-600' :
+                          faceScanMessageType === 'scanning' ? 'text-emerald-600 animate-pulse' :
+                          faceScanMessageType === 'success' ? 'text-emerald-600' :
+                          'text-gray-600'  // info
                         }`}>
                           {faceScanMessage || t('detail_hub.punch_clock.messages.position_face')}
                         </p>
@@ -1268,16 +1355,59 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                         />
 
                         {/* Face Guide Overlay */}
-                        {faceScanning && (
+                        {faceScanning && !showSuccessOverlay && (
                           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                             <div className="relative">
-                              {/* Face outline guide */}
-                              <div className="w-64 h-80 border-4 border-emerald-500 rounded-2xl animate-pulse-border" />
+                              {/* Face outline guide - enhanced pulse when actively scanning */}
+                              <div className={`w-64 h-80 border-4 rounded-2xl transition-all duration-300 ${
+                                faceScanMessageType === 'scanning'
+                                  ? 'border-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.6)] animate-pulse'
+                                  : 'border-emerald-500 animate-pulse-border'
+                              }`} />
+
+                              {/* Scanning line - only when actively analyzing */}
+                              {faceScanMessageType === 'scanning' && (
+                                <div className="absolute inset-0 flex items-start justify-center overflow-hidden rounded-2xl">
+                                  <div className="w-full h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-80 animate-scan-line"
+                                       style={{ boxShadow: '0 0 10px rgba(52, 211, 153, 0.8)' }} />
+                                </div>
+                              )}
 
                               {/* Instruction badge */}
                               <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg animate-fade-in whitespace-nowrap">
                                 {t('detail_hub.punch_clock.messages.position_face')}
                               </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Success Overlay - Checkmark Animation */}
+                        {showSuccessOverlay && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in">
+                            <div className="text-center space-y-4">
+                              {/* Checkmark Circle */}
+                              <div className="mx-auto w-24 h-24 rounded-full bg-emerald-500 flex items-center justify-center animate-scale-in">
+                                <svg
+                                  className="w-16 h-16 text-white"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    className="animate-check-draw"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={3}
+                                    strokeDasharray="50"
+                                    strokeDashoffset="50"
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                              </div>
+                              {/* Success Text */}
+                              <p className="text-white text-xl font-semibold">
+                                {faceScanMessage}
+                              </p>
                             </div>
                           </div>
                         )}
@@ -1636,6 +1766,39 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                       </div>
                     </div>
 
+                    {/* Camera Warning Alert */}
+                    {!cameraReady && (
+                      <Alert
+                        variant={
+                          cameraStatus === 'denied' || cameraStatus === 'blocked' || cameraStatus === 'error'
+                            ? 'destructive'
+                            : 'default'
+                        }
+                        className="mt-3"
+                      >
+                        <div className="flex items-center gap-2">
+                          {cameraStatus === 'checking' && <Loader2 className="h-4 w-4 animate-spin" />}
+                          {(cameraStatus === 'denied' || cameraStatus === 'blocked' || cameraStatus === 'error') && (
+                            <XCircle className="h-4 w-4" />
+                          )}
+                          {(cameraStatus === 'not_found' || cameraStatus === 'in_use') && (
+                            <AlertCircle className="h-4 w-4 text-amber-600" />
+                          )}
+                          <AlertTitle className="mb-0">
+                            {cameraStatus === 'checking' && t('detail_hub.punch_clock.camera_checking')}
+                            {cameraStatus === 'denied' && t('detail_hub.punch_clock.camera_denied')}
+                            {cameraStatus === 'blocked' && t('detail_hub.punch_clock.camera_blocked')}
+                            {cameraStatus === 'not_found' && t('detail_hub.punch_clock.camera_not_found')}
+                            {cameraStatus === 'in_use' && t('detail_hub.punch_clock.camera_in_use')}
+                            {cameraStatus === 'error' && t('detail_hub.punch_clock.camera_error')}
+                          </AlertTitle>
+                        </div>
+                        <AlertDescription className="mt-2 text-sm">
+                          {cameraError || t('detail_hub.punch_clock.camera_required_message')}
+                        </AlertDescription>
+                      </Alert>
+                    )}
+
                     {/* Current Status Info - Grid Layout */}
                     {employeeState.currentEntry && (
                       <div className="pt-3 border-t border-gray-200">
@@ -1649,7 +1812,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                                 })}
                               </p>
                               <p className="text-xs text-gray-500">
-                                📍 {kioskConfig.name || KIOSK_ID || 'Not Configured'}
+                                📍 {kioskConfig.name || 'Not Configured'}
+                                {kioskConfig.location && ` - ${kioskConfig.location}`}
                               </p>
                             </div>
 
@@ -1673,7 +1837,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                                 })}
                               </p>
                               <p className="text-xs text-gray-500">
-                                📍 {kioskConfig.name || KIOSK_ID || 'Not Configured'}
+                                📍 {kioskConfig.name || 'Not Configured'}
+                                {kioskConfig.location && ` - ${kioskConfig.location}`}
                               </p>
                               {(employeeState.currentEntry.break_elapsed_minutes || 0) < 30 && (
                                 <p className="text-xs text-amber-600 mt-1">
@@ -1748,7 +1913,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                           size="lg"
                           className="h-24 text-xl font-semibold bg-emerald-600 hover:bg-emerald-700 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-emerald-200 col-span-2"
                           onClick={() => handleStartPhotoCapture('clock_in')}
-                          disabled={templateValidation?.allowed === false}
+                          disabled={!cameraReady || templateValidation?.allowed === false}
                         >
                           <LogIn className="w-8 h-8 mr-3" />
                           <div className="text-left">
@@ -1766,15 +1931,15 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                             variant="outline"
                             className="h-24 text-xl font-semibold border-2 border-amber-500 text-amber-700 hover:bg-amber-50"
                             onClick={() => handleStartPhotoCapture('break_start')}
+                            disabled={!cameraReady}
                           >
                             <Coffee className="w-8 h-8 mr-2" />
                             <div className="text-left">
                               <div>{t('detail_hub.punch_clock.start_break')}</div>
                               <div className="text-xs font-normal opacity-75">
-                                {/* ✅ SMART MESSAGE: Show break type based on how many taken */}
-                                {currentBreak === null && employeeState.currentEntry?.break_start === null
-                                  ? t('detail_hub.messages.lunch_break_label', { minutes: 30 })
-                                  : t('detail_hub.messages.short_break_label')}
+                                {(currentBreak === null && employeeState.currentEntry?.break_start === null)
+                                  ? t('detail_hub.punch_clock.messages.lunch_break_label', { minutes: 30 })
+                                  : t('detail_hub.punch_clock.messages.short_break_label')}
                               </div>
                             </div>
                           </Button>
@@ -1783,6 +1948,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                             size="lg"
                             className="h-24 text-xl font-semibold bg-red-600 hover:bg-red-700"
                             onClick={() => handleStartPhotoCapture('clock_out')}
+                            disabled={!cameraReady}
                           >
                             <LogOut className="w-8 h-8 mr-2" />
                             {t('detail_hub.punch_clock.messages.clock_out')}
@@ -1797,7 +1963,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                             size="lg"
                             className="h-24 text-xl font-semibold bg-amber-600 hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed"
                             onClick={() => handleStartPhotoCapture('break_end')}
-                            disabled={breakSecondsRemaining !== null && breakSecondsRemaining > 0}
+                            disabled={!cameraReady || (breakSecondsRemaining !== null && breakSecondsRemaining > 0)}
                             title={breakSecondsRemaining !== null && breakSecondsRemaining > 0
                               ? t('detail_hub.messages.break_minimum_required', {
                                   minutes: 30,
@@ -1827,6 +1993,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                             size="lg"
                             className="h-24 text-xl font-semibold bg-red-600 hover:bg-red-700"
                             onClick={() => handleStartPhotoCapture('clock_out')}
+                            disabled={!cameraReady}
                           >
                             <LogOut className="w-8 h-8 mr-2" />
                             {t('detail_hub.punch_clock.messages.clock_out')}
@@ -1937,7 +2104,8 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                       <span>{selectedEmployee.employee_number}</span>
                       <span>•</span>
                       <Badge variant="outline" className="text-xs">
-                        📍 {kioskConfig.name || KIOSK_ID || 'Not Configured'}
+                        📍 {kioskConfig.name || 'Not Configured'}
+                        {kioskConfig.location && ` - ${kioskConfig.location}`}
                       </Badge>
                       <span>•</span>
                       <span className="text-gray-500">{format(new Date(), 'MMM d, HH:mm')}</span>
@@ -1980,6 +2148,38 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                     </AlertDescription>
                   </Alert>
 
+                  {/* Note Input - Always Visible & Highlighted */}
+                  {capturedPhoto && (
+                    <div className="space-y-2 p-4 bg-amber-50 border-2 border-amber-300 rounded-lg animate-fade-in">
+                      <label className="text-sm font-semibold text-amber-900 flex items-center gap-2">
+                        <MessageSquare className="w-5 h-5 text-amber-600" />
+                        {t('detail_hub.punch_clock.note_label')}
+                        <span className="text-amber-600 font-normal">({t('common.optional')})</span>
+                      </label>
+                      <Textarea
+                        value={punchNote}
+                        onChange={(e) => setPunchNote(e.target.value)}
+                        placeholder={t('detail_hub.punch_clock.note_placeholder')}
+                        className="min-h-[100px] resize-none bg-white border-amber-200 focus:border-amber-400 focus:ring-amber-400"
+                        maxLength={500}
+                      />
+                      <div className="flex justify-between items-center text-xs text-amber-700">
+                        <span className="font-medium">{punchNote.length}/500</span>
+                        {punchNote && (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 px-2 text-xs text-amber-600 hover:text-amber-800 hover:bg-amber-100"
+                            onClick={() => setPunchNote("")}
+                          >
+                            {t('common.clear')}
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Action buttons */}
                   <div className="flex gap-3">
                     {!capturedPhoto ? (
@@ -1994,11 +2194,21 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                         </Button>
                         <Button
                           size="lg"
-                          className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                          className="flex-1 bg-blue-600 hover:bg-blue-700"
                           onClick={handleCapturePhoto}
+                          disabled={isCapturing}
                         >
-                          <Camera className="w-5 h-5 mr-2" />
-                          {t('detail_hub.punch_clock.capture')}
+                          {isCapturing ? (
+                            <>
+                              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                              {t('detail_hub.punch_clock.messages.capturing_photo')}
+                            </>
+                          ) : (
+                            <>
+                              <Camera className="w-5 h-5 mr-2" />
+                              {t('detail_hub.punch_clock.capture')}
+                            </>
+                          )}
                         </Button>
                       </>
                     ) : (
@@ -2042,14 +2252,62 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
             <Card className="card-enhanced">
               <CardContent className="py-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <Badge variant="outline">{kioskConfig.name || KIOSK_ID || 'Not Configured'}</Badge>
-                    <span>{t('detail_hub.punch_clock.kiosk_mode_active')}</span>
+                  <div className="flex items-center gap-3 text-sm text-gray-600">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-gray-700">
+                          {kioskConfig.name || 'Not Configured'}
+                        </span>
+                        {kioskConfig.kiosk_code && (
+                          <Badge variant="outline" className="text-xs">
+                            {kioskConfig.kiosk_code}
+                          </Badge>
+                        )}
+                      </div>
+                      {kioskConfig.location && (
+                        <span className="text-xs text-gray-500">
+                          📍 {kioskConfig.location}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="flex items-center gap-4 text-sm text-gray-600">
+                    {/* Dynamic Camera Status */}
                     <div className="flex items-center gap-1">
-                      <CheckCircle className="w-4 h-4 text-emerald-500" />
-                      <span>{t('detail_hub.punch_clock.camera_ready')}</span>
+                      {cameraStatus === 'checking' && (
+                        <>
+                          <Loader2 className="w-4 h-4 text-gray-400 animate-spin" />
+                          <span className="text-gray-500">{t('detail_hub.punch_clock.camera_checking')}</span>
+                        </>
+                      )}
+                      {cameraStatus === 'available' && (
+                        <>
+                          <CheckCircle className="w-4 h-4 text-emerald-500" />
+                          <span className="text-emerald-600">{t('detail_hub.punch_clock.camera_ready')}</span>
+                        </>
+                      )}
+                      {(cameraStatus === 'denied' || cameraStatus === 'blocked') && (
+                        <>
+                          <XCircle className="w-4 h-4 text-red-500" />
+                          <span className="text-red-600">{t('detail_hub.punch_clock.camera_denied')}</span>
+                        </>
+                      )}
+                      {(cameraStatus === 'not_found' || cameraStatus === 'in_use') && (
+                        <>
+                          <AlertCircle className="w-4 h-4 text-amber-500" />
+                          <span className="text-amber-600">
+                            {cameraStatus === 'not_found'
+                              ? t('detail_hub.punch_clock.camera_not_found')
+                              : t('detail_hub.punch_clock.camera_in_use')}
+                          </span>
+                        </>
+                      )}
+                      {cameraStatus === 'error' && (
+                        <>
+                          <XCircle className="w-4 h-4 text-red-500" />
+                          <span className="text-red-600">{t('detail_hub.punch_clock.camera_error')}</span>
+                        </>
+                      )}
                     </div>
                     <div className="flex items-center gap-1">
                       <CheckCircle className="w-4 h-4 text-emerald-500" />

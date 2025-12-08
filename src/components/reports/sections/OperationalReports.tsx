@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useOperationalOrdersList, useOrdersAnalytics, usePerformanceTrends, type ReportsFilters, type VehicleForList } from '@/hooks/useReportsData';
 import { usePermissions } from '@/hooks/usePermissions';
 import { supabase } from '@/integrations/supabase/client';
@@ -19,6 +20,7 @@ import {
   Clock,
   DollarSign,
   FileText,
+  HelpCircle,
   Package,
   PieChart,
   Target,
@@ -144,7 +146,19 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="p-4 border rounded-lg space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">{t('reports.operational.executive_metrics.total_volume')}</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-sm font-medium text-muted-foreground">{t('reports.operational.executive_metrics.total_volume')}</span>
+                  <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <HelpCircle className="h-3.5 w-3.5 text-muted-foreground/60 hover:text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="max-w-xs">
+                        <p>{t('reports.operational.executive_metrics.total_volume_tooltip')}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
                 <Package className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="text-2xl font-bold">{orderAnalytics?.total_volume || 0}</div>
@@ -770,7 +784,19 @@ export const OperationalReports: React.FC<OperationalReportsProps> = ({ filters 
             <Card>
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-muted-foreground">{t('reports.operational.orders_table.total_orders')}</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-medium text-muted-foreground">{t('reports.operational.orders_table.total_orders')}</span>
+                    <TooltipProvider delayDuration={200}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <HelpCircle className="h-3.5 w-3.5 text-muted-foreground/60 hover:text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="max-w-xs">
+                          <p>{t('reports.operational.orders_table.total_orders_tooltip')}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
                   <FileText className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div className="text-3xl font-bold mb-1">{orderAnalytics?.total_orders || 0}</div>

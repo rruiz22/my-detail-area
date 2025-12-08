@@ -356,7 +356,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
         .from('orders')
         .select('id, order_type, created_at, completed_at, due_date, status, services')
         .eq('dealer_id', dealerId)
-        .limit(2000);
+        .limit(QUERY_LIMITS.EXTENDED) // 50000 - handles large dealers
+        .order('created_at', { ascending: false }); // Most recent orders first
 
       // Apply order type filter
       if (orderType !== 'all') {
@@ -411,13 +412,14 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       });
 
       // Then, get invoice items for those invoices
-      // ⚠️ CRITICAL: Supabase defaults to 1000 row limit - we need ALL items
+      // ⚠️ CRITICAL: Fetch most recent items first to handle large datasets
       const { data: existingInvoiceItems, error: itemsError } = await supabase
         .from('invoice_items')
         .select('service_reference')
         .in('invoice_id', invoiceIds)
         .not('service_reference', 'is', null)
-        .limit(10000); // ✅ Fix: Get ALL invoice items, not just first 1000
+        .order('created_at', { ascending: false }) // ✅ FIX: Fetch newest items first
+        .limit(QUERY_LIMITS.EXTENDED); // 50000 - handles large dealers
 
       if (itemsError) throw itemsError;
 
@@ -434,6 +436,18 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
       console.log('🔍 [TOTAL-ORDERS DEBUG 3] Set created:', {
         setSize: invoicedOrderIds.size
+      });
+
+      // ⚠️ CRITICAL DEBUG: Compare order IDs with invoiced IDs to find mismatch
+      console.log('🔍 [TOTAL-ORDERS DEBUG 3.5] ID Comparison:', {
+        sampleOrderIds: filteredByDate.slice(0, 3).map(o => ({
+          id: o.id,
+          type: typeof o.id,
+          orderNumber: o.order_number
+        })),
+        sampleInvoicedIds: Array.from(invoicedOrderIds).slice(0, 3),
+        firstOrderInSet: invoicedOrderIds.has(filteredByDate[0]?.id),
+        setHasString: invoicedOrderIds.has(filteredByDate[0]?.id?.toString())
       });
 
       const availableCount = filteredByDate.filter(order => !invoicedOrderIds.has(order.id)).length;
@@ -469,7 +483,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
         .select('id, order_number, custom_order_number, order_type, customer_name, stock_number, po, ro, tag, vehicle_make, vehicle_model, vehicle_year, vehicle_vin, total_amount, services, status, created_at, completed_at, due_date, assigned_group_id')
         .eq('dealer_id', dealerId)
         .order('created_at', { ascending: false })
-        .limit(QUERY_LIMITS.STANDARD); // Standard limit - TODO: Implement server-side filtering or pagination
+        .limit(QUERY_LIMITS.EXTENDED); // ✅ FIX: Increased from 5K to 50K for historical date range support
 
       // Apply order type filter
       if (orderType !== 'all') {
@@ -523,13 +537,14 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       });
 
       // Then, get invoice items for those invoices
-      // ⚠️ CRITICAL: Supabase defaults to 1000 row limit - we need ALL items
+      // ⚠️ CRITICAL: Fetch most recent items first to handle large datasets
       const { data: existingInvoiceItems, error: itemsError } = await supabase
         .from('invoice_items')
         .select('service_reference')
         .in('invoice_id', invoiceIds2)
         .not('service_reference', 'is', null)
-        .limit(10000); // ✅ Fix: Get ALL invoice items, not just first 1000
+        .order('created_at', { ascending: false }) // ✅ FIX: Fetch newest items first
+        .limit(QUERY_LIMITS.EXTENDED); // 50000 - handles large dealers
 
       if (itemsError) throw itemsError;
 
@@ -554,6 +569,18 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
           serviceRef: item.service_reference,
           type: typeof item.service_reference
         }))
+      });
+
+      // ⚠️ CRITICAL DEBUG: Compare order IDs with invoiced IDs to find mismatch
+      console.log('🔍 [INVOICE DEBUG 3.5] ID Comparison:', {
+        sampleOrderIds: filteredByDate.slice(0, 3).map(o => ({
+          id: o.id,
+          type: typeof o.id,
+          orderNumber: o.order_number
+        })),
+        sampleInvoicedIds: Array.from(invoicedOrderIds).slice(0, 3),
+        firstOrderInSet: invoicedOrderIds.has(filteredByDate[0]?.id),
+        setHasString: invoicedOrderIds.has(filteredByDate[0]?.id?.toString())
       });
 
       const beforeFilterCount = filteredByDate.length;

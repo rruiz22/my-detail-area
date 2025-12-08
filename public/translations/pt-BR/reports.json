@@ -394,6 +394,7 @@
     "executive_metrics": {
       "efficiency_score": "Índice de Eficiência",
       "total_volume": "Volume Total",
+      "total_volume_tooltip": "Número total de serviços individuais realizados em todos os pedidos. Cada pedido pode incluir múltiplos serviços (ex: lavagem externa + detalhamento interno + enceramento).",
       "services_processed": "serviços processados",
       "per_order": "por pedido",
       "from_completed_orders": "de pedidos concluídos"
@@ -481,6 +482,7 @@
       "title": "Relatório de Pedidos",
       "description": "Pedidos de veículos detalhados correspondentes aos seus filtros",
       "total_orders": "Total de Pedidos",
+      "total_orders_tooltip": "Número de ordens de trabalho/tickets criados no período selecionado. Cada pedido representa uma solicitação de um veículo ou cliente individual e pode conter um ou mais serviços.",
       "in_selected_period": "No período selecionado",
       "pending": "Pendente",
       "of_total": "do total",
@@ -563,6 +565,13 @@
       "pdf_exported_successfully": "PDF exportado com sucesso",
       "failed_to_export_excel": "Falha ao exportar Excel",
       "failed_to_export_pdf": "Falha ao exportar PDF"
+    },
+    "invoices": {
+      "duplicate_order_warning": "Pedido Duplicado Detectado",
+      "duplicate_vin_found": "{{count}} pedidos compartilham o mesmo VIN",
+      "duplicate_stock_found": "{{count}} pedidos compartilham o mesmo Stock Number",
+      "duplicate_tag_found": "{{count}} pedidos compartilham o mesmo Tag#",
+      "duplicate_tooltip_hint": "Múltiplos pedidos para o mesmo veículo/stock podem indicar serviços progressivos (Recon → Sales) ou erros de entrada de dados. Revise antes de faturar."
     }
   }
 }

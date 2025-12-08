@@ -1,12 +1,13 @@
 /**
  * PinInputDisplay Component
  *
- * Displays PIN input as dots (like iOS passcode)
+ * Displays PIN input as dynamic dots (banking/iOS style)
+ * No fixed number of squares - dots grow as user types
  *
  * Props:
  * - pin: string (current PIN value)
- * - length: number (expected PIN length, default 6)
- * - error?: boolean (shows red border on error)
+ * - length: number (maximum PIN length, default 6)
+ * - error?: boolean (shows red dots on error)
  */
 
 interface PinInputDisplayProps {
@@ -16,25 +17,23 @@ interface PinInputDisplayProps {
 }
 
 export function PinInputDisplay({ pin, length = 6, error = false }: PinInputDisplayProps) {
-  const dots = Array.from({ length }, (_, i) => i);
+  // Only show dots for entered digits (grow dynamically)
+  const enteredDots = pin.length;
 
   return (
-    <div className="flex justify-center gap-3">
-      {dots.map((index) => (
-        <div
-          key={index}
-          className={`
-            w-14 h-14 rounded-lg border-2 flex items-center justify-center
-            transition-all
-            ${error ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-white'}
-            ${pin.length > index ? (error ? 'bg-red-100' : 'bg-emerald-50 border-emerald-500') : ''}
-          `}
-        >
-          {pin.length > index && (
-            <div className={`w-3 h-3 rounded-full ${error ? 'bg-red-600' : 'bg-emerald-600'}`} />
-          )}
-        </div>
-      ))}
+    <div className="flex justify-center items-center gap-2 py-4 min-h-[40px]">
+      {enteredDots > 0 && (
+        // Show dots only for entered digits
+        Array.from({ length: enteredDots }, (_, i) => (
+          <div
+            key={i}
+            className={`
+              w-3 h-3 rounded-full transition-all animate-in fade-in zoom-in duration-200
+              ${error ? 'bg-red-600' : 'bg-emerald-600'}
+            `}
+          />
+        ))
+      )}
     </div>
   );
 }

@@ -394,6 +394,7 @@
     "executive_metrics": {
       "efficiency_score": "Puntuación de Eficiencia",
       "total_volume": "Volumen Total",
+      "total_volume_tooltip": "Número total de servicios individuales realizados en todas las órdenes. Cada orden puede incluir múltiples servicios (ej: lavado exterior + detalle interior + encerado).",
       "services_processed": "servicios procesados",
       "per_order": "por orden",
       "from_completed_orders": "de órdenes completadas"
@@ -481,6 +482,7 @@
       "title": "Reporte de Órdenes",
       "description": "Órdenes de vehículos detalladas que coinciden con sus filtros",
       "total_orders": "Órdenes Totales",
+      "total_orders_tooltip": "Número de órdenes de trabajo/tickets creadas en el período seleccionado. Cada orden representa una solicitud de un vehículo o cliente individual y puede contener uno o más servicios.",
       "in_selected_period": "En el período seleccionado",
       "pending": "Pendiente",
       "of_total": "del total",
@@ -563,6 +565,13 @@
       "pdf_exported_successfully": "PDF exportado exitosamente",
       "failed_to_export_excel": "Error al exportar Excel",
       "failed_to_export_pdf": "Error al exportar PDF"
+    },
+    "invoices": {
+      "duplicate_order_warning": "Orden Duplicada Detectada",
+      "duplicate_vin_found": "{{count}} órdenes comparten el mismo VIN",
+      "duplicate_stock_found": "{{count}} órdenes comparten el mismo Stock Number",
+      "duplicate_tag_found": "{{count}} órdenes comparten el mismo Tag#",
+      "duplicate_tooltip_hint": "Múltiples órdenes para el mismo vehículo/stock pueden indicar servicios progresivos (Recon → Sales) o errores de entrada de datos. Revise antes de facturar."
     }
   }
 }

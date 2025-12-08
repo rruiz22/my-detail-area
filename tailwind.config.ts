@@ -106,16 +106,37 @@ export default {
           },
         },
         "scan-line": {
-          "0%": { 
-            transform: "translateY(0px)", 
-            opacity: "0" 
+          "0%": {
+            transform: "translateY(0px)",
+            opacity: "0"
           },
-          "50%": { 
-            opacity: "1" 
+          "50%": {
+            opacity: "1"
           },
-          "100%": { 
-            transform: "translateY(128px)", 
-            opacity: "0" 
+          "100%": {
+            transform: "translateY(128px)",
+            opacity: "0"
+          }
+        },
+        "scale-in": {
+          "0%": {
+            transform: "scale(0)",
+            opacity: "0"
+          },
+          "50%": {
+            transform: "scale(1.1)"
+          },
+          "100%": {
+            transform: "scale(1)",
+            opacity: "1"
+          }
+        },
+        "check-draw": {
+          "0%": {
+            strokeDashoffset: "50"
+          },
+          "100%": {
+            strokeDashoffset: "0"
           }
         },
       },
@@ -123,6 +144,8 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "scan-line": "scan-line 2s ease-in-out infinite",
+        "scale-in": "scale-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "check-draw": "check-draw 0.4s ease-out 0.15s forwards",
       },
     },
   },

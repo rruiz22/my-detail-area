@@ -1003,6 +1003,103 @@ export type Database = {
         }
         Relationships: []
       }
+      dealer_integrations: {
+        Row: {
+          config: Json
+          created_at: string | null
+          created_by: string | null
+          credentials_encrypted: boolean | null
+          dealer_id: number
+          deleted_at: string | null
+          enabled: boolean
+          encryption_key_id: string | null
+          id: string
+          integration_name: string
+          integration_type: string
+          last_test_at: string | null
+          last_test_result: Json | null
+          oauth_access_token: string | null
+          oauth_refresh_token: string | null
+          oauth_scopes: string[] | null
+          oauth_token_expires_at: string | null
+          status: string | null
+          updated_at: string | null
+          updated_by: string | null
+          webhook_secret: string | null
+          webhook_url: string | null
+        }
+        Insert: {
+          config?: Json
+          created_at?: string | null
+          created_by?: string | null
+          credentials_encrypted?: boolean | null
+          dealer_id: number
+          deleted_at?: string | null
+          enabled?: boolean
+          encryption_key_id?: string | null
+          id?: string
+          integration_name: string
+          integration_type: string
+          last_test_at?: string | null
+          last_test_result?: Json | null
+          oauth_access_token?: string | null
+          oauth_refresh_token?: string | null
+          oauth_scopes?: string[] | null
+          oauth_token_expires_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          webhook_secret?: string | null
+          webhook_url?: string | null
+        }
+        Update: {
+          config?: Json
+          created_at?: string | null
+          created_by?: string | null
+          credentials_encrypted?: boolean | null
+          dealer_id?: number
+          deleted_at?: string | null
+          enabled?: boolean
+          encryption_key_id?: string | null
+          id?: string
+          integration_name?: string
+          integration_type?: string
+          last_test_at?: string | null
+          last_test_result?: Json | null
+          oauth_access_token?: string | null
+          oauth_refresh_token?: string | null
+          oauth_scopes?: string[] | null
+          oauth_token_expires_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+          webhook_secret?: string | null
+          webhook_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_integrations_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "appointment_slots_health"
+            referencedColumns: ["dealer_id"]
+          },
+          {
+            foreignKeyName: "dealer_integrations_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_integrations_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "mv_dealership_stats"
+            referencedColumns: ["dealer_id"]
+          },
+        ]
+      }
       dealer_inventory_sync_log: {
         Row: {
           dealer_id: number
@@ -1630,6 +1727,81 @@ export type Database = {
           },
         ]
       }
+      dealer_push_notification_preferences: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          dealer_id: number
+          enabled: boolean
+          event_type: string
+          id: string
+          module: string
+          notification_level: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          dealer_id: number
+          enabled?: boolean
+          event_type: string
+          id?: string
+          module: string
+          notification_level?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          dealer_id?: number
+          enabled?: boolean
+          event_type?: string
+          id?: string
+          module?: string
+          notification_level?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_push_notification_preferences_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_push_notification_preferences_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "appointment_slots_health"
+            referencedColumns: ["dealer_id"]
+          },
+          {
+            foreignKeyName: "dealer_push_notification_preferences_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_push_notification_preferences_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "mv_dealership_stats"
+            referencedColumns: ["dealer_id"]
+          },
+          {
+            foreignKeyName: "dealer_push_notification_preferences_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dealer_role_chat_templates: {
         Row: {
           conversation_types: string[] | null
@@ -1815,6 +1987,159 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "service_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_slack_channel_mappings: {
+        Row: {
+          channel_id: string
+          channel_name: string
+          created_at: string | null
+          created_by: string | null
+          dealer_id: number
+          enabled: boolean | null
+          id: string
+          integration_id: string
+          module: string
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          channel_id: string
+          channel_name: string
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id: number
+          enabled?: boolean | null
+          id?: string
+          integration_id: string
+          module: string
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          channel_id?: string
+          channel_name?: string
+          created_at?: string | null
+          created_by?: string | null
+          dealer_id?: number
+          enabled?: boolean | null
+          id?: string
+          integration_id?: string
+          module?: string
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_slack_channel_mappings_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_slack_channel_mappings_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "appointment_slots_health"
+            referencedColumns: ["dealer_id"]
+          },
+          {
+            foreignKeyName: "dealer_slack_channel_mappings_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_slack_channel_mappings_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "mv_dealership_stats"
+            referencedColumns: ["dealer_id"]
+          },
+          {
+            foreignKeyName: "dealer_slack_channel_mappings_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_slack_channel_mappings_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dealer_slack_event_preferences: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          dealer_id: number
+          enabled: boolean
+          event_type: string
+          id: string
+          module: string
+          updated_at: string
+          updated_by: string | null
+          webhook_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          dealer_id: number
+          enabled?: boolean
+          event_type: string
+          id?: string
+          module: string
+          updated_at?: string
+          updated_by?: string | null
+          webhook_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          dealer_id?: number
+          enabled?: boolean
+          event_type?: string
+          id?: string
+          module?: string
+          updated_at?: string
+          updated_by?: string | null
+          webhook_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealer_slack_event_preferences_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "appointment_slots_health"
+            referencedColumns: ["dealer_id"]
+          },
+          {
+            foreignKeyName: "dealer_slack_event_preferences_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealer_slack_event_preferences_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "mv_dealership_stats"
+            referencedColumns: ["dealer_id"]
+          },
+          {
+            foreignKeyName: "dealer_slack_event_preferences_webhook_id_fkey"
+            columns: ["webhook_id"]
+            isOneToOne: false
+            referencedRelation: "dealer_integrations"
             referencedColumns: ["id"]
           },
         ]
@@ -2543,6 +2868,7 @@ export type Database = {
           id: string
           is_paid: boolean | null
           kiosk_id: string | null
+          notes: string | null
           photo_end_url: string | null
           photo_start_url: string | null
           time_entry_id: string
@@ -2566,6 +2892,7 @@ export type Database = {
           id?: string
           is_paid?: boolean | null
           kiosk_id?: string | null
+          notes?: string | null
           photo_end_url?: string | null
           photo_start_url?: string | null
           time_entry_id: string
@@ -2589,6 +2916,7 @@ export type Database = {
           id?: string
           is_paid?: boolean | null
           kiosk_id?: string | null
+          notes?: string | null
           photo_end_url?: string | null
           photo_start_url?: string | null
           time_entry_id?: string
@@ -4152,30 +4480,51 @@ export type Database = {
       }
       fcm_tokens: {
         Row: {
+          browser: string | null
+          browser_version: string | null
           created_at: string | null
           dealer_id: number
+          device_name: string | null
           fcm_token: string
           id: string
           is_active: boolean | null
+          last_used_at: string | null
+          os: string | null
+          os_version: string | null
           updated_at: string | null
+          user_agent: string | null
           user_id: string
         }
         Insert: {
+          browser?: string | null
+          browser_version?: string | null
           created_at?: string | null
           dealer_id: number
+          device_name?: string | null
           fcm_token: string
           id?: string
           is_active?: boolean | null
+          last_used_at?: string | null
+          os?: string | null
+          os_version?: string | null
           updated_at?: string | null
+          user_agent?: string | null
           user_id: string
         }
         Update: {
+          browser?: string | null
+          browser_version?: string | null
           created_at?: string | null
           dealer_id?: number
+          device_name?: string | null
           fcm_token?: string
           id?: string
           is_active?: boolean | null
+          last_used_at?: string | null
+          os?: string | null
+          os_version?: string | null
           updated_at?: string | null
+          user_agent?: string | null
           user_id?: string
         }
         Relationships: [
@@ -5711,6 +6060,69 @@ export type Database = {
           },
         ]
       }
+      invoice_tag_relations: {
+        Row: {
+          created_at: string | null
+          invoice_id: string
+          tag_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          invoice_id: string
+          tag_id: string
+        }
+        Update: {
+          created_at?: string | null
+          invoice_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_tag_relations_invoice_id_fkey"
+            columns: ["invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoice_tag_relations_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "invoice_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoice_tags: {
+        Row: {
+          color_index: number | null
+          created_at: string | null
+          dealer_id: number
+          id: string
+          tag_name: string
+          updated_at: string | null
+          usage_count: number | null
+        }
+        Insert: {
+          color_index?: number | null
+          created_at?: string | null
+          dealer_id: number
+          id?: string
+          tag_name: string
+          updated_at?: string | null
+          usage_count?: number | null
+        }
+        Update: {
+          color_index?: number | null
+          created_at?: string | null
+          dealer_id?: number
+          id?: string
+          tag_name?: string
+          updated_at?: string | null
+          usage_count?: number | null
+        }
+        Relationships: []
+      }
       invoices: {
         Row: {
           amount_due: number
@@ -6657,6 +7069,61 @@ export type Database = {
           },
         ]
       }
+      oauth_states: {
+        Row: {
+          created_at: string
+          dealer_id: number
+          expires_at: string
+          id: string
+          integration_type: string
+          state_token: string
+          used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          dealer_id: number
+          expires_at?: string
+          id?: string
+          integration_type: string
+          state_token: string
+          used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          dealer_id?: number
+          expires_at?: string
+          id?: string
+          integration_type?: string
+          state_token?: string
+          used_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oauth_states_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "appointment_slots_health"
+            referencedColumns: ["dealer_id"]
+          },
+          {
+            foreignKeyName: "oauth_states_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealerships"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "oauth_states_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "mv_dealership_stats"
+            referencedColumns: ["dealer_id"]
+          },
+        ]
+      }
       order_activity_log: {
         Row: {
           activity_type: string
@@ -7175,6 +7642,42 @@ export type Database = {
           vehicle_model?: string | null
           vehicle_vin?: string | null
           vehicle_year?: number | null
+        }
+        Relationships: []
+      }
+      orders_zero_amount_backup_20251130: {
+        Row: {
+          backup_timestamp: string | null
+          created_at: string | null
+          created_by: string | null
+          customer_name: string | null
+          id: string | null
+          order_number: string | null
+          services: Json | null
+          status: string | null
+          total_amount: number | null
+        }
+        Insert: {
+          backup_timestamp?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          customer_name?: string | null
+          id?: string | null
+          order_number?: string | null
+          services?: Json | null
+          status?: string | null
+          total_amount?: number | null
+        }
+        Update: {
+          backup_timestamp?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          customer_name?: string | null
+          id?: string | null
+          order_number?: string | null
+          services?: Json | null
+          status?: string | null
+          total_amount?: number | null
         }
         Relationships: []
       }
@@ -9518,6 +10021,45 @@ export type Database = {
         }
         Relationships: []
       }
+      slack_event_types: {
+        Row: {
+          category: string
+          created_at: string
+          description_key: string | null
+          display_name_key: string
+          example_preview: string | null
+          icon: string | null
+          id: string
+          is_active: boolean
+          module: string
+          sort_order: number
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description_key?: string | null
+          display_name_key: string
+          example_preview?: string | null
+          icon?: string | null
+          id: string
+          is_active?: boolean
+          module: string
+          sort_order?: number
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description_key?: string | null
+          display_name_key?: string
+          example_preview?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          module?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
       sms_conversations: {
         Row: {
           created_at: string | null
@@ -10866,6 +11408,56 @@ export type Database = {
             foreignKeyName: "user_presence_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_push_notification_preferences: {
+        Row: {
+          allow_background: boolean
+          allow_sound: boolean
+          allow_vibration: boolean
+          created_at: string
+          id: string
+          push_enabled: boolean
+          quiet_hours_enabled: boolean
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          allow_background?: boolean
+          allow_sound?: boolean
+          allow_vibration?: boolean
+          created_at?: string
+          id?: string
+          push_enabled?: boolean
+          quiet_hours_enabled?: boolean
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          allow_background?: boolean
+          allow_sound?: boolean
+          allow_vibration?: boolean
+          created_at?: string
+          id?: string
+          push_enabled?: boolean
+          quiet_hours_enabled?: boolean
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_push_notification_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -13283,6 +13875,10 @@ export type Database = {
         Args: { dealer_id: number; user_id: string }
         Returns: boolean
       }
+      can_configure_slack_integration: {
+        Args: { dealer_id: number; user_id: string }
+        Returns: boolean
+      }
       can_punch_in_from_template: {
         Args: {
           p_current_time?: string
@@ -13339,6 +13935,7 @@ export type Database = {
         Args: { p_vehicle_id: string }
         Returns: boolean
       }
+      cleanup_expired_oauth_states: { Args: never; Returns: undefined }
       cleanup_expired_remote_kiosk_tokens: { Args: never; Returns: number }
       cleanup_expired_slots: {
         Args: never
@@ -13356,6 +13953,7 @@ export type Database = {
           deleted_count: number
         }[]
       }
+      cleanup_stale_fcm_tokens: { Args: never; Returns: number }
       create_dealer_invitation: {
         Args: { p_dealer_id: number; p_email: string; p_role_name: string }
         Returns: Json
@@ -13393,6 +13991,14 @@ export type Database = {
         Returns: string
       }
       create_role_system_backup: { Args: never; Returns: string }
+      deactivate_all_user_tokens: {
+        Args: { p_dealer_id: number; p_user_id: string }
+        Returns: number
+      }
+      deactivate_fcm_token: {
+        Args: { p_token_id: string; p_user_id: string }
+        Returns: boolean
+      }
       dealership_has_module_access: {
         Args: {
           p_dealer_id: number
@@ -13641,6 +14247,14 @@ export type Database = {
           total_orders: number
         }[]
       }
+      get_dealer_push_preferences: {
+        Args: { p_dealer_id: number; p_module: string }
+        Returns: {
+          enabled: boolean
+          event_type: string
+          notification_level: string
+        }[]
+      }
       get_dealer_services_by_department: {
         Args: { p_dealer_id: number; p_department_name: string }
         Returns: {
@@ -13696,6 +14310,16 @@ export type Database = {
           worst_active_t2l_hours: number
         }[]
       }
+      get_dealer_tags_summary: {
+        Args: { p_dealer_id: number }
+        Returns: {
+          color_index: number
+          id: string
+          invoice_count: number
+          tag_name: string
+          usage_count: number
+        }[]
+      }
       get_dealership_contacts: {
         Args: { p_dealership_id: number }
         Returns: {
@@ -13705,6 +14329,15 @@ export type Database = {
           job_title: string
           name: string
         }[]
+      }
+      get_dealership_export_data: {
+        Args: {
+          p_dealership_id: number
+          p_include_contacts?: boolean
+          p_include_orders?: boolean
+          p_include_users?: boolean
+        }
+        Returns: Json
       }
       get_dealership_modules: {
         Args: { p_dealer_id: number }
@@ -13885,6 +14518,14 @@ export type Database = {
           updated_at: string
         }[]
       }
+      get_invoice_tags: {
+        Args: { p_invoice_id: string }
+        Returns: {
+          color_index: number
+          id: string
+          tag_name: string
+        }[]
+      }
       get_invoices_with_filters: {
         Args: {
           p_dealer_id: number
@@ -13894,11 +14535,13 @@ export type Database = {
           p_search_term?: string
           p_start_date?: string
           p_status?: string
+          p_tag_names?: string[]
         }
         Returns: {
           amount_due: number
           amount_paid: number
           cancelled_at: string
+          child_invoices_count: number
           comments_count: number
           created_at: string
           created_by: string
@@ -13927,6 +14570,7 @@ export type Database = {
           reinvoice_sequence: string
           status: string
           subtotal: number
+          tags: Json
           tax_amount: number
           tax_rate: number
           total_amount: number
@@ -13994,7 +14638,7 @@ export type Database = {
           custom_order_number: string
           customer_name: string
           due_date: string
-          id: number
+          id: string
           invoice_number: string
           order_number: string
           order_type: string
@@ -14318,6 +14962,15 @@ export type Database = {
           vehicle_count: number
         }[]
       }
+      get_suggested_tags: {
+        Args: { p_dealer_id: number; p_limit?: number }
+        Returns: {
+          color_index: number
+          id: string
+          tag_name: string
+          usage_count: number
+        }[]
+      }
       get_system_stats: {
         Args: never
         Returns: {
@@ -14455,6 +15108,31 @@ export type Database = {
               role_name: Database["public"]["Enums"]["base_role_v3"]
             }[]
           }
+      get_user_push_devices: {
+        Args: { p_dealer_id: number; p_user_id: string }
+        Returns: {
+          browser: string
+          created_at: string
+          device_name: string
+          id: string
+          is_current_device: boolean
+          last_used_at: string
+          os: string
+          token_preview: string
+        }[]
+      }
+      get_user_push_preferences: {
+        Args: { p_user_id: string }
+        Returns: {
+          allow_background: boolean
+          allow_sound: boolean
+          allow_vibration: boolean
+          push_enabled: boolean
+          quiet_hours_enabled: boolean
+          quiet_hours_end: string
+          quiet_hours_start: string
+        }[]
+      }
       get_user_role_v3:
         | { Args: { p_dealer_id: number; p_user_id: string }; Returns: string }
         | {
@@ -14617,7 +15295,20 @@ export type Database = {
         Returns: boolean
       }
       is_global_system_admin: { Args: { user_id: string }; Returns: boolean }
+      is_push_enabled_for_event: {
+        Args: {
+          p_dealer_id: number
+          p_event_type: string
+          p_module: string
+          p_user_id: string
+        }
+        Returns: boolean
+      }
       is_slack_enabled_for_event: {
+        Args: { p_dealer_id: number; p_event_type: string; p_module: string }
+        Returns: boolean
+      }
+      is_slack_enabled_for_event_v2: {
         Args: { p_dealer_id: number; p_event_type: string; p_module: string }
         Returns: boolean
       }
@@ -14627,6 +15318,10 @@ export type Database = {
       is_system_admin_v3: { Args: { p_user_id: string }; Returns: boolean }
       is_user_member_of_dealer: {
         Args: { p_dealer_id: number }
+        Returns: boolean
+      }
+      is_within_quiet_hours: {
+        Args: { p_check_time?: string; p_user_id: string }
         Returns: boolean
       }
       log_face_enrollment: {
@@ -14697,6 +15392,14 @@ export type Database = {
         Returns: undefined
       }
       migrate_user_to_v2: { Args: { user_auth_id: string }; Returns: string }
+      migrate_users_to_dealership: {
+        Args: {
+          p_source_dealer_id: number
+          p_target_dealer_id: number
+          p_user_ids: string[]
+        }
+        Returns: Json
+      }
       preview_role_fixes: {
         Args: never
         Returns: {
@@ -14759,6 +15462,10 @@ export type Database = {
           vehicle_vin: string
         }[]
       }
+      seed_default_slack_event_preferences: {
+        Args: { p_dealer_id: number; p_webhook_id: string }
+        Returns: undefined
+      }
       set_membership_groups: {
         Args: { p_group_ids: string[]; p_membership_id: string }
         Returns: boolean
@@ -14790,6 +15497,14 @@ export type Database = {
           p_module: Database["public"]["Enums"]["app_module"]
         }
         Returns: boolean
+      }
+      update_invoice_tags: {
+        Args: {
+          p_dealer_id: number
+          p_invoice_id: string
+          p_tag_names: string[]
+        }
+        Returns: undefined
       }
       update_kiosk_heartbeat: {
         Args: { p_ip_address?: unknown; p_kiosk_code: string }

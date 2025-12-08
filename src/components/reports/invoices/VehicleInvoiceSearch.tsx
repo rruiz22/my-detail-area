@@ -70,6 +70,7 @@ export const VehicleInvoiceSearch: React.FC<VehicleInvoiceSearchProps> = ({ deal
         .select('id, order_number, custom_order_number, customer_name, stock_number, vehicle_make, vehicle_model, vehicle_year, vehicle_vin, total_amount, status')
         .eq('dealer_id', dealerId)
         .eq('status', 'completed')
+        .order('created_at', { ascending: false }) // ✅ FIX: Newest orders first for search results
         .limit(50);
 
       // Apply search filter
