@@ -117,31 +117,54 @@ interface VehicleForInvoice {
 // DUPLICATE DETECTION HELPERS
 // =====================================================
 
+/**
+ * Normalizes services to a comparable string for duplicate detection
+ * Only orders with SAME VIN/Stock/Tag AND SAME services are considered duplicates
+ */
+const normalizeServices = (services: OrderServiceItem[] | null): string => {
+  if (!services || !Array.isArray(services) || services.length === 0) return 'NO_SERVICES';
+
+  return services
+    .map(s => {
+      // Extract service identifier in priority order
+      if (s && typeof s === 'object' && s.name) return s.name;
+      if (s && typeof s === 'object' && s.id) return s.id;
+      if (s && typeof s === 'object' && s.type) return s.type;
+      if (typeof s === 'string') return s;
+      return 'UNKNOWN';
+    })
+    .sort() // Sort to ensure ["Photos", "Wash"] === ["Wash", "Photos"]
+    .join('|')
+    .toUpperCase();
+};
+
 const detectDuplicates = (orders: VehicleForInvoice[]) => {
   const vinMap = new Map<string, VehicleForInvoice[]>();
   const stockMap = new Map<string, VehicleForInvoice[]>();
   const tagMap = new Map<string, VehicleForInvoice[]>();
 
   orders.forEach(order => {
-    // Track VIN duplicates
+    const serviceKey = normalizeServices(order.services);
+
+    // Track VIN + Services duplicates (compound key)
     if (order.vehicle_vin && order.vehicle_vin.trim() !== '') {
-      const vin = order.vehicle_vin.toUpperCase().trim();
-      const existing = vinMap.get(vin) || [];
-      vinMap.set(vin, [...existing, order]);
+      const key = `${order.vehicle_vin.toUpperCase().trim()}_${serviceKey}`;
+      const existing = vinMap.get(key) || [];
+      vinMap.set(key, [...existing, order]);
     }
 
-    // Track Stock Number duplicates
+    // Track Stock Number + Services duplicates (compound key)
     if (order.stock_number && order.stock_number.trim() !== '') {
-      const stock = order.stock_number.toUpperCase().trim();
-      const existing = stockMap.get(stock) || [];
-      stockMap.set(stock, [...existing, order]);
+      const key = `${order.stock_number.toUpperCase().trim()}_${serviceKey}`;
+      const existing = stockMap.get(key) || [];
+      stockMap.set(key, [...existing, order]);
     }
 
-    // Track Tag# duplicates (Car Wash specific)
+    // Track Tag# + Services duplicates (compound key - Car Wash specific)
     if (order.tag && order.tag.trim() !== '') {
-      const tag = order.tag.toUpperCase().trim();
-      const existing = tagMap.get(tag) || [];
-      tagMap.set(tag, [...existing, order]);
+      const key = `${order.tag.toUpperCase().trim()}_${serviceKey}`;
+      const existing = tagMap.get(key) || [];
+      tagMap.set(key, [...existing, order]);
     }
   });
 
@@ -154,9 +177,12 @@ const getDuplicateInfo = (
   stockMap: Map<string, VehicleForInvoice[]>,
   tagMap: Map<string, VehicleForInvoice[]>
 ) => {
-  const vinKey = order.vehicle_vin?.toUpperCase().trim() || '';
-  const stockKey = order.stock_number?.toUpperCase().trim() || '';
-  const tagKey = order.tag?.toUpperCase().trim() || '';
+  const serviceKey = normalizeServices(order.services);
+
+  // Build compound keys: VIN/Stock/Tag + Services
+  const vinKey = order.vehicle_vin ? `${order.vehicle_vin.toUpperCase().trim()}_${serviceKey}` : '';
+  const stockKey = order.stock_number ? `${order.stock_number.toUpperCase().trim()}_${serviceKey}` : '';
+  const tagKey = order.tag ? `${order.tag.toUpperCase().trim()}_${serviceKey}` : '';
 
   const vinDuplicates = vinKey ? vinMap.get(vinKey) || [] : [];
   const stockDuplicates = stockKey ? stockMap.get(stockKey) || [] : [];
