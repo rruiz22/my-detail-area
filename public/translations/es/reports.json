@@ -305,7 +305,9 @@
     "duplicate_vin_found": "VIN aparece {{count}} veces en órdenes disponibles",
     "duplicate_stock_found": "Stock# aparece {{count}} veces en órdenes disponibles",
     "duplicate_tag_found": "Tag# aparece {{count}} veces en órdenes disponibles",
-    "duplicate_tooltip_hint": "Revise cuidadosamente antes de crear la factura para evitar cobros duplicados"
+    "duplicate_tooltip_hint": "Revise cuidadosamente antes de crear la factura para evitar cobros duplicados",
+    "duplicate_orders_list": "Encontrado en estas órdenes:",
+    "order_completed": "Completada: {{date}}"
   },
   "analytics": {
     "historicalTrends": "Tendencias Históricas",

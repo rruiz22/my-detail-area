@@ -305,7 +305,9 @@
     "duplicate_vin_found": "VIN appears {{count}} times in available orders",
     "duplicate_stock_found": "Stock# appears {{count}} times in available orders",
     "duplicate_tag_found": "Tag# appears {{count}} times in available orders",
-    "duplicate_tooltip_hint": "Review carefully before creating invoice to avoid duplicate billing"
+    "duplicate_tooltip_hint": "Review carefully before creating invoice to avoid duplicate billing",
+    "duplicate_orders_list": "Found in these orders:",
+    "order_completed": "Completed: {{date}}"
   },
   "analytics": {
     "historicalTrends": "Historical Trends",

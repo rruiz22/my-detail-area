@@ -2331,8 +2331,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                                           {!duplicateInfo.hasVinDuplicate && !duplicateInfo.hasStockDuplicate && duplicateInfo.hasTagDuplicate && `${duplicateInfo.tagCount}x Tag`}
                                         </Badge>
                                       </TooltipTrigger>
-                                      <TooltipContent side="top" className="max-w-xs">
-                                        <p className="font-semibold mb-1">{t('reports.invoices.duplicate_order_warning')}</p>
+                                      <TooltipContent side="top" className="max-w-md">
+                                        <p className="font-semibold mb-2">{t('reports.invoices.duplicate_order_warning')}</p>
                                         {duplicateInfo.hasVinDuplicate && (
                                           <p className="text-xs mb-1">• {t('reports.invoices.duplicate_vin_found', { count: duplicateInfo.vinCount })}</p>
                                         )}
@@ -2342,7 +2342,35 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                                         {duplicateInfo.hasTagDuplicate && (
                                           <p className="text-xs mb-1">• {t('reports.invoices.duplicate_tag_found', { count: duplicateInfo.tagCount })}</p>
                                         )}
-                                        <p className="text-xs text-muted-foreground mt-2">
+
+                                        {duplicateInfo.duplicateOrders.length > 0 && (
+                                          <div className="mt-3 pt-2 border-t border-gray-200">
+                                            <p className="text-xs font-semibold mb-2">{t('reports.invoices.duplicate_orders_list')}</p>
+                                            <div className="space-y-1.5">
+                                              {duplicateInfo.duplicateOrders.map((dupOrder) => (
+                                                <div key={dupOrder.id} className="text-xs bg-gray-50 p-1.5 rounded">
+                                                  <div className="font-semibold">
+                                                    Order #{dupOrder.order_number}
+                                                    <span className="ml-1 text-[10px] font-normal text-gray-500">({dupOrder.order_type})</span>
+                                                  </div>
+                                                  <div className="text-[10px] text-gray-600 mt-0.5">
+                                                    {t('reports.invoices.order_completed', {
+                                                      date: formatDate(dupOrder.completed_at || dupOrder.created_at)
+                                                    })}
+                                                  </div>
+                                                  {dupOrder.stock_number && (
+                                                    <div className="text-[10px] text-gray-600">Stock: {dupOrder.stock_number}</div>
+                                                  )}
+                                                  {dupOrder.tag && (
+                                                    <div className="text-[10px] text-gray-600">Tag: {dupOrder.tag}</div>
+                                                  )}
+                                                </div>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        )}
+
+                                        <p className="text-xs text-muted-foreground mt-3 pt-2 border-t border-gray-200">
                                           {t('reports.invoices.duplicate_tooltip_hint')}
                                         </p>
                                       </TooltipContent>
