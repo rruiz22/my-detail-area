@@ -636,15 +636,19 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       dev(`🔍 Dealer filter resolved: "${savedDealerFilter}" → ${dealerFilter}`);
 
       // Handle dealer filtering based on user type and global filter
-      // ✅ FIX: System admins should ALWAYS respect global filter, even if they have dealership_id assigned
+      // ✅ FIX: System admins and supermanagers should ALWAYS respect global filter, even if they have dealership_id assigned
       const isSystemAdmin = isEnhancedUserV2(enhancedUser)
         ? enhancedUser.is_system_admin
         : isEnhancedUserV1(enhancedUser) && enhancedUser.role === 'system_admin';
 
-      const shouldUseGlobalFilter = enhancedUser.dealership_id === null || isSystemAdmin;
+      const isSupermanager = isEnhancedUserV2(enhancedUser)
+        ? enhancedUser.is_supermanager
+        : isEnhancedUserV1(enhancedUser) && enhancedUser.role === 'supermanager';
+
+      const shouldUseGlobalFilter = enhancedUser.dealership_id === null || isSystemAdmin || isSupermanager;
 
       if (shouldUseGlobalFilter) {
-        // Multi-dealer users and system admins - respect global filter
+        // Multi-dealer users, system admins, and supermanagers - respect global filter
         if (dealerFilter === 'all') {
           // Show all dealers user has access to
           const { data: userDealerships, error: dealershipError } = await supabase
@@ -663,13 +667,13 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
             ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
           } else {
             const dealerIds = userDealerships.map(d => d.dealer_id);
-            dev(`🏢 ${isSystemAdmin ? 'System admin' : 'Multi-dealer user'} - showing all dealers: [${dealerIds.join(', ')}]`);
+            dev(`🏢 ${isSystemAdmin ? 'System admin' : isSupermanager ? 'Supermanager' : 'Multi-dealer user'} - showing all dealers: [${dealerIds.join(', ')}]`);
             ordersQuery = ordersQuery.in('dealer_id', dealerIds);
           }
         } else {
           // Filter by specific dealer selected in dropdown - validate it's a number
           if (typeof dealerFilter === 'number' && !isNaN(dealerFilter)) {
-            dev(`🎯 ${isSystemAdmin ? 'System admin' : 'Multi-dealer user'} - filtering by selected dealer: ${dealerFilter}`);
+            dev(`🎯 ${isSystemAdmin ? 'System admin' : isSupermanager ? 'Supermanager' : 'Multi-dealer user'} - filtering by selected dealer: ${dealerFilter}`);
             ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
           } else {
             // 🔒 SECURITY: Invalid dealer filter - return empty results (fail-secure)
