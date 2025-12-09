@@ -101,7 +101,33 @@ export function useCurrentlyWorking() {
       const { data, error} = await query;
 
       if (error) throw error;
-      return data as CurrentlyWorkingEmployee[];
+
+      // SAFETY NET: Deduplicate by employee_id to prevent duplicate rendering
+      // This handles edge cases where the database view might return duplicates
+      // (e.g., during migration rollouts, race conditions, or data inconsistencies)
+      if (!data || data.length === 0) return [];
+
+      // Use Map to deduplicate - keeps the most recent entry per employee
+      const uniqueEmployees = new Map<string, CurrentlyWorkingEmployee>();
+
+      data.forEach((employee) => {
+        const existing = uniqueEmployees.get(employee.employee_id);
+
+        if (!existing) {
+          // First time seeing this employee
+          uniqueEmployees.set(employee.employee_id, employee);
+        } else {
+          // Duplicate found - keep the one with most recent clock_in
+          const existingClockIn = new Date(existing.clock_in);
+          const currentClockIn = new Date(employee.clock_in);
+
+          if (currentClockIn > existingClockIn) {
+            uniqueEmployees.set(employee.employee_id, employee);
+          }
+        }
+      });
+
+      return Array.from(uniqueEmployees.values());
     },
     enabled: !!user,
     staleTime: CACHE_TIMES.INSTANT, // 0ms - always fetch fresh

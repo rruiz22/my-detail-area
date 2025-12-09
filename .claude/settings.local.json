@@ -28,7 +28,11 @@
       "Bash(npm run version:generate:*)",
       "Bash(powershell -Command \"(Get-Content ''C:\\Users\\rudyr\\apps\\mydetailarea\\public\\translations\\en\\reports.json'' | Measure-Object -Line).Lines\")",
       "Bash(netstat:*)",
-      "Bash(powershell -Command \"Start-Sleep -Seconds 5; echo ''Compilation complete''\")"
+      "Bash(powershell -Command \"Start-Sleep -Seconds 5; echo ''Compilation complete''\")",
+      "Bash(nul)",
+      "Bash(powershell:*)",
+      "mcp__supabase__deploy_edge_function",
+      "mcp__supabase__list_tables"
     ],
     "deny": [],
     "ask": []

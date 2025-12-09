@@ -233,9 +233,14 @@ export default function Auth() {
         // Log detailed error server-side only (not shown to user)
         console.error('[AUTH] Sign-in failed:', error.message);
 
+        // Check if error is specifically account_deactivated
+        const isAccountDeactivated = error.message === 'account_deactivated';
+
         toast({
           title: t('auth.sign_in_error_title'),
-          description: t('auth.invalid_credentials_generic'),
+          description: isAccountDeactivated
+            ? t('auth.account_deactivated')
+            : t('auth.invalid_credentials_generic'),
           variant: "destructive",
         });
       } else {

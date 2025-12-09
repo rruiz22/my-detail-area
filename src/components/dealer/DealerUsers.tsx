@@ -211,27 +211,70 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
    * Toggle user active/inactive status
    */
   const confirmToggleUserStatus = async (user: DealerMembership) => {
-    console.log('🔵 [DealerUsers] Toggling user status:', user.profiles?.email);
+    const timestamp = new Date().toISOString();
+    const newStatus = !user.is_active;
+
+    console.log('🔵 [DealerUsers] Toggling user status:', {
+      email: user.profiles?.email,
+      currentStatus: user.is_active ? 'active' : 'inactive',
+      newStatus: newStatus ? 'active' : 'inactive',
+      timestamp
+    });
 
     try {
       setIsToggling(true);
 
+      // OPTIMISTIC UPDATE: Update UI immediately for instant feedback
+      queryClient.setQueryData(['dealer_users_with_roles', dealerId], (oldData: DealerMembership[] | undefined) => {
+        if (!oldData) return oldData;
+        return oldData.map(u =>
+          u.user_id === user.user_id
+            ? { ...u, is_active: newStatus }
+            : u
+        );
+      });
+
+      // Execute database update
       const { error } = await supabase
         .from('dealer_memberships')
         .update({
-          is_active: !user.is_active,
-          updated_at: new Date().toISOString()
+          is_active: newStatus,
+          updated_at: timestamp
         })
         .eq('user_id', user.user_id)
         .eq('dealer_id', parseInt(dealerId));
 
       if (error) {
-        console.error('Error details:', error);
+        console.error('❌ [UserDeactivation] Database update failed:', {
+          timestamp,
+          user_id: user.user_id,
+          user_email: user.profiles?.email,
+          dealer_id: dealerId,
+          attempted_status: newStatus ? 'active' : 'inactive',
+          error: error.message,
+          error_code: error.code,
+          error_details: error.details
+        });
+
+        // Revert optimistic update on error
+        await queryClient.invalidateQueries({ queryKey: ['dealer_users_with_roles', dealerId] });
         throw error;
       }
 
-      // Invalidate cache to trigger refetch
-      await queryClient.invalidateQueries({ queryKey: ['dealer_users_with_roles', dealerId] });
+      console.log('✅ [UserDeactivation] Database update successful:', {
+        timestamp,
+        user_email: user.profiles?.email,
+        new_status: newStatus ? 'active' : 'inactive'
+      });
+
+      // Wait for database transaction to complete
+      await new Promise(resolve => setTimeout(resolve, 150));
+
+      // Force immediate refetch to ensure UI is in sync with database
+      await queryClient.refetchQueries({
+        queryKey: ['dealer_users_with_roles', dealerId],
+        type: 'active'
+      });
 
       toast({
         title: t('common.success'),
@@ -240,11 +283,16 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
           : t('dealer.view.users.user_activated')
       });
 
-      console.log('✅ [DealerUsers] User status updated successfully');
       setShowDeactivateDialog(false);
       setUserToToggle(null);
     } catch (error: any) {
-      console.error('💥 [DealerUsers] Error updating user status:', error);
+      console.error('💥 [UserDeactivation] Operation failed:', {
+        timestamp,
+        error_message: error?.message,
+        error_code: error?.code,
+        error_hint: error?.hint
+      });
+
       toast({
         title: t('common.error'),
         description: error?.message || t('dealer.view.users.error_updating_status'),
@@ -290,43 +338,53 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
   };
 
   /**
-   * Get badge color for role based on role name
+   * Get badge color for role based on role name (soft colors for better UI)
    */
   const getRoleBadgeClasses = (roleName: string): string => {
     const lowerRoleName = roleName.toLowerCase();
 
     // Admin roles - Red
     if (lowerRoleName.includes('admin')) {
-      return 'bg-rose-500 hover:bg-rose-600 text-white border-rose-600';
+      return 'bg-red-100 hover:bg-red-200 text-red-700 border-red-200';
     }
 
     // Manager roles - Purple
     if (lowerRoleName.includes('manager')) {
-      return 'bg-purple-500 hover:bg-purple-600 text-white border-purple-600';
+      return 'bg-purple-100 hover:bg-purple-200 text-purple-700 border-purple-200';
     }
 
     // Service roles - Blue
     if (lowerRoleName.includes('service') || lowerRoleName.includes('advisor')) {
-      return 'bg-blue-500 hover:bg-blue-600 text-white border-blue-600';
+      return 'bg-blue-100 hover:bg-blue-200 text-blue-700 border-blue-200';
     }
 
     // Sales roles - Emerald
     if (lowerRoleName.includes('sales') || lowerRoleName.includes('salesperson')) {
-      return 'bg-emerald-500 hover:bg-emerald-600 text-white border-emerald-600';
+      return 'bg-emerald-100 hover:bg-emerald-200 text-emerald-700 border-emerald-200';
     }
 
     // Technician roles - Orange
     if (lowerRoleName.includes('technician') || lowerRoleName.includes('tech')) {
-      return 'bg-orange-500 hover:bg-orange-600 text-white border-orange-600';
+      return 'bg-orange-100 hover:bg-orange-200 text-orange-700 border-orange-200';
     }
 
-    // Viewer/Basic roles - Gray
+    // Lot/Detail roles - Cyan
+    if (lowerRoleName.includes('lot') || lowerRoleName.includes('detail')) {
+      return 'bg-cyan-100 hover:bg-cyan-200 text-cyan-700 border-cyan-200';
+    }
+
+    // Viewer/Basic roles - Slate
     if (lowerRoleName.includes('viewer') || lowerRoleName.includes('basic')) {
-      return 'bg-gray-500 hover:bg-gray-600 text-white border-gray-600';
+      return 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200';
+    }
+
+    // Car Wash roles - Teal
+    if (lowerRoleName.includes('wash') || lowerRoleName.includes('carwash')) {
+      return 'bg-teal-100 hover:bg-teal-200 text-teal-700 border-teal-200';
     }
 
     // Default - Indigo
-    return 'bg-indigo-500 hover:bg-indigo-600 text-white border-indigo-600';
+    return 'bg-indigo-100 hover:bg-indigo-200 text-indigo-700 border-indigo-200';
   };
 
   // Loading state
@@ -347,21 +405,38 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
 
   return (
     <div className="space-y-6">
-      {/* Action Buttons */}
-      <div className="flex justify-end gap-2">
-        <Button
-          variant="outline"
-          onClick={() => setShowArchivedModal(true)}
-          disabled={archivedUsers.length === 0}
-        >
-          <UserX className="h-4 w-4 mr-2" />
-          {t('dealer.view.users.view_archived')} ({archivedUsers.length})
-        </Button>
-        <Button onClick={() => setShowInviteModal(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          {t('dealer.view.users.invite_user')}
-        </Button>
-      </div>
+      {/* Header */}
+      <Card className="border-none shadow-sm bg-gradient-to-r from-primary/5 to-primary/10">
+        <CardContent className="py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary/20 rounded-lg">
+                <Users className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold">{t('dealer.view.users.dealership_users', 'Dealership Users')}</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  {t('dealer.view.users.manage_access_description', 'Manage user memberships and access for this dealership')}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowArchivedModal(true)}
+                disabled={archivedUsers.length === 0}
+              >
+                <UserX className="h-4 w-4 mr-2" />
+                {t('dealer.view.users.view_archived')} ({archivedUsers.length})
+              </Button>
+              <Button onClick={() => setShowInviteModal(true)} size="lg">
+                <Plus className="h-4 w-4 mr-2" />
+                {t('dealer.view.users.invite_user')}
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Tabs */}
       <Tabs defaultValue="users" className="w-full">
@@ -379,16 +454,16 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
         {/* Users Tab Content */}
         <TabsContent value="users" className="space-y-6">
           {/* Users Table */}
-          <Card>
-        <CardContent>
+          <Card className="shadow-sm">
+        <CardContent className="pt-6">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>{t('dealer.view.users.table.user')}</TableHead>
-                <TableHead>{t('dealer.view.users.table.email')}</TableHead>
-                <TableHead>{t('dealer.view.users.table.role')}</TableHead>
-                <TableHead>{t('dealer.view.users.table.status')}</TableHead>
-                <TableHead>{t('dealer.view.users.table.joined')}</TableHead>
+              <TableRow className="border-b-2">
+                <TableHead className="font-semibold">{t('dealer.view.users.table.user')}</TableHead>
+                <TableHead className="font-semibold">{t('dealer.view.users.table.email')}</TableHead>
+                <TableHead className="font-semibold">{t('dealer.view.users.table.role')}</TableHead>
+                <TableHead className="font-semibold">{t('dealer.view.users.table.status')}</TableHead>
+                <TableHead className="font-semibold">{t('dealer.view.users.table.joined')}</TableHead>
                 <TableHead className="w-[70px]"></TableHead>
               </TableRow>
             </TableHeader>
@@ -404,60 +479,62 @@ export const DealerUsers: React.FC<DealerUsersProps> = ({ dealerId }) => {
                 </TableRow>
               ) : (
                 activeUsers.map((user) => (
-                  <TableRow key={user.id}>
+                  <TableRow key={user.id} className="hover:bg-muted/50 transition-colors">
                     {/* User Info */}
                     <TableCell>
                       <div className="flex items-center space-x-3">
-                        <Avatar className="h-8 w-8">
+                        <Avatar className="h-10 w-10 border-2 border-gray-100">
                           <AvatarImage src="" />
-                          <AvatarFallback className="text-xs">
+                          <AvatarFallback className="text-sm font-semibold">
                             {getInitials(user)}
                           </AvatarFallback>
                         </Avatar>
-                        <span className="font-medium">{getFullName(user)}</span>
+                        <span className="font-semibold">{getFullName(user)}</span>
                       </div>
                     </TableCell>
 
                     {/* Email */}
-                    <TableCell>{user.profiles?.email || t('common.no_email')}</TableCell>
+                    <TableCell>
+                      <span className="text-sm text-muted-foreground">{user.profiles?.email || t('common.no_email')}</span>
+                    </TableCell>
 
                     {/* Role */}
                     <TableCell>
                       {user.custom_roles && user.custom_roles.length > 0 ? (
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-1.5">
                           {user.custom_roles.map(role => (
-                            <Badge
+                            <span
                               key={role.id}
-                              variant="outline"
-                              className={`text-xs ${getRoleBadgeClasses(role.role_name)}`}
+                              className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold transition-colors border ${getRoleBadgeClasses(role.role_name)}`}
                             >
                               {role.display_name}
-                            </Badge>
+                            </span>
                           ))}
                         </div>
                       ) : (
-                        <Badge variant="outline" className="text-xs bg-amber-500 hover:bg-amber-600 text-white border-amber-600">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 hover:bg-amber-200 text-amber-700 border border-amber-200">
                           {t('dealer.view.users.no_role')}
-                        </Badge>
+                        </span>
                       )}
                     </TableCell>
 
                     {/* Status */}
                     <TableCell>
-                      <Badge
-                        variant="outline"
-                        className={user.is_active
-                          ? "bg-green-500 hover:bg-green-600 text-white border-green-600"
-                          : "bg-gray-400 hover:bg-gray-500 text-white border-gray-500"
-                        }
+                      <span
+                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold transition-colors ${user.is_active
+                          ? "bg-green-100 hover:bg-green-200 text-green-700 border border-green-200"
+                          : "bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200"
+                        }`}
                       >
                         {user.is_active ? t('common.active') : t('common.inactive')}
-                      </Badge>
+                      </span>
                     </TableCell>
 
                     {/* Joined Date */}
                     <TableCell>
-                      {safeFormatDateOnly(user.joined_at)}
+                      <span className="text-sm text-muted-foreground">
+                        {safeFormatDateOnly(user.joined_at)}
+                      </span>
                     </TableCell>
 
                     {/* Actions */}

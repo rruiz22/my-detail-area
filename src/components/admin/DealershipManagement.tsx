@@ -340,9 +340,9 @@ export const DealershipManagement: React.FC = () => {
 
   const getPlanBadgeVariant = (plan: string) => {
     switch (plan) {
-      case 'basic': return 'outline';
-      case 'premium': return 'secondary';
-      case 'enterprise': return 'default';
+      case 'basic': return 'warning';        // Amber/yellow
+      case 'premium': return 'default';      // Dark/prominent
+      case 'enterprise': return 'success';   // Green
       default: return 'outline';
     }
   };
@@ -444,12 +444,12 @@ export const DealershipManagement: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t('dealerships.dealership')}</TableHead>
-                  <TableHead>{t('dealerships.location')}</TableHead>
-                  <TableHead>{t('dealerships.status')}</TableHead>
-                  <TableHead>{t('dealerships.plan')}</TableHead>
-                  <TableHead>{t('dealerships.stats')}</TableHead>
-                  <TableHead className="text-right">{t('common.actions')}</TableHead>
+                  <TableHead className="w-[35%]">{t('dealerships.dealership')}</TableHead>
+                  <TableHead className="w-[15%]">{t('dealerships.location')}</TableHead>
+                  <TableHead className="w-[10%]">{t('dealerships.status')}</TableHead>
+                  <TableHead className="w-[12%]">{t('dealerships.plan')}</TableHead>
+                  <TableHead className="w-[15%]">{t('dealerships.stats')}</TableHead>
+                  <TableHead className="w-[13%] text-right">{t('common.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -457,11 +457,11 @@ export const DealershipManagement: React.FC = () => {
                   <TableRow
                     key={dealership.id}
                     onDoubleClick={() => handleViewDealer(dealership)}
-                    className="cursor-pointer hover:bg-muted/50"
+                    className="cursor-pointer hover:bg-muted/50 transition-colors"
                   >
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10">
+                        <Avatar className="h-12 w-12 border-2 border-gray-100">
                           {dealership.logo_url && (
                             <AvatarImage
                               src={dealership.logo_url}
@@ -469,13 +469,13 @@ export const DealershipManagement: React.FC = () => {
                               className={dealership.deleted_at ? 'opacity-50' : ''}
                             />
                           )}
-                          <AvatarFallback className={dealership.deleted_at ? 'opacity-50' : ''}>
+                          <AvatarFallback className={`text-sm font-semibold ${dealership.deleted_at ? 'opacity-50' : ''}`}>
                             {dealership.name.substring(0, 2).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className={`font-medium ${dealership.deleted_at ? 'opacity-60' : ''}`}>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <span className={`font-semibold text-base ${dealership.deleted_at ? 'opacity-60' : ''}`}>
                               {dealership.name}
                             </span>
                             {dealership.deleted_at && (
@@ -485,7 +485,8 @@ export const DealershipManagement: React.FC = () => {
                             )}
                           </div>
                           {dealership.email && (
-                            <div className={`text-sm text-muted-foreground ${dealership.deleted_at ? 'opacity-50' : ''}`}>
+                            <div className={`text-xs text-muted-foreground flex items-center gap-1 ${dealership.deleted_at ? 'opacity-50' : ''}`}>
+                              <Mail className="h-3 w-3" />
                               {dealership.email}
                             </div>
                           )}
@@ -493,12 +494,17 @@ export const DealershipManagement: React.FC = () => {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="text-sm">
-                        {dealership.city && dealership.state ? (
-                          <span>{dealership.city}, {dealership.state}</span>
-                        ) : (
-                          <span className="text-muted-foreground">{t('dealerships.no_location')}</span>
-                        )}
+                      <div className="space-y-1">
+                        <div className="text-sm font-medium">
+                          {dealership.city && dealership.state ? (
+                            <span>{dealership.city}, {dealership.state}</span>
+                          ) : (
+                            <span className="text-muted-foreground">{t('dealerships.no_location')}</span>
+                          )}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {t('dealerships.created')}: {new Date(dealership.created_at).toLocaleDateString()}
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -512,14 +518,18 @@ export const DealershipManagement: React.FC = () => {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-4 text-sm">
-                        <div className="flex items-center gap-1">
-                          <Users className="h-3 w-3" />
-                          <span>{dealership.user_count || 0}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Mail className="h-3 w-3" />
-                          <span>{dealership.contact_count || 0}</span>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2 text-sm">
+                          <div className="flex items-center gap-1.5 bg-blue-50 px-2 py-1 rounded">
+                            <Users className="h-3.5 w-3.5 text-blue-600" />
+                            <span className="font-medium text-blue-700">{dealership.user_count || 0}</span>
+                            <span className="text-xs text-blue-600/70">{t('dealerships.users')}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 bg-emerald-50 px-2 py-1 rounded">
+                            <Mail className="h-3.5 w-3.5 text-emerald-600" />
+                            <span className="font-medium text-emerald-700">{dealership.contact_count || 0}</span>
+                            <span className="text-xs text-emerald-600/70">{t('dealerships.contacts')}</span>
+                          </div>
                         </div>
                       </div>
                     </TableCell>

@@ -31,6 +31,31 @@ interface GranularRolePermission {
   display_name: string;
 }
 
+// Module configuration with unique colors and friendly names
+const MODULE_CONFIG: Record<string, { label: string; color: string; bgColor: string }> = {
+  dashboard: { label: 'Dashboard', color: 'text-slate-700', bgColor: 'bg-slate-100 hover:bg-slate-200' },
+  sales_orders: { label: 'Sales', color: 'text-emerald-700', bgColor: 'bg-emerald-100 hover:bg-emerald-200' },
+  service_orders: { label: 'Service', color: 'text-blue-700', bgColor: 'bg-blue-100 hover:bg-blue-200' },
+  recon_orders: { label: 'Recon', color: 'text-purple-700', bgColor: 'bg-purple-100 hover:bg-purple-200' },
+  car_wash: { label: 'Car Wash', color: 'text-cyan-700', bgColor: 'bg-cyan-100 hover:bg-cyan-200' },
+  contacts: { label: 'Contacts', color: 'text-pink-700', bgColor: 'bg-pink-100 hover:bg-pink-200' },
+  users: { label: 'Users', color: 'text-red-700', bgColor: 'bg-red-100 hover:bg-red-200' },
+  productivity: { label: 'Productivity', color: 'text-green-700', bgColor: 'bg-green-100 hover:bg-green-200' },
+  get_ready: { label: 'Get Ready', color: 'text-amber-700', bgColor: 'bg-amber-100 hover:bg-amber-200' },
+  stock: { label: 'Stock', color: 'text-indigo-700', bgColor: 'bg-indigo-100 hover:bg-indigo-200' },
+  chat: { label: 'Chat', color: 'text-teal-700', bgColor: 'bg-teal-100 hover:bg-teal-200' },
+  reports: { label: 'Reports', color: 'text-gray-700', bgColor: 'bg-gray-100 hover:bg-gray-200' },
+  management: { label: 'Management', color: 'text-orange-700', bgColor: 'bg-orange-100 hover:bg-orange-200' },
+};
+
+const getModuleConfig = (module: string) => {
+  return MODULE_CONFIG[module] || {
+    label: module,
+    color: 'text-gray-700',
+    bgColor: 'bg-gray-100 hover:bg-gray-200'
+  };
+};
+
 export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
@@ -170,35 +195,52 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">{t('roles.custom_roles_title')}</h2>
-          <p className="text-sm text-muted-foreground">
-            {t('roles.custom_roles_description')}
-          </p>
-        </div>
-        <Button onClick={() => setShowCreateModal(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          {t('roles.create_role')}
-        </Button>
-      </div>
+      <Card className="border-none shadow-sm bg-gradient-to-r from-primary/5 to-primary/10">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary/20 rounded-lg">
+                <Shield className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold">{t('roles.custom_roles_title')}</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  {t('roles.custom_roles_description')}
+                </p>
+              </div>
+            </div>
+            <Button onClick={() => setShowCreateModal(true)} size="lg">
+              <Plus className="h-4 w-4 mr-2" />
+              {t('roles.create_role')}
+            </Button>
+          </div>
+        </CardHeader>
+      </Card>
 
       {/* Roles List */}
       <div className="grid gap-4">
         {roles.map((role) => (
-          <Card key={role.id}>
-            <CardHeader>
+          <Card key={role.id} className="hover:shadow-md transition-shadow">
+            <CardHeader className="pb-4">
               <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <Shield className="h-5 w-5" />
-                    {role.display_name}
-                  </CardTitle>
-                  <CardDescription>{role.description}</CardDescription>
+                <div className="flex items-start gap-3 flex-1">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Shield className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <CardTitle className="text-lg mb-1">
+                      {role.display_name}
+                    </CardTitle>
+                    {role.description && (
+                      <CardDescription className="text-sm">
+                        {role.description}
+                      </CardDescription>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
                     onClick={() => {
                       if (!role.id) {
@@ -218,21 +260,22 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
                     <Bell className="h-4 w-4" />
                   </Button>
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
                     onClick={() => {
                       setSelectedRole(role);
                       setShowEditModal(true);
                     }}
+                    title={t('common.edit')}
                   >
                     <Edit className="h-4 w-4" />
                   </Button>
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
                     onClick={() => handleDeleteRole(role)}
                     disabled={role.users_count && role.users_count > 0}
-                    className={role.users_count && role.users_count > 0 ? 'opacity-50 cursor-not-allowed' : ''}
+                    className={role.users_count && role.users_count > 0 ? 'opacity-50 cursor-not-allowed' : 'text-destructive hover:text-destructive hover:bg-destructive/10'}
                     title={role.users_count && role.users_count > 0
                       ? t('roles.cannot_delete_has_users', { count: role.users_count })
                       : t('roles.delete_role')
@@ -244,30 +287,43 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Users className="h-4 w-4" />
-                  <span>{role.users_count || 0} {t('roles.users').toLowerCase()}</span>
+              <div className="space-y-4">
+                {/* User Count */}
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-md">
+                    <Users className="h-4 w-4 text-blue-600" />
+                    <span className="font-medium text-blue-700">{role.users_count || 0}</span>
+                    <span className="text-xs text-blue-600/70">{t('roles.users').toLowerCase()}</span>
+                  </div>
                 </div>
+
+                {/* Module Permissions */}
                 <div>
-                  <div className="text-sm font-medium mb-2">
+                  <div className="text-sm font-semibold mb-3 flex items-center gap-2">
+                    <Shield className="h-4 w-4" />
                     {t('permissions.module_permissions')}: {role.permissions.length}
                   </div>
-                  <div className="flex flex-wrap gap-1">
+                  <div className="flex flex-wrap gap-2">
                     {role.permissions.length === 0 ? (
-                      <span className="text-sm text-muted-foreground">{t('roles.no_permissions_assigned')}</span>
+                      <span className="text-sm text-muted-foreground italic">{t('roles.no_permissions_assigned')}</span>
                     ) : (
-                      // Group by module and show count
+                      // Group by module and show count with unique colors
                       Object.entries(
                         role.permissions.reduce((acc, perm) => {
                           acc[perm.module] = (acc[perm.module] || 0) + 1;
                           return acc;
                         }, {} as Record<string, number>)
-                      ).map(([module, count]) => (
-                        <Badge key={module} variant="secondary" className="text-xs">
-                          {module}: {count}
-                        </Badge>
-                      ))
+                      ).map(([module, count]) => {
+                        const config = getModuleConfig(module);
+                        return (
+                          <span
+                            key={module}
+                            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold transition-colors ${config.bgColor} ${config.color}`}
+                          >
+                            {config.label}: {count}
+                          </span>
+                        );
+                      })
                     )}
                   </div>
                 </div>

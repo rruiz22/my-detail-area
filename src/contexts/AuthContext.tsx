@@ -320,11 +320,60 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    return { error };
+
+    // If authentication failed, return the error
+    if (authError) {
+      return { error: authError };
+    }
+
+    // Authentication successful - now check if user has any active memberships
+    const userId = authData?.user?.id;
+    if (!userId) {
+      console.error('❌ [Auth] User ID not found after successful login');
+      return { error: authError };
+    }
+
+    console.log('🔍 [Auth] Checking active memberships for user:', email);
+
+    try {
+      // Check if user has at least one active membership
+      const { data: activeMemberships, error: membershipError } = await supabase
+        .from('dealer_memberships')
+        .select('id, dealer_id')
+        .eq('user_id', userId)
+        .eq('is_active', true)
+        .limit(1);
+
+      if (membershipError) {
+        console.error('❌ [Auth] Error checking memberships:', membershipError);
+        // Don't block login if we can't check - fail open for safety
+        return { error: authError };
+      }
+
+      // If user has no active memberships, sign them out and return error
+      if (!activeMemberships || activeMemberships.length === 0) {
+        console.warn('⚠️ [Auth] User has no active memberships:', email);
+
+        // Sign out the user immediately
+        await supabase.auth.signOut({ scope: 'local' });
+
+        // Return custom error
+        return {
+          error: new Error('account_deactivated') as any
+        };
+      }
+
+      console.log('✅ [Auth] User has active membership(s):', activeMemberships.length);
+      return { error: authError };
+    } catch (error: any) {
+      console.error('❌ [Auth] Unexpected error during membership check:', error);
+      // Fail open - allow login if membership check fails unexpectedly
+      return { error: authError };
+    }
   };
 
   const signOut = async () => {

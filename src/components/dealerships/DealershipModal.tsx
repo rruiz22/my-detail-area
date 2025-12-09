@@ -21,6 +21,7 @@ import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
 import { Dealership, DealershipFormData, DealershipStatus, SubscriptionPlan } from '@/types/dealership';
 import { useToast } from '@/hooks/use-toast';
+import { usePermissions } from '@/hooks/usePermissions';
 import { Building2, Palette } from 'lucide-react';
 import { LogoUploader } from './LogoUploader';
 
@@ -35,8 +36,10 @@ interface DealershipModalProps {
 export function DealershipModal({ isOpen, onClose, onSuccess, dealership, onRefresh }: DealershipModalProps) {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const { enhancedUser } = usePermissions();
   const [loading, setLoading] = useState(false);
   const isEditing = !!dealership;
+  const isSystemAdmin = enhancedUser?.is_system_admin || false;
 
   // Handler for logo upload that refreshes data without closing modal
   const handleLogoUploadSuccess = () => {
@@ -116,7 +119,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership, onRefr
     e.preventDefault();
 
     // Basic validation
-    if (!formData.name.trim() || !formData.email.trim()) {
+    if (!formData.name.trim()) {
       toast({ variant: 'destructive', description: t('messages.required_field') });
       return;
     }
@@ -286,14 +289,13 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership, onRefr
                 <h3 className="text-lg font-semibold mb-4">{t('dealerships.contact_info')}</h3>
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="email" className="block mb-3">{t('dealerships.email')} *</Label>
+                    <Label htmlFor="email" className="block mb-3">{t('dealerships.email')}</Label>
                     <Input
                       id="email"
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
                       placeholder="Enter email address"
                       type="email"
-                      required
                     />
                   </div>
 
@@ -309,52 +311,56 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership, onRefr
                 </div>
               </div>
 
-              <Separator />
+              {isSystemAdmin && (
+                <>
+                  <Separator />
 
-              {/* Subscription Settings */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4">{t('dealerships.subscription_settings')}</h3>
-                <div className="space-y-4">
+                  {/* Subscription Settings */}
                   <div>
-                    <Label htmlFor="subscription_plan" className="block mb-3">{t('dealerships.subscription_plan')}</Label>
-                    <Select value={formData.subscription_plan} onValueChange={handlePlanChange}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="basic">{t('dealerships.basic_plan')}</SelectItem>
-                        <SelectItem value="premium">{t('dealerships.premium_plan')}</SelectItem>
-                        <SelectItem value="enterprise">{t('dealerships.enterprise_plan')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                    <h3 className="text-lg font-semibold mb-4">{t('dealerships.subscription_settings')}</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="subscription_plan" className="block mb-3">{t('dealerships.subscription_plan')}</Label>
+                        <Select value={formData.subscription_plan} onValueChange={handlePlanChange}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="basic">{t('dealerships.basic_plan')}</SelectItem>
+                            <SelectItem value="premium">{t('dealerships.premium_plan')}</SelectItem>
+                            <SelectItem value="enterprise">{t('dealerships.enterprise_plan')}</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-                  <div>
-                    <Label htmlFor="max_users" className="block mb-3">{t('dealerships.max_users')}</Label>
-                    <Input
-                      id="max_users"
-                      value={formData.max_users}
-                      onChange={(e) => handleInputChange('max_users', parseInt(e.target.value))}
-                      type="number"
-                      min="1"
-                    />
-                  </div>
+                      <div>
+                        <Label htmlFor="max_users" className="block mb-3">{t('dealerships.max_users')}</Label>
+                        <Input
+                          id="max_users"
+                          value={formData.max_users}
+                          onChange={(e) => handleInputChange('max_users', parseInt(e.target.value))}
+                          type="number"
+                          min="1"
+                        />
+                      </div>
 
-                  <div>
-                    <Label htmlFor="status" className="block mb-3">{t('dealerships.status')}</Label>
-                    <Select value={formData.status} onValueChange={(value: DealershipStatus) => handleInputChange('status', value)}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="active">{t('dealerships.active')}</SelectItem>
-                        <SelectItem value="inactive">{t('dealerships.inactive')}</SelectItem>
-                        <SelectItem value="suspended">{t('dealerships.suspended')}</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      <div>
+                        <Label htmlFor="status" className="block mb-3">{t('dealerships.status')}</Label>
+                        <Select value={formData.status} onValueChange={(value: DealershipStatus) => handleInputChange('status', value)}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="active">{t('dealerships.active')}</SelectItem>
+                            <SelectItem value="inactive">{t('dealerships.inactive')}</SelectItem>
+                            <SelectItem value="suspended">{t('dealerships.suspended')}</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                </>
+              )}
             </div>
 
             {/* Right Column */}
