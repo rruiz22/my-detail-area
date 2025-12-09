@@ -41,7 +41,6 @@ import { cn } from '@/lib/utils';
 import { QUERY_LIMITS } from '@/constants/queryLimits';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { useTranslation } from 'react-i18next';
 import { useDateCalculations } from '@/hooks/useDateCalculations';
 import { useDeleteInvoice, useInvoices, useInvoiceSummary } from '@/hooks/useInvoices';
 import type { ReportsFilters } from '@/hooks/useReportsData';
