@@ -36,6 +36,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 import { QUERY_LIMITS } from '@/constants/queryLimits';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -52,6 +54,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { format, parseISO } from 'date-fns';
 import {
   AlertCircle,
+  AlertTriangle,
   ArrowDown,
   ArrowUp,
   Calendar,
@@ -109,6 +112,75 @@ interface VehicleForInvoice {
   completed_at: string | null;
   due_date: string | null;
 }
+
+// =====================================================
+// DUPLICATE DETECTION HELPERS
+// =====================================================
+
+const detectDuplicates = (orders: VehicleForInvoice[]) => {
+  const vinMap = new Map<string, VehicleForInvoice[]>();
+  const stockMap = new Map<string, VehicleForInvoice[]>();
+  const tagMap = new Map<string, VehicleForInvoice[]>();
+
+  orders.forEach(order => {
+    // Track VIN duplicates
+    if (order.vehicle_vin && order.vehicle_vin.trim() !== '') {
+      const vin = order.vehicle_vin.toUpperCase().trim();
+      const existing = vinMap.get(vin) || [];
+      vinMap.set(vin, [...existing, order]);
+    }
+
+    // Track Stock Number duplicates
+    if (order.stock_number && order.stock_number.trim() !== '') {
+      const stock = order.stock_number.toUpperCase().trim();
+      const existing = stockMap.get(stock) || [];
+      stockMap.set(stock, [...existing, order]);
+    }
+
+    // Track Tag# duplicates (Car Wash specific)
+    if (order.tag && order.tag.trim() !== '') {
+      const tag = order.tag.toUpperCase().trim();
+      const existing = tagMap.get(tag) || [];
+      tagMap.set(tag, [...existing, order]);
+    }
+  });
+
+  return { vinMap, stockMap, tagMap };
+};
+
+const getDuplicateInfo = (
+  order: VehicleForInvoice,
+  vinMap: Map<string, VehicleForInvoice[]>,
+  stockMap: Map<string, VehicleForInvoice[]>,
+  tagMap: Map<string, VehicleForInvoice[]>
+) => {
+  const vinKey = order.vehicle_vin?.toUpperCase().trim() || '';
+  const stockKey = order.stock_number?.toUpperCase().trim() || '';
+  const tagKey = order.tag?.toUpperCase().trim() || '';
+
+  const vinDuplicates = vinKey ? vinMap.get(vinKey) || [] : [];
+  const stockDuplicates = stockKey ? stockMap.get(stockKey) || [] : [];
+  const tagDuplicates = tagKey ? tagMap.get(tagKey) || [] : [];
+
+  const hasVinDuplicate = vinDuplicates.length > 1;
+  const hasStockDuplicate = stockDuplicates.length > 1;
+  const hasTagDuplicate = tagDuplicates.length > 1;
+
+  const isDuplicate = hasVinDuplicate || hasStockDuplicate || hasTagDuplicate;
+
+  return {
+    isDuplicate,
+    hasVinDuplicate,
+    hasStockDuplicate,
+    hasTagDuplicate,
+    vinCount: vinDuplicates.length,
+    stockCount: stockDuplicates.length,
+    tagCount: tagDuplicates.length,
+    duplicateOrders: [...vinDuplicates, ...stockDuplicates, ...tagDuplicates]
+      .filter((v, i, a) => a.findIndex(t => t.id === v.id) === i)
+      .filter(v => v.id !== order.id)
+  };
+};
 
 const getStatusBadge = (status: InvoiceStatus) => {
   const styles = {
@@ -673,6 +745,12 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
     return filtered;
   }, [availableVehicles, searchTerm, selectedService, excludedServices, sortField, sortDirection]);
+
+  // Detect duplicates across VIN, Stock Number, and Tag#
+  const { vinMap, stockMap, tagMap } = useMemo(
+    () => detectDuplicates(filteredVehicles),
+    [filteredVehicles]
+  );
 
   const selectedVehicles = useMemo(() => {
     return filteredVehicles.filter(v => selectedVehicleIds.has(v.id));
@@ -2182,10 +2260,18 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                         const orderNumber = vehicle.order_number || 'N/A';
                         const orderPath = `/${vehicle.order_type}`;
 
+                        // Get duplicate info for this vehicle
+                        const duplicateInfo = getDuplicateInfo(vehicle, vinMap, stockMap, tagMap);
+                        const isSelected = selectedVehicleIds.has(vehicle.id);
+
                         return (
                           <TableRow
                             key={vehicle.id}
-                            className={selectedVehicleIds.has(vehicle.id) ? 'bg-indigo-50' : ''}
+                            className={cn(
+                              "cursor-pointer hover:bg-gray-50",
+                              isSelected && "bg-indigo-50 border-l-2 border-l-indigo-500",
+                              duplicateInfo.isDuplicate && !isSelected && "bg-amber-50/50 border-l-2 border-l-amber-400"
+                            )}
                           >
                             <TableCell className="text-center">
                               <Checkbox
@@ -2232,7 +2318,38 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                               {vehicle.vehicle_year} {vehicle.vehicle_make} {vehicle.vehicle_model}
                             </TableCell>
                             <TableCell className="font-mono text-sm font-semibold text-center">
-                              {vehicle.vehicle_vin || 'N/A'}
+                              <div className="flex items-center justify-center gap-1.5">
+                                <span>{vehicle.vehicle_vin || 'N/A'}</span>
+                                {duplicateInfo.isDuplicate && (
+                                  <TooltipProvider delayDuration={200}>
+                                    <Tooltip>
+                                      <TooltipTrigger className="cursor-help">
+                                        <Badge variant="warning" className="flex items-center gap-1 text-[10px] px-1.5 py-0.5">
+                                          <AlertTriangle className="h-2.5 w-2.5" />
+                                          {duplicateInfo.hasVinDuplicate && `${duplicateInfo.vinCount}x VIN`}
+                                          {!duplicateInfo.hasVinDuplicate && duplicateInfo.hasStockDuplicate && `${duplicateInfo.stockCount}x Stock`}
+                                          {!duplicateInfo.hasVinDuplicate && !duplicateInfo.hasStockDuplicate && duplicateInfo.hasTagDuplicate && `${duplicateInfo.tagCount}x Tag`}
+                                        </Badge>
+                                      </TooltipTrigger>
+                                      <TooltipContent side="top" className="max-w-xs">
+                                        <p className="font-semibold mb-1">{t('reports.invoices.duplicate_order_warning')}</p>
+                                        {duplicateInfo.hasVinDuplicate && (
+                                          <p className="text-xs mb-1">• {t('reports.invoices.duplicate_vin_found', { count: duplicateInfo.vinCount })}</p>
+                                        )}
+                                        {duplicateInfo.hasStockDuplicate && (
+                                          <p className="text-xs mb-1">• {t('reports.invoices.duplicate_stock_found', { count: duplicateInfo.stockCount })}</p>
+                                        )}
+                                        {duplicateInfo.hasTagDuplicate && (
+                                          <p className="text-xs mb-1">• {t('reports.invoices.duplicate_tag_found', { count: duplicateInfo.tagCount })}</p>
+                                        )}
+                                        <p className="text-xs text-muted-foreground mt-2">
+                                          {t('reports.invoices.duplicate_tooltip_hint')}
+                                        </p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                )}
+                              </div>
                             </TableCell>
                             <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate text-center">
                               {getServiceNames(vehicle.services)}

@@ -300,7 +300,12 @@
       "all_tags": "All tags",
       "filter_placeholder": "Filter by tags...",
       "no_suggested": "No suggested tags available"
-    }
+    },
+    "duplicate_order_warning": "Duplicate Vehicle Warning",
+    "duplicate_vin_found": "VIN appears {{count}} times in available orders",
+    "duplicate_stock_found": "Stock# appears {{count}} times in available orders",
+    "duplicate_tag_found": "Tag# appears {{count}} times in available orders",
+    "duplicate_tooltip_hint": "Review carefully before creating invoice to avoid duplicate billing"
   },
   "analytics": {
     "historicalTrends": "Historical Trends",

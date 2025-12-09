@@ -300,7 +300,12 @@
       "all_tags": "Todas las etiquetas",
       "filter_placeholder": "Filtrar por etiquetas...",
       "no_suggested": "No hay etiquetas sugeridas disponibles"
-    }
+    },
+    "duplicate_order_warning": "Advertencia de Vehículo Duplicado",
+    "duplicate_vin_found": "VIN aparece {{count}} veces en órdenes disponibles",
+    "duplicate_stock_found": "Stock# aparece {{count}} veces en órdenes disponibles",
+    "duplicate_tag_found": "Tag# aparece {{count}} veces en órdenes disponibles",
+    "duplicate_tooltip_hint": "Revise cuidadosamente antes de crear la factura para evitar cobros duplicados"
   },
   "analytics": {
     "historicalTrends": "Tendencias Históricas",
