@@ -102,6 +102,9 @@ export const DealershipManagement: React.FC = () => {
         query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,city.ilike.%${search}%`);
       }
 
+      // Order by creation date (newest first)
+      query = query.order('created_at', { ascending: false });
+
       const { data, error } = await query;
 
       if (error) throw error;
