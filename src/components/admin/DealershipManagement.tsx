@@ -2,7 +2,7 @@ import { DealerInvitationModal } from '@/components/dealerships/DealerInvitation
 import { DealershipModal } from '@/components/dealerships/DealershipModal';
 import { ExportDealershipDataModal } from '@/components/dealerships/ExportDealershipDataModal';
 import { MigrateUsersModal } from '@/components/dealerships/MigrateUsersModal';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -48,6 +48,7 @@ interface Dealership {
   zip?: string;
   status: 'active' | 'inactive' | 'suspended';
   subscription_plan: 'basic' | 'premium' | 'enterprise';
+  logo_url?: string | null;
   created_at: string;
   updated_at: string;
   deleted_at?: string | null;
@@ -461,6 +462,13 @@ export const DealershipManagement: React.FC = () => {
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar className="h-10 w-10">
+                          {dealership.logo_url && (
+                            <AvatarImage
+                              src={dealership.logo_url}
+                              alt={`${dealership.name} logo`}
+                              className={dealership.deleted_at ? 'opacity-50' : ''}
+                            />
+                          )}
                           <AvatarFallback className={dealership.deleted_at ? 'opacity-50' : ''}>
                             {dealership.name.substring(0, 2).toUpperCase()}
                           </AvatarFallback>
