@@ -41,6 +41,7 @@ import { cn } from '@/lib/utils';
 import { QUERY_LIMITS } from '@/constants/queryLimits';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 import { useDateCalculations } from '@/hooks/useDateCalculations';
 import { useDeleteInvoice, useInvoices, useInvoiceSummary } from '@/hooks/useInvoices';
 import type { ReportsFilters } from '@/hooks/useReportsData';
@@ -2324,8 +2325,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                                   <TooltipProvider delayDuration={200}>
                                     <Tooltip>
                                       <TooltipTrigger className="cursor-help">
-                                        <Badge variant="warning" className="flex items-center gap-1 text-[10px] px-1.5 py-0.5">
-                                          <AlertTriangle className="h-2.5 w-2.5" />
+                                        <Badge variant="warning" className="flex items-center gap-1 text-[10px] px-1.5 py-0.5 whitespace-nowrap">
+                                          <AlertTriangle className="h-2.5 w-2.5 flex-shrink-0" />
                                           {duplicateInfo.hasVinDuplicate && `${duplicateInfo.vinCount}x VIN`}
                                           {!duplicateInfo.hasVinDuplicate && duplicateInfo.hasStockDuplicate && `${duplicateInfo.stockCount}x Stock`}
                                           {!duplicateInfo.hasVinDuplicate && !duplicateInfo.hasStockDuplicate && duplicateInfo.hasTagDuplicate && `${duplicateInfo.tagCount}x Tag`}
