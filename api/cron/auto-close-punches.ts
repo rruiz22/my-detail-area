@@ -1,8 +1,23 @@
 /**
  * Vercel Cron Endpoint: Auto-Close Forgotten Punches
  *
- * Triggered every 15 minutes by Vercel Cron Jobs.
- * Invokes the Supabase Edge Function to process overdue punches.
+ * ⚠️ CURRENTLY DISABLED - Will be enabled soon
+ *
+ * TODO: Enable cron in vercel.json when ready to deploy
+ * Schedule: Every 15 minutes (*/15 * * * *)
+ *
+ * Configuration (vercel.json):
+ * {
+ *   "crons": [{
+ *     "path": "/api/cron/auto-close-punches",
+ *     "schedule": "*/15 * * * *"
+ *   }]
+ * }
+ *
+ * Purpose:
+ * - Triggered every 15 minutes by Vercel Cron Jobs
+ * - Invokes the Supabase Edge Function to process overdue punches
+ * - Automatically closes forgotten punch-out entries
  *
  * Security: Validates cron secret to prevent unauthorized access.
  */
