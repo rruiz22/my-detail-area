@@ -2,11 +2,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
 
-interface Dealership {
+export interface Dealership {
   id: number;
   name: string;
   shortcode: string;
   is_active: boolean;
+  logo_url?: string | null;
 }
 
 /**

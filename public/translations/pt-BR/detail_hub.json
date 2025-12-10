@@ -911,5 +911,66 @@
   },
   "qr_block": {
     "words_in_general": "Escaneie o código QR com a câmera do seu telefone para ver os detalhes deste pedido e compartilhar com a equipe"
+  },
+  "assignments": {
+    "title": "Atribuições de Concessionária",
+    "subtitle": "Gerenciar em quais concessionárias este funcionário pode trabalhar",
+    "assign_button": "Atribuir a Concessionária",
+    "manage_assignments": "Gerenciar Atribuições de Concessionárias",
+    "no_active_assignments": "Sem atribuições ativas",
+    "no_assignments_description": "Este funcionário não está atribuído a nenhuma concessionária. Adicione uma atribuição para habilitar o acesso ao relógio de ponto.",
+    "inactive_assignments": "Atribuições Inativas",
+    "remove_assignment": "Remover Atribuição?",
+    "remove_confirmation": "Isso removerá a atribuição de {{employeeName}} a {{dealership}}. O funcionário não poderá mais bater o ponto nesta concessionária.",
+    "note_existing_entries": "Nota: As entradas de tempo existentes não serão afetadas.",
+    "remove_button": "Remover Atribuição",
+    "table": {
+      "dealership": "Concessionária",
+      "shift_hours": "Horas do Turno",
+      "punch_window": "Janela de Ponto",
+      "early_late_label": "Cedo / Tarde",
+      "break": "Intervalo",
+      "break_minutes": "min",
+      "paid": "Pago",
+      "unpaid": "Não Pago",
+      "status": "Status",
+      "actions": "Ações"
+    },
+    "toast": {
+      "created_title": "Atribuição Criada",
+      "created_description": "Funcionário atribuído a {{dealership}} com sucesso.",
+      "updated_title": "Atribuição Atualizada",
+      "updated_description": "A atribuição foi atualizada com sucesso.",
+      "deleted_title": "Atribuição Removida",
+      "deleted_description": "A atribuição do funcionário foi removida com sucesso.",
+      "error_title": "Erro",
+      "error_create": "Falha ao criar atribuição",
+      "error_update": "Falha ao atualizar atribuição",
+      "error_delete": "Falha ao remover atribuição",
+      "already_assigned": "O funcionário já está atribuído a esta concessionária"
+    },
+    "modal": {
+      "title_create": "Atribuir a Concessionária",
+      "title_edit": "Editar Atribuição",
+      "employee_name_suffix": "- {{employeeName}}",
+      "dealership_label": "Concessionária *",
+      "dealership_placeholder": "Selecionar concessionária",
+      "dealership_help": "O funcionário pode trabalhar em múltiplas concessionárias com diferentes horários",
+      "schedule_template": "Modelo de Horário",
+      "shift_start_label": "Hora de Início do Turno",
+      "shift_end_label": "Hora de Fim do Turno",
+      "early_punch_label": "Ponto Adiantado (minutos)",
+      "early_punch_help": "Minutos antes do início do turno que o funcionário pode bater o ponto",
+      "late_punch_label": "Ponto Atrasado (minutos)",
+      "late_punch_help": "Minutos após o início do turno que o funcionário pode bater o ponto",
+      "break_label": "Intervalo Obrigatório (minutos)",
+      "flexible_schedule_alert": "Horário Flexível: O funcionário pode trabalhar qualquer dia nesta concessionária. Não há restrições de dias.",
+      "notes_label": "Notas (Opcional)",
+      "notes_placeholder": "Adicionar notas sobre esta atribuição...",
+      "cancel_button": "Cancelar",
+      "create_button": "Criar Atribuição",
+      "update_button": "Atualizar Atribuição",
+      "saving": "Salvando..."
+    }
   }
 }

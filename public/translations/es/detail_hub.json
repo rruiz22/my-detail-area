@@ -929,5 +929,66 @@
   },
   "qr_block": {
     "words_in_general": "Escanee el código QR con la cámara de su teléfono para ver los detalles de esta orden y compartir con los miembros del equipo"
+  },
+  "assignments": {
+    "title": "Asignaciones de Concesionario",
+    "subtitle": "Administrar en qué concesionarios puede trabajar este empleado",
+    "assign_button": "Asignar a Concesionario",
+    "manage_assignments": "Administrar Asignaciones de Concesionarios",
+    "no_active_assignments": "Sin asignaciones activas",
+    "no_assignments_description": "Este empleado no está asignado a ningún concesionario. Agregue una asignación para habilitar el acceso al reloj de tiempo.",
+    "inactive_assignments": "Asignaciones Inactivas",
+    "remove_assignment": "¿Eliminar Asignación?",
+    "remove_confirmation": "Esto eliminará la asignación de {{employeeName}} a {{dealership}}. El empleado ya no podrá fichar en este concesionario.",
+    "note_existing_entries": "Nota: Las entradas de tiempo existentes no se verán afectadas.",
+    "remove_button": "Eliminar Asignación",
+    "table": {
+      "dealership": "Concesionario",
+      "shift_hours": "Horas de Turno",
+      "punch_window": "Ventana de Fichaje",
+      "early_late_label": "Temprano / Tarde",
+      "break": "Descanso",
+      "break_minutes": "min",
+      "paid": "Pagado",
+      "unpaid": "No Pagado",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "toast": {
+      "created_title": "Asignación Creada",
+      "created_description": "Empleado asignado a {{dealership}} exitosamente.",
+      "updated_title": "Asignación Actualizada",
+      "updated_description": "La asignación ha sido actualizada exitosamente.",
+      "deleted_title": "Asignación Eliminada",
+      "deleted_description": "La asignación del empleado ha sido eliminada exitosamente.",
+      "error_title": "Error",
+      "error_create": "No se pudo crear la asignación",
+      "error_update": "No se pudo actualizar la asignación",
+      "error_delete": "No se pudo eliminar la asignación",
+      "already_assigned": "El empleado ya está asignado a este concesionario"
+    },
+    "modal": {
+      "title_create": "Asignar a Concesionario",
+      "title_edit": "Editar Asignación",
+      "employee_name_suffix": "- {{employeeName}}",
+      "dealership_label": "Concesionario *",
+      "dealership_placeholder": "Seleccionar concesionario",
+      "dealership_help": "El empleado puede trabajar en múltiples concesionarios con diferentes horarios",
+      "schedule_template": "Plantilla de Horario",
+      "shift_start_label": "Hora de Inicio de Turno",
+      "shift_end_label": "Hora de Fin de Turno",
+      "early_punch_label": "Fichaje Temprano (minutos)",
+      "early_punch_help": "Minutos antes del inicio del turno que el empleado puede fichar",
+      "late_punch_label": "Fichaje Tardío (minutos)",
+      "late_punch_help": "Minutos después del inicio del turno que el empleado puede fichar",
+      "break_label": "Descanso Requerido (minutos)",
+      "flexible_schedule_alert": "Horario Flexible: El empleado puede trabajar cualquier día en este concesionario. No hay restricciones de días.",
+      "notes_label": "Notas (Opcional)",
+      "notes_placeholder": "Agregar notas sobre esta asignación...",
+      "cancel_button": "Cancelar",
+      "create_button": "Crear Asignación",
+      "update_button": "Actualizar Asignación",
+      "saving": "Guardando..."
+    }
   }
 }

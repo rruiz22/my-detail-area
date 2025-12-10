@@ -373,38 +373,35 @@ export function useClockIn() {
       }
 
       // ========================================
-      // CRITICAL: Validate punch time against schedule template
+      // CRITICAL: Validate punch against employee assignment
       // ========================================
-      // Prevents early/late punches outside allowed window
+      // Multi-dealer validation:
+      // 1. Checks if employee has active assignment to this dealership
+      // 2. Prevents employee from being clocked in at two dealerships simultaneously
+      // 3. Validates punch time against assignment's schedule template
       // This server-side check cannot be bypassed by UI manipulation
-      if (params.kioskId) {
-        const currentTime = new Date().toISOString();
+      const currentTime = new Date().toISOString();
 
-        const { data: validation, error: validationError } = await supabase.rpc('can_punch_in_from_template', {
-          p_employee_id: params.employeeId,
-          p_kiosk_id: params.kioskId,
-          p_current_time: currentTime
-        });
+      const { data: validation, error: validationError } = await supabase.rpc('validate_punch_in_assignment', {
+        p_employee_id: params.employeeId,
+        p_dealership_id: params.dealershipId,
+        p_kiosk_id: params.kioskId || null,
+        p_punch_time: currentTime
+      });
 
-        if (validationError) {
-          console.error('[ClockIn] Validation RPC error:', validationError);
-          // Log error but don't block punch (fallback to allow if RPC fails)
-        } else if (validation && validation.length > 0 && !validation[0].allowed) {
-          // Validation failed - block punch
-          const reason = validation[0].reason || 'Clock in not allowed at this time';
-          const minutesUntilAllowed = validation[0].minutes_until_allowed || 0;
-
-          console.warn('[ClockIn] Punch blocked by validation:', reason);
-
-          throw new Error(
-            minutesUntilAllowed > 0
-              ? `${reason}. Please wait ${minutesUntilAllowed} more minute(s).`
-              : reason
-          );
-        }
-
-        console.log('[ClockIn] Validation passed - proceeding with punch');
+      if (validationError) {
+        console.error('[ClockIn] Validation RPC error:', validationError);
+        throw new Error('Failed to validate punch. Please contact support.');
       }
+
+      if (validation && validation.length > 0 && !validation[0].allowed) {
+        // Validation failed - block punch
+        const reason = validation[0].reason || 'Clock in not allowed';
+        console.warn('[ClockIn] Punch blocked by validation:', reason);
+        throw new Error(reason);
+      }
+
+      console.log('[ClockIn] Validation passed - proceeding with punch');
 
       // Create time entry
       const { data, error } = await supabase

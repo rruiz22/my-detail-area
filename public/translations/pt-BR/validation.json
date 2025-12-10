@@ -39,5 +39,7 @@
   "status_transition_error": "Esta mudança de status não é permitida. Por favor, verifique o fluxo de trabalho",
   "pin_invalid": "PIN deve ter 4-6 dígitos",
   "pin_required": "Código PIN é obrigatório",
-  "pin_must_be_numeric": "PIN deve conter apenas números"
+  "pin_must_be_numeric": "PIN deve conter apenas números",
+  "invalid_time_range": "Intervalo de Tempo Inválido",
+  "shift_end_must_be_after_start": "A hora de término do turno deve ser após a hora de início"
 }

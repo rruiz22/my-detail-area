@@ -16,13 +16,14 @@ import { useEmployeePortalPersistence } from "@/hooks/useEmployeePortalPersisten
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { Ban, Calendar, Camera, ClipboardList, Clock, DollarSign, Edit2, Eye, EyeOff, FileText, Filter, Scan, Search, Shield, Sparkles, Trash2, UserCheck, UserPlus, UserX, X } from "lucide-react";
+import { Ban, Building2, Calendar, Camera, ClipboardList, Clock, DollarSign, Edit2, Eye, EyeOff, FileText, Filter, Scan, Search, Shield, Sparkles, Trash2, UserCheck, UserPlus, UserX, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import * as z from "zod";
 import { EmployeeAuditLogsModal } from "./EmployeeAuditLogsModal";
 import { FaceEnrollmentModal } from "./FaceEnrollmentModal";
+import { EmployeeAssignmentsTable } from "./EmployeeAssignmentsTable";
 
 // REAL DATABASE INTEGRATION
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
@@ -101,6 +102,8 @@ const EmployeePortal = () => {
   const [employeeToReactivate, setEmployeeToReactivate] = useState<DetailHubEmployee | null>(null);
   const [faceEnrollmentOpen, setFaceEnrollmentOpen] = useState(false);
   const [employeeForFaceEnrollment, setEmployeeForFaceEnrollment] = useState<DetailHubEmployee | null>(null);
+  const [showAssignmentsModal, setShowAssignmentsModal] = useState(false);
+  const [employeeForAssignments, setEmployeeForAssignments] = useState<DetailHubEmployee | null>(null);
 
   // 🔒 PRIVACY: Track which employees have hourly rate visible
   const [visibleSalaries, setVisibleSalaries] = useState<Set<string>>(new Set());
@@ -1464,6 +1467,19 @@ const EmployeePortal = () => {
                         )}
                       </button>
 
+                      {/* Dealership Assignments */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEmployeeForAssignments(employee.rawData);
+                          setShowAssignmentsModal(true);
+                        }}
+                        title="Manage Dealership Assignments"
+                        className="p-1 hover:bg-purple-50 rounded transition-colors"
+                      >
+                        <Building2 className="w-3.5 h-3.5 text-purple-600" />
+                      </button>
+
                       {/* Terminate/Delete Employee */}
                       <button
                         onClick={(e) => {
@@ -1572,6 +1588,35 @@ const EmployeePortal = () => {
           }}
         />
       )}
+
+      {/* Dealership Assignments Modal */}
+      <Dialog open={showAssignmentsModal} onOpenChange={setShowAssignmentsModal}>
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Building2 className="h-5 w-5" />
+              Dealership Assignments
+              {employeeForAssignments && (
+                <span className="text-gray-500">
+                  - {employeeForAssignments.first_name} {employeeForAssignments.last_name}
+                </span>
+              )}
+            </DialogTitle>
+            <DialogDescription>
+              Manage which dealerships this employee can work at and configure their schedule for each location.
+            </DialogDescription>
+          </DialogHeader>
+
+          <ScrollArea className="max-h-[70vh] pr-4">
+            {employeeForAssignments && (
+              <EmployeeAssignmentsTable
+                employeeId={employeeForAssignments.id}
+                employeeName={`${employeeForAssignments.first_name} ${employeeForAssignments.last_name}`}
+              />
+            )}
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
 
       {/* Terminated Employees Modal */}
       <Dialog open={showTerminatedModal} onOpenChange={setShowTerminatedModal}>

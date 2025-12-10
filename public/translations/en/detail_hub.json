@@ -929,5 +929,66 @@
   },
   "qr_block": {
     "words_in_general": "Scan QR code with your phone camera to view this order details and share with team members"
+  },
+  "assignments": {
+    "title": "Dealership Assignments",
+    "subtitle": "Manage which dealerships this employee can work at",
+    "assign_button": "Assign to Dealership",
+    "manage_assignments": "Manage Dealership Assignments",
+    "no_active_assignments": "No active assignments",
+    "no_assignments_description": "This employee is not assigned to any dealerships. Add an assignment to enable time clock access.",
+    "inactive_assignments": "Inactive Assignments",
+    "remove_assignment": "Remove Assignment?",
+    "remove_confirmation": "This will remove {{employeeName}}'s assignment to {{dealership}}. The employee will no longer be able to clock in at this dealership.",
+    "note_existing_entries": "Note: Existing time entries will not be affected.",
+    "remove_button": "Remove Assignment",
+    "table": {
+      "dealership": "Dealership",
+      "shift_hours": "Shift Hours",
+      "punch_window": "Punch Window",
+      "early_late_label": "Early / Late",
+      "break": "Break",
+      "break_minutes": "min",
+      "paid": "Paid",
+      "unpaid": "Unpaid",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "toast": {
+      "created_title": "Assignment Created",
+      "created_description": "Employee assigned to {{dealership}} successfully.",
+      "updated_title": "Assignment Updated",
+      "updated_description": "Assignment has been updated successfully.",
+      "deleted_title": "Assignment Removed",
+      "deleted_description": "Employee assignment has been removed successfully.",
+      "error_title": "Error",
+      "error_create": "Failed to create assignment",
+      "error_update": "Failed to update assignment",
+      "error_delete": "Failed to remove assignment",
+      "already_assigned": "Employee is already assigned to this dealership"
+    },
+    "modal": {
+      "title_create": "Assign to Dealership",
+      "title_edit": "Edit Assignment",
+      "employee_name_suffix": "- {{employeeName}}",
+      "dealership_label": "Dealership *",
+      "dealership_placeholder": "Select dealership",
+      "dealership_help": "Employee can work at multiple dealerships with different schedules",
+      "schedule_template": "Schedule Template",
+      "shift_start_label": "Shift Start Time",
+      "shift_end_label": "Shift End Time",
+      "early_punch_label": "Early Punch (minutes)",
+      "early_punch_help": "Minutes before shift start that employee can clock in",
+      "late_punch_label": "Late Punch (minutes)",
+      "late_punch_help": "Minutes after shift start that employee can clock in",
+      "break_label": "Required Break (minutes)",
+      "flexible_schedule_alert": "Flexible Schedule: Employee can work any day at this dealership. No day restrictions apply.",
+      "notes_label": "Notes (Optional)",
+      "notes_placeholder": "Add any notes about this assignment...",
+      "cancel_button": "Cancel",
+      "create_button": "Create Assignment",
+      "update_button": "Update Assignment",
+      "saving": "Saving..."
+    }
   }
 }

@@ -1,8 +1,8 @@
 {
   "scannedFiles": 951,
-  "totalStrings": 10046,
+  "totalStrings": 10053,
   "hardcodedStrings": 2155,
-  "translatedStrings": 7891,
+  "translatedStrings": 7898,
   "issues": {
     "critical": [
       {
@@ -7221,352 +7221,352 @@
         "hardcodedStrings": [
           {
             "text": "United States",
-            "line": 416,
-            "context": "415: <SelectContent>\n416: <SelectItem value=\"US\">United States</SelectItem>\n417: <SelectItem value=\"CA\">Canada</SelectItem>"
+            "line": 422,
+            "context": "421: <SelectContent>\n422: <SelectItem value=\"US\">United States</SelectItem>\n423: <SelectItem value=\"CA\">Canada</SelectItem>"
           },
           {
             "text": "Canada",
-            "line": 417,
-            "context": "416: <SelectItem value=\"US\">United States</SelectItem>\n417: <SelectItem value=\"CA\">Canada</SelectItem>\n418: <SelectItem value=\"MX\">Mexico</SelectItem>"
+            "line": 423,
+            "context": "422: <SelectItem value=\"US\">United States</SelectItem>\n423: <SelectItem value=\"CA\">Canada</SelectItem>\n424: <SelectItem value=\"MX\">Mexico</SelectItem>"
           },
           {
             "text": "Mexico",
-            "line": 418,
-            "context": "417: <SelectItem value=\"CA\">Canada</SelectItem>\n418: <SelectItem value=\"MX\">Mexico</SelectItem>\n419: <SelectItem value=\"BR\">Brazil</SelectItem>"
+            "line": 424,
+            "context": "423: <SelectItem value=\"CA\">Canada</SelectItem>\n424: <SelectItem value=\"MX\">Mexico</SelectItem>\n425: <SelectItem value=\"BR\">Brazil</SelectItem>"
           },
           {
             "text": "Brazil",
-            "line": 419,
-            "context": "418: <SelectItem value=\"MX\">Mexico</SelectItem>\n419: <SelectItem value=\"BR\">Brazil</SelectItem>\n420: <SelectItem value=\"ES\">Spain</SelectItem>"
+            "line": 425,
+            "context": "424: <SelectItem value=\"MX\">Mexico</SelectItem>\n425: <SelectItem value=\"BR\">Brazil</SelectItem>\n426: <SelectItem value=\"ES\">Spain</SelectItem>"
           },
           {
             "text": "Spain",
-            "line": 420,
-            "context": "419: <SelectItem value=\"BR\">Brazil</SelectItem>\n420: <SelectItem value=\"ES\">Spain</SelectItem>\n421: </SelectContent>"
+            "line": 426,
+            "context": "425: <SelectItem value=\"BR\">Brazil</SelectItem>\n426: <SelectItem value=\"ES\">Spain</SelectItem>\n427: </SelectContent>"
           },
           {
             "text": "Enter dealership name",
-            "line": 254,
-            "context": "253: onChange={(e) => handleInputChange('name', e.target.value)}\n254: placeholder=\"Enter dealership name\"\n255: required"
+            "line": 257,
+            "context": "256: onChange={(e) => handleInputChange('name', e.target.value)}\n257: placeholder=\"Enter dealership name\"\n258: required"
           },
           {
             "text": "Enter tax number",
-            "line": 265,
-            "context": "264: onChange={(e) => handleInputChange('tax_number', e.target.value)}\n265: placeholder=\"Enter tax number\"\n266: />"
+            "line": 268,
+            "context": "267: onChange={(e) => handleInputChange('tax_number', e.target.value)}\n268: placeholder=\"Enter tax number\"\n269: />"
           },
           {
             "text": "Enter email address",
-            "line": 294,
-            "context": "293: onChange={(e) => handleInputChange('email', e.target.value)}\n294: placeholder=\"Enter email address\"\n295: type=\"email\""
+            "line": 297,
+            "context": "296: onChange={(e) => handleInputChange('email', e.target.value)}\n297: placeholder=\"Enter email address\"\n298: type=\"email\""
           },
           {
             "text": "Enter phone number",
-            "line": 306,
-            "context": "305: onChange={(e) => handleInputChange('phone', e.target.value)}\n306: placeholder=\"Enter phone number\"\n307: />"
+            "line": 308,
+            "context": "307: onChange={(e) => handleInputChange('phone', e.target.value)}\n308: placeholder=\"Enter phone number\"\n309: />"
           },
           {
             "text": "Enter street address",
-            "line": 372,
-            "context": "371: onChange={(e) => handleInputChange('address', e.target.value)}\n372: placeholder=\"Enter street address\"\n373: />"
+            "line": 378,
+            "context": "377: onChange={(e) => handleInputChange('address', e.target.value)}\n378: placeholder=\"Enter street address\"\n379: />"
           },
           {
             "text": "Enter city",
-            "line": 383,
-            "context": "382: onChange={(e) => handleInputChange('city', e.target.value)}\n383: placeholder=\"Enter city\"\n384: />"
+            "line": 389,
+            "context": "388: onChange={(e) => handleInputChange('city', e.target.value)}\n389: placeholder=\"Enter city\"\n390: />"
           },
           {
             "text": "Enter state",
-            "line": 393,
-            "context": "392: onChange={(e) => handleInputChange('state', e.target.value)}\n393: placeholder=\"Enter state\"\n394: />"
+            "line": 399,
+            "context": "398: onChange={(e) => handleInputChange('state', e.target.value)}\n399: placeholder=\"Enter state\"\n400: />"
           },
           {
             "text": "Enter ZIP code",
-            "line": 405,
-            "context": "404: onChange={(e) => handleInputChange('zip_code', e.target.value)}\n405: placeholder=\"Enter ZIP code\"\n406: />"
+            "line": 411,
+            "context": "410: onChange={(e) => handleInputChange('zip_code', e.target.value)}\n411: placeholder=\"Enter ZIP code\"\n412: />"
           },
           {
             "text": "Enter internal notes or comments",
-            "line": 484,
-            "context": "483: onChange={(e) => handleInputChange('notes', e.target.value)}\n484: placeholder=\"Enter internal notes or comments\"\n485: className=\"min-h-[100px]\""
+            "line": 490,
+            "context": "489: onChange={(e) => handleInputChange('notes', e.target.value)}\n490: placeholder=\"Enter internal notes or comments\"\n491: className=\"min-h-[100px]\""
           }
         ],
         "translationCalls": [
           {
             "key": "messages.required_field",
-            "line": 120,
+            "line": 123,
             "exists": false
           },
           {
             "key": "dealerships.duplicate_tax_number_title",
-            "line": 144,
+            "line": 147,
             "exists": false
           },
           {
             "key": "dealerships.duplicate_tax_number_description",
-            "line": 145,
+            "line": 148,
             "exists": false
           },
           {
             "key": "messages.saved",
-            "line": 167,
+            "line": 170,
             "exists": false
           },
           {
             "key": "messages.saved",
-            "line": 174,
+            "line": 177,
             "exists": false
           },
           {
             "key": "dealerships.duplicate_tax_number_title",
-            "line": 189,
+            "line": 192,
             "exists": false
           },
           {
             "key": "dealerships.duplicate_tax_number_error",
-            "line": 190,
+            "line": 193,
             "exists": false
           },
           {
             "key": "dealerships.duplicate_email_title",
-            "line": 195,
+            "line": 198,
             "exists": false
           },
           {
             "key": "dealerships.duplicate_email_error",
-            "line": 196,
+            "line": 199,
             "exists": false
           },
           {
             "key": "common.error",
-            "line": 201,
+            "line": 204,
             "exists": true
           },
           {
             "key": "dealerships.duplicate_field_error",
-            "line": 202,
+            "line": 205,
             "exists": false
           },
           {
             "key": "messages.error",
-            "line": 206,
+            "line": 209,
             "exists": true
           },
           {
             "key": "dealerships.edit",
-            "line": 235,
+            "line": 238,
             "exists": true
           },
           {
             "key": "dealerships.add_new",
-            "line": 235,
+            "line": 238,
             "exists": true
           },
           {
             "key": "dealerships.business_info",
-            "line": 246,
-            "exists": true
-          },
-          {
-            "key": "dealerships.name",
             "line": 249,
             "exists": true
           },
           {
+            "key": "dealerships.name",
+            "line": 252,
+            "exists": true
+          },
+          {
             "key": "dealerships.tax_number",
-            "line": 260,
+            "line": 263,
             "exists": true
           },
           {
             "key": "dealerships.website",
-            "line": 270,
+            "line": 273,
             "exists": true
           },
           {
             "key": "dealerships.contact_info",
-            "line": 286,
-            "exists": true
-          },
-          {
-            "key": "dealerships.email",
             "line": 289,
             "exists": true
           },
           {
+            "key": "dealerships.email",
+            "line": 292,
+            "exists": true
+          },
+          {
             "key": "dealerships.phone",
-            "line": 301,
+            "line": 303,
             "exists": true
           },
           {
             "key": "dealerships.subscription_settings",
-            "line": 316,
+            "line": 320,
             "exists": true
           },
           {
             "key": "dealerships.subscription_plan",
-            "line": 319,
+            "line": 323,
             "exists": true
           },
           {
             "key": "dealerships.basic_plan",
-            "line": 325,
+            "line": 329,
             "exists": true
           },
           {
             "key": "dealerships.premium_plan",
-            "line": 326,
+            "line": 330,
             "exists": true
           },
           {
             "key": "dealerships.enterprise_plan",
-            "line": 327,
+            "line": 331,
             "exists": true
           },
           {
             "key": "dealerships.max_users",
-            "line": 333,
+            "line": 337,
             "exists": true
           },
           {
             "key": "dealerships.status",
-            "line": 344,
+            "line": 348,
             "exists": true
           },
           {
             "key": "dealerships.active",
-            "line": 350,
+            "line": 354,
             "exists": true
           },
           {
             "key": "dealerships.inactive",
-            "line": 351,
+            "line": 355,
             "exists": true
           },
           {
             "key": "dealerships.suspended",
-            "line": 352,
+            "line": 356,
             "exists": true
           },
           {
             "key": "dealerships.address_info",
-            "line": 364,
+            "line": 370,
             "exists": true
           },
           {
             "key": "dealerships.address",
-            "line": 367,
+            "line": 373,
             "exists": true
           },
           {
             "key": "dealerships.city",
-            "line": 378,
+            "line": 384,
             "exists": true
           },
           {
             "key": "dealerships.state",
-            "line": 388,
+            "line": 394,
             "exists": true
           },
           {
             "key": "dealerships.zip",
-            "line": 400,
+            "line": 406,
             "exists": true
           },
           {
             "key": "dealerships.country",
-            "line": 410,
+            "line": 416,
             "exists": true
           },
           {
             "key": "dealerships.branding",
-            "line": 432,
+            "line": 438,
             "exists": true
           },
           {
             "key": "dealerships.logo",
-            "line": 436,
+            "line": 442,
             "exists": true
           },
           {
             "key": "dealerships.logo_upload_after_creation",
-            "line": 446,
+            "line": 452,
             "exists": true
           },
           {
             "key": "dealerships.primary_color",
-            "line": 455,
+            "line": 461,
             "exists": true
           },
           {
             "key": "dealerships.notes",
-            "line": 479,
+            "line": 485,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 493,
+            "line": 499,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 496,
+            "line": 502,
             "exists": true
           },
           {
             "key": "common.save",
-            "line": 496,
+            "line": 502,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "messages.required_field",
-            "line": 120,
-            "context": "119: if (!formData.name.trim() || !formData.email.trim()) {\n120: toast({ variant: 'destructive', description: t('messages.required_field') });\n121: return;"
+            "line": 123,
+            "context": "122: if (!formData.name.trim()) {\n123: toast({ variant: 'destructive', description: t('messages.required_field') });\n124: return;"
           },
           {
             "key": "dealerships.duplicate_tax_number_title",
-            "line": 144,
-            "context": "143: variant: 'destructive',\n144: title: t('dealerships.duplicate_tax_number_title'),\n145: description: t('dealerships.duplicate_tax_number_description', {"
+            "line": 147,
+            "context": "146: variant: 'destructive',\n147: title: t('dealerships.duplicate_tax_number_title'),\n148: description: t('dealerships.duplicate_tax_number_description', {"
           },
           {
             "key": "dealerships.duplicate_tax_number_description",
-            "line": 145,
-            "context": "144: title: t('dealerships.duplicate_tax_number_title'),\n145: description: t('dealerships.duplicate_tax_number_description', {\n146: name: existingDealership.name,"
+            "line": 148,
+            "context": "147: title: t('dealerships.duplicate_tax_number_title'),\n148: description: t('dealerships.duplicate_tax_number_description', {\n149: name: existingDealership.name,"
           },
           {
             "key": "messages.saved",
-            "line": 167,
-            "context": "166: if (error) throw error;\n167: toast({ description: t('messages.saved') });\n168: } else {"
+            "line": 170,
+            "context": "169: if (error) throw error;\n170: toast({ description: t('messages.saved') });\n171: } else {"
           },
           {
             "key": "messages.saved",
-            "line": 174,
-            "context": "173: if (error) throw error;\n174: toast({ description: t('messages.saved') });\n175: }"
+            "line": 177,
+            "context": "176: if (error) throw error;\n177: toast({ description: t('messages.saved') });\n178: }"
           },
           {
             "key": "dealerships.duplicate_tax_number_title",
-            "line": 189,
-            "context": "188: variant: 'destructive',\n189: title: t('dealerships.duplicate_tax_number_title'),\n190: description: t('dealerships.duplicate_tax_number_error')"
+            "line": 192,
+            "context": "191: variant: 'destructive',\n192: title: t('dealerships.duplicate_tax_number_title'),\n193: description: t('dealerships.duplicate_tax_number_error')"
           },
           {
             "key": "dealerships.duplicate_tax_number_error",
-            "line": 190,
-            "context": "189: title: t('dealerships.duplicate_tax_number_title'),\n190: description: t('dealerships.duplicate_tax_number_error')\n191: });"
+            "line": 193,
+            "context": "192: title: t('dealerships.duplicate_tax_number_title'),\n193: description: t('dealerships.duplicate_tax_number_error')\n194: });"
           },
           {
             "key": "dealerships.duplicate_email_title",
-            "line": 195,
-            "context": "194: variant: 'destructive',\n195: title: t('dealerships.duplicate_email_title'),\n196: description: t('dealerships.duplicate_email_error')"
+            "line": 198,
+            "context": "197: variant: 'destructive',\n198: title: t('dealerships.duplicate_email_title'),\n199: description: t('dealerships.duplicate_email_error')"
           },
           {
             "key": "dealerships.duplicate_email_error",
-            "line": 196,
-            "context": "195: title: t('dealerships.duplicate_email_title'),\n196: description: t('dealerships.duplicate_email_error')\n197: });"
+            "line": 199,
+            "context": "198: title: t('dealerships.duplicate_email_title'),\n199: description: t('dealerships.duplicate_email_error')\n200: });"
           },
           {
             "key": "dealerships.duplicate_field_error",
-            "line": 202,
-            "context": "201: title: t('common.error'),\n202: description: t('dealerships.duplicate_field_error')\n203: });"
+            "line": 205,
+            "context": "204: title: t('common.error'),\n205: description: t('dealerships.duplicate_field_error')\n206: });"
           }
         ],
         "coverage": 76,
@@ -19202,112 +19202,127 @@
           },
           {
             "key": "dealerships.no_location",
-            "line": 500,
+            "line": 502,
             "exists": true
           },
           {
-            "key": "dealerships.${dealership.status}",
+            "key": "dealerships.created",
             "line": 506,
             "exists": false
           },
           {
+            "key": "dealerships.${dealership.status}",
+            "line": 512,
+            "exists": false
+          },
+          {
             "key": "dealerships.${dealership.subscription_plan}",
-            "line": 511,
+            "line": 517,
+            "exists": false
+          },
+          {
+            "key": "dealerships.users",
+            "line": 526,
+            "exists": false
+          },
+          {
+            "key": "dealerships.contacts",
+            "line": 531,
             "exists": false
           },
           {
             "key": "dealerships.view_details",
-            "line": 538,
+            "line": 548,
             "exists": true
           },
           {
             "key": "common.edit",
-            "line": 542,
+            "line": 552,
             "exists": false
           },
           {
             "key": "dealerships.invite_user",
-            "line": 546,
+            "line": 556,
             "exists": true
           },
           {
             "key": "dealerships.export_data",
-            "line": 550,
+            "line": 560,
             "exists": false
           },
           {
             "key": "dealerships.migrate_users",
-            "line": 554,
+            "line": 564,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 561,
+            "line": 571,
             "exists": false
           },
           {
             "key": "dealerships.export_data",
-            "line": 568,
+            "line": 578,
             "exists": false
           },
           {
             "key": "dealerships.restore_dealership",
-            "line": 575,
+            "line": 585,
             "exists": false
           },
           {
             "key": "dealerships.no_results",
-            "line": 592,
+            "line": 602,
             "exists": true
           },
           {
             "key": "dealerships.no_dealerships",
-            "line": 592,
+            "line": 602,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 649,
+            "line": 659,
             "exists": false
           },
           {
             "key": "dealerships.confirm_delete_warning",
-            "line": 652,
+            "line": 662,
             "exists": false
           },
           {
             "key": "dealerships.confirm_delete",
-            "line": 656,
+            "line": 666,
             "exists": true
           },
           {
             "key": "common.delete",
-            "line": 658,
-            "exists": false
-          },
-          {
-            "key": "common.cancel",
-            "line": 659,
-            "exists": true
-          },
-          {
-            "key": "dealerships.restore_dealership",
             "line": 668,
             "exists": false
           },
           {
-            "key": "dealerships.confirm_restore",
+            "key": "common.cancel",
             "line": 669,
+            "exists": true
+          },
+          {
+            "key": "dealerships.restore_dealership",
+            "line": 678,
+            "exists": false
+          },
+          {
+            "key": "dealerships.confirm_restore",
+            "line": 679,
             "exists": false
           },
           {
             "key": "common.restore",
-            "line": 670,
+            "line": 680,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 671,
+            "line": 681,
             "exists": true
           }
         ],
@@ -19343,74 +19358,89 @@
             "context": "482: <Badge variant=\"destructive\" className=\"text-xs\">\n483: {t('dealerships.deleted_at')}: {new Date(dealership.deleted_at).toLocaleDateString()}\n484: </Badge>"
           },
           {
-            "key": "dealerships.${dealership.status}",
+            "key": "dealerships.created",
             "line": 506,
-            "context": "505: <Badge variant={getStatusBadgeVariant(dealership.status)}>\n506: {t(`dealerships.${dealership.status}`)}\n507: </Badge>"
+            "context": "505: <div className=\"text-xs text-muted-foreground\">\n506: {t('dealerships.created')}: {new Date(dealership.created_at).toLocaleDateString()}\n507: </div>"
+          },
+          {
+            "key": "dealerships.${dealership.status}",
+            "line": 512,
+            "context": "511: <Badge variant={getStatusBadgeVariant(dealership.status)}>\n512: {t(`dealerships.${dealership.status}`)}\n513: </Badge>"
           },
           {
             "key": "dealerships.${dealership.subscription_plan}",
-            "line": 511,
-            "context": "510: <Badge variant={getPlanBadgeVariant(dealership.subscription_plan)}>\n511: {t(`dealerships.${dealership.subscription_plan}`)}\n512: </Badge>"
+            "line": 517,
+            "context": "516: <Badge variant={getPlanBadgeVariant(dealership.subscription_plan)}>\n517: {t(`dealerships.${dealership.subscription_plan}`)}\n518: </Badge>"
+          },
+          {
+            "key": "dealerships.users",
+            "line": 526,
+            "context": "525: <span className=\"font-medium text-blue-700\">{dealership.user_count || 0}</span>\n526: <span className=\"text-xs text-blue-600/70\">{t('dealerships.users')}</span>\n527: </div>"
+          },
+          {
+            "key": "dealerships.contacts",
+            "line": 531,
+            "context": "530: <span className=\"font-medium text-emerald-700\">{dealership.contact_count || 0}</span>\n531: <span className=\"text-xs text-emerald-600/70\">{t('dealerships.contacts')}</span>\n532: </div>"
           },
           {
             "key": "common.edit",
-            "line": 542,
-            "context": "541: <Edit className=\"mr-2 h-4 w-4\" />\n542: {t('common.edit')}\n543: </DropdownMenuItem>"
+            "line": 552,
+            "context": "551: <Edit className=\"mr-2 h-4 w-4\" />\n552: {t('common.edit')}\n553: </DropdownMenuItem>"
           },
           {
             "key": "dealerships.export_data",
-            "line": 550,
-            "context": "549: <Download className=\"mr-2 h-4 w-4\" />\n550: {t('dealerships.export_data')}\n551: </DropdownMenuItem>"
+            "line": 560,
+            "context": "559: <Download className=\"mr-2 h-4 w-4\" />\n560: {t('dealerships.export_data')}\n561: </DropdownMenuItem>"
           },
           {
             "key": "dealerships.migrate_users",
-            "line": 554,
-            "context": "553: <UserCog className=\"mr-2 h-4 w-4\" />\n554: {t('dealerships.migrate_users')}\n555: </DropdownMenuItem>"
+            "line": 564,
+            "context": "563: <UserCog className=\"mr-2 h-4 w-4\" />\n564: {t('dealerships.migrate_users')}\n565: </DropdownMenuItem>"
           },
           {
             "key": "common.delete",
-            "line": 561,
-            "context": "560: <Trash2 className=\"mr-2 h-4 w-4\" />\n561: {t('common.delete')}\n562: </DropdownMenuItem>"
+            "line": 571,
+            "context": "570: <Trash2 className=\"mr-2 h-4 w-4\" />\n571: {t('common.delete')}\n572: </DropdownMenuItem>"
           },
           {
             "key": "dealerships.export_data",
-            "line": 568,
-            "context": "567: <Download className=\"mr-2 h-4 w-4\" />\n568: {t('dealerships.export_data')}\n569: </DropdownMenuItem>"
+            "line": 578,
+            "context": "577: <Download className=\"mr-2 h-4 w-4\" />\n578: {t('dealerships.export_data')}\n579: </DropdownMenuItem>"
           },
           {
             "key": "dealerships.restore_dealership",
-            "line": 575,
-            "context": "574: <RotateCcw className=\"mr-2 h-4 w-4\" />\n575: {t('dealerships.restore_dealership')}\n576: </DropdownMenuItem>"
+            "line": 585,
+            "context": "584: <RotateCcw className=\"mr-2 h-4 w-4\" />\n585: {t('dealerships.restore_dealership')}\n586: </DropdownMenuItem>"
           },
           {
             "key": "common.delete",
-            "line": 649,
-            "context": "648: onOpenChange={setDeleteDialogOpen}\n649: title={t('common.delete') + ' ' + (dealershipToDelete?.name || '')}\n650: description={"
+            "line": 659,
+            "context": "658: onOpenChange={setDeleteDialogOpen}\n659: title={t('common.delete') + ' ' + (dealershipToDelete?.name || '')}\n660: description={"
           },
           {
             "key": "dealerships.confirm_delete_warning",
-            "line": 652,
-            "context": "651: dealershipToDelete && dealershipToDelete.user_count && dealershipToDelete.user_count > 0\n652: ? t('dealerships.confirm_delete_warning', {\n653: name: dealershipToDelete.name,"
+            "line": 662,
+            "context": "661: dealershipToDelete && dealershipToDelete.user_count && dealershipToDelete.user_count > 0\n662: ? t('dealerships.confirm_delete_warning', {\n663: name: dealershipToDelete.name,"
           },
           {
             "key": "common.delete",
-            "line": 658,
-            "context": "657: }\n658: confirmText={t('common.delete')}\n659: cancelText={t('common.cancel')}"
+            "line": 668,
+            "context": "667: }\n668: confirmText={t('common.delete')}\n669: cancelText={t('common.cancel')}"
           },
           {
             "key": "dealerships.restore_dealership",
-            "line": 668,
-            "context": "667: onOpenChange={setRestoreDialogOpen}\n668: title={t('dealerships.restore_dealership')}\n669: description={t('dealerships.confirm_restore', { name: dealershipToRestore?.name || '' })}"
+            "line": 678,
+            "context": "677: onOpenChange={setRestoreDialogOpen}\n678: title={t('dealerships.restore_dealership')}\n679: description={t('dealerships.confirm_restore', { name: dealershipToRestore?.name || '' })}"
           },
           {
             "key": "dealerships.confirm_restore",
-            "line": 669,
-            "context": "668: title={t('dealerships.restore_dealership')}\n669: description={t('dealerships.confirm_restore', { name: dealershipToRestore?.name || '' })}\n670: confirmText={t('common.restore', { defaultValue: 'Restore' })}"
+            "line": 679,
+            "context": "678: title={t('dealerships.restore_dealership')}\n679: description={t('dealerships.confirm_restore', { name: dealershipToRestore?.name || '' })}\n680: confirmText={t('common.restore', { defaultValue: 'Restore' })}"
           },
           {
             "key": "common.restore",
-            "line": 670,
-            "context": "669: description={t('dealerships.confirm_restore', { name: dealershipToRestore?.name || '' })}\n670: confirmText={t('common.restore', { defaultValue: 'Restore' })}\n671: cancelText={t('common.cancel')}"
+            "line": 680,
+            "context": "679: description={t('dealerships.confirm_restore', { name: dealershipToRestore?.name || '' })}\n680: confirmText={t('common.restore', { defaultValue: 'Restore' })}\n681: cancelText={t('common.cancel')}"
           }
         ],
         "coverage": 100,
@@ -23082,142 +23112,152 @@
         "hardcodedStrings": [
           {
             "text": "Configure SMS/Email Notifications",
-            "line": 216,
-            "context": "215: }}\n216: title=\"Configure SMS/Email Notifications\"\n217: >"
+            "line": 258,
+            "context": "257: }}\n258: title=\"Configure SMS/Email Notifications\"\n259: >"
           }
         ],
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 101,
+            "line": 126,
             "exists": true
           },
           {
             "key": "roles.cannot_delete_role",
-            "line": 119,
+            "line": 144,
             "exists": true
           },
           {
             "key": "roles.role_has_users",
-            "line": 120,
+            "line": 145,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 142,
+            "line": 167,
             "exists": true
           },
           {
             "key": "roles.role_deleted",
-            "line": 143,
+            "line": 168,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 152,
-            "exists": true
-          },
-          {
-            "key": "roles.error_deleting_role",
-            "line": 153,
-            "exists": true
-          },
-          {
-            "key": "common.loading",
-            "line": 163,
-            "exists": true
-          },
-          {
-            "key": "roles.custom_roles_title",
-            "line": 175,
-            "exists": true
-          },
-          {
-            "key": "roles.custom_roles_description",
             "line": 177,
             "exists": true
           },
           {
-            "key": "roles.create_role",
-            "line": 182,
+            "key": "roles.error_deleting_role",
+            "line": 178,
             "exists": true
           },
           {
+            "key": "common.loading",
+            "line": 188,
+            "exists": true
+          },
+          {
+            "key": "roles.custom_roles_title",
+            "line": 206,
+            "exists": true
+          },
+          {
+            "key": "roles.custom_roles_description",
+            "line": 208,
+            "exists": true
+          },
+          {
+            "key": "roles.create_role",
+            "line": 214,
+            "exists": true
+          },
+          {
+            "key": "common.edit",
+            "line": 269,
+            "exists": false
+          },
+          {
             "key": "roles.cannot_delete_has_users",
-            "line": 237,
+            "line": 280,
             "exists": true
           },
           {
             "key": "roles.delete_role",
-            "line": 238,
+            "line": 281,
             "exists": true
           },
           {
             "key": "roles.users",
-            "line": 250,
+            "line": 296,
             "exists": true
           },
           {
             "key": "permissions.module_permissions",
-            "line": 254,
+            "line": 304,
             "exists": true
           },
           {
             "key": "roles.no_permissions_assigned",
-            "line": 258,
+            "line": 308,
             "exists": true
           },
           {
             "key": "roles.no_custom_roles",
-            "line": 286,
+            "line": 342,
             "exists": true
           },
           {
             "key": "roles.create_role_description",
-            "line": 288,
+            "line": 344,
             "exists": true
           },
           {
             "key": "roles.create_first_role",
-            "line": 293,
+            "line": 349,
             "exists": true
           },
           {
             "key": "roles.confirm_delete_role_title",
-            "line": 335,
+            "line": 391,
             "exists": false
           },
           {
             "key": "roles.confirm_delete",
-            "line": 336,
+            "line": 392,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 337,
+            "line": 393,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 338,
+            "line": 394,
             "exists": true
           }
         ],
         "missingKeys": [
           {
+            "key": "common.edit",
+            "line": 269,
+            "context": "268: }}\n269: title={t('common.edit')}\n270: >"
+          },
+          {
             "key": "roles.confirm_delete_role_title",
-            "line": 335,
-            "context": "334: onOpenChange={setDeleteDialogOpen}\n335: title={t('roles.confirm_delete_role_title', 'Delete Role?')}\n336: description={t('roles.confirm_delete', roleToDelete ? `Are you sure you want to delete \"${roleToDelete.display_name}\"? This action cannot be undone.` : '')}"
+            "line": 391,
+            "context": "390: onOpenChange={setDeleteDialogOpen}\n391: title={t('roles.confirm_delete_role_title', 'Delete Role?')}\n392: description={t('roles.confirm_delete', roleToDelete ? `Are you sure you want to delete \"${roleToDelete.display_name}\"? This action cannot be undone.` : '')}"
           },
           {
             "key": "roles.confirm_delete",
-            "line": 336,
-            "context": "335: title={t('roles.confirm_delete_role_title', 'Delete Role?')}\n336: description={t('roles.confirm_delete', roleToDelete ? `Are you sure you want to delete \"${roleToDelete.display_name}\"? This action cannot be undone.` : '')}\n337: confirmText={t('common.delete', 'Delete')}"
+            "line": 392,
+            "context": "391: title={t('roles.confirm_delete_role_title', 'Delete Role?')}\n392: description={t('roles.confirm_delete', roleToDelete ? `Are you sure you want to delete \"${roleToDelete.display_name}\"? This action cannot be undone.` : '')}\n393: confirmText={t('common.delete', 'Delete')}"
           },
           {
             "key": "common.delete",
-            "line": 337,
-            "context": "336: description={t('roles.confirm_delete', roleToDelete ? `Are you sure you want to delete \"${roleToDelete.display_name}\"? This action cannot be undone.` : '')}\n337: confirmText={t('common.delete', 'Delete')}\n338: cancelText={t('common.cancel', 'Cancel')}"
+            "line": 393,
+            "context": "392: description={t('roles.confirm_delete', roleToDelete ? `Are you sure you want to delete \"${roleToDelete.display_name}\"? This action cannot be undone.` : '')}\n393: confirmText={t('common.delete', 'Delete')}\n394: cancelText={t('common.cancel', 'Cancel')}"
           }
         ],
         "coverage": 96,
@@ -23239,220 +23279,240 @@
           },
           {
             "key": "common.success",
-            "line": 237,
+            "line": 280,
             "exists": true
           },
           {
             "key": "dealer.view.users.user_deactivated",
-            "line": 239,
+            "line": 282,
             "exists": true
           },
           {
             "key": "dealer.view.users.user_activated",
-            "line": 240,
+            "line": 283,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 249,
+            "line": 297,
             "exists": true
           },
           {
             "key": "dealer.view.users.error_updating_status",
-            "line": 250,
+            "line": 298,
             "exists": true
           },
           {
             "key": "common.unnamed",
-            "line": 271,
+            "line": 319,
             "exists": true
           },
           {
             "key": "common.unnamed",
-            "line": 277,
+            "line": 325,
             "exists": true
+          },
+          {
+            "key": "dealer.view.users.dealership_users",
+            "line": 417,
+            "exists": false
+          },
+          {
+            "key": "dealer.view.users.manage_access_description",
+            "line": 419,
+            "exists": false
           },
           {
             "key": "dealer.view.users.view_archived",
-            "line": 358,
+            "line": 430,
             "exists": true
           },
           {
             "key": "dealer.view.users.invite_user",
-            "line": 362,
+            "line": 434,
             "exists": true
           },
           {
             "key": "dealer.view.users.tab_users",
-            "line": 371,
+            "line": 446,
             "exists": false
           },
           {
             "key": "password_management.title",
-            "line": 375,
+            "line": 450,
             "exists": true
           },
           {
             "key": "dealer.view.users.table.user",
-            "line": 387,
+            "line": 462,
             "exists": true
           },
           {
             "key": "dealer.view.users.table.email",
-            "line": 388,
+            "line": 463,
             "exists": true
           },
           {
             "key": "dealer.view.users.table.role",
-            "line": 389,
+            "line": 464,
             "exists": true
           },
           {
             "key": "dealer.view.users.table.status",
-            "line": 390,
+            "line": 465,
             "exists": true
           },
           {
             "key": "dealer.view.users.table.joined",
-            "line": 391,
+            "line": 466,
             "exists": true
           },
           {
             "key": "dealer.view.users.no_active_users",
-            "line": 401,
+            "line": 476,
             "exists": true
           },
           {
             "key": "common.no_email",
-            "line": 422,
+            "line": 498,
             "exists": true
           },
           {
             "key": "dealer.view.users.no_role",
-            "line": 440,
+            "line": 516,
             "exists": true
           },
           {
             "key": "common.active",
-            "line": 454,
+            "line": 529,
             "exists": true
           },
           {
             "key": "common.inactive",
-            "line": 454,
+            "line": 529,
             "exists": true
           },
           {
             "key": "dealer.view.users.edit_role",
-            "line": 474,
+            "line": 551,
             "exists": true
           },
           {
             "key": "dealer.view.users.deactivate",
-            "line": 483,
+            "line": 560,
             "exists": true
           },
           {
             "key": "dealer.view.users.activate",
-            "line": 488,
+            "line": 565,
             "exists": true
           },
           {
             "key": "dealer.view.users.deactivate_user_title",
-            "line": 548,
+            "line": 625,
             "exists": true
           },
           {
             "key": "dealer.view.users.activate_user_title",
-            "line": 553,
+            "line": 630,
             "exists": true
           },
           {
             "key": "dealer.view.users.deactivate_user_description",
-            "line": 559,
+            "line": 636,
             "exists": true
           },
           {
             "key": "dealer.view.users.activate_user_description",
-            "line": 564,
+            "line": 641,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 573,
+            "line": 650,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 586,
+            "line": 663,
             "exists": true
           },
           {
             "key": "dealer.view.users.deactivate",
-            "line": 589,
+            "line": 666,
             "exists": true
           },
           {
             "key": "dealer.view.users.activate",
-            "line": 591,
+            "line": 668,
             "exists": true
           },
           {
             "key": "dealer.view.users.archived_users_title",
-            "line": 604,
+            "line": 681,
             "exists": true
           },
           {
             "key": "dealer.view.users.archived_users_description",
-            "line": 607,
+            "line": 684,
             "exists": true
           },
           {
             "key": "dealer.view.users.no_archived_users",
-            "line": 615,
+            "line": 692,
             "exists": true
           },
           {
             "key": "dealer.view.users.table.user",
-            "line": 621,
+            "line": 698,
             "exists": true
           },
           {
             "key": "dealer.view.users.table.email",
-            "line": 622,
+            "line": 699,
             "exists": true
           },
           {
             "key": "dealer.view.users.table.role",
-            "line": 623,
+            "line": 700,
             "exists": true
           },
           {
             "key": "dealer.view.users.table.joined",
-            "line": 624,
+            "line": 701,
             "exists": true
           },
           {
             "key": "common.no_email",
-            "line": 646,
+            "line": 723,
             "exists": true
           },
           {
             "key": "dealer.view.users.no_role",
-            "line": 664,
+            "line": 741,
             "exists": true
           },
           {
             "key": "dealer.view.users.activate",
-            "line": 685,
+            "line": 762,
             "exists": true
           }
         ],
         "missingKeys": [
           {
+            "key": "dealer.view.users.dealership_users",
+            "line": 417,
+            "context": "416: <div>\n417: <h2 className=\"text-2xl font-bold\">{t('dealer.view.users.dealership_users', 'Dealership Users')}</h2>\n418: <p className=\"text-sm text-muted-foreground mt-0.5\">"
+          },
+          {
+            "key": "dealer.view.users.manage_access_description",
+            "line": 419,
+            "context": "418: <p className=\"text-sm text-muted-foreground mt-0.5\">\n419: {t('dealer.view.users.manage_access_description', 'Manage user memberships and access for this dealership')}\n420: </p>"
+          },
+          {
             "key": "dealer.view.users.tab_users",
-            "line": 371,
-            "context": "370: <Users className=\"h-4 w-4\" />\n371: <span>{t('dealer.view.users.tab_users', 'Users')}</span>\n372: </TabsTrigger>"
+            "line": 446,
+            "context": "445: <Users className=\"h-4 w-4\" />\n446: <span>{t('dealer.view.users.tab_users', 'Users')}</span>\n447: </TabsTrigger>"
           }
         ],
         "coverage": 100,
@@ -65798,308 +65858,318 @@
           },
           {
             "key": "auth.sign_in_error_title",
-            "line": 237,
+            "line": 240,
             "exists": true
           },
           {
+            "key": "auth.account_deactivated",
+            "line": 242,
+            "exists": false
+          },
+          {
             "key": "auth.invalid_credentials_generic",
-            "line": 238,
+            "line": 243,
             "exists": true
           },
           {
             "key": "auth.error_title",
-            "line": 247,
+            "line": 252,
             "exists": true
           },
           {
             "key": "auth.unexpected_error",
-            "line": 248,
+            "line": 253,
             "exists": true
           },
           {
             "key": "auth.invalid_email_title",
-            "line": 266,
+            "line": 271,
             "exists": true
           },
           {
             "key": "auth.invalid_email_description",
-            "line": 267,
+            "line": 272,
             "exists": true
           },
           {
             "key": "auth.signup.password_weak_title",
-            "line": 277,
+            "line": 282,
             "exists": true
           },
           {
             "key": "auth.signup.password_requirements",
-            "line": 278,
+            "line": 283,
             "exists": true
           },
           {
             "key": "auth.signup.required_fields_title",
-            "line": 287,
+            "line": 292,
             "exists": true
           },
           {
             "key": "auth.signup.required_fields_description",
-            "line": 288,
+            "line": 293,
             "exists": true
           },
           {
             "key": "auth.signup.email_mismatch_title",
-            "line": 297,
+            "line": 302,
             "exists": true
           },
           {
             "key": "auth.signup.email_mismatch_description",
-            "line": 298,
+            "line": 303,
             "exists": true
           },
           {
             "key": "auth.signup.error_title",
-            "line": 311,
+            "line": 316,
             "exists": true
           },
           {
             "key": "auth.signup.success_title",
-            "line": 321,
+            "line": 326,
             "exists": true
           },
           {
             "key": "auth.signup.check_email",
-            "line": 322,
+            "line": 327,
             "exists": true
           },
           {
             "key": "auth.error_title",
-            "line": 329,
+            "line": 334,
             "exists": true
           },
           {
             "key": "auth.unexpected_error",
-            "line": 330,
+            "line": 335,
             "exists": true
           },
           {
             "key": "auth.signup.invitation_accept_error",
-            "line": 360,
+            "line": 365,
             "exists": true
           },
           {
             "key": "auth.signup.success_title",
-            "line": 366,
+            "line": 371,
             "exists": true
           },
           {
             "key": "auth.signup.invitation_accepted",
-            "line": 367,
+            "line": 372,
             "exists": true
           },
           {
             "key": "auth.signup.success_title",
-            "line": 382,
-            "exists": true
-          },
-          {
-            "key": "auth.signup.email_confirmation_pending_with_invitation",
-            "line": 383,
-            "exists": true
-          },
-          {
-            "key": "auth.unexpected_error",
             "line": 387,
             "exists": true
           },
           {
+            "key": "auth.signup.email_confirmation_pending_with_invitation",
+            "line": 388,
+            "exists": true
+          },
+          {
+            "key": "auth.unexpected_error",
+            "line": 392,
+            "exists": true
+          },
+          {
             "key": "auth.signup.invitation_accept_error",
-            "line": 389,
+            "line": 394,
             "exists": true
           },
           {
             "key": "auth.skip_to_form",
-            "line": 403,
+            "line": 408,
             "exists": true
           },
           {
             "key": "auth.app_title",
-            "line": 433,
-            "exists": true
-          },
-          {
-            "key": "auth.app_subtitle",
             "line": 438,
             "exists": true
           },
           {
+            "key": "auth.app_subtitle",
+            "line": 443,
+            "exists": true
+          },
+          {
             "key": "auth.signup.welcome_title",
-            "line": 445,
+            "line": 450,
             "exists": true
           },
           {
             "key": "auth.welcome_title",
-            "line": 445,
+            "line": 450,
             "exists": true
           },
           {
             "key": "auth.signup.welcome_subtitle",
-            "line": 448,
+            "line": 453,
             "exists": true
           },
           {
             "key": "auth.welcome_subtitle",
-            "line": 448,
+            "line": 453,
             "exists": true
           },
           {
             "key": "auth.signup.invitation_info",
-            "line": 455,
+            "line": 460,
             "exists": true
           },
           {
             "key": "auth.signup.as_role",
-            "line": 455,
+            "line": 460,
             "exists": true
           },
           {
             "key": "auth.signup.verifying_invitation",
-            "line": 475,
+            "line": 480,
             "exists": true
           },
           {
             "key": "auth.signup.first_name",
-            "line": 488,
+            "line": 493,
             "exists": true
           },
           {
             "key": "auth.signup.first_name_placeholder",
-            "line": 500,
-            "exists": true
-          },
-          {
-            "key": "auth.signup.last_name",
             "line": 505,
             "exists": true
           },
           {
+            "key": "auth.signup.last_name",
+            "line": 510,
+            "exists": true
+          },
+          {
             "key": "auth.signup.last_name_placeholder",
-            "line": 517,
+            "line": 522,
             "exists": true
           },
           {
             "key": "auth.email_label",
-            "line": 526,
+            "line": 531,
             "exists": true
           },
           {
             "key": "auth.email_placeholder",
-            "line": 539,
+            "line": 544,
             "exists": true
           },
           {
             "key": "auth.invalid_email_description",
-            "line": 545,
+            "line": 550,
             "exists": true
           },
           {
             "key": "auth.password_label",
-            "line": 554,
+            "line": 559,
             "exists": true
           },
           {
             "key": "auth.signup.password_placeholder",
-            "line": 565,
+            "line": 570,
             "exists": true
           },
           {
             "key": "auth.password_placeholder",
-            "line": 565,
+            "line": 570,
             "exists": true
           },
           {
             "key": "auth.forgot_password_link",
-            "line": 575,
+            "line": 580,
             "exists": false
           },
           {
             "key": "auth.signup.password_length",
-            "line": 588,
+            "line": 593,
             "exists": true
           },
           {
             "key": "auth.signup.password_uppercase",
-            "line": 592,
+            "line": 597,
             "exists": true
           },
           {
             "key": "auth.signup.password_lowercase",
-            "line": 596,
+            "line": 601,
             "exists": true
           },
           {
             "key": "auth.signup.password_number",
-            "line": 600,
+            "line": 605,
             "exists": true
           },
           {
             "key": "auth.signup.creating_account",
-            "line": 619,
+            "line": 624,
             "exists": true
           },
           {
             "key": "auth.signing_in",
-            "line": 619,
+            "line": 624,
             "exists": true
           },
           {
             "key": "auth.signup.create_account_button",
-            "line": 622,
+            "line": 627,
             "exists": true
           },
           {
             "key": "auth.sign_in_button",
-            "line": 622,
+            "line": 627,
             "exists": true
           },
           {
             "key": "auth.signup.already_have_account",
-            "line": 630,
+            "line": 635,
             "exists": true
           },
           {
             "key": "auth.signup.sign_in_instead",
-            "line": 636,
+            "line": 641,
             "exists": true
           },
           {
             "key": "auth.signup.invitation_invalid",
-            "line": 648,
+            "line": 653,
             "exists": true
           },
           {
             "key": "auth.signup.go_to_signin",
-            "line": 654,
+            "line": 659,
             "exists": true
           },
           {
             "key": "auth.no_access_text",
-            "line": 661,
+            "line": 666,
             "exists": true
           },
           {
             "key": "auth.footer_text",
-            "line": 669,
+            "line": 674,
             "exists": true
           }
         ],
         "missingKeys": [
           {
+            "key": "auth.account_deactivated",
+            "line": 242,
+            "context": "241: description: isAccountDeactivated\n242: ? t('auth.account_deactivated')\n243: : t('auth.invalid_credentials_generic'),"
+          },
+          {
             "key": "auth.forgot_password_link",
-            "line": 575,
-            "context": "574: >\n575: {t('auth.forgot_password_link', 'Forgot password?')}\n576: </button>"
+            "line": 580,
+            "context": "579: >\n580: {t('auth.forgot_password_link', 'Forgot password?')}\n581: </button>"
           }
         ],
-        "coverage": 98,
+        "coverage": 99,
         "severity": "low"
       },
       {
@@ -71850,7 +71920,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3173 translation keys are referenced but missing",
+      "description": "3180 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "159 hours"
     }

@@ -39,5 +39,7 @@
   "status_transition_error": "This status change is not allowed. Please check the workflow",
   "pin_invalid": "PIN must be 4-6 digits",
   "pin_required": "PIN code is required",
-  "pin_must_be_numeric": "PIN must contain only numbers"
+  "pin_must_be_numeric": "PIN must contain only numbers",
+  "invalid_time_range": "Invalid Time Range",
+  "shift_end_must_be_after_start": "Shift end time must be after start time"
 }
