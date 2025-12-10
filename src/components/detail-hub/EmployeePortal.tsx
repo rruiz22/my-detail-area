@@ -35,6 +35,9 @@ import {
   type DetailHubEmployee
 } from "@/hooks/useDetailHubDatabase";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import { CACHE_TIMES, GC_TIMES } from "@/constants/cacheConfig";
+import { ShiftHoursCell } from "./ShiftHoursCell";
 
 // =====================================================
 // VALIDATION SCHEMA
@@ -131,6 +134,50 @@ const EmployeePortal = () => {
   const { mutate: createEmployee, isPending: isCreating } = useCreateEmployee();
   const { mutate: updateEmployee, isPending: isUpdating } = useUpdateEmployee();
   const { mutate: deleteEmployee, isPending: isDeleting } = useDeleteEmployee();
+
+  // Fetch all employee assignments with dealership data (optimized single query)
+  const { data: assignmentsMap = {} } = useQuery({
+    queryKey: ['employee-assignments-map', selectedDealerId],
+    queryFn: async () => {
+      if (!selectedDealerId) return {};
+
+      const { data, error } = await supabase
+        .from('detail_hub_employee_assignments')
+        .select(`
+          id,
+          employee_id,
+          dealership_id,
+          schedule_template,
+          status,
+          dealership:dealerships(
+            id,
+            name,
+            logo_url
+          )
+        `)
+        .order('status', { ascending: true }); // Active assignments first
+
+      if (error) {
+        console.error('Error fetching assignments:', error);
+        return {};
+      }
+
+      // Group assignments by employee_id for O(1) lookup
+      const grouped = (data || []).reduce((acc: Record<string, any[]>, assignment) => {
+        const empId = assignment.employee_id;
+        if (!acc[empId]) {
+          acc[empId] = [];
+        }
+        acc[empId].push(assignment);
+        return acc;
+      }, {});
+
+      return grouped;
+    },
+    enabled: !!selectedDealerId,
+    staleTime: CACHE_TIMES.MEDIUM, // 5 minutes
+    gcTime: GC_TIMES.MEDIUM, // 10 minutes
+  });
 
   // Form setup
   const form = useForm<EmployeeFormValues>({
@@ -1319,8 +1366,7 @@ const EmployeePortal = () => {
             <TableHeader>
               <TableRow>
                 <TableHead>{t('detail_hub.employees.employee_details')}</TableHead>
-                <TableHead>{t('detail_hub.employees.role')}</TableHead>
-                <TableHead>{t('detail_hub.employees.department')}</TableHead>
+                <TableHead>{t('detail_hub.employees.shift_hours_dealers')}</TableHead>
                 <TableHead>{t('detail_hub.employees.status')}</TableHead>
                 <TableHead>{t('detail_hub.employees.hourly_rate')}</TableHead>
                 <TableHead>{t('detail_hub.employees.last_punch')}</TableHead>
@@ -1330,7 +1376,7 @@ const EmployeePortal = () => {
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8">
+                  <TableCell colSpan={6} className="text-center py-8">
                     <div className="flex items-center justify-center gap-2">
                       <Clock className="w-4 h-4 animate-spin" />
                       {t('detail_hub.common.loading')}
@@ -1339,7 +1385,7 @@ const EmployeePortal = () => {
                 </TableRow>
               ) : filteredEmployees.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                     No employees found
                   </TableCell>
                 </TableRow>
@@ -1359,8 +1405,12 @@ const EmployeePortal = () => {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>{getRoleLabel(employee.role)}</TableCell>
-                  <TableCell>{getDepartmentLabel(employee.department)}</TableCell>
+                  <TableCell>
+                    <ShiftHoursCell
+                      employeeId={employee.id}
+                      assignments={assignmentsMap[employee.id] || []}
+                    />
+                  </TableCell>
                   <TableCell>{getStatusBadge(employee.status)}</TableCell>
                   <TableCell>
                     <button
