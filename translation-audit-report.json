@@ -1,8 +1,8 @@
 {
   "scannedFiles": 954,
-  "totalStrings": 10105,
+  "totalStrings": 10110,
   "hardcodedStrings": 2170,
-  "translatedStrings": 7935,
+  "translatedStrings": 7940,
   "issues": {
     "critical": [
       {
@@ -7730,87 +7730,87 @@
         "hardcodedStrings": [
           {
             "text": "Employee can work at multiple dealerships with different schedules",
-            "line": 198,
-            "context": "197: </Select>\n198: <p className=\"text-sm text-gray-500\">\n199: Employee can work at multiple dealerships with different schedules"
+            "line": 205,
+            "context": "204: </Select>\n205: <p className=\"text-sm text-gray-500\">\n206: Employee can work at multiple dealerships with different schedules"
           },
           {
             "text": "Schedule Template",
-            "line": 207,
-            "context": "206: <div className=\"flex items-center gap-2 text-sm font-medium\">\n207: <Clock className=\"h-4 w-4\" />\n208: Schedule Template"
+            "line": 214,
+            "context": "213: <div className=\"flex items-center gap-2 text-sm font-medium\">\n214: <Clock className=\"h-4 w-4\" />\n215: Schedule Template"
           },
           {
             "text": "Shift Start Time",
-            "line": 214,
-            "context": "213: <div className=\"space-y-2\">\n214: <Label htmlFor=\"shift-start\">Shift Start Time</Label>\n215: <Input"
+            "line": 221,
+            "context": "220: <div className=\"space-y-2\">\n221: <Label htmlFor=\"shift-start\">Shift Start Time</Label>\n222: <Input"
           },
           {
             "text": "Shift End Time",
-            "line": 225,
-            "context": "224: <div className=\"space-y-2\">\n225: <Label htmlFor=\"shift-end\">Shift End Time</Label>\n226: <Input"
+            "line": 232,
+            "context": "231: <div className=\"space-y-2\">\n232: <Label htmlFor=\"shift-end\">Shift End Time</Label>\n233: <Input"
           },
           {
             "text": "Employee can work",
-            "line": 304,
-            "context": "303: <AlertDescription>\n304: <strong>Flexible Schedule:</strong> Employee can work <strong>any day</strong> at this\n305: dealership. No day restrictions apply."
+            "line": 311,
+            "context": "310: <AlertDescription>\n311: <strong>Flexible Schedule:</strong> Employee can work <strong>any day</strong> at this\n312: dealership. No day restrictions apply."
           },
           {
             "text": "Cancel",
-            "line": 324,
-            "context": "323: <DialogFooter>\n324: <Button variant=\"outline\" onClick={onClose} disabled={isSubmitting}>\n325: Cancel"
+            "line": 331,
+            "context": "330: <DialogFooter>\n331: <Button variant=\"outline\" onClick={onClose} disabled={isSubmitting}>\n332: Cancel"
           },
           {
             "text": "Select dealership",
-            "line": 183,
-            "context": "182: <SelectTrigger id=\"dealership\">\n183: <SelectValue placeholder=\"Select dealership\" />\n184: </SelectTrigger>"
+            "line": 190,
+            "context": "189: <SelectTrigger id=\"dealership\">\n190: <SelectValue placeholder=\"Select dealership\" />\n191: </SelectTrigger>"
           },
           {
             "text": "Add any notes about this assignment...",
-            "line": 315,
-            "context": "314: id=\"notes\"\n315: placeholder=\"Add any notes about this assignment...\"\n316: value={notes}"
+            "line": 322,
+            "context": "321: id=\"notes\"\n322: placeholder=\"Add any notes about this assignment...\"\n323: value={notes}"
           },
           {
             "text": "Shift Start Time",
-            "line": 214,
-            "context": "213: <div className=\"space-y-2\">\n214: <Label htmlFor=\"shift-start\">Shift Start Time</Label>\n215: <Input"
+            "line": 221,
+            "context": "220: <div className=\"space-y-2\">\n221: <Label htmlFor=\"shift-start\">Shift Start Time</Label>\n222: <Input"
           },
           {
             "text": "Shift End Time",
-            "line": 225,
-            "context": "224: <div className=\"space-y-2\">\n225: <Label htmlFor=\"shift-end\">Shift End Time</Label>\n226: <Input"
+            "line": 232,
+            "context": "231: <div className=\"space-y-2\">\n232: <Label htmlFor=\"shift-end\">Shift End Time</Label>\n233: <Input"
           },
           {
             "text": "Cancel\r\n          ",
-            "line": 324,
-            "context": "323: <DialogFooter>\n324: <Button variant=\"outline\" onClick={onClose} disabled={isSubmitting}>\n325: Cancel"
+            "line": 331,
+            "context": "330: <DialogFooter>\n331: <Button variant=\"outline\" onClick={onClose} disabled={isSubmitting}>\n332: Cancel"
           }
         ],
         "translationCalls": [
           {
             "key": "validation.invalid_time_range",
-            "line": 108,
+            "line": 115,
             "exists": false
           },
           {
             "key": "validation.shift_end_must_be_after_start",
-            "line": 109,
+            "line": 116,
             "exists": false
           },
           {
             "key": "validation.dealershipRequired",
-            "line": 136,
+            "line": 143,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "validation.invalid_time_range",
-            "line": 108,
-            "context": "107: toast({\n108: title: t('validation.invalid_time_range'),\n109: description: t('validation.shift_end_must_be_after_start'),"
+            "line": 115,
+            "context": "114: toast({\n115: title: t('validation.invalid_time_range'),\n116: description: t('validation.shift_end_must_be_after_start'),"
           },
           {
             "key": "validation.shift_end_must_be_after_start",
-            "line": 109,
-            "context": "108: title: t('validation.invalid_time_range'),\n109: description: t('validation.shift_end_must_be_after_start'),\n110: variant: \"destructive\""
+            "line": 116,
+            "context": "115: title: t('validation.invalid_time_range'),\n116: description: t('validation.shift_end_must_be_after_start'),\n117: variant: \"destructive\""
           }
         ],
         "coverage": 21,
@@ -25568,215 +25568,235 @@
         "translationCalls": [
           {
             "key": "common.loading",
-            "line": 74,
+            "line": 76,
             "exists": true
           },
           {
             "key": "detail_hub.assignments.title",
-            "line": 91,
+            "line": 93,
             "exists": false
           },
           {
             "key": "detail_hub.assignments.subtitle",
-            "line": 94,
+            "line": 96,
             "exists": false
           },
           {
             "key": "detail_hub.assignments.assign_button",
-            "line": 99,
+            "line": 101,
             "exists": false
           },
           {
             "key": "detail_hub.assignments.no_active_assignments",
-            "line": 109,
+            "line": 111,
             "exists": false
           },
           {
             "key": "detail_hub.assignments.no_assignments_description",
-            "line": 109,
+            "line": 111,
             "exists": false
           },
           {
             "key": "detail_hub.assignments.table.dealership",
-            "line": 116,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.assignments.table.shift_hours",
-            "line": 117,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.assignments.table.punch_window",
             "line": 118,
             "exists": false
           },
           {
-            "key": "detail_hub.assignments.table.break",
+            "key": "detail_hub.assignments.table.shift_hours",
             "line": 119,
             "exists": false
           },
           {
-            "key": "detail_hub.assignments.table.status",
+            "key": "detail_hub.assignments.table.punch_window",
             "line": 120,
             "exists": false
           },
           {
-            "key": "detail_hub.assignments.table.actions",
+            "key": "detail_hub.assignments.table.break",
             "line": 121,
             "exists": false
           },
           {
+            "key": "detail_hub.assignments.table.status",
+            "line": 122,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.assignments.table.actions",
+            "line": 123,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.assignments.table.no_limit",
+            "line": 152,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.assignments.table.no_limit",
+            "line": 154,
+            "exists": false
+          },
+          {
             "key": "detail_hub.assignments.table.early_late_label",
-            "line": 151,
+            "line": 156,
             "exists": false
           },
           {
             "key": "detail_hub.assignments.table.break_minutes",
-            "line": 155,
+            "line": 160,
             "exists": false
           },
           {
             "key": "detail_hub.assignments.table.paid",
-            "line": 158,
+            "line": 163,
             "exists": false
           },
           {
             "key": "detail_hub.assignments.table.unpaid",
-            "line": 158,
+            "line": 163,
             "exists": false
           },
           {
             "key": "detail_hub.assignments.inactive_assignments",
-            "line": 196,
+            "line": 201,
             "exists": false
           },
           {
             "key": "detail_hub.assignments.remove_assignment",
-            "line": 253,
+            "line": 260,
             "exists": false
           },
           {
             "key": "detail_hub.assignments.remove_confirmation",
-            "line": 255,
+            "line": 262,
             "exists": false
           },
           {
             "key": "detail_hub.assignments.note_existing_entries",
-            "line": 261,
+            "line": 268,
             "exists": false
           },
           {
             "key": "detail_hub.common.cancel",
-            "line": 265,
+            "line": 272,
             "exists": true
           },
           {
             "key": "detail_hub.assignments.remove_button",
-            "line": 267,
+            "line": 274,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "detail_hub.assignments.title",
-            "line": 91,
-            "context": "90: <Building2 className=\"h-5 w-5\" />\n91: {t('detail_hub.assignments.title')}\n92: </CardTitle>"
+            "line": 93,
+            "context": "92: <Building2 className=\"h-5 w-5\" />\n93: {t('detail_hub.assignments.title')}\n94: </CardTitle>"
           },
           {
             "key": "detail_hub.assignments.subtitle",
-            "line": 94,
-            "context": "93: <p className=\"text-sm text-gray-500 mt-1\">\n94: {t('detail_hub.assignments.subtitle')}\n95: </p>"
+            "line": 96,
+            "context": "95: <p className=\"text-sm text-gray-500 mt-1\">\n96: {t('detail_hub.assignments.subtitle')}\n97: </p>"
           },
           {
             "key": "detail_hub.assignments.assign_button",
-            "line": 99,
-            "context": "98: <Plus className=\"h-4 w-4 mr-2\" />\n99: {t('detail_hub.assignments.assign_button')}\n100: </Button>"
+            "line": 101,
+            "context": "100: <Plus className=\"h-4 w-4 mr-2\" />\n101: {t('detail_hub.assignments.assign_button')}\n102: </Button>"
           },
           {
             "key": "detail_hub.assignments.no_active_assignments",
-            "line": 109,
-            "context": "108: <AlertDescription>\n109: <strong>{t('detail_hub.assignments.no_active_assignments')}.</strong> {t('detail_hub.assignments.no_assignments_description')}\n110: </AlertDescription>"
+            "line": 111,
+            "context": "110: <AlertDescription>\n111: <strong>{t('detail_hub.assignments.no_active_assignments')}.</strong> {t('detail_hub.assignments.no_assignments_description')}\n112: </AlertDescription>"
           },
           {
             "key": "detail_hub.assignments.no_assignments_description",
-            "line": 109,
-            "context": "108: <AlertDescription>\n109: <strong>{t('detail_hub.assignments.no_active_assignments')}.</strong> {t('detail_hub.assignments.no_assignments_description')}\n110: </AlertDescription>"
+            "line": 111,
+            "context": "110: <AlertDescription>\n111: <strong>{t('detail_hub.assignments.no_active_assignments')}.</strong> {t('detail_hub.assignments.no_assignments_description')}\n112: </AlertDescription>"
           },
           {
             "key": "detail_hub.assignments.table.dealership",
-            "line": 116,
-            "context": "115: <TableRow>\n116: <TableHead>{t('detail_hub.assignments.table.dealership')}</TableHead>\n117: <TableHead>{t('detail_hub.assignments.table.shift_hours')}</TableHead>"
+            "line": 118,
+            "context": "117: <TableRow>\n118: <TableHead>{t('detail_hub.assignments.table.dealership')}</TableHead>\n119: <TableHead>{t('detail_hub.assignments.table.shift_hours')}</TableHead>"
           },
           {
             "key": "detail_hub.assignments.table.shift_hours",
-            "line": 117,
-            "context": "116: <TableHead>{t('detail_hub.assignments.table.dealership')}</TableHead>\n117: <TableHead>{t('detail_hub.assignments.table.shift_hours')}</TableHead>\n118: <TableHead>{t('detail_hub.assignments.table.punch_window')}</TableHead>"
+            "line": 119,
+            "context": "118: <TableHead>{t('detail_hub.assignments.table.dealership')}</TableHead>\n119: <TableHead>{t('detail_hub.assignments.table.shift_hours')}</TableHead>\n120: <TableHead>{t('detail_hub.assignments.table.punch_window')}</TableHead>"
           },
           {
             "key": "detail_hub.assignments.table.punch_window",
-            "line": 118,
-            "context": "117: <TableHead>{t('detail_hub.assignments.table.shift_hours')}</TableHead>\n118: <TableHead>{t('detail_hub.assignments.table.punch_window')}</TableHead>\n119: <TableHead>{t('detail_hub.assignments.table.break')}</TableHead>"
+            "line": 120,
+            "context": "119: <TableHead>{t('detail_hub.assignments.table.shift_hours')}</TableHead>\n120: <TableHead>{t('detail_hub.assignments.table.punch_window')}</TableHead>\n121: <TableHead>{t('detail_hub.assignments.table.break')}</TableHead>"
           },
           {
             "key": "detail_hub.assignments.table.break",
-            "line": 119,
-            "context": "118: <TableHead>{t('detail_hub.assignments.table.punch_window')}</TableHead>\n119: <TableHead>{t('detail_hub.assignments.table.break')}</TableHead>\n120: <TableHead>{t('detail_hub.assignments.table.status')}</TableHead>"
+            "line": 121,
+            "context": "120: <TableHead>{t('detail_hub.assignments.table.punch_window')}</TableHead>\n121: <TableHead>{t('detail_hub.assignments.table.break')}</TableHead>\n122: <TableHead>{t('detail_hub.assignments.table.status')}</TableHead>"
           },
           {
             "key": "detail_hub.assignments.table.status",
-            "line": 120,
-            "context": "119: <TableHead>{t('detail_hub.assignments.table.break')}</TableHead>\n120: <TableHead>{t('detail_hub.assignments.table.status')}</TableHead>\n121: <TableHead className=\"text-right\">{t('detail_hub.assignments.table.actions')}</TableHead>"
+            "line": 122,
+            "context": "121: <TableHead>{t('detail_hub.assignments.table.break')}</TableHead>\n122: <TableHead>{t('detail_hub.assignments.table.status')}</TableHead>\n123: <TableHead className=\"text-right\">{t('detail_hub.assignments.table.actions')}</TableHead>"
           },
           {
             "key": "detail_hub.assignments.table.actions",
-            "line": 121,
-            "context": "120: <TableHead>{t('detail_hub.assignments.table.status')}</TableHead>\n121: <TableHead className=\"text-right\">{t('detail_hub.assignments.table.actions')}</TableHead>\n122: </TableRow>"
+            "line": 123,
+            "context": "122: <TableHead>{t('detail_hub.assignments.table.status')}</TableHead>\n123: <TableHead className=\"text-right\">{t('detail_hub.assignments.table.actions')}</TableHead>\n124: </TableRow>"
+          },
+          {
+            "key": "detail_hub.assignments.table.no_limit",
+            "line": 152,
+            "context": "151: ? `-${assignment.schedule_template.early_punch_allowed_minutes}m`\n152: : t('detail_hub.assignments.table.no_limit')} / {assignment.schedule_template.late_punch_grace_minutes != null\n153: ? `+${assignment.schedule_template.late_punch_grace_minutes}m`"
+          },
+          {
+            "key": "detail_hub.assignments.table.no_limit",
+            "line": 154,
+            "context": "153: ? `+${assignment.schedule_template.late_punch_grace_minutes}m`\n154: : t('detail_hub.assignments.table.no_limit')}\n155: </div>"
           },
           {
             "key": "detail_hub.assignments.table.early_late_label",
-            "line": 151,
-            "context": "150: </div>\n151: <div className=\"text-xs text-gray-500\">{t('detail_hub.assignments.table.early_late_label')}</div>\n152: </TableCell>"
+            "line": 156,
+            "context": "155: </div>\n156: <div className=\"text-xs text-gray-500\">{t('detail_hub.assignments.table.early_late_label')}</div>\n157: </TableCell>"
           },
           {
             "key": "detail_hub.assignments.table.break_minutes",
-            "line": 155,
-            "context": "154: <div className=\"text-sm\">\n155: {assignment.schedule_template.required_break_minutes ?? 0} {t('detail_hub.assignments.table.break_minutes')}\n156: </div>"
+            "line": 160,
+            "context": "159: <div className=\"text-sm\">\n160: {assignment.schedule_template.required_break_minutes ?? 0} {t('detail_hub.assignments.table.break_minutes')}\n161: </div>"
           },
           {
             "key": "detail_hub.assignments.table.paid",
-            "line": 158,
-            "context": "157: <div className=\"text-xs text-gray-500\">\n158: {assignment.schedule_template.break_is_paid ? t('detail_hub.assignments.table.paid') : t('detail_hub.assignments.table.unpaid')}\n159: </div>"
+            "line": 163,
+            "context": "162: <div className=\"text-xs text-gray-500\">\n163: {assignment.schedule_template.break_is_paid ? t('detail_hub.assignments.table.paid') : t('detail_hub.assignments.table.unpaid')}\n164: </div>"
           },
           {
             "key": "detail_hub.assignments.table.unpaid",
-            "line": 158,
-            "context": "157: <div className=\"text-xs text-gray-500\">\n158: {assignment.schedule_template.break_is_paid ? t('detail_hub.assignments.table.paid') : t('detail_hub.assignments.table.unpaid')}\n159: </div>"
+            "line": 163,
+            "context": "162: <div className=\"text-xs text-gray-500\">\n163: {assignment.schedule_template.break_is_paid ? t('detail_hub.assignments.table.paid') : t('detail_hub.assignments.table.unpaid')}\n164: </div>"
           },
           {
             "key": "detail_hub.assignments.inactive_assignments",
-            "line": 196,
-            "context": "195: <div className=\"mt-6 border-t pt-4\">\n196: <h4 className=\"text-sm font-medium text-gray-500 mb-2\">{t('detail_hub.assignments.inactive_assignments')}</h4>\n197: <div className=\"space-y-2\">"
+            "line": 201,
+            "context": "200: <div className=\"mt-6 border-t pt-4\">\n201: <h4 className=\"text-sm font-medium text-gray-500 mb-2\">{t('detail_hub.assignments.inactive_assignments')}</h4>\n202: <div className=\"space-y-2\">"
           },
           {
             "key": "detail_hub.assignments.remove_assignment",
-            "line": 253,
-            "context": "252: <AlertDialogHeader>\n253: <AlertDialogTitle>{t('detail_hub.assignments.remove_assignment')}</AlertDialogTitle>\n254: <AlertDialogDescription>"
+            "line": 260,
+            "context": "259: <AlertDialogHeader>\n260: <AlertDialogTitle>{t('detail_hub.assignments.remove_assignment')}</AlertDialogTitle>\n261: <AlertDialogDescription>"
           },
           {
             "key": "detail_hub.assignments.remove_confirmation",
-            "line": 255,
-            "context": "254: <AlertDialogDescription>\n255: {t('detail_hub.assignments.remove_confirmation', {\n256: employeeName,"
+            "line": 262,
+            "context": "261: <AlertDialogDescription>\n262: {t('detail_hub.assignments.remove_confirmation', {\n263: employeeName,"
           },
           {
             "key": "detail_hub.assignments.note_existing_entries",
-            "line": 261,
-            "context": "260: <br />\n261: <strong>{t('detail_hub.assignments.note_existing_entries')}</strong>\n262: </AlertDialogDescription>"
+            "line": 268,
+            "context": "267: <br />\n268: <strong>{t('detail_hub.assignments.note_existing_entries')}</strong>\n269: </AlertDialogDescription>"
           },
           {
             "key": "detail_hub.assignments.remove_button",
-            "line": 267,
-            "context": "266: <AlertDialogAction onClick={handleDelete} className=\"bg-red-600 hover:bg-red-700\">\n267: {t('detail_hub.assignments.remove_button')}\n268: </AlertDialogAction>"
+            "line": 274,
+            "context": "273: <AlertDialogAction onClick={handleDelete} className=\"bg-red-600 hover:bg-red-700\">\n274: {t('detail_hub.assignments.remove_button')}\n275: </AlertDialogAction>"
           }
         ],
         "coverage": 100,
@@ -34125,8 +34145,8 @@
         "hardcodedStrings": [
           {
             "text": "Expired",
-            "line": 532,
-            "context": "531: <div className=\"flex items-center gap-1 text-red-600\">\n532: <AlertCircle className=\"h-4 w-4\" />\n533: Expired"
+            "line": 608,
+            "context": "607: <div className=\"flex items-center gap-1 text-red-600\">\n608: <AlertCircle className=\"h-4 w-4\" />\n609: Expired"
           },
           {
             "text": ", error);\n        throw error;\n      }\n\n      setInvitations(data || []);\n\n      console.log(",
@@ -34135,8 +34155,8 @@
           },
           {
             "text": ", updateError);\n        throw updateError;\n      }\n\n      console.log(",
-            "line": 236,
-            "context": "235: if (updateError) {\n236: console.error('❌ [RESEND INVITATION] Database update error:', updateError);\n237: throw updateError;"
+            "line": 279,
+            "context": "278: if (updateError) {\n279: console.error('❌ [RESEND INVITATION] Database update error:', updateError);\n280: throw updateError;"
           }
         ],
         "translationCalls": [
@@ -34147,220 +34167,240 @@
           },
           {
             "key": "common.success",
-            "line": 272,
+            "line": 315,
             "exists": true
           },
           {
             "key": "invitations.invitation_updated_email_failed",
-            "line": 273,
+            "line": 316,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 278,
+            "line": 321,
             "exists": true
           },
           {
             "key": "invitations.invitation_resent",
-            "line": 279,
+            "line": 322,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 286,
+            "line": 329,
             "exists": true
           },
           {
             "key": "invitations.error_resending",
-            "line": 287,
+            "line": 330,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 305,
+            "line": 348,
             "exists": true
           },
           {
             "key": "invitations.cancelled_successfully",
-            "line": 306,
+            "line": 349,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 312,
+            "line": 355,
             "exists": true
           },
           {
             "key": "invitations.error_cancelling",
-            "line": 313,
+            "line": 356,
             "exists": true
           },
           {
             "key": "common.success",
-            "line": 331,
+            "line": 374,
             "exists": true
           },
           {
             "key": "invitations.deleted_successfully",
-            "line": 332,
+            "line": 375,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 338,
+            "line": 381,
             "exists": true
           },
           {
             "key": "invitations.error_deleting",
-            "line": 339,
+            "line": 382,
+            "exists": true
+          },
+          {
+            "key": "invitations.title",
+            "line": 445,
+            "exists": true
+          },
+          {
+            "key": "invitations.description",
+            "line": 447,
             "exists": true
           },
           {
             "key": "invitations.stats.total",
-            "line": 399,
-            "exists": true
-          },
-          {
-            "key": "invitations.stats.pending",
-            "line": 411,
-            "exists": true
-          },
-          {
-            "key": "invitations.stats.accepted",
-            "line": 423,
-            "exists": true
-          },
-          {
-            "key": "invitations.stats.expired",
-            "line": 435,
-            "exists": true
-          },
-          {
-            "key": "invitations.table.invitee",
-            "line": 459,
-            "exists": true
-          },
-          {
-            "key": "invitations.table.role",
-            "line": 460,
-            "exists": true
-          },
-          {
-            "key": "invitations.table.dealership",
-            "line": 461,
-            "exists": true
-          },
-          {
-            "key": "invitations.table.inviter",
             "line": 462,
             "exists": true
           },
           {
+            "key": "invitations.stats.pending",
+            "line": 477,
+            "exists": true
+          },
+          {
+            "key": "invitations.stats.accepted",
+            "line": 492,
+            "exists": true
+          },
+          {
+            "key": "invitations.stats.expired",
+            "line": 507,
+            "exists": true
+          },
+          {
+            "key": "invitations.table.invitee",
+            "line": 533,
+            "exists": true
+          },
+          {
+            "key": "invitations.table.role",
+            "line": 534,
+            "exists": true
+          },
+          {
+            "key": "invitations.table.dealership",
+            "line": 535,
+            "exists": true
+          },
+          {
+            "key": "invitations.table.inviter",
+            "line": 536,
+            "exists": true
+          },
+          {
             "key": "invitations.table.status",
-            "line": 463,
+            "line": 537,
             "exists": true
           },
           {
             "key": "invitations.table.sent",
-            "line": 464,
+            "line": 538,
             "exists": true
           },
           {
             "key": "invitations.table.expires",
-            "line": 465,
+            "line": 539,
             "exists": true
           },
           {
             "key": "invitations.table.actions",
-            "line": 466,
+            "line": 540,
             "exists": true
           },
           {
             "key": "invitations.table.no_invitations",
-            "line": 475,
+            "line": 549,
             "exists": true
           },
           {
             "key": "roles.${invitation.role_name}",
-            "line": 498,
+            "line": 573,
             "exists": false
           },
           {
-            "key": "invitations.cancel_invitation",
-            "line": 571,
-            "exists": true
-          },
-          {
-            "key": "invitations.delete_invitation",
-            "line": 585,
-            "exists": true
-          },
-          {
-            "key": "invitations.confirm_cancel",
-            "line": 623,
-            "exists": true
-          },
-          {
-            "key": "invitations.confirm_cancel_desc",
-            "line": 624,
-            "exists": true
-          },
-          {
-            "key": "common.yes",
+            "key": "invitations.resend_invitation",
             "line": 625,
             "exists": false
           },
           {
-            "key": "common.no",
-            "line": 626,
-            "exists": false
-          },
-          {
-            "key": "invitations.confirm_delete",
-            "line": 638,
+            "key": "invitations.cancel_invitation",
+            "line": 640,
             "exists": true
           },
           {
-            "key": "invitations.confirm_delete_desc",
-            "line": 639,
+            "key": "invitations.delete_invitation",
+            "line": 655,
+            "exists": true
+          },
+          {
+            "key": "invitations.confirm_cancel",
+            "line": 693,
+            "exists": true
+          },
+          {
+            "key": "invitations.confirm_cancel_desc",
+            "line": 694,
             "exists": true
           },
           {
             "key": "common.yes",
-            "line": 640,
+            "line": 695,
             "exists": false
           },
           {
             "key": "common.no",
-            "line": 641,
+            "line": 696,
+            "exists": false
+          },
+          {
+            "key": "invitations.confirm_delete",
+            "line": 708,
+            "exists": true
+          },
+          {
+            "key": "invitations.confirm_delete_desc",
+            "line": 709,
+            "exists": true
+          },
+          {
+            "key": "common.yes",
+            "line": 710,
+            "exists": false
+          },
+          {
+            "key": "common.no",
+            "line": 711,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "roles.${invitation.role_name}",
-            "line": 498,
-            "context": "497: <TableCell>\n498: <Badge variant=\"outline\">{t(`roles.${invitation.role_name}`, formatRoleName(invitation.role_name))}</Badge>\n499: </TableCell>"
+            "line": 573,
+            "context": "572: <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold transition-colors border ${getRoleBadgeClasses(invitation.role_name)}`}>\n573: {t(`roles.${invitation.role_name}`, formatRoleName(invitation.role_name))}\n574: </span>"
           },
           {
-            "key": "common.yes",
+            "key": "invitations.resend_invitation",
             "line": 625,
-            "context": "624: description={t('invitations.confirm_cancel_desc')}\n625: confirmText={t('common.yes')}\n626: cancelText={t('common.no')}"
-          },
-          {
-            "key": "common.no",
-            "line": 626,
-            "context": "625: confirmText={t('common.yes')}\n626: cancelText={t('common.no')}\n627: onConfirm={() => {"
+            "context": "624: className=\"h-8 w-8 p-0\"\n625: title={t('invitations.resend_invitation')}\n626: >"
           },
           {
             "key": "common.yes",
-            "line": 640,
-            "context": "639: description={t('invitations.confirm_delete_desc')}\n640: confirmText={t('common.yes')}\n641: cancelText={t('common.no')}"
+            "line": 695,
+            "context": "694: description={t('invitations.confirm_cancel_desc')}\n695: confirmText={t('common.yes')}\n696: cancelText={t('common.no')}"
           },
           {
             "key": "common.no",
-            "line": 641,
-            "context": "640: confirmText={t('common.yes')}\n641: cancelText={t('common.no')}\n642: onConfirm={() => {"
+            "line": 696,
+            "context": "695: confirmText={t('common.yes')}\n696: cancelText={t('common.no')}\n697: onConfirm={() => {"
+          },
+          {
+            "key": "common.yes",
+            "line": 710,
+            "context": "709: description={t('invitations.confirm_delete_desc')}\n710: confirmText={t('common.yes')}\n711: cancelText={t('common.no')}"
+          },
+          {
+            "key": "common.no",
+            "line": 711,
+            "context": "710: confirmText={t('common.yes')}\n711: cancelText={t('common.no')}\n712: onConfirm={() => {"
           }
         ],
         "coverage": 93,
@@ -72385,7 +72425,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3214 translation keys are referenced but missing",
+      "description": "3217 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "161 hours"
     }

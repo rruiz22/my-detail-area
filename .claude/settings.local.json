@@ -32,7 +32,8 @@
       "Bash(nul)",
       "Bash(powershell:*)",
       "mcp__supabase__deploy_edge_function",
-      "mcp__supabase__list_tables"
+      "mcp__supabase__list_tables",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

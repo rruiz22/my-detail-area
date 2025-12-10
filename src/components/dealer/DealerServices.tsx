@@ -364,190 +364,205 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
   }
 
   return (
-    <div className="space-y-4">
-      {/* Header with Add Button */}
-      <div className="flex justify-end">
-        {canManageServices && (
-          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={resetForm}>
-                <Plus className="h-4 w-4 mr-2" />
-                {t('services.add')}
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>
-                  {editingService ? t('services.edit') : t('services.add')}
-                </DialogTitle>
-                <DialogDescription>
-                  {editingService ? t('services.editDescription') : t('services.addDescription')}
-                </DialogDescription>
-              </DialogHeader>
+    <div className="space-y-6">
+      {/* Professional Header */}
+      <Card className="border-none shadow-sm bg-gradient-to-r from-primary/5 to-primary/10">
+        <CardContent className="py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary/20 rounded-lg">
+                <Tag className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold">{t('services.title', 'Services')}</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  {t('services.description', 'Manage services and pricing for your dealership')}
+                </p>
+              </div>
+            </div>
+            {canManageServices && (
+              <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <DialogTrigger asChild>
+                  <Button onClick={resetForm} size="lg">
+                    <Plus className="h-4 w-4 mr-2" />
+                    {t('services.add')}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>
+                      {editingService ? t('services.edit') : t('services.add')}
+                    </DialogTitle>
+                    <DialogDescription>
+                      {editingService ? t('services.editDescription') : t('services.addDescription')}
+                    </DialogDescription>
+                  </DialogHeader>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="name">{t('services.name')} *</Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="category">{t('services.department')} *</Label>
-                    <Select
-                      value={formData.category_id}
-                      onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value }))}
-                      disabled={categories.length === 0}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder={
-                          categories.length === 0
-                            ? t('services.noCategoriesAvailable', 'No categories available')
-                            : t('services.selectDepartment')
-                        } />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categories.length === 0 ? (
-                          <SelectItem value="none" disabled>
-                            {t('services.noCategoriesFound', 'No categories found')}
-                          </SelectItem>
-                        ) : (
-                          categories.map(category => (
-                            <SelectItem key={category.id} value={category.id}>
-                              <div className="flex items-center space-x-2">
-                                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: category.color }} />
-                                <span>{category.name}</span>
-                              </div>
-                            </SelectItem>
-                          ))
-                        )}
-                      </SelectContent>
-                    </Select>
-                    {categories.length === 0 && (
-                      <p className="text-xs text-amber-600 mt-1">
-                        {t('services.noCategoriesWarning', 'No service categories available. Please contact system administrator.')}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="description">{t('services.description')}</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    rows={3}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="price">{t('services.price')}</Label>
-                    <Input
-                      id="price"
-                      type="number"
-                      step="0.01"
-                      value={formData.price}
-                      onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="duration">{t('services.duration')}</Label>
-                    <Input
-                      id="duration"
-                      type="number"
-                      placeholder={t('services.durationPlaceholder')}
-                      value={formData.duration}
-                      onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
-                    />
-                  </div>
-                </div>
-
-                {/* Badge Color Picker */}
-                <div>
-                  <Label htmlFor="color">{t('services.color')}</Label>
-                  <div className="flex gap-3 items-center">
-                    <Input
-                      type="color"
-                      id="color"
-                      value={formData.color}
-                      onChange={(e) => setFormData(prev => ({ ...prev, color: e.target.value }))}
-                      className="w-20 h-10 cursor-pointer"
-                    />
-                    <Badge style={{
-                      backgroundColor: formData.color + '20',
-                      color: formData.color,
-                      border: `1px solid ${formData.color}40`
-                    }}>
-                      {formData.name || t('services.colorPreview')}
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Choose a color for this service's badge in orders
-                  </p>
-                </div>
-
-                <div>
-                  <Label>{t('services.assignGroups')}</Label>
-                  <div className="space-y-2 mt-2">
-                    {groups.map(group => (
-                      <div key={group.id} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={group.id}
-                          checked={formData.assigned_groups.includes(group.id)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setFormData(prev => ({
-                                ...prev,
-                                assigned_groups: [...prev.assigned_groups, group.id]
-                              }));
-                            } else {
-                              setFormData(prev => ({
-                                ...prev,
-                                assigned_groups: prev.assigned_groups.filter(id => id !== group.id)
-                              }));
-                            }
-                          }}
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="name">{t('services.name')} *</Label>
+                        <Input
+                          id="name"
+                          value={formData.name}
+                          onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                          required
                         />
-                        <Label htmlFor={group.id}>{group.name}</Label>
                       </div>
-                    ))}
-                  </div>
-                </div>
 
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="is_active"
-                    checked={formData.is_active}
-                    onCheckedChange={(checked) =>
-                      setFormData(prev => ({ ...prev, is_active: !!checked }))
-                    }
-                  />
-                  <Label htmlFor="is_active">{t('services.active')}</Label>
-                </div>
+                      <div>
+                        <Label htmlFor="category">{t('services.department')} *</Label>
+                        <Select
+                          value={formData.category_id}
+                          onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value }))}
+                          disabled={categories.length === 0}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder={
+                              categories.length === 0
+                                ? t('services.noCategoriesAvailable', 'No categories available')
+                                : t('services.selectDepartment')
+                            } />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {categories.length === 0 ? (
+                              <SelectItem value="none" disabled>
+                                {t('services.noCategoriesFound', 'No categories found')}
+                              </SelectItem>
+                            ) : (
+                              categories.map(category => (
+                                <SelectItem key={category.id} value={category.id}>
+                                  <div className="flex items-center space-x-2">
+                                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: category.color }} />
+                                    <span>{category.name}</span>
+                                  </div>
+                                </SelectItem>
+                              ))
+                            )}
+                          </SelectContent>
+                        </Select>
+                        {categories.length === 0 && (
+                          <p className="text-xs text-amber-600 mt-1">
+                            {t('services.noCategoriesWarning', 'No service categories available. Please contact system administrator.')}
+                          </p>
+                        )}
+                      </div>
+                    </div>
 
-                <Separator />
+                    <div>
+                      <Label htmlFor="description">{t('services.description')}</Label>
+                      <Textarea
+                        id="description"
+                        value={formData.description}
+                        onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                        rows={3}
+                      />
+                    </div>
 
-                <div className="flex justify-end space-x-2">
-                  <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
-                    {t('common.action_buttons.cancel')}
-                  </Button>
-                  <Button type="submit" disabled={categories.length === 0}>
-                    {editingService ? t('common.action_buttons.update') : t('common.action_buttons.create')}
-                  </Button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
-        )}
-      </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="price">{t('services.price')}</Label>
+                        <Input
+                          id="price"
+                          type="number"
+                          step="0.01"
+                          value={formData.price}
+                          onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
+                        />
+                      </div>
+
+                      <div>
+                        <Label htmlFor="duration">{t('services.duration')}</Label>
+                        <Input
+                          id="duration"
+                          type="number"
+                          placeholder={t('services.durationPlaceholder')}
+                          value={formData.duration}
+                          onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Badge Color Picker */}
+                    <div>
+                      <Label htmlFor="color">{t('services.color')}</Label>
+                      <div className="flex gap-3 items-center">
+                        <Input
+                          type="color"
+                          id="color"
+                          value={formData.color}
+                          onChange={(e) => setFormData(prev => ({ ...prev, color: e.target.value }))}
+                          className="w-20 h-10 cursor-pointer"
+                        />
+                        <Badge style={{
+                          backgroundColor: formData.color + '20',
+                          color: formData.color,
+                          border: `1px solid ${formData.color}40`
+                        }}>
+                          {formData.name || t('services.colorPreview')}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Choose a color for this service's badge in orders
+                      </p>
+                    </div>
+
+                    <div>
+                      <Label>{t('services.assignGroups')}</Label>
+                      <div className="space-y-2 mt-2">
+                        {groups.map(group => (
+                          <div key={group.id} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={group.id}
+                              checked={formData.assigned_groups.includes(group.id)}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    assigned_groups: [...prev.assigned_groups, group.id]
+                                  }));
+                                } else {
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    assigned_groups: prev.assigned_groups.filter(id => id !== group.id)
+                                  }));
+                                }
+                              }}
+                            />
+                            <Label htmlFor={group.id}>{group.name}</Label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="is_active"
+                        checked={formData.is_active}
+                        onCheckedChange={(checked) =>
+                          setFormData(prev => ({ ...prev, is_active: !!checked }))
+                        }
+                      />
+                      <Label htmlFor="is_active">{t('services.active')}</Label>
+                    </div>
+
+                    <Separator />
+
+                    <div className="flex justify-end space-x-2">
+                      <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
+                        {t('common.action_buttons.cancel')}
+                      </Button>
+                      <Button type="submit" disabled={categories.length === 0}>
+                        {editingService ? t('common.action_buttons.update') : t('common.action_buttons.create')}
+                      </Button>
+                    </div>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -584,26 +599,33 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
       {/* Services Table Grouped by Category */}
       <div className="space-y-4">
         {Object.entries(groupedServices).map(([categoryName, { color, services }]) => (
-          <Card key={categoryName} className="card-enhanced overflow-hidden">
+          <Card key={categoryName} className="border shadow-sm hover:shadow-md transition-shadow overflow-hidden">
             <Collapsible
               open={openCategories[categoryName] ?? true}
               onOpenChange={() => toggleCategory(categoryName)}
             >
               <CollapsibleTrigger className="w-full">
-                <CardHeader className="hover:bg-gray-50 transition-colors cursor-pointer py-3 px-4">
+                <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100/50 hover:from-gray-100 hover:to-gray-200/50 transition-all cursor-pointer py-4 px-6">
                   <div className="flex items-center gap-3">
-                    {openCategories[categoryName] ? (
-                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                    )}
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: color }}
-                    />
-                    <CardTitle className="text-base font-semibold">{categoryName}</CardTitle>
-                    <Badge variant="secondary" className="ml-auto text-xs">
-                      {services.length}
+                    <div className="p-1.5 bg-white rounded-md shadow-sm">
+                      {openCategories[categoryName] ? (
+                        <ChevronDown className="h-4 w-4 text-gray-600" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4 text-gray-600" />
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className="w-4 h-4 rounded-lg shadow-sm"
+                        style={{ backgroundColor: color }}
+                      />
+                      <CardTitle className="text-lg font-bold text-gray-900">{categoryName}</CardTitle>
+                    </div>
+                    <Badge
+                      variant="secondary"
+                      className="ml-auto bg-gray-200 hover:bg-gray-300 text-gray-700 border-gray-300 font-semibold px-3 py-1"
+                    >
+                      {services.length} {services.length === 1 ? 'service' : 'services'}
                     </Badge>
                   </div>
                 </CardHeader>
@@ -613,16 +635,16 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                 <div className="border-t">
                   <Table>
                     <TableHeader>
-                      <TableRow className="bg-gray-50">
-                        <TableHead className="w-[25%] h-9 text-xs font-semibold">{t('services.name')}</TableHead>
-                        <TableHead className="w-[30%] h-9 text-xs font-semibold">{t('services.description')}</TableHead>
+                      <TableRow className="bg-gradient-to-r from-gray-100 to-gray-50 border-b-2 border-gray-200">
+                        <TableHead className="w-[25%] h-11 text-xs font-bold text-gray-700 uppercase tracking-wide">{t('services.name')}</TableHead>
+                        <TableHead className="w-[30%] h-11 text-xs font-bold text-gray-700 uppercase tracking-wide">{t('services.description')}</TableHead>
                         {canViewPrices && (
-                          <TableHead className="w-[12%] h-9 text-xs font-semibold text-center">{t('services.price')}</TableHead>
+                          <TableHead className="w-[12%] h-11 text-xs font-bold text-gray-700 uppercase tracking-wide text-center">{t('services.price')}</TableHead>
                         )}
-                        <TableHead className="w-[13%] h-9 text-xs font-semibold text-center">{t('services.duration')}</TableHead>
-                        <TableHead className="w-[12%] h-9 text-xs font-semibold text-center">{t('services.status', 'Status')}</TableHead>
+                        <TableHead className="w-[13%] h-11 text-xs font-bold text-gray-700 uppercase tracking-wide text-center">{t('services.duration')}</TableHead>
+                        <TableHead className="w-[12%] h-11 text-xs font-bold text-gray-700 uppercase tracking-wide text-center">{t('services.status', 'Status')}</TableHead>
                         {canManageServices && (
-                          <TableHead className="w-[8%] h-9 text-xs font-semibold text-right">{t('common.actions')}</TableHead>
+                          <TableHead className="w-[8%] h-11 text-xs font-bold text-gray-700 uppercase tracking-wide text-right">{t('common.actions')}</TableHead>
                         )}
                       </TableRow>
                     </TableHeader>
@@ -630,17 +652,17 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                       {services.map(service => (
                         <TableRow
                           key={service.id}
-                          className={`${!service.is_active ? 'opacity-50' : ''} hover:bg-gray-50`}
+                          className={`${!service.is_active ? 'opacity-60' : ''} hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent transition-all border-b border-gray-100`}
                         >
-                          <TableCell className="py-2 px-4">
-                            <div className="flex flex-col gap-1">
-                              <span className="text-sm font-medium">{service.name}</span>
+                          <TableCell className="py-3 px-6">
+                            <div className="flex flex-col gap-1.5">
+                              <span className="text-sm font-semibold text-gray-900">{service.name}</span>
                               {service.assigned_groups.length > 0 && (
                                 <div className="flex flex-wrap gap-1">
                                   {service.assigned_groups.map(groupId => {
                                     const group = groups.find(g => g.id === groupId);
                                     return group ? (
-                                      <Badge key={groupId} variant="outline" className="text-[10px] px-1.5 py-0 h-4">
+                                      <Badge key={groupId} className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200 text-[10px] px-2 py-0.5 h-5 font-medium">
                                         {group.name}
                                       </Badge>
                                     ) : null;
@@ -650,35 +672,40 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                             </div>
                           </TableCell>
                           <TableCell
-                            className="py-2 px-4 text-xs text-muted-foreground max-w-xs truncate"
+                            className="py-3 px-6 text-sm text-gray-600 max-w-xs truncate"
                             title={service.description || ''}
                           >
-                            {service.description || '—'}
+                            {service.description || <span className="text-gray-400">—</span>}
                           </TableCell>
                           {canViewPrices && (
-                            <TableCell className="py-2 px-4 text-center text-sm font-medium">
-                              {service.price ? `$${service.price.toFixed(2)}` : '—'}
+                            <TableCell className="py-3 px-6 text-center text-sm font-semibold text-gray-900">
+                              {service.price ? `$${service.price.toFixed(2)}` : <span className="text-gray-400">—</span>}
                             </TableCell>
                           )}
-                          <TableCell className="py-2 px-4 text-center text-xs">
+                          <TableCell className="py-3 px-6 text-center text-sm">
                             {service.duration ? (
-                              <div className="flex items-center justify-center gap-1">
-                                <Clock className="h-3 w-3 text-muted-foreground" />
-                                <span>{service.duration}m</span>
+                              <div className="flex items-center justify-center gap-1.5">
+                                <div className="p-1 bg-amber-50 rounded">
+                                  <Clock className="h-3.5 w-3.5 text-amber-600" />
+                                </div>
+                                <span className="font-medium text-gray-700">{service.duration}m</span>
                               </div>
-                            ) : '—'}
+                            ) : <span className="text-gray-400">—</span>}
                           </TableCell>
-                          <TableCell className="py-2 px-4 text-center">
+                          <TableCell className="py-3 px-6 text-center">
                             <Badge
-                              variant={service.is_active ? "default" : "secondary"}
-                              className="text-[10px] px-2 py-0 h-5"
+                              className={
+                                service.is_active
+                                  ? "bg-emerald-100 hover:bg-emerald-200 text-emerald-700 border-emerald-200 text-xs px-3 py-1 h-6 font-semibold"
+                                  : "bg-gray-100 hover:bg-gray-200 text-gray-600 border-gray-200 text-xs px-3 py-1 h-6 font-semibold"
+                              }
                             >
                               {service.is_active ? t('services.active') : t('services.inactive')}
                             </Badge>
                           </TableCell>
                           {canManageServices && (
-                            <TableCell className="py-2 px-4">
-                              <div className="flex items-center justify-end gap-1.5">
+                            <TableCell className="py-3 px-6">
+                              <div className="flex items-center justify-end gap-2">
                                 <Button
                                   size="sm"
                                   variant="ghost"
@@ -686,7 +713,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                                     e.stopPropagation();
                                     openEditModal(service);
                                   }}
-                                  className="h-8 w-8 p-0 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                                  className="h-9 w-9 p-0 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-all hover:scale-105"
                                   title={t('services.edit')}
                                 >
                                   <Edit className="h-4 w-4" />
@@ -699,7 +726,7 @@ export const DealerServices: React.FC<DealerServicesProps> = ({ dealerId }) => {
                                     e.stopPropagation();
                                     handleDelete(service.id);
                                   }}
-                                  className="h-8 w-8 p-0 text-gray-600 hover:bg-red-50 hover:text-red-600 transition-colors"
+                                  className="h-9 w-9 p-0 rounded-lg text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all hover:scale-105"
                                   title={t('common.action_buttons.delete')}
                                 >
                                   <Trash2 className="h-4 w-4" />

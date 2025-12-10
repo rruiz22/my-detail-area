@@ -176,20 +176,63 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
     return 'pending';
   };
 
-  // Get status badge variant
-  const getStatusBadgeVariant = (status: string) => {
+  // Get status badge color classes (soft colors)
+  const getStatusBadgeClasses = (status: string): string => {
     switch (status) {
       case 'accepted':
-        return 'default';
+        return 'bg-green-100 hover:bg-green-200 text-green-700 border-green-200';
       case 'cancelled':
-        return 'destructive';
+        return 'bg-red-100 hover:bg-red-200 text-red-700 border-red-200';
       case 'expired':
-        return 'secondary';
+        return 'bg-orange-100 hover:bg-orange-200 text-orange-700 border-orange-200';
       case 'pending':
-        return 'secondary';
+        return 'bg-amber-100 hover:bg-amber-200 text-amber-700 border-amber-200';
       default:
-        return 'outline';
+        return 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-200';
     }
+  };
+
+  // Get role badge color classes (soft colors, unique per role)
+  const getRoleBadgeClasses = (roleName: string): string => {
+    const lowerRoleName = roleName.toLowerCase();
+
+    // Admin roles - Red
+    if (lowerRoleName.includes('admin')) {
+      return 'bg-red-100 hover:bg-red-200 text-red-700 border-red-200';
+    }
+
+    // Manager roles - Purple
+    if (lowerRoleName.includes('manager')) {
+      return 'bg-purple-100 hover:bg-purple-200 text-purple-700 border-purple-200';
+    }
+
+    // Service roles - Blue
+    if (lowerRoleName.includes('service') || lowerRoleName.includes('advisor')) {
+      return 'bg-blue-100 hover:bg-blue-200 text-blue-700 border-blue-200';
+    }
+
+    // Sales roles - Emerald
+    if (lowerRoleName.includes('sales') || lowerRoleName.includes('salesperson')) {
+      return 'bg-emerald-100 hover:bg-emerald-200 text-emerald-700 border-emerald-200';
+    }
+
+    // Technician roles - Orange
+    if (lowerRoleName.includes('technician') || lowerRoleName.includes('tech')) {
+      return 'bg-orange-100 hover:bg-orange-200 text-orange-700 border-orange-200';
+    }
+
+    // Lot/Detail roles - Cyan
+    if (lowerRoleName.includes('lot') || lowerRoleName.includes('detail')) {
+      return 'bg-cyan-100 hover:bg-cyan-200 text-cyan-700 border-cyan-200';
+    }
+
+    // Car Wash roles - Teal
+    if (lowerRoleName.includes('wash') || lowerRoleName.includes('carwash')) {
+      return 'bg-teal-100 hover:bg-teal-200 text-teal-700 border-teal-200';
+    }
+
+    // Default - Indigo
+    return 'bg-indigo-100 hover:bg-indigo-200 text-indigo-700 border-indigo-200';
   };
 
   // Get status icon
@@ -390,52 +433,83 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
   return (
     <PermissionGuard module="users" permission="edit">
       <div className="space-y-6">
+        {/* Header */}
+        <Card className="border-none shadow-sm bg-gradient-to-r from-primary/5 to-primary/10">
+          <CardContent className="py-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/20 rounded-lg">
+                  <Mail className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold">{t('invitations.title', 'Invitations')}</h2>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    {t('invitations.description', 'Manage user invitations and track their status')}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
+          {/* Total Invitations */}
+          <Card className="hover:shadow-md transition-shadow cursor-pointer">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">{t('invitations.stats.total')}</p>
-                  <p className="text-2xl font-bold">{stats.total}</p>
+                  <p className="text-3xl font-bold mt-2">{stats.total}</p>
                 </div>
-                <Mail className="h-8 w-8 text-blue-500" />
+                <div className="p-3 bg-blue-100 rounded-xl">
+                  <Mail className="h-7 w-7 text-blue-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          {/* Pending Invitations */}
+          <Card className="hover:shadow-md transition-shadow cursor-pointer">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">{t('invitations.stats.pending')}</p>
-                  <p className="text-2xl font-bold">{stats.pending}</p>
+                  <p className="text-3xl font-bold mt-2">{stats.pending}</p>
                 </div>
-                <Clock className="h-8 w-8 text-yellow-500" />
+                <div className="p-3 bg-amber-100 rounded-xl">
+                  <Clock className="h-7 w-7 text-amber-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          {/* Accepted Invitations */}
+          <Card className="hover:shadow-md transition-shadow cursor-pointer">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">{t('invitations.stats.accepted')}</p>
-                  <p className="text-2xl font-bold">{stats.accepted}</p>
+                  <p className="text-3xl font-bold mt-2">{stats.accepted}</p>
                 </div>
-                <CheckCircle className="h-8 w-8 text-green-500" />
+                <div className="p-3 bg-green-100 rounded-xl">
+                  <CheckCircle className="h-7 w-7 text-green-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          {/* Expired Invitations */}
+          <Card className="hover:shadow-md transition-shadow cursor-pointer">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">{t('invitations.stats.expired')}</p>
-                  <p className="text-2xl font-bold">{stats.expired}</p>
+                  <p className="text-3xl font-bold mt-2">{stats.expired}</p>
                 </div>
-                <XCircle className="h-8 w-8 text-red-500" />
+                <div className="p-3 bg-red-100 rounded-xl">
+                  <XCircle className="h-7 w-7 text-red-600" />
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -451,19 +525,19 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
           </TabsList>
 
           <TabsContent value={selectedStatus} className="mt-6">
-            <Card>
-              <CardContent className="p-0">
+            <Card className="shadow-sm">
+              <CardContent className="pt-6">
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>{t('invitations.table.invitee')}</TableHead>
-                      <TableHead>{t('invitations.table.role')}</TableHead>
-                      <TableHead>{t('invitations.table.dealership')}</TableHead>
-                      <TableHead>{t('invitations.table.inviter')}</TableHead>
-                      <TableHead>{t('invitations.table.status')}</TableHead>
-                      <TableHead>{t('invitations.table.sent')}</TableHead>
-                      <TableHead>{t('invitations.table.expires')}</TableHead>
-                      <TableHead className="text-right">{t('invitations.table.actions')}</TableHead>
+                    <TableRow className="border-b-2">
+                      <TableHead className="font-semibold">{t('invitations.table.invitee')}</TableHead>
+                      <TableHead className="font-semibold">{t('invitations.table.role')}</TableHead>
+                      <TableHead className="font-semibold">{t('invitations.table.dealership')}</TableHead>
+                      <TableHead className="font-semibold">{t('invitations.table.inviter')}</TableHead>
+                      <TableHead className="font-semibold">{t('invitations.table.status')}</TableHead>
+                      <TableHead className="font-semibold">{t('invitations.table.sent')}</TableHead>
+                      <TableHead className="font-semibold">{t('invitations.table.expires')}</TableHead>
+                      <TableHead className="text-right font-semibold">{t('invitations.table.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -481,26 +555,28 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
                         const status = getInvitationStatus(invitation);
 
                         return (
-                          <TableRow key={invitation.id}>
+                          <TableRow key={invitation.id} className="hover:bg-muted/50 transition-colors">
                             <TableCell>
                               <div className="flex items-center gap-3">
-                                <Avatar className="h-8 w-8">
-                                  <AvatarFallback className="text-xs">
+                                <Avatar className="h-10 w-10 border-2 border-gray-100">
+                                  <AvatarFallback className="text-sm font-semibold">
                                     {invitation.email.slice(0, 2).toUpperCase()}
                                   </AvatarFallback>
                                 </Avatar>
                                 <div>
-                                  <p className="font-medium">{invitation.email}</p>
+                                  <p className="font-semibold">{invitation.email}</p>
                                 </div>
                               </div>
                             </TableCell>
                             <TableCell>
-                              <Badge variant="outline">{t(`roles.${invitation.role_name}`, formatRoleName(invitation.role_name))}</Badge>
+                              <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold transition-colors border ${getRoleBadgeClasses(invitation.role_name)}`}>
+                                {t(`roles.${invitation.role_name}`, formatRoleName(invitation.role_name))}
+                              </span>
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-2">
                                 <Building2 className="h-4 w-4 text-muted-foreground" />
-                                <span className="text-sm">{invitation.dealerships?.name || 'Unknown'}</span>
+                                <span className="text-sm font-medium">{invitation.dealerships?.name || 'Unknown'}</span>
                               </div>
                             </TableCell>
                             <TableCell>
@@ -514,10 +590,10 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
                               </div>
                             </TableCell>
                             <TableCell>
-                              <Badge variant={getStatusBadgeVariant(status)} className="flex items-center gap-1 w-fit">
+                              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-colors border w-fit ${getStatusBadgeClasses(status)}`}>
                                 {getStatusIcon(status)}
                                 {status.charAt(0).toUpperCase() + status.slice(1)}
-                              </Badge>
+                              </span>
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -539,26 +615,19 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
                             </TableCell>
                             <TableCell className="text-right">
                               <div className="flex items-center gap-1 justify-end">
-                                {status === 'pending' && (
+                                {/* Resend button - show for pending and expired invitations */}
+                                {(status === 'pending' || status === 'expired') && (
                                   <Button
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => handleResendInvitation(invitation)}
                                     className="h-8 w-8 p-0"
-                                  >
-                                    <RotateCcw className="h-4 w-4" />
-                                  </Button>
-                                )}
-                                {(status === 'expired' || status === 'pending') && (
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => handleResendInvitation(invitation)}
-                                    className="h-8 w-8 p-0"
+                                    title={t('invitations.resend_invitation')}
                                   >
                                     <Send className="h-4 w-4" />
                                   </Button>
                                 )}
+                                {/* Cancel button - only for pending invitations */}
                                 {status === 'pending' && (
                                   <Button
                                     variant="ghost"
@@ -573,6 +642,7 @@ export const InvitationManagement: React.FC<InvitationManagementProps> = ({ deal
                                     <XCircle className="h-4 w-4" />
                                   </Button>
                                 )}
+                                {/* Delete button - for all except accepted */}
                                 {status !== 'accepted' && (
                                   <Button
                                     variant="ghost"

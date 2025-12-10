@@ -141,27 +141,50 @@ export const DealerModules: React.FC<DealerModulesProps> = ({ dealerId }) => {
 
   if (loading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('dealer.modules.title')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex items-center justify-between p-4 border rounded-lg animate-pulse">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-muted rounded"></div>
-                  <div>
-                    <div className="w-24 h-4 bg-muted rounded mb-1"></div>
-                    <div className="w-32 h-3 bg-muted rounded"></div>
-                  </div>
-                </div>
-                <div className="w-12 h-6 bg-muted rounded-full"></div>
+      <div className="space-y-6">
+        {/* Loading Header */}
+        <Card className="border-none shadow-sm bg-gradient-to-r from-primary/5 to-primary/10">
+          <CardContent className="py-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary/20 rounded-lg">
+                <Shield className="h-6 w-6 text-primary" />
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              <div className="flex-1">
+                <div className="w-32 h-6 bg-muted rounded mb-1.5 animate-pulse"></div>
+                <div className="w-64 h-4 bg-muted rounded animate-pulse"></div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Loading Cards */}
+        {[1, 2].map((cardIndex) => (
+          <Card key={cardIndex} className="border shadow-sm">
+            <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100/50 border-b py-4">
+              <div className="flex items-center justify-between">
+                <div className="w-24 h-5 bg-muted rounded animate-pulse"></div>
+                <div className="w-20 h-5 bg-muted rounded-full animate-pulse"></div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex items-center justify-between p-5 border rounded-xl animate-pulse">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-muted rounded-xl"></div>
+                      <div>
+                        <div className="w-32 h-4 bg-muted rounded mb-2"></div>
+                        <div className="w-48 h-3 bg-muted rounded"></div>
+                      </div>
+                    </div>
+                    <div className="w-12 h-6 bg-muted rounded-full"></div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     );
   }
 
@@ -182,49 +205,71 @@ export const DealerModules: React.FC<DealerModulesProps> = ({ dealerId }) => {
       </Card>
     }>
       <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5" />
-              {t('dealer.modules.title')}
-            </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              {t('dealer.modules.description')}
-            </p>
-          </CardHeader>
+        {/* Professional Header */}
+        <Card className="border-none shadow-sm bg-gradient-to-r from-primary/5 to-primary/10">
+          <CardContent className="py-6">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary/20 rounded-lg">
+                <Shield className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold">{t('dealer.modules.title')}</h2>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  {t('dealer.modules.description')}
+                </p>
+              </div>
+            </div>
+          </CardContent>
         </Card>
 
         {Object.entries(modulesByCategory).map(([category, categoryModules]) => (
-          <Card key={category}>
-            <CardHeader>
-              <CardTitle className="text-lg">{t(`dealer.modules.categories.${category.toLowerCase()}`)}</CardTitle>
+          <Card key={category} className="border shadow-sm hover:shadow-md transition-shadow">
+            <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100/50 border-b py-4">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-bold text-gray-900">
+                  {t(`dealer.modules.categories.${category.toLowerCase()}`)}
+                </CardTitle>
+                <Badge variant="secondary" className="bg-gray-200 hover:bg-gray-300 text-gray-700 border-gray-300 font-semibold">
+                  {categoryModules.length} {categoryModules.length === 1 ? 'module' : 'modules'}
+                </Badge>
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               <div className="space-y-4">
                 {categoryModules.map((module) => {
                   const config = moduleConfig[module.module];
                   const IconComponent = config?.icon || Settings;
 
                   return (
-                    <div key={module.module} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+                    <div
+                      key={module.module}
+                      className="flex items-center justify-between p-5 border rounded-xl hover:bg-gradient-to-r hover:from-gray-50 hover:to-transparent hover:shadow-sm transition-all"
+                    >
                       <div className="flex items-center space-x-4">
-                        <div className="p-2 rounded-lg bg-primary/10">
-                          <IconComponent className="h-5 w-5 text-primary" />
+                        <div className="p-3 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 shadow-sm">
+                          <IconComponent className="h-6 w-6 text-primary" />
                         </div>
                         <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <Label className="text-sm font-medium">
+                          <div className="flex items-center gap-2.5">
+                            <Label className="text-sm font-semibold text-gray-900 cursor-pointer">
                               {t(`dealer.modules.names.${module.module}`)}
                             </Label>
-                            <Badge variant={module.is_enabled ? "default" : "secondary"} className="text-xs">
+                            <Badge
+                              className={
+                                module.is_enabled
+                                  ? "bg-emerald-100 hover:bg-emerald-200 text-emerald-700 border-emerald-200 text-xs px-2.5 py-0.5 font-semibold"
+                                  : "bg-gray-100 hover:bg-gray-200 text-gray-600 border-gray-200 text-xs px-2.5 py-0.5 font-semibold"
+                              }
+                            >
                               {module.is_enabled ? t('common.enabled') : t('common.disabled')}
                             </Badge>
                           </div>
-                          <p className="text-xs text-muted-foreground mt-1">
+                          <p className="text-sm text-gray-600 mt-1.5 leading-relaxed">
                             {t(`dealer.modules.descriptions.${config?.description || module.module}`)}
                           </p>
                           {module.is_enabled && module.enabled_at && (
-                            <p className="text-xs text-muted-foreground mt-1">
+                            <p className="text-xs text-gray-500 mt-1.5 flex items-center gap-1">
+                              <span className="inline-block w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
                               {t('dealer.modules.enabled_on', {
                                 date: new Date(module.enabled_at).toLocaleDateString()
                               })}
@@ -237,6 +282,7 @@ export const DealerModules: React.FC<DealerModulesProps> = ({ dealerId }) => {
                         checked={module.is_enabled}
                         disabled={updating === module.module}
                         onCheckedChange={() => toggleModule(module.module, module.is_enabled)}
+                        className="ml-4"
                       />
                     </div>
                   );

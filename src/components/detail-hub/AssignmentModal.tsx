@@ -167,7 +167,11 @@ export function AssignmentModal({
   const isEditMode = !!assignment;
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog
+      key={assignment?.id || 'new'}
+      open={open}
+      onOpenChange={onClose}
+    >
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
