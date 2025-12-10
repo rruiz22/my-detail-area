@@ -54,6 +54,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // 🔒 FIX: Track mount state to prevent state updates after unmount (React error #310)
   const isMountedRef = React.useRef(true);
 
+  // 🔒 RATE LIMIT PROTECTION: Track token refresh attempts to detect 429 errors
+  const tokenRefreshTimestamps = React.useRef<number[]>([]);
+
   // Track mount state for cleanup
   React.useEffect(() => {
     isMountedRef.current = true;
@@ -64,8 +67,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Load extended user profile data with timeout and fallback
   const loadUserProfile = async (authUser: User): Promise<ExtendedUser> => {
+    // 📊 Telemetry: Track profile load start time
+    const startTime = Date.now();
+
     try {
-      auth('Loading extended profile for user:', authUser.id);
+      auth('⏱️ [Profile Load] Starting for user:', authUser.id, '@ ' + new Date(startTime).toISOString());
 
       // Add timeout to prevent infinite loading
       const profilePromise = supabase
@@ -74,9 +80,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .eq('id', authUser.id)
         .single();
 
-      // 5 second timeout
+      // ✅ FIX: Increased from 5s to 15s for slow networks
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Profile load timeout')), 5000)
+        setTimeout(() => reject(new Error('Profile load timeout after 15 seconds')), 15000)
       );
 
       const { data: profile, error } = await Promise.race([
@@ -84,8 +90,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         timeoutPromise
       ]) as { data: { user_type?: string; role?: string; first_name?: string; last_name?: string; dealership_id?: number; avatar_seed?: string; avatar_url?: string | null } | null; error: Error | null };
 
+      // 📊 Telemetry: Calculate load duration
+      const loadDuration = Date.now() - startTime;
+
       if (error) {
-        logError('Error loading user profile:', error);
+        logError(`❌ [Profile Load] Failed after ${loadDuration}ms:`, error);
         // Return basic user with minimal extension
         return {
           ...authUser,
@@ -106,14 +115,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         avatar_url: profile.avatar_url
       };
 
-      auth('Extended user profile loaded:', {
-        user_type: extendedUser.user_type,
-        role: extendedUser.role
-      });
+      // 📊 Telemetry: Log success with duration and warn if slow
+      if (loadDuration > 10000) {
+        warn(`⚠️ [Profile Load] SLOW: Took ${loadDuration}ms (>10s threshold) for user ${authUser.id}`);
+      } else {
+        auth(`✅ [Profile Load] Success in ${loadDuration}ms:`, {
+          user_type: extendedUser.user_type,
+          role: extendedUser.role
+        });
+      }
+
       return extendedUser;
 
     } catch (error) {
-      logError('Failed to load user profile, using fallback:', error);
+      // 📊 Telemetry: Log fallback with duration
+      const loadDuration = Date.now() - startTime;
+      logError(`❌ [Profile Load] FALLBACK after ${loadDuration}ms:`, error);
+
       // Emergency fallback to unblock app
       return {
         ...authUser,
@@ -200,6 +218,39 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        // ✅ FIX: Handle TOKEN_REFRESHED to prevent logout on token expiry
+        if (event === 'TOKEN_REFRESHED') {
+          // 📊 Telemetry: Log token refresh
+          const now = Date.now();
+          console.log(`🔄 [Token Refresh] Success at ${new Date(now).toISOString()}`);
+
+          // 🔒 Rate limit detection: Track refresh attempts
+          tokenRefreshTimestamps.current.push(now);
+
+          // Keep only last 60 seconds of timestamps
+          tokenRefreshTimestamps.current = tokenRefreshTimestamps.current.filter(
+            timestamp => now - timestamp < 60000
+          );
+
+          // Warn if too many refreshes in short period (indicates potential 429 loop)
+          const recentRefreshes = tokenRefreshTimestamps.current.length;
+          if (recentRefreshes > 5) {
+            console.warn(
+              `⚠️ [Token Refresh] RATE LIMIT WARNING: ${recentRefreshes} refreshes in last 60s ` +
+              `(Supabase may return 429 errors). Consider increasing token expiry time.`
+            );
+          }
+
+          // Silently update session without clearing caches
+          if (isMountedRef.current && session) {
+            setSession(session);
+            console.log(`✅ [Token Refresh] Session updated - NO cache clearing`);
+          }
+
+          // No need to reload user profile or clear caches
+          return;
+        }
+
         // 🔒 CRITICAL FIX: Clear ALL caches BEFORE processing session change
         // This prevents race conditions where old user cache is used for new user
         if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
@@ -212,19 +263,58 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setLoading(false);
           }
 
+          // 📊 Telemetry: Log cache clearing with event type
+          console.log(`🗑️ [Cache Clear] Event: ${event} - Clearing user-specific caches`);
+
           // Cache clearing is safe without guard (localStorage operations)
           userProfileCache.clearCache();
           clearPermissionsCache();
-          queryClient.clear();
+
+          // ✅ FIX: Selective invalidation instead of queryClient.clear()
+          // Only clear user-specific queries, not all application data
+          const userQueries = [
+            'user-permissions',
+            'user_profile',
+            'dealer-memberships',
+            'user-dealerships',
+            'user-roles',
+            'active-membership'
+          ];
+
+          userQueries.forEach(queryKey => {
+            queryClient.invalidateQueries({ queryKey: [queryKey] });
+          });
+
+          console.log(`✅ [Cache Clear] Invalidated ${userQueries.length} user-specific query caches`);
           return;
         }
 
         // 🔒 CRITICAL FIX: On user change (different user login), clear previous user's cache
         if (event === 'SIGNED_IN' && previousUserIdRef.current && session?.user?.id !== previousUserIdRef.current) {
           auth('🔄 User changed - clearing previous user cache');
+
+          // 📊 Telemetry: Log user switch
+          console.log(`🔄 [User Switch] Old: ${previousUserIdRef.current?.slice(0, 8)}... → New: ${session?.user?.id?.slice(0, 8)}...`);
+
           userProfileCache.clearCache();
           clearPermissionsCache();
-          queryClient.clear();
+
+          // ✅ FIX: Selective invalidation instead of queryClient.clear()
+          // Only clear user-specific queries when switching users
+          const userQueries = [
+            'user-permissions',
+            'user_profile',
+            'dealer-memberships',
+            'user-dealerships',
+            'user-roles',
+            'active-membership'
+          ];
+
+          userQueries.forEach(queryKey => {
+            queryClient.invalidateQueries({ queryKey: [queryKey] });
+          });
+
+          console.log(`✅ [Cache Clear] User switch - Invalidated ${userQueries.length} query caches`);
         }
 
         // ✅ Guard: Only update session if component is still mounted

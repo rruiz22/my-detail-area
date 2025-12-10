@@ -1,7 +1,7 @@
 {
   "scannedFiles": 954,
-  "totalStrings": 10107,
-  "hardcodedStrings": 2172,
+  "totalStrings": 10105,
+  "hardcodedStrings": 2170,
   "translatedStrings": 7935,
   "issues": {
     "critical": [
@@ -7730,100 +7730,90 @@
         "hardcodedStrings": [
           {
             "text": "Employee can work at multiple dealerships with different schedules",
-            "line": 197,
-            "context": "196: </Select>\n197: <p className=\"text-sm text-gray-500\">\n198: Employee can work at multiple dealerships with different schedules"
+            "line": 198,
+            "context": "197: </Select>\n198: <p className=\"text-sm text-gray-500\">\n199: Employee can work at multiple dealerships with different schedules"
           },
           {
             "text": "Schedule Template",
-            "line": 206,
-            "context": "205: <div className=\"flex items-center gap-2 text-sm font-medium\">\n206: <Clock className=\"h-4 w-4\" />\n207: Schedule Template"
+            "line": 207,
+            "context": "206: <div className=\"flex items-center gap-2 text-sm font-medium\">\n207: <Clock className=\"h-4 w-4\" />\n208: Schedule Template"
           },
           {
             "text": "Shift Start Time",
-            "line": 213,
-            "context": "212: <div className=\"space-y-2\">\n213: <Label htmlFor=\"shift-start\">Shift Start Time</Label>\n214: <Input"
+            "line": 214,
+            "context": "213: <div className=\"space-y-2\">\n214: <Label htmlFor=\"shift-start\">Shift Start Time</Label>\n215: <Input"
           },
           {
             "text": "Shift End Time",
-            "line": 224,
-            "context": "223: <div className=\"space-y-2\">\n224: <Label htmlFor=\"shift-end\">Shift End Time</Label>\n225: <Input"
-          },
-          {
-            "text": "Minutes before shift start that employee can clock in",
-            "line": 254,
-            "context": "253: />\n254: <p className=\"text-xs text-gray-500\">\n255: Minutes before shift start that employee can clock in"
-          },
-          {
-            "text": "Minutes after shift start that employee can clock in",
-            "line": 274,
-            "context": "273: />\n274: <p className=\"text-xs text-gray-500\">\n275: Minutes after shift start that employee can clock in"
+            "line": 225,
+            "context": "224: <div className=\"space-y-2\">\n225: <Label htmlFor=\"shift-end\">Shift End Time</Label>\n226: <Input"
           },
           {
             "text": "Employee can work",
-            "line": 303,
-            "context": "302: <AlertDescription>\n303: <strong>Flexible Schedule:</strong> Employee can work <strong>any day</strong> at this\n304: dealership. No day restrictions apply."
+            "line": 304,
+            "context": "303: <AlertDescription>\n304: <strong>Flexible Schedule:</strong> Employee can work <strong>any day</strong> at this\n305: dealership. No day restrictions apply."
           },
           {
             "text": "Cancel",
-            "line": 323,
-            "context": "322: <DialogFooter>\n323: <Button variant=\"outline\" onClick={onClose} disabled={isSubmitting}>\n324: Cancel"
+            "line": 324,
+            "context": "323: <DialogFooter>\n324: <Button variant=\"outline\" onClick={onClose} disabled={isSubmitting}>\n325: Cancel"
           },
           {
             "text": "Select dealership",
-            "line": 182,
-            "context": "181: <SelectTrigger id=\"dealership\">\n182: <SelectValue placeholder=\"Select dealership\" />\n183: </SelectTrigger>"
+            "line": 183,
+            "context": "182: <SelectTrigger id=\"dealership\">\n183: <SelectValue placeholder=\"Select dealership\" />\n184: </SelectTrigger>"
           },
           {
             "text": "Add any notes about this assignment...",
-            "line": 314,
-            "context": "313: id=\"notes\"\n314: placeholder=\"Add any notes about this assignment...\"\n315: value={notes}"
+            "line": 315,
+            "context": "314: id=\"notes\"\n315: placeholder=\"Add any notes about this assignment...\"\n316: value={notes}"
           },
           {
             "text": "Shift Start Time",
-            "line": 213,
-            "context": "212: <div className=\"space-y-2\">\n213: <Label htmlFor=\"shift-start\">Shift Start Time</Label>\n214: <Input"
+            "line": 214,
+            "context": "213: <div className=\"space-y-2\">\n214: <Label htmlFor=\"shift-start\">Shift Start Time</Label>\n215: <Input"
           },
           {
             "text": "Shift End Time",
-            "line": 224,
-            "context": "223: <div className=\"space-y-2\">\n224: <Label htmlFor=\"shift-end\">Shift End Time</Label>\n225: <Input"
+            "line": 225,
+            "context": "224: <div className=\"space-y-2\">\n225: <Label htmlFor=\"shift-end\">Shift End Time</Label>\n226: <Input"
           },
           {
             "text": "Cancel\r\n          ",
-            "line": 323,
-            "context": "322: <DialogFooter>\n323: <Button variant=\"outline\" onClick={onClose} disabled={isSubmitting}>\n324: Cancel"
+            "line": 324,
+            "context": "323: <DialogFooter>\n324: <Button variant=\"outline\" onClick={onClose} disabled={isSubmitting}>\n325: Cancel"
           }
         ],
         "translationCalls": [
           {
             "key": "validation.invalid_time_range",
-            "line": 107,
-            "exists": false
-          },
-          {
-            "key": "validation.shift_end_must_be_after_start",
             "line": 108,
             "exists": false
           },
           {
+            "key": "validation.shift_end_must_be_after_start",
+            "line": 109,
+            "exists": false
+          },
+          {
             "key": "validation.dealershipRequired",
-            "line": 135,
+            "line": 136,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "validation.invalid_time_range",
-            "line": 107,
-            "context": "106: toast({\n107: title: t('validation.invalid_time_range'),\n108: description: t('validation.shift_end_must_be_after_start'),"
+            "line": 108,
+            "context": "107: toast({\n108: title: t('validation.invalid_time_range'),\n109: description: t('validation.shift_end_must_be_after_start'),"
           },
           {
             "key": "validation.shift_end_must_be_after_start",
-            "line": 108,
-            "context": "107: title: t('validation.invalid_time_range'),\n108: description: t('validation.shift_end_must_be_after_start'),\n109: variant: \"destructive\""
+            "line": 109,
+            "context": "108: title: t('validation.invalid_time_range'),\n109: description: t('validation.shift_end_must_be_after_start'),\n110: variant: \"destructive\""
           }
         ],
-        "coverage": 19,
+        "coverage": 21,
         "severity": "high"
       },
       {
