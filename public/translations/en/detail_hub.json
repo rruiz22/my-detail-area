@@ -952,7 +952,8 @@
       "paid": "Paid",
       "unpaid": "Unpaid",
       "status": "Status",
-      "actions": "Actions"
+      "actions": "Actions",
+      "no_limit": "No limit"
     },
     "toast": {
       "created_title": "Assignment Created",

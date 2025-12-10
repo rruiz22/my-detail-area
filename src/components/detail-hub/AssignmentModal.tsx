@@ -29,6 +29,9 @@ interface AssignmentModalProps {
   /** Employee name (for display) */
   employeeName?: string;
 
+  /** Employee's default schedule template (inherited by new assignments) */
+  employeeScheduleTemplate?: Partial<ScheduleTemplate>;
+
   /** Whether the modal is open */
   open: boolean;
 
@@ -44,6 +47,7 @@ export function AssignmentModal({
   assignment,
   employeeId,
   employeeName,
+  employeeScheduleTemplate,
   open,
   onClose
 }: AssignmentModalProps) {
@@ -82,20 +86,22 @@ export function AssignmentModal({
       });
       setNotes(assignment.notes || '');
     } else {
-      // Reset form for create mode (flexible schedule by default)
+      // Reset form for create mode
+      // Inherit from employee's default schedule template if available
       setSelectedDealerId(null);
       setScheduleTemplate({
-        shift_start_time: '08:00',
-        shift_end_time: '17:00',
-        days_of_week: [0, 1, 2, 3, 4, 5, 6],
-        early_punch_allowed_minutes: undefined, // undefined = flexible (no time restriction)
-        late_punch_grace_minutes: undefined,    // undefined = flexible (no time restriction)
-        required_break_minutes: 30,
-        break_is_paid: false
+        shift_start_time: employeeScheduleTemplate?.shift_start_time || '08:00',
+        shift_end_time: employeeScheduleTemplate?.shift_end_time || '17:00',
+        days_of_week: employeeScheduleTemplate?.days_of_week || [0, 1, 2, 3, 4, 5, 6],
+        // Inherit employee's time restrictions (or undefined = flexible if not set)
+        early_punch_allowed_minutes: employeeScheduleTemplate?.early_punch_allowed_minutes,
+        late_punch_grace_minutes: employeeScheduleTemplate?.late_punch_grace_minutes,
+        required_break_minutes: employeeScheduleTemplate?.required_break_minutes ?? 30,
+        break_is_paid: employeeScheduleTemplate?.break_is_paid ?? false
       });
       setNotes('');
     }
-  }, [assignment]);
+  }, [assignment, employeeScheduleTemplate]);
 
   const handleSubmit = () => {
     // Validate time range before submission

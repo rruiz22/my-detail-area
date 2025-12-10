@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Edit2, Trash2, Building2, Clock, AlertCircle } from "lucide-react";
 import { useEmployeeAssignments, useDeleteAssignment, type EmployeeAssignment } from "@/hooks/useEmployeeAssignments";
+import { useEmployeeById } from "@/hooks/useEmployeeById";
 import { AssignmentModal } from "./AssignmentModal";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -51,6 +52,7 @@ export function EmployeeAssignmentsTable({
 }: EmployeeAssignmentsTableProps) {
   const { t } = useTranslation();
   const { data: assignments, isLoading } = useEmployeeAssignments(employeeId);
+  const { data: employee } = useEmployeeById(employeeId); // Fetch full employee data
   const { mutate: deleteAssignment } = useDeleteAssignment();
 
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -145,8 +147,11 @@ export function EmployeeAssignmentsTable({
                     </TableCell>
                     <TableCell>
                       <div className="text-sm text-gray-600">
-                        -{assignment.schedule_template.early_punch_allowed_minutes ?? 0}m / +
-                        {assignment.schedule_template.late_punch_grace_minutes ?? 0}m
+                        {assignment.schedule_template.early_punch_allowed_minutes != null
+                          ? `-${assignment.schedule_template.early_punch_allowed_minutes}m`
+                          : t('detail_hub.assignments.table.no_limit')} / {assignment.schedule_template.late_punch_grace_minutes != null
+                          ? `+${assignment.schedule_template.late_punch_grace_minutes}m`
+                          : t('detail_hub.assignments.table.no_limit')}
                       </div>
                       <div className="text-xs text-gray-500">{t('detail_hub.assignments.table.early_late_label')}</div>
                     </TableCell>
@@ -233,6 +238,7 @@ export function EmployeeAssignmentsTable({
         assignment={null}
         employeeId={employeeId}
         employeeName={employeeName}
+        employeeScheduleTemplate={employee?.schedule_template}
         open={showCreateModal}
         onClose={() => setShowCreateModal(false)}
       />
@@ -242,6 +248,7 @@ export function EmployeeAssignmentsTable({
         assignment={editingAssignment}
         employeeId={employeeId}
         employeeName={employeeName}
+        employeeScheduleTemplate={employee?.schedule_template}
         open={!!editingAssignment}
         onClose={() => setEditingAssignment(null)}
       />

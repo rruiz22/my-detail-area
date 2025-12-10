@@ -934,7 +934,8 @@
       "paid": "Pago",
       "unpaid": "Não Pago",
       "status": "Status",
-      "actions": "Ações"
+      "actions": "Ações",
+      "no_limit": "Sem limite"
     },
     "toast": {
       "created_title": "Atribuição Criada",
