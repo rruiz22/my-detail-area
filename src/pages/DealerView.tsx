@@ -29,6 +29,7 @@ const DealerView = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const [dealerName, setDealerName] = useState<string>('');
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
 
   // Dealer-specific tab persistence
   const [activeTab, setActiveTab] = useTabPersistence('dealer_view', id);
@@ -40,13 +41,14 @@ const DealerView = () => {
       try {
         const { data, error } = await supabase
           .from('dealerships')
-          .select('name')
+          .select('name, logo_url')
           .eq('id', parseInt(id))
           .single();
 
         if (error) throw error;
         if (data) {
           setDealerName(data.name);
+          setLogoUrl(data.logo_url);
         }
       } catch (error) {
         console.error('Error fetching dealer info:', error);
@@ -93,7 +95,19 @@ const DealerView = () => {
           </div>
 
           <div className="flex items-start space-x-3">
-            <Building2 className="h-8 w-8 text-primary mt-1" />
+            {logoUrl ? (
+              <div className="p-2 bg-white border border-gray-200 rounded-lg shadow-sm">
+                <img
+                  src={logoUrl}
+                  alt={`${dealerName} logo`}
+                  className="h-12 w-12 object-contain"
+                />
+              </div>
+            ) : (
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <Building2 className="h-8 w-8 text-primary" />
+              </div>
+            )}
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
                 {dealerName || t('dealer.view.loading')}

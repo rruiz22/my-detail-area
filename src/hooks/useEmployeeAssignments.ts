@@ -46,6 +46,18 @@ export interface ScheduleTemplate {
 
   /** Assigned kiosk ID for this assignment */
   assigned_kiosk_id?: string | null;
+
+  /** Enable auto-close for forgotten punch-outs (default: false) */
+  auto_close_enabled?: boolean;
+
+  /** Minutes after shift end to send first reminder (default: 30) */
+  auto_close_first_reminder?: number;
+
+  /** Minutes after shift end to send second reminder (default: 60) */
+  auto_close_second_reminder?: number;
+
+  /** Minutes after shift end to auto-close punch (default: 120) */
+  auto_close_window_minutes?: number;
 }
 
 /**

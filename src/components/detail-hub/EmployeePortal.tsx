@@ -38,6 +38,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { CACHE_TIMES, GC_TIMES } from "@/constants/cacheConfig";
 import { ShiftHoursCell } from "./ShiftHoursCell";
+import { AutoCloseStatusCell } from "./AutoCloseStatusCell";
+import { AutoClosedPunchReviewModal } from "./AutoClosedPunchReviewModal";
 
 // =====================================================
 // VALIDATION SCHEMA
@@ -107,6 +109,8 @@ const EmployeePortal = () => {
   const [employeeForFaceEnrollment, setEmployeeForFaceEnrollment] = useState<DetailHubEmployee | null>(null);
   const [showAssignmentsModal, setShowAssignmentsModal] = useState(false);
   const [employeeForAssignments, setEmployeeForAssignments] = useState<DetailHubEmployee | null>(null);
+  const [showAutoCloseReviewModal, setShowAutoCloseReviewModal] = useState(false);
+  const [selectedAutoCloseEntryId, setSelectedAutoCloseEntryId] = useState<string | null>(null);
 
   // 🔒 PRIVACY: Track which employees have hourly rate visible
   const [visibleSalaries, setVisibleSalaries] = useState<Set<string>>(new Set());
@@ -177,6 +181,78 @@ const EmployeePortal = () => {
     enabled: !!selectedDealerId,
     staleTime: CACHE_TIMES.MEDIUM, // 5 minutes
     gcTime: GC_TIMES.MEDIUM, // 10 minutes
+  });
+
+  // Fetch last punch for each employee (optimized single query)
+  const { data: lastPunchMap = {} } = useQuery({
+    queryKey: ['employee-last-punch-map', selectedDealerId],
+    queryFn: async () => {
+      if (!selectedDealerId) return {};
+
+      const { data, error } = await supabase
+        .from('detail_hub_time_entries')
+        .select('employee_id, clock_in, clock_out')
+        .order('clock_in', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching last punches:', error);
+        return {};
+      }
+
+      // Get the most recent punch (clock_in or clock_out) for each employee
+      const punchMap = (data || []).reduce((acc: Record<string, string>, entry) => {
+        const empId = entry.employee_id;
+
+        // Skip if we already have a punch for this employee (since we ordered by clock_in desc)
+        if (acc[empId]) return acc;
+
+        // Use clock_out if available and more recent, otherwise use clock_in
+        const lastPunch = entry.clock_out || entry.clock_in;
+        acc[empId] = lastPunch;
+
+        return acc;
+      }, {});
+
+      return punchMap;
+    },
+    enabled: !!selectedDealerId,
+    staleTime: CACHE_TIMES.SHORT, // 1 minute (more frequent for time entries)
+    gcTime: GC_TIMES.SHORT, // 5 minutes
+  });
+
+  // Fetch auto-close entries for each employee (requires supervisor review)
+  const { data: autoCloseMap = {} } = useQuery({
+    queryKey: ['employee-auto-close-map', selectedDealerId],
+    queryFn: async () => {
+      if (!selectedDealerId) return {};
+
+      const { data, error } = await supabase
+        .from('detail_hub_time_entries')
+        .select('id, employee_id, auto_closed_at, auto_close_reason, requires_supervisor_review')
+        .eq('dealership_id', selectedDealerId)
+        .not('auto_closed_at', 'is', null) // Only entries that were auto-closed
+        .order('auto_closed_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching auto-close entries:', error);
+        return {};
+      }
+
+      // Group auto-close entries by employee_id
+      const grouped = (data || []).reduce((acc: Record<string, any[]>, entry) => {
+        const empId = entry.employee_id;
+        if (!acc[empId]) {
+          acc[empId] = [];
+        }
+        acc[empId].push(entry);
+        return acc;
+      }, {});
+
+      return grouped;
+    },
+    enabled: !!selectedDealerId,
+    staleTime: CACHE_TIMES.SHORT, // 1 minute (near real-time for review queue)
+    gcTime: GC_TIMES.SHORT, // 5 minutes
   });
 
   // Form setup
@@ -498,6 +574,16 @@ const EmployeePortal = () => {
     }
   };
 
+  const handleAutoCloseReviewClick = (employeeId: string) => {
+    const entries = autoCloseMap[employeeId] || [];
+    const pendingEntry = entries.find(e => e.requires_supervisor_review);
+
+    if (pendingEntry) {
+      setSelectedAutoCloseEntryId(pendingEntry.id);
+      setShowAutoCloseReviewModal(true);
+    }
+  };
+
   // =====================================================
   // DATA TRANSFORMATION
   // =====================================================
@@ -513,7 +599,7 @@ const EmployeePortal = () => {
     status: emp.status,
     hourlyRate: emp.hourly_rate || 0,
     hireDate: emp.hire_date,
-    lastPunch: emp.updated_at,
+    lastPunch: lastPunchMap[emp.id] || null,
     avatar: "/placeholder.svg",
     rawData: emp,
   })) : [];
@@ -1370,13 +1456,14 @@ const EmployeePortal = () => {
                 <TableHead>{t('detail_hub.employees.status')}</TableHead>
                 <TableHead>{t('detail_hub.employees.hourly_rate')}</TableHead>
                 <TableHead>{t('detail_hub.employees.last_punch')}</TableHead>
+                <TableHead>{t('detail_hub.auto_close_status')}</TableHead>
                 <TableHead>{t('detail_hub.employees.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8">
+                  <TableCell colSpan={7} className="text-center py-8">
                     <div className="flex items-center justify-center gap-2">
                       <Clock className="w-4 h-4 animate-spin" />
                       {t('detail_hub.common.loading')}
@@ -1385,7 +1472,7 @@ const EmployeePortal = () => {
                 </TableRow>
               ) : filteredEmployees.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                     No employees found
                   </TableCell>
                 </TableRow>
@@ -1456,6 +1543,13 @@ const EmployeePortal = () => {
                     ) : (
                       <span className="text-muted-foreground">-</span>
                     )}
+                  </TableCell>
+                  <TableCell>
+                    <AutoCloseStatusCell
+                      employeeId={employee.id}
+                      autoCloseEntries={autoCloseMap[employee.id] || []}
+                      onReviewClick={handleAutoCloseReviewClick}
+                    />
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1">
@@ -1805,6 +1899,16 @@ const EmployeePortal = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Auto-Close Review Modal */}
+      <AutoClosedPunchReviewModal
+        timeEntryId={selectedAutoCloseEntryId}
+        isOpen={showAutoCloseReviewModal}
+        onClose={() => {
+          setShowAutoCloseReviewModal(false);
+          setSelectedAutoCloseEntryId(null);
+        }}
+      />
     </div>
   );
 };

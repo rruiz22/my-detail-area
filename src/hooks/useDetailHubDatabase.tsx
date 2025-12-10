@@ -80,6 +80,12 @@ export interface DetailHubTimeEntry {
   verified_by: string | null;
   verified_at: string | null;
 
+  // Approval (NEW: Timecard approval system)
+  approval_status: 'pending' | 'approved' | 'rejected';
+  approved_by: string | null;
+  approved_at: string | null;
+  rejection_reason: string | null;
+
   // Metadata
   kiosk_id: string | null;
   ip_address: string | null;
@@ -1440,10 +1446,10 @@ export function useUpdateTimeEntry() {
     }) => {
       if (!user) throw new Error('User not authenticated');
 
-      // Fetch current time entry to check if we're adding clock out
+      // Fetch current time entry to check if we're adding clock out and approval status
       const { data: currentEntry, error: fetchError } = await supabase
         .from('detail_hub_time_entries')
-        .select('id, clock_out, status')
+        .select('id, clock_out, status, approval_status')
         .eq('id', params.timeEntryId)
         .single();
 
@@ -1453,6 +1459,14 @@ export function useUpdateTimeEntry() {
         verified_by: user.id, // Track who made the edit
         updated_at: new Date().toISOString()
       };
+
+      // 🔄 APPROVAL RESET: If entry was approved/rejected, reset to pending
+      if (currentEntry.approval_status && currentEntry.approval_status !== 'pending') {
+        console.log(`[TIMECARD EDIT] Entry ${params.timeEntryId} was ${currentEntry.approval_status}, resetting to pending`);
+        updates.approval_status = 'pending';
+        updates.approved_by = null;
+        updates.approved_at = null;
+      }
 
       if (params.clockIn) updates.clock_in = params.clockIn;
       if (params.clockOut !== undefined) updates.clock_out = params.clockOut || null;
@@ -1852,6 +1866,192 @@ export function useSupervisorOverridePunch() {
       toast({
         title: "Override Failed",
         description: error instanceof Error ? error.message : 'Failed to override schedule validation',
+        variant: "destructive"
+      });
+    }
+  });
+}
+
+// =====================================================
+// TIMECARD APPROVAL SYSTEM (NEW)
+// =====================================================
+
+/**
+ * Approve a timecard entry
+ * Permissions: Only system_admin and supermanager can approve
+ */
+export function useApproveTimecard() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { selectedDealerId } = useDealerFilter();
+  const { user } = useAuth();
+
+  return useMutation({
+    mutationFn: async (timeEntryId: string) => {
+      if (!user) throw new Error('User not authenticated');
+
+      // Permission check is done in EmployeeTimecardDetailModal UI
+      // This is an additional safety check
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      if (profile?.role !== 'system_admin' && profile?.role !== 'supermanager') {
+        throw new Error('Insufficient permissions. Only system administrators and supermanagers can approve timecards.');
+      }
+
+      const { data, error } = await supabase
+        .from('detail_hub_time_entries')
+        .update({
+          approval_status: 'approved',
+          approved_by: user.id,
+          approved_at: new Date().toISOString(),
+          rejection_reason: null // Clear any previous rejection reason
+        })
+        .eq('id', timeEntryId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as DetailHubTimeEntry;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.timeEntries(selectedDealerId) });
+
+      toast({
+        title: "Timecard Approved",
+        description: "The timecard entry has been approved successfully."
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Approval Failed",
+        description: error instanceof Error ? error.message : 'Failed to approve timecard',
+        variant: "destructive"
+      });
+    }
+  });
+}
+
+/**
+ * Reject a timecard entry
+ * Permissions: Only system_admin and supermanager can reject
+ * Uses soft delete (marks as rejected, not physical deletion)
+ */
+export function useRejectTimecard() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { selectedDealerId } = useDealerFilter();
+  const { user } = useAuth();
+
+  return useMutation({
+    mutationFn: async (params: {
+      timeEntryId: string;
+      reason: string;
+    }) => {
+      if (!user) throw new Error('User not authenticated');
+
+      // Permission check
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      if (profile?.role !== 'system_admin' && profile?.role !== 'supermanager') {
+        throw new Error('Insufficient permissions. Only system administrators and supermanagers can reject timecards.');
+      }
+
+      const { data, error } = await supabase
+        .from('detail_hub_time_entries')
+        .update({
+          approval_status: 'rejected',
+          approved_by: user.id,
+          approved_at: new Date().toISOString(),
+          rejection_reason: params.reason
+        })
+        .eq('id', params.timeEntryId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as DetailHubTimeEntry;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.timeEntries(selectedDealerId) });
+
+      toast({
+        title: "Timecard Rejected",
+        description: "The timecard entry has been rejected.",
+        variant: "default"
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Rejection Failed",
+        description: error instanceof Error ? error.message : 'Failed to reject timecard',
+        variant: "destructive"
+      });
+    }
+  });
+}
+
+/**
+ * Approve multiple timecard entries at once (bulk action)
+ * Permissions: Only system_admin and supermanager can approve
+ */
+export function useBulkApproveTimecards() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { selectedDealerId } = useDealerFilter();
+  const { user } = useAuth();
+
+  return useMutation({
+    mutationFn: async (timeEntryIds: string[]) => {
+      if (!user) throw new Error('User not authenticated');
+
+      // Permission check
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      if (profile?.role !== 'system_admin' && profile?.role !== 'supermanager') {
+        throw new Error('Insufficient permissions. Only system administrators and supermanagers can approve timecards.');
+      }
+
+      const approvalTime = new Date().toISOString();
+
+      // Update all entries in a single transaction-like batch
+      const { data, error } = await supabase
+        .from('detail_hub_time_entries')
+        .update({
+          approval_status: 'approved',
+          approved_by: user.id,
+          approved_at: approvalTime,
+          rejection_reason: null
+        })
+        .in('id', timeEntryIds)
+        .select();
+
+      if (error) throw error;
+      return data as DetailHubTimeEntry[];
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.timeEntries(selectedDealerId) });
+
+      toast({
+        title: "Bulk Approval Complete",
+        description: `${data.length} timecard ${data.length === 1 ? 'entry' : 'entries'} approved successfully.`
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Bulk Approval Failed",
+        description: error instanceof Error ? error.message : 'Failed to approve timecards',
         variant: "destructive"
       });
     }

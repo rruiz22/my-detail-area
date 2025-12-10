@@ -106,6 +106,8 @@ export default function SalesOrders() {
 
   // Check if user can create sales orders
   const canCreate = hasModulePermission('sales_orders', 'create_orders');
+  // System admins and supermanagers can always export
+  const canExport = enhancedUser?.is_system_admin || enhancedUser?.is_supermanager || hasModulePermission('sales_orders', 'export_data');
 
   // Hook for status permissions and updates
   const { canUpdateStatus, updateOrderStatus } = useStatusPermissions();
@@ -515,7 +517,7 @@ export default function SalesOrders() {
           onToggleFilters={() => setShowFilters(!showFilters)}
           weekOffset={weekOffset}
           onWeekChange={setWeekOffset}
-          onPrintList={handlePrintList}
+          onPrintList={canExport ? handlePrintList : undefined}
           isPrinting={isPrinting}
         />
 

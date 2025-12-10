@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 954,
-  "totalStrings": 10110,
-  "hardcodedStrings": 2170,
-  "translatedStrings": 7940,
+  "scannedFiles": 955,
+  "totalStrings": 10121,
+  "hardcodedStrings": 2174,
+  "translatedStrings": 7947,
   "issues": {
     "critical": [
       {
@@ -159,529 +159,454 @@
         "hardcodedStrings": [
           {
             "text": "Default Work Schedule",
-            "line": 846,
-            "context": "845: <CardTitle className=\"text-base flex items-center gap-2 text-emerald-900\">\n846: <Clock className=\"w-5 h-5\" />\n847: Default Work Schedule"
+            "line": 893,
+            "context": "892: <CardTitle className=\"text-base flex items-center gap-2 text-emerald-900\">\n893: <Clock className=\"w-5 h-5\" />\n894: Default Work Schedule"
           },
           {
             "text": "Shift Start Time",
-            "line": 865,
-            "context": "864: <FormItem>\n865: <FormLabel className=\"text-sm font-semibold text-gray-900\">\n866: Shift Start Time <span className=\"text-destructive\">*</span>"
+            "line": 912,
+            "context": "911: <FormItem>\n912: <FormLabel className=\"text-sm font-semibold text-gray-900\">\n913: Shift Start Time <span className=\"text-destructive\">*</span>"
           },
           {
             "text": "Shift End Time",
-            "line": 881,
-            "context": "880: <FormItem>\n881: <FormLabel className=\"text-sm font-semibold text-gray-900\">\n882: Shift End Time <span className=\"text-destructive\">*</span>"
+            "line": 928,
+            "context": "927: <FormItem>\n928: <FormLabel className=\"text-sm font-semibold text-gray-900\">\n929: Shift End Time <span className=\"text-destructive\">*</span>"
           },
           {
             "text": "Work Days",
-            "line": 899,
-            "context": "898: <FormItem>\n899: <FormLabel className=\"text-sm font-semibold text-gray-900\">\n900: Work Days <span className=\"text-destructive\">*</span>"
+            "line": 946,
+            "context": "945: <FormItem>\n946: <FormLabel className=\"text-sm font-semibold text-gray-900\">\n947: Work Days <span className=\"text-destructive\">*</span>"
           },
           {
             "text": "Early Punch Allowed",
-            "line": 951,
-            "context": "950: <FormItem>\n951: <FormLabel className=\"text-xs text-gray-700\">Early Punch Allowed</FormLabel>\n952: <FormControl>"
+            "line": 998,
+            "context": "997: <FormItem>\n998: <FormLabel className=\"text-xs text-gray-700\">Early Punch Allowed</FormLabel>\n999: <FormControl>"
           },
           {
             "text": "Leave empty for no restrictions",
-            "line": 971,
-            "context": "970: </FormControl>\n971: <p className=\"text-xs text-gray-500\">Leave empty for no restrictions</p>\n972: <FormMessage />"
+            "line": 1018,
+            "context": "1017: </FormControl>\n1018: <p className=\"text-xs text-gray-500\">Leave empty for no restrictions</p>\n1019: <FormMessage />"
           },
           {
             "text": "Late Punch Grace",
-            "line": 982,
-            "context": "981: <FormItem>\n982: <FormLabel className=\"text-xs text-gray-700\">Late Punch Grace</FormLabel>\n983: <FormControl>"
+            "line": 1029,
+            "context": "1028: <FormItem>\n1029: <FormLabel className=\"text-xs text-gray-700\">Late Punch Grace</FormLabel>\n1030: <FormControl>"
           },
           {
             "text": "Leave empty for no restrictions",
-            "line": 1002,
-            "context": "1001: </FormControl>\n1002: <p className=\"text-xs text-gray-500\">Leave empty for no restrictions</p>\n1003: <FormMessage />"
+            "line": 1049,
+            "context": "1048: </FormControl>\n1049: <p className=\"text-xs text-gray-500\">Leave empty for no restrictions</p>\n1050: <FormMessage />"
           },
           {
             "text": "Schedule Preview",
-            "line": 1012,
-            "context": "1011: <div className=\"p-4 bg-white rounded-lg border-2 border-emerald-300 shadow-sm\">\n1012: <p className=\"text-xs font-semibold text-emerald-900 mb-2 uppercase tracking-wide\">\n1013: Schedule Preview"
+            "line": 1059,
+            "context": "1058: <div className=\"p-4 bg-white rounded-lg border-2 border-emerald-300 shadow-sm\">\n1059: <p className=\"text-xs font-semibold text-emerald-900 mb-2 uppercase tracking-wide\">\n1060: Schedule Preview"
           },
           {
             "text": "No punch restrictions",
-            "line": 1052,
-            "context": "1051: <>\n1052: <strong className=\"font-semibold text-amber-600\">No punch restrictions</strong>\n1053: {' - Employee can punch in anytime'}"
+            "line": 1099,
+            "context": "1098: <>\n1099: <strong className=\"font-semibold text-amber-600\">No punch restrictions</strong>\n1100: {' - Employee can punch in anytime'}"
           },
           {
             "text": "Default Break Duration",
-            "line": 1098,
-            "context": "1097: <FormItem>\n1098: <FormLabel className=\"text-xs\">Default Break Duration</FormLabel>\n1099: <FormControl>"
+            "line": 1145,
+            "context": "1144: <FormItem>\n1145: <FormLabel className=\"text-xs\">Default Break Duration</FormLabel>\n1146: <FormControl>"
           },
           {
             "text": "Paid Break",
-            "line": 1123,
-            "context": "1122: />\n1123: <label htmlFor=\"template_break_paid\" className=\"text-sm cursor-pointer\">\n1124: Paid Break"
+            "line": 1170,
+            "context": "1169: />\n1170: <label htmlFor=\"template_break_paid\" className=\"text-sm cursor-pointer\">\n1171: Paid Break"
           },
           {
             "text": "No employees found",
-            "line": 1342,
-            "context": "1341: <TableRow>\n1342: <TableCell colSpan={7} className=\"text-center py-8 text-muted-foreground\">\n1343: No employees found"
+            "line": 1388,
+            "context": "1387: <TableRow>\n1388: <TableCell colSpan={6} className=\"text-center py-8 text-muted-foreground\">\n1389: No employees found"
           },
           {
             "text": "John",
-            "line": 579,
-            "context": "578: <FormControl>\n579: <Input placeholder=\"John\" {...field} />\n580: </FormControl>"
+            "line": 626,
+            "context": "625: <FormControl>\n626: <Input placeholder=\"John\" {...field} />\n627: </FormControl>"
           },
           {
             "text": "Smith",
-            "line": 592,
-            "context": "591: <FormControl>\n592: <Input placeholder=\"Smith\" {...field} />\n593: </FormControl>"
+            "line": 639,
+            "context": "638: <FormControl>\n639: <Input placeholder=\"Smith\" {...field} />\n640: </FormControl>"
           },
           {
             "text": "No limit",
-            "line": 959,
-            "context": "958: step=\"5\"\n959: placeholder=\"No limit\"\n960: {...field}"
+            "line": 1006,
+            "context": "1005: step=\"5\"\n1006: placeholder=\"No limit\"\n1007: {...field}"
           },
           {
             "text": "No limit",
-            "line": 990,
-            "context": "989: step=\"5\"\n990: placeholder=\"No limit\"\n991: {...field}"
+            "line": 1037,
+            "context": "1036: step=\"5\"\n1037: placeholder=\"No limit\"\n1038: {...field}"
           },
           {
             "text": "Manage Dealership Assignments",
-            "line": 1477,
-            "context": "1476: }}\n1477: title=\"Manage Dealership Assignments\"\n1478: className=\"p-1 hover:bg-purple-50 rounded transition-colors\""
+            "line": 1527,
+            "context": "1526: }}\n1527: title=\"Manage Dealership Assignments\"\n1528: className=\"p-1 hover:bg-purple-50 rounded transition-colors\""
           },
           {
             "text": "Shift Start Time ",
-            "line": 865,
-            "context": "864: <FormItem>\n865: <FormLabel className=\"text-sm font-semibold text-gray-900\">\n866: Shift Start Time <span className=\"text-destructive\">*</span>"
+            "line": 912,
+            "context": "911: <FormItem>\n912: <FormLabel className=\"text-sm font-semibold text-gray-900\">\n913: Shift Start Time <span className=\"text-destructive\">*</span>"
           },
           {
             "text": "Shift End Time ",
-            "line": 881,
-            "context": "880: <FormItem>\n881: <FormLabel className=\"text-sm font-semibold text-gray-900\">\n882: Shift End Time <span className=\"text-destructive\">*</span>"
+            "line": 928,
+            "context": "927: <FormItem>\n928: <FormLabel className=\"text-sm font-semibold text-gray-900\">\n929: Shift End Time <span className=\"text-destructive\">*</span>"
           },
           {
             "text": "Work Days ",
-            "line": 899,
-            "context": "898: <FormItem>\n899: <FormLabel className=\"text-sm font-semibold text-gray-900\">\n900: Work Days <span className=\"text-destructive\">*</span>"
+            "line": 946,
+            "context": "945: <FormItem>\n946: <FormLabel className=\"text-sm font-semibold text-gray-900\">\n947: Work Days <span className=\"text-destructive\">*</span>"
           },
           {
             "text": "Early Punch Allowed",
-            "line": 951,
-            "context": "950: <FormItem>\n951: <FormLabel className=\"text-xs text-gray-700\">Early Punch Allowed</FormLabel>\n952: <FormControl>"
+            "line": 998,
+            "context": "997: <FormItem>\n998: <FormLabel className=\"text-xs text-gray-700\">Early Punch Allowed</FormLabel>\n999: <FormControl>"
           },
           {
             "text": "Late Punch Grace",
-            "line": 982,
-            "context": "981: <FormItem>\n982: <FormLabel className=\"text-xs text-gray-700\">Late Punch Grace</FormLabel>\n983: <FormControl>"
+            "line": 1029,
+            "context": "1028: <FormItem>\n1029: <FormLabel className=\"text-xs text-gray-700\">Late Punch Grace</FormLabel>\n1030: <FormControl>"
           },
           {
             "text": "Default Break Duration",
-            "line": 1098,
-            "context": "1097: <FormItem>\n1098: <FormLabel className=\"text-xs\">Default Break Duration</FormLabel>\n1099: <FormControl>"
+            "line": 1145,
+            "context": "1144: <FormItem>\n1145: <FormLabel className=\"text-xs\">Default Break Duration</FormLabel>\n1146: <FormControl>"
           }
         ],
         "translationCalls": [
           {
             "key": "detail_hub.employees.${status}",
-            "line": 505,
+            "line": 552,
             "exists": false
           },
           {
             "key": "detail_hub.employees.roles.detailer",
-            "line": 512,
+            "line": 559,
             "exists": true
           },
           {
             "key": "detail_hub.employees.roles.car_wash",
-            "line": 513,
+            "line": 560,
             "exists": true
           },
           {
             "key": "detail_hub.employees.roles.supervisor",
-            "line": 514,
+            "line": 561,
             "exists": true
           },
           {
             "key": "detail_hub.employees.roles.manager",
-            "line": 515,
+            "line": 562,
             "exists": true
           },
           {
             "key": "detail_hub.employees.roles.technician",
-            "line": 516,
+            "line": 563,
             "exists": true
           },
           {
             "key": "detail_hub.employees.departments.detail",
-            "line": 523,
+            "line": 570,
             "exists": true
           },
           {
             "key": "detail_hub.employees.departments.car_wash",
-            "line": 524,
+            "line": 571,
             "exists": true
           },
           {
             "key": "detail_hub.employees.departments.service",
-            "line": 525,
+            "line": 572,
             "exists": true
           },
           {
             "key": "detail_hub.employees.departments.management",
-            "line": 526,
+            "line": 573,
             "exists": true
           },
           {
             "key": "detail_hub.employees.title",
-            "line": 535,
+            "line": 582,
             "exists": true
           },
           {
             "key": "detail_hub.employees.subtitle",
-            "line": 536,
+            "line": 583,
             "exists": true
           },
           {
             "key": "detail_hub.employees.view_terminated",
-            "line": 545,
+            "line": 592,
             "exists": false
           },
           {
             "key": "detail_hub.employees.add_employee",
-            "line": 551,
+            "line": 598,
             "exists": true
           },
           {
             "key": "detail_hub.employees.edit",
-            "line": 558,
+            "line": 605,
             "exists": true
           },
           {
             "key": "detail_hub.employees.add_employee",
-            "line": 558,
+            "line": 605,
             "exists": true
           },
           {
             "key": "detail_hub.employees.edit_description",
-            "line": 562,
+            "line": 609,
             "exists": false
           },
           {
             "key": "detail_hub.employees.add_description",
-            "line": 563,
+            "line": 610,
             "exists": false
           },
           {
             "key": "common.first_name",
-            "line": 577,
+            "line": 624,
             "exists": false
           },
           {
             "key": "common.last_name",
-            "line": 590,
+            "line": 637,
             "exists": false
           },
           {
             "key": "common.email",
-            "line": 606,
+            "line": 653,
             "exists": true
           },
           {
             "key": "common.phone",
-            "line": 625,
+            "line": 672,
             "exists": false
           },
           {
             "key": "detail_hub.employees.role",
-            "line": 646,
+            "line": 693,
             "exists": true
           },
           {
             "key": "validation.option_required",
-            "line": 650,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.roles.detailer",
-            "line": 654,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.roles.technician",
-            "line": 655,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.roles.car_wash",
-            "line": 656,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.roles.supervisor",
-            "line": 657,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.roles.manager",
-            "line": 658,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.department",
-            "line": 671,
-            "exists": true
-          },
-          {
-            "key": "validation.option_required",
-            "line": 675,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.departments.detail",
-            "line": 679,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.departments.car_wash",
-            "line": 680,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.departments.service",
-            "line": 681,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.departments.management",
-            "line": 682,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.hourly_rate",
             "line": 697,
             "exists": true
           },
           {
-            "key": "detail_hub.employees.hire_date",
-            "line": 717,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.timecard.pick_date",
-            "line": 731,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.status",
-            "line": 761,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.active",
-            "line": 769,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.inactive",
-            "line": 770,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.suspended",
-            "line": 771,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.terminated",
-            "line": 772,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.kiosk_pin",
-            "line": 787,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.kiosk_pin_placeholder",
-            "line": 795,
-            "exists": false
-          },
-          {
-            "key": "common.hide",
-            "line": 813,
-            "exists": false
-          },
-          {
-            "key": "common.show",
-            "line": 813,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.generate_pin",
-            "line": 828,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.kiosk_pin_help",
-            "line": 834,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.enroll_face_id",
-            "line": 1138,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.common.cancel",
-            "line": 1144,
-            "exists": true
-          },
-          {
-            "key": "common.save",
-            "line": 1150,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.add_employee",
-            "line": 1150,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.total_employees",
-            "line": 1167,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.stats.active_employees",
-            "line": 1178,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.hourly_rate",
-            "line": 1189,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.departments.title",
-            "line": 1202,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.search_employees",
-            "line": 1221,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.timecard.filters.advanced",
-            "line": 1233,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.filters.clear_filters",
-            "line": 1248,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.filters.status.label",
-            "line": 1258,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.filters.status.all",
-            "line": 1264,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.active",
-            "line": 1265,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.inactive",
-            "line": 1266,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.suspended",
-            "line": 1267,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.terminated",
-            "line": 1268,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.role",
-            "line": 1275,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.timecard.filters.status.all",
-            "line": 1281,
-            "exists": false
-          },
-          {
             "key": "detail_hub.employees.roles.detailer",
-            "line": 1282,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.roles.car_wash",
-            "line": 1283,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.roles.supervisor",
-            "line": 1284,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.roles.manager",
-            "line": 1285,
+            "line": 701,
             "exists": true
           },
           {
             "key": "detail_hub.employees.roles.technician",
-            "line": 1286,
+            "line": 702,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.roles.car_wash",
+            "line": 703,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.roles.supervisor",
+            "line": 704,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.roles.manager",
+            "line": 705,
             "exists": true
           },
           {
             "key": "detail_hub.employees.department",
-            "line": 1293,
+            "line": 718,
             "exists": true
           },
           {
-            "key": "detail_hub.timecard.filters.status.all",
-            "line": 1299,
-            "exists": false
+            "key": "validation.option_required",
+            "line": 722,
+            "exists": true
           },
           {
             "key": "detail_hub.employees.departments.detail",
-            "line": 1300,
+            "line": 726,
             "exists": true
           },
           {
             "key": "detail_hub.employees.departments.car_wash",
-            "line": 1301,
+            "line": 727,
             "exists": true
           },
           {
             "key": "detail_hub.employees.departments.service",
-            "line": 1302,
+            "line": 728,
             "exists": true
           },
           {
             "key": "detail_hub.employees.departments.management",
-            "line": 1303,
+            "line": 729,
             "exists": true
           },
           {
-            "key": "detail_hub.employees.employee_list",
+            "key": "detail_hub.employees.hourly_rate",
+            "line": 744,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.hire_date",
+            "line": 764,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.timecard.pick_date",
+            "line": 778,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.status",
+            "line": 808,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.active",
+            "line": 816,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.inactive",
+            "line": 817,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.suspended",
+            "line": 818,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.terminated",
+            "line": 819,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.kiosk_pin",
+            "line": 834,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.kiosk_pin_placeholder",
+            "line": 842,
+            "exists": false
+          },
+          {
+            "key": "common.hide",
+            "line": 860,
+            "exists": false
+          },
+          {
+            "key": "common.show",
+            "line": 860,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.generate_pin",
+            "line": 875,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.kiosk_pin_help",
+            "line": 881,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.enroll_face_id",
+            "line": 1185,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.common.cancel",
+            "line": 1191,
+            "exists": true
+          },
+          {
+            "key": "common.save",
+            "line": 1197,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.add_employee",
+            "line": 1197,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.total_employees",
+            "line": 1214,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.stats.active_employees",
+            "line": 1225,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.hourly_rate",
+            "line": 1236,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.departments.title",
+            "line": 1249,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.search_employees",
+            "line": 1268,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.timecard.filters.advanced",
+            "line": 1280,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.filters.clear_filters",
+            "line": 1295,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.filters.status.label",
+            "line": 1305,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.filters.status.all",
+            "line": 1311,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.active",
+            "line": 1312,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.inactive",
+            "line": 1313,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.suspended",
+            "line": 1314,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.terminated",
             "line": 1315,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.employee_details",
-            "line": 1321,
             "exists": true
           },
           {
@@ -690,461 +615,536 @@
             "exists": true
           },
           {
-            "key": "detail_hub.employees.department",
-            "line": 1323,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.status",
-            "line": 1324,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.hourly_rate",
-            "line": 1325,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.last_punch",
-            "line": 1326,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.actions",
-            "line": 1327,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.common.loading",
-            "line": 1336,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.timecard.actions.view_logs",
-            "line": 1419,
+            "key": "detail_hub.timecard.filters.status.all",
+            "line": 1328,
             "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.actions.edit",
-            "line": 1431,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.view_timecard",
-            "line": 1443,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.enroll_face_id",
-            "line": 1456,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.delete_permanently",
-            "line": 1491,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.terminate_employee",
-            "line": 1492,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.confirm_delete_title",
-            "line": 1521,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.confirm_terminate_title",
-            "line": 1522,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.confirm_delete_message",
-            "line": 1527,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.cannot_undo",
-            "line": 1531,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.confirm_terminate_message",
-            "line": 1535,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.can_reactivate",
-            "line": 1539,
-            "exists": false
-          },
-          {
-            "key": "common.cancel",
-            "line": 1546,
-            "exists": true
-          },
-          {
-            "key": "common.processing",
-            "line": 1556,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.delete_permanently",
-            "line": 1559,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.terminate_employee",
-            "line": 1561,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.terminated_employees",
-            "line": 1625,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.terminated_employees_description",
-            "line": 1627,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.no_terminated_employees",
-            "line": 1636,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.terminated",
-            "line": 1652,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.employee_number",
-            "line": 1656,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.employees.role",
-            "line": 1660,
-            "exists": true
           },
           {
             "key": "detail_hub.employees.roles.detailer",
-            "line": 1662,
+            "line": 1329,
             "exists": true
           },
           {
             "key": "detail_hub.employees.roles.car_wash",
-            "line": 1663,
+            "line": 1330,
             "exists": true
           },
           {
             "key": "detail_hub.employees.roles.supervisor",
-            "line": 1664,
+            "line": 1331,
             "exists": true
           },
           {
             "key": "detail_hub.employees.roles.manager",
-            "line": 1665,
+            "line": 1332,
             "exists": true
           },
           {
             "key": "detail_hub.employees.roles.technician",
-            "line": 1666,
+            "line": 1333,
             "exists": true
           },
           {
             "key": "detail_hub.employees.department",
-            "line": 1670,
+            "line": 1340,
             "exists": true
           },
           {
+            "key": "detail_hub.timecard.filters.status.all",
+            "line": 1346,
+            "exists": false
+          },
+          {
             "key": "detail_hub.employees.departments.detail",
-            "line": 1672,
+            "line": 1347,
             "exists": true
           },
           {
             "key": "detail_hub.employees.departments.car_wash",
-            "line": 1673,
+            "line": 1348,
             "exists": true
           },
           {
             "key": "detail_hub.employees.departments.service",
-            "line": 1674,
+            "line": 1349,
             "exists": true
           },
           {
             "key": "detail_hub.employees.departments.management",
-            "line": 1675,
+            "line": 1350,
             "exists": true
           },
           {
-            "key": "common.email",
-            "line": 1680,
+            "key": "detail_hub.employees.employee_list",
+            "line": 1362,
             "exists": true
           },
           {
-            "key": "common.phone",
-            "line": 1686,
+            "key": "detail_hub.employees.employee_details",
+            "line": 1368,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.shift_hours_dealers",
+            "line": 1369,
             "exists": false
           },
           {
-            "key": "detail_hub.employees.reactivate",
-            "line": 1703,
+            "key": "detail_hub.employees.status",
+            "line": 1370,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.hourly_rate",
+            "line": 1371,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.last_punch",
+            "line": 1372,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.actions",
+            "line": 1373,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.common.loading",
+            "line": 1382,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.timecard.actions.view_logs",
+            "line": 1469,
             "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.actions.edit",
+            "line": 1481,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.view_timecard",
+            "line": 1493,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.enroll_face_id",
+            "line": 1506,
+            "exists": true
           },
           {
             "key": "detail_hub.employees.delete_permanently",
-            "line": 1712,
+            "line": 1541,
             "exists": false
           },
           {
-            "key": "detail_hub.employees.confirm_reactivate_title",
-            "line": 1729,
+            "key": "detail_hub.employees.terminate_employee",
+            "line": 1542,
             "exists": false
           },
           {
-            "key": "detail_hub.employees.confirm_reactivate_message",
-            "line": 1732,
+            "key": "detail_hub.employees.confirm_delete_title",
+            "line": 1571,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.confirm_terminate_title",
+            "line": 1572,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.confirm_delete_message",
+            "line": 1577,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.cannot_undo",
+            "line": 1581,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.confirm_terminate_message",
+            "line": 1585,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.can_reactivate",
+            "line": 1589,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 1740,
+            "line": 1596,
             "exists": true
           },
           {
             "key": "common.processing",
-            "line": 1749,
+            "line": 1606,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.delete_permanently",
+            "line": 1609,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.terminate_employee",
+            "line": 1611,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.terminated_employees",
+            "line": 1675,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.terminated_employees_description",
+            "line": 1677,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.no_terminated_employees",
+            "line": 1686,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.terminated",
+            "line": 1702,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.employee_number",
+            "line": 1706,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.role",
+            "line": 1710,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.roles.detailer",
+            "line": 1712,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.roles.car_wash",
+            "line": 1713,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.roles.supervisor",
+            "line": 1714,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.roles.manager",
+            "line": 1715,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.roles.technician",
+            "line": 1716,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.department",
+            "line": 1720,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.departments.detail",
+            "line": 1722,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.departments.car_wash",
+            "line": 1723,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.departments.service",
+            "line": 1724,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.employees.departments.management",
+            "line": 1725,
+            "exists": true
+          },
+          {
+            "key": "common.email",
+            "line": 1730,
+            "exists": true
+          },
+          {
+            "key": "common.phone",
+            "line": 1736,
             "exists": false
           },
           {
             "key": "detail_hub.employees.reactivate",
-            "line": 1752,
+            "line": 1753,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.delete_permanently",
+            "line": 1762,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.confirm_reactivate_title",
+            "line": 1779,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.confirm_reactivate_message",
+            "line": 1782,
+            "exists": false
+          },
+          {
+            "key": "common.cancel",
+            "line": 1790,
+            "exists": true
+          },
+          {
+            "key": "common.processing",
+            "line": 1799,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.reactivate",
+            "line": 1802,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "detail_hub.employees.${status}",
-            "line": 505,
-            "context": "504: <Badge variant={config.variant} className={config.className}>\n505: {t(`detail_hub.employees.${status}`)}\n506: </Badge>"
+            "line": 552,
+            "context": "551: <Badge variant={config.variant} className={config.className}>\n552: {t(`detail_hub.employees.${status}`)}\n553: </Badge>"
           },
           {
             "key": "detail_hub.employees.view_terminated",
-            "line": 545,
-            "context": "544: <Ban className=\"w-4 h-4 mr-2\" />\n545: {t('detail_hub.employees.view_terminated')}\n546: </Button>"
+            "line": 592,
+            "context": "591: <Ban className=\"w-4 h-4 mr-2\" />\n592: {t('detail_hub.employees.view_terminated')}\n593: </Button>"
           },
           {
             "key": "detail_hub.employees.edit_description",
-            "line": 562,
-            "context": "561: {editingEmployee\n562: ? t('detail_hub.employees.edit_description')\n563: : t('detail_hub.employees.add_description')}"
+            "line": 609,
+            "context": "608: {editingEmployee\n609: ? t('detail_hub.employees.edit_description')\n610: : t('detail_hub.employees.add_description')}"
           },
           {
             "key": "detail_hub.employees.add_description",
-            "line": 563,
-            "context": "562: ? t('detail_hub.employees.edit_description')\n563: : t('detail_hub.employees.add_description')}\n564: </DialogDescription>"
+            "line": 610,
+            "context": "609: ? t('detail_hub.employees.edit_description')\n610: : t('detail_hub.employees.add_description')}\n611: </DialogDescription>"
           },
           {
             "key": "common.first_name",
-            "line": 577,
-            "context": "576: <FormItem>\n577: <FormLabel>{t('common.first_name')}</FormLabel>\n578: <FormControl>"
+            "line": 624,
+            "context": "623: <FormItem>\n624: <FormLabel>{t('common.first_name')}</FormLabel>\n625: <FormControl>"
           },
           {
             "key": "common.last_name",
-            "line": 590,
-            "context": "589: <FormItem>\n590: <FormLabel>{t('common.last_name')}</FormLabel>\n591: <FormControl>"
+            "line": 637,
+            "context": "636: <FormItem>\n637: <FormLabel>{t('common.last_name')}</FormLabel>\n638: <FormControl>"
           },
           {
             "key": "common.phone",
-            "line": 625,
-            "context": "624: <FormItem>\n625: <FormLabel>{t('common.phone')}</FormLabel>\n626: <FormControl>"
+            "line": 672,
+            "context": "671: <FormItem>\n672: <FormLabel>{t('common.phone')}</FormLabel>\n673: <FormControl>"
           },
           {
             "key": "detail_hub.employees.kiosk_pin",
-            "line": 787,
-            "context": "786: <Shield className=\"w-4 h-4\" />\n787: {t('detail_hub.employees.kiosk_pin')}\n788: <span className=\"text-destructive\">*</span>"
+            "line": 834,
+            "context": "833: <Shield className=\"w-4 h-4\" />\n834: {t('detail_hub.employees.kiosk_pin')}\n835: <span className=\"text-destructive\">*</span>"
           },
           {
             "key": "detail_hub.employees.kiosk_pin_placeholder",
-            "line": 795,
-            "context": "794: type={showPIN ? \"text\" : \"password\"}\n795: placeholder={t('detail_hub.employees.kiosk_pin_placeholder')}\n796: maxLength={6}"
+            "line": 842,
+            "context": "841: type={showPIN ? \"text\" : \"password\"}\n842: placeholder={t('detail_hub.employees.kiosk_pin_placeholder')}\n843: maxLength={6}"
           },
           {
             "key": "common.hide",
-            "line": 813,
-            "context": "812: className=\"absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded transition-colors\"\n813: title={showPIN ? t('common.hide') : t('common.show')}\n814: >"
+            "line": 860,
+            "context": "859: className=\"absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded transition-colors\"\n860: title={showPIN ? t('common.hide') : t('common.show')}\n861: >"
           },
           {
             "key": "common.show",
-            "line": 813,
-            "context": "812: className=\"absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded transition-colors\"\n813: title={showPIN ? t('common.hide') : t('common.show')}\n814: >"
+            "line": 860,
+            "context": "859: className=\"absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded transition-colors\"\n860: title={showPIN ? t('common.hide') : t('common.show')}\n861: >"
           },
           {
             "key": "detail_hub.employees.generate_pin",
-            "line": 828,
-            "context": "827: className=\"shrink-0\"\n828: title={t('detail_hub.employees.generate_pin')}\n829: >"
+            "line": 875,
+            "context": "874: className=\"shrink-0\"\n875: title={t('detail_hub.employees.generate_pin')}\n876: >"
           },
           {
             "key": "detail_hub.employees.kiosk_pin_help",
-            "line": 834,
-            "context": "833: <p className=\"text-xs text-muted-foreground\">\n834: {t('detail_hub.employees.kiosk_pin_help')}\n835: </p>"
+            "line": 881,
+            "context": "880: <p className=\"text-xs text-muted-foreground\">\n881: {t('detail_hub.employees.kiosk_pin_help')}\n882: </p>"
           },
           {
             "key": "detail_hub.employees.total_employees",
-            "line": 1167,
-            "context": "1166: <div>\n1167: <p className=\"text-sm font-medium text-muted-foreground\">{t('detail_hub.employees.total_employees')}</p>\n1168: <p className=\"text-3xl font-bold text-blue-600\">{employees.length}</p>"
+            "line": 1214,
+            "context": "1213: <div>\n1214: <p className=\"text-sm font-medium text-muted-foreground\">{t('detail_hub.employees.total_employees')}</p>\n1215: <p className=\"text-3xl font-bold text-blue-600\">{employees.length}</p>"
           },
           {
             "key": "detail_hub.employees.departments.title",
-            "line": 1202,
-            "context": "1201: <div>\n1202: <p className=\"text-sm font-medium text-muted-foreground\">{t('detail_hub.employees.departments.title')}</p>\n1203: <p className=\"text-3xl font-bold text-indigo-600\">"
+            "line": 1249,
+            "context": "1248: <div>\n1249: <p className=\"text-sm font-medium text-muted-foreground\">{t('detail_hub.employees.departments.title')}</p>\n1250: <p className=\"text-3xl font-bold text-indigo-600\">"
           },
           {
             "key": "detail_hub.timecard.filters.advanced",
-            "line": 1233,
-            "context": "1232: <Filter className=\"w-4 h-4\" />\n1233: {t('detail_hub.timecard.filters.advanced')}\n1234: {getActiveFiltersCount() > 0 && ("
+            "line": 1280,
+            "context": "1279: <Filter className=\"w-4 h-4\" />\n1280: {t('detail_hub.timecard.filters.advanced')}\n1281: {getActiveFiltersCount() > 0 && ("
           },
           {
             "key": "detail_hub.timecard.filters.clear_filters",
-            "line": 1248,
-            "context": "1247: <X className=\"w-4 h-4\" />\n1248: {t('detail_hub.timecard.filters.clear_filters')}\n1249: </Button>"
+            "line": 1295,
+            "context": "1294: <X className=\"w-4 h-4\" />\n1295: {t('detail_hub.timecard.filters.clear_filters')}\n1296: </Button>"
           },
           {
             "key": "detail_hub.timecard.filters.status.label",
-            "line": 1258,
-            "context": "1257: <div className=\"space-y-2\">\n1258: <Label className=\"text-sm font-medium\">{t('detail_hub.timecard.filters.status.label')}</Label>\n1259: <Select value={selectedStatus} onValueChange={(val) => setFilters({ selectedStatus: val })}>"
+            "line": 1305,
+            "context": "1304: <div className=\"space-y-2\">\n1305: <Label className=\"text-sm font-medium\">{t('detail_hub.timecard.filters.status.label')}</Label>\n1306: <Select value={selectedStatus} onValueChange={(val) => setFilters({ selectedStatus: val })}>"
           },
           {
             "key": "detail_hub.timecard.filters.status.all",
-            "line": 1264,
-            "context": "1263: <SelectContent>\n1264: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.status.all')}</SelectItem>\n1265: <SelectItem value=\"active\">{t('detail_hub.employees.active')}</SelectItem>"
+            "line": 1311,
+            "context": "1310: <SelectContent>\n1311: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.status.all')}</SelectItem>\n1312: <SelectItem value=\"active\">{t('detail_hub.employees.active')}</SelectItem>"
           },
           {
             "key": "detail_hub.timecard.filters.status.all",
-            "line": 1281,
-            "context": "1280: <SelectContent>\n1281: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.status.all')}</SelectItem>\n1282: <SelectItem value=\"detailer\">{t('detail_hub.employees.roles.detailer')}</SelectItem>"
+            "line": 1328,
+            "context": "1327: <SelectContent>\n1328: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.status.all')}</SelectItem>\n1329: <SelectItem value=\"detailer\">{t('detail_hub.employees.roles.detailer')}</SelectItem>"
           },
           {
             "key": "detail_hub.timecard.filters.status.all",
-            "line": 1299,
-            "context": "1298: <SelectContent>\n1299: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.status.all')}</SelectItem>\n1300: <SelectItem value=\"detail\">{t('detail_hub.employees.departments.detail')}</SelectItem>"
+            "line": 1346,
+            "context": "1345: <SelectContent>\n1346: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.status.all')}</SelectItem>\n1347: <SelectItem value=\"detail\">{t('detail_hub.employees.departments.detail')}</SelectItem>"
+          },
+          {
+            "key": "detail_hub.employees.shift_hours_dealers",
+            "line": 1369,
+            "context": "1368: <TableHead>{t('detail_hub.employees.employee_details')}</TableHead>\n1369: <TableHead>{t('detail_hub.employees.shift_hours_dealers')}</TableHead>\n1370: <TableHead>{t('detail_hub.employees.status')}</TableHead>"
           },
           {
             "key": "detail_hub.timecard.actions.view_logs",
-            "line": 1419,
-            "context": "1418: }}\n1419: title={t('detail_hub.timecard.actions.view_logs')}\n1420: className=\"p-1 hover:bg-gray-100 rounded transition-colors\""
+            "line": 1469,
+            "context": "1468: }}\n1469: title={t('detail_hub.timecard.actions.view_logs')}\n1470: className=\"p-1 hover:bg-gray-100 rounded transition-colors\""
           },
           {
             "key": "detail_hub.timecard.actions.edit",
-            "line": 1431,
-            "context": "1430: }}\n1431: title={t('detail_hub.timecard.actions.edit')}\n1432: className=\"p-1 hover:bg-blue-50 rounded transition-colors\""
+            "line": 1481,
+            "context": "1480: }}\n1481: title={t('detail_hub.timecard.actions.edit')}\n1482: className=\"p-1 hover:bg-blue-50 rounded transition-colors\""
           },
           {
             "key": "detail_hub.employees.delete_permanently",
-            "line": 1491,
-            "context": "1490: employee.rawData.status === 'terminated'\n1491: ? t('detail_hub.employees.delete_permanently')\n1492: : t('detail_hub.employees.terminate_employee')"
+            "line": 1541,
+            "context": "1540: employee.rawData.status === 'terminated'\n1541: ? t('detail_hub.employees.delete_permanently')\n1542: : t('detail_hub.employees.terminate_employee')"
           },
           {
             "key": "detail_hub.employees.terminate_employee",
-            "line": 1492,
-            "context": "1491: ? t('detail_hub.employees.delete_permanently')\n1492: : t('detail_hub.employees.terminate_employee')\n1493: }"
+            "line": 1542,
+            "context": "1541: ? t('detail_hub.employees.delete_permanently')\n1542: : t('detail_hub.employees.terminate_employee')\n1543: }"
           },
           {
             "key": "detail_hub.employees.confirm_delete_title",
-            "line": 1521,
-            "context": "1520: {employeeToDelete?.status === 'terminated'\n1521: ? t('detail_hub.employees.confirm_delete_title')\n1522: : t('detail_hub.employees.confirm_terminate_title')}"
+            "line": 1571,
+            "context": "1570: {employeeToDelete?.status === 'terminated'\n1571: ? t('detail_hub.employees.confirm_delete_title')\n1572: : t('detail_hub.employees.confirm_terminate_title')}"
           },
           {
             "key": "detail_hub.employees.confirm_terminate_title",
-            "line": 1522,
-            "context": "1521: ? t('detail_hub.employees.confirm_delete_title')\n1522: : t('detail_hub.employees.confirm_terminate_title')}\n1523: </AlertDialogTitle>"
+            "line": 1572,
+            "context": "1571: ? t('detail_hub.employees.confirm_delete_title')\n1572: : t('detail_hub.employees.confirm_terminate_title')}\n1573: </AlertDialogTitle>"
           },
           {
             "key": "detail_hub.employees.confirm_delete_message",
-            "line": 1527,
-            "context": "1526: <>\n1527: {t('detail_hub.employees.confirm_delete_message')}{' '}\n1528: <strong>"
+            "line": 1577,
+            "context": "1576: <>\n1577: {t('detail_hub.employees.confirm_delete_message')}{' '}\n1578: <strong>"
           },
           {
             "key": "detail_hub.employees.cannot_undo",
-            "line": 1531,
-            "context": "1530: </strong>{' '}\n1531: ({employeeToDelete?.employee_number}). {t('detail_hub.employees.cannot_undo')}\n1532: </>"
+            "line": 1581,
+            "context": "1580: </strong>{' '}\n1581: ({employeeToDelete?.employee_number}). {t('detail_hub.employees.cannot_undo')}\n1582: </>"
           },
           {
             "key": "detail_hub.employees.confirm_terminate_message",
-            "line": 1535,
-            "context": "1534: <>\n1535: {t('detail_hub.employees.confirm_terminate_message')}{' '}\n1536: <strong>"
+            "line": 1585,
+            "context": "1584: <>\n1585: {t('detail_hub.employees.confirm_terminate_message')}{' '}\n1586: <strong>"
           },
           {
             "key": "detail_hub.employees.can_reactivate",
-            "line": 1539,
-            "context": "1538: </strong>{' '}\n1539: ({employeeToDelete?.employee_number}). {t('detail_hub.employees.can_reactivate')}\n1540: </>"
+            "line": 1589,
+            "context": "1588: </strong>{' '}\n1589: ({employeeToDelete?.employee_number}). {t('detail_hub.employees.can_reactivate')}\n1590: </>"
           },
           {
             "key": "common.processing",
-            "line": 1556,
-            "context": "1555: <Clock className=\"w-4 h-4 mr-2 animate-spin\" />\n1556: {t('common.processing')}\n1557: </>"
+            "line": 1606,
+            "context": "1605: <Clock className=\"w-4 h-4 mr-2 animate-spin\" />\n1606: {t('common.processing')}\n1607: </>"
           },
           {
             "key": "detail_hub.employees.delete_permanently",
-            "line": 1559,
-            "context": "1558: ) : employeeToDelete?.status === 'terminated' ? (\n1559: t('detail_hub.employees.delete_permanently')\n1560: ) : ("
+            "line": 1609,
+            "context": "1608: ) : employeeToDelete?.status === 'terminated' ? (\n1609: t('detail_hub.employees.delete_permanently')\n1610: ) : ("
           },
           {
             "key": "detail_hub.employees.terminate_employee",
-            "line": 1561,
-            "context": "1560: ) : (\n1561: t('detail_hub.employees.terminate_employee')\n1562: )}"
+            "line": 1611,
+            "context": "1610: ) : (\n1611: t('detail_hub.employees.terminate_employee')\n1612: )}"
           },
           {
             "key": "detail_hub.employees.terminated_employees",
-            "line": 1625,
-            "context": "1624: <DialogHeader>\n1625: <DialogTitle>{t('detail_hub.employees.terminated_employees')}</DialogTitle>\n1626: <DialogDescription>"
+            "line": 1675,
+            "context": "1674: <DialogHeader>\n1675: <DialogTitle>{t('detail_hub.employees.terminated_employees')}</DialogTitle>\n1676: <DialogDescription>"
           },
           {
             "key": "detail_hub.employees.terminated_employees_description",
-            "line": 1627,
-            "context": "1626: <DialogDescription>\n1627: {t('detail_hub.employees.terminated_employees_description')}\n1628: </DialogDescription>"
+            "line": 1677,
+            "context": "1676: <DialogDescription>\n1677: {t('detail_hub.employees.terminated_employees_description')}\n1678: </DialogDescription>"
           },
           {
             "key": "detail_hub.employees.no_terminated_employees",
-            "line": 1636,
-            "context": "1635: <p className=\"text-lg text-muted-foreground\">\n1636: {t('detail_hub.employees.no_terminated_employees')}\n1637: </p>"
+            "line": 1686,
+            "context": "1685: <p className=\"text-lg text-muted-foreground\">\n1686: {t('detail_hub.employees.no_terminated_employees')}\n1687: </p>"
           },
           {
             "key": "common.phone",
-            "line": 1686,
-            "context": "1685: <div>\n1686: <span className=\"text-muted-foreground\">{t('common.phone')}: </span>\n1687: <span className=\"font-medium\">{employee.phone}</span>"
+            "line": 1736,
+            "context": "1735: <div>\n1736: <span className=\"text-muted-foreground\">{t('common.phone')}: </span>\n1737: <span className=\"font-medium\">{employee.phone}</span>"
           },
           {
             "key": "detail_hub.employees.reactivate",
-            "line": 1703,
-            "context": "1702: <UserCheck className=\"w-4 h-4 mr-2\" />\n1703: {t('detail_hub.employees.reactivate')}\n1704: </Button>"
+            "line": 1753,
+            "context": "1752: <UserCheck className=\"w-4 h-4 mr-2\" />\n1753: {t('detail_hub.employees.reactivate')}\n1754: </Button>"
           },
           {
             "key": "detail_hub.employees.delete_permanently",
-            "line": 1712,
-            "context": "1711: <Trash2 className=\"w-4 h-4 mr-2\" />\n1712: {t('detail_hub.employees.delete_permanently')}\n1713: </Button>"
+            "line": 1762,
+            "context": "1761: <Trash2 className=\"w-4 h-4 mr-2\" />\n1762: {t('detail_hub.employees.delete_permanently')}\n1763: </Button>"
           },
           {
             "key": "detail_hub.employees.confirm_reactivate_title",
-            "line": 1729,
-            "context": "1728: <AlertDialogTitle>\n1729: {t('detail_hub.employees.confirm_reactivate_title')}\n1730: </AlertDialogTitle>"
+            "line": 1779,
+            "context": "1778: <AlertDialogTitle>\n1779: {t('detail_hub.employees.confirm_reactivate_title')}\n1780: </AlertDialogTitle>"
           },
           {
             "key": "detail_hub.employees.confirm_reactivate_message",
-            "line": 1732,
-            "context": "1731: <AlertDialogDescription>\n1732: {t('detail_hub.employees.confirm_reactivate_message')}{' '}\n1733: <strong>"
+            "line": 1782,
+            "context": "1781: <AlertDialogDescription>\n1782: {t('detail_hub.employees.confirm_reactivate_message')}{' '}\n1783: <strong>"
           },
           {
             "key": "common.processing",
-            "line": 1749,
-            "context": "1748: <Clock className=\"w-4 h-4 mr-2 animate-spin\" />\n1749: {t('common.processing')}\n1750: </>"
+            "line": 1799,
+            "context": "1798: <Clock className=\"w-4 h-4 mr-2 animate-spin\" />\n1799: {t('common.processing')}\n1800: </>"
           },
           {
             "key": "detail_hub.employees.reactivate",
-            "line": 1752,
-            "context": "1751: ) : (\n1752: t('detail_hub.employees.reactivate')\n1753: )}"
+            "line": 1802,
+            "context": "1801: ) : (\n1802: t('detail_hub.employees.reactivate')\n1803: )}"
           }
         ],
         "coverage": 84,
@@ -7730,58 +7730,58 @@
         "hardcodedStrings": [
           {
             "text": "Employee can work at multiple dealerships with different schedules",
-            "line": 205,
-            "context": "204: </Select>\n205: <p className=\"text-sm text-gray-500\">\n206: Employee can work at multiple dealerships with different schedules"
+            "line": 209,
+            "context": "208: </Select>\n209: <p className=\"text-sm text-gray-500\">\n210: Employee can work at multiple dealerships with different schedules"
           },
           {
             "text": "Schedule Template",
-            "line": 214,
-            "context": "213: <div className=\"flex items-center gap-2 text-sm font-medium\">\n214: <Clock className=\"h-4 w-4\" />\n215: Schedule Template"
+            "line": 218,
+            "context": "217: <div className=\"flex items-center gap-2 text-sm font-medium\">\n218: <Clock className=\"h-4 w-4\" />\n219: Schedule Template"
           },
           {
             "text": "Shift Start Time",
-            "line": 221,
-            "context": "220: <div className=\"space-y-2\">\n221: <Label htmlFor=\"shift-start\">Shift Start Time</Label>\n222: <Input"
+            "line": 225,
+            "context": "224: <div className=\"space-y-2\">\n225: <Label htmlFor=\"shift-start\">Shift Start Time</Label>\n226: <Input"
           },
           {
             "text": "Shift End Time",
-            "line": 232,
-            "context": "231: <div className=\"space-y-2\">\n232: <Label htmlFor=\"shift-end\">Shift End Time</Label>\n233: <Input"
+            "line": 236,
+            "context": "235: <div className=\"space-y-2\">\n236: <Label htmlFor=\"shift-end\">Shift End Time</Label>\n237: <Input"
           },
           {
             "text": "Employee can work",
-            "line": 311,
-            "context": "310: <AlertDescription>\n311: <strong>Flexible Schedule:</strong> Employee can work <strong>any day</strong> at this\n312: dealership. No day restrictions apply."
+            "line": 315,
+            "context": "314: <AlertDescription>\n315: <strong>Flexible Schedule:</strong> Employee can work <strong>any day</strong> at this\n316: dealership. No day restrictions apply."
           },
           {
             "text": "Cancel",
-            "line": 331,
-            "context": "330: <DialogFooter>\n331: <Button variant=\"outline\" onClick={onClose} disabled={isSubmitting}>\n332: Cancel"
+            "line": 335,
+            "context": "334: <DialogFooter>\n335: <Button variant=\"outline\" onClick={onClose} disabled={isSubmitting}>\n336: Cancel"
           },
           {
             "text": "Select dealership",
-            "line": 190,
-            "context": "189: <SelectTrigger id=\"dealership\">\n190: <SelectValue placeholder=\"Select dealership\" />\n191: </SelectTrigger>"
+            "line": 194,
+            "context": "193: <SelectTrigger id=\"dealership\">\n194: <SelectValue placeholder=\"Select dealership\" />\n195: </SelectTrigger>"
           },
           {
             "text": "Add any notes about this assignment...",
-            "line": 322,
-            "context": "321: id=\"notes\"\n322: placeholder=\"Add any notes about this assignment...\"\n323: value={notes}"
+            "line": 326,
+            "context": "325: id=\"notes\"\n326: placeholder=\"Add any notes about this assignment...\"\n327: value={notes}"
           },
           {
             "text": "Shift Start Time",
-            "line": 221,
-            "context": "220: <div className=\"space-y-2\">\n221: <Label htmlFor=\"shift-start\">Shift Start Time</Label>\n222: <Input"
+            "line": 225,
+            "context": "224: <div className=\"space-y-2\">\n225: <Label htmlFor=\"shift-start\">Shift Start Time</Label>\n226: <Input"
           },
           {
             "text": "Shift End Time",
-            "line": 232,
-            "context": "231: <div className=\"space-y-2\">\n232: <Label htmlFor=\"shift-end\">Shift End Time</Label>\n233: <Input"
+            "line": 236,
+            "context": "235: <div className=\"space-y-2\">\n236: <Label htmlFor=\"shift-end\">Shift End Time</Label>\n237: <Input"
           },
           {
             "text": "Cancel\r\n          ",
-            "line": 331,
-            "context": "330: <DialogFooter>\n331: <Button variant=\"outline\" onClick={onClose} disabled={isSubmitting}>\n332: Cancel"
+            "line": 335,
+            "context": "334: <DialogFooter>\n335: <Button variant=\"outline\" onClick={onClose} disabled={isSubmitting}>\n336: Cancel"
           }
         ],
         "translationCalls": [
@@ -11853,64 +11853,69 @@
         "hardcodedStrings": [
           {
             "text": "Modify role details and permissions for this dealership role",
-            "line": 113,
-            "context": "112: <DialogTitle>Edit Role: {role.display_name}</DialogTitle>\n113: <DialogDescription>\n114: Modify role details and permissions for this dealership role"
+            "line": 126,
+            "context": "125: <DialogTitle className=\"text-xl\">Edit Role: {role.display_name}</DialogTitle>\n126: <DialogDescription className=\"mt-1\">\n127: Modify role details and permissions for this dealership role"
           },
           {
-            "text": "Basic Info",
-            "line": 120,
-            "context": "119: <TabsList className=\"grid w-full grid-cols-2\">\n120: <TabsTrigger value=\"basic\">Basic Info</TabsTrigger>\n121: <TabsTrigger value=\"permissions\">Permissions</TabsTrigger>"
+            "text": "Unsaved changes",
+            "line": 131,
+            "context": "130: {hasBasicInfoChanges && (\n131: <Badge variant=\"outline\" className=\"bg-amber-50 border-amber-200 text-amber-700\">\n132: Unsaved changes"
           },
           {
-            "text": "Permissions",
-            "line": 121,
-            "context": "120: <TabsTrigger value=\"basic\">Basic Info</TabsTrigger>\n121: <TabsTrigger value=\"permissions\">Permissions</TabsTrigger>\n122: </TabsList>"
+            "text": "Basic Information",
+            "line": 146,
+            "context": "145: </div>\n146: <CardTitle className=\"text-lg\">Basic Information</CardTitle>\n147: </div>"
           },
           {
             "text": "Cannot be changed after creation",
-            "line": 139,
-            "context": "138: <Input value={role.role_name} disabled className=\"bg-muted\" />\n139: <p className=\"text-xs text-muted-foreground mt-1\">Cannot be changed after creation</p>\n140: </div>"
+            "line": 171,
+            "context": "170: <p className=\"text-xs text-muted-foreground mt-1.5 flex items-center gap-1\">\n171: <span className=\"inline-block w-1 h-1 bg-gray-400 rounded-full\"></span>\n172: Cannot be changed after creation"
           },
           {
             "text": "Description",
-            "line": 144,
-            "context": "143: <div>\n144: <Label htmlFor=\"description\">Description</Label>\n145: <Textarea"
+            "line": 178,
+            "context": "177: <div>\n178: <Label htmlFor=\"description\" className=\"text-sm font-semibold\">\n179: Description"
+          },
+          {
+            "text": "Module Permissions",
+            "line": 201,
+            "context": "200: <div className=\"flex-1\">\n201: <CardTitle className=\"text-lg\">Module Permissions</CardTitle>\n202: <p className=\"text-sm text-muted-foreground mt-1\">"
+          },
+          {
+            "text": "Configure access levels for each module",
+            "line": 202,
+            "context": "201: <CardTitle className=\"text-lg\">Module Permissions</CardTitle>\n202: <p className=\"text-sm text-muted-foreground mt-1\">\n203: Configure access levels for each module"
           },
           {
             "text": "Brief description of this role",
-            "line": 149,
-            "context": "148: onChange={(e) => setDescription(e.target.value)}\n149: placeholder=\"Brief description of this role's responsibilities\"\n150: rows={3}"
+            "line": 185,
+            "context": "184: onChange={(e) => setDescription(e.target.value)}\n185: placeholder=\"Brief description of this role's responsibilities\"\n186: rows={3}"
           },
           {
-            "text": "Description",
-            "line": 144,
-            "context": "143: <div>\n144: <Label htmlFor=\"description\">Description</Label>\n145: <Textarea"
+            "text": "Description\n                ",
+            "line": 178,
+            "context": "177: <div>\n178: <Label htmlFor=\"description\" className=\"text-sm font-semibold\">\n179: Description"
           }
         ],
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 61,
-            "exists": true
-          },
-          {
-            "key": "common.success",
-            "line": 83,
+            "line": 69,
             "exists": true
           },
           {
             "key": "common.error",
-            "line": 92,
+            "line": 97,
             "exists": true
           },
           {
             "key": "common.cancel",
-            "line": 156,
+            "line": 224,
             "exists": true
           }
         ],
         "missingKeys": [],
-        "coverage": 36,
+        "coverage": 25,
         "severity": "medium"
       },
       {
@@ -16977,71 +16982,6 @@
           }
         ],
         "coverage": 20,
-        "severity": "medium"
-      },
-      {
-        "file": "src\\components\\permissions\\GranularPermissionManager.tsx",
-        "hardcodedStrings": [
-          {
-            "text": "Configure granular permissions for this role",
-            "line": 419,
-            "context": "418: </h3>\n419: <p className=\"text-sm text-muted-foreground\">\n420: Configure granular permissions for this role"
-          },
-          {
-            "text": "Reset",
-            "line": 426,
-            "context": "425: <Button variant=\"outline\" onClick={resetChanges}>\n426: <RotateCcw className=\"h-4 w-4 mr-2\" />\n427: Reset"
-          },
-          {
-            "text": "Administration Permissions",
-            "line": 455,
-            "context": "454: <CardTitle className=\"flex items-center gap-2\">\n455: <Shield className=\"h-5 w-5\" />\n456: Administration Permissions"
-          },
-          {
-            "text": "Dangerous",
-            "line": 490,
-            "context": "489: <Badge variant=\"destructive\" className=\"text-xs\">\n490: <Lock className=\"h-3 w-3 mr-1\" />\n491: Dangerous"
-          },
-          {
-            "text": "Module Permissions",
-            "line": 509,
-            "context": "508: <h4 className=\"text-md font-semibold flex items-center gap-2\">\n509: <Info className=\"h-4 w-4\" />\n510: Module Permissions"
-          },
-          {
-            "text": "Module Disabled",
-            "line": 539,
-            "context": "538: {!isModuleEnabled && dealerId && (\n539: <Badge variant=\"secondary\" className=\"text-xs\">\n540: Module Disabled"
-          }
-        ],
-        "translationCalls": [
-          {
-            "key": "common.error",
-            "line": 112,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 181,
-            "exists": true
-          },
-          {
-            "key": "common.success",
-            "line": 352,
-            "exists": true
-          },
-          {
-            "key": "common.error",
-            "line": 363,
-            "exists": true
-          },
-          {
-            "key": "common.success",
-            "line": 380,
-            "exists": true
-          }
-        ],
-        "missingKeys": [],
-        "coverage": 45,
         "severity": "medium"
       },
       {
@@ -23008,71 +22948,66 @@
             "exists": true
           },
           {
-            "key": "dealer.modules.title",
-            "line": 146,
-            "exists": true
-          },
-          {
             "key": "common.access_denied",
-            "line": 180,
+            "line": 203,
             "exists": true
           },
           {
             "key": "dealer.modules.title",
-            "line": 189,
+            "line": 216,
             "exists": true
           },
           {
             "key": "dealer.modules.description",
-            "line": 192,
+            "line": 218,
             "exists": true
           },
           {
             "key": "dealer.modules.categories.${category.toLowerCase()}",
-            "line": 200,
+            "line": 230,
             "exists": false
           },
           {
             "key": "dealer.modules.names.${module.module}",
-            "line": 217,
+            "line": 255,
             "exists": false
           },
           {
             "key": "common.enabled",
-            "line": 220,
+            "line": 264,
             "exists": true
           },
           {
             "key": "common.disabled",
-            "line": 220,
+            "line": 264,
             "exists": true
           },
           {
             "key": "dealer.modules.descriptions.${config?.description || module.module}",
-            "line": 224,
+            "line": 268,
             "exists": false
           },
           {
             "key": "dealer.modules.enabled_on",
-            "line": 228,
+            "line": 273,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "dealer.modules.categories.${category.toLowerCase()}",
-            "line": 200,
-            "context": "199: <CardHeader>\n200: <CardTitle className=\"text-lg\">{t(`dealer.modules.categories.${category.toLowerCase()}`)}</CardTitle>\n201: </CardHeader>"
+            "line": 230,
+            "context": "229: <CardTitle className=\"text-lg font-bold text-gray-900\">\n230: {t(`dealer.modules.categories.${category.toLowerCase()}`)}\n231: </CardTitle>"
           },
           {
             "key": "dealer.modules.names.${module.module}",
-            "line": 217,
-            "context": "216: <Label className=\"text-sm font-medium\">\n217: {t(`dealer.modules.names.${module.module}`)}\n218: </Label>"
+            "line": 255,
+            "context": "254: <Label className=\"text-sm font-semibold text-gray-900 cursor-pointer\">\n255: {t(`dealer.modules.names.${module.module}`)}\n256: </Label>"
           },
           {
             "key": "dealer.modules.descriptions.${config?.description || module.module}",
-            "line": 224,
-            "context": "223: <p className=\"text-xs text-muted-foreground mt-1\">\n224: {t(`dealer.modules.descriptions.${config?.description || module.module}`)}\n225: </p>"
+            "line": 268,
+            "context": "267: <p className=\"text-sm text-gray-600 mt-1.5 leading-relaxed\">\n268: {t(`dealer.modules.descriptions.${config?.description || module.module}`)}\n269: </p>"
           }
         ],
         "coverage": 100,
@@ -23080,127 +23015,163 @@
       },
       {
         "file": "src\\components\\dealer\\DealerOverview.tsx",
-        "hardcodedStrings": [],
+        "hardcodedStrings": [
+          {
+            "text": "Pending",
+            "line": 322,
+            "context": "321: <p className=\"text-3xl font-bold text-amber-600\">{kpis?.pending_orders || 0}</p>\n322: <Badge className=\"mt-2 bg-amber-100 hover:bg-amber-200 text-amber-700 border-amber-200 text-xs font-semibold\">\n323: Pending"
+          },
+          {
+            "text": "In Progress",
+            "line": 339,
+            "context": "338: <p className=\"text-3xl font-bold text-blue-600\">{kpis?.in_progress_orders || 0}</p>\n339: <Badge className=\"mt-2 bg-blue-100 hover:bg-blue-200 text-blue-700 border-blue-200 text-xs font-semibold\">\n340: In Progress"
+          },
+          {
+            "text": "Completed",
+            "line": 356,
+            "context": "355: <p className=\"text-3xl font-bold text-emerald-600\">{kpis?.completed_orders || 0}</p>\n356: <Badge className=\"mt-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 border-emerald-200 text-xs font-semibold\">\n357: Completed"
+          },
+          {
+            "text": "Cancelled",
+            "line": 373,
+            "context": "372: <p className=\"text-3xl font-bold text-red-600\">{kpis?.cancelled_orders || 0}</p>\n373: <Badge className=\"mt-2 bg-red-100 hover:bg-red-200 text-red-700 border-red-200 text-xs font-semibold\">\n374: Cancelled"
+          }
+        ],
         "translationCalls": [
           {
             "key": "common.error",
-            "line": 76,
-            "exists": true
-          },
-          {
-            "key": "dealer.overview.error_loading_kpis",
             "line": 77,
             "exists": true
           },
           {
+            "key": "dealer.overview.error_loading_kpis",
+            "line": 78,
+            "exists": true
+          },
+          {
+            "key": "dealer.overview.title",
+            "line": 240,
+            "exists": true
+          },
+          {
+            "key": "dealer.overview.subtitle",
+            "line": 242,
+            "exists": false
+          },
+          {
             "key": "dealer.overview.total_orders",
-            "line": 180,
+            "line": 256,
             "exists": true
           },
           {
             "key": "dealer.overview.orders_today",
-            "line": 192,
+            "line": 270,
             "exists": true
           },
           {
             "key": "dealer.overview.avg_sla_hours",
-            "line": 204,
+            "line": 284,
             "exists": true
           },
           {
             "key": "dealer.overview.calculating",
-            "line": 210,
+            "line": 287,
             "exists": true
           },
           {
             "key": "dealer.overview.sla_compliance",
-            "line": 218,
+            "line": 300,
             "exists": true
           },
           {
             "key": "dealer.overview.calculating",
-            "line": 224,
+            "line": 303,
             "exists": true
           },
           {
             "key": "dealer.overview.pending_orders",
-            "line": 235,
+            "line": 319,
             "exists": true
           },
           {
             "key": "dealer.overview.in_progress_orders",
-            "line": 247,
+            "line": 336,
             "exists": true
           },
           {
             "key": "dealer.overview.completed_orders",
-            "line": 259,
+            "line": 353,
             "exists": true
           },
           {
             "key": "dealer.overview.cancelled_orders",
-            "line": 271,
+            "line": 370,
             "exists": true
           },
           {
             "key": "dealer.overview.orders_by_module",
-            "line": 285,
+            "line": 387,
             "exists": true
           },
           {
             "key": "dealer.overview.orders_by_module_desc",
-            "line": 287,
+            "line": 389,
             "exists": false
           },
           {
             "key": "dealer.overview.sales",
-            "line": 298,
+            "line": 399,
             "exists": true
           },
           {
             "key": "dealer.overview.service",
-            "line": 309,
+            "line": 411,
             "exists": true
           },
           {
             "key": "dealer.overview.recon",
-            "line": 320,
+            "line": 423,
             "exists": true
           },
           {
             "key": "dealer.overview.carwash",
-            "line": 331,
+            "line": 435,
             "exists": true
           },
           {
             "key": "dealer.overview.top_services",
-            "line": 341,
+            "line": 447,
             "exists": true
           },
           {
             "key": "dealer.overview.top_services_desc",
-            "line": 343,
+            "line": 449,
             "exists": true
           },
           {
             "key": "dealer.overview.no_services_data",
-            "line": 365,
+            "line": 483,
             "exists": true
           },
           {
             "key": "dealer.overview.no_data",
-            "line": 368,
+            "line": 486,
             "exists": true
           }
         ],
         "missingKeys": [
           {
+            "key": "dealer.overview.subtitle",
+            "line": 242,
+            "context": "241: <p className=\"text-sm text-muted-foreground mt-0.5\">\n242: {t('dealer.overview.subtitle', 'Key metrics and performance indicators')}\n243: </p>"
+          },
+          {
             "key": "dealer.overview.orders_by_module_desc",
-            "line": 287,
-            "context": "286: <CardDescription>\n287: {t('dealer.overview.orders_by_module_desc')}\n288: </CardDescription>"
+            "line": 389,
+            "context": "388: <CardDescription className=\"text-sm\">\n389: {t('dealer.overview.orders_by_module_desc')}\n390: </CardDescription>"
           }
         ],
-        "coverage": 100,
+        "coverage": 86,
         "severity": "low"
       },
       {
@@ -29652,6 +29623,96 @@
             "key": "remote_kiosk_management.stats.total_revoked",
             "line": 72,
             "context": "71: <XCircle className=\"w-3 h-3\" />\n72: <span>{t('remote_kiosk_management.stats.total_revoked')}</span>\n73: </div>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\detail-hub\\ShiftHoursCell.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "detail_hub.employees.no_assignments",
+            "line": 84,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.no_active_assignments",
+            "line": 94,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.flexible_schedule",
+            "line": 133,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.punch_window",
+            "line": 139,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.punch_window",
+            "line": 167,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.multiple_locations",
+            "line": 177,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.all_assignments",
+            "line": 182,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.punch_window",
+            "line": 213,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "detail_hub.employees.no_assignments",
+            "line": 84,
+            "context": "83: <AlertCircle className=\"h-4 w-4\" />\n84: <span className=\"text-sm font-medium\">{t('detail_hub.employees.no_assignments')}</span>\n85: </div>"
+          },
+          {
+            "key": "detail_hub.employees.no_active_assignments",
+            "line": 94,
+            "context": "93: <AlertCircle className=\"h-3 w-3 mr-1\" />\n94: {t('detail_hub.employees.no_active_assignments')}\n95: </Badge>"
+          },
+          {
+            "key": "detail_hub.employees.flexible_schedule",
+            "line": 133,
+            "context": "132: <Badge variant=\"outline\" className=\"text-xs\">\n133: {t('detail_hub.employees.flexible_schedule')}\n134: </Badge>"
+          },
+          {
+            "key": "detail_hub.employees.punch_window",
+            "line": 139,
+            "context": "138: <div className=\"flex items-center gap-1 text-xs text-gray-500 ml-5\">\n139: <span>{t('detail_hub.employees.punch_window')}: {punchWindow}</span>\n140: </div>"
+          },
+          {
+            "key": "detail_hub.employees.punch_window",
+            "line": 167,
+            "context": "166: <div className=\"flex items-center gap-1 text-xs text-gray-500 ml-5\">\n167: <span>{t('detail_hub.employees.punch_window')}: {punchWindow}</span>\n168: </div>"
+          },
+          {
+            "key": "detail_hub.employees.multiple_locations",
+            "line": 177,
+            "context": "176: <Building2 className=\"h-3 w-3 mr-1\" />\n177: {t('detail_hub.employees.multiple_locations', { count: remainingCount })}\n178: </Button>"
+          },
+          {
+            "key": "detail_hub.employees.all_assignments",
+            "line": 182,
+            "context": "181: <div className=\"space-y-3\">\n182: <h4 className=\"font-semibold text-sm\">{t('detail_hub.employees.all_assignments')}</h4>\n183: <div className=\"space-y-2\">"
+          },
+          {
+            "key": "detail_hub.employees.punch_window",
+            "line": 213,
+            "context": "212: <div className=\"text-xs text-gray-500 ml-7\">\n213: {t('detail_hub.employees.punch_window')}: {assignmentPunchWindow}\n214: </div>"
           }
         ],
         "coverage": 100,
@@ -43959,6 +44020,61 @@
           }
         ],
         "coverage": 89,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\permissions\\GranularPermissionManager.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Configure granular permissions for this role",
+            "line": 419,
+            "context": "418: </h3>\n419: <p className=\"text-sm text-muted-foreground\">\n420: Configure granular permissions for this role"
+          },
+          {
+            "text": "Reset",
+            "line": 426,
+            "context": "425: <Button variant=\"outline\" onClick={resetChanges}>\n426: <RotateCcw className=\"h-4 w-4 mr-2\" />\n427: Reset"
+          },
+          {
+            "text": "Module Permissions",
+            "line": 454,
+            "context": "453: <h4 className=\"text-md font-semibold flex items-center gap-2\">\n454: <Info className=\"h-4 w-4\" />\n455: Module Permissions"
+          },
+          {
+            "text": "Module Disabled",
+            "line": 484,
+            "context": "483: {!isModuleEnabled && dealerId && (\n484: <Badge variant=\"secondary\" className=\"text-xs\">\n485: Module Disabled"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "common.error",
+            "line": 112,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 181,
+            "exists": true
+          },
+          {
+            "key": "common.success",
+            "line": 352,
+            "exists": true
+          },
+          {
+            "key": "common.error",
+            "line": 363,
+            "exists": true
+          },
+          {
+            "key": "common.success",
+            "line": 380,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 56,
         "severity": "low"
       },
       {
@@ -71882,11 +71998,11 @@
         "src\\components\\contacts\\ContactDetailModal.tsx",
         "src\\components\\dealerships\\DealershipModal.tsx",
         "src\\components\\detail-hub\\AssignmentModal.tsx",
+        "src\\components\\dealer\\EditRoleModal.tsx",
         "src\\components\\orders\\UnifiedModalTest.tsx",
         "src\\components\\dealer\\CreateRoleModal.tsx",
         "src\\components\\permissions\\RoleAssignmentModal.tsx",
         "src\\components\\admin\\EditAllowedModulesModal.tsx",
-        "src\\components\\dealer\\EditRoleModal.tsx",
         "src\\components\\detail-hub\\FaceEnrollmentModal.tsx",
         "src\\components\\detail-hub\\PunchClockKioskModal.tsx",
         "src\\components\\detail-hub\\TimeClockModal.tsx",
@@ -71937,8 +72053,8 @@
         "src\\components\\detail-hub\\KioskManager.tsx",
         "src\\components\\permissions\\AdvancedPermissionManager.tsx",
         "src\\components\\permissions\\SimplifiedPermissionManager.tsx",
-        "src\\components\\permissions\\GranularPermissionManager.tsx",
         "src\\components\\get-ready\\WorkItemTemplatesManager.tsx",
+        "src\\components\\permissions\\GranularPermissionManager.tsx",
         "src\\components\\settings\\notifications\\NotificationTemplatesManager.tsx",
         "src\\components\\nfc\\NFCTagManager.tsx",
         "src\\components\\nfc\\NFCWorkflowManager.tsx",
@@ -71961,7 +72077,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "456 Component components need translation",
+      "description": "457 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\detail-hub\\InvoiceCenter.BACKUP.tsx",
@@ -72069,6 +72185,7 @@
         "src\\components\\attachments\\AttachmentsList.tsx",
         "src\\components\\chat\\MessageBubble.tsx",
         "src\\components\\chat\\MessageComposer.tsx",
+        "src\\components\\dealer\\DealerOverview.tsx",
         "src\\components\\detail-hub\\DetailHubDashboard.tsx",
         "src\\components\\detail-hub\\PunchClockKiosk.COMPLEX.tsx",
         "src\\components\\detail-hub\\PunchClockKiosk.FULL_FEATURES.tsx",
@@ -72285,7 +72402,6 @@
         "src\\components\\dealer\\DealerGroupManagement.tsx",
         "src\\components\\dealer\\DealerGroups.tsx",
         "src\\components\\dealer\\DealerModules.tsx",
-        "src\\components\\dealer\\DealerOverview.tsx",
         "src\\components\\dealer\\DealerUsers.tsx",
         "src\\components\\dealerships\\DealershipStatsCard.tsx",
         "src\\components\\detail-hub\\AddBreakDialog.tsx",
@@ -72298,6 +72414,7 @@
         "src\\components\\detail-hub\\RemoteKioskTokenCharts.tsx",
         "src\\components\\detail-hub\\RemoteKioskTokenList.tsx",
         "src\\components\\detail-hub\\RemoteKioskTokenStats.tsx",
+        "src\\components\\detail-hub\\ShiftHoursCell.tsx",
         "src\\components\\detail-hub\\WeekStatsCard.tsx",
         "src\\components\\filters\\DealershipFilter.tsx",
         "src\\components\\get-ready\\analytics\\SafeBarChart.tsx",
@@ -72420,14 +72537,14 @@
         "src\\utils\\stockCSVHelpers.ts",
         "src\\utils\\translationAudit.ts"
       ],
-      "estimatedEffort": "228 hours"
+      "estimatedEffort": "229 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3217 translation keys are referenced but missing",
+      "description": "3227 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "161 hours"
+      "estimatedEffort": "162 hours"
     }
   ],
   "coverage": 79

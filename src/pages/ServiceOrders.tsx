@@ -93,6 +93,8 @@ export default function ServiceOrders() {
 
   // Check if user can create service orders
   const canCreate = hasModulePermission('service_orders', 'create_orders');
+  // System admins and supermanagers can always export
+  const canExport = enhancedUser?.is_system_admin || enhancedUser?.is_supermanager || hasModulePermission('service_orders', 'export_data');
 
   // Hook for status permissions and updates
   const { canUpdateStatus, updateOrderStatus } = useStatusPermissions();
@@ -477,7 +479,7 @@ export default function ServiceOrders() {
             onToggleFilters={() => setShowFilters(!showFilters)}
             weekOffset={weekOffset}
             onWeekChange={setWeekOffset}
-            onPrintList={handlePrintList}
+            onPrintList={canExport ? handlePrintList : undefined}
             isPrinting={isPrinting}
             excludeFilters={['dashboard', 'tomorrow']}
           />

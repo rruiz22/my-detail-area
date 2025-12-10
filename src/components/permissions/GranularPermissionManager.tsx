@@ -448,61 +448,6 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
         </Alert>
       )}
 
-      {/* System-Level Permissions */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
-            Administration Permissions
-          </CardTitle>
-          <CardDescription>
-            System-wide permissions that apply across all modules
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {availableSystemPerms.map(perm => {
-              const isChecked = systemPermissions.has(perm.permission_key as SystemPermissionKey);
-              const isDangerous = isDangerousPermission(perm.permission_key as SystemPermissionKey);
-
-              return (
-                <div
-                  key={perm.id}
-                  className={`flex items-start space-x-3 p-3 rounded-lg border-2 transition-colors ${
-                    isChecked ? 'bg-primary/5 border-primary' : 'border-muted hover:border-muted-foreground/50'
-                  }`}
-                >
-                  <Checkbox
-                    id={`sys-${perm.id}`}
-                    checked={isChecked}
-                    onCheckedChange={() => toggleSystemPermission(perm.permission_key as SystemPermissionKey)}
-                  />
-                  <label
-                    htmlFor={`sys-${perm.id}`}
-                    className="flex-1 cursor-pointer"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-sm">
-                        {perm.display_name}
-                      </span>
-                      {isDangerous && (
-                        <Badge variant="destructive" className="text-xs">
-                          <Lock className="h-3 w-3 mr-1" />
-                          Dangerous
-                        </Badge>
-                      )}
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {perm.description}
-                    </p>
-                  </label>
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Module-Specific Permissions */}
       <div className="space-y-4">
         <h4 className="text-md font-semibold flex items-center gap-2">
@@ -520,6 +465,26 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
 
             // Filter by enabled modules
             return hasModuleAccess(module as AppModule);
+          })
+          .sort(([moduleA], [moduleB]) => {
+            // Order modules - put order modules first
+            const orderModules = ['sales_orders', 'service_orders', 'recon_orders', 'car_wash'];
+            const aIsOrder = orderModules.includes(moduleA);
+            const bIsOrder = orderModules.includes(moduleB);
+
+            // Both are order modules, maintain relative order
+            if (aIsOrder && bIsOrder) {
+              return orderModules.indexOf(moduleA) - orderModules.indexOf(moduleB);
+            }
+
+            // Only A is order module, it comes first
+            if (aIsOrder) return -1;
+
+            // Only B is order module, it comes first
+            if (bIsOrder) return 1;
+
+            // Neither are order modules, sort alphabetically
+            return moduleA.localeCompare(moduleB);
           })
           .map(([module, perms]) => {
           const modulePerms = (modulePermissions || {})[module] || new Set();
@@ -588,6 +553,9 @@ export const GranularPermissionManager: React.FC<GranularPermissionManagerProps>
                     .map(permKey => {
                       const perm = perms.find(p => p.permission_key === permKey);
                       if (!perm) return null;
+
+                      // Hide SMS notifications permission (not used)
+                      if (permKey === 'receive_sms_notifications') return null;
 
                       const isChecked = modulePerms.has(permKey);
                       const isDangerous = isDangerousPermission(permKey);

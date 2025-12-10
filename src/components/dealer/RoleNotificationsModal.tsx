@@ -270,60 +270,72 @@ export function RoleNotificationsModal({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Bell className="h-5 w-5" />
-            Notification Settings: {role.display_name}
-          </DialogTitle>
-          <DialogDescription>
-            Configure which notification events this role can receive (Level 2 of 3-level validation)
-          </DialogDescription>
+      <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogHeader className="border-b pb-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-amber-100 rounded-lg">
+              <Bell className="h-6 w-6 text-amber-600" />
+            </div>
+            <div className="flex-1">
+              <DialogTitle className="text-xl">Notification Settings: {role.display_name}</DialogTitle>
+              <DialogDescription className="mt-1">
+                Configure which notification events this role can receive
+              </DialogDescription>
+            </div>
+            {hasUnsavedChanges && (
+              <Badge variant="outline" className="bg-amber-50 border-amber-200 text-amber-700">
+                Unsaved changes
+              </Badge>
+            )}
+          </div>
         </DialogHeader>
 
-        {/* 3-Level Architecture Info */}
-        <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-950/20">
-          <Info className="h-4 w-4 text-blue-600" />
-          <AlertTitle className="text-blue-900 dark:text-blue-100">
-            Level 2: Custom Role Permissions
-          </AlertTitle>
-          <AlertDescription className="text-blue-800 dark:text-blue-200 text-sm">
-            Events enabled here are available to all users with this role. Users must also be followers (Level 1) and enable notifications in their profile (Level 3).
-          </AlertDescription>
-        </Alert>
+        <div className="flex-1 overflow-y-auto px-6 py-6">
+          {/* 3-Level Architecture Info */}
+          <Alert className="mb-6 card-enhanced border-blue-200 bg-blue-50/30">
+            <Info className="h-4 w-4 text-blue-600" />
+            <AlertTitle className="text-blue-900 font-semibold">
+              Level 2: Custom Role Permissions
+            </AlertTitle>
+            <AlertDescription className="text-blue-800 text-sm mt-1">
+              Events enabled here are available to all users with this role. Users must also be followers (Level 1) and enable notifications in their profile (Level 3).
+            </AlertDescription>
+          </Alert>
 
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="text-center space-y-4">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-              <p className="text-muted-foreground">Loading notification events...</p>
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="text-center space-y-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+                <p className="text-muted-foreground">Loading notification events...</p>
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {MODULES.map(module => {
-              const stats = getModuleStats(module.value);
-              const anyEnabled = stats.enabled > 0;
+          ) : (
+            <div className="space-y-4">
+              {MODULES.map(module => {
+                const stats = getModuleStats(module.value);
+                const anyEnabled = stats.enabled > 0;
 
-              return (
-                <Card key={module.value} className="border-2">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className="text-2xl">{module.icon}</span>
-                        <div>
-                          <CardTitle className="text-base">{module.label}</CardTitle>
-                          <CardDescription className="text-xs">
-                            {stats.enabled} of {stats.total} events enabled
-                          </CardDescription>
+                return (
+                  <Card key={module.value} className="card-enhanced border-purple-200 bg-purple-50/30">
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-purple-100 rounded-lg">
+                            <span className="text-2xl">{module.icon}</span>
+                          </div>
+                          <div>
+                            <CardTitle className="text-base font-semibold">{module.label}</CardTitle>
+                            <CardDescription className="text-xs mt-0.5">
+                              {stats.enabled} of {stats.total} events enabled
+                            </CardDescription>
+                          </div>
                         </div>
+                        <Switch
+                          checked={anyEnabled}
+                          onCheckedChange={(checked) => handleToggleModuleEvents(module.value, checked)}
+                        />
                       </div>
-                      <Switch
-                        checked={anyEnabled}
-                        onCheckedChange={(checked) => handleToggleModuleEvents(module.value, checked)}
-                      />
-                    </div>
-                  </CardHeader>
+                    </CardHeader>
                   <CardContent className="space-y-3">
                     {EVENTS.map(event => {
                       const evt = getEvent(module.value, event.value);
@@ -392,25 +404,32 @@ export function RoleNotificationsModal({
                   </CardContent>
                 </Card>
               );
-            })}
+              })}
+            </div>
+          )}
+        </div>
 
-            <Separator />
+        {/* Footer with Actions */}
+        <div className="px-6 pb-4 pt-4 border-t bg-gray-50/50 space-y-3">
+          {/* Unsaved Changes Warning */}
+          {hasUnsavedChanges && (
+            <Alert className="card-enhanced border-amber-200 bg-amber-50/30">
+              <AlertCircle className="h-4 w-4 text-amber-600" />
+              <AlertTitle className="text-amber-900 font-semibold">
+                Unsaved Changes
+              </AlertTitle>
+              <AlertDescription className="text-amber-800 text-sm mt-1">
+                You have modified notification settings. Click "Save" to apply them.
+              </AlertDescription>
+            </Alert>
+          )}
 
-            {/* Unsaved Changes Warning */}
-            {hasUnsavedChanges && (
-              <Alert className="border-amber-200 bg-amber-50 dark:bg-amber-950/20">
-                <AlertCircle className="h-4 w-4 text-amber-600" />
-                <AlertTitle className="text-amber-900 dark:text-amber-100">
-                  Unsaved Changes
-                </AlertTitle>
-                <AlertDescription className="text-amber-800 dark:text-amber-200 text-sm">
-                  You have unsaved changes. Click "Save" to apply them.
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {/* Action Buttons */}
-            <div className="flex justify-end gap-2">
+          {/* Action Buttons */}
+          <div className="flex justify-between items-center">
+            <p className="text-xs text-muted-foreground">
+              Configure which events trigger notifications for this role
+            </p>
+            <div className="flex gap-2">
               <Button
                 variant="outline"
                 onClick={onClose}
@@ -421,13 +440,14 @@ export function RoleNotificationsModal({
               <Button
                 onClick={handleSave}
                 disabled={saving || !hasUnsavedChanges}
+                className="bg-amber-600 hover:bg-amber-700 text-white"
               >
                 <Save className="h-4 w-4 mr-2" />
                 {saving ? 'Saving...' : 'Save Notification Settings'}
               </Button>
             </div>
           </div>
-        )}
+        </div>
       </DialogContent>
     </Dialog>
   );

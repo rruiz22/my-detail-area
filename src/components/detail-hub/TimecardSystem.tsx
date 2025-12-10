@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CalendarIcon, Download, Filter, Clock, User, DollarSign, AlertTriangle, Camera, Image as ImageIcon, Plus, FileText, Edit2, Ban, X, Search, FileSpreadsheet, Trash2, Eye, EyeOff } from "lucide-react";
+import { CalendarIcon, Download, Filter, Clock, User, DollarSign, AlertTriangle, Camera, Image as ImageIcon, Plus, FileText, Edit2, Ban, X, Search, FileSpreadsheet, Trash2, Eye, EyeOff, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
@@ -24,6 +25,7 @@ import { TimeEntryLogsModal } from "./TimeEntryLogsModal";
 import { EditTimeEntryModal } from "./EditTimeEntryModal";
 import { EmployeeTimecardDetailModal } from "./EmployeeTimecardDetailModal";
 import { DisabledEntriesModal } from "./DisabledEntriesModal";
+import { AutoClosedPunchReviewModal } from "./AutoClosedPunchReviewModal";
 import { useTabPersistence } from "@/hooks/useTabPersistence";
 import { useTimecardPersistence, type DateFilter } from "@/hooks/useTimecardPersistence";
 import { exportReportToPDF, exportReportToExcel } from "@/utils/reportExporters";
@@ -35,6 +37,7 @@ import { createTimecardReport, createWeeklySummaryReport, type TimecardEntry, ty
  */
 const TimecardSystem = () => {
   const { t } = useTranslation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // Persisted state with localStorage
   const [activeTab, setActiveTab] = useTabPersistence('detail_hub_timecard', 'daily');
@@ -81,6 +84,10 @@ const TimecardSystem = () => {
     hourlyRate: number;
   } | null>(null);
 
+  // Auto-close review modal state
+  const [showAutoCloseReviewModal, setShowAutoCloseReviewModal] = useState(false);
+  const [autoCloseEntryIdForReview, setAutoCloseEntryIdForReview] = useState<string | null>(null);
+
   // 🔒 PRIVACY: Track which employees have hourly rate visible in weekly summary
   const [visibleSalaries, setVisibleSalaries] = useState<Set<string>>(new Set());
 
@@ -97,6 +104,21 @@ const TimecardSystem = () => {
     map[emp.id] = emp.hourly_rate || 0;
     return map;
   }, {} as Record<string, number>);
+
+  // Handle URL parameter filter=auto_closed
+  useEffect(() => {
+    const filterParam = searchParams.get('filter');
+    if (filterParam === 'auto_closed') {
+      setFilters({
+        ...filters,
+        selectedMethod: 'auto_close',
+        showAdvancedFilters: true,
+      });
+      // Clear the URL parameter after applying
+      searchParams.delete('filter');
+      setSearchParams(searchParams);
+    }
+  }, [searchParams]);
 
   // Get date range based on filter (UTC-aware to prevent timezone issues)
   const getDateRange = () => {
@@ -190,7 +212,8 @@ const TimecardSystem = () => {
       punchOutMethod: entry.punch_out_method,
       status: entry.status === 'active' ? 'Active' :
               entry.status === 'complete' ? 'Complete' :
-              entry.status === 'disputed' ? 'Disputed' : 'Approved'
+              entry.status === 'disputed' ? 'Disputed' : 'Approved',
+      approvalStatus: entry.approval_status || 'pending'
     };
   };
 
@@ -332,6 +355,24 @@ const TimecardSystem = () => {
         return <Badge className="bg-red-100 text-red-800 text-xs py-0">{t('detail_hub.timecard.status_badges.late')}</Badge>;
       default:
         return <Badge variant="secondary" className="text-xs py-0">{status}</Badge>;
+    }
+  };
+
+  // 🎨 VISUAL FEEDBACK: Get table row classes based on approval status
+  const getRowClasses = (status: string, approvalStatus: string) => {
+    // Only apply approval colors for complete entries
+    if (status !== 'Complete') {
+      return 'cursor-pointer hover:bg-gray-50/80 transition-colors';
+    }
+
+    switch (approvalStatus) {
+      case 'approved':
+        return 'bg-emerald-50/50 hover:bg-emerald-50 border-l-4 border-emerald-500 cursor-pointer transition-colors';
+      case 'rejected':
+        return 'bg-red-50/50 hover:bg-red-50 border-l-4 border-red-500 cursor-pointer transition-colors';
+      case 'pending':
+      default:
+        return 'bg-gray-50/30 hover:bg-gray-50 border-l-4 border-gray-300 cursor-pointer transition-colors';
     }
   };
 
@@ -887,7 +928,7 @@ const TimecardSystem = () => {
                             setShowEditModal(true);
                           }
                         }}
-                        className="cursor-pointer hover:bg-gray-50/80 transition-colors"
+                        className={getRowClasses(timecard.status, timecard.approvalStatus)}
                       >
                       <TableCell className="py-2">
                         <div className="leading-tight">
@@ -981,6 +1022,23 @@ const TimecardSystem = () => {
                       <TableCell className="py-2">{getStatusBadge(timecard.status)}</TableCell>
                       <TableCell className="py-1">
                         <div className="flex gap-0.5">
+                          {/* Review button for auto-closed entries */}
+                          {(() => {
+                            const fullEntry = filteredTimeEntries.find(e => e.id === timecard.id);
+                            return fullEntry?.punch_out_method === 'auto_close' && fullEntry?.requires_supervisor_review ? (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setAutoCloseEntryIdForReview(timecard.id);
+                                  setShowAutoCloseReviewModal(true);
+                                }}
+                                title={t('detail_hub.review_now')}
+                                className="p-1 hover:bg-amber-50 rounded transition-colors"
+                              >
+                                <AlertCircle className="w-3 h-3 text-amber-600" />
+                              </button>
+                            ) : null;
+                          })()}
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -1039,7 +1097,7 @@ const TimecardSystem = () => {
                             setShowEditModal(true);
                           }
                         }}
-                        className="cursor-pointer hover:bg-gray-50/80 transition-colors"
+                        className={getRowClasses(timecard.status, timecard.approvalStatus)}
                       >
                       <TableCell className="py-2">
                         <div className="leading-tight">
@@ -1133,6 +1191,23 @@ const TimecardSystem = () => {
                       <TableCell className="py-2">{getStatusBadge(timecard.status)}</TableCell>
                       <TableCell className="py-1">
                         <div className="flex gap-0.5">
+                          {/* Review button for auto-closed entries */}
+                          {(() => {
+                            const fullEntry = filteredTimeEntries.find(e => e.id === timecard.id);
+                            return fullEntry?.punch_out_method === 'auto_close' && fullEntry?.requires_supervisor_review ? (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setAutoCloseEntryIdForReview(timecard.id);
+                                  setShowAutoCloseReviewModal(true);
+                                }}
+                                title={t('detail_hub.review_now')}
+                                className="p-1 hover:bg-amber-50 rounded transition-colors"
+                              >
+                                <AlertCircle className="w-3 h-3 text-amber-600" />
+                              </button>
+                            ) : null;
+                          })()}
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -1225,6 +1300,11 @@ const TimecardSystem = () => {
                         hourlyRate: number;
                         totalPay: number;
                         daysWorked: number;
+                        approvalStatus: 'all_approved' | 'partially_approved' | 'none_approved' | 'pending';
+                        totalEntries: number;
+                        approvedEntries: number;
+                        rejectedEntries: number;
+                        pendingEntries: number;
                       }>();
 
                       filteredTimeEntries.forEach(entry => {
@@ -1241,6 +1321,12 @@ const TimecardSystem = () => {
                           existing.totalHours += entry.total_hours || 0;
                           existing.totalPay += regularPay + overtimePay;
                           existing.daysWorked += 1;
+                          existing.totalEntries += 1;
+
+                          // Track approval status
+                          if (entry.approval_status === 'approved') existing.approvedEntries += 1;
+                          else if (entry.approval_status === 'rejected') existing.rejectedEntries += 1;
+                          else existing.pendingEntries += 1;
                         } else {
                           employeeMap.set(employeeId, {
                             id: employeeId,
@@ -1251,8 +1337,26 @@ const TimecardSystem = () => {
                             totalHours: entry.total_hours || 0,
                             hourlyRate: hourlyRate,
                             totalPay: regularPay + overtimePay,
-                            daysWorked: 1
+                            daysWorked: 1,
+                            approvalStatus: 'pending',
+                            totalEntries: 1,
+                            approvedEntries: entry.approval_status === 'approved' ? 1 : 0,
+                            rejectedEntries: entry.approval_status === 'rejected' ? 1 : 0,
+                            pendingEntries: entry.approval_status === 'pending' ? 1 : 0
                           });
+                        }
+                      });
+
+                      // Calculate approval status for each employee
+                      employeeMap.forEach(emp => {
+                        if (emp.approvedEntries === emp.totalEntries) {
+                          emp.approvalStatus = 'all_approved';
+                        } else if (emp.approvedEntries > 0) {
+                          emp.approvalStatus = 'partially_approved';
+                        } else if (emp.pendingEntries === emp.totalEntries) {
+                          emp.approvalStatus = 'pending';
+                        } else {
+                          emp.approvalStatus = 'none_approved';
                         }
                       });
 
@@ -1271,10 +1375,60 @@ const TimecardSystem = () => {
                         );
                       }
 
-                      return employeeData.map((emp, index) => (
+                      return employeeData.map((emp, index) => {
+                        // Determine background color based on approval status
+                        const getRowClasses = () => {
+                          switch (emp.approvalStatus) {
+                            case 'all_approved':
+                              return 'bg-emerald-50/50 hover:bg-emerald-50 border-l-4 border-emerald-500';
+                            case 'partially_approved':
+                              return 'bg-amber-50/50 hover:bg-amber-50 border-l-4 border-amber-500';
+                            case 'none_approved':
+                              return 'bg-red-50/50 hover:bg-red-50 border-l-4 border-red-500';
+                            case 'pending':
+                            default:
+                              return 'bg-gray-50/50 hover:bg-gray-100 border-l-4 border-gray-300';
+                          }
+                        };
+
+                        // Get approval badge
+                        const getApprovalBadge = () => {
+                          switch (emp.approvalStatus) {
+                            case 'all_approved':
+                              return (
+                                <Badge className="bg-emerald-100 text-emerald-800 border-emerald-300 ml-2">
+                                  <CheckCircle2 className="w-3 h-3 mr-1" />
+                                  Approved
+                                </Badge>
+                              );
+                            case 'partially_approved':
+                              return (
+                                <Badge className="bg-amber-100 text-amber-800 border-amber-300 ml-2">
+                                  <Clock className="w-3 h-3 mr-1" />
+                                  {emp.approvedEntries}/{emp.totalEntries} Approved
+                                </Badge>
+                              );
+                            case 'pending':
+                              return (
+                                <Badge className="bg-gray-100 text-gray-700 border-gray-300 ml-2">
+                                  <Clock className="w-3 h-3 mr-1" />
+                                  Pending
+                                </Badge>
+                              );
+                            case 'none_approved':
+                              return (
+                                <Badge className="bg-red-100 text-red-800 border-red-300 ml-2">
+                                  <XCircle className="w-3 h-3 mr-1" />
+                                  Not Approved
+                                </Badge>
+                              );
+                          }
+                        };
+
+                        return (
                         <TableRow
                           key={emp.id}
-                          className="hover:bg-gray-50 cursor-pointer"
+                          className={`cursor-pointer transition-colors ${getRowClasses()}`}
                           onDoubleClick={() => {
                             setSelectedEmployeeForDetail({
                               id: emp.id,
@@ -1287,9 +1441,12 @@ const TimecardSystem = () => {
                           title="Double-click to view employee details"
                         >
                           <TableCell>
-                            <div>
-                              <p className="font-medium">{emp.name}</p>
-                              <p className="text-sm text-muted-foreground">{emp.employeeNumber}</p>
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="font-medium">{emp.name}</p>
+                                <p className="text-sm text-muted-foreground">{emp.employeeNumber}</p>
+                              </div>
+                              {getApprovalBadge()}
                             </div>
                           </TableCell>
                           <TableCell className="text-right">
@@ -1345,7 +1502,8 @@ const TimecardSystem = () => {
                             ${emp.totalPay.toFixed(2)}
                           </TableCell>
                         </TableRow>
-                      ));
+                      );
+                      });
                     })()}
                     {/* Totals Row */}
                     {filteredTimeEntries.length > 0 && (
@@ -1414,6 +1572,16 @@ const TimecardSystem = () => {
         onEntriesDeleted={() => {
           // Refresh time entries after deletion
           // This will be handled by TanStack Query refetch
+        }}
+      />
+
+      {/* Auto-Closed Punch Review Modal */}
+      <AutoClosedPunchReviewModal
+        timeEntryId={autoCloseEntryIdForReview}
+        isOpen={showAutoCloseReviewModal}
+        onClose={() => {
+          setShowAutoCloseReviewModal(false);
+          setAutoCloseEntryIdForReview(null);
         }}
       />
 

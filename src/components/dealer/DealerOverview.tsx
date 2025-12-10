@@ -173,13 +173,15 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
         {/* Loading KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {[...Array(4)].map((_, i) => (
-            <Card key={i} className="animate-pulse border-l-4">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                <div className="w-24 h-4 bg-muted rounded"></div>
-                <div className="w-10 h-10 bg-muted rounded-lg"></div>
-              </CardHeader>
-              <CardContent>
-                <div className="w-16 h-8 bg-muted rounded"></div>
+            <Card key={i} className="card-enhanced animate-pulse">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="w-24 h-4 bg-muted rounded mb-2"></div>
+                    <div className="w-16 h-8 bg-muted rounded"></div>
+                  </div>
+                  <div className="w-10 h-10 bg-muted rounded"></div>
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -188,14 +190,16 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
         {/* Loading Status Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {[...Array(4)].map((_, i) => (
-            <Card key={i} className="animate-pulse border-l-4">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                <div className="w-24 h-4 bg-muted rounded"></div>
-                <div className="w-10 h-10 bg-muted rounded-lg"></div>
-              </CardHeader>
-              <CardContent>
-                <div className="w-16 h-8 bg-muted rounded mb-2"></div>
-                <div className="w-20 h-5 bg-muted rounded"></div>
+            <Card key={i} className="card-enhanced animate-pulse">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="w-24 h-4 bg-muted rounded mb-2"></div>
+                    <div className="w-16 h-8 bg-muted rounded mb-2"></div>
+                    <div className="w-20 h-5 bg-muted rounded"></div>
+                  </div>
+                  <div className="w-10 h-10 bg-muted rounded"></div>
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -244,62 +248,62 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <Card className="hover:shadow-md transition-shadow border-l-4 border-l-blue-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">
-              {t('dealer.overview.total_orders')}
-            </CardTitle>
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <TrendingUp className="h-5 w-5 text-blue-600" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{kpis?.total_orders || 0}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow border-l-4 border-l-emerald-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">
-              {t('dealer.overview.orders_today')}
-            </CardTitle>
-            <div className="p-2 bg-emerald-100 rounded-lg">
-              <Calendar className="h-5 w-5 text-emerald-600" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{kpis?.orders_today || 0}</div>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow border-l-4 border-l-amber-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">
-              {t('dealer.overview.avg_sla_hours')}
-            </CardTitle>
-            <div className="p-2 bg-amber-100 rounded-lg">
-              <Clock className="h-5 w-5 text-amber-600" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">
-              {kpis?.avg_sla_hours ? `${Math.round(kpis.avg_sla_hours)}h` : <span className="text-xl text-gray-500">{t('dealer.overview.calculating')}</span>}
+        <Card className="card-enhanced border-blue-200 bg-blue-50/30">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {t('dealer.overview.total_orders')}
+                </p>
+                <p className="text-3xl font-bold text-blue-600">{kpis?.total_orders || 0}</p>
+              </div>
+              <TrendingUp className="w-10 h-10 text-blue-600" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-md transition-shadow border-l-4 border-l-purple-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">
-              {t('dealer.overview.sla_compliance')}
-            </CardTitle>
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <CheckCircle className="h-5 w-5 text-purple-600" />
+        <Card className="card-enhanced border-emerald-200 bg-emerald-50/30">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {t('dealer.overview.orders_today')}
+                </p>
+                <p className="text-3xl font-bold text-emerald-600">{kpis?.orders_today || 0}</p>
+              </div>
+              <Calendar className="w-10 h-10 text-emerald-600" />
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">
-              {kpis?.sla_compliance_rate ? `${Math.round(kpis.sla_compliance_rate)}%` : <span className="text-xl text-gray-500">{t('dealer.overview.calculating')}</span>}
+          </CardContent>
+        </Card>
+
+        <Card className="card-enhanced border-amber-200 bg-amber-50/30">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {t('dealer.overview.avg_sla_hours')}
+                </p>
+                <p className="text-3xl font-bold text-amber-600">
+                  {kpis?.avg_sla_hours ? `${Math.round(kpis.avg_sla_hours)}h` : t('dealer.overview.calculating')}
+                </p>
+              </div>
+              <Clock className="w-10 h-10 text-amber-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="card-enhanced border-purple-200 bg-purple-50/30">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {t('dealer.overview.sla_compliance')}
+                </p>
+                <p className="text-3xl font-bold text-purple-600">
+                  {kpis?.sla_compliance_rate ? `${Math.round(kpis.sla_compliance_rate)}%` : t('dealer.overview.calculating')}
+                </p>
+              </div>
+              <CheckCircle className="w-10 h-10 text-purple-600" />
             </div>
           </CardContent>
         </Card>
@@ -307,71 +311,71 @@ export const DealerOverview: React.FC<DealerOverviewProps> = ({ dealerId }) => {
 
       {/* Order Status Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <Card className="hover:shadow-md transition-shadow border-l-4 border-l-amber-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">
-              {t('dealer.overview.pending_orders')}
-            </CardTitle>
-            <div className="p-2 bg-amber-100 rounded-lg">
-              <AlertCircle className="h-5 w-5 text-amber-600" />
+        <Card className="card-enhanced border-amber-200 bg-amber-50/30">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {t('dealer.overview.pending_orders')}
+                </p>
+                <p className="text-3xl font-bold text-amber-600">{kpis?.pending_orders || 0}</p>
+                <Badge className="mt-2 bg-amber-100 hover:bg-amber-200 text-amber-700 border-amber-200 text-xs font-semibold">
+                  Pending
+                </Badge>
+              </div>
+              <AlertCircle className="w-10 h-10 text-amber-600" />
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{kpis?.pending_orders || 0}</div>
-            <Badge className="mt-2 bg-amber-100 hover:bg-amber-200 text-amber-700 border-amber-200 text-xs font-semibold">
-              Pending
-            </Badge>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-md transition-shadow border-l-4 border-l-blue-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">
-              {t('dealer.overview.in_progress_orders')}
-            </CardTitle>
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <Clock className="h-5 w-5 text-blue-600" />
+        <Card className="card-enhanced border-blue-200 bg-blue-50/30">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {t('dealer.overview.in_progress_orders')}
+                </p>
+                <p className="text-3xl font-bold text-blue-600">{kpis?.in_progress_orders || 0}</p>
+                <Badge className="mt-2 bg-blue-100 hover:bg-blue-200 text-blue-700 border-blue-200 text-xs font-semibold">
+                  In Progress
+                </Badge>
+              </div>
+              <Clock className="w-10 h-10 text-blue-600" />
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{kpis?.in_progress_orders || 0}</div>
-            <Badge className="mt-2 bg-blue-100 hover:bg-blue-200 text-blue-700 border-blue-200 text-xs font-semibold">
-              In Progress
-            </Badge>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-md transition-shadow border-l-4 border-l-emerald-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">
-              {t('dealer.overview.completed_orders')}
-            </CardTitle>
-            <div className="p-2 bg-emerald-100 rounded-lg">
-              <CheckCircle className="h-5 w-5 text-emerald-600" />
+        <Card className="card-enhanced border-emerald-200 bg-emerald-50/30">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {t('dealer.overview.completed_orders')}
+                </p>
+                <p className="text-3xl font-bold text-emerald-600">{kpis?.completed_orders || 0}</p>
+                <Badge className="mt-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 border-emerald-200 text-xs font-semibold">
+                  Completed
+                </Badge>
+              </div>
+              <CheckCircle className="w-10 h-10 text-emerald-600" />
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{kpis?.completed_orders || 0}</div>
-            <Badge className="mt-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 border-emerald-200 text-xs font-semibold">
-              Completed
-            </Badge>
           </CardContent>
         </Card>
 
-        <Card className="hover:shadow-md transition-shadow border-l-4 border-l-red-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-gray-700">
-              {t('dealer.overview.cancelled_orders')}
-            </CardTitle>
-            <div className="p-2 bg-red-100 rounded-lg">
-              <XCircle className="h-5 w-5 text-red-600" />
+        <Card className="card-enhanced border-red-200 bg-red-50/30">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {t('dealer.overview.cancelled_orders')}
+                </p>
+                <p className="text-3xl font-bold text-red-600">{kpis?.cancelled_orders || 0}</p>
+                <Badge className="mt-2 bg-red-100 hover:bg-red-200 text-red-700 border-red-200 text-xs font-semibold">
+                  Cancelled
+                </Badge>
+              </div>
+              <XCircle className="w-10 h-10 text-red-600" />
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{kpis?.cancelled_orders || 0}</div>
-            <Badge className="mt-2 bg-red-100 hover:bg-red-200 text-red-700 border-red-200 text-xs font-semibold">
-              Cancelled
-            </Badge>
           </CardContent>
         </Card>
       </div>

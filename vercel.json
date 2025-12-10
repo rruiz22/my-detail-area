@@ -4,5 +4,9 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "crons": [{
+    "path": "/api/cron/auto-close-punches",
+    "schedule": "*/15 * * * *"
+  }]
 }

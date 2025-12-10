@@ -255,7 +255,8 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
                       setSelectedRole(role);
                       setShowNotificationsModal(true);
                     }}
-                    title="Configure SMS/Email Notifications"
+                    title="Configure Notification Settings"
+                    className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
                   >
                     <Bell className="h-4 w-4" />
                   </Button>
@@ -267,6 +268,7 @@ export const DealerRoles: React.FC<DealerRolesProps> = ({ dealerId }) => {
                       setShowEditModal(true);
                     }}
                     title={t('common.edit')}
+                    className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                   >
                     <Edit className="h-4 w-4" />
                   </Button>

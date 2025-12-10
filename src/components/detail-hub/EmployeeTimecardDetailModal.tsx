@@ -15,10 +15,32 @@ import {
   ImageIcon,
   User,
   Eye,
-  EyeOff
+  EyeOff,
+  CheckCircle2,
+  XCircle
 } from "lucide-react";
 import { format } from "date-fns";
-import { TimeEntryWithEmployee } from "@/hooks/useDetailHubDatabase";
+import {
+  TimeEntryWithEmployee,
+  useApproveTimecard,
+  useRejectTimecard,
+  useBulkApproveTimecards
+} from "@/hooks/useDetailHubDatabase";
+import { usePermissions } from "@/hooks/usePermissions";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { EditTimeEntryModal } from "./EditTimeEntryModal";
+import { toast } from "sonner";
 
 interface EmployeeTimecardDetailModalProps {
   open: boolean;
@@ -55,9 +77,27 @@ export function EmployeeTimecardDetailModal({
   onPhotoClick
 }: EmployeeTimecardDetailModalProps) {
   const { t } = useTranslation();
+  const { enhancedUser } = usePermissions();
 
   // 🔒 PRIVACY: Track if hourly rate is visible
   const [showHourlyRate, setShowHourlyRate] = useState(false);
+
+  // ⚙️ APPROVAL SYSTEM: Hooks and state
+  const approveTimecard = useApproveTimecard();
+  const rejectTimecard = useRejectTimecard();
+  const bulkApproveTimecards = useBulkApproveTimecards();
+
+  const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
+  const [timeEntryToReject, setTimeEntryToReject] = useState<string | null>(null);
+  const [rejectionReason, setRejectionReason] = useState("");
+
+  // ✏️ EDIT SYSTEM: State for edit modal
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedTimeEntryForEdit, setSelectedTimeEntryForEdit] = useState<TimeEntryWithEmployee | null>(null);
+
+  // 🔐 PERMISSION CHECK: Only system_admin and supermanager can approve/edit timecards
+  const canApprove = enhancedUser?.is_system_admin || enhancedUser?.is_supermanager;
+  const canEdit = enhancedUser?.is_system_admin || enhancedUser?.is_supermanager;
 
   // Calculate employee statistics
   const stats = useMemo(() => {
@@ -113,19 +153,107 @@ export function EmployeeTimecardDetailModal({
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "complete":
-        return <Badge className="bg-green-100 text-green-800">{t('detail_hub.timecard.status_badges.complete')}</Badge>;
+        return <Badge className="bg-green-100 text-green-800 text-xs py-0.5 px-2">{t('detail_hub.timecard.status_badges.complete')}</Badge>;
       case "active":
-        return <Badge className="bg-blue-100 text-blue-800">{t('detail_hub.timecard.status_badges.active')}</Badge>;
+        return <Badge className="bg-blue-100 text-blue-800 text-xs py-0.5 px-2">{t('detail_hub.timecard.status_badges.active')}</Badge>;
       case "disputed":
-        return <Badge className="bg-orange-100 text-orange-800">{t('detail_hub.timecard.filters.status.disputed')}</Badge>;
+        return <Badge className="bg-orange-100 text-orange-800 text-xs py-0.5 px-2">{t('detail_hub.timecard.filters.status.disputed')}</Badge>;
       case "approved":
-        return <Badge className="bg-emerald-100 text-emerald-800">{t('detail_hub.timecard.filters.status.approved')}</Badge>;
+        return <Badge className="bg-emerald-100 text-emerald-800 text-xs py-0.5 px-2">{t('detail_hub.timecard.filters.status.approved')}</Badge>;
       default:
-        return <Badge variant="secondary">{status}</Badge>;
+        return <Badge variant="secondary" className="text-xs py-0.5 px-2">{status}</Badge>;
+    }
+  };
+
+  // Helper: Get approval status badge
+  const getApprovalBadge = (approvalStatus: 'pending' | 'approved' | 'rejected') => {
+    switch (approvalStatus) {
+      case "approved":
+        return (
+          <Badge className="bg-emerald-100 text-emerald-800 border-emerald-300 text-xs py-0.5 px-2">
+            <CheckCircle2 className="w-3 h-3 mr-1" />
+            {t('detail_hub.timecard.approval.status.approved')}
+          </Badge>
+        );
+      case "rejected":
+        return (
+          <Badge className="bg-red-100 text-red-800 border-red-300 text-xs py-0.5 px-2">
+            <XCircle className="w-3 h-3 mr-1" />
+            {t('detail_hub.timecard.approval.status.rejected')}
+          </Badge>
+        );
+      case "pending":
+      default:
+        return (
+          <Badge className="bg-amber-100 text-amber-800 border-amber-300 text-xs py-0.5 px-2">
+            <Clock className="w-3 h-3 mr-1" />
+            {t('detail_hub.timecard.approval.status.pending')}
+          </Badge>
+        );
+    }
+  };
+
+  // ⚙️ APPROVAL HANDLERS
+  const handleApprove = (timeEntryId: string) => {
+    approveTimecard.mutate(timeEntryId);
+  };
+
+  const handleRejectClick = (timeEntryId: string) => {
+    setTimeEntryToReject(timeEntryId);
+    setRejectionReason("");
+    setRejectDialogOpen(true);
+  };
+
+  const handleRejectConfirm = () => {
+    if (!timeEntryToReject || !rejectionReason.trim()) {
+      return;
+    }
+
+    rejectTimecard.mutate({
+      timeEntryId: timeEntryToReject,
+      reason: rejectionReason.trim()
+    });
+
+    setRejectDialogOpen(false);
+    setTimeEntryToReject(null);
+    setRejectionReason("");
+  };
+
+  const handleBulkApprove = () => {
+    const pendingEntries = timeEntries
+      .filter(entry => entry.approval_status === 'pending')
+      .map(entry => entry.id);
+
+    if (pendingEntries.length > 0) {
+      bulkApproveTimecards.mutate(pendingEntries);
+    }
+  };
+
+  // ✏️ EDIT HANDLER
+  const handleEditEntry = (entry: TimeEntryWithEmployee) => {
+    if (!canEdit) {
+      toast.error(t('detail_hub.timecard.edit.permission_denied') || "Only admins can edit timecards");
+      return;
+    }
+    setSelectedTimeEntryForEdit(entry);
+    setShowEditModal(true);
+  };
+
+  // 🎨 VISUAL FEEDBACK: Get card classes based on approval status
+  const getEntryCardClasses = (approvalStatus: 'pending' | 'approved' | 'rejected') => {
+    switch (approvalStatus) {
+      case 'approved':
+        return 'bg-emerald-50/50 hover:bg-emerald-50 border-l-4 border-emerald-500';
+      case 'rejected':
+        return 'bg-red-50/50 hover:bg-red-50 border-l-4 border-red-500';
+      case 'pending':
+      default:
+        return 'bg-gray-50/30 hover:bg-gray-50 border-l-4 border-gray-300';
     }
   };
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
@@ -244,12 +372,18 @@ export function EmployeeTimecardDetailModal({
                 const dailyPay = (entry.regular_hours || 0) * hourlyRate + (entry.overtime_hours || 0) * hourlyRate * 1.5;
 
                 return (
-                  <Card key={entry.id} className="card-enhanced hover:shadow-md transition-shadow">
+                  <Card
+                    key={entry.id}
+                    className={`card-enhanced hover:shadow-md transition-all cursor-pointer ${entry.status === 'complete' ? getEntryCardClasses(entry.approval_status) : 'border-l-4 border-gray-300'}`}
+                    onDoubleClick={() => handleEditEntry(entry)}
+                    title={canEdit ? t('detail_hub.timecard.edit.double_click_hint') || "Double-click to edit (Admin only)" : ""}
+                  >
                     <CardContent className="p-4">
-                      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-                        {/* Date Badge */}
-                        <div className="flex items-center gap-3">
-                          <div className="w-14 h-14 rounded-lg bg-blue-50 flex flex-col items-center justify-center border-2 border-blue-200">
+                      <div className="flex items-center justify-between gap-4">
+                        {/* Left Section: Date + Time Details */}
+                        <div className="flex items-center gap-3 flex-1">
+                          {/* Date Badge */}
+                          <div className="w-14 h-14 rounded-lg bg-blue-50 flex flex-col items-center justify-center border-2 border-blue-200 flex-shrink-0">
                             <p className="text-xs font-medium text-blue-600 uppercase">
                               {format(clockInDate, 'MMM')}
                             </p>
@@ -259,15 +393,15 @@ export function EmployeeTimecardDetailModal({
                           </div>
 
                           {/* Time Details Grid */}
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm flex-1">
                             {/* Clock In with Photo */}
                             <div>
-                              <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
+                              <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1.5 flex items-center gap-1 font-medium">
+                                <Clock className="w-3.5 h-3.5" />
                                 {t('detail_hub.timecard.employee_detail.breakdown.clock_in')}
                               </p>
                               <div className="flex items-center gap-2">
-                                <p className="font-medium">{formatTime(entry.clock_in)}</p>
+                                <p className="text-base font-semibold text-gray-900">{formatTime(entry.clock_in)}</p>
                                 {entry.photo_in_url ? (
                                   <button
                                     onClick={() => onPhotoClick?.({
@@ -285,12 +419,12 @@ export function EmployeeTimecardDetailModal({
                                     <img
                                       src={entry.photo_in_url}
                                       alt="In"
-                                      className="w-6 h-6 rounded object-cover border border-green-500 hover:border-green-600 transition-all cursor-pointer"
+                                      className="w-12 h-12 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer hover:scale-105"
                                     />
                                   </button>
                                 ) : (
-                                  <div className="w-6 h-6 rounded bg-gray-100 border border-gray-200 flex items-center justify-center">
-                                    <Camera className="w-3 h-3 text-gray-300" />
+                                  <div className="w-12 h-12 rounded bg-gray-100 border border-gray-200 flex items-center justify-center">
+                                    <Camera className="w-5 h-5 text-gray-300" />
                                   </div>
                                 )}
                               </div>
@@ -298,12 +432,12 @@ export function EmployeeTimecardDetailModal({
 
                             {/* Clock Out with Photo */}
                             <div>
-                              <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
+                              <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1.5 flex items-center gap-1 font-medium">
+                                <Clock className="w-3.5 h-3.5" />
                                 {t('detail_hub.timecard.employee_detail.breakdown.clock_out')}
                               </p>
                               <div className="flex items-center gap-2">
-                                <p className="font-medium">{formatTime(entry.clock_out)}</p>
+                                <p className="text-base font-semibold text-gray-900">{formatTime(entry.clock_out)}</p>
                                 {entry.photo_out_url ? (
                                   <button
                                     onClick={() => onPhotoClick?.({
@@ -321,12 +455,12 @@ export function EmployeeTimecardDetailModal({
                                     <img
                                       src={entry.photo_out_url}
                                       alt="Out"
-                                      className="w-6 h-6 rounded object-cover border border-red-500 hover:border-red-600 transition-all cursor-pointer"
+                                      className="w-12 h-12 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer hover:scale-105"
                                     />
                                   </button>
                                 ) : (
-                                  <div className="w-6 h-6 rounded bg-gray-100 border border-gray-200 flex items-center justify-center">
-                                    <Camera className="w-3 h-3 text-gray-300" />
+                                  <div className="w-12 h-12 rounded bg-gray-100 border border-gray-200 flex items-center justify-center">
+                                    <Camera className="w-5 h-5 text-gray-300" />
                                   </div>
                                 )}
                               </div>
@@ -334,11 +468,11 @@ export function EmployeeTimecardDetailModal({
 
                             {/* Break */}
                             <div>
-                              <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
-                                <Coffee className="w-3 h-3" />
+                              <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1.5 flex items-center gap-1 font-medium">
+                                <Coffee className="w-3.5 h-3.5" />
                                 {t('detail_hub.timecard.employee_detail.breakdown.break_time')}
                               </p>
-                              <p className="font-medium">
+                              <p className="text-base font-semibold text-gray-900">
                                 {entry.break_duration_minutes > 0
                                   ? `${entry.break_duration_minutes} min`
                                   : '--'
@@ -348,35 +482,80 @@ export function EmployeeTimecardDetailModal({
 
                             {/* Total Hours */}
                             <div>
-                              <p className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
+                              <p className="text-[11px] uppercase tracking-wide text-muted-foreground mb-1.5 flex items-center gap-1 font-medium">
+                                <Clock className="w-3.5 h-3.5" />
                                 {t('detail_hub.timecard.employee_detail.breakdown.total_hours')}
                               </p>
-                              <p className="font-semibold text-blue-600">
+                              <p className="text-lg font-bold text-blue-600">
                                 {(entry.total_hours || 0).toFixed(2)}h
                                 {entry.overtime_hours > 0 && (
-                                  <span className="text-xs text-orange-600 ml-1">
+                                  <span className="text-sm text-orange-600 ml-1 font-semibold">
                                     (+{entry.overtime_hours.toFixed(2)} OT)
                                   </span>
                                 )}
                               </p>
+                              {/* Status Badge */}
+                              <div className="mt-2">
+                                {getStatusBadge(entry.status)}
+                              </div>
                             </div>
                           </div>
                         </div>
 
-                        {/* Status & Daily Pay */}
-                        <div className="flex items-center gap-3 ml-auto">
-                          {getStatusBadge(entry.status)}
+                        {/* Approval Buttons (vertical stack) */}
+                        {canApprove && entry.status === 'complete' && entry.approval_status === 'pending' && (
+                          <div className="flex flex-col gap-1.5 flex-shrink-0">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-300 h-8 px-3 text-xs"
+                              onClick={() => handleApprove(entry.id)}
+                              disabled={approveTimecard.isPending}
+                            >
+                              <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                              {t('detail_hub.timecard.approval.buttons.approve')}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="bg-red-50 hover:bg-red-100 text-red-700 border-red-300 h-8 px-3 text-xs"
+                              onClick={() => handleRejectClick(entry.id)}
+                              disabled={rejectTimecard.isPending}
+                            >
+                              <XCircle className="w-3.5 h-3.5 mr-1" />
+                              {t('detail_hub.timecard.approval.buttons.reject')}
+                            </Button>
+                          </div>
+                        )}
+
+                        {/* Right Section: Approval Status & Daily Pay */}
+                        <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                          {/* Approval Badge Only */}
+                          {entry.status === 'complete' && (
+                            <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                              {getApprovalBadge(entry.approval_status)}
+                            </div>
+                          )}
+
+                          {/* Daily Pay */}
                           <div className="text-right">
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-[11px] uppercase tracking-wide text-muted-foreground font-medium">
                               {t('detail_hub.timecard.employee_detail.breakdown.daily_pay')}
                             </p>
-                            <p className="text-lg font-semibold text-green-600">
+                            <p className="text-xl font-bold text-green-600">
                               ${dailyPay.toFixed(2)}
                             </p>
                           </div>
                         </div>
                       </div>
+
+                      {/* Rejection reason if rejected (full width below) */}
+                      {entry.approval_status === 'rejected' && entry.rejection_reason && (
+                        <div className="mt-3 px-3 py-2 bg-red-50 border border-red-200 rounded-md text-xs">
+                          <p className="font-semibold text-red-800 mb-1">{t('detail_hub.timecard.approval.dialog.reason_display')}</p>
+                          <p className="text-red-700">{entry.rejection_reason}</p>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 );
@@ -386,12 +565,78 @@ export function EmployeeTimecardDetailModal({
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-2 pt-4 border-t mt-4">
+        <div className="flex justify-between items-center gap-2 pt-4 border-t mt-4">
+          {/* Bulk Approve Button (only for admins with pending entries) */}
+          {canApprove && timeEntries.some(e => e.status === 'complete' && e.approval_status === 'pending') ? (
+            <Button
+              variant="default"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              onClick={handleBulkApprove}
+              disabled={bulkApproveTimecards.isPending}
+            >
+              <CheckCircle2 className="w-4 h-4 mr-2" />
+              {t('detail_hub.timecard.approval.buttons.approve_all')} ({timeEntries.filter(e => e.approval_status === 'pending').length})
+            </Button>
+          ) : (
+            <div className="flex-1" />
+          )}
+
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t('detail_hub.timecard.employee_detail.close')}
           </Button>
         </div>
       </DialogContent>
     </Dialog>
+
+    {/* Rejection Reason Dialog */}
+    <AlertDialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t('detail_hub.timecard.approval.dialog.reject_title')}</AlertDialogTitle>
+          <AlertDialogDescription>
+            {t('detail_hub.timecard.approval.dialog.reject_description')}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <div className="py-4">
+          <Label htmlFor="rejection-reason" className="text-sm font-medium mb-2 block">
+            {t('detail_hub.timecard.approval.dialog.reason_label')} *
+          </Label>
+          <Textarea
+            id="rejection-reason"
+            placeholder={t('detail_hub.timecard.approval.dialog.reason_placeholder')}
+            value={rejectionReason}
+            onChange={(e) => setRejectionReason(e.target.value)}
+            className="min-h-[100px]"
+          />
+        </div>
+
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => {
+            setRejectDialogOpen(false);
+            setTimeEntryToReject(null);
+            setRejectionReason("");
+          }}>
+            {t('detail_hub.timecard.approval.dialog.cancel')}
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleRejectConfirm}
+            disabled={!rejectionReason.trim()}
+            className="bg-red-600 hover:bg-red-700 text-white"
+          >
+            <XCircle className="w-4 h-4 mr-2" />
+            {t('detail_hub.timecard.approval.dialog.confirm_reject')}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+
+    {/* Edit Time Entry Modal */}
+    <EditTimeEntryModal
+      open={showEditModal}
+      onOpenChange={setShowEditModal}
+      timeEntry={selectedTimeEntryForEdit}
+    />
+    </>
   );
 }

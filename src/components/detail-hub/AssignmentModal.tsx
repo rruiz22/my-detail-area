@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import { Building2, Clock, AlertCircle } from "lucide-react";
 import { useCreateAssignment, useUpdateAssignment, type EmployeeAssignment, type ScheduleTemplate } from "@/hooks/useEmployeeAssignments";
 import { useDealerships } from "@/hooks/useDealerships";
@@ -316,6 +317,89 @@ export function AssignmentModal({
                 dealership. No day restrictions apply.
               </AlertDescription>
             </Alert>
+
+            {/* Auto-Close Configuration */}
+            <div className="space-y-4 border-t pt-4 mt-4">
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <Clock className="h-4 w-4" />
+                {t('detail_hub.auto_close_section_title')}
+              </div>
+
+              {/* Enable/Disable Auto-Close */}
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <p className="font-medium text-sm">{t('detail_hub.auto_close_enabled')}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t('detail_hub.auto_close_enabled_help')}
+                  </p>
+                </div>
+                <Switch
+                  checked={scheduleTemplate.auto_close_enabled ?? false}
+                  onCheckedChange={(checked) =>
+                    setScheduleTemplate({ ...scheduleTemplate, auto_close_enabled: checked })
+                  }
+                />
+              </div>
+
+              {/* Auto-Close Timing (only if enabled) */}
+              {scheduleTemplate.auto_close_enabled && (
+                <div className="grid grid-cols-3 gap-4 pl-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="first-reminder">{t('detail_hub.auto_close_first_reminder_label')}</Label>
+                    <Input
+                      id="first-reminder"
+                      type="number"
+                      min="5"
+                      max="180"
+                      value={scheduleTemplate.auto_close_first_reminder ?? 30}
+                      onChange={(e) =>
+                        setScheduleTemplate({
+                          ...scheduleTemplate,
+                          auto_close_first_reminder: parseInt(e.target.value) || 30
+                        })
+                      }
+                    />
+                    <p className="text-xs text-gray-500">{t('detail_hub.auto_close_first_reminder_help')}</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="second-reminder">{t('detail_hub.auto_close_second_reminder_label')}</Label>
+                    <Input
+                      id="second-reminder"
+                      type="number"
+                      min="10"
+                      max="240"
+                      value={scheduleTemplate.auto_close_second_reminder ?? 60}
+                      onChange={(e) =>
+                        setScheduleTemplate({
+                          ...scheduleTemplate,
+                          auto_close_second_reminder: parseInt(e.target.value) || 60
+                        })
+                      }
+                    />
+                    <p className="text-xs text-gray-500">{t('detail_hub.auto_close_second_reminder_help')}</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="auto-close-window">{t('detail_hub.auto_close_window_label')}</Label>
+                    <Input
+                      id="auto-close-window"
+                      type="number"
+                      min="30"
+                      max="480"
+                      value={scheduleTemplate.auto_close_window_minutes ?? 120}
+                      onChange={(e) =>
+                        setScheduleTemplate({
+                          ...scheduleTemplate,
+                          auto_close_window_minutes: parseInt(e.target.value) || 120
+                        })
+                      }
+                    />
+                    <p className="text-xs text-gray-500">{t('detail_hub.auto_close_window_help')}</p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Notes */}

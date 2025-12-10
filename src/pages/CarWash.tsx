@@ -81,6 +81,8 @@ export default function CarWash() {
 
   // Check if user can create car wash orders
   const canCreate = hasModulePermission('car_wash', 'create_orders');
+  // System admins and supermanagers can always export
+  const canExport = enhancedUser?.is_system_admin || enhancedUser?.is_supermanager || hasModulePermission('car_wash', 'export_data');
 
   // Hook for status permissions and updates
   const { canUpdateStatus, updateOrderStatus } = useStatusPermissions();
@@ -492,7 +494,7 @@ export default function CarWash() {
           onToggleFilters={() => setShowFilters(!showFilters)}
           weekOffset={weekOffset}
           onWeekChange={setWeekOffset}
-          onPrintList={handlePrintList}
+          onPrintList={canExport ? handlePrintList : undefined}
           isPrinting={isPrinting}
         />
 

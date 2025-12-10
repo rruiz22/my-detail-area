@@ -19,6 +19,7 @@ import InvoiceCenter from "./InvoiceCenter";
 import KioskManager from "./KioskManager";
 import LiveStatusDashboard from "./LiveStatusDashboard";
 import { PunchClockKioskModal } from "./PunchClockKioskModal";
+import { ForgottenPunchBanner } from "./ForgottenPunchBanner";
 // KIOSK SETUP WIZARD
 import { KioskSetupWizard, isKioskConfigured, getConfiguredKioskId, generateDeviceFingerprint, getSystemUsername } from "./KioskSetupWizard";
 // KIOSK CONFIG CLEANUP
@@ -197,6 +198,9 @@ const DetailHubDashboard = () => {
 
         {/* TAB: Overview - Live Status Dashboard */}
         <TabsContent value="overview" className="space-y-6">
+          {/* Auto-Close Punch Review Banner */}
+          <ForgottenPunchBanner />
+
           <LiveStatusDashboard />
         </TabsContent>
 

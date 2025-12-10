@@ -82,6 +82,8 @@ export default function ReconOrders() {
 
   // Check if user can create recon orders
   const canCreate = hasModulePermission('recon_orders', 'create_orders');
+  // System admins and supermanagers can always export
+  const canExport = enhancedUser?.is_system_admin || enhancedUser?.is_supermanager || hasModulePermission('recon_orders', 'export_data');
 
   // Hook for status permissions and updates
   const { canUpdateStatus, updateOrderStatus } = useStatusPermissions();
@@ -600,7 +602,7 @@ export default function ReconOrders() {
           onToggleFilters={() => setShowFilters(!showFilters)}
           weekOffset={weekOffset}
           onWeekChange={setWeekOffset}
-          onPrintList={handlePrintList}
+          onPrintList={canExport ? handlePrintList : undefined}
           isPrinting={isPrinting}
           excludeFilters={['dashboard', 'tomorrow']}
         />
