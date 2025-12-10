@@ -59,8 +59,8 @@ export function AssignmentModal({
     shift_start_time: '08:00',
     shift_end_time: '17:00',
     days_of_week: [0, 1, 2, 3, 4, 5, 6], // All days (flexible)
-    early_punch_allowed_minutes: 15,
-    late_punch_grace_minutes: 15,
+    early_punch_allowed_minutes: undefined, // undefined = no time restriction (flexible)
+    late_punch_grace_minutes: undefined,    // undefined = no time restriction (flexible)
     required_break_minutes: 30,
     break_is_paid: false
   });
@@ -74,21 +74,22 @@ export function AssignmentModal({
         shift_start_time: assignment.schedule_template.shift_start_time || '08:00',
         shift_end_time: assignment.schedule_template.shift_end_time || '17:00',
         days_of_week: assignment.schedule_template.days_of_week || [0, 1, 2, 3, 4, 5, 6],
-        early_punch_allowed_minutes: assignment.schedule_template.early_punch_allowed_minutes ?? 15,
-        late_punch_grace_minutes: assignment.schedule_template.late_punch_grace_minutes ?? 15,
+        // Preserve existing values, don't apply defaults (undefined means flexible)
+        early_punch_allowed_minutes: assignment.schedule_template.early_punch_allowed_minutes,
+        late_punch_grace_minutes: assignment.schedule_template.late_punch_grace_minutes,
         required_break_minutes: assignment.schedule_template.required_break_minutes ?? 30,
         break_is_paid: assignment.schedule_template.break_is_paid ?? false
       });
       setNotes(assignment.notes || '');
     } else {
-      // Reset form for create mode
+      // Reset form for create mode (flexible schedule by default)
       setSelectedDealerId(null);
       setScheduleTemplate({
         shift_start_time: '08:00',
         shift_end_time: '17:00',
         days_of_week: [0, 1, 2, 3, 4, 5, 6],
-        early_punch_allowed_minutes: 15,
-        late_punch_grace_minutes: 15,
+        early_punch_allowed_minutes: undefined, // undefined = flexible (no time restriction)
+        late_punch_grace_minutes: undefined,    // undefined = flexible (no time restriction)
         required_break_minutes: 30,
         break_is_paid: false
       });
@@ -242,17 +243,17 @@ export function AssignmentModal({
                   type="number"
                   min="0"
                   max="60"
-                  value={scheduleTemplate.early_punch_allowed_minutes}
+                  value={scheduleTemplate.early_punch_allowed_minutes ?? ''}
                   onChange={(e) => {
-                    const value = e.target.value === '' ? 0 : parseInt(e.target.value);
+                    const value = e.target.value === '' ? undefined : parseInt(e.target.value);
                     setScheduleTemplate({
                       ...scheduleTemplate,
-                      early_punch_allowed_minutes: isNaN(value) ? 0 : value
+                      early_punch_allowed_minutes: value !== undefined && isNaN(value) ? undefined : value
                     });
                   }}
                 />
                 <p className="text-xs text-gray-500">
-                  Minutes before shift start that employee can clock in
+                  Minutes before shift start. Leave empty for no time restriction.
                 </p>
               </div>
               <div className="space-y-2">
@@ -262,17 +263,17 @@ export function AssignmentModal({
                   type="number"
                   min="0"
                   max="60"
-                  value={scheduleTemplate.late_punch_grace_minutes}
+                  value={scheduleTemplate.late_punch_grace_minutes ?? ''}
                   onChange={(e) => {
-                    const value = e.target.value === '' ? 0 : parseInt(e.target.value);
+                    const value = e.target.value === '' ? undefined : parseInt(e.target.value);
                     setScheduleTemplate({
                       ...scheduleTemplate,
-                      late_punch_grace_minutes: isNaN(value) ? 0 : value
+                      late_punch_grace_minutes: value !== undefined && isNaN(value) ? undefined : value
                     });
                   }}
                 />
                 <p className="text-xs text-gray-500">
-                  Minutes after shift start that employee can clock in
+                  Minutes after shift start. Leave empty for no time restriction.
                 </p>
               </div>
             </div>
