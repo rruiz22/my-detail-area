@@ -251,6 +251,7 @@
     "multiple_locations": "+{{count}} ubicación(es) más",
     "all_assignments": "Todas las Asignaciones",
     "flexible_schedule": "Flexible",
+    "punch_window": "Ventana de fichaje",
     "kiosk_pin": "Código PIN del Kiosco",
     "kiosk_pin_help": "Código de acceso de 4-6 dígitos requerido para autenticación en el reloj de tiempo del kiosco",
     "kiosk_pin_placeholder": "Ingrese 4-6 dígitos",

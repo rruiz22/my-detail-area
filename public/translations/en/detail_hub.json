@@ -251,6 +251,7 @@
     "multiple_locations": "+{{count}} more location(s)",
     "all_assignments": "All Assignments",
     "flexible_schedule": "Flexible",
+    "punch_window": "Punch window",
     "kiosk_pin": "Kiosk PIN Code",
     "kiosk_pin_help": "Required 4-6 digit passcode for kiosk time clock authentication",
     "kiosk_pin_placeholder": "Enter 4-6 digits",

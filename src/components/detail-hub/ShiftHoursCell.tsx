@@ -49,6 +49,21 @@ interface ShiftHoursCellProps {
 }
 
 /**
+ * Helper function to format punch window display
+ */
+function formatPunchWindow(
+  early: number | null,
+  late: number | null
+): string | null {
+  if (early === null && late === null) return null;
+
+  const earlyStr = early !== null ? `-${early}m` : 'No limit';
+  const lateStr = late !== null ? `+${late}m` : 'No limit';
+
+  return `${earlyStr} / ${lateStr}`;
+}
+
+/**
  * Displays shift hours and dealer assignments in a compact table cell format
  * Shows primary assignment inline, additional assignments in popover
  */
@@ -90,6 +105,12 @@ export function ShiftHoursCell({
     primary.schedule_template.early_punch_allowed_minutes === null &&
     primary.schedule_template.late_punch_grace_minutes === null;
 
+  // Format punch window for primary assignment
+  const punchWindow = formatPunchWindow(
+    primary.schedule_template.early_punch_allowed_minutes,
+    primary.schedule_template.late_punch_grace_minutes
+  );
+
   // Single assignment - show directly
   if (activeAssignments.length === 1) {
     return (
@@ -113,6 +134,11 @@ export function ShiftHoursCell({
             </Badge>
           )}
         </div>
+        {punchWindow && (
+          <div className="flex items-center gap-1 text-xs text-gray-500 ml-5">
+            <span>{t('detail_hub.employees.punch_window')}: {punchWindow}</span>
+          </div>
+        )}
       </div>
     );
   }
@@ -121,19 +147,26 @@ export function ShiftHoursCell({
   return (
     <div className="space-y-1">
       {/* Primary assignment - always visible */}
-      <div className="flex items-center gap-2">
-        {primary.dealership.logo_url && (
-          <img
-            src={primary.dealership.logo_url}
-            alt=""
-            className="h-4 w-4 object-contain"
-          />
+      <div className="space-y-1">
+        <div className="flex items-center gap-2">
+          {primary.dealership.logo_url && (
+            <img
+              src={primary.dealership.logo_url}
+              alt=""
+              className="h-4 w-4 object-contain"
+            />
+          )}
+          <Clock className="h-3 w-3 text-gray-500" />
+          <span className="text-sm font-medium">
+            {primary.schedule_template.shift_start_time} -{' '}
+            {primary.schedule_template.shift_end_time}
+          </span>
+        </div>
+        {punchWindow && (
+          <div className="flex items-center gap-1 text-xs text-gray-500 ml-5">
+            <span>{t('detail_hub.employees.punch_window')}: {punchWindow}</span>
+          </div>
         )}
-        <Clock className="h-3 w-3 text-gray-500" />
-        <span className="text-sm font-medium">
-          {primary.schedule_template.shift_start_time} -{' '}
-          {primary.schedule_template.shift_end_time}
-        </span>
       </div>
 
       {/* Additional assignments - in popover */}
@@ -144,31 +177,45 @@ export function ShiftHoursCell({
             {t('detail_hub.employees.multiple_locations', { count: remainingCount })}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80" align="start">
+        <PopoverContent className="w-96" align="start">
           <div className="space-y-3">
             <h4 className="font-semibold text-sm">{t('detail_hub.employees.all_assignments')}</h4>
             <div className="space-y-2">
-              {activeAssignments.map((assignment) => (
-                <div
-                  key={assignment.id}
-                  className="flex items-center justify-between p-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors"
-                >
-                  <div className="flex items-center gap-2">
-                    {assignment.dealership.logo_url && (
-                      <img
-                        src={assignment.dealership.logo_url}
-                        alt=""
-                        className="h-5 w-5 object-contain"
-                      />
+              {activeAssignments.map((assignment) => {
+                const assignmentPunchWindow = formatPunchWindow(
+                  assignment.schedule_template.early_punch_allowed_minutes,
+                  assignment.schedule_template.late_punch_grace_minutes
+                );
+
+                return (
+                  <div
+                    key={assignment.id}
+                    className="p-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors space-y-1"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        {assignment.dealership.logo_url && (
+                          <img
+                            src={assignment.dealership.logo_url}
+                            alt=""
+                            className="h-5 w-5 object-contain"
+                          />
+                        )}
+                        <span className="text-sm font-medium">{assignment.dealership.name}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-sm text-gray-600">
+                        <Clock className="h-3 w-3" />
+                        {assignment.schedule_template.shift_start_time} - {assignment.schedule_template.shift_end_time}
+                      </div>
+                    </div>
+                    {assignmentPunchWindow && (
+                      <div className="text-xs text-gray-500 ml-7">
+                        {t('detail_hub.employees.punch_window')}: {assignmentPunchWindow}
+                      </div>
                     )}
-                    <span className="text-sm font-medium">{assignment.dealership.name}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-sm text-gray-600">
-                    <Clock className="h-3 w-3" />
-                    {assignment.schedule_template.shift_start_time} - {assignment.schedule_template.shift_end_time}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </PopoverContent>
