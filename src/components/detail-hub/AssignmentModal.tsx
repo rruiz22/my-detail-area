@@ -75,14 +75,15 @@ export function AssignmentModal({
     if (assignment) {
       setSelectedDealerId(assignment.dealership_id);
       setScheduleTemplate({
-        shift_start_time: assignment.schedule_template.shift_start_time || '08:00',
-        shift_end_time: assignment.schedule_template.shift_end_time || '17:00',
-        days_of_week: assignment.schedule_template.days_of_week || [0, 1, 2, 3, 4, 5, 6],
-        // Preserve existing values, don't apply defaults (undefined means flexible)
-        early_punch_allowed_minutes: assignment.schedule_template.early_punch_allowed_minutes,
-        late_punch_grace_minutes: assignment.schedule_template.late_punch_grace_minutes,
-        required_break_minutes: assignment.schedule_template.required_break_minutes ?? 30,
-        break_is_paid: assignment.schedule_template.break_is_paid ?? false
+        // AUTO-SYNC: Always inherit from employee's current schedule (not old assignment values)
+        shift_start_time: employeeScheduleTemplate?.shift_start_time || assignment.schedule_template.shift_start_time || '08:00',
+        shift_end_time: employeeScheduleTemplate?.shift_end_time || assignment.schedule_template.shift_end_time || '17:00',
+        days_of_week: employeeScheduleTemplate?.days_of_week || assignment.schedule_template.days_of_week || [0, 1, 2, 3, 4, 5, 6],
+        // Always sync time restrictions from employee (NULL = flexible)
+        early_punch_allowed_minutes: employeeScheduleTemplate?.early_punch_allowed_minutes,
+        late_punch_grace_minutes: employeeScheduleTemplate?.late_punch_grace_minutes,
+        required_break_minutes: employeeScheduleTemplate?.required_break_minutes ?? assignment.schedule_template.required_break_minutes ?? 30,
+        break_is_paid: employeeScheduleTemplate?.break_is_paid ?? assignment.schedule_template.break_is_paid ?? false
       });
       setNotes(assignment.notes || '');
     } else {
