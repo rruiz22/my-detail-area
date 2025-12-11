@@ -73,6 +73,7 @@
   "state": "State",
   "zip": "ZIP Code",
   "country": "Country",
+  "timezone": "Timezone",
   "branding": "Branding",
   "logo": "Logo",
   "upload_logo": "Upload Logo",

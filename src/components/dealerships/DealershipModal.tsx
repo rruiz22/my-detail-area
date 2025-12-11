@@ -63,6 +63,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership, onRefr
     tax_number: '',
     logo_url: '',
     primary_color: '#3B82F6',
+    timezone: 'America/New_York',
     status: 'active',
     subscription_plan: 'basic',
     max_users: 5,
@@ -84,6 +85,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership, onRefr
         tax_number: dealership.tax_number || '',
         logo_url: dealership.logo_url || '',
         primary_color: dealership.primary_color,
+        timezone: dealership.timezone || 'America/New_York',
         status: dealership.status,
         subscription_plan: dealership.subscription_plan,
         max_users: dealership.max_users,
@@ -103,6 +105,7 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership, onRefr
         tax_number: '',
         logo_url: '',
         primary_color: '#3B82F6',
+        timezone: 'America/New_York',
         status: 'active',
         subscription_plan: 'basic',
         max_users: 5,
@@ -427,6 +430,29 @@ export function DealershipModal({ isOpen, onClose, onSuccess, dealership, onRefr
                         </SelectContent>
                       </Select>
                     </div>
+                  </div>
+
+                  {/* Timezone */}
+                  <div>
+                    <Label htmlFor="timezone" className="block mb-3">{t('dealerships.timezone')}</Label>
+                    <Select value={formData.timezone} onValueChange={(value) => handleInputChange('timezone', value)}>
+                      <SelectTrigger id="timezone">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="America/New_York">Eastern Time (New York)</SelectItem>
+                        <SelectItem value="America/Chicago">Central Time (Chicago)</SelectItem>
+                        <SelectItem value="America/Denver">Mountain Time (Denver)</SelectItem>
+                        <SelectItem value="America/Los_Angeles">Pacific Time (Los Angeles)</SelectItem>
+                        <SelectItem value="America/Phoenix">Arizona Time (Phoenix)</SelectItem>
+                        <SelectItem value="America/Anchorage">Alaska Time (Anchorage)</SelectItem>
+                        <SelectItem value="Pacific/Honolulu">Hawaii Time (Honolulu)</SelectItem>
+                        <SelectItem value="UTC">UTC (Coordinated Universal Time)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Used for shift times, punch validation, and time-based operations
+                    </p>
                   </div>
                 </div>
               </div>

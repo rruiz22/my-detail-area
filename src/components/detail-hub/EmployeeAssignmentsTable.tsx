@@ -238,7 +238,6 @@ export function EmployeeAssignmentsTable({
         assignment={null}
         employeeId={employeeId}
         employeeName={employeeName}
-        employeeScheduleTemplate={employee?.schedule_template}
         open={showCreateModal}
         onClose={() => setShowCreateModal(false)}
       />
@@ -248,7 +247,6 @@ export function EmployeeAssignmentsTable({
         assignment={editingAssignment}
         employeeId={employeeId}
         employeeName={employeeName}
-        employeeScheduleTemplate={employee?.schedule_template}
         open={!!editingAssignment}
         onClose={() => setEditingAssignment(null)}
       />

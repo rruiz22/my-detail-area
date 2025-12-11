@@ -73,6 +73,7 @@
   "state": "Estado",
   "zip": "CEP",
   "country": "País",
+  "timezone": "Fuso Horário",
   "branding": "Marca",
   "logo": "Logo",
   "upload_logo": "Enviar Logo",

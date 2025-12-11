@@ -73,6 +73,7 @@
   "state": "Estado",
   "zip": "Código Postal",
   "country": "País",
+  "timezone": "Zona Horaria",
   "branding": "Marca",
   "logo": "Logo",
   "upload_logo": "Subir Logo",
