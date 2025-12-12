@@ -621,7 +621,9 @@ export const usePermissions = () => {
       const systemPermsData = batchResult.system_permissions || [];
       const modulePermsData = batchResult.module_permissions || [];
       const roleModuleAccessData = batchResult.module_access || [];
-      const allowedModulesData = batchResult.allowed_modules || []; // 🆕 Supermanager allowed modules
+      const allowedModulesData = Array.isArray(batchResult.allowed_modules)
+        ? batchResult.allowed_modules
+        : []; // 🆕 Supermanager allowed modules
 
       // Build a map of which modules each role has access to
       // ✅ FIX: Now includes BOTH enabled and disabled modules (is_enabled field)
@@ -1287,3 +1289,4 @@ export const usePermissions = () => {
     permissions: []
   };
 };
+

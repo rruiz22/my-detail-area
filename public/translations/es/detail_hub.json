@@ -492,6 +492,7 @@
       "overtime": "Horas Extra",
       "pay": "Pago",
       "status": "Estado",
+      "notes": "Notas",
       "actions": "Acciones",
       "hours_abbr": "h"
     },
@@ -543,11 +544,21 @@
     "photo_reviews": {
       "title": "Registros con Foto Pendientes de Revisión",
       "pending_count": "{{count}} Pendiente(s)",
-      "no_pending": "No hay revisiones pendientes"
+      "no_pending": "No hay revisiones pendientes",
+      "select_all": "Seleccionar Todos",
+      "deselect_all": "Deseleccionar Todos",
+      "approve_selected": "Aprobar {{count}} Seleccionado(s)",
+      "bulk_approve_title": "¿Aprobar Múltiples Registros con Foto?",
+      "bulk_approve_description": "Esto verificará la identidad de {{count}} empleados. Esta acción no se puede deshacer.",
+      "confirm_approve": "Aprobar Todos",
+      "approving": "Aprobando...",
+      "bulk_approved": "{{count}} registros aprobados exitosamente",
+      "bulk_failed": "{{count}} registros no se pudieron aprobar"
     },
     "photo_review": {
       "title": "Verificación de Foto Requerida",
       "pending_review": "Revisión Pendiente",
+      "employee": "Empleado",
       "punch_in_label": "Entrada",
       "punch_out_label": "Salida",
       "total_hours": "Total",

@@ -501,6 +501,7 @@
       "overtime": "Horas Extras",
       "pay": "Pagamento",
       "status": "Status",
+      "notes": "Notas",
       "actions": "Ações",
       "hours_abbr": "h"
     },
@@ -552,11 +553,21 @@
     "photo_reviews": {
       "title": "Registros com Foto Pendentes de Revisão",
       "pending_count": "{{count}} Pendentes",
-      "no_pending": "Nenhuma revisão pendente"
+      "no_pending": "Nenhuma revisão pendente",
+      "select_all": "Selecionar Todos",
+      "deselect_all": "Desselecionar Todos",
+      "approve_selected": "Aprovar {{count}} Selecionado(s)",
+      "bulk_approve_title": "Aprovar Múltiplos Registros com Foto?",
+      "bulk_approve_description": "Isso verificará a identidade de {{count}} funcionários. Esta ação não pode ser desfeita.",
+      "confirm_approve": "Aprovar Todos",
+      "approving": "Aprovando...",
+      "bulk_approved": "{{count}} registros aprovados com sucesso",
+      "bulk_failed": "{{count}} registros falharam na aprovação"
     },
     "photo_review": {
       "title": "Verificação de Foto Necessária",
       "pending_review": "Revisão Pendente",
+      "employee": "Funcionário",
       "punch_in_label": "Entrada",
       "punch_out_label": "Saída",
       "total_hours": "Total",
@@ -843,6 +854,11 @@
       "online": "Online",
       "offline": "Offline",
       "maintenance": "Manutenção",
+      "error": "Erro"
+    },
+    "camera_status_values": {
+      "active": "Ativa",
+      "inactive": "Inativa",
       "error": "Erro"
     },
     "device_types": {

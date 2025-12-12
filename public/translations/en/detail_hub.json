@@ -492,6 +492,7 @@
       "overtime": "Overtime",
       "pay": "Pay",
       "status": "Status",
+      "notes": "Notes",
       "actions": "Actions",
       "hours_abbr": "h"
     },
@@ -543,11 +544,21 @@
     "photo_reviews": {
       "title": "Photo Punches Pending Review",
       "pending_count": "{{count}} Pending",
-      "no_pending": "No pending reviews"
+      "no_pending": "No pending reviews",
+      "select_all": "Select All",
+      "deselect_all": "Deselect All",
+      "approve_selected": "Approve {{count}} Selected",
+      "bulk_approve_title": "Approve Multiple Photo Punches?",
+      "bulk_approve_description": "This will verify the identity of {{count}} employees. This action cannot be undone.",
+      "confirm_approve": "Approve All",
+      "approving": "Approving...",
+      "bulk_approved": "{{count}} punches approved successfully",
+      "bulk_failed": "{{count}} punches failed to approve"
     },
     "photo_review": {
       "title": "Photo Verification Required",
       "pending_review": "Pending Review",
+      "employee": "Employee",
       "punch_in_label": "Punch In",
       "punch_out_label": "Punch Out",
       "total_hours": "Total",

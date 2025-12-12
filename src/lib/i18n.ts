@@ -382,7 +382,7 @@ if (USE_CODE_SPLITTING) {
 
   // ✅ PHASE 4.1: Preload user's preferred language IMMEDIATELY
   // This starts loading BEFORE React mounts, reducing perceived load time
-  const userLanguage = getSavedLanguage() || navigator.language.split('-')[0] || 'en';
+  const userLanguage = getSavedLanguage() || (navigator.language || '').split('-')[0] || 'en';
 
   // Start loading immediately (before init even completes)
   initialLanguageLoading = loadLanguageMonolithic(userLanguage).then(() => {

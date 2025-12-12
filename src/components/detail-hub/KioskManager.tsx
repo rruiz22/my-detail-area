@@ -9,8 +9,11 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { Monitor, Settings, Camera, AlertTriangle, CheckCircle, Plus, Edit, Trash2, Activity, Info, ExternalLink } from "lucide-react";
-import { format } from "date-fns";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Monitor, Settings, Camera, AlertTriangle, CheckCircle, Plus, Edit, Trash2, Activity, Info, ExternalLink, Search } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { format, formatDistanceToNow } from "date-fns";
 
 // REAL DATABASE INTEGRATION
 import {
@@ -25,6 +28,7 @@ import {
 } from "@/hooks/useDetailHubKiosks";
 import { useDetailHubEmployees } from "@/hooks/useDetailHubDatabase";
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
+import { useToast } from "@/hooks/use-toast";
 import { KioskDetailModal } from "./KioskDetailModal";
 import { GenerateRemoteKioskModal } from "./GenerateRemoteKioskModal";
 
@@ -38,6 +42,7 @@ import type { RemoteKioskToken } from "@/hooks/useRemoteKioskTokens";
 
 const KioskManager = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
 
   // Tab state with persistence
   const [activeTab, setActiveTab] = useTabPersistence('kiosk_manager');
@@ -47,9 +52,13 @@ const KioskManager = () => {
   const [editingKiosk, setEditingKiosk] = useState<DetailHubKiosk | null>(null);
   const [viewingKiosk, setViewingKiosk] = useState<DetailHubKiosk | null>(null);
   const [remoteKioskModalOpen, setRemoteKioskModalOpen] = useState(false);
+  const [kioskToArchive, setKioskToArchive] = useState<string | null>(null);
 
   // Remote token states
   const [viewingToken, setViewingToken] = useState<RemoteKioskToken | null>(null);
+
+  // Search/filter state
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Form state - Simplified (removed unused fields: IP, MAC, brightness, volume, kioskMode)
   const [name, setName] = useState("");
@@ -97,11 +106,11 @@ const KioskManager = () => {
   const getCameraStatusBadge = (status: string) => {
     switch (status) {
       case "active":
-        return <Badge className="bg-green-100 text-green-800">Active</Badge>;
+        return <Badge className="bg-green-100 text-green-800">{t('detail_hub.kiosk_manager.camera_status_values.active')}</Badge>;
       case "inactive":
-        return <Badge variant="secondary">Inactive</Badge>;
+        return <Badge variant="secondary">{t('detail_hub.kiosk_manager.camera_status_values.inactive')}</Badge>;
       case "error":
-        return <Badge variant="destructive">Error</Badge>;
+        return <Badge variant="destructive">{t('detail_hub.kiosk_manager.camera_status_values.error')}</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -118,7 +127,11 @@ const KioskManager = () => {
 
   const handleCreateKiosk = async () => {
     if (selectedDealerId === 'all') {
-      alert('Please select a specific dealership');
+      toast({
+        title: "Dealership Required",
+        description: "Please select a specific dealership",
+        variant: "destructive"
+      });
       return;
     }
 
@@ -176,24 +189,105 @@ const KioskManager = () => {
   };
 
   const handleDeleteKiosk = (id: string) => {
-    const confirmed = confirm(
-      '⚠️ Archive this kiosk?\n\n' +
-      'The kiosk will be hidden from the active list, but device bindings will be preserved. ' +
-      'You can unarchive it later if needed.\n\n' +
-      'Devices configured with this kiosk may need to be reconfigured.'
-    );
+    setKioskToArchive(id);
+  };
 
-    if (confirmed) {
-      archiveKiosk(id); // ✅ CHANGED: Archive instead of delete
+  const confirmArchive = () => {
+    if (kioskToArchive) {
+      archiveKiosk(kioskToArchive);
+      setKioskToArchive(null);
     }
   };
+
+  // Filter kiosks based on search term
+  const filteredKiosks = kiosks.filter((kiosk) => {
+    if (!searchTerm) return true;
+    const search = searchTerm.toLowerCase();
+    return (
+      kiosk.name.toLowerCase().includes(search) ||
+      kiosk.kiosk_code.toLowerCase().includes(search) ||
+      (kiosk.location && kiosk.location.toLowerCase().includes(search))
+    );
+  });
 
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">Loading kiosks...</p>
+        {/* Skeleton for stats cards */}
+        <div className="grid gap-4 md:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <Card key={i}>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-8 w-12" />
+                  </div>
+                  <Skeleton className="h-8 w-8 rounded-full" />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
+
+        {/* Skeleton for kiosks table */}
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-6 w-32" />
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Kiosk</TableHead>
+                  <TableHead className="hidden md:table-cell">Location</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="hidden lg:table-cell">Camera</TableHead>
+                  <TableHead className="hidden md:table-cell">Last Ping</TableHead>
+                  <TableHead className="hidden lg:table-cell">Today's Punches</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {[...Array(3)].map((_, i) => (
+                  <TableRow key={i}>
+                    <TableCell>
+                      <div className="flex items-center space-x-2">
+                        <Skeleton className="h-4 w-4 rounded-full" />
+                        <div className="space-y-2">
+                          <Skeleton className="h-4 w-32" />
+                          <Skeleton className="h-3 w-24" />
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <Skeleton className="h-4 w-40" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-5 w-16 rounded-full" />
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell">
+                      <Skeleton className="h-5 w-16 rounded-full" />
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <Skeleton className="h-4 w-24" />
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell">
+                      <Skeleton className="h-4 w-8" />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center space-x-1">
+                        <Skeleton className="h-8 w-8 rounded" />
+                        <Skeleton className="h-8 w-8 rounded" />
+                        <Skeleton className="h-8 w-8 rounded" />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -210,8 +304,9 @@ const KioskManager = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <TooltipProvider>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t('detail_hub.kiosk_manager.title')}</h1>
           <p className="text-muted-foreground">{t('detail_hub.kiosk_manager.subtitle')}</p>
@@ -407,29 +502,56 @@ const KioskManager = () => {
       {/* Kiosks Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Kiosks ({kiosks.length})</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>Kiosks ({filteredKiosks.length}{searchTerm && ` of ${kiosks.length}`})</CardTitle>
+            <div className="relative w-64">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search by name, code, or location..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-8"
+              />
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
-          {kiosks.length === 0 ? (
+          {filteredKiosks.length === 0 ? (
             <div className="text-center py-12">
-              <Monitor className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">No kiosks configured</p>
+              {searchTerm ? (
+                <>
+                  <Search className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">No kiosks match "{searchTerm}"</p>
+                  <Button
+                    variant="link"
+                    onClick={() => setSearchTerm("")}
+                    className="mt-2"
+                  >
+                    Clear search
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Monitor className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                  <p className="text-muted-foreground">No kiosks configured</p>
+                </>
+              )}
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Kiosk</TableHead>
-                  <TableHead>Location</TableHead>
+                  <TableHead className="hidden md:table-cell">Location</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Camera</TableHead>
-                  <TableHead>Last Ping</TableHead>
-                  <TableHead>Today's Punches</TableHead>
+                  <TableHead className="hidden lg:table-cell">Camera</TableHead>
+                  <TableHead className="hidden md:table-cell">Last Ping</TableHead>
+                  <TableHead className="hidden lg:table-cell">Today's Punches</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {kiosks.map((kiosk) => (
+                {filteredKiosks.map((kiosk) => (
                   <TableRow key={kiosk.id}>
                     <TableCell>
                       <div className="flex items-center space-x-2">
@@ -440,45 +562,63 @@ const KioskManager = () => {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden md:table-cell">
                       <p>{kiosk.location || 'Not set'}</p>
                     </TableCell>
                     <TableCell>{getStatusBadge(kiosk.status)}</TableCell>
-                    <TableCell>{getCameraStatusBadge(kiosk.camera_status)}</TableCell>
-                    <TableCell>
-                      <span className="text-sm">
+                    <TableCell className="hidden lg:table-cell">{getCameraStatusBadge(kiosk.camera_status)}</TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <span className="text-sm text-muted-foreground">
                         {kiosk.last_ping
-                          ? format(new Date(kiosk.last_ping), 'MMM dd, HH:mm')
+                          ? `${formatDistanceToNow(new Date(kiosk.last_ping), { addSuffix: true })}`
                           : 'Never'}
                       </span>
                     </TableCell>
-                    <TableCell className="font-medium">{kiosk.punches_today}</TableCell>
+                    <TableCell className="hidden lg:table-cell font-medium">{kiosk.punches_today}</TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setViewingKiosk(kiosk)}
-                          title="View Details"
-                        >
-                          <Info className="w-4 h-4 text-blue-600" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleEdit(kiosk)}
-                          title="Edit Configuration"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteKiosk(kiosk.id)}
-                          title="Delete Kiosk"
-                        >
-                          <Trash2 className="w-4 h-4 text-destructive" />
-                        </Button>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setViewingKiosk(kiosk)}
+                            >
+                              <Info className="w-4 h-4 text-blue-600" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>View Details</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleEdit(kiosk)}
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Edit Configuration</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDeleteKiosk(kiosk.id)}
+                            >
+                              <Trash2 className="w-4 h-4 text-destructive" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Archive Kiosk</p>
+                          </TooltipContent>
+                        </Tooltip>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -550,7 +690,34 @@ const KioskManager = () => {
           }))
         }
       />
-    </div>
+
+      {/* Archive Kiosk Confirmation Dialog */}
+      <AlertDialog open={!!kioskToArchive} onOpenChange={() => setKioskToArchive(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-amber-500" />
+              Archive this kiosk?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              The kiosk will be hidden from the active list, but device bindings will be preserved.
+              You can unarchive it later if needed.
+              <br /><br />
+              <strong>Note:</strong> Devices configured with this kiosk may need to be reconfigured.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setKioskToArchive(null)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={confirmArchive} className="bg-amber-600 hover:bg-amber-700">
+              Archive Kiosk
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      </div>
+    </TooltipProvider>
   );
 };
 

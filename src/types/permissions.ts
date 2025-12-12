@@ -201,8 +201,8 @@ export interface EnhancedUserGranular {
   is_system_admin: boolean;
   is_supermanager: boolean;  // NEW: Elevated access but limited (cannot manage platform settings or create system_admins)
 
-  /** 🆕 NEW: Global allowed modules for supermanagers (applies to ALL dealers). Empty array or undefined = no access. */
-  allowed_modules?: string[];
+  /** 🆕 NEW: Global allowed modules for supermanagers (applies to ALL dealers). Empty array = no access. */
+  allowed_modules: string[];
 
   custom_roles: GranularCustomRole[];
   // Aggregated permissions from all roles

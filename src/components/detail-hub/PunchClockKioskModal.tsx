@@ -70,6 +70,7 @@ import { PunchHistoryCard } from "./punch-clock/PunchHistoryCard";
 
 // DetailHub hooks
 import { useClockIn, useClockOut, useStartBreak, useEndBreak, DetailHubEmployee, useCurrentBreak, useTemplateValidation } from "@/hooks/useDetailHubDatabase";
+import { useUpdateKioskHeartbeat } from "@/hooks/useDetailHubKiosks";
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
 import { useToast } from "@/hooks/use-toast";
 import { useLiveClock } from "@/hooks/useLiveClock";
@@ -103,7 +104,10 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     isReady: cameraReady,
     error: cameraError,
     checkCamera
-  } = useCameraAvailability();
+  } = useCameraAvailability(false); // Don't auto-check on mount
+
+  // Kiosk heartbeat
+  const { mutate: updateHeartbeat } = useUpdateKioskHeartbeat();
 
   // Face recognition hook
   const {
@@ -170,6 +174,34 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
         });
     }
   }, [KIOSK_ID]);
+
+  // ✅ NEW: Manually trigger camera check only when modal opens (if face recognition enabled)
+  useEffect(() => {
+    if (open && kioskConfig.face_recognition_enabled) {
+      console.log('[Kiosk] Modal opened with face recognition - checking camera availability');
+      checkCamera();
+    }
+  }, [open, kioskConfig.face_recognition_enabled, checkCamera]);
+
+  // Send heartbeat with camera status when modal opens or camera status changes
+  useEffect(() => {
+    if (open && kioskConfig.kiosk_code) {
+      // Map camera status to database enum
+      let dbCameraStatus: 'active' | 'inactive' | 'error' | undefined;
+      if (cameraStatus === 'available') {
+        dbCameraStatus = 'active';
+      } else if (cameraStatus === 'error' || cameraStatus === 'blocked' || cameraStatus === 'denied') {
+        dbCameraStatus = 'error';
+      } else if (cameraStatus === 'unavailable' || cameraStatus === 'checking') {
+        dbCameraStatus = 'inactive';
+      }
+
+      updateHeartbeat({
+        kioskCode: kioskConfig.kiosk_code,
+        cameraStatus: dbCameraStatus
+      });
+    }
+  }, [open, cameraStatus, kioskConfig.kiosk_code, updateHeartbeat]);
 
   // State machine
   const [currentView, setCurrentView] = useState<KioskView>('search');
@@ -865,7 +897,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
             dealershipId: selectedDealerId as number,
             method: 'photo_fallback',
             photoUrl: uploadResult.photoUrl,
-            kioskId: KIOSK_ID || kioskConfig.kiosk_code || undefined, // Prefer UUID
+            kioskId: KIOSK_ID || undefined, // Always use UUID, never fallback to kiosk_code string
             ipAddress: currentIp || undefined,
             notes: punchNote || undefined
             // scheduleId: schedule?.id // Disabled until trigger is fixed
@@ -881,7 +913,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
             employeeId: selectedEmployee.id,
             method: 'photo_fallback',
             photoUrl: uploadResult.photoUrl,
-            kioskId: kioskConfig.kiosk_code || undefined,
+            kioskId: KIOSK_ID || undefined, // Always use UUID, never fallback to kiosk_code string
             ipAddress: currentIp || undefined,
             notes: punchNote || undefined
           });
@@ -896,7 +928,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
             employeeId: selectedEmployee.id,
             method: 'photo_fallback',
             photoUrl: uploadResult.photoUrl,
-            kioskId: kioskConfig.kiosk_code || undefined,
+            kioskId: KIOSK_ID || undefined, // Always use UUID, never fallback to kiosk_code string
             ipAddress: currentIp || undefined,
             notes: punchNote || undefined
           });
@@ -911,7 +943,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
             employeeId: selectedEmployee.id,
             method: 'photo_fallback',
             photoUrl: uploadResult.photoUrl,
-            kioskId: kioskConfig.kiosk_code || undefined,
+            kioskId: KIOSK_ID || undefined, // Always use UUID, never fallback to kiosk_code string
             ipAddress: currentIp || undefined,
             notes: punchNote || undefined
           });

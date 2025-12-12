@@ -361,9 +361,16 @@ export function useUpdateKioskHeartbeat() {
   const { selectedDealerId } = useDealerFilter();
 
   return useMutation({
-    mutationFn: async (kioskCode: string) => {
+    mutationFn: async ({
+      kioskCode,
+      cameraStatus
+    }: {
+      kioskCode: string;
+      cameraStatus?: 'active' | 'inactive' | 'error'
+    }) => {
       const { error } = await supabase.rpc('update_kiosk_heartbeat', {
-        p_kiosk_code: kioskCode
+        p_kiosk_code: kioskCode,
+        p_camera_status: cameraStatus || null
       });
 
       if (error) throw error;
@@ -450,13 +457,13 @@ export function useKioskStatistics() {
 }
 
 // =====================================================
-// HELPER FUNCTION: Generate next kiosk code
+// HELPER FUNCTION: Generate next kiosk code (GLOBAL - not per dealership)
 // =====================================================
 export async function generateKioskCode(dealershipId: number): Promise<string> {
+  // Query ALL kiosks globally (not filtered by dealership)
   const { data, error } = await supabase
     .from('detail_hub_kiosks')
     .select('kiosk_code')
-    .eq('dealership_id', dealershipId)
     .order('kiosk_code', { ascending: false })
     .limit(1);
 

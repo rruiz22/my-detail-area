@@ -47,7 +47,7 @@ export function usePerformanceMonitor() {
     const duration = performance.now() - startTime;
     measureStartTimes.current.delete(measureId);
 
-    const metricName = name || measureId.split('-')[0];
+    const metricName = name || (measureId?.includes('-') ? measureId.split('-')[0] : measureId) || 'unknown';
     performanceStore.measures.set(metricName, duration);
 
     // Use Performance API if available

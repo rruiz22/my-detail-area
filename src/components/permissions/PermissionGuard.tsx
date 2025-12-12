@@ -104,7 +104,9 @@ export const PermissionGuard: React.FC<PermissionGuardProps> = React.memo(({
       if (checkDealerModule && !isSystemAdmin) {
         // PRIORITY 1: Supermanager - check allowed_modules
         if (isSupermanager) {
-          const allowedModules = (enhancedUser as any)?.allowed_modules || [];
+          const allowedModules = Array.isArray((enhancedUser as any)?.allowed_modules)
+          ? (enhancedUser as any).allowed_modules
+          : [];
 
           if (allowedModules.length === 0) {
             // No allowed modules = no access

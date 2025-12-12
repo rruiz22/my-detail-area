@@ -91,6 +91,11 @@ const TimecardSystem = () => {
   // 🔒 PRIVACY: Track which employees have hourly rate visible in weekly summary
   const [visibleSalaries, setVisibleSalaries] = useState<Set<string>>(new Set());
 
+  // 🔲 SELECTION: Track selected photo review cards for bulk approval
+  const [selectedPhotoReviews, setSelectedPhotoReviews] = useState<Set<string>>(new Set());
+  const [showBulkApproveDialog, setShowBulkApproveDialog] = useState(false);
+  const [isBulkApproving, setIsBulkApproving] = useState(false);
+
   // Real database hooks (NO MOCK DATA)
   const { data: pendingReviews = [], isLoading: loadingReviews } = usePendingReviews();
   const { data: timeEntries = [], isLoading: loadingTimeEntries } = useDetailHubTimeEntries();
@@ -119,6 +124,69 @@ const TimecardSystem = () => {
       setSearchParams(searchParams);
     }
   }, [searchParams]);
+
+  // 🔲 SELECTION HANDLERS: Photo review bulk approval
+  const handlePhotoSelectionChange = (timeEntryId: string, selected: boolean) => {
+    setSelectedPhotoReviews(prev => {
+      const newSet = new Set(prev);
+      if (selected) {
+        newSet.add(timeEntryId);
+      } else {
+        newSet.delete(timeEntryId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (selectedPhotoReviews.size === pendingReviews.length) {
+      // Deselect all
+      setSelectedPhotoReviews(new Set());
+    } else {
+      // Select all
+      setSelectedPhotoReviews(new Set(pendingReviews.map(entry => entry.id)));
+    }
+  };
+
+  const handleApproveSelected = async () => {
+    if (selectedPhotoReviews.size === 0) return;
+
+    setIsBulkApproving(true);
+    let successCount = 0;
+    let failCount = 0;
+    const errors: string[] = [];
+
+    try {
+      for (const entryId of selectedPhotoReviews) {
+        try {
+          await approveTimeEntry(entryId);
+          successCount++;
+        } catch (error) {
+          failCount++;
+          const entry = pendingReviews.find(e => e.id === entryId);
+          const employeeName = entry?.employee_name || 'Unknown';
+          errors.push(`${employeeName}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+      }
+
+      // Clear selection after bulk approve
+      setSelectedPhotoReviews(new Set());
+      setShowBulkApproveDialog(false);
+
+      // Show results
+      if (successCount > 0) {
+        toast.success(t('detail_hub.timecard.photo_reviews.bulk_approved', { count: successCount }));
+      }
+      if (failCount > 0) {
+        toast.error(t('detail_hub.timecard.photo_reviews.bulk_failed', { count: failCount }));
+        if (errors.length > 0) {
+          console.error('Bulk approve errors:', errors);
+        }
+      }
+    } finally {
+      setIsBulkApproving(false);
+    }
+  };
 
   // Get date range based on filter (UTC-aware to prevent timezone issues)
   const getDateRange = () => {
@@ -213,7 +281,8 @@ const TimecardSystem = () => {
       status: entry.status === 'active' ? 'Active' :
               entry.status === 'complete' ? 'Complete' :
               entry.status === 'disputed' ? 'Disputed' : 'Approved',
-      approvalStatus: entry.approval_status || 'pending'
+      approvalStatus: entry.approval_status || 'pending',
+      notes: entry.notes || null
     };
   };
 
@@ -524,6 +593,40 @@ const TimecardSystem = () => {
       .sort(([dateA], [dateB]) => dateB.localeCompare(dateA));
   };
 
+  // Helper: Group photo review cards by date
+  const groupPhotoReviewsByDate = () => {
+    const grouped = new Map<string, TimeEntryWithEmployee[]>();
+
+    pendingReviews.forEach(entry => {
+      // Validate clock_in exists
+      if (!entry.clock_in) {
+        return; // Skip invalid entries
+      }
+
+      try {
+        const clockInDate = new Date(entry.clock_in);
+        // Check if date is valid
+        if (isNaN(clockInDate.getTime())) {
+          return;
+        }
+
+        // Use local timezone date formatting
+        const localDateString = `${clockInDate.getFullYear()}-${String(clockInDate.getMonth() + 1).padStart(2, '0')}-${String(clockInDate.getDate()).padStart(2, '0')}`;
+
+        if (!grouped.has(localDateString)) {
+          grouped.set(localDateString, []);
+        }
+        grouped.get(localDateString)!.push(entry);
+      } catch (error) {
+        console.error('Error grouping photo review:', entry.id, error);
+      }
+    });
+
+    // Sort by date descending (most recent first)
+    return Array.from(grouped.entries())
+      .sort(([dateA], [dateB]) => dateB.localeCompare(dateA));
+  };
+
   return (
     <div className="space-y-6">
       {/* HEADER: Title + Primary Actions Only */}
@@ -789,30 +892,92 @@ const TimecardSystem = () => {
                 {t('detail_hub.timecard.photo_reviews.pending_count', { count: pendingReviews.length })}
               </Badge>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-              {pendingReviews.map((entry: TimeEntryWithEmployee) => (
-                <PhotoReviewCard
-                  key={entry.id}
-                  timeEntry={{
-                    id: entry.id,
-                    employee_id: entry.employee_id,
-                    employee_name: entry.employee_name,
-                    employee_number: entry.employee_number,      // ✨ ADD: Show employee number
-                    clock_in: entry.clock_in,
-                    clock_out: entry.clock_out,                  // ✨ ADD: Show punch out if exists
-                    total_hours: entry.total_hours,              // ✨ ADD: Show total hours
-                    punch_in_method: 'photo_fallback',
-                    photo_in_url: entry.photo_in_url!,
-                    photo_out_url: entry.photo_out_url,          // ✨ ADD: For future use
-                    requires_manual_verification: true
-                  }}
-                  onApprove={approveTimeEntry}
-                  onReject={rejectTimeEntry}
-                />
-              ))}
+
+            {/* Bulk Actions */}
+            <div className="flex items-center gap-2 mt-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSelectAll}
+                className="text-xs"
+              >
+                <CheckCircle2 className="w-3 h-3 mr-1.5" />
+                {selectedPhotoReviews.size === pendingReviews.length
+                  ? t('detail_hub.timecard.photo_reviews.deselect_all')
+                  : t('detail_hub.timecard.photo_reviews.select_all')
+                }
+              </Button>
+
+              {selectedPhotoReviews.size > 0 && (
+                <Button
+                  size="sm"
+                  onClick={() => setShowBulkApproveDialog(true)}
+                  disabled={isBulkApproving}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-xs"
+                >
+                  <CheckCircle2 className="w-3 h-3 mr-1.5" />
+                  {t('detail_hub.timecard.photo_reviews.approve_selected', { count: selectedPhotoReviews.size })}
+                </Button>
+              )}
             </div>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {groupPhotoReviewsByDate().map(([date, dateEntries]) => {
+              // Parse date parts to avoid timezone issues
+              const [year, month, day] = date.split('-').map(Number);
+              const localDate = new Date(year, month - 1, day);
+
+              // Count selected entries for this date
+              const selectedInDate = dateEntries.filter(entry => selectedPhotoReviews.has(entry.id)).length;
+
+              return (
+                <div key={`photo-group-${date}`} className="space-y-3">
+                  {/* Date Header */}
+                  <div className="flex items-center justify-between pb-2 border-b border-amber-200">
+                    <div className="flex items-center gap-2">
+                      <CalendarIcon className="w-4 h-4 text-amber-600" />
+                      <h3 className="font-semibold text-gray-800">
+                        {format(localDate, 'EEEE, MMMM d, yyyy')}
+                      </h3>
+                      <Badge variant="outline" className="bg-white text-amber-700 border-amber-300 text-xs">
+                        {dateEntries.length} {dateEntries.length === 1 ? 'punch' : 'punches'}
+                      </Badge>
+                      {selectedInDate > 0 && (
+                        <Badge className="bg-emerald-100 text-emerald-700 border-emerald-300 text-xs">
+                          {selectedInDate} selected
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Cards Grid for this date */}
+                  <div className="grid gap-3 grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-8">
+                    {dateEntries.map((entry: TimeEntryWithEmployee) => (
+                      <PhotoReviewCard
+                        key={entry.id}
+                        timeEntry={{
+                          id: entry.id,
+                          employee_id: entry.employee_id,
+                          employee_name: entry.employee_name,
+                          employee_number: entry.employee_number,
+                          clock_in: entry.clock_in,
+                          clock_out: entry.clock_out,
+                          total_hours: entry.total_hours,
+                          punch_in_method: 'photo_fallback',
+                          photo_in_url: entry.photo_in_url!,
+                          photo_out_url: entry.photo_out_url,
+                          requires_manual_verification: true
+                        }}
+                        onApprove={approveTimeEntry}
+                        onReject={rejectTimeEntry}
+                        isSelected={selectedPhotoReviews.has(entry.id)}
+                        onSelectionChange={handlePhotoSelectionChange}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </CardContent>
         </Card>
       )}
@@ -851,13 +1016,14 @@ const TimecardSystem = () => {
                     <TableHead>{t('detail_hub.timecard.table.overtime')}</TableHead>
                     <TableHead>{t('detail_hub.timecard.table.pay')}</TableHead>
                     <TableHead>{t('detail_hub.timecard.table.status')}</TableHead>
+                    <TableHead className="max-w-xs">{t('detail_hub.timecard.table.notes')}</TableHead>
                     <TableHead className="w-[100px]">{t('detail_hub.timecard.table.actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {loadingTimeEntries ? (
                     <TableRow>
-                      <TableCell colSpan={10} className="text-center py-8">
+                      <TableCell colSpan={11} className="text-center py-8">
                         <div className="flex items-center justify-center gap-2">
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900"></div>
                           <span className="text-muted-foreground">{t('detail_hub.timecard.loading')}</span>
@@ -866,7 +1032,7 @@ const TimecardSystem = () => {
                     </TableRow>
                   ) : timecards.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={10} className="text-center py-8">
+                      <TableCell colSpan={11} className="text-center py-8">
                         <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-2" />
                         <p className="text-muted-foreground">{t('detail_hub.timecard.no_entries')}</p>
                       </TableCell>
@@ -887,7 +1053,7 @@ const TimecardSystem = () => {
                       <React.Fragment key={`group-${date}`}>
                         {/* Date Header Row with Daily Totals */}
                         <TableRow key={`header-${date}`} className="bg-gray-200 hover:bg-gray-200 border-y border-gray-300">
-                          <TableCell colSpan={10} className="font-semibold text-gray-800 py-3">
+                          <TableCell colSpan={11} className="font-semibold text-gray-800 py-3">
                             <div className="flex items-center justify-between">
                               <div>
                                 📅 {format(localDate, 'EEEE, MMMM d, yyyy')}
@@ -1020,6 +1186,17 @@ const TimecardSystem = () => {
                       </TableCell>
                       <TableCell className="py-2 text-sm">${timecard.totalPay.toFixed(2)}</TableCell>
                       <TableCell className="py-2">{getStatusBadge(timecard.status)}</TableCell>
+                      <TableCell className="py-2 max-w-xs">
+                        {timecard.notes ? (
+                          <div className="bg-amber-50 border border-amber-200 rounded-md px-2 py-1.5">
+                            <span className="text-sm text-amber-900 truncate block" title={timecard.notes}>
+                              {timecard.notes}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-sm text-gray-400">--</span>
+                        )}
+                      </TableCell>
                       <TableCell className="py-1">
                         <div className="flex gap-0.5">
                           {/* Review button for auto-closed entries */}
@@ -1189,6 +1366,17 @@ const TimecardSystem = () => {
                       </TableCell>
                       <TableCell className="py-2 text-sm">${timecard.totalPay.toFixed(2)}</TableCell>
                       <TableCell className="py-2">{getStatusBadge(timecard.status)}</TableCell>
+                      <TableCell className="py-2 max-w-xs">
+                        {timecard.notes ? (
+                          <div className="bg-amber-50 border border-amber-200 rounded-md px-2 py-1.5">
+                            <span className="text-sm text-amber-900 truncate block" title={timecard.notes}>
+                              {timecard.notes}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-sm text-gray-400">--</span>
+                        )}
+                      </TableCell>
                       <TableCell className="py-1">
                         <div className="flex gap-0.5">
                           {/* Review button for auto-closed entries */}
@@ -1584,6 +1772,43 @@ const TimecardSystem = () => {
           setAutoCloseEntryIdForReview(null);
         }}
       />
+
+      {/* Bulk Approve Confirmation Dialog */}
+      <AlertDialog open={showBulkApproveDialog} onOpenChange={setShowBulkApproveDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+              {t('detail_hub.timecard.photo_reviews.bulk_approve_title')}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('detail_hub.timecard.photo_reviews.bulk_approve_description', { count: selectedPhotoReviews.size })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isBulkApproving}>
+              {t('common.cancel')}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleApproveSelected}
+              disabled={isBulkApproving}
+              className="bg-emerald-600 hover:bg-emerald-700"
+            >
+              {isBulkApproving ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  {t('detail_hub.timecard.photo_reviews.approving')}
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  {t('detail_hub.timecard.photo_reviews.confirm_approve')}
+                </>
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Audit Logs Modal */}
       <TimeEntryLogsModal

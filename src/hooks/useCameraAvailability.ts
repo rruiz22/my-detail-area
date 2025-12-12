@@ -42,7 +42,7 @@ export interface CameraAvailability {
   checkCamera: () => Promise<void>;
 }
 
-export function useCameraAvailability(): CameraAvailability {
+export function useCameraAvailability(autoCheck = false): CameraAvailability {
   const [status, setStatus] = useState<CameraStatus>('checking');
   const [error, setError] = useState<string | null>(null);
   const [deviceCount, setDeviceCount] = useState(0);
@@ -75,24 +75,39 @@ export function useCameraAvailability(): CameraAvailability {
         return;
       }
 
-      // Step 3: Request camera access (lightweight test)
-      console.log('[CameraCheck] Requesting camera access...');
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          width: { ideal: 320 },
-          height: { ideal: 240 }
+      // Step 3: Check permission without activating camera (non-invasive)
+      console.log('[CameraCheck] Checking camera permission (non-invasive)...');
+
+      try {
+        // Use Permissions API to check without activating camera hardware
+        const permissionStatus = await navigator.permissions.query({
+          name: 'camera' as PermissionName
+        });
+
+        console.log('[CameraCheck] Permission status:', permissionStatus.state);
+
+        if (permissionStatus.state === 'granted') {
+          // Camera available and permitted
+          setStatus('available');
+          setError(null);
+          console.log('[CameraCheck] ✅ Camera permission granted (no activation)');
+        } else if (permissionStatus.state === 'denied') {
+          setStatus('denied');
+          setError('Camera permission denied by user');
+          console.warn('[CameraCheck] Camera permission denied');
+        } else {
+          // 'prompt' - Permission not yet requested
+          // Assume available, will prompt on first actual use
+          setStatus('available');
+          setError(null);
+          console.log('[CameraCheck] ✅ Camera available (permission will be requested on use)');
         }
-      });
-
-      // Success! Stop the test stream immediately to release camera
-      console.log('[CameraCheck] ✅ Camera access granted');
-      stream.getTracks().forEach(track => {
-        track.stop();
-        console.log('[CameraCheck] Stopped test track:', track.label);
-      });
-
-      setStatus('available');
-      setError(null);
+      } catch (permError) {
+        // Fallback: Permissions API not supported in this browser
+        console.warn('[CameraCheck] Permissions API not available, assuming camera accessible');
+        setStatus('available');
+        setError(null);
+      }
 
     } catch (err: any) {
       console.error('[CameraCheck] ❌ Camera detection failed:', err);
@@ -122,10 +137,12 @@ export function useCameraAvailability(): CameraAvailability {
     }
   }, []);
 
-  // Auto-check camera on mount
+  // Conditionally auto-check camera on mount (only if autoCheck=true)
   useEffect(() => {
-    checkCamera();
-  }, [checkCamera]);
+    if (autoCheck) {
+      checkCamera();
+    }
+  }, [checkCamera, autoCheck]);
 
   return {
     status,
