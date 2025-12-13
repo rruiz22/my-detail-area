@@ -97,6 +97,33 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   // Live clock (updates every second)
   const liveClock = useLiveClock();
 
+  // Kiosk ID from props or localStorage (NO FALLBACK - must be configured)
+  const KIOSK_ID = kioskId || localStorage.getItem('kiosk_id') || null;
+
+  // Helper to check if string is valid UUID
+  const isValidUUID = (str: string | null): str is string => {
+    if (!str) return false;
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(str);
+  };
+
+  // Kiosk Configuration (loaded from database) - MUST be declared before hooks that use it
+  const [kioskConfig, setKioskConfig] = useState<{
+    face_recognition_enabled: boolean;
+    allow_manual_entry: boolean;
+    sleep_timeout_minutes: number;
+    kiosk_code: string | null;
+    name: string | null;
+    location: string | null;
+  }>({
+    face_recognition_enabled: true,
+    allow_manual_entry: true,
+    sleep_timeout_minutes: 10, // Default 10 seconds
+    kiosk_code: null,
+    name: null,
+    location: null,
+  });
+
   // Camera availability detection
   // Hook will reactively update when kioskConfig loads and face_recognition_enabled changes
   const {
@@ -119,33 +146,6 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     findBestMatch,
     initializeMatcher
   } = useFaceRecognition();
-
-  // Kiosk ID from props or localStorage (NO FALLBACK - must be configured)
-  const KIOSK_ID = kioskId || localStorage.getItem('kiosk_id') || null;
-
-  // Helper to check if string is valid UUID
-  const isValidUUID = (str: string | null): str is string => {
-    if (!str) return false;
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    return uuidRegex.test(str);
-  };
-
-  // Kiosk Configuration (loaded from database)
-  const [kioskConfig, setKioskConfig] = useState<{
-    face_recognition_enabled: boolean;
-    allow_manual_entry: boolean;
-    sleep_timeout_minutes: number;
-    kiosk_code: string | null;
-    name: string | null;
-    location: string | null;
-  }>({
-    face_recognition_enabled: true,
-    allow_manual_entry: true,
-    sleep_timeout_minutes: 10, // Default 10 seconds
-    kiosk_code: null,
-    name: null,
-    location: null,
-  });
 
   // Fetch kiosk configuration from database
   useEffect(() => {

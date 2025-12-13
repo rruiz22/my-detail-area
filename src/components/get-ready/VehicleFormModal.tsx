@@ -93,7 +93,7 @@ export function VehicleFormModal({
     Partial<Record<keyof VehicleFormData, string>>
   >({});
   const [loadingVehicle, setLoadingVehicle] = useState(false);
-  const [vinDecoded, setVinDecoded] = useState(false);
+  const [lastDecodedVin, setLastDecodedVin] = useState<string>("");
   const [duplicateVinWarning, setDuplicateVinWarning] = useState<{
     show: boolean;
     existingVehicles: Array<{
@@ -175,7 +175,7 @@ export function VehicleFormModal({
     if (!open) {
       setFormData(initialFormData);
       setErrors({});
-      setVinDecoded(false);
+      setLastDecodedVin("");
       setDuplicateVinWarning({ show: false, existingVehicles: [] });
     }
   }, [open]);
@@ -317,10 +317,12 @@ export function VehicleFormModal({
   };
 
   const handleVinChange = async (vin: string) => {
-    updateFormData("vin", vin.toUpperCase());
+    const normalizedVin = vin.toUpperCase();
+    updateFormData("vin", normalizedVin);
 
-    if (vin.length === 17 && !vinDecoded) {
-      const vehicleData = await decodeVin(vin);
+    // Decode if VIN is 17 chars AND different from last decoded VIN
+    if (vin.length === 17 && normalizedVin !== lastDecodedVin) {
+      const vehicleData = await decodeVin(normalizedVin);
       if (vehicleData) {
         setFormData((prev) => ({
           ...prev,
@@ -329,7 +331,7 @@ export function VehicleFormModal({
           model: vehicleData.model || "",
           trim: vehicleData.trim || "",
         }));
-        setVinDecoded(true);
+        setLastDecodedVin(normalizedVin); // Track this specific VIN
 
         // Clear errors for auto-populated fields
         setErrors((prev) => ({
@@ -345,7 +347,7 @@ export function VehicleFormModal({
         });
       }
     } else if (vin.length < 17) {
-      setVinDecoded(false);
+      setLastDecodedVin(""); // Reset when VIN is incomplete
     }
   };
 
@@ -504,7 +506,7 @@ export function VehicleFormModal({
                       {t("get_ready.vehicle_form.fields.vin")}
                       <span className="text-red-500 ml-1">*</span>
                     </Label>
-                    {vinDecoded && (
+                    {lastDecodedVin && (
                       <div className="flex items-center gap-1 text-xs text-emerald-600">
                         <Zap className="h-3 w-3" />
                         <span>{t("get_ready.vehicle_form.vin_decoded")}</span>

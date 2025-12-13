@@ -13,6 +13,7 @@ interface VehicleInfo {
   trim?: string;
   vehicleType?: string;
   bodyClass?: string;
+  source?: string; // Track which API was used
 }
 
 interface NHTSAApiItem {
@@ -20,68 +21,52 @@ interface NHTSAApiItem {
   Value: string | null;
 }
 
-serve(async (req) => {
-  // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
+// Optional: Get Vincario API key from environment (if available)
+const VINCARIO_API_KEY = Deno.env.get('VINCARIO_API_KEY');
+
+/**
+ * Decode VIN using NHTSA vPIC API (Primary - Free, Unlimited)
+ */
+async function decodeVinNHTSA(vin: string): Promise<VehicleInfo | null> {
+  console.log('Trying NHTSA API...');
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
   try {
-    const { vin } = await req.json();
-    
-    if (!vin || vin.length !== 17) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid VIN. Must be exactly 17 characters.' }),
-        { 
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
-    }
-
-    console.log(`Decoding VIN: ${vin}`);
-    
-    // Use NHTSA free API for VIN decoding
     const response = await fetch(
       `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVin/${vin}?format=json`,
       {
         method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        },
+        headers: { 'Accept': 'application/json' },
+        signal: controller.signal,
       }
     );
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`NHTSA API error: ${response.status}`);
     }
 
     const data = await response.json();
-    console.log('NHTSA Response:', JSON.stringify(data, null, 2));
 
     if (!data.Results || data.Results.length === 0) {
-      return new Response(
-        JSON.stringify({ error: 'Unable to decode VIN. Please verify the VIN is correct.' }),
-        { 
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
+      return null;
     }
 
-    // Extract vehicle information from NHTSA response
-    const results = data.Results;
+    // Extract vehicle information
     const vehicleInfo: VehicleInfo = {
       year: '',
       make: '',
       model: '',
       trim: '',
       vehicleType: '',
-      bodyClass: ''
+      bodyClass: '',
+      source: 'NHTSA'
     };
 
-    // Map NHTSA fields to our structure
-    results.forEach((item: NHTSAApiItem) => {
+    data.Results.forEach((item: NHTSAApiItem) => {
       switch (item.Variable) {
         case 'Model Year':
           vehicleInfo.year = item.Value || '';
@@ -109,21 +94,133 @@ serve(async (req) => {
 
     // Validate required fields
     if (!vehicleInfo.year || !vehicleInfo.make || !vehicleInfo.model) {
-      console.log('Missing required fields:', vehicleInfo);
+      console.log('NHTSA returned incomplete data:', vehicleInfo);
+      return null;
+    }
+
+    console.log('✅ NHTSA decode successful');
+    return vehicleInfo;
+
+  } catch (error) {
+    clearTimeout(timeoutId);
+    console.error('NHTSA API failed:', error.message);
+    return null;
+  }
+}
+
+/**
+ * Decode VIN using Vincario API (Fallback - 20 free/month with API key)
+ * Requires VINCARIO_API_KEY environment variable
+ */
+async function decodeVinVincario(vin: string): Promise<VehicleInfo | null> {
+  if (!VINCARIO_API_KEY) {
+    console.log('⚠️ Vincario API key not configured, skipping fallback');
+    return null;
+  }
+
+  console.log('Trying Vincario API (fallback)...');
+
+  try {
+    const response = await fetch(
+      `https://api.vindecoder.eu/3.2/${VINCARIO_API_KEY}/decode/${vin}.json`,
+      {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+        signal: AbortSignal.timeout(15000), // 15 second timeout
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Vincario API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    // Check if decode was successful
+    if (!data.decode || data.decode.length === 0) {
+      return null;
+    }
+
+    const decoded = data.decode[0];
+
+    const vehicleInfo: VehicleInfo = {
+      year: decoded.years?.[0]?.toString() || '',
+      make: decoded.make || '',
+      model: decoded.model || '',
+      trim: decoded.trim || '',
+      vehicleType: decoded.vehicle_type || '',
+      bodyClass: decoded.body || '',
+      source: 'Vincario'
+    };
+
+    // Validate required fields
+    if (!vehicleInfo.year || !vehicleInfo.make || !vehicleInfo.model) {
+      console.log('Vincario returned incomplete data:', vehicleInfo);
+      return null;
+    }
+
+    console.log('✅ Vincario decode successful (fallback used)');
+    return vehicleInfo;
+
+  } catch (error) {
+    console.error('Vincario API failed:', error.message);
+    return null;
+  }
+}
+
+/**
+ * Main handler with cascading fallback
+ */
+serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const { vin } = await req.json();
+
+    if (!vin || vin.length !== 17) {
       return new Response(
-        JSON.stringify({ 
-          error: 'Incomplete vehicle information from VIN. Please enter vehicle details manually.',
-          partial: vehicleInfo
-        }),
-        { 
+        JSON.stringify({ error: 'Invalid VIN. Must be exactly 17 characters.' }),
+        {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         }
       );
     }
 
+    console.log(`🔍 Decoding VIN: ${vin}`);
+
+    // Try NHTSA first (primary, free, unlimited)
+    let vehicleInfo = await decodeVinNHTSA(vin);
+
+    // If NHTSA failed, try Vincario fallback
+    if (!vehicleInfo) {
+      console.log('⚠️ NHTSA failed, attempting fallback...');
+      vehicleInfo = await decodeVinVincario(vin);
+    }
+
+    // If all APIs failed
+    if (!vehicleInfo) {
+      const errorMessage = VINCARIO_API_KEY
+        ? 'All VIN decode services are currently unavailable. Please try again later or enter vehicle details manually.'
+        : 'NHTSA VIN decode service is currently unavailable. Please try again later or enter vehicle details manually.';
+
+      return new Response(
+        JSON.stringify({
+          error: errorMessage,
+          hint: 'Add VINCARIO_API_KEY to enable fallback API (20 free decodes/month)'
+        }),
+        {
+          status: 503, // Service Unavailable
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
     // Format consolidated vehicle info
-    const formattedInfo = vehicleInfo.trim 
+    const formattedInfo = vehicleInfo.trim
       ? `${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model} (${vehicleInfo.trim})`
       : `${vehicleInfo.year} ${vehicleInfo.make} ${vehicleInfo.model}`;
 
@@ -136,20 +233,21 @@ serve(async (req) => {
       vehicleInfo: formattedInfo,
       vehicleType: vehicleInfo.vehicleType,
       bodyClass: vehicleInfo.bodyClass,
+      source: vehicleInfo.source, // Indicates which API was used
       success: true
     };
 
-    console.log('Decoded vehicle info:', result);
+    console.log(`✅ VIN decoded successfully via ${vehicleInfo.source}`);
 
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
   } catch (error) {
-    console.error('Error in decode-vin function:', error);
-    
+    console.error('❌ Error in decode-vin function:', error);
+
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Failed to decode VIN. Please try again or enter vehicle details manually.',
         details: error.message
       }),

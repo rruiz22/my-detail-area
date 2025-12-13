@@ -77,10 +77,29 @@ export function InvoiceTagsManager({
   // Estado local optimista
   const [optimisticTags, setOptimisticTags] = useState<InvoiceTag[]>(currentTags);
 
-  // Sincronizar con datos del servidor
+  // Helper: Comparar arrays de tags por contenido (no por referencia)
+  const areTagArraysEqual = (a: InvoiceTag[], b: InvoiceTag[]): boolean => {
+    if (a.length !== b.length) return false;
+
+    // Comparar cada tag por sus propiedades
+    return a.every((tagA, index) => {
+      const tagB = b[index];
+      return (
+        tagA.id === tagB?.id &&
+        tagA.tagName === tagB?.tagName &&
+        tagA.colorIndex === tagB?.colorIndex
+      );
+    });
+  };
+
+  // Sincronizar con datos del servidor (solo si el contenido cambió)
   useEffect(() => {
-    setOptimisticTags(currentTags);
-  }, [currentTags]);
+    // ✅ Fix: Solo actualizar si el contenido es diferente
+    // Esto previene el loop infinito causado por cambios de referencia
+    if (!areTagArraysEqual(optimisticTags, currentTags)) {
+      setOptimisticTags(currentTags);
+    }
+  }, [currentTags, optimisticTags]);
 
   // Filtrar sugerencias (excluir tags ya agregados)
   const currentTagNames = optimisticTags.map(t => t.tagName.toLowerCase());
