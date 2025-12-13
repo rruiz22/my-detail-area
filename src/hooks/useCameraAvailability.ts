@@ -152,11 +152,10 @@ export function useCameraAvailability(autoCheck = false, enabled = true): Camera
       console.log('[CameraCheck] Face recognition disabled - setting camera to unavailable');
       setStatus('unavailable');
       setError(null);
-    } else if (enabled && status === 'unavailable' && autoCheck) {
-      // If face recognition gets re-enabled, check camera again
-      checkCamera();
     }
-  }, [enabled, status, autoCheck, checkCamera]);
+    // Note: Don't re-enable camera here to avoid circular dependencies
+    // Camera will be checked on mount if autoCheck=true
+  }, [enabled, status]);
 
   return {
     status,
