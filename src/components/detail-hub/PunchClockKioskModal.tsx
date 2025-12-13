@@ -98,13 +98,14 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   const liveClock = useLiveClock();
 
   // Camera availability detection
+  // Hook will reactively update when kioskConfig loads and face_recognition_enabled changes
   const {
     status: cameraStatus,
     hasCamera,
     isReady: cameraReady,
     error: cameraError,
     checkCamera
-  } = useCameraAvailability(false); // Don't auto-check on mount
+  } = useCameraAvailability(false, kioskConfig.face_recognition_enabled);
 
   // Kiosk heartbeat
   const { mutate: updateHeartbeat } = useUpdateKioskHeartbeat();

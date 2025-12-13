@@ -42,8 +42,10 @@ export interface CameraAvailability {
   checkCamera: () => Promise<void>;
 }
 
-export function useCameraAvailability(autoCheck = false): CameraAvailability {
-  const [status, setStatus] = useState<CameraStatus>('checking');
+export function useCameraAvailability(autoCheck = false, enabled = true): CameraAvailability {
+  // If enabled=false (face recognition disabled), start with 'unavailable' instead of 'checking'
+  // This prevents infinite "checking" state when camera is not needed
+  const [status, setStatus] = useState<CameraStatus>(enabled ? 'checking' : 'unavailable');
   const [error, setError] = useState<string | null>(null);
   const [deviceCount, setDeviceCount] = useState(0);
 
@@ -143,6 +145,18 @@ export function useCameraAvailability(autoCheck = false): CameraAvailability {
       checkCamera();
     }
   }, [checkCamera, autoCheck]);
+
+  // React to enabled parameter changes (e.g., when kioskConfig loads asynchronously)
+  useEffect(() => {
+    if (!enabled && status !== 'unavailable') {
+      console.log('[CameraCheck] Face recognition disabled - setting camera to unavailable');
+      setStatus('unavailable');
+      setError(null);
+    } else if (enabled && status === 'unavailable' && autoCheck) {
+      // If face recognition gets re-enabled, check camera again
+      checkCamera();
+    }
+  }, [enabled, status, autoCheck, checkCamera]);
 
   return {
     status,
