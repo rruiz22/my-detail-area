@@ -871,8 +871,9 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       if (captureAction === 'clock_in' && KIOSK_ID) {
         const currentTime = new Date().toISOString();
 
-        const { data: revalidation, error: revalidationError } = await supabase.rpc('can_punch_in_from_template', {
+        const { data: revalidation, error: revalidationError } = await supabase.rpc('validate_punch_in_assignment', {
           p_employee_id: selectedEmployee.id,
+          p_dealership_id: selectedDealerId as number,
           p_kiosk_id: KIOSK_ID, // Use UUID, not kiosk_code
           p_current_time: currentTime
         });
