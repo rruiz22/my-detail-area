@@ -58,6 +58,9 @@ export interface ScheduleTemplate {
 
   /** Minutes after shift end to auto-close punch (default: 120) */
   auto_close_window_minutes?: number;
+
+  /** Whether to require face validation for this assignment */
+  require_face_validation?: boolean;
 }
 
 /**

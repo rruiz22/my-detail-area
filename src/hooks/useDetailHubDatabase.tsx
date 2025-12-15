@@ -1779,36 +1779,74 @@ export function useApproveEarlyPunch() {
 export interface TemplateValidationResult {
   allowed: boolean;
   reason: string;
+  assignment_id: string | null;
   shift_start_time: string | null;
   shift_end_time: string | null;
   early_punch_allowed_minutes: number | null;
   late_punch_grace_minutes: number | null;
   minutes_until_allowed: number | null;
+  require_face_validation: boolean;
 }
 
 /**
- * Validates punch-in using employee schedule template (no schedules table)
- * Replaces usePunchValidation from useDetailHubSchedules
+ * Validates punch-in using employee assignment and schedule template
+ * Uses validate_punch_in_assignment RPC function
  */
-export function useTemplateValidation(employeeId: string | null, kioskId: string | null) {
+export function useTemplateValidation(
+  employeeId: string | null,
+  kioskId: string | null,
+  dealershipId?: number | null
+) {
   return useQuery({
-    queryKey: ['template-validation', employeeId, kioskId],
+    queryKey: ['template-validation', employeeId, kioskId, dealershipId],
     queryFn: async () => {
-      if (!employeeId || !kioskId) return null;
+      if (!employeeId || !dealershipId || dealershipId === 0) return null;
 
-      const { data, error } = await supabase.rpc('can_punch_in_from_template', {
+      const punchTime = new Date().toISOString();
+      console.log('[TemplateValidation] Calling RPC with:', {
         p_employee_id: employeeId,
-        p_kiosk_id: kioskId,
-        p_current_time: new Date().toISOString()
+        p_dealership_id: dealershipId,
+        p_kiosk_id: kioskId || null,
+        p_punch_time: punchTime,
+        local_time: new Date().toLocaleTimeString()
       });
 
-      if (error) throw error;
-      return data[0] as TemplateValidationResult;
+      const { data, error } = await supabase.rpc('validate_punch_in_assignment', {
+        p_employee_id: employeeId,
+        p_dealership_id: dealershipId,
+        p_kiosk_id: kioskId || null,
+        p_punch_time: punchTime
+      });
+
+      console.log('[TemplateValidation] RPC response:', { data, error });
+
+      if (error) {
+        console.error('[TemplateValidation] RPC error:', error);
+        throw error;
+      }
+
+      // Transform result to match expected interface
+      const result = data?.[0];
+      console.log('[TemplateValidation] Result:', result);
+      if (!result) return null;
+
+      return {
+        allowed: result.allowed,
+        reason: result.reason,
+        assignment_id: result.assignment_id,
+        // Now these fields are returned from the expanded RPC
+        shift_start_time: result.shift_start_time || null,
+        shift_end_time: result.shift_end_time || null,
+        early_punch_allowed_minutes: result.early_punch_allowed_minutes || null,
+        late_punch_grace_minutes: result.late_punch_grace_minutes || null,
+        minutes_until_allowed: result.minutes_until_allowed || null,
+        require_face_validation: result.require_face_validation || false,
+      } as TemplateValidationResult;
     },
-    enabled: !!employeeId && !!kioskId,
+    enabled: !!employeeId && !!dealershipId && dealershipId !== 0,
     staleTime: 10000, // 10 seconds
     gcTime: GC_TIMES.SHORT,
-    refetchInterval: 30000, // Refresh every 30s for time-based validation
+    refetchInterval: 10000, // Refresh every 10s for better responsiveness
   });
 }
 

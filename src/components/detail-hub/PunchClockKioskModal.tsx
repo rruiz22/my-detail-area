@@ -18,33 +18,32 @@
  * - Responsive design (full-screen on mobile, 90% viewport on desktop)
  */
 
-import { useState, useRef, useEffect, useCallback } from "react";
-import { useTranslation } from "react-i18next";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { format } from "date-fns";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { format } from "date-fns";
 import {
-  Camera,
-  User,
-  CheckCircle,
-  LogIn,
-  LogOut,
-  Coffee,
-  RotateCcw,
-  Loader2,
-  X,
-  XCircle,
-  Clock,
-  AlertCircle,
-  AlertTriangle,
-  MessageSquare
+    AlertCircle,
+    Camera,
+    CheckCircle,
+    Clock,
+    Coffee,
+    Loader2,
+    LogIn,
+    LogOut,
+    MessageSquare,
+    RotateCcw,
+    User,
+    X,
+    XCircle
 } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 // Photo capture utilities
 import { capturePhotoFromVideo, uploadPhotoToStorage } from "@/utils/photoFallback";
@@ -59,22 +58,22 @@ import { supabase } from "@/integrations/supabase/client";
 import { debugLog } from "@/utils/debugLog";
 
 // New hooks and components
-import { useEmployeeSearch } from "@/hooks/useEmployeeSearch";
-import { useEmployeeCurrentState } from "@/hooks/useEmployeeCurrentState";
 import { useEmployeeById } from "@/hooks/useEmployeeById";
+import { useEmployeeCurrentState } from "@/hooks/useEmployeeCurrentState";
+import { useEmployeeSearch } from "@/hooks/useEmployeeSearch";
 import { EmployeeHeader } from "./punch-clock/EmployeeHeader";
-import { WeekStatsCard } from "./punch-clock/WeekStatsCard";
 import { NumericKeypad } from "./punch-clock/NumericKeypad";
 import { PinInputDisplay } from "./punch-clock/PinInputDisplay";
 import { PunchHistoryCard } from "./punch-clock/PunchHistoryCard";
+import { WeekStatsCard } from "./punch-clock/WeekStatsCard";
 
 // DetailHub hooks
-import { useClockIn, useClockOut, useStartBreak, useEndBreak, DetailHubEmployee, useCurrentBreak, useTemplateValidation } from "@/hooks/useDetailHubDatabase";
-import { useUpdateKioskHeartbeat } from "@/hooks/useDetailHubKiosks";
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
 import { useToast } from "@/hooks/use-toast";
-import { useLiveClock } from "@/hooks/useLiveClock";
 import { useCameraAvailability } from "@/hooks/useCameraAvailability";
+import { DetailHubEmployee, useClockIn, useClockOut, useCurrentBreak, useEndBreak, useStartBreak, useTemplateValidation } from "@/hooks/useDetailHubDatabase";
+import { useUpdateKioskHeartbeat } from "@/hooks/useDetailHubKiosks";
+import { useLiveClock } from "@/hooks/useLiveClock";
 
 interface PunchClockKioskModalProps {
   open: boolean;
@@ -175,13 +174,13 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     }
   }, [KIOSK_ID]);
 
-  // ✅ NEW: Manually trigger camera check only when modal opens (if face recognition enabled)
+  // ✅ Always check camera when modal opens (photo capture is always required for punches)
   useEffect(() => {
-    if (open && kioskConfig.face_recognition_enabled) {
-      console.log('[Kiosk] Modal opened with face recognition - checking camera availability');
+    if (open) {
+      console.log('[Kiosk] Modal opened - checking camera availability for photo capture');
       checkCamera();
     }
-  }, [open, kioskConfig.face_recognition_enabled, checkCamera]);
+  }, [open, checkCamera]);
 
   // Send heartbeat with camera status when modal opens or camera status changes
   useEffect(() => {
@@ -261,10 +260,11 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   // ✅ NEW: Get current open break from detail_hub_breaks table
   const { data: currentBreak } = useCurrentBreak(selectedEmployee?.id || null);
 
-  // ✅ TEMPLATE VALIDATION: Pre-punch validation using employee template
+  // ✅ TEMPLATE VALIDATION: Pre-punch validation using employee assignment
   const { data: templateValidation } = useTemplateValidation(
     selectedEmployee?.id || null,
-    KIOSK_ID
+    KIOSK_ID,
+    typeof selectedDealerId === 'number' ? selectedDealerId : null
   );
 
   // Live break timer (updates every second)
@@ -759,7 +759,52 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
   }, [currentView, pin, isLocked, handlePinSubmit]);
 
   // Start photo capture (always required, even after facial recognition)
-  const handleStartPhotoCapture = (action: CaptureAction) => {
+  const handleStartPhotoCapture = async (action: CaptureAction) => {
+    // Check if face validation is required and not completed
+    if (templateValidation?.require_face_validation &&
+        kioskConfig.face_recognition_enabled &&
+        !faceMatchedEmployeeId) {
+
+      // Check if employee has face enrolled
+      if (!selectedEmployee?.face_enrolled) {
+        // Log validation failure
+        if (KIOSK_ID && selectedDealerId) {
+          await supabase.rpc('log_validation_failure', {
+            p_employee_id: selectedEmployee?.id,
+            p_dealership_id: selectedDealerId as number,
+            p_kiosk_id: KIOSK_ID,
+            p_validation_type: 'no_face_enrolled',
+            p_reason: 'Face recognition required but employee has no face enrolled'
+          });
+        }
+
+        toast({
+          title: t('detail_hub.punch_clock.messages.face_required_title') || 'Face Recognition Required',
+          description: t('detail_hub.punch_clock.messages.face_not_enrolled') || 'Face enrollment required. Please contact your manager.',
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Log validation failure - face recognition failed
+      if (KIOSK_ID && selectedDealerId) {
+        await supabase.rpc('log_validation_failure', {
+          p_employee_id: selectedEmployee?.id,
+          p_dealership_id: selectedDealerId as number,
+          p_kiosk_id: KIOSK_ID,
+          p_validation_type: 'require_face_not_met',
+          p_reason: 'Face recognition required but validation failed'
+        });
+      }
+
+      toast({
+        title: t('detail_hub.punch_clock.messages.face_required_title') || 'Face Recognition Required',
+        description: t('detail_hub.punch_clock.messages.face_required_desc') || 'Face recognition is required for this assignment. Please try again.',
+        variant: "destructive"
+      });
+      return;
+    }
+
     setCaptureAction(action);
     setCurrentView('photo_capture');
     setCapturedPhoto(null); // Clear any previous photo (including from facial recognition)
@@ -875,7 +920,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
           p_employee_id: selectedEmployee.id,
           p_dealership_id: selectedDealerId as number,
           p_kiosk_id: KIOSK_ID, // Use UUID, not kiosk_code
-          p_current_time: currentTime
+          p_punch_time: currentTime
         });
 
         if (revalidationError) {

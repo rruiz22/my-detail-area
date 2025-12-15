@@ -65,7 +65,8 @@ export function AssignmentModal({
     early_punch_allowed_minutes: undefined, // undefined = no time restriction (flexible)
     late_punch_grace_minutes: undefined,    // undefined = no time restriction (flexible)
     required_break_minutes: 30,
-    break_is_paid: false
+    break_is_paid: false,
+    require_face_validation: false
   });
   const [notes, setNotes] = useState('');
 
@@ -81,7 +82,8 @@ export function AssignmentModal({
         early_punch_allowed_minutes: assignment.schedule_template.early_punch_allowed_minutes,
         late_punch_grace_minutes: assignment.schedule_template.late_punch_grace_minutes,
         required_break_minutes: assignment.schedule_template.required_break_minutes ?? 30,
-        break_is_paid: assignment.schedule_template.break_is_paid ?? false
+        break_is_paid: assignment.schedule_template.break_is_paid ?? false,
+        require_face_validation: assignment.schedule_template.require_face_validation ?? false
       });
       setNotes(assignment.notes || '');
     } else {
@@ -94,7 +96,8 @@ export function AssignmentModal({
         early_punch_allowed_minutes: undefined, // Flexible (no time restriction)
         late_punch_grace_minutes: undefined,    // Flexible (no time restriction)
         required_break_minutes: 30,
-        break_is_paid: false
+        break_is_paid: false,
+        require_face_validation: false
       });
       setNotes('');
     }
@@ -412,6 +415,48 @@ export function AssignmentModal({
                   Typical break: 30 minutes for 8-hour shifts
                 </p>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Security Settings */}
+          <Card className="border-red-200 bg-red-50/30">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 text-red-600" />
+                Security Settings
+              </CardTitle>
+              <CardDescription>
+                Configure security requirements for this assignment
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-red-100 shadow-sm">
+                <div>
+                  <p className="font-medium text-sm text-gray-900">
+                    Require Face Recognition
+                  </p>
+                  <p className="text-xs text-gray-600 mt-0.5">
+                    Employee must pass face recognition to punch in/out
+                  </p>
+                </div>
+                <Switch
+                  checked={scheduleTemplate.require_face_validation ?? false}
+                  onCheckedChange={(checked) =>
+                    setScheduleTemplate({ ...scheduleTemplate, require_face_validation: checked })
+                  }
+                />
+              </div>
+              {scheduleTemplate.require_face_validation && (
+                <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                  <p className="text-xs text-amber-800 flex items-start gap-2">
+                    <AlertCircle className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
+                    <span>
+                      Employee must have face enrollment completed before this setting takes effect.
+                      Face recognition must also be enabled at the kiosk level.
+                    </span>
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
