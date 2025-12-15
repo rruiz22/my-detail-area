@@ -43,9 +43,9 @@ export const DealershipFilter = () => {
   // Single dealer user - show ONLY informative badge (no dropdown)
   if (dealerships.length === 1 && user?.role !== 'system_admin') {
     return (
-      <Badge variant="outline" className="gap-2 px-3 py-1 rounded-sm">
-        <Building2 className="h-3 w-3" />
-        <span className="font-medium text-xs">{dealerships[0].name}</span>
+      <Badge variant="outline" className="gap-2 px-3 py-1 rounded-sm max-w-[280px]">
+        <Building2 className="h-3 w-3 shrink-0" />
+        <span className="font-medium text-xs truncate" title={dealerships[0].name}>{dealerships[0].name}</span>
       </Badge>
     );
   }
@@ -56,19 +56,21 @@ export const DealershipFilter = () => {
 
   return (
     <div className="flex items-center gap-2 shrink-0">
-      <Badge variant="outline" className="gap-2 px-3 py-1 hidden lg:flex rounded-sm">
-        <Building2 className="h-3 w-3" />
-        <span className="font-medium text-xs">{getCurrentDealerName()}</span>
+      <Badge variant="outline" className="gap-2 px-3 py-1 hidden lg:flex rounded-sm max-w-[200px]">
+        <Building2 className="h-3 w-3 shrink-0" />
+        <span className="font-medium text-xs truncate">{getCurrentDealerName()}</span>
       </Badge>
       <Select
         key={dealershipsKey}
         value={selectedDealerId.toString()}
         onValueChange={handleDealerChange}
       >
-        <SelectTrigger className="w-56 lg:w-48 h-8 text-sm whitespace-nowrap">
-          <div className="flex items-center gap-2 w-full">
+        <SelectTrigger className="w-56 lg:w-64 xl:w-72 h-8 text-sm">
+          <div className="flex items-center gap-2 w-full overflow-hidden">
             <Building2 className="h-4 w-4 text-muted-foreground shrink-0 lg:hidden" />
-            <SelectValue placeholder={t('dealerships.dealership')} className="truncate" />
+            <div className="truncate flex-1 text-left">
+              <SelectValue placeholder={t('dealerships.dealership')} />
+            </div>
           </div>
         </SelectTrigger>
         <SelectContent>
