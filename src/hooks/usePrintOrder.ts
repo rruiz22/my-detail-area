@@ -60,6 +60,9 @@ interface DealershipInfo {
   id: number;
   name: string;
   address?: string;
+  city?: string;
+  state?: string;
+  zip_code?: string;
   phone?: string;
   email?: string;
   website?: string;
@@ -103,14 +106,14 @@ const PRINT_STYLES = `
     .order-title { font-size: 18pt; font-weight: bold; margin: 0 0 8px 0; color: #000; }
     .order-number-plain { font-size: 20pt; font-weight: bold; margin-bottom: 8px; color: #000; }
     .print-date { font-size: 10pt; color: #666; }
-    .customer-vehicle-section { margin-bottom: 20px; }
+    .customer-vehicle-section { margin-bottom: 15px; }
     .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
     .section-title { font-size: 14pt; font-weight: bold; margin: 0 0 12px 0; padding: 8px 0; border-bottom: 2px solid #ccc; color: #000; }
     .info-table { width: 100%; }
     .info-row { display: grid; grid-template-columns: 100px 1fr; gap: 12px; padding: 6px 0; border-bottom: 1px solid #eee; }
     .label { font-weight: bold; color: #333; white-space: nowrap; }
     .value { color: #000; }
-    .services-section { margin-bottom: 20px; }
+    .services-section { margin-bottom: 15px; }
     .services-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
     .services-table th { background: #f8f8f8; padding: 12px 8px; text-align: left; border: 1px solid #ddd; font-weight: bold; font-size: 11pt; }
     .services-table td { padding: 10px 8px; border: 1px solid #ddd; font-size: 11pt; }
@@ -125,9 +128,9 @@ const PRINT_STYLES = `
     .qr-container { border: 1px solid #ddd; padding: 16px; display: inline-block; border-radius: 8px; }
     .qr-instructions { margin: 8px 0 4px 0; font-size: 10pt; color: #666; }
     .qr-url { font-size: 9pt; font-family: 'Courier New', monospace; color: #666; word-break: break-all; }
-    .notes-section { margin-bottom: 30px; }
+    .notes-section { margin-bottom: 15px; }
     .notes-content { padding: 12px; border: 1px solid #ddd; border-radius: 4px; background: #fafafa; white-space: pre-wrap; font-size: 11pt; line-height: 1.4; }
-    .print-footer { border-top: 1px solid #ddd; padding-top: 20px; text-align: center; font-size: 10pt; color: #666; page-break-inside: avoid; }
+    .print-footer { border-top: 1px solid #ddd; padding-top: 8px; text-align: center; font-size: 10pt; color: #666; page-break-inside: avoid; }
     .footer-info p { margin: 4px 0; }
   }
 
@@ -187,7 +190,7 @@ export const usePrintOrder = () => {
       const [dealershipResult, userProfilesResult, currentUserProfile] = await Promise.all([
         supabase
           .from('dealerships')
-          .select('id, name, address, phone, email, website')
+          .select('id, name, address, city, state, zip_code, phone, email, website')
           .eq('id', orderData.dealer_id)
           .single(),
         supabase
@@ -337,7 +340,11 @@ export const usePrintOrder = () => {
         <header class="print-header">
           <div class="dealership-info">
             <h1 class="dealership-name">${dealership.name}</h1>
-            ${dealership.address ? `<p class="dealership-address">${dealership.address}</p>` : ''}
+            ${dealership.address ? `<p class="dealership-address" style="margin: 2px 0;">${dealership.address}</p>` : ''}
+            ${dealership.city || dealership.state || dealership.zip_code ? `
+            <p class="dealership-address" style="margin: 2px 0;">
+              ${dealership.city ? dealership.city + ', ' : ''}${dealership.state || ''} ${dealership.zip_code || ''}
+            </p>` : ''}
             <div class="dealership-contact">
               ${dealership.phone ? `Phone: ${dealership.phone}` : ''}
             </div>
@@ -474,20 +481,20 @@ export const usePrintOrder = () => {
         </section>
 
         ${order.short_link ? `
-        <section class="qr-section">
-          <h3 class="section-title">Order Tracking</h3>
-          <div class="qr-container" style="text-align: center; margin: 15px 0;">
+        <section class="qr-section" style="margin-bottom: 8px;">
+          <h3 class="section-title" style="margin-bottom: 10px;">Order Tracking</h3>
+          <div class="qr-container" style="text-align: center; margin: 10px 0 5px 0;">
             <img
               src="https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${encodeURIComponent(order.short_link)}"
               alt="QR Code"
               style="width: 90px; height: 90px; border: 1px solid #ddd; border-radius: 4px; display: block; margin: 0 auto;"
             />
-            <p class="qr-instructions" style="margin: 8px 0 2px 0; font-size: 10px; color: #666; font-weight: bold;">Scan for order status</p>
-            <p class="qr-url" style="margin: 0; font-size: 9px; color: #888; word-break: break-all;">${order.short_link}</p>
+            <p class="qr-instructions" style="margin: 6px 0 2px 0; font-size: 10px; color: #666; font-weight: bold;">Scan for order status</p>
+            <p class="qr-url" style="margin: 0 0 5px 0; font-size: 9px; color: #888; word-break: break-all;">${order.short_link}</p>
           </div>
         </section>` : ''}
 
-        <footer class="print-footer">
+        <footer class="print-footer" style="padding-top: 8px;">
           <div class="footer-info">
             <p style="font-size: 10px; color: #999; margin: 0;">Order ID: ${order.id}</p>
           </div>

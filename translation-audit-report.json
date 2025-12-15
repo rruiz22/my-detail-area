@@ -1,7 +1,7 @@
 {
   "scannedFiles": 958,
-  "totalStrings": 10222,
-  "hardcodedStrings": 2188,
+  "totalStrings": 10224,
+  "hardcodedStrings": 2190,
   "translatedStrings": 8034,
   "issues": {
     "critical": [
@@ -10357,63 +10357,73 @@
         "hardcodedStrings": [
           {
             "text": "WORK ORDER",
-            "line": 330,
-            "context": "329: <div class=\"order-header\">\n330: <h2 class=\"order-title\">WORK ORDER</h2>\n331: <div class=\"order-number-plain\">#${orderNumber}</div>"
+            "line": 346,
+            "context": "345: <div class=\"order-header\">\n346: <h2 class=\"order-title\">WORK ORDER</h2>\n347: <div class=\"order-number-plain\">#${orderNumber}</div>"
           },
           {
             "text": "Customer Information",
-            "line": 348,
-            "context": "347: <div class=\"customer-info\">\n348: <h3 class=\"section-title\">Customer Information</h3>\n349: <div class=\"info-table\">"
+            "line": 364,
+            "context": "363: <div class=\"customer-info\">\n364: <h3 class=\"section-title\">Customer Information</h3>\n365: <div class=\"info-table\">"
           },
           {
             "text": "Vehicle Information",
-            "line": 370,
-            "context": "369: <div class=\"vehicle-info\">\n370: <h3 class=\"section-title\">Vehicle Information</h3>\n371: <div class=\"info-table\">"
+            "line": 386,
+            "context": "385: <div class=\"vehicle-info\">\n386: <h3 class=\"section-title\">Vehicle Information</h3>\n387: <div class=\"info-table\">"
           },
           {
             "text": "Service Information",
-            "line": 401,
-            "context": "400: <section style=\"margin-bottom: 15px;\">\n401: <h3 class=\"section-title\" style=\"margin-bottom: 8px; padding: 4px 0;\">Service Information</h3>\n402: <div style=\"display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;\">"
+            "line": 417,
+            "context": "416: <section style=\"margin-bottom: 15px;\">\n417: <h3 class=\"section-title\" style=\"margin-bottom: 8px; padding: 4px 0;\">Service Information</h3>\n418: <div style=\"display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;\">"
           },
           {
             "text": "Services Requested",
-            "line": 423,
-            "context": "422: <section class=\"services-section\">\n423: <h3 class=\"section-title\">Services Requested</h3>\n424: <table class=\"services-table\">"
+            "line": 438,
+            "context": "437: <section class=\"services-section\">\n438: <h3 class=\"section-title\">Services Requested</h3>\n439: ${services.length > 0 ? `"
           },
           {
             "text": "Service",
-            "line": 427,
-            "context": "426: <tr>\n427: <th class=\"service-name\">Service</th>\n428: <th class=\"service-description\">Description</th>"
+            "line": 443,
+            "context": "442: <tr>\n443: <th class=\"service-name\">Service</th>\n444: <th class=\"service-description\">Description</th>"
           },
           {
             "text": "Description",
-            "line": 428,
-            "context": "427: <th class=\"service-name\">Service</th>\n428: <th class=\"service-description\">Description</th>\n429: </tr>"
+            "line": 444,
+            "context": "443: <th class=\"service-name\">Service</th>\n444: <th class=\"service-description\">Description</th>\n445: <th class=\"service-price\" style=\"text-align: right;\">Price</th>"
+          },
+          {
+            "text": "Price",
+            "line": 445,
+            "context": "444: <th class=\"service-description\">Description</th>\n445: <th class=\"service-price\" style=\"text-align: right;\">Price</th>\n446: </tr>"
+          },
+          {
+            "text": "No services added to this order yet",
+            "line": 457,
+            "context": "456: </tfoot>\n457: </table>` : '<p style=\"padding: 12px; color: #666;\">No services added to this order yet</p>'}\n458: "
           },
           {
             "text": "Order Tracking",
-            "line": 455,
-            "context": "454: <section class=\"qr-section\">\n455: <h3 class=\"section-title\">Order Tracking</h3>\n456: <div class=\"qr-container\" style=\"text-align: center; margin: 15px 0;\">"
+            "line": 478,
+            "context": "477: <section class=\"qr-section\">\n478: <h3 class=\"section-title\">Order Tracking</h3>\n479: <div class=\"qr-container\" style=\"text-align: center; margin: 15px 0;\">"
           },
           {
             "text": "Scan for order status",
-            "line": 462,
-            "context": "461: />\n462: <p class=\"qr-instructions\" style=\"margin: 8px 0 2px 0; font-size: 10px; color: #666; font-weight: bold;\">Scan for order status</p>\n463: <p class=\"qr-url\" style=\"margin: 0; font-size: 9px; color: #888; word-break: break-all;\">${order.short_link}</p>"
+            "line": 485,
+            "context": "484: />\n485: <p class=\"qr-instructions\" style=\"margin: 8px 0 2px 0; font-size: 10px; color: #666; font-weight: bold;\">Scan for order status</p>\n486: <p class=\"qr-url\" style=\"margin: 0; font-size: 9px; color: #888; word-break: break-all;\">${order.short_link}</p>"
           },
           {
             "text": "QR Code",
-            "line": 459,
-            "context": "458: src=\"https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${encodeURIComponent(order.short_link)}\"\n459: alt=\"QR Code\"\n460: style=\"width: 90px; height: 90px; border: 1px solid #ddd; border-radius: 4px; display: block; margin: 0 auto;\""
+            "line": 482,
+            "context": "481: src=\"https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${encodeURIComponent(order.short_link)}\"\n482: alt=\"QR Code\"\n483: style=\"width: 90px; height: 90px; border: 1px solid #ddd; border-radius: 4px; display: block; margin: 0 auto;\""
           },
           {
             "text": ", error);\n      toast({ variant: ",
-            "line": 522,
-            "context": "521: } catch (error) {\n522: console.error('Print order error:', error);\n523: toast({ variant: 'destructive', description: `Failed to print order: ${error}` });"
+            "line": 545,
+            "context": "544: } catch (error) {\n545: console.error('Print order error:', error);\n546: toast({ variant: 'destructive', description: `Failed to print order: ${error}` });"
           },
           {
             "text": ", error);\n      toast({ variant: ",
-            "line": 611,
-            "context": "610: } catch (error) {\n611: console.error('Print preview error:', error);\n612: toast({ variant: 'destructive', description: 'Failed to open print preview' });"
+            "line": 634,
+            "context": "633: } catch (error) {\n634: console.error('Print preview error:', error);\n635: toast({ variant: 'destructive', description: 'Failed to open print preview' });"
           }
         ],
         "translationCalls": [],
@@ -73069,6 +73079,7 @@
         "src\\components\\dev\\StorageDevTools.tsx",
         "src\\components\\users\\AdvancedUserFilters.tsx",
         "src\\components\\debug\\PermissionsDebugger.tsx",
+        "src\\hooks\\usePrintOrder.ts",
         "src\\components\\management\\DealershipManagementSection.tsx",
         "src\\components\\orders\\InstructionsBlock.tsx",
         "src\\components\\performance\\PerformanceMonitor.tsx",
@@ -73081,7 +73092,6 @@
         "src\\components\\reports\\invoices\\email\\ManageEmailContactsDialog.tsx",
         "src\\components\\reports\\invoices\\VehicleInvoiceSearch.tsx",
         "src\\components\\scanner\\enhanced\\VinStatistics.tsx",
-        "src\\hooks\\usePrintOrder.ts",
         "src\\pages\\PublicReconData.tsx",
         "src\\components\\followers\\UniversalFollowButton.tsx",
         "src\\components\\get-ready\\approvals\\ApprovalHistoryTable.tsx",
