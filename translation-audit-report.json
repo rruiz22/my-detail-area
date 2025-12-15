@@ -28739,255 +28739,255 @@
         "translationCalls": [
           {
             "key": "detail_hub.timecard.manual_entry.errors.employee_required",
-            "line": 44,
+            "line": 45,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.errors.clock_in_required",
-            "line": 48,
+            "line": 49,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.errors.clock_out_after_in",
-            "line": 57,
+            "line": 58,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.errors.break_end_required",
-            "line": 63,
+            "line": 64,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.errors.break_end_after_start",
-            "line": 71,
+            "line": 72,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.errors.break_minimum_30",
-            "line": 77,
+            "line": 78,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.errors.break_within_shift",
-            "line": 84,
+            "line": 85,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.errors.break_within_shift",
-            "line": 91,
+            "line": 92,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.title",
-            "line": 170,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.manual_entry.description",
             "line": 172,
             "exists": false
           },
           {
+            "key": "detail_hub.timecard.manual_entry.description",
+            "line": 174,
+            "exists": false
+          },
+          {
             "key": "detail_hub.timecard.manual_entry.employee",
-            "line": 179,
+            "line": 181,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.select_employee",
-            "line": 182,
+            "line": 184,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.date",
-            "line": 197,
+            "line": 199,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.clock_in",
-            "line": 220,
+            "line": 227,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.clock_out",
-            "line": 236,
+            "line": 243,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.optional",
-            "line": 245,
+            "line": 252,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.break_start",
-            "line": 256,
+            "line": 263,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.optional",
-            "line": 265,
+            "line": 272,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.break_end",
-            "line": 273,
+            "line": 280,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.optional",
-            "line": 282,
+            "line": 289,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.notes",
-            "line": 292,
+            "line": 299,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.notes_placeholder",
-            "line": 297,
+            "line": 304,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.cancel",
-            "line": 313,
+            "line": 320,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.saving",
-            "line": 317,
+            "line": 324,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.manual_entry.save",
-            "line": 317,
+            "line": 324,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "detail_hub.timecard.manual_entry.errors.employee_required",
-            "line": 44,
-            "context": "43: if (!selectedEmployee) {\n44: newErrors.employee = t('detail_hub.timecard.manual_entry.errors.employee_required');\n45: }"
+            "line": 45,
+            "context": "44: if (!selectedEmployee) {\n45: newErrors.employee = t('detail_hub.timecard.manual_entry.errors.employee_required');\n46: }"
           },
           {
             "key": "detail_hub.timecard.manual_entry.errors.clock_in_required",
-            "line": 48,
-            "context": "47: if (!clockInTime) {\n48: newErrors.clockIn = t('detail_hub.timecard.manual_entry.errors.clock_in_required');\n49: }"
+            "line": 49,
+            "context": "48: if (!clockInTime) {\n49: newErrors.clockIn = t('detail_hub.timecard.manual_entry.errors.clock_in_required');\n50: }"
           },
           {
             "key": "detail_hub.timecard.manual_entry.errors.clock_out_after_in",
-            "line": 57,
-            "context": "56: if (clockOutDateTime <= clockInDateTime) {\n57: newErrors.clockOut = t('detail_hub.timecard.manual_entry.errors.clock_out_after_in');\n58: }"
+            "line": 58,
+            "context": "57: if (clockOutDateTime <= clockInDateTime) {\n58: newErrors.clockOut = t('detail_hub.timecard.manual_entry.errors.clock_out_after_in');\n59: }"
           },
           {
             "key": "detail_hub.timecard.manual_entry.errors.break_end_required",
-            "line": 63,
-            "context": "62: if (breakStart && !breakEnd) {\n63: newErrors.breakEnd = t('detail_hub.timecard.manual_entry.errors.break_end_required');\n64: }"
+            "line": 64,
+            "context": "63: if (breakStart && !breakEnd) {\n64: newErrors.breakEnd = t('detail_hub.timecard.manual_entry.errors.break_end_required');\n65: }"
           },
           {
             "key": "detail_hub.timecard.manual_entry.errors.break_end_after_start",
-            "line": 71,
-            "context": "70: if (breakEndDateTime <= breakStartDateTime) {\n71: newErrors.breakEnd = t('detail_hub.timecard.manual_entry.errors.break_end_after_start');\n72: }"
+            "line": 72,
+            "context": "71: if (breakEndDateTime <= breakStartDateTime) {\n72: newErrors.breakEnd = t('detail_hub.timecard.manual_entry.errors.break_end_after_start');\n73: }"
           },
           {
             "key": "detail_hub.timecard.manual_entry.errors.break_minimum_30",
-            "line": 77,
-            "context": "76: if (breakMinutes < 30) {\n77: newErrors.breakEnd = t('detail_hub.timecard.manual_entry.errors.break_minimum_30');\n78: }"
+            "line": 78,
+            "context": "77: if (breakMinutes < 30) {\n78: newErrors.breakEnd = t('detail_hub.timecard.manual_entry.errors.break_minimum_30');\n79: }"
           },
           {
             "key": "detail_hub.timecard.manual_entry.errors.break_within_shift",
-            "line": 84,
-            "context": "83: if (breakStartDateTime < clockInDateTime) {\n84: newErrors.breakStart = t('detail_hub.timecard.manual_entry.errors.break_within_shift');\n85: }"
+            "line": 85,
+            "context": "84: if (breakStartDateTime < clockInDateTime) {\n85: newErrors.breakStart = t('detail_hub.timecard.manual_entry.errors.break_within_shift');\n86: }"
           },
           {
             "key": "detail_hub.timecard.manual_entry.errors.break_within_shift",
-            "line": 91,
-            "context": "90: if (breakEndDateTime > clockOutDateTime) {\n91: newErrors.breakEnd = t('detail_hub.timecard.manual_entry.errors.break_within_shift');\n92: }"
+            "line": 92,
+            "context": "91: if (breakEndDateTime > clockOutDateTime) {\n92: newErrors.breakEnd = t('detail_hub.timecard.manual_entry.errors.break_within_shift');\n93: }"
           },
           {
             "key": "detail_hub.timecard.manual_entry.title",
-            "line": 170,
-            "context": "169: <DialogHeader>\n170: <DialogTitle>{t('detail_hub.timecard.manual_entry.title')}</DialogTitle>\n171: <DialogDescription>"
+            "line": 172,
+            "context": "171: <DialogHeader>\n172: <DialogTitle>{t('detail_hub.timecard.manual_entry.title')}</DialogTitle>\n173: <DialogDescription>"
           },
           {
             "key": "detail_hub.timecard.manual_entry.description",
-            "line": 172,
-            "context": "171: <DialogDescription>\n172: {t('detail_hub.timecard.manual_entry.description')}\n173: </DialogDescription>"
+            "line": 174,
+            "context": "173: <DialogDescription>\n174: {t('detail_hub.timecard.manual_entry.description')}\n175: </DialogDescription>"
           },
           {
             "key": "detail_hub.timecard.manual_entry.employee",
-            "line": 179,
-            "context": "178: <div className=\"space-y-2\">\n179: <Label htmlFor=\"employee\">{t('detail_hub.timecard.manual_entry.employee')}</Label>\n180: <Select value={selectedEmployee} onValueChange={setSelectedEmployee}>"
+            "line": 181,
+            "context": "180: <div className=\"space-y-2\">\n181: <Label htmlFor=\"employee\">{t('detail_hub.timecard.manual_entry.employee')}</Label>\n182: <Select value={selectedEmployee} onValueChange={setSelectedEmployee}>"
           },
           {
             "key": "detail_hub.timecard.manual_entry.select_employee",
-            "line": 182,
-            "context": "181: <SelectTrigger id=\"employee\" className={errors.employee ? 'border-red-500' : ''}>\n182: <SelectValue placeholder={t('detail_hub.timecard.manual_entry.select_employee')} />\n183: </SelectTrigger>"
+            "line": 184,
+            "context": "183: <SelectTrigger id=\"employee\" className={errors.employee ? 'border-red-500' : ''}>\n184: <SelectValue placeholder={t('detail_hub.timecard.manual_entry.select_employee')} />\n185: </SelectTrigger>"
           },
           {
             "key": "detail_hub.timecard.manual_entry.date",
-            "line": 197,
-            "context": "196: <div className=\"space-y-2\">\n197: <Label>{t('detail_hub.timecard.manual_entry.date')}</Label>\n198: <Popover>"
+            "line": 199,
+            "context": "198: <div className=\"space-y-2\">\n199: <Label>{t('detail_hub.timecard.manual_entry.date')}</Label>\n200: <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>"
           },
           {
             "key": "detail_hub.timecard.manual_entry.clock_in",
-            "line": 220,
-            "context": "219: <div className=\"space-y-2\">\n220: <Label htmlFor=\"clockIn\">{t('detail_hub.timecard.manual_entry.clock_in')}</Label>\n221: <div className=\"relative\">"
+            "line": 227,
+            "context": "226: <div className=\"space-y-2\">\n227: <Label htmlFor=\"clockIn\">{t('detail_hub.timecard.manual_entry.clock_in')}</Label>\n228: <div className=\"relative\">"
           },
           {
             "key": "detail_hub.timecard.manual_entry.clock_out",
-            "line": 236,
-            "context": "235: <div className=\"space-y-2\">\n236: <Label htmlFor=\"clockOut\">{t('detail_hub.timecard.manual_entry.clock_out')}</Label>\n237: <div className=\"relative\">"
+            "line": 243,
+            "context": "242: <div className=\"space-y-2\">\n243: <Label htmlFor=\"clockOut\">{t('detail_hub.timecard.manual_entry.clock_out')}</Label>\n244: <div className=\"relative\">"
           },
           {
             "key": "detail_hub.timecard.manual_entry.optional",
-            "line": 245,
-            "context": "244: className={`pl-10 ${errors.clockOut ? 'border-red-500' : ''}`}\n245: placeholder={t('detail_hub.timecard.manual_entry.optional')}\n246: />"
+            "line": 252,
+            "context": "251: className={`pl-10 ${errors.clockOut ? 'border-red-500' : ''}`}\n252: placeholder={t('detail_hub.timecard.manual_entry.optional')}\n253: />"
           },
           {
             "key": "detail_hub.timecard.manual_entry.break_start",
-            "line": 256,
-            "context": "255: <div className=\"space-y-2\">\n256: <Label htmlFor=\"breakStart\">{t('detail_hub.timecard.manual_entry.break_start')}</Label>\n257: <div className=\"relative\">"
+            "line": 263,
+            "context": "262: <div className=\"space-y-2\">\n263: <Label htmlFor=\"breakStart\">{t('detail_hub.timecard.manual_entry.break_start')}</Label>\n264: <div className=\"relative\">"
           },
           {
             "key": "detail_hub.timecard.manual_entry.optional",
-            "line": 265,
-            "context": "264: className={`pl-10 ${errors.breakStart ? 'border-red-500' : ''}`}\n265: placeholder={t('detail_hub.timecard.manual_entry.optional')}\n266: />"
+            "line": 272,
+            "context": "271: className={`pl-10 ${errors.breakStart ? 'border-red-500' : ''}`}\n272: placeholder={t('detail_hub.timecard.manual_entry.optional')}\n273: />"
           },
           {
             "key": "detail_hub.timecard.manual_entry.break_end",
-            "line": 273,
-            "context": "272: <div className=\"space-y-2\">\n273: <Label htmlFor=\"breakEnd\">{t('detail_hub.timecard.manual_entry.break_end')}</Label>\n274: <div className=\"relative\">"
+            "line": 280,
+            "context": "279: <div className=\"space-y-2\">\n280: <Label htmlFor=\"breakEnd\">{t('detail_hub.timecard.manual_entry.break_end')}</Label>\n281: <div className=\"relative\">"
           },
           {
             "key": "detail_hub.timecard.manual_entry.optional",
-            "line": 282,
-            "context": "281: className={`pl-10 ${errors.breakEnd ? 'border-red-500' : ''}`}\n282: placeholder={t('detail_hub.timecard.manual_entry.optional')}\n283: disabled={!breakStart}"
+            "line": 289,
+            "context": "288: className={`pl-10 ${errors.breakEnd ? 'border-red-500' : ''}`}\n289: placeholder={t('detail_hub.timecard.manual_entry.optional')}\n290: disabled={!breakStart}"
           },
           {
             "key": "detail_hub.timecard.manual_entry.notes",
-            "line": 292,
-            "context": "291: <div className=\"space-y-2\">\n292: <Label htmlFor=\"notes\">{t('detail_hub.timecard.manual_entry.notes')}</Label>\n293: <Textarea"
+            "line": 299,
+            "context": "298: <div className=\"space-y-2\">\n299: <Label htmlFor=\"notes\">{t('detail_hub.timecard.manual_entry.notes')}</Label>\n300: <Textarea"
           },
           {
             "key": "detail_hub.timecard.manual_entry.notes_placeholder",
-            "line": 297,
-            "context": "296: onChange={(e) => setNotes(e.target.value)}\n297: placeholder={t('detail_hub.timecard.manual_entry.notes_placeholder')}\n298: rows={3}"
+            "line": 304,
+            "context": "303: onChange={(e) => setNotes(e.target.value)}\n304: placeholder={t('detail_hub.timecard.manual_entry.notes_placeholder')}\n305: rows={3}"
           },
           {
             "key": "detail_hub.timecard.manual_entry.cancel",
-            "line": 313,
-            "context": "312: <X className=\"w-4 h-4 mr-2\" />\n313: {t('detail_hub.timecard.manual_entry.cancel')}\n314: </Button>"
+            "line": 320,
+            "context": "319: <X className=\"w-4 h-4 mr-2\" />\n320: {t('detail_hub.timecard.manual_entry.cancel')}\n321: </Button>"
           },
           {
             "key": "detail_hub.timecard.manual_entry.saving",
-            "line": 317,
-            "context": "316: <Save className=\"w-4 h-4 mr-2\" />\n317: {isPending ? t('detail_hub.timecard.manual_entry.saving') : t('detail_hub.timecard.manual_entry.save')}\n318: </Button>"
+            "line": 324,
+            "context": "323: <Save className=\"w-4 h-4 mr-2\" />\n324: {isPending ? t('detail_hub.timecard.manual_entry.saving') : t('detail_hub.timecard.manual_entry.save')}\n325: </Button>"
           },
           {
             "key": "detail_hub.timecard.manual_entry.save",
-            "line": 317,
-            "context": "316: <Save className=\"w-4 h-4 mr-2\" />\n317: {isPending ? t('detail_hub.timecard.manual_entry.saving') : t('detail_hub.timecard.manual_entry.save')}\n318: </Button>"
+            "line": 324,
+            "context": "323: <Save className=\"w-4 h-4 mr-2\" />\n324: {isPending ? t('detail_hub.timecard.manual_entry.saving') : t('detail_hub.timecard.manual_entry.save')}\n325: </Button>"
           }
         ],
         "coverage": 100,
@@ -61319,13 +61319,13 @@
         "hardcodedStrings": [
           {
             "text": "Click any order to view details",
-            "line": 306,
-            "context": "305: <div className=\"flex items-center justify-center gap-1.5\">\n306: <Eye className=\"w-3.5 h-3.5\" />\n307: Click any order to view details"
+            "line": 315,
+            "context": "314: <div className=\"flex items-center justify-center gap-1.5\">\n315: <Eye className=\"w-3.5 h-3.5\" />\n316: Click any order to view details"
           },
           {
             "text": "Failed to load tooltip content",
-            "line": 319,
-            "context": "318: <div className=\"text-xs text-destructive flex items-center gap-1\">\n319: <AlertTriangle className=\"w-3 h-3\" />\n320: Failed to load tooltip content"
+            "line": 328,
+            "context": "327: <div className=\"text-xs text-destructive flex items-center gap-1\">\n328: <AlertTriangle className=\"w-3 h-3\" />\n329: Failed to load tooltip content"
           },
           {
             "text": "Invalid value",
@@ -61341,65 +61341,65 @@
         "translationCalls": [
           {
             "key": "orders.status.pending",
-            "line": 163,
+            "line": 172,
             "exists": false
           },
           {
             "key": "orders.status.in_progress",
-            "line": 165,
+            "line": 174,
             "exists": false
           },
           {
             "key": "orders.status.in_progress",
-            "line": 167,
+            "line": 176,
             "exists": false
           },
           {
             "key": "orders.status.completed",
-            "line": 169,
+            "line": 178,
             "exists": false
           },
           {
             "key": "orders.status.completed",
-            "line": 171,
+            "line": 180,
             "exists": false
           },
           {
             "key": "orders.status.cancelled",
-            "line": 173,
+            "line": 182,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "orders.status.pending",
-            "line": 163,
-            "context": "162: case 'pending':\n163: return t('orders.status.pending', 'Pending');\n164: case 'in_progress':"
+            "line": 172,
+            "context": "171: case 'pending':\n172: return t('orders.status.pending', 'Pending');\n173: case 'in_progress':"
           },
           {
             "key": "orders.status.in_progress",
-            "line": 165,
-            "context": "164: case 'in_progress':\n165: return t('orders.status.in_progress', 'In Progress');\n166: case 'in progress':"
+            "line": 174,
+            "context": "173: case 'in_progress':\n174: return t('orders.status.in_progress', 'In Progress');\n175: case 'in progress':"
           },
           {
             "key": "orders.status.in_progress",
-            "line": 167,
-            "context": "166: case 'in progress':\n167: return t('orders.status.in_progress', 'In Progress');\n168: case 'completed':"
+            "line": 176,
+            "context": "175: case 'in progress':\n176: return t('orders.status.in_progress', 'In Progress');\n177: case 'completed':"
           },
           {
             "key": "orders.status.completed",
-            "line": 169,
-            "context": "168: case 'completed':\n169: return t('orders.status.completed', 'Completed');\n170: case 'complete':"
+            "line": 178,
+            "context": "177: case 'completed':\n178: return t('orders.status.completed', 'Completed');\n179: case 'complete':"
           },
           {
             "key": "orders.status.completed",
-            "line": 171,
-            "context": "170: case 'complete':\n171: return t('orders.status.completed', 'Completed');\n172: case 'cancelled':"
+            "line": 180,
+            "context": "179: case 'complete':\n180: return t('orders.status.completed', 'Completed');\n181: case 'cancelled':"
           },
           {
             "key": "orders.status.cancelled",
-            "line": 173,
-            "context": "172: case 'cancelled':\n173: return t('orders.status.cancelled', 'Cancelled');\n174: default:"
+            "line": 182,
+            "context": "181: case 'cancelled':\n182: return t('orders.status.cancelled', 'Cancelled');\n183: default:"
           }
         ],
         "coverage": 60,
@@ -64863,8 +64863,8 @@
           },
           {
             "text": ", error);\r\n        throw error;\r\n      }\r\n\r\n      // Transform result to match expected interface\r\n      const result = data?.[0];\r\n      console.log(",
-            "line": 1824,
-            "context": "1823: if (error) {\n1824: console.error('[TemplateValidation] RPC error:', error);\n1825: throw error;"
+            "line": 1833,
+            "context": "1832: if (error) {\n1833: console.error('[TemplateValidation] RPC error:', error);\n1834: throw error;"
           }
         ],
         "translationCalls": [],

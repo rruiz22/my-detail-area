@@ -114,8 +114,9 @@ const PRINT_STYLES = `
     .services-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
     .services-table th { background: #f8f8f8; padding: 12px 8px; text-align: left; border: 1px solid #ddd; font-weight: bold; font-size: 11pt; }
     .services-table td { padding: 10px 8px; border: 1px solid #ddd; font-size: 11pt; }
-    .service-name { width: 35%; font-weight: bold; }
-    .service-description { width: 65%; color: #666; }
+    .service-name { width: 30%; font-weight: bold; }
+    .service-description { width: 50%; color: #666; }
+    .service-price { width: 20%; text-align: right; font-weight: 600; }
     .service-notes-block { margin-top: 20px; padding: 16px; border: 1px solid #ddd; border-radius: 4px; background: #fafafa; }
     .notes-label { font-size: 11pt; font-weight: bold; margin: 0 0 12px 0; color: #333; }
     .notes-write-space { border: 1px solid #ccc; background: white; min-height: 100px; padding: 12px; border-radius: 4px; }
@@ -150,6 +151,9 @@ const PRINT_STYLES = `
     .services-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
     .services-table th, .services-table td { padding: 10px 8px; border: 1px solid #ddd; text-align: left; }
     .services-table th { background: #f8f8f8; font-weight: bold; }
+    .service-name { width: 30%; font-weight: bold; }
+    .service-description { width: 50%; }
+    .service-price { width: 20%; text-align: right; font-weight: 600; }
     .service-notes-block { margin-top: 20px; padding: 16px; border: 1px solid #ddd; border-radius: 4px; background: #fafafa; }
     .notes-label { font-size: 0.95rem; font-weight: bold; margin: 0 0 12px 0; color: #333; }
     .notes-write-space { border: 1px solid #ccc; background: white; min-height: 100px; padding: 12px; border-radius: 4px; }
@@ -216,15 +220,20 @@ export const usePrintOrder = () => {
 
       // Fetch services if any
       let services: OrderService[] = [];
-      if (orderData.services && Array.isArray(orderData.services) && orderData.services.length > 0) {
-        const { data: servicesData, error: servicesError } = await supabase
-          .from('dealer_services')
-          .select('id, name, description, price')
-          .in('id', orderData.services);
+      console.log('Order services data:', orderData.services);
 
-        if (!servicesError && servicesData) {
-          services = servicesData;
-        }
+      if (orderData.services && Array.isArray(orderData.services) && orderData.services.length > 0) {
+        // Services are stored as JSON objects in the order, not as IDs
+        // Extract the service data directly from the order
+        services = orderData.services.map((service: any) => ({
+          id: service.id,
+          name: service.name || 'Unnamed Service',
+          description: service.description || '',
+          price: service.price || 0
+        }));
+        console.log('Extracted services from order:', services);
+      } else {
+        console.log('No services found in order');
       }
 
       // Get printed by user name
@@ -255,6 +264,8 @@ export const usePrintOrder = () => {
 
   // Generate HTML content for printing
   const generatePrintHTML = useCallback((order: OrderData, services: OrderService[], dealership: DealershipInfo, printedBy: string = 'System') => {
+    console.log('generatePrintHTML - Services to print:', services);
+    console.log('generatePrintHTML - Services count:', services.length);
     // Order number logic - matches UI display in UnifiedOrderHeaderV2
     const getOrderNumber = (order: OrderData): string => {
       // Priority: orderNumber (frontend) > order_number (DB) > fallback
@@ -309,10 +320,15 @@ export const usePrintOrder = () => {
       }).format(amount);
     };
 
+    // Calculate total from services or use order total if available
+    const totalAmount = order.total_amount ||
+      services.reduce((sum, service) => sum + (service.price || 0), 0);
+
     const servicesHTML = services.map(service => `
       <tr class="service-row">
         <td class="service-name">${service.name}</td>
         <td class="service-description">${service.description || 'Standard service'}</td>
+        <td class="service-price" style="text-align: right; white-space: nowrap;">${formatCurrency(service.price)}</td>
       </tr>
     `).join('');
 
@@ -418,20 +434,27 @@ export const usePrintOrder = () => {
           </div>
         </section>` : ''}
 
-        ${services.length > 0 ? `
         <section class="services-section">
           <h3 class="section-title">Services Requested</h3>
+          ${services.length > 0 ? `
           <table class="services-table">
             <thead>
               <tr>
                 <th class="service-name">Service</th>
                 <th class="service-description">Description</th>
+                <th class="service-price" style="text-align: right;">Price</th>
               </tr>
             </thead>
             <tbody>
               ${servicesHTML}
             </tbody>
-          </table>
+            <tfoot>
+              <tr style="border-top: 2px solid #333; font-weight: bold;">
+                <td colspan="2" style="text-align: right; padding: 10px 8px; font-size: 14px;">TOTAL:</td>
+                <td style="text-align: right; padding: 10px 8px; white-space: nowrap; font-size: 14px;">${formatCurrency(totalAmount)}</td>
+              </tr>
+            </tfoot>
+          </table>` : '<p style="padding: 12px; color: #666;">No services added to this order yet</p>'}
 
           <!-- Notes Section for Customer/Technician -->
           <div class="service-notes-block">
@@ -448,7 +471,7 @@ export const usePrintOrder = () => {
             </div>
             `}
           </div>
-        </section>` : ''}
+        </section>
 
         ${order.short_link ? `
         <section class="qr-section">
