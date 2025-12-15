@@ -242,7 +242,7 @@ export const useCarWashOrderManagement = () => {
         if (order.assigned_group_id) {
           transformedOrder.assignedTo = groupMap.get(order.assigned_group_id) || userMap.get(order.assigned_group_id) || 'Unknown';
         } else if (order.created_by) {
-          transformedOrder.assignedTo = `Created by: ${userMap.get(order.created_by) || 'Unknown'}`;
+          transformedOrder.assignedTo = userMap.get(order.created_by) || 'Unknown';
         } else {
           transformedOrder.assignedTo = 'Unassigned';
         }

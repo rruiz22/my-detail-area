@@ -129,14 +129,23 @@ export function DuplicateTooltip({
   }, [onOrderClick]);
 
   // Utility functions - always defined
-  const formatDate = useCallback((dateString: string) => {
+  const formatDate = useCallback((dateString: string | undefined | null) => {
     try {
-      return new Date(dateString).toLocaleDateString('en-US', {
+      if (!dateString) {
+        return 'No date';
+      }
+      const date = new Date(dateString);
+      // Check if date is valid
+      if (isNaN(date.getTime())) {
+        return 'No date';
+      }
+      return date.toLocaleDateString('en-US', {
         month: 'short',
-        day: 'numeric'
+        day: 'numeric',
+        year: 'numeric'
       });
     } catch {
-      return 'Unknown';
+      return 'No date';
     }
   }, []);
 
@@ -272,7 +281,7 @@ export function DuplicateTooltip({
                 {/* Date - Show completion date if available, otherwise due date, otherwise created date */}
                 <div className="flex items-center gap-1 text-xs text-muted-foreground flex-shrink-0">
                   <Calendar className="w-3 h-3" />
-                  <span>{formatDate(order.completionDate || order.dueDate || order.createdAt)}</span>
+                  <span>{formatDate(order.completedAt || order.completed_at || order.dueDate || order.due_date || order.createdAt || order.created_at)}</span>
                 </div>
 
                 {/* Services */}

@@ -1269,16 +1269,25 @@ export function useCreateManualTimeEntry() {
     }) => {
       if (!user) throw new Error('User not authenticated');
 
-      // Validation: Check if employee already has an active entry
-      const { data: existing } = await supabase
-        .from('detail_hub_time_entries')
-        .select('id, clock_in, clock_out')
-        .eq('employee_id', params.employeeId)
-        .eq('status', 'active')
-        .maybeSingle();
+      // Check if the manual entry is for today
+      const clockInDate = new Date(params.clockIn);
+      const today = new Date();
+      const isToday = clockInDate.toDateString() === today.toDateString();
+      const isFuture = clockInDate > today;
 
-      if (existing) {
-        throw new Error('Employee already has an active time entry. Please clock them out first.');
+      // Only validate active entries if the manual entry is for today or future
+      if (isToday || isFuture) {
+        // Validation: Check if employee already has an active entry
+        const { data: existing } = await supabase
+          .from('detail_hub_time_entries')
+          .select('id, clock_in, clock_out')
+          .eq('employee_id', params.employeeId)
+          .eq('status', 'active')
+          .maybeSingle();
+
+        if (existing) {
+          throw new Error('Employee already has an active time entry. Please clock them out first.');
+        }
       }
 
       // Validation: Check for overlapping entries (EXCLUDE disabled and deleted entries)

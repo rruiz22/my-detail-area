@@ -128,7 +128,7 @@ const transformReconOrder = (supabaseOrder: SupabaseOrder): ReconOrder => ({
   dealershipName: 'Unknown Dealer',
   assignedGroupName: undefined,
   createdByGroupName: undefined,
-  assignedTo: 'Unassigned',
+  assignedTo: 'Unassigned', // Will be populated from profilesMap in the polling query
   dueTime: supabaseOrder.sla_deadline ? new Date(supabaseOrder.sla_deadline).toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
@@ -229,6 +229,29 @@ export const useReconOrderManagement = () => {
       const { data: orders, error } = await ordersQuery;
       if (error) throw error;
 
+      // Get unique creator IDs
+      const creatorIds = [...new Set((orders || []).map(o => o.created_by).filter(Boolean))];
+
+      // Fetch profiles for all creators in one query
+      let profilesMap = new Map();
+      if (creatorIds.length > 0) {
+        const { data: profiles, error: profilesError } = await supabase
+          .from('profiles')
+          .select('id, first_name, last_name, email')
+          .in('id', creatorIds);
+
+        if (profilesError) {
+          console.error('Error fetching creator profiles:', profilesError);
+        } else if (profiles) {
+          profiles.forEach(profile => {
+            const name = profile.first_name && profile.last_name
+              ? `${profile.first_name} ${profile.last_name}`
+              : profile.email?.split('@')[0] || 'Unknown';
+            profilesMap.set(profile.id, name);
+          });
+        }
+      }
+
       // Fetch dealerships data separately
       const { data: dealerships, error: dealershipsError } = await supabase
         .from('dealerships')
@@ -258,7 +281,16 @@ export const useReconOrderManagement = () => {
         transformedOrder.dealershipName = dealershipMap.get(order.dealer_id) || 'Unknown Dealer';
         transformedOrder.assignedGroupName = order.assigned_group_id ? groupMap.get(order.assigned_group_id) : undefined;
         transformedOrder.createdByGroupName = order.created_by_group_id ? groupMap.get(order.created_by_group_id) : undefined;
-        transformedOrder.assignedTo = transformedOrder.assignedGroupName || 'Unassigned';
+
+        // Set assignedTo to creator's name from profilesMap
+        // If there's an assigned group, use that instead
+        if (transformedOrder.assignedGroupName) {
+          transformedOrder.assignedTo = transformedOrder.assignedGroupName;
+        } else if (order.created_by && profilesMap.has(order.created_by)) {
+          transformedOrder.assignedTo = profilesMap.get(order.created_by);
+        }
+        // Otherwise keep the default 'Unassigned' from transformReconOrder
+
         return transformedOrder;
       });
 

@@ -33,6 +33,7 @@ export function ManualTimeEntryModal({ open, onOpenChange, employees }: ManualTi
   const [breakStart, setBreakStart] = useState<string>("");
   const [breakEnd, setBreakEnd] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
+  const [calendarOpen, setCalendarOpen] = useState<boolean>(false);
 
   // Validation errors
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -153,6 +154,7 @@ export function ManualTimeEntryModal({ open, onOpenChange, employees }: ManualTi
     setBreakEnd("");
     setNotes("");
     setErrors({});
+    setCalendarOpen(false);
   };
 
   const handleCancel = () => {
@@ -195,7 +197,7 @@ export function ManualTimeEntryModal({ open, onOpenChange, employees }: ManualTi
           {/* Date Selection */}
           <div className="space-y-2">
             <Label>{t('detail_hub.timecard.manual_entry.date')}</Label>
-            <Popover>
+            <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
               <PopoverTrigger asChild>
                 <Button variant="outline" className="w-full justify-start">
                   <CalendarIcon className="w-4 h-4 mr-2" />
@@ -206,7 +208,12 @@ export function ManualTimeEntryModal({ open, onOpenChange, employees }: ManualTi
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={(d) => d && setDate(d)}
+                  onSelect={(d) => {
+                    if (d) {
+                      setDate(d);
+                      setCalendarOpen(false);
+                    }
+                  }}
                   initialFocus
                 />
               </PopoverContent>
