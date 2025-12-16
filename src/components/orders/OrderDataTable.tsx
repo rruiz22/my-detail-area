@@ -329,7 +329,9 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                     <div className="p-2 rounded">
                       <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Vehicle</label>
                       <div className="text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis">
-                        {order.vehicleYear} {order.vehicleMake} {order.vehicleModel}
+                        {order.vehicleInfo ||
+                         `${order.vehicleYear || ''} ${order.vehicleMake || ''} ${order.vehicleModel || ''}`.trim() ||
+                         'Vehicle info not available'}
                       </div>
                       <DuplicateTooltip
                         orders={duplicateData.vinDuplicateOrders.get(order.id) || []}
@@ -630,8 +632,9 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                     <TableCell className="py-1 text-center max-w-[200px]">
                       <div className="space-y-0">
                         <div className="text-base font-bold text-foreground whitespace-nowrap overflow-hidden text-ellipsis">
-                          {order.vehicleYear} {order.vehicleMake} {order.vehicleModel}
-                          {order.vehicleTrim && ` (${order.vehicleTrim})`}
+                          {order.vehicleInfo ||
+                           `${order.vehicleYear || ''} ${order.vehicleMake || ''} ${order.vehicleModel || ''}${order.vehicleTrim ? ` (${order.vehicleTrim})` : ''}`.trim() ||
+                           'Vehicle info not available'}
                         </div>
                         <DuplicateTooltip
                           orders={duplicateData.vinDuplicateOrders.get(order.id) || []}
