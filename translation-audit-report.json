@@ -16583,33 +16583,33 @@
           },
           {
             "text": "Waiter",
-            "line": 419,
-            "context": "418: <Clock className=\"w-3.5 h-3.5 text-destructive animate-pulse\" />\n419: <span className=\"text-xs font-semibold text-destructive\">Waiter</span>\n420: </span>"
+            "line": 421,
+            "context": "420: <Clock className=\"w-3.5 h-3.5 text-destructive animate-pulse\" />\n421: <span className=\"text-xs font-semibold text-destructive\">Waiter</span>\n422: </span>"
           },
           {
             "text": "Previous",
-            "line": 481,
-            "context": "480: disabled={currentPage === 1}\n481: >\n482: Previous"
+            "line": 483,
+            "context": "482: disabled={currentPage === 1}\n483: >\n484: Previous"
           },
           {
             "text": "Next",
-            "line": 492,
-            "context": "491: disabled={currentPage >= totalPages}\n492: >\n493: Next"
+            "line": 494,
+            "context": "493: disabled={currentPage >= totalPages}\n494: >\n495: Next"
           },
           {
             "text": "Waiter",
-            "line": 703,
-            "context": "702: <Clock className=\"w-3.5 h-3.5 text-destructive animate-pulse\" />\n703: <span className=\"text-xs font-semibold text-destructive\">Waiter</span>\n704: </span>"
+            "line": 706,
+            "context": "705: <Clock className=\"w-3.5 h-3.5 text-destructive animate-pulse\" />\n706: <span className=\"text-xs font-semibold text-destructive\">Waiter</span>\n707: </span>"
           },
           {
             "text": "Previous",
-            "line": 850,
-            "context": "849: disabled={currentPage === 1}\n850: >\n851: Previous"
+            "line": 853,
+            "context": "852: disabled={currentPage === 1}\n853: >\n854: Previous"
           },
           {
             "text": "Next",
-            "line": 861,
-            "context": "860: disabled={currentPage >= totalPages}\n861: >\n862: Next"
+            "line": 864,
+            "context": "863: disabled={currentPage >= totalPages}\n864: >\n865: Next"
           }
         ],
         "translationCalls": [
@@ -16660,187 +16660,187 @@
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 353,
+            "line": 355,
             "exists": true
           },
           {
             "key": "data_table.no_stock",
-            "line": 377,
+            "line": 379,
             "exists": true
           },
           {
             "key": "recon.completion_date",
-            "line": 392,
+            "line": 394,
             "exists": true
           },
           {
             "key": "data_table.no_date_set",
-            "line": 406,
+            "line": 408,
             "exists": true
           },
           {
             "key": "car_wash_orders.waiter_priority",
-            "line": 417,
+            "line": 419,
             "exists": true
           },
           {
             "key": "data_table.view",
-            "line": 434,
+            "line": 436,
             "exists": true
           },
           {
             "key": "data_table.edit",
-            "line": 446,
+            "line": 448,
             "exists": true
           },
           {
             "key": "data_table.delete",
-            "line": 459,
+            "line": 461,
             "exists": true
           },
           {
             "key": "data_table.showing_range",
-            "line": 473,
+            "line": 475,
             "exists": true
           },
           {
             "key": "data_table.page_of",
-            "line": 485,
+            "line": 487,
             "exists": true
           },
           {
             "key": "data_table.orders_count",
-            "line": 504,
+            "line": 506,
             "exists": true
           },
           {
             "key": "data_table.columns.order_id",
-            "line": 513,
+            "line": 515,
             "exists": false
           },
           {
             "key": "data_table.columns.tag",
-            "line": 515,
-            "exists": false
-          },
-          {
-            "key": "data_table.columns.tag_stock",
-            "line": 515,
-            "exists": false
-          },
-          {
-            "key": "data_table.columns.stock",
-            "line": 515,
-            "exists": false
-          },
-          {
-            "key": "data_table.columns.vehicle",
             "line": 517,
             "exists": false
           },
           {
+            "key": "data_table.columns.tag_stock",
+            "line": 517,
+            "exists": false
+          },
+          {
+            "key": "data_table.columns.stock",
+            "line": 517,
+            "exists": false
+          },
+          {
+            "key": "data_table.columns.vehicle",
+            "line": 519,
+            "exists": false
+          },
+          {
             "key": "data_table.columns.services",
-            "line": 518,
-            "exists": false
-          },
-          {
-            "key": "recon.completion_date",
-            "line": 519,
-            "exists": true
-          },
-          {
-            "key": "data_table.columns.due",
-            "line": 519,
-            "exists": false
-          },
-          {
-            "key": "data_table.columns.status",
             "line": 520,
             "exists": false
           },
           {
-            "key": "data_table.columns.actions",
+            "key": "recon.completion_date",
+            "line": 521,
+            "exists": true
+          },
+          {
+            "key": "data_table.columns.due",
             "line": 521,
             "exists": false
           },
           {
+            "key": "data_table.columns.status",
+            "line": 522,
+            "exists": false
+          },
+          {
+            "key": "data_table.columns.actions",
+            "line": 523,
+            "exists": false
+          },
+          {
             "key": "data_table.view",
-            "line": 553,
+            "line": 555,
             "exists": true
           },
           {
             "key": "data_table.unknown_dealer",
-            "line": 594,
+            "line": 596,
             "exists": true
           },
           {
             "key": "data_table.no_stock",
-            "line": 617,
+            "line": 619,
             "exists": true
           },
           {
             "key": "data_table.vin_not_provided",
-            "line": 655,
+            "line": 658,
             "exists": true
           },
           {
             "key": "data_table.no_date_set",
-            "line": 695,
+            "line": 698,
             "exists": true
           },
           {
             "key": "car_wash_orders.waiter_priority",
-            "line": 701,
+            "line": 704,
             "exists": true
           },
           {
             "key": "data_table.no_time_set",
-            "line": 723,
+            "line": 726,
             "exists": true
           },
           {
             "key": "data_table.view_details",
-            "line": 752,
+            "line": 755,
             "exists": true
           },
           {
             "key": "data_table.edit_order",
-            "line": 764,
+            "line": 767,
             "exists": true
           },
           {
             "key": "data_table.print_order",
-            "line": 775,
+            "line": 778,
             "exists": true
           },
           {
             "key": "data_table.delete_order",
-            "line": 787,
+            "line": 790,
             "exists": true
           },
           {
             "key": "data_table.no_orders_found",
-            "line": 803,
+            "line": 806,
             "exists": true
           },
           {
             "key": "data_table.adjust_filters_or_create",
-            "line": 804,
+            "line": 807,
             "exists": true
           },
           {
             "key": "data_table.showing_range",
-            "line": 819,
-            "exists": true
-          },
-          {
-            "key": "data_table.items_per_page",
             "line": 822,
             "exists": true
           },
           {
+            "key": "data_table.items_per_page",
+            "line": 825,
+            "exists": true
+          },
+          {
             "key": "data_table.page_of",
-            "line": 854,
+            "line": 857,
             "exists": true
           }
         ],
@@ -16882,48 +16882,48 @@
           },
           {
             "key": "data_table.columns.order_id",
-            "line": 513,
-            "context": "512: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n513: <TableHead className=\"w-[140px] font-medium text-foreground text-center\">{t('data_table.columns.order_id')}</TableHead>\n514: <TableHead className=\"font-medium text-foreground text-center\">"
+            "line": 515,
+            "context": "514: <TableHead className=\"w-16 font-medium text-foreground text-center\">#</TableHead>\n515: <TableHead className=\"w-[140px] font-medium text-foreground text-center\">{t('data_table.columns.order_id')}</TableHead>\n516: <TableHead className=\"font-medium text-foreground text-center\">"
           },
           {
             "key": "data_table.columns.tag",
-            "line": 515,
-            "context": "514: <TableHead className=\"font-medium text-foreground text-center\">\n515: {tabType === 'service' ? t('data_table.columns.tag') : tabType === 'carwash' ? t('data_table.columns.tag_stock') : t('data_table.columns.stock')}\n516: </TableHead>"
+            "line": 517,
+            "context": "516: <TableHead className=\"font-medium text-foreground text-center\">\n517: {tabType === 'service' ? t('data_table.columns.tag') : tabType === 'carwash' ? t('data_table.columns.tag_stock') : t('data_table.columns.stock')}\n518: </TableHead>"
           },
           {
             "key": "data_table.columns.tag_stock",
-            "line": 515,
-            "context": "514: <TableHead className=\"font-medium text-foreground text-center\">\n515: {tabType === 'service' ? t('data_table.columns.tag') : tabType === 'carwash' ? t('data_table.columns.tag_stock') : t('data_table.columns.stock')}\n516: </TableHead>"
+            "line": 517,
+            "context": "516: <TableHead className=\"font-medium text-foreground text-center\">\n517: {tabType === 'service' ? t('data_table.columns.tag') : tabType === 'carwash' ? t('data_table.columns.tag_stock') : t('data_table.columns.stock')}\n518: </TableHead>"
           },
           {
             "key": "data_table.columns.stock",
-            "line": 515,
-            "context": "514: <TableHead className=\"font-medium text-foreground text-center\">\n515: {tabType === 'service' ? t('data_table.columns.tag') : tabType === 'carwash' ? t('data_table.columns.tag_stock') : t('data_table.columns.stock')}\n516: </TableHead>"
+            "line": 517,
+            "context": "516: <TableHead className=\"font-medium text-foreground text-center\">\n517: {tabType === 'service' ? t('data_table.columns.tag') : tabType === 'carwash' ? t('data_table.columns.tag_stock') : t('data_table.columns.stock')}\n518: </TableHead>"
           },
           {
             "key": "data_table.columns.vehicle",
-            "line": 517,
-            "context": "516: </TableHead>\n517: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">{t('data_table.columns.vehicle')}</TableHead>\n518: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.services')}</TableHead>"
+            "line": 519,
+            "context": "518: </TableHead>\n519: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">{t('data_table.columns.vehicle')}</TableHead>\n520: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.services')}</TableHead>"
           },
           {
             "key": "data_table.columns.services",
-            "line": 518,
-            "context": "517: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">{t('data_table.columns.vehicle')}</TableHead>\n518: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.services')}</TableHead>\n519: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : t('data_table.columns.due')}</TableHead>"
+            "line": 520,
+            "context": "519: <TableHead className=\"max-w-[200px] font-medium text-foreground text-center\">{t('data_table.columns.vehicle')}</TableHead>\n520: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.services')}</TableHead>\n521: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : t('data_table.columns.due')}</TableHead>"
           },
           {
             "key": "data_table.columns.due",
-            "line": 519,
-            "context": "518: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.services')}</TableHead>\n519: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : t('data_table.columns.due')}</TableHead>\n520: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.status')}</TableHead>"
+            "line": 521,
+            "context": "520: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.services')}</TableHead>\n521: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : t('data_table.columns.due')}</TableHead>\n522: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.status')}</TableHead>"
           },
           {
             "key": "data_table.columns.status",
-            "line": 520,
-            "context": "519: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : t('data_table.columns.due')}</TableHead>\n520: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.status')}</TableHead>\n521: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.actions')}</TableHead>"
+            "line": 522,
+            "context": "521: <TableHead className=\"font-medium text-foreground text-center\">{(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : t('data_table.columns.due')}</TableHead>\n522: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.status')}</TableHead>\n523: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.actions')}</TableHead>"
           },
           {
             "key": "data_table.columns.actions",
-            "line": 521,
-            "context": "520: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.status')}</TableHead>\n521: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.actions')}</TableHead>\n522: </TableRow>"
+            "line": 523,
+            "context": "522: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.status')}</TableHead>\n523: <TableHead className=\"font-medium text-foreground text-center\">{t('data_table.columns.actions')}</TableHead>\n524: </TableRow>"
           }
         ],
         "coverage": 87,

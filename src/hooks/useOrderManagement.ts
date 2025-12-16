@@ -1151,6 +1151,10 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       if (orderData.due_date !== undefined) {
         updateData.due_date = orderData.due_date;
       }
+      // Support camelCase variant from UI components
+      if (orderData.dueDate !== undefined) {
+        updateData.due_date = orderData.dueDate;
+      }
       if (orderData.sla_deadline !== undefined) {
         updateData.sla_deadline = orderData.sla_deadline;
       }

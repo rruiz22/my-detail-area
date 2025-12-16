@@ -1,4 +1,4 @@
-import { CompletedDateInline } from '@/components/CompletedDateInline';
+import { DateInlineEditor } from '@/components/DateInlineEditor';
 import { StatusBadgeInteractive } from '@/components/StatusBadgeInteractive';
 import { StockImageLightbox } from '@/components/get-ready/StockImageLightbox';
 import { VehicleImageWithLoader } from '@/components/get-ready/VehicleImageWithLoader';
@@ -54,7 +54,7 @@ interface UnifiedOrderHeaderV2Props {
   orderType: 'sales' | 'service' | 'recon' | 'carwash';
   effectiveDealerId: string;
   onStatusChange?: (orderId: string, newStatus: string) => void;
-  onCompletedDateChange?: (orderId: string, newDate: Date | null) => Promise<void>;
+  onDateChange?: (orderId: string, newDate: Date | null, dateType: 'completed_at' | 'due_date') => Promise<void>;
   canEditOrder?: boolean;
   onEdit?: () => void;
 }
@@ -64,7 +64,7 @@ export function UnifiedOrderHeaderV2({
   orderType,
   effectiveDealerId,
   onStatusChange,
-  onCompletedDateChange,
+  onDateChange,
   canEditOrder,
   onEdit
 }: UnifiedOrderHeaderV2Props) {
@@ -100,12 +100,19 @@ export function UnifiedOrderHeaderV2({
 
   const primaryPhoto = stockPhotosData?.photos?.[0]?.photo_url || stockPhotosData?.vehicleImageUrl;
 
-  // For recon and carwash orders, use completed_at instead of due_date
-  const usesCompleteDate = orderType === 'recon' || orderType === 'carwash';
-  const displayDate = usesCompleteDate
+  // Date configuration per order type
+  const dateConfig = {
+    sales: { field: 'due_date', label: 'Due Date', dateType: 'due_date' as const },
+    service: { field: 'due_date', label: 'Due Date', dateType: 'due_date' as const },
+    recon: { field: 'completed_at', label: 'Complete Date', dateType: 'completed_at' as const },
+    carwash: { field: 'completed_at', label: 'Complete Date', dateType: 'completed_at' as const }
+  };
+
+  const config = dateConfig[orderType];
+  const displayDate = config.dateType === 'completed_at'
     ? (order.completedAt || order.completed_at)
     : (order.dueDate || order.due_date);
-  const dateLabel = usesCompleteDate ? 'Complete Date' : 'Due Date';
+  const dateLabel = config.label;
 
   // Get enriched services from global cache
   const enrichedServices = useMemo(() => {
@@ -231,12 +238,13 @@ export function UnifiedOrderHeaderV2({
               <Calendar className="w-5 h-5 text-primary flex-shrink-0" />
               <div>
                 <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{dateLabel}</div>
-                {usesCompleteDate && onCompletedDateChange ? (
-                  <CompletedDateInline
-                    completedAt={displayDate}
+                {onDateChange ? (
+                  <DateInlineEditor
+                    date={displayDate}
                     orderId={order.id}
-                    orderType={orderType as 'recon' | 'carwash'}
-                    onDateChange={onCompletedDateChange}
+                    orderType={orderType}
+                    dateType={config.dateType}
+                    onDateChange={onDateChange}
                     canEdit={canEditOrder || false}
                   />
                 ) : displayDate ? (

@@ -701,6 +701,10 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
       if (orderData.dueDate !== undefined) {
         updateData.due_date = orderData.dueDate;
       }
+      // Support snake_case variant from database
+      if (orderData.due_date !== undefined) {
+        updateData.due_date = orderData.due_date;
+      }
 
       // Notes
       if (orderData.notes !== undefined) {

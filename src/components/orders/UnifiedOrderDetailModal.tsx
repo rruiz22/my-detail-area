@@ -409,16 +409,21 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
     [onStatusChange]
   );
 
-  // Handle completed date change (for recon/carwash)
-  const handleCompletedDateChange = useCallback(
-    async (orderId: string, newDate: Date | null) => {
+  // Handle date change (for all order types)
+  const handleDateChange = useCallback(
+    async (orderId: string, newDate: Date | null, dateType: 'completed_at' | 'due_date') => {
       try {
         // Prepare the update data
         const isoDate = newDate?.toISOString() || null;
-        const updates: Partial<OrderData> = {
-          completed_at: isoDate,
-          completedAt: isoDate
-        };
+        const updates: Partial<OrderData> = {};
+
+        if (dateType === 'completed_at') {
+          updates.completed_at = isoDate;
+          updates.completedAt = isoDate;
+        } else {
+          updates.due_date = isoDate;
+          updates.dueDate = isoDate;
+        }
 
         // Call parent update function if available
         if (onUpdate) {
@@ -436,7 +441,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
 
         toast({ description: t('orders.date_updated', 'Date updated successfully') });
       } catch (error) {
-        logger.error('Failed to update completed date', error, { orderId, newDate });
+        logger.error(`Failed to update ${dateType}`, error, { orderId, newDate, dateType });
         toast({ variant: 'destructive', description: t('orders.date_update_failed', 'Failed to update date') });
       }
     },
@@ -495,7 +500,7 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                 orderType={orderType}
                 effectiveDealerId={effectiveDealerId}
                 onStatusChange={handleStatusChange}
-                onCompletedDateChange={handleCompletedDateChange}
+                onDateChange={handleDateChange}
                 canEditOrder={canEditOrder}
                 onEdit={handleEdit}
               />
