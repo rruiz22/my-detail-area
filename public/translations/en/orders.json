@@ -75,5 +75,17 @@
   "status_updated_successfully": "Status updated successfully",
   "status_change_failed": "Failed to update status",
   "new_order": "New Order",
-  "today_orders": "Today's Orders"
+  "today_orders": "Today's Orders",
+  "editing_completed_order_warning_title": "Editing Completed Order",
+  "editing_completed_order_warning_description": "You are editing order {{orderNumber}} that was completed. All changes will be logged for audit purposes.",
+  "editing_cancelled_order_warning_description": "You are editing order {{orderNumber}} that was cancelled. All changes will be logged for audit purposes.",
+  "completed_at_label": "Completed: {{date}}",
+  "cancelled_at_label": "Cancelled: {{date}}",
+  "audit_logging_notice": "This is a sensitive operation. All field changes will be permanently recorded with your user information, timestamp, and the reason for change.",
+  "edit_completed_orders_permission": "Edit Completed Orders",
+  "edit_completed_orders_permission_description": "Override to edit completed or cancelled orders (changes are logged)",
+  "field_updated": "Field updated successfully",
+  "field_update_failed": "Failed to update field",
+  "date_updated": "Date updated successfully",
+  "date_update_failed": "Failed to update date"
 }

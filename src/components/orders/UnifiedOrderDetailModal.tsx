@@ -3,6 +3,8 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePermissionContext } from '@/contexts/PermissionContext';
+import { usePermissions } from '@/hooks/usePermissions';
+import { useOrderChangeAudit } from '@/hooks/useOrderChangeAudit';
 import { useToast } from '@/hooks/use-toast';
 import { usePrintOrder } from '@/hooks/usePrintOrder';
 import { useOrderDetailsPolling } from '@/hooks/useSmartPolling';
@@ -27,6 +29,7 @@ import {
 
 // Type-specific field components
 import { CarWashOrderFields } from './CarWashOrderFields';
+import { CompletedOrderEditWarning } from './CompletedOrderEditWarning';
 import { ReconOrderFields } from './ReconOrderFields';
 import { SalesOrderFields } from './SalesOrderFields';
 import { ServiceOrderFields } from './ServiceOrderFields';
@@ -139,15 +142,17 @@ const useQRProps = (orderData: OrderData) => {
 interface OrderTypeFieldsProps {
   orderType: OrderType;
   order: OrderData;
+  onFieldChange?: (orderId: string, fieldName: string, newValue: string) => Promise<void>;
+  canEdit?: boolean;
 }
 
-const OrderTypeFields = memo(function OrderTypeFields({ orderType, order }: OrderTypeFieldsProps) {
+const OrderTypeFields = memo(function OrderTypeFields({ orderType, order, onFieldChange, canEdit }: OrderTypeFieldsProps) {
   const renderTypeSpecificFields = () => {
     switch (orderType) {
       case 'sales':
         return <SalesOrderFields order={order} />;
       case 'service':
-        return <ServiceOrderFields order={order} />;
+        return <ServiceOrderFields order={order} onFieldChange={onFieldChange} canEdit={canEdit} />;
       case 'recon':
         return <ReconOrderFields order={order} />;
       case 'carwash':
@@ -180,6 +185,8 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
   const { toast } = useToast();
   const { user } = useAuth();
   const { hasPermission } = usePermissionContext();
+  const { hasModulePermission } = usePermissions();  // CAUTION: For checking edit_completed_orders permission
+  const { logFieldChange, shouldAuditChanges } = useOrderChangeAudit();  // CAUTION: For audit logging
   const { previewPrint } = usePrintOrder();
   const [orderData, setOrderData] = useState(order);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -199,14 +206,9 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
     return ''; // Empty string instead of hardcoded default
   }, [orderData.dealer_id, user?.dealershipId, orderData.id]);
 
-  // Check if user can edit orders
+  // Check if user can edit orders - WITH CAUTION for completed orders
   const canEditOrder = useMemo(() => {
     if (!onEdit) {
-      return false;
-    }
-
-    // Prevent editing if order is completed or cancelled
-    if (orderData.status === 'completed' || orderData.status === 'cancelled') {
       return false;
     }
 
@@ -218,8 +220,19 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
     } as const;
 
     const targetModule = permissionModuleMap[orderType];
+
+    // CAUTION: Check status-appropriate permission
+    const isCompletedOrCancelled = orderData.status === 'completed' || orderData.status === 'cancelled';
+
+    if (isCompletedOrCancelled) {
+      // Requires special 'edit_completed_orders' permission
+      // This is a sensitive permission that should be granted carefully
+      return hasModulePermission(targetModule, 'edit_completed_orders');
+    }
+
+    // Regular edit permission for non-completed orders
     return hasPermission(targetModule, 'edit');
-  }, [onEdit, hasPermission, orderType, orderData.status]);
+  }, [onEdit, hasPermission, hasModulePermission, orderType, orderData.status]);
 
   // Check if user can delete orders
   const canDeleteOrder = useMemo(() => {
@@ -409,10 +422,15 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
     [onStatusChange]
   );
 
-  // Handle date change (for all order types)
+  // Handle date change (for all order types) - WITH AUDIT LOGGING
   const handleDateChange = useCallback(
     async (orderId: string, newDate: Date | null, dateType: 'completed_at' | 'due_date') => {
       try {
+        // Get old value for audit purposes
+        const oldDate = dateType === 'completed_at'
+          ? (orderData.completed_at || orderData.completedAt)
+          : (orderData.due_date || orderData.dueDate);
+
         // Prepare the update data
         const isoDate = newDate?.toISOString() || null;
         const updates: Partial<OrderData> = {};
@@ -432,6 +450,25 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
           logger.warn('onUpdate callback not provided, skipping DB update', { orderId });
         }
 
+        // CAUTION: Log change if order is completed/cancelled (audit requirement)
+        if (shouldAuditChanges(orderData.status)) {
+          logger.info('[AUDIT] Logging date change for completed/cancelled order', {
+            orderId,
+            dateType,
+            status: orderData.status,
+            oldDate,
+            newDate: isoDate
+          });
+
+          await logFieldChange(
+            orderId,
+            dateType,
+            oldDate || null,
+            isoDate,
+            'Date updated via inline editor'  // Reason for change
+          );
+        }
+
         // Optimistic update
         setOrderData(prev => (
           prev.id === orderId
@@ -445,7 +482,62 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
         toast({ variant: 'destructive', description: t('orders.date_update_failed', 'Failed to update date') });
       }
     },
-    [onUpdate, t, toast]
+    [onUpdate, orderData, shouldAuditChanges, logFieldChange, t, toast]
+  );
+
+  // Handle field change for service order fields (PO, RO, TAG) - WITH AUDIT LOGGING
+  const handleFieldChange = useCallback(
+    async (orderId: string, fieldName: string, newValue: string) => {
+      try {
+        // Get old value for audit purposes
+        const oldValue = orderData[fieldName] as string | null;
+
+        // Prepare the update data - using computed property names
+        const updates: Partial<OrderData> = {
+          [fieldName]: newValue
+        };
+
+        // Call parent update function if available
+        if (onUpdate) {
+          await onUpdate(orderId, updates);
+        } else {
+          logger.warn('onUpdate callback not provided, skipping DB update', { orderId });
+        }
+
+        // CAUTION: Log change if order is completed/cancelled (audit requirement)
+        if (shouldAuditChanges(orderData.status)) {
+          logger.info('[AUDIT] Logging field change for completed/cancelled order', {
+            orderId,
+            fieldName,
+            status: orderData.status,
+            oldValue,
+            newValue
+          });
+
+          await logFieldChange(
+            orderId,
+            fieldName,
+            oldValue,
+            newValue,
+            'Field updated via inline editor'  // Reason for change
+          );
+        }
+
+        // Optimistic update
+        setOrderData(prev => (
+          prev.id === orderId
+            ? { ...prev, ...updates }
+            : prev
+        ));
+
+        toast({ description: t('orders.field_updated', 'Field updated successfully') });
+      } catch (error) {
+        logger.error(`Failed to update ${fieldName}`, error, { orderId, fieldName, newValue });
+        toast({ variant: 'destructive', description: t('orders.field_update_failed', 'Failed to update field') });
+        throw error; // Re-throw for the component to handle
+      }
+    },
+    [onUpdate, orderData, shouldAuditChanges, logFieldChange, t, toast]
   );
 
   // Memoize vehicle display name - prioritize vehicle_info from VIN decoder
@@ -505,6 +597,15 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                 onEdit={handleEdit}
               />
 
+              {/* CAUTION: Warning when editing completed/cancelled orders */}
+              {(orderData.status === 'completed' || orderData.status === 'cancelled') && canEditOrder && (
+                <CompletedOrderEditWarning
+                  orderNumber={orderData.orderNumber || orderData.order_number || orderData.id}
+                  completedAt={orderData.completed_at || orderData.completedAt || null}
+                  status={orderData.status}
+                />
+              )}
+
               <div className="grid grid-cols-1 xl:grid-cols-[2fr,1fr] gap-3 sm:gap-4 lg:gap-6">
                 {/* Main Content Area */}
                 <div className="space-y-3 sm:space-y-4 lg:space-y-6 min-w-0 overflow-hidden">
@@ -512,7 +613,12 @@ export const UnifiedOrderDetailModal = memo(function UnifiedOrderDetailModal({
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
                     {/* Left: Order fields and notes */}
                     <div className="space-y-2">
-                      <OrderTypeFields orderType={orderType} order={orderData} />
+                      <OrderTypeFields
+                        orderType={orderType}
+                        order={orderData}
+                        onFieldChange={handleFieldChange}
+                        canEdit={canEditOrder}
+                      />
                       <SimpleNotesDisplay order={orderData} />
                     </div>
 

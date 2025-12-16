@@ -1091,16 +1091,13 @@ export const usePermissions = () => {
   const canEditOrder = useCallback((order: { dealer_id: number; order_type: string; status: string }): boolean => {
     if (!enhancedUser) return false;
 
-    // System admins can edit everything
+    // System admins can edit everything (including completed orders)
     if (enhancedUser.is_system_admin) return true;
 
     // Can only edit orders from own dealership
     if (order.dealer_id !== enhancedUser.dealership_id) return false;
 
-    // Cannot edit completed or cancelled orders
-    if (['completed', 'cancelled'].includes(order.status)) return false;
-
-    // Check module permission for order type
+    // Get module for order type
     const orderType = order.order_type as OrderType;
     const moduleMap: Record<OrderType, AppModule> = {
       'sales': 'sales_orders',
@@ -1110,7 +1107,50 @@ export const usePermissions = () => {
     };
     const module = moduleMap[orderType];
 
+    // CAUTION: Check for completed/cancelled order override permission
+    const isCompletedOrCancelled = ['completed', 'cancelled'].includes(order.status);
+
+    if (isCompletedOrCancelled) {
+      // Requires special 'edit_completed_orders' permission
+      // This is a sensitive permission that should be granted carefully
+      return hasModulePermission(module, 'edit_completed_orders');
+    }
+
+    // Regular edit permission for non-completed orders
     return hasModulePermission(module, 'edit_orders');
+  }, [enhancedUser, hasModulePermission]);
+
+  /**
+   * Check if user can specifically edit a completed or cancelled order
+   * This is a more explicit check for the edit_completed_orders permission
+   *
+   * @param order - Order to check (requires dealer_id, order_type, status)
+   * @returns true if user has override permission to edit completed/cancelled orders
+   */
+  const canEditCompletedOrder = useCallback((order: { dealer_id: number; order_type: string; status: string }): boolean => {
+    if (!enhancedUser) return false;
+
+    // System admins can edit everything
+    if (enhancedUser.is_system_admin) return true;
+
+    // Must be from own dealership
+    if (order.dealer_id !== enhancedUser.dealership_id) return false;
+
+    // Must be completed or cancelled
+    if (!['completed', 'cancelled'].includes(order.status)) return false;
+
+    // Check for edit_completed_orders permission
+    const orderType = order.order_type as OrderType;
+    const moduleMap: Record<OrderType, AppModule> = {
+      'sales': 'sales_orders',
+      'service': 'service_orders',
+      'recon': 'recon_orders',
+      'carwash': 'car_wash'
+    };
+    const module = moduleMap[orderType];
+
+    // CAUTION: This is a sensitive permission - changes will be audited
+    return hasModulePermission(module, 'edit_completed_orders');
   }, [enhancedUser, hasModulePermission]);
 
   /**
@@ -1281,6 +1321,7 @@ export const usePermissions = () => {
     // Legacy compatibility
     hasPermission,
     canEditOrder,
+    canEditCompletedOrder,  // CAUTION: Sensitive permission for editing completed orders
     canDeleteOrder,
     getAllowedOrderTypes,
     refreshPermissions,

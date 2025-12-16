@@ -4,6 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ModifiedVehicleInfoBlock } from './ModifiedVehicleInfoBlock';
 import { ServicesDisplay } from './ServicesDisplay';
+import { TextInlineEditor } from '@/components/TextInlineEditor';
 
 interface ServiceOrderFieldsProps {
   order: {
@@ -17,12 +18,16 @@ interface ServiceOrderFieldsProps {
     dealer_id: string | number;
     status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'on_hold';
   };
+  onFieldChange?: (orderId: string, fieldName: string, newValue: string) => Promise<void>;
+  canEdit?: boolean;
 }
 
 // Service Order specific fields component
 // Contains: PO, RO, TAG + modified vehicle information
 export const ServiceOrderFields = React.memo(function ServiceOrderFields({
-  order
+  order,
+  onFieldChange,
+  canEdit = false
 }: ServiceOrderFieldsProps) {
   const { t } = useTranslation();
 
@@ -31,21 +36,24 @@ export const ServiceOrderFields = React.memo(function ServiceOrderFields({
       icon: FileText,
       label: 'PO',
       fullLabel: t('service_orders.purchase_order'),
-      value: order.po || order.purchase_order || t('common.not_assigned'),
+      value: order.po || order.purchase_order || null,
+      fieldName: 'po' as const,
       hasValue: !!(order.po || order.purchase_order)
     },
     {
       icon: Wrench,
       label: 'RO',
       fullLabel: t('service_orders.repair_order'),
-      value: order.ro || order.repair_order || t('common.not_assigned'),
+      value: order.ro || order.repair_order || null,
+      fieldName: 'ro' as const,
       hasValue: !!(order.ro || order.repair_order)
     },
     {
       icon: Tag,
       label: 'TAG',
       fullLabel: t('service_orders.tag'),
-      value: order.tag || t('common.not_assigned'),
+      value: order.tag || null,
+      fieldName: 'tag' as const,
       hasValue: !!order.tag
     }
   ], [
@@ -86,9 +94,26 @@ export const ServiceOrderFields = React.memo(function ServiceOrderFields({
                   <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">
                     {info.label}
                   </p>
-                  <p className="text-sm font-bold text-foreground font-mono break-all leading-tight">
-                    {info.value}
-                  </p>
+                  <div className="text-sm break-all leading-tight">
+                    {onFieldChange ? (
+                      <TextInlineEditor
+                        value={info.value}
+                        orderId={order.id}
+                        fieldName={info.fieldName}
+                        label={info.label}
+                        onValueChange={onFieldChange}
+                        canEdit={canEdit}  // CAUTION: Permission logic now handled by parent (includes edit_completed_orders)
+                        required={true}
+                        autoUppercase={true}
+                        maxLength={50}
+                        placeholder={`Enter ${info.label}...`}
+                      />
+                    ) : (
+                      <span className="font-bold text-foreground font-mono">
+                        {info.value || t('common.not_assigned')}
+                      </span>
+                    )}
+                  </div>
                 </div>
               );
             })}

@@ -48,6 +48,7 @@ export type ModulePermissionKey =
   | 'view_orders'
   | 'create_orders'
   | 'edit_orders'
+  | 'edit_completed_orders'  // CAUTION: Override permission to edit completed/cancelled orders (audited)
   | 'delete_orders'
   | 'change_status'
   | 'view_pricing'
