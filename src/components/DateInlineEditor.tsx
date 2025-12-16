@@ -51,16 +51,30 @@ export function DateInlineEditor({
   const handleDateSelect = async (selectedDate: Date | undefined) => {
     if (!selectedDate) return;
 
+    // Preserve original time if a date already exists
+    let finalDate = selectedDate;
+    if (currentDate) {
+      // Extract time components from the original date
+      const originalHours = currentDate.getHours();
+      const originalMinutes = currentDate.getMinutes();
+      const originalSeconds = currentDate.getSeconds();
+      const originalMs = currentDate.getMilliseconds();
+
+      // Create new date with selected date but original time
+      finalDate = new Date(selectedDate);
+      finalDate.setHours(originalHours, originalMinutes, originalSeconds, originalMs);
+    }
+
     // For due_date, warn if selecting a past date
-    if (isDueDate && selectedDate < new Date(new Date().setHours(0, 0, 0, 0))) {
-      setPendingDate(selectedDate);
+    if (isDueDate && finalDate < new Date(new Date().setHours(0, 0, 0, 0))) {
+      setPendingDate(finalDate);
       setShowPastDateWarning(true);
       return;
     }
 
     setUpdating(true);
     try {
-      await onDateChange(orderId, selectedDate, dateType);
+      await onDateChange(orderId, finalDate, dateType);
       setOpen(false);
       toast({
         description: `${dateLabel} updated successfully.`,
