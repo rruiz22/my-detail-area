@@ -75,12 +75,21 @@ export function InvoiceTagsManager({
   const updateTagsMutation = useUpdateInvoiceTags();
 
   // Estado local optimista
-  const [optimisticTags, setOptimisticTags] = useState<InvoiceTag[]>(currentTags);
+  const [optimisticTags, setOptimisticTags] = useState<InvoiceTag[]>([]);
+  const previousTagsRef = useRef<string>('');
 
-  // Sincronizar con datos del servidor
+  // Sincronizar con datos del servidor cuando cambian (sin loop infinito)
   useEffect(() => {
-    setOptimisticTags(currentTags);
-  }, [currentTags]);
+    if (!loadingTags && currentTags) {
+      // Usar ref para comparación sin causar re-renders
+      const currentTagsKey = JSON.stringify(currentTags.map(t => t.id).sort());
+
+      if (previousTagsRef.current !== currentTagsKey) {
+        previousTagsRef.current = currentTagsKey;
+        setOptimisticTags(currentTags);
+      }
+    }
+  }, [currentTags, loadingTags]);
 
   // Filtrar sugerencias (excluir tags ya agregados)
   const currentTagNames = optimisticTags.map(t => t.tagName.toLowerCase());

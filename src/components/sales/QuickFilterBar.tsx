@@ -3,9 +3,17 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { WeekNavigator } from '@/components/ui/WeekNavigator';
-import { AlertCircle, BarChart3, Calendar, Clock, Kanban, List, Printer, Search, X } from 'lucide-react';
+import { DateRangePicker } from '@/components/ui/date-range-picker';
+import { AlertCircle, BarChart3, Calendar, Clock, Kanban, List, Printer, Search, X, CalendarDays, ChevronDown } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { DateRange } from '@/hooks/useDetailHubAnalytics';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 import type { LucideIcon } from 'lucide-react';
 
@@ -23,6 +31,8 @@ interface QuickFilterBarProps {
   onFilterChange: (filter: string) => void;
   searchTerm: string;
   onSearchChange: (term: string) => void;
+  dateRange?: DateRange;
+  onDateRangeChange?: (range: DateRange) => void;
   viewMode?: 'kanban' | 'table' | 'calendar';
   onViewModeChange?: (mode: 'kanban' | 'table' | 'calendar') => void;
   showFilters?: boolean;
@@ -40,6 +50,8 @@ export const QuickFilterBar = memo(function QuickFilterBar({
   onFilterChange,
   searchTerm,
   onSearchChange,
+  dateRange,
+  onDateRangeChange,
   viewMode,
   onViewModeChange,
   showFilters = false,
@@ -52,6 +64,34 @@ export const QuickFilterBar = memo(function QuickFilterBar({
 }: QuickFilterBarProps) {
   const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(false);
+  const [showDatePresets, setShowDatePresets] = useState(false);
+
+  // Date preset helper functions
+  const getDatePresets = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
+
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    const last30Days = new Date(today);
+    last30Days.setDate(last30Days.getDate() - 30);
+
+    return {
+      yesterday: { from: yesterday, to: yesterday },
+      today: { from: today, to: today },
+      thisWeek: { from: startOfWeek, to: today },
+      thisMonth: { from: startOfMonth, to: today },
+      last30Days: { from: last30Days, to: today }
+    };
+  };
+
+  const presets = getDatePresets();
 
   // Check if mobile on mount and resize
   useEffect(() => {
@@ -139,25 +179,83 @@ export const QuickFilterBar = memo(function QuickFilterBar({
       <div className="p-4 space-y-4">
         {/* Search and View Toggle */}
         <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-          {/* Search */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder={t('layout.search_placeholder')}
-              value={searchTerm}
-              onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-10 pr-10 bg-background"
-            />
-            {searchTerm && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onSearchChange('')}
-                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 hover:bg-muted"
-                aria-label={t('layout.clear_search')}
-              >
-                <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-              </Button>
+          {/* Search and Date Filter */}
+          <div className="flex flex-1 gap-2 max-w-2xl">
+            {/* Search */}
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder={t('layout.search_placeholder')}
+                value={searchTerm}
+                onChange={(e) => onSearchChange(e.target.value)}
+                className="pl-10 pr-10 bg-background"
+              />
+              {searchTerm && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onSearchChange('')}
+                  className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 hover:bg-muted"
+                  aria-label={t('layout.clear_search')}
+                >
+                  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                </Button>
+              )}
+            </div>
+
+            {/* Date Range Filter - Only show if callback provided */}
+            {onDateRangeChange && (
+              <div className="flex gap-2">
+                <div className="relative">
+                  <DateRangePicker
+                    value={dateRange || { from: null, to: null }}
+                    onChange={onDateRangeChange}
+                    className="w-full"
+                  />
+                  {(dateRange?.from || dateRange?.to) && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onDateRangeChange({ from: null, to: null })}
+                      className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 hover:bg-muted z-10"
+                      aria-label={t('orders.filters.clear')}
+                    >
+                      <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                    </Button>
+                  )}
+                </div>
+
+                {/* Date Presets Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="h-10">
+                      <CalendarDays className="w-4 h-4 mr-2" />
+                      <span className="hidden sm:inline">{t('orders.filters.quick_dates')}</span>
+                      <ChevronDown className="w-4 h-4 ml-1" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem onClick={() => onDateRangeChange(presets.yesterday)}>
+                      {t('orders.filters.yesterday')}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onDateRangeChange(presets.today)}>
+                      {t('orders.filters.today')}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onDateRangeChange(presets.thisWeek)}>
+                      {t('orders.filters.this_week')}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onDateRangeChange(presets.thisMonth)}>
+                      {t('orders.filters.this_month')}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onDateRangeChange(presets.last30Days)}>
+                      {t('orders.filters.last_30_days')}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onDateRangeChange({ from: null, to: null })}>
+                      {t('orders.filters.clear')}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             )}
           </div>
 

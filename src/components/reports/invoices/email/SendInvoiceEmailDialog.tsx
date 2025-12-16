@@ -66,11 +66,32 @@ export const SendInvoiceEmailDialog: React.FC<SendInvoiceEmailDialogProps> = ({
   // Initialize subject and message
   useEffect(() => {
     if (!subject) {
-      const amount = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(invoice.totalAmount);
-      setSubject(`Invoice ${invoice.invoiceNumber} - ${amount}`);
+      // Include dealership name at the beginning of the subject
+      const dealerName = invoice.dealership?.name || '';
+
+      // Get department name from metadata
+      const departments = invoice.metadata?.departments;
+      let departmentText = '';
+      if (departments && departments.length > 0) {
+        if (departments.length === 1) {
+          const deptName = departments[0].charAt(0).toUpperCase() + departments[0].slice(1);
+          departmentText = `${deptName} Dept`;
+        } else {
+          departmentText = 'Multi-Dept';
+        }
+      }
+
+      // Build subject with dealership and department (without amount)
+      let subjectPrefix = '';
+      if (dealerName && departmentText) {
+        subjectPrefix = `${dealerName} - ${departmentText} - `;
+      } else if (dealerName) {
+        subjectPrefix = `${dealerName} - `;
+      } else if (departmentText) {
+        subjectPrefix = `${departmentText} - `;
+      }
+
+      setSubject(`${subjectPrefix}Invoice ${invoice.invoiceNumber}`);
     }
 
     if (!message) {
@@ -90,15 +111,15 @@ export const SendInvoiceEmailDialog: React.FC<SendInvoiceEmailDialogProps> = ({
           })
         : '';
 
-      // Get department name
-      const departments = invoice.metadata?.departments;
-      let departmentText = '';
-      if (departments && departments.length > 0) {
-        if (departments.length === 1) {
-          const deptName = departments[0].charAt(0).toUpperCase() + departments[0].slice(1);
-          departmentText = `${deptName} `;
+      // Get department name for message body
+      const deptForMessage = invoice.metadata?.departments;
+      let departmentTextForMessage = '';
+      if (deptForMessage && deptForMessage.length > 0) {
+        if (deptForMessage.length === 1) {
+          const deptName = deptForMessage[0].charAt(0).toUpperCase() + deptForMessage[0].slice(1);
+          departmentTextForMessage = `${deptName} `;
         } else {
-          departmentText = 'Multi-Department ';
+          departmentTextForMessage = 'Multi-Department ';
         }
       }
 
@@ -114,7 +135,7 @@ export const SendInvoiceEmailDialog: React.FC<SendInvoiceEmailDialogProps> = ({
       const vehicleCount = invoice.items?.length || 0;
 
       setMessage(
-        `Dear ${dealershipName},\n\nPlease find attached invoice #${invoiceNum} for ${departmentText}services rendered ${period}.\n\nInvoice Summary:\n• Invoice Number: ${invoiceNum}\n${departmentText ? `• Department: ${departmentText.trim()}\n` : ''}${period ? `• Service Period: ${startDate} - ${endDate}\n` : ''}• Total Vehicles: ${vehicleCount}\n• Total Amount: ${amount}\n\nThe detailed invoice and supporting documentation are attached in PDF and Excel formats.\n\nShould you have any questions or require additional information, please do not hesitate to contact us.\n\nBest regards,\nDealer Detail Service LLC`
+        `Dear ${dealershipName},\n\nPlease find attached invoice #${invoiceNum} for ${departmentTextForMessage}services rendered ${period}.\n\nInvoice Summary:\n• Invoice Number: ${invoiceNum}\n${departmentTextForMessage ? `• Department: ${departmentTextForMessage.trim()}\n` : ''}${period ? `• Service Period: ${startDate} - ${endDate}\n` : ''}• Total Vehicles: ${vehicleCount}\n• Total Amount: ${amount}\n\nThe detailed invoice and supporting documentation are attached in PDF and Excel formats.\n\nShould you have any questions or require additional information, please do not hesitate to contact us.\n\nBest regards,\nDealer Detail Service LLC`
       );
     }
   }, [invoice, subject, message]);

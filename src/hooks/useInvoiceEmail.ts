@@ -227,8 +227,14 @@ export const useSendInvoiceEmail = () => {
       }
     },
     onSuccess: (data, variables) => {
+      // Invalidate email history queries
       queryClient.invalidateQueries({ queryKey: ['invoice-email-history', variables.invoice_id] });
       queryClient.invalidateQueries({ queryKey: ['dealership-email-history', variables.dealership_id] });
+
+      // Invalidate invoice queries to update the email sent indicator
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      queryClient.invalidateQueries({ queryKey: ['invoice', variables.invoice_id] });
+
       toast({
         title: 'Success',
         description: 'Invoice email sent successfully',

@@ -511,6 +511,8 @@ export default function SalesOrders() {
           onFilterChange={setActiveFilter}
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
+          dateRange={filters.dateRange}
+          onDateRangeChange={(dateRange) => updateFilters({ ...filters, dateRange })}
           viewMode={viewMode}
           onViewModeChange={setViewMode}
           showFilters={showFilters}

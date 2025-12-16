@@ -166,6 +166,11 @@
       "cancelled": "Cancelado"
     },
     "record_payment": "Registrar Pagamento",
+    "edit_payment": "Editar Pagamento",
+    "update_payment": "Atualizar Pagamento",
+    "updating_payment": "Atualizando...",
+    "edit_payment_dialog_description": "Editar pagamento {{paymentNumber}} para a fatura {{invoiceNumber}}",
+    "payment_updated_successfully": "Pagamento atualizado com sucesso",
     "send_email": "Enviar E-mail",
     "download_pdf": "Baixar PDF",
     "view_details": "Ver Detalhes",

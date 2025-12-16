@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 959,
-  "totalStrings": 10230,
-  "hardcodedStrings": 2196,
-  "translatedStrings": 8034,
+  "scannedFiles": 962,
+  "totalStrings": 10251,
+  "hardcodedStrings": 2202,
+  "translatedStrings": 8049,
   "issues": {
     "critical": [
       {
@@ -41459,6 +41459,86 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\orders\\CompletedOrderEditWarning.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "orders.editing_completed_order_warning_title",
+            "line": 36,
+            "exists": false
+          },
+          {
+            "key": "orders.editing_completed_order_warning_description",
+            "line": 41,
+            "exists": false
+          },
+          {
+            "key": "orders.editing_cancelled_order_warning_description",
+            "line": 45,
+            "exists": false
+          },
+          {
+            "key": "orders.completed_at_label",
+            "line": 55,
+            "exists": false
+          },
+          {
+            "key": "orders.cancelled_at_label",
+            "line": 56,
+            "exists": false
+          },
+          {
+            "key": "common.caution",
+            "line": 61,
+            "exists": false
+          },
+          {
+            "key": "orders.audit_logging_notice",
+            "line": 62,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "orders.editing_completed_order_warning_title",
+            "line": 36,
+            "context": "35: <ShieldCheck className=\"h-4 w-4\" />\n36: {t('orders.editing_completed_order_warning_title', 'Editing Completed Order')}\n37: </AlertTitle>"
+          },
+          {
+            "key": "orders.editing_completed_order_warning_description",
+            "line": 41,
+            "context": "40: {status === 'completed'\n41: ? t('orders.editing_completed_order_warning_description', {\n42: defaultValue: `You are editing order {{orderNumber}} that was completed. All changes will be logged for audit purposes.`,"
+          },
+          {
+            "key": "orders.editing_cancelled_order_warning_description",
+            "line": 45,
+            "context": "44: })\n45: : t('orders.editing_cancelled_order_warning_description', {\n46: defaultValue: `You are editing order {{orderNumber}} that was cancelled. All changes will be logged for audit purposes.`,"
+          },
+          {
+            "key": "orders.completed_at_label",
+            "line": 55,
+            "context": "54: {status === 'completed'\n55: ? t('orders.completed_at_label', { defaultValue: 'Completed: {{date}}', date: formattedDate })\n56: : t('orders.cancelled_at_label', { defaultValue: 'Cancelled: {{date}}', date: formattedDate })"
+          },
+          {
+            "key": "orders.cancelled_at_label",
+            "line": 56,
+            "context": "55: ? t('orders.completed_at_label', { defaultValue: 'Completed: {{date}}', date: formattedDate })\n56: : t('orders.cancelled_at_label', { defaultValue: 'Cancelled: {{date}}', date: formattedDate })\n57: }"
+          },
+          {
+            "key": "common.caution",
+            "line": 61,
+            "context": "60: <p className=\"text-xs font-medium text-amber-900 dark:text-amber-200 mt-2 p-2 bg-amber-100/50 dark:bg-amber-900/30 rounded\">\n61: <strong className=\"font-semibold\">{t('common.caution', 'CAUTION')}:</strong>{' '}\n62: {t('orders.audit_logging_notice',"
+          },
+          {
+            "key": "orders.audit_logging_notice",
+            "line": 62,
+            "context": "61: <strong className=\"font-semibold\">{t('common.caution', 'CAUTION')}:</strong>{' '}\n62: {t('orders.audit_logging_notice',\n63: 'This is a sensitive operation. All field changes will be permanently recorded with your user information, timestamp, and the reason for change.'"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\orders\\EnhancedOrderDetailLayout.tsx",
         "hardcodedStrings": [
           {
@@ -44084,6 +44164,51 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\orders\\ServiceOrderFields.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 21,
+            "context": "20: };\n21: onFieldChange?: (orderId: string, fieldName: string, newValue: string) => Promise<void>;\n22: canEdit?: boolean;"
+          }
+        ],
+        "translationCalls": [
+          {
+            "key": "service_orders.purchase_order",
+            "line": 38,
+            "exists": true
+          },
+          {
+            "key": "service_orders.repair_order",
+            "line": 46,
+            "exists": true
+          },
+          {
+            "key": "service_orders.tag",
+            "line": 54,
+            "exists": true
+          },
+          {
+            "key": "service_orders.service_information",
+            "line": 77,
+            "exists": true
+          },
+          {
+            "key": "common.not_assigned",
+            "line": 113,
+            "exists": true
+          },
+          {
+            "key": "orders.services",
+            "line": 128,
+            "exists": true
+          }
+        ],
+        "missingKeys": [],
+        "coverage": 86,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\orders\\ServiceOrderModal.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -44819,140 +44944,165 @@
         "hardcodedStrings": [
           {
             "text": "Promise",
-            "line": 100,
-            "context": "99: onStatusChange?: (orderId: string, newStatus: string) => void;\n100: onUpdate?: (orderId: string, updates: Partial<OrderData>) => Promise<void>;\n101: isLoadingData?: boolean;"
+            "line": 103,
+            "context": "102: onStatusChange?: (orderId: string, newStatus: string) => void;\n103: onUpdate?: (orderId: string, updates: Partial<OrderData>) => Promise<void>;\n104: isLoadingData?: boolean;"
+          },
+          {
+            "text": "Promise",
+            "line": 145,
+            "context": "144: order: OrderData;\n145: onFieldChange?: (orderId: string, fieldName: string, newValue: string) => Promise<void>;\n146: canEdit?: boolean;"
           }
         ],
         "translationCalls": [
           {
             "key": "orders.no_link_available",
-            "line": 253,
+            "line": 266,
             "exists": false
           },
           {
             "key": "order_detail.copy_link",
-            "line": 258,
+            "line": 271,
             "exists": true
           },
           {
             "key": "order_detail.copy_failed",
-            "line": 261,
+            "line": 274,
             "exists": true
           },
           {
             "key": "orders.polling_error",
-            "line": 348,
+            "line": 361,
             "exists": true
           },
           {
             "key": "orders.date_updated",
-            "line": 442,
-            "exists": false
-          },
-          {
-            "key": "orders.date_update_failed",
-            "line": 445,
-            "exists": false
-          },
-          {
-            "key": "orders.unknown_vehicle",
-            "line": 467,
-            "exists": false
-          },
-          {
-            "key": "orders.order_details_modal_title",
             "line": 479,
             "exists": false
           },
           {
+            "key": "orders.date_update_failed",
+            "line": 482,
+            "exists": false
+          },
+          {
+            "key": "orders.field_updated",
+            "line": 533,
+            "exists": false
+          },
+          {
+            "key": "orders.field_update_failed",
+            "line": 536,
+            "exists": false
+          },
+          {
+            "key": "orders.unknown_vehicle",
+            "line": 559,
+            "exists": false
+          },
+          {
+            "key": "orders.order_details_modal_title",
+            "line": 571,
+            "exists": false
+          },
+          {
             "key": "orders.order_details_description",
-            "line": 487,
+            "line": 579,
             "exists": false
           },
           {
             "key": "orders.delete_order",
-            "line": 584,
+            "line": 690,
             "exists": true
           },
           {
             "key": "orders.edit",
-            "line": 597,
+            "line": 703,
             "exists": true
           },
           {
             "key": "orders.share_order",
-            "line": 610,
+            "line": 716,
             "exists": true
           },
           {
             "key": "orders.print",
-            "line": 621,
+            "line": 727,
             "exists": true
           },
           {
             "key": "common.action_buttons.close",
-            "line": 630,
+            "line": 736,
             "exists": true
           },
           {
             "key": "orders.delete_title",
-            "line": 640,
+            "line": 746,
             "exists": false
           },
           {
             "key": "messages.confirm_delete_order",
-            "line": 641,
+            "line": 747,
             "exists": true
           },
           {
             "key": "common.action_buttons.delete",
-            "line": 642,
+            "line": 748,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 643,
+            "line": 749,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "orders.no_link_available",
-            "line": 253,
-            "context": "252: if (!shortLink) {\n253: toast({ variant: 'destructive', description: t('orders.no_link_available', 'No link available to share') });\n254: return;"
+            "line": 266,
+            "context": "265: if (!shortLink) {\n266: toast({ variant: 'destructive', description: t('orders.no_link_available', 'No link available to share') });\n267: return;"
           },
           {
             "key": "orders.date_updated",
-            "line": 442,
-            "context": "441: \n442: toast({ description: t('orders.date_updated', 'Date updated successfully') });\n443: } catch (error) {"
+            "line": 479,
+            "context": "478: \n479: toast({ description: t('orders.date_updated', 'Date updated successfully') });\n480: } catch (error) {"
           },
           {
             "key": "orders.date_update_failed",
-            "line": 445,
-            "context": "444: logger.error(`Failed to update ${dateType}`, error, { orderId, newDate, dateType });\n445: toast({ variant: 'destructive', description: t('orders.date_update_failed', 'Failed to update date') });\n446: }"
+            "line": 482,
+            "context": "481: logger.error(`Failed to update ${dateType}`, error, { orderId, newDate, dateType });\n482: toast({ variant: 'destructive', description: t('orders.date_update_failed', 'Failed to update date') });\n483: }"
+          },
+          {
+            "key": "orders.field_updated",
+            "line": 533,
+            "context": "532: \n533: toast({ description: t('orders.field_updated', 'Field updated successfully') });\n534: } catch (error) {"
+          },
+          {
+            "key": "orders.field_update_failed",
+            "line": 536,
+            "context": "535: logger.error(`Failed to update ${fieldName}`, error, { orderId, fieldName, newValue });\n536: toast({ variant: 'destructive', description: t('orders.field_update_failed', 'Failed to update field') });\n537: throw error; // Re-throw for the component to handle"
           },
           {
             "key": "orders.unknown_vehicle",
-            "line": 467,
-            "context": "466: \n467: return baseVehicle ? `${baseVehicle}${trimInfo}` : t('orders.unknown_vehicle');\n468: }, [orderData, t]);"
+            "line": 559,
+            "context": "558: \n559: return baseVehicle ? `${baseVehicle}${trimInfo}` : t('orders.unknown_vehicle');\n560: }, [orderData, t]);"
           },
           {
             "key": "orders.order_details_modal_title",
-            "line": 479,
-            "context": "478: <DialogTitle className=\"sr-only\">\n479: {t('orders.order_details_modal_title', {\n480: defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,"
+            "line": 571,
+            "context": "570: <DialogTitle className=\"sr-only\">\n571: {t('orders.order_details_modal_title', {\n572: defaultValue: `Order Details - ${order.orderNumber || order.order_number || 'New'}`,"
           },
           {
             "key": "orders.order_details_description",
-            "line": 487,
-            "context": "486: <DialogDescription className=\"sr-only\">\n487: {t('orders.order_details_description', {\n488: defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,"
+            "line": 579,
+            "context": "578: <DialogDescription className=\"sr-only\">\n579: {t('orders.order_details_description', {\n580: defaultValue: `Viewing ${orderType} order for ${order.customerName || order.customer_name || 'customer'} with vehicle ${vehicleDisplayName}`,"
           },
           {
             "key": "orders.delete_title",
-            "line": 640,
-            "context": "639: onOpenChange={setDeleteDialogOpen}\n640: title={t('orders.delete_title', { defaultValue: 'Delete Order?' })}\n641: description={t('messages.confirm_delete_order', { defaultValue: 'Are you sure you want to delete this order? This action cannot be undone.' })}"
+            "line": 746,
+            "context": "745: onOpenChange={setDeleteDialogOpen}\n746: title={t('orders.delete_title', { defaultValue: 'Delete Order?' })}\n747: description={t('messages.confirm_delete_order', { defaultValue: 'Are you sure you want to delete this order? This action cannot be undone.' })}"
           }
         ],
-        "coverage": 95,
+        "coverage": 91,
         "severity": "low"
       },
       {
@@ -61232,6 +61382,35 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\TextInlineEditor.tsx",
+        "hardcodedStrings": [
+          {
+            "text": "Promise",
+            "line": 15,
+            "context": "14: label: string;\n15: onValueChange: (orderId: string, fieldName: string, newValue: string) => Promise<void>;\n16: canEdit: boolean;"
+          },
+          {
+            "text": "Save",
+            "line": 225,
+            "context": "224: >\n225: <Save className=\"h-3 w-3 mr-1.5\" />\n226: Save"
+          },
+          {
+            "text": "Cancel",
+            "line": 236,
+            "context": "235: >\n236: <X className=\"h-3 w-3 mr-1.5\" />\n237: Cancel"
+          },
+          {
+            "text": "Promise",
+            "line": 1,
+            "context": "1: import { Button } from '@/components/ui/button';\n2: import { Input } from '@/components/ui/input';"
+          }
+        ],
+        "translationCalls": [],
+        "missingKeys": [],
+        "coverage": 0,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\ui\\avatar-system.tsx",
         "hardcodedStrings": [
           {
@@ -73029,6 +73208,7 @@
         "src\\components\\detail-hub\\TimeEntryLogsModal.tsx",
         "src\\components\\orders\\CarWashOrderModal.tsx",
         "src\\components\\orders\\OrderModal.tsx",
+        "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
         "src\\components\\attachments\\ImagePreviewModal.tsx",
         "src\\components\\dealerships\\DealerInvitationModal.tsx",
         "src\\components\\followers\\AddFollowerModal.tsx",
@@ -73037,7 +73217,6 @@
         "src\\components\\orders\\OptimizedOrderModal.tsx",
         "src\\components\\orders\\OrderDetailModal.tsx",
         "src\\components\\orders\\ReconOrderModal.tsx",
-        "src\\components\\orders\\UnifiedOrderDetailModal.tsx",
         "src\\components\\profile\\UnsavedChangesModal.tsx",
         "src\\components\\dealerships\\ExportDealershipDataModal.tsx",
         "src\\components\\dealerships\\MigrateUsersModal.tsx",
@@ -73087,7 +73266,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "460 Component components need translation",
+      "description": "463 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\detail-hub\\InvoiceCenter.BACKUP.tsx",
@@ -73208,6 +73387,7 @@
         "src\\components\\scanner\\enhanced\\SmartFocusVinScanner.tsx",
         "src\\components\\scanner\\enhanced\\VinHistory.tsx",
         "src\\components\\settings\\integrations\\SlackIntegrationCard.tsx",
+        "src\\components\\TextInlineEditor.tsx",
         "src\\components\\ui\\duplicate-tooltip.tsx",
         "src\\components\\ui\\WeekNavigator.tsx",
         "src\\config\\supabaseOptimized.ts",
@@ -73332,6 +73512,7 @@
         "src\\components\\nfc\\NFCPhysicalWriter.tsx",
         "src\\components\\orders\\QRCodeDisplay.tsx",
         "src\\components\\orders\\RecentActivityBlock.tsx",
+        "src\\components\\orders\\ServiceOrderFields.tsx",
         "src\\components\\orders\\VehicleAutoPopulationField.tsx",
         "src\\components\\permissions\\UserGroupAssignment.tsx",
         "src\\components\\productivity\\ProductivityKanban.tsx",
@@ -73466,6 +73647,7 @@
         "src\\components\\orders\\communication\\VoicePlayer.tsx",
         "src\\components\\orders\\communication\\VoiceRecorder.tsx",
         "src\\components\\orders\\CommunicationActions.tsx",
+        "src\\components\\orders\\CompletedOrderEditWarning.tsx",
         "src\\components\\orders\\EnhancedQRCodeBlock.tsx",
         "src\\components\\orders\\FollowersBlock.tsx",
         "src\\components\\orders\\OrderCalendarView.tsx",
@@ -73550,14 +73732,14 @@
         "src\\utils\\stockCSVHelpers.ts",
         "src\\utils\\translationAudit.ts"
       ],
-      "estimatedEffort": "230 hours"
+      "estimatedEffort": "232 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3312 translation keys are referenced but missing",
+      "description": "3321 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "166 hours"
+      "estimatedEffort": "167 hours"
     }
   ],
   "coverage": 79

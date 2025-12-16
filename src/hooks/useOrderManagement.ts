@@ -560,7 +560,8 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         order.vehicleVin?.toLowerCase().includes(searchLower) ||
         order.stockNumber?.toLowerCase().includes(searchLower) ||
         order.customerName?.toLowerCase().includes(searchLower) ||
-        `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`.toLowerCase().includes(searchLower)
+        `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`.toLowerCase().includes(searchLower) ||
+        order.assignedTo?.toLowerCase().includes(searchLower) // Added assigned user/group search
       );
     }
 
@@ -578,13 +579,20 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
 
     if (currentFilters.dateRange?.from) {
       const fromDate = new Date(currentFilters.dateRange.from);
-      filtered = filtered.filter(order => new Date(order.createdAt) >= fromDate);
+      fromDate.setHours(0, 0, 0, 0); // Start of day
+      filtered = filtered.filter(order => {
+        if (!order.dueDate) return false; // Skip orders without due date
+        return new Date(order.dueDate) >= fromDate;
+      });
     }
 
     if (currentFilters.dateRange?.to) {
       const toDate = new Date(currentFilters.dateRange.to);
-      toDate.setHours(23, 59, 59, 999);
-      filtered = filtered.filter(order => new Date(order.createdAt) <= toDate);
+      toDate.setHours(23, 59, 59, 999); // End of day
+      filtered = filtered.filter(order => {
+        if (!order.dueDate) return false; // Skip orders without due date
+        return new Date(order.dueDate) <= toDate;
+      });
     }
 
     // Apply sorting based on active tab

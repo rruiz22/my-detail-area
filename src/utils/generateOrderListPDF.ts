@@ -259,7 +259,7 @@ export async function generateOrderListPDF(options: GenerateOrderListOptions): P
     { header: 'VIN', dataKey: 'vin' },
     { header: orderType === 'recon' || orderType === 'carwash' ? 'Completed' : 'Due Date', dataKey: 'date' },
     { header: 'Status', dataKey: 'status' },
-    { header: 'Amount', dataKey: 'amount' }
+    // TEMPORARILY HIDDEN: { header: 'Amount', dataKey: 'amount' }
   ];
 
   // Prepare table data
@@ -279,7 +279,7 @@ export async function generateOrderListPDF(options: GenerateOrderListOptions): P
       vin: getVIN(order),
       date: dateDisplay,
       status: getServicesWithStatus(order),
-      amount: formatCurrency(order.totalAmount || order.total_amount)
+      // TEMPORARILY HIDDEN: amount: formatCurrency(order.totalAmount || order.total_amount)
     };
   });
 
@@ -312,13 +312,13 @@ export async function generateOrderListPDF(options: GenerateOrderListOptions): P
     },
     columnStyles: {
       0: { halign: 'center', cellWidth: 12, fontSize: 9, overflow: 'hidden' },   // # - Row number
-      1: { halign: 'center', cellWidth: 21, fontSize: 9, overflow: 'hidden' },  // Order Number (increased +5mm)
-      2: { halign: 'left', cellWidth: 27, fontSize: 8, overflow: 'linebreak' },    // Stock/Tag/RO
-      3: { halign: 'left', cellWidth: 29, fontSize: 9, overflow: 'linebreak' },    // Vehicle
-      4: { halign: 'center', cellWidth: 20, fontStyle: 'bold', font: 'courier', fontSize: 8, overflow: 'hidden' }, // VIN L8V
-      5: { halign: 'center', cellWidth: 24, fontSize: 8, overflow: 'hidden' },  // Date
-      6: { halign: 'center', cellWidth: 24, fontSize: 8, overflow: 'hidden' },  // Status
-      7: { halign: 'right', cellWidth: 23, fontStyle: 'bold', fontSize: 9, overflow: 'hidden' }  // Amount (reduced -5mm)
+      1: { halign: 'center', cellWidth: 25, fontSize: 9, overflow: 'hidden' },  // Order Number (increased width)
+      2: { halign: 'left', cellWidth: 32, fontSize: 8, overflow: 'linebreak' },    // Stock/Tag/RO (increased width)
+      3: { halign: 'left', cellWidth: 35, fontSize: 9, overflow: 'linebreak' },    // Vehicle (increased width)
+      4: { halign: 'center', cellWidth: 23, fontStyle: 'bold', font: 'courier', fontSize: 8, overflow: 'hidden' }, // VIN L8V
+      5: { halign: 'center', cellWidth: 27, fontSize: 8, overflow: 'hidden' },  // Date (increased width)
+      6: { halign: 'center', cellWidth: 26, fontSize: 8, overflow: 'hidden' },  // Status (increased width)
+      // TEMPORARILY HIDDEN: 7: { halign: 'right', cellWidth: 23, fontStyle: 'bold', fontSize: 9, overflow: 'hidden' }  // Amount
     },
     alternateRowStyles: {
       fillColor: colors.zebraStripe
@@ -344,13 +344,13 @@ export async function generateOrderListPDF(options: GenerateOrderListOptions): P
   const finalY = (doc as any).lastAutoTable.finalY || yPosition + 20;
 
   // Summary stats
-  const totalAmount = orders.reduce((sum, order) => sum + (order.totalAmount || order.total_amount || 0), 0);
+  // TEMPORARILY HIDDEN: const totalAmount = orders.reduce((sum, order) => sum + (order.totalAmount || order.total_amount || 0), 0);
 
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(colors.primary);
   doc.text(`Total Orders: ${orders.length}`, leftCol, finalY + 10);
-  doc.text(`Total Amount: ${formatCurrency(totalAmount)}`, rightCol, finalY + 10, { align: 'right' });
+  // TEMPORARILY HIDDEN: doc.text(`Total Amount: ${formatCurrency(totalAmount)}`, rightCol, finalY + 10, { align: 'right' });
 
   // ===== SAVE PDF =====
   const fileName = `${orderType}_orders_${filterLabel.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
@@ -428,7 +428,7 @@ export async function previewOrderListPDF(options: GenerateOrderListOptions): Pr
     { header: 'VIN', dataKey: 'vin' },
     { header: orderType === 'recon' || orderType === 'carwash' ? 'Completed' : 'Due Date', dataKey: 'date' },
     { header: 'Status', dataKey: 'status' },
-    { header: 'Amount', dataKey: 'amount' }
+    // TEMPORARILY HIDDEN: { header: 'Amount', dataKey: 'amount' }
   ];
 
   const tableData = orders.map((order, index) => {
@@ -447,7 +447,7 @@ export async function previewOrderListPDF(options: GenerateOrderListOptions): Pr
       vin: getVIN(order),
       date: dateDisplay,
       status: getServicesWithStatus(order),
-      amount: formatCurrency(order.totalAmount || order.total_amount)
+      // TEMPORARILY HIDDEN: amount: formatCurrency(order.totalAmount || order.total_amount)
     };
   });
 
@@ -481,13 +481,13 @@ export async function previewOrderListPDF(options: GenerateOrderListOptions): Pr
     },
     columnStyles: {
       0: { halign: 'center', cellWidth: 12, fontSize: 9, overflow: 'hidden' },   // # - Row number
-      1: { halign: 'center', cellWidth: 21, fontSize: 9, overflow: 'hidden' },  // Order Number (increased +5mm)
-      2: { halign: 'left', cellWidth: 27, fontSize: 8, overflow: 'linebreak' },    // Stock/Tag/RO
-      3: { halign: 'left', cellWidth: 29, fontSize: 9, overflow: 'linebreak' },    // Vehicle
-      4: { halign: 'center', cellWidth: 20, fontStyle: 'bold', font: 'courier', fontSize: 8, overflow: 'hidden' }, // VIN L8V
-      5: { halign: 'center', cellWidth: 24, fontSize: 8, overflow: 'hidden' },  // Date
-      6: { halign: 'center', cellWidth: 24, fontSize: 8, overflow: 'hidden' },  // Status
-      7: { halign: 'right', cellWidth: 23, fontStyle: 'bold', fontSize: 9, overflow: 'hidden' }  // Amount (reduced -5mm)
+      1: { halign: 'center', cellWidth: 25, fontSize: 9, overflow: 'hidden' },  // Order Number (increased width)
+      2: { halign: 'left', cellWidth: 32, fontSize: 8, overflow: 'linebreak' },    // Stock/Tag/RO (increased width)
+      3: { halign: 'left', cellWidth: 35, fontSize: 9, overflow: 'linebreak' },    // Vehicle (increased width)
+      4: { halign: 'center', cellWidth: 23, fontStyle: 'bold', font: 'courier', fontSize: 8, overflow: 'hidden' }, // VIN L8V
+      5: { halign: 'center', cellWidth: 27, fontSize: 8, overflow: 'hidden' },  // Date (increased width)
+      6: { halign: 'center', cellWidth: 26, fontSize: 8, overflow: 'hidden' },  // Status (increased width)
+      // TEMPORARILY HIDDEN: 7: { halign: 'right', cellWidth: 23, fontStyle: 'bold', fontSize: 9, overflow: 'hidden' }  // Amount
     },
     alternateRowStyles: {
       fillColor: colors.zebraStripe
@@ -509,13 +509,13 @@ export async function previewOrderListPDF(options: GenerateOrderListOptions): Pr
   });
 
   const finalY = (doc as any).lastAutoTable.finalY || yPosition + 20;
-  const totalAmount = orders.reduce((sum, order) => sum + (order.totalAmount || order.total_amount || 0), 0);
+  // TEMPORARILY HIDDEN: const totalAmount = orders.reduce((sum, order) => sum + (order.totalAmount || order.total_amount || 0), 0);
 
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(colors.primary);
   doc.text(`Total Orders: ${orders.length}`, leftCol, finalY + 10);
-  doc.text(`Total Amount: ${formatCurrency(totalAmount)}`, rightCol, finalY + 10, { align: 'right' });
+  // TEMPORARILY HIDDEN: doc.text(`Total Amount: ${formatCurrency(totalAmount)}`, rightCol, finalY + 10, { align: 'right' });
 
   // Open in new window
   const pdfBlob = doc.output('blob');

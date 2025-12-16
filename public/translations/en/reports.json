@@ -166,6 +166,11 @@
       "cancelled": "Cancelled"
     },
     "record_payment": "Record Payment",
+    "edit_payment": "Edit Payment",
+    "update_payment": "Update Payment",
+    "updating_payment": "Updating...",
+    "edit_payment_dialog_description": "Edit payment {{paymentNumber}} for invoice {{invoiceNumber}}",
+    "payment_updated_successfully": "Payment updated successfully",
     "send_email": "Send Email",
     "download_pdf": "Download PDF",
     "view_details": "View Details",

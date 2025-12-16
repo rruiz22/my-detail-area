@@ -554,6 +554,80 @@ export const useDeletePayment = () => {
   });
 };
 
+export const useUpdatePayment = () => {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async ({ paymentId, formData }: {
+      paymentId: string;
+      formData: PaymentFormData
+    }) => {
+      if (!user) throw new Error('User not authenticated');
+
+      // Get current payment to check if amount is changing
+      const { data: currentPayment, error: fetchError } = await supabase
+        .from('payments')
+        .select('*')
+        .eq('id', paymentId)
+        .single();
+
+      if (fetchError) throw fetchError;
+      if (!currentPayment) throw new Error('Payment not found');
+
+      // Get invoice details to validate new amount
+      const { data: invoice, error: invoiceError } = await supabase
+        .from('invoices')
+        .select('total_amount, amount_paid')
+        .eq('id', formData.invoiceId)
+        .single();
+
+      if (invoiceError) throw invoiceError;
+      if (!invoice) throw new Error('Invoice not found');
+
+      // Calculate new total paid (excluding current payment, adding new amount)
+      const otherPaymentsTotal = parseFloat(invoice.amount_paid) - parseFloat(currentPayment.amount);
+      const newTotalPaid = otherPaymentsTotal + formData.amount;
+
+      // Validate that new total doesn't exceed invoice total
+      if (newTotalPaid > parseFloat(invoice.total_amount)) {
+        const maxAllowed = parseFloat(invoice.total_amount) - otherPaymentsTotal;
+        throw new Error(`Payment amount would exceed invoice total. Maximum allowed: $${maxAllowed.toFixed(2)}`);
+      }
+
+      // Update payment
+      const { data: payment, error: updateError } = await supabase
+        .from('payments')
+        .update({
+          payment_date: formData.paymentDate.toISOString(),
+          amount: formData.amount,
+          payment_method: formData.paymentMethod,
+          reference_number: formData.referenceNumber,
+          notes: formData.notes,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', paymentId)
+        .select()
+        .single();
+
+      if (updateError) throw updateError;
+
+      return payment;
+    },
+    onSuccess: (_, variables) => {
+      // Invalidate all invoice-related queries
+      queryClient.invalidateQueries({ queryKey: ['invoices'] });
+      queryClient.invalidateQueries({ queryKey: ['invoice', variables.formData.invoiceId] });
+      queryClient.invalidateQueries({ queryKey: ['invoice-summary'] });
+      toast({ description: 'Payment updated successfully' });
+    },
+    onError: (error: Error) => {
+      toast({ variant: 'destructive', description: error.message || 'Failed to update payment' });
+    }
+  });
+};
+
 // =====================================================
 // INVOICE ITEM PAYMENT STATUS
 // =====================================================

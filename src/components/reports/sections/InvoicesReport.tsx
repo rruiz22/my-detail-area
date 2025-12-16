@@ -1829,10 +1829,29 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                         vehicleCount = invoice.metadata.vehicle_count;
                       }
 
+                      // Determine row background color based on payment status
+                      const getRowBackgroundClass = (status: InvoiceStatus) => {
+                        switch(status) {
+                          case 'paid':
+                            return 'bg-green-50 hover:bg-green-100';
+                          case 'partially_paid':
+                            return 'bg-yellow-50 hover:bg-yellow-100';
+                          case 'overdue':
+                            return 'bg-red-50 hover:bg-red-100';
+                          case 'cancelled':
+                            return 'bg-gray-50 hover:bg-gray-100';
+                          case 'pending':
+                            return 'bg-blue-50 hover:bg-blue-100';
+                          case 'draft':
+                          default:
+                            return 'hover:bg-gray-50';
+                        }
+                      };
+
                       return (
                         <TableRow
                           key={invoice.id}
-                          className="cursor-pointer hover:bg-gray-50/50"
+                          className={`cursor-pointer ${getRowBackgroundClass(invoice.status)}`}
                           onClick={() => {
                             setSelectedInvoice(invoice);
                             setShowDetailsDialog(true);

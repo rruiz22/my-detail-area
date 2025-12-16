@@ -46,10 +46,11 @@ import type { InvoiceStatus } from '@/types/invoices';
 import { generateInvoiceExcel } from '@/utils/generateInvoiceExcel';
 import { generateInvoicePDF } from '@/utils/generateInvoicePDF';
 import { format, parseISO } from 'date-fns';
-import { Download, FileSpreadsheet, FileText, Loader2, Mail, Printer, RefreshCw, Trash2, X } from 'lucide-react';
+import { Download, Edit2, FileSpreadsheet, FileText, Loader2, Mail, Printer, RefreshCw, Trash2, X } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SendInvoiceEmailDialog } from './email/SendInvoiceEmailDialog';
+import { EditPaymentDialog } from './EditPaymentDialog';
 import { InvoiceComments } from './InvoiceComments';
 import { InvoiceEmailLog } from './InvoiceEmailLog';
 import { ReinvoiceButton } from './ReinvoiceButton';
@@ -100,6 +101,7 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showRecalculateConfirm, setShowRecalculateConfirm] = useState(false);
   const [paymentToDelete, setPaymentToDelete] = useState<string | null>(null);
+  const [paymentToEdit, setPaymentToEdit] = useState<any | null>(null);
   const [showEmailDialog, setShowEmailDialog] = useState(false);
 
   // ✅ Nested modal for viewing re-invoices
@@ -1186,14 +1188,26 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                       <p className="font-bold text-emerald-600">
                         {formatCurrency(payment.amount)}
                       </p>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={() => setPaymentToDelete(payment.id)}
-                      >
-                        <X className="h-4 w-4 text-red-600" />
-                      </Button>
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-6 w-6"
+                          onClick={() => setPaymentToEdit(payment)}
+                          title="Edit payment"
+                        >
+                          <Edit2 className="h-4 w-4 text-blue-600" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-6 w-6"
+                          onClick={() => setPaymentToDelete(payment.id)}
+                          title="Delete payment"
+                        >
+                          <X className="h-4 w-4 text-red-600" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -1345,6 +1359,16 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
         open={showEmailDialog}
         onOpenChange={setShowEmailDialog}
         invoice={invoice}
+      />
+    )}
+
+    {/* Edit Payment Dialog */}
+    {invoice && paymentToEdit && (
+      <EditPaymentDialog
+        open={!!paymentToEdit}
+        onOpenChange={(open) => !open && setPaymentToEdit(null)}
+        invoice={invoice}
+        payment={paymentToEdit}
       />
     )}
 
