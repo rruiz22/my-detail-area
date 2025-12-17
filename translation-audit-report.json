@@ -1,8 +1,8 @@
 {
   "scannedFiles": 963,
-  "totalStrings": 10274,
+  "totalStrings": 10275,
   "hardcodedStrings": 2218,
-  "translatedStrings": 8056,
+  "translatedStrings": 8057,
   "issues": {
     "critical": [
       {
@@ -13319,1212 +13319,1232 @@
         "hardcodedStrings": [
           {
             "text": "Start Your Shift",
-            "line": 1999,
-            "context": "1998: <div>{t('detail_hub.live_dashboard.clock_in')}</div>\n1999: <div className=\"text-xs font-normal opacity-90\">Start Your Shift</div>\n2000: </div>"
+            "line": 2007,
+            "context": "2006: <div>{t('detail_hub.live_dashboard.clock_in')}</div>\n2007: <div className=\"text-xs font-normal opacity-90\">Start Your Shift</div>\n2008: </div>"
           },
           {
             "text": ", err);\r\n        }\r\n      };\r\n\r\n      // Send initial heartbeat\r\n      sendHeartbeat();\r\n\r\n      // Send heartbeat every 30 seconds while modal is open\r\n      const heartbeatInterval = setInterval(sendHeartbeat, 30000);\r\n\r\n      return () => {\r\n        console.log(",
-            "line": 570,
-            "context": "569: } catch (err) {\n570: console.error('[Kiosk] ❌ Heartbeat error:', err);\n571: }"
+            "line": 572,
+            "context": "571: } catch (err) {\n572: console.error('[Kiosk] ❌ Heartbeat error:', err);\n573: }"
           },
           {
             "text": ", error);\r\n      setPhotoUploadStatus(t(",
-            "line": 823,
-            "context": "822: .catch(error => {\n823: console.error('Camera access error:', error);\n824: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.camera_denied'));"
+            "line": 825,
+            "context": "824: .catch(error => {\n825: console.error('Camera access error:', error);\n826: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.camera_denied'));"
           },
           {
             "text": ", revalidationError);\r\n        } else if (revalidation && revalidation.length > 0 && !revalidation[0].allowed) {\r\n          // Validation failed at punch time - block\r\n          throw new Error(revalidation[0].reason || ",
-            "line": 927,
-            "context": "926: if (revalidationError) {\n927: console.error('[Punch] Re-validation RPC error:', revalidationError);\n928: } else if (revalidation && revalidation.length > 0 && !revalidation[0].allowed) {"
+            "line": 929,
+            "context": "928: if (revalidationError) {\n929: console.error('[Punch] Re-validation RPC error:', revalidationError);\n930: } else if (revalidation && revalidation.length > 0 && !revalidation[0].allowed) {"
           },
           {
             "text": ", error);\r\n      setPhotoUploadStatus(t(",
-            "line": 1026,
-            "context": "1025: } catch (error) {\n1026: console.error('Punch error:', error);\n1027: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.punch_failed'));"
+            "line": 1034,
+            "context": "1033: } catch (error) {\n1034: console.error('Punch error:', error);\n1035: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.punch_failed'));"
           },
           {
             "text": ", error);\r\n      updateFaceScanMessage(t(",
-            "line": 1320,
-            "context": "1319: \n1320: console.error('Camera access error:', error);\n1321: updateFaceScanMessage(t('detail_hub.punch_clock.messages.camera_denied'), 'error');"
+            "line": 1328,
+            "context": "1327: \n1328: console.error('Camera access error:', error);\n1329: updateFaceScanMessage(t('detail_hub.punch_clock.messages.camera_denied'), 'error');"
           }
         ],
         "translationCalls": [
           {
             "key": "detail_hub.punch_clock.messages.session_timeout",
-            "line": 291,
+            "line": 293,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.please_try_again",
-            "line": 292,
+            "line": 294,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 400,
+            "line": 402,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 426,
+            "line": 428,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 720,
+            "line": 722,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.pin_locked",
-            "line": 721,
+            "line": 723,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 727,
+            "line": 729,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.pin_incorrect",
-            "line": 728,
+            "line": 730,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.face_required_title",
-            "line": 782,
+            "line": 784,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.face_not_enrolled",
-            "line": 783,
+            "line": 785,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.face_required_title",
-            "line": 801,
+            "line": 803,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.face_required_desc",
-            "line": 802,
+            "line": 804,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.preparing_camera",
-            "line": 811,
+            "line": 813,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.position_and_capture",
-            "line": 819,
+            "line": 821,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.camera_denied",
-            "line": 824,
+            "line": 826,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.camera_error",
-            "line": 826,
+            "line": 828,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.camera_denied",
-            "line": 827,
+            "line": 829,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.capturing_photo",
-            "line": 838,
+            "line": 840,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.photo_capture_failed",
-            "line": 846,
+            "line": 848,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.photo_captured",
-            "line": 852,
+            "line": 854,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 872,
+            "line": 874,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.id_and_photo_required",
-            "line": 873,
+            "line": 875,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 881,
+            "line": 883,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.select_dealership",
-            "line": 882,
+            "line": 884,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.uploading",
-            "line": 889,
+            "line": 891,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.upload_failed",
-            "line": 907,
+            "line": 909,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.processing",
-            "line": 910,
+            "line": 912,
             "exists": false
           },
           {
             "key": "detail_hub.toasts.clocked_in",
-            "line": 952,
+            "line": 954,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.clock_in_success",
-            "line": 953,
+            "line": 955,
             "exists": false
           },
           {
             "key": "detail_hub.toasts.clocked_out",
-            "line": 967,
+            "line": 969,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.clock_out_success",
-            "line": 968,
+            "line": 970,
             "exists": false
           },
           {
             "key": "detail_hub.toasts.break_started",
-            "line": 982,
+            "line": 984,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.processing",
-            "line": 983,
+            "line": 985,
             "exists": false
           },
           {
             "key": "detail_hub.toasts.break_ended",
-            "line": 997,
+            "line": 999,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.processing",
-            "line": 998,
+            "line": 1000,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.punch_failed",
-            "line": 1027,
+            "line": 1035,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.punch_failed",
-            "line": 1029,
+            "line": 1037,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.unknown_error",
-            "line": 1030,
+            "line": 1038,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.face_not_recognized_timeout",
-            "line": 1071,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.face_scan_timeout_title",
-            "line": 1078,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.face_scan_timeout_description",
             "line": 1079,
             "exists": false
           },
           {
+            "key": "detail_hub.punch_clock.messages.face_scan_timeout_title",
+            "line": 1086,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.face_scan_timeout_description",
+            "line": 1087,
+            "exists": false
+          },
+          {
             "key": "detail_hub.punch_clock.messages.preparing_camera",
-            "line": 1102,
+            "line": 1110,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 1117,
+            "line": 1125,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.no_enrolled_faces",
-            "line": 1127,
+            "line": 1135,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.no_enrolled_employees",
-            "line": 1129,
+            "line": 1137,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.try_again_or_search",
-            "line": 1130,
+            "line": 1138,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.no_enrolled_faces",
-            "line": 1163,
+            "line": 1171,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 1165,
+            "line": 1173,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.position_face",
-            "line": 1197,
+            "line": 1205,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.detecting_face",
-            "line": 1217,
+            "line": 1225,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.multiple_faces_detected",
-            "line": 1224,
+            "line": 1232,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.employee_recognized",
-            "line": 1248,
+            "line": 1256,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.employee_recognized",
-            "line": 1263,
+            "line": 1271,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.welcome_back",
-            "line": 1264,
+            "line": 1272,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.no_face_detected",
-            "line": 1279,
+            "line": 1287,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 1290,
+            "line": 1298,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 1314,
+            "line": 1322,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.camera_denied",
-            "line": 1321,
+            "line": 1329,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.camera_error",
-            "line": 1323,
+            "line": 1331,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.camera_denied",
-            "line": 1324,
+            "line": 1332,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.title",
-            "line": 1369,
+            "line": 1377,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.kiosk_description",
-            "line": 1371,
+            "line": 1379,
             "exists": false
           },
           {
             "key": "common.close",
-            "line": 1381,
+            "line": 1389,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.title",
-            "line": 1397,
+            "line": 1405,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.use_face_recognition",
-            "line": 1412,
+            "line": 1420,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.position_face",
-            "line": 1421,
+            "line": 1429,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.position_face",
-            "line": 1456,
+            "line": 1464,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.scanning",
-            "line": 1498,
+            "line": 1506,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.loading_models",
-            "line": 1515,
+            "line": 1523,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.no_enrolled_faces",
-            "line": 1524,
+            "line": 1532,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1526,
+            "line": 1534,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_cancelled",
-            "line": 1539,
+            "line": 1547,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1540,
+            "line": 1548,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.cancel_face_scan",
-            "line": 1549,
+            "line": 1557,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1561,
+            "line": 1569,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.search_placeholder",
-            "line": 1574,
+            "line": 1582,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1580,
+            "line": 1588,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.search_placeholder",
-            "line": 1586,
+            "line": 1594,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.messages.loading_models",
-            "line": 1595,
+            "line": 1603,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.messages.use_face_recognition",
-            "line": 1616,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.face_recognition_unavailable",
             "line": 1624,
             "exists": false
           },
           {
+            "key": "detail_hub.punch_clock.messages.face_recognition_unavailable",
+            "line": 1632,
+            "exists": false
+          },
+          {
             "key": "detail_hub.punch_clock.loading_employees",
-            "line": 1638,
+            "line": 1646,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.no_results",
-            "line": 1642,
+            "line": 1650,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.enter_pin",
-            "line": 1698,
+            "line": 1706,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.pin_incorrect",
-            "line": 1707,
+            "line": 1715,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.pin_locked",
-            "line": 1714,
+            "line": 1722,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.back_to_search",
-            "line": 1740,
+            "line": 1748,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.loading_employee_state",
-            "line": 1758,
+            "line": 1766,
             "exists": false
           },
           {
             "key": "detail_hub.live_dashboard.active",
-            "line": 1839,
+            "line": 1847,
             "exists": false
           },
           {
             "key": "detail_hub.live_dashboard.on_break",
-            "line": 1840,
+            "line": 1848,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.status.online",
-            "line": 1841,
+            "line": 1849,
             "exists": true
           },
           {
             "key": "detail_hub.punch_clock.camera_checking",
-            "line": 1866,
+            "line": 1874,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.camera_denied",
-            "line": 1867,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.camera_blocked",
-            "line": 1868,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.camera_not_found",
-            "line": 1869,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.camera_in_use",
-            "line": 1870,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.camera_error",
-            "line": 1871,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.camera_required_message",
             "line": 1875,
             "exists": false
           },
           {
-            "key": "detail_hub.punch_clock.clocked_in_at",
-            "line": 1888,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.elapsed",
-            "line": 1900,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.on_break_since",
-            "line": 1913,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.until_minimum",
-            "line": 1923,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.break_time",
-            "line": 1930,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.live_dashboard.clock_in",
-            "line": 1998,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.start_break",
-            "line": 2016,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.lunch_break_label",
-            "line": 2019,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.short_break_label",
-            "line": 2020,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.clock_out",
-            "line": 2032,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.messages.break_minimum_required",
-            "line": 2046,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.end_break",
-            "line": 2055,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.clock_out",
-            "line": 2077,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.back_to_search",
-            "line": 2092,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.state_fallback_info",
-            "line": 2110,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.clock_in",
-            "line": 2130,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.back_to_search",
-            "line": 2141,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.photo_capture",
-            "line": 2177,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.position_face",
-            "line": 2208,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.punch_clock.captured_photo_alt",
-            "line": 2216,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.note_label",
-            "line": 2234,
-            "exists": false
-          },
-          {
-            "key": "common.optional",
-            "line": 2235,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.punch_clock.note_placeholder",
-            "line": 2240,
-            "exists": false
-          },
-          {
-            "key": "common.clear",
-            "line": 2254,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.cancel",
-            "line": 2271,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.capturing_photo",
-            "line": 2282,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.punch_clock.capture",
-            "line": 2287,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.punch_clock.retake_photo",
-            "line": 2301,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.punch_clock.messages.processing",
-            "line": 2312,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.confirm",
-            "line": 2317,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.camera_checking",
-            "line": 2358,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.camera_ready",
-            "line": 2364,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.punch_clock.camera_denied",
-            "line": 2370,
+            "key": "detail_hub.punch_clock.camera_blocked",
+            "line": 1876,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.camera_not_found",
-            "line": 2378,
+            "line": 1877,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.camera_in_use",
-            "line": 2379,
+            "line": 1878,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.camera_error",
+            "line": 1879,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.camera_required_message",
+            "line": 1883,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.clocked_in_at",
+            "line": 1896,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.elapsed",
+            "line": 1908,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.on_break_since",
+            "line": 1921,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.until_minimum",
+            "line": 1931,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.break_time",
+            "line": 1938,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.live_dashboard.clock_in",
+            "line": 2006,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.start_break",
+            "line": 2024,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.lunch_break_label",
+            "line": 2027,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.short_break_label",
+            "line": 2028,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.clock_out",
+            "line": 2040,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.messages.break_minimum_required",
+            "line": 2054,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.end_break",
+            "line": 2063,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.clock_out",
+            "line": 2085,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.back_to_search",
+            "line": 2100,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.state_fallback_info",
+            "line": 2118,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.clock_in",
+            "line": 2138,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.back_to_search",
+            "line": 2149,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.photo_capture",
+            "line": 2185,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.position_face",
+            "line": 2216,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.punch_clock.cancel",
+            "line": 2230,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.capturing_photo",
+            "line": 2241,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.punch_clock.capture",
+            "line": 2246,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.position_capture_helper",
+            "line": 2254,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.captured_photo_alt",
+            "line": 2263,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.retake_photo",
+            "line": 2277,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.processing",
+            "line": 2288,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.confirm",
+            "line": 2293,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.photo_captured_confirm",
+            "line": 2301,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.note_label",
+            "line": 2314,
+            "exists": false
+          },
+          {
+            "key": "common.optional",
+            "line": 2315,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.punch_clock.note_placeholder",
+            "line": 2320,
+            "exists": false
+          },
+          {
+            "key": "common.clear",
+            "line": 2334,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.camera_checking",
+            "line": 2374,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.camera_ready",
+            "line": 2380,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.camera_denied",
             "line": 2386,
             "exists": false
           },
           {
+            "key": "detail_hub.punch_clock.camera_not_found",
+            "line": 2394,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.camera_in_use",
+            "line": 2395,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.camera_error",
+            "line": 2402,
+            "exists": false
+          },
+          {
             "key": "detail_hub.punch_clock.status.online",
-            "line": 2392,
+            "line": 2408,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "detail_hub.punch_clock.messages.session_timeout",
-            "line": 291,
-            "context": "290: toast({\n291: title: t('detail_hub.punch_clock.messages.session_timeout'),\n292: description: t('detail_hub.punch_clock.messages.please_try_again'),"
+            "line": 293,
+            "context": "292: toast({\n293: title: t('detail_hub.punch_clock.messages.session_timeout'),\n294: description: t('detail_hub.punch_clock.messages.please_try_again'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.please_try_again",
-            "line": 292,
-            "context": "291: title: t('detail_hub.punch_clock.messages.session_timeout'),\n292: description: t('detail_hub.punch_clock.messages.please_try_again'),\n293: variant: \"default\""
+            "line": 294,
+            "context": "293: title: t('detail_hub.punch_clock.messages.session_timeout'),\n294: description: t('detail_hub.punch_clock.messages.please_try_again'),\n295: variant: \"default\""
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 400,
-            "context": "399: toast({\n400: title: t('detail_hub.punch_clock.error'),\n401: description: 'This device is not configured as a kiosk. Please configure it in the Kiosk Manager.',"
+            "line": 402,
+            "context": "401: toast({\n402: title: t('detail_hub.punch_clock.error'),\n403: description: 'This device is not configured as a kiosk. Please configure it in the Kiosk Manager.',"
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 426,
-            "context": "425: toast({\n426: title: t('detail_hub.punch_clock.error'),\n427: description: 'Corrupted kiosk configuration detected. Please reconfigure this device.',"
+            "line": 428,
+            "context": "427: toast({\n428: title: t('detail_hub.punch_clock.error'),\n429: description: 'Corrupted kiosk configuration detected. Please reconfigure this device.',"
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 720,
-            "context": "719: toast({\n720: title: t('detail_hub.punch_clock.error'),\n721: description: t('detail_hub.punch_clock.pin_locked', { seconds: 30 }),"
+            "line": 722,
+            "context": "721: toast({\n722: title: t('detail_hub.punch_clock.error'),\n723: description: t('detail_hub.punch_clock.pin_locked', { seconds: 30 }),"
           },
           {
             "key": "detail_hub.punch_clock.pin_locked",
-            "line": 721,
-            "context": "720: title: t('detail_hub.punch_clock.error'),\n721: description: t('detail_hub.punch_clock.pin_locked', { seconds: 30 }),\n722: variant: \"destructive\""
+            "line": 723,
+            "context": "722: title: t('detail_hub.punch_clock.error'),\n723: description: t('detail_hub.punch_clock.pin_locked', { seconds: 30 }),\n724: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 727,
-            "context": "726: toast({\n727: title: t('detail_hub.punch_clock.error'),\n728: description: t('detail_hub.punch_clock.pin_incorrect', { attempts: 3 - newAttempts }),"
+            "line": 729,
+            "context": "728: toast({\n729: title: t('detail_hub.punch_clock.error'),\n730: description: t('detail_hub.punch_clock.pin_incorrect', { attempts: 3 - newAttempts }),"
           },
           {
             "key": "detail_hub.punch_clock.pin_incorrect",
-            "line": 728,
-            "context": "727: title: t('detail_hub.punch_clock.error'),\n728: description: t('detail_hub.punch_clock.pin_incorrect', { attempts: 3 - newAttempts }),\n729: variant: \"destructive\""
+            "line": 730,
+            "context": "729: title: t('detail_hub.punch_clock.error'),\n730: description: t('detail_hub.punch_clock.pin_incorrect', { attempts: 3 - newAttempts }),\n731: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.messages.face_required_title",
-            "line": 782,
-            "context": "781: toast({\n782: title: t('detail_hub.punch_clock.messages.face_required_title') || 'Face Recognition Required',\n783: description: t('detail_hub.punch_clock.messages.face_not_enrolled') || 'Face enrollment required. Please contact your manager.',"
+            "line": 784,
+            "context": "783: toast({\n784: title: t('detail_hub.punch_clock.messages.face_required_title') || 'Face Recognition Required',\n785: description: t('detail_hub.punch_clock.messages.face_not_enrolled') || 'Face enrollment required. Please contact your manager.',"
           },
           {
             "key": "detail_hub.punch_clock.messages.face_not_enrolled",
-            "line": 783,
-            "context": "782: title: t('detail_hub.punch_clock.messages.face_required_title') || 'Face Recognition Required',\n783: description: t('detail_hub.punch_clock.messages.face_not_enrolled') || 'Face enrollment required. Please contact your manager.',\n784: variant: \"destructive\""
+            "line": 785,
+            "context": "784: title: t('detail_hub.punch_clock.messages.face_required_title') || 'Face Recognition Required',\n785: description: t('detail_hub.punch_clock.messages.face_not_enrolled') || 'Face enrollment required. Please contact your manager.',\n786: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.messages.face_required_title",
-            "line": 801,
-            "context": "800: toast({\n801: title: t('detail_hub.punch_clock.messages.face_required_title') || 'Face Recognition Required',\n802: description: t('detail_hub.punch_clock.messages.face_required_desc') || 'Face recognition is required for this assignment. Please try again.',"
+            "line": 803,
+            "context": "802: toast({\n803: title: t('detail_hub.punch_clock.messages.face_required_title') || 'Face Recognition Required',\n804: description: t('detail_hub.punch_clock.messages.face_required_desc') || 'Face recognition is required for this assignment. Please try again.',"
           },
           {
             "key": "detail_hub.punch_clock.messages.face_required_desc",
-            "line": 802,
-            "context": "801: title: t('detail_hub.punch_clock.messages.face_required_title') || 'Face Recognition Required',\n802: description: t('detail_hub.punch_clock.messages.face_required_desc') || 'Face recognition is required for this assignment. Please try again.',\n803: variant: \"destructive\""
+            "line": 804,
+            "context": "803: title: t('detail_hub.punch_clock.messages.face_required_title') || 'Face Recognition Required',\n804: description: t('detail_hub.punch_clock.messages.face_required_desc') || 'Face recognition is required for this assignment. Please try again.',\n805: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.camera_error",
-            "line": 826,
-            "context": "825: toast({\n826: title: t('detail_hub.punch_clock.camera_error'),\n827: description: t('detail_hub.punch_clock.messages.camera_denied'),"
+            "line": 828,
+            "context": "827: toast({\n828: title: t('detail_hub.punch_clock.camera_error'),\n829: description: t('detail_hub.punch_clock.messages.camera_denied'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.photo_captured",
-            "line": 852,
-            "context": "851: setCapturedPhoto(photoData);\n852: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.photo_captured'));\n853: setIsCapturing(false);"
+            "line": 854,
+            "context": "853: setCapturedPhoto(photoData);\n854: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.photo_captured'));\n855: setIsCapturing(false);"
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 872,
-            "context": "871: toast({\n872: title: t('detail_hub.punch_clock.error'),\n873: description: t('detail_hub.punch_clock.messages.id_and_photo_required'),"
+            "line": 874,
+            "context": "873: toast({\n874: title: t('detail_hub.punch_clock.error'),\n875: description: t('detail_hub.punch_clock.messages.id_and_photo_required'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.id_and_photo_required",
-            "line": 873,
-            "context": "872: title: t('detail_hub.punch_clock.error'),\n873: description: t('detail_hub.punch_clock.messages.id_and_photo_required'),\n874: variant: \"destructive\""
+            "line": 875,
+            "context": "874: title: t('detail_hub.punch_clock.error'),\n875: description: t('detail_hub.punch_clock.messages.id_and_photo_required'),\n876: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.error",
-            "line": 881,
-            "context": "880: toast({\n881: title: t('detail_hub.punch_clock.error'),\n882: description: t('detail_hub.punch_clock.messages.select_dealership'),"
+            "line": 883,
+            "context": "882: toast({\n883: title: t('detail_hub.punch_clock.error'),\n884: description: t('detail_hub.punch_clock.messages.select_dealership'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.select_dealership",
-            "line": 882,
-            "context": "881: title: t('detail_hub.punch_clock.error'),\n882: description: t('detail_hub.punch_clock.messages.select_dealership'),\n883: variant: \"destructive\""
+            "line": 884,
+            "context": "883: title: t('detail_hub.punch_clock.error'),\n884: description: t('detail_hub.punch_clock.messages.select_dealership'),\n885: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.messages.processing",
-            "line": 910,
-            "context": "909: \n910: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.processing'));\n911: "
+            "line": 912,
+            "context": "911: \n912: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.processing'));\n913: "
           },
           {
             "key": "detail_hub.punch_clock.messages.clock_in_success",
-            "line": 953,
-            "context": "952: title: t('detail_hub.toasts.clocked_in'),\n953: description: t('detail_hub.punch_clock.messages.clock_in_success', { time: formatTime(currentTime) })\n954: });"
+            "line": 955,
+            "context": "954: title: t('detail_hub.toasts.clocked_in'),\n955: description: t('detail_hub.punch_clock.messages.clock_in_success', { time: formatTime(currentTime) })\n956: });"
           },
           {
             "key": "detail_hub.punch_clock.messages.clock_out_success",
-            "line": 968,
-            "context": "967: title: t('detail_hub.toasts.clocked_out'),\n968: description: t('detail_hub.punch_clock.messages.clock_out_success')\n969: });"
+            "line": 970,
+            "context": "969: title: t('detail_hub.toasts.clocked_out'),\n970: description: t('detail_hub.punch_clock.messages.clock_out_success')\n971: });"
           },
           {
             "key": "detail_hub.toasts.break_started",
-            "line": 982,
-            "context": "981: toast({\n982: title: t('detail_hub.toasts.break_started'),\n983: description: t('detail_hub.punch_clock.messages.processing')"
+            "line": 984,
+            "context": "983: toast({\n984: title: t('detail_hub.toasts.break_started'),\n985: description: t('detail_hub.punch_clock.messages.processing')"
           },
           {
             "key": "detail_hub.punch_clock.messages.processing",
-            "line": 983,
-            "context": "982: title: t('detail_hub.toasts.break_started'),\n983: description: t('detail_hub.punch_clock.messages.processing')\n984: });"
+            "line": 985,
+            "context": "984: title: t('detail_hub.toasts.break_started'),\n985: description: t('detail_hub.punch_clock.messages.processing')\n986: });"
           },
           {
             "key": "detail_hub.toasts.break_ended",
-            "line": 997,
-            "context": "996: toast({\n997: title: t('detail_hub.toasts.break_ended'),\n998: description: t('detail_hub.punch_clock.messages.processing')"
+            "line": 999,
+            "context": "998: toast({\n999: title: t('detail_hub.toasts.break_ended'),\n1000: description: t('detail_hub.punch_clock.messages.processing')"
           },
           {
             "key": "detail_hub.punch_clock.messages.processing",
-            "line": 998,
-            "context": "997: title: t('detail_hub.toasts.break_ended'),\n998: description: t('detail_hub.punch_clock.messages.processing')\n999: });"
+            "line": 1000,
+            "context": "999: title: t('detail_hub.toasts.break_ended'),\n1000: description: t('detail_hub.punch_clock.messages.processing')\n1001: });"
           },
           {
             "key": "detail_hub.punch_clock.messages.punch_failed",
-            "line": 1027,
-            "context": "1026: console.error('Punch error:', error);\n1027: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.punch_failed'));\n1028: toast({"
+            "line": 1035,
+            "context": "1034: console.error('Punch error:', error);\n1035: setPhotoUploadStatus(t('detail_hub.punch_clock.messages.punch_failed'));\n1036: toast({"
           },
           {
             "key": "detail_hub.punch_clock.punch_failed",
-            "line": 1029,
-            "context": "1028: toast({\n1029: title: t('detail_hub.punch_clock.punch_failed'),\n1030: description: error instanceof Error ? error.message : t('detail_hub.punch_clock.messages.unknown_error'),"
+            "line": 1037,
+            "context": "1036: toast({\n1037: title: t('detail_hub.punch_clock.punch_failed'),\n1038: description: error instanceof Error ? error.message : t('detail_hub.punch_clock.messages.unknown_error'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.unknown_error",
-            "line": 1030,
-            "context": "1029: title: t('detail_hub.punch_clock.punch_failed'),\n1030: description: error instanceof Error ? error.message : t('detail_hub.punch_clock.messages.unknown_error'),\n1031: variant: \"destructive\""
+            "line": 1038,
+            "context": "1037: title: t('detail_hub.punch_clock.punch_failed'),\n1038: description: error instanceof Error ? error.message : t('detail_hub.punch_clock.messages.unknown_error'),\n1039: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.messages.face_not_recognized_timeout",
-            "line": 1071,
-            "context": "1070: console.log('[FaceScan] ⏰ 15-second timeout - no face recognized');\n1071: updateFaceScanMessage(t('detail_hub.punch_clock.messages.face_not_recognized_timeout'), 'warning');\n1072: handleStopFaceScan();"
+            "line": 1079,
+            "context": "1078: console.log('[FaceScan] ⏰ 15-second timeout - no face recognized');\n1079: updateFaceScanMessage(t('detail_hub.punch_clock.messages.face_not_recognized_timeout'), 'warning');\n1080: handleStopFaceScan();"
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_timeout_title",
-            "line": 1078,
-            "context": "1077: toast({\n1078: title: t('detail_hub.punch_clock.messages.face_scan_timeout_title'),\n1079: description: t('detail_hub.punch_clock.messages.face_scan_timeout_description'),"
+            "line": 1086,
+            "context": "1085: toast({\n1086: title: t('detail_hub.punch_clock.messages.face_scan_timeout_title'),\n1087: description: t('detail_hub.punch_clock.messages.face_scan_timeout_description'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_timeout_description",
-            "line": 1079,
-            "context": "1078: title: t('detail_hub.punch_clock.messages.face_scan_timeout_title'),\n1079: description: t('detail_hub.punch_clock.messages.face_scan_timeout_description'),\n1080: variant: \"destructive\""
+            "line": 1087,
+            "context": "1086: title: t('detail_hub.punch_clock.messages.face_scan_timeout_title'),\n1087: description: t('detail_hub.punch_clock.messages.face_scan_timeout_description'),\n1088: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 1117,
-            "context": "1116: toast({\n1117: title: t('detail_hub.punch_clock.messages.face_scan_error'),\n1118: description: 'Failed to load enrolled employees',"
+            "line": 1125,
+            "context": "1124: toast({\n1125: title: t('detail_hub.punch_clock.messages.face_scan_error'),\n1126: description: 'Failed to load enrolled employees',"
           },
           {
             "key": "detail_hub.punch_clock.messages.no_enrolled_faces",
-            "line": 1127,
-            "context": "1126: console.warn('[FaceScan] ❌ No enrolled employees found');\n1127: updateFaceScanMessage(t('detail_hub.punch_clock.messages.no_enrolled_faces'), 'error');\n1128: toast({"
+            "line": 1135,
+            "context": "1134: console.warn('[FaceScan] ❌ No enrolled employees found');\n1135: updateFaceScanMessage(t('detail_hub.punch_clock.messages.no_enrolled_faces'), 'error');\n1136: toast({"
           },
           {
             "key": "detail_hub.punch_clock.messages.no_enrolled_employees",
-            "line": 1129,
-            "context": "1128: toast({\n1129: title: t('detail_hub.punch_clock.messages.no_enrolled_employees'),\n1130: description: t('detail_hub.punch_clock.messages.try_again_or_search'),"
+            "line": 1137,
+            "context": "1136: toast({\n1137: title: t('detail_hub.punch_clock.messages.no_enrolled_employees'),\n1138: description: t('detail_hub.punch_clock.messages.try_again_or_search'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.try_again_or_search",
-            "line": 1130,
-            "context": "1129: title: t('detail_hub.punch_clock.messages.no_enrolled_employees'),\n1130: description: t('detail_hub.punch_clock.messages.try_again_or_search'),\n1131: variant: \"destructive\""
+            "line": 1138,
+            "context": "1137: title: t('detail_hub.punch_clock.messages.no_enrolled_employees'),\n1138: description: t('detail_hub.punch_clock.messages.try_again_or_search'),\n1139: variant: \"destructive\""
           },
           {
             "key": "detail_hub.punch_clock.messages.no_enrolled_faces",
-            "line": 1163,
-            "context": "1162: console.error('[FaceScan] ❌ No valid face descriptors found (all employees have corrupted data)');\n1163: updateFaceScanMessage(t('detail_hub.punch_clock.messages.no_enrolled_faces'), 'error');\n1164: toast({"
+            "line": 1171,
+            "context": "1170: console.error('[FaceScan] ❌ No valid face descriptors found (all employees have corrupted data)');\n1171: updateFaceScanMessage(t('detail_hub.punch_clock.messages.no_enrolled_faces'), 'error');\n1172: toast({"
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 1165,
-            "context": "1164: toast({\n1165: title: t('detail_hub.punch_clock.messages.face_scan_error'),\n1166: description: 'Face recognition data is corrupted. Please re-enroll employees.',"
+            "line": 1173,
+            "context": "1172: toast({\n1173: title: t('detail_hub.punch_clock.messages.face_scan_error'),\n1174: description: 'Face recognition data is corrupted. Please re-enroll employees.',"
           },
           {
             "key": "detail_hub.punch_clock.messages.multiple_faces_detected",
-            "line": 1224,
-            "context": "1223: console.warn('[FaceScan] ⚠️ Multiple faces detected in frame');\n1224: updateFaceScanMessage(t('detail_hub.punch_clock.messages.multiple_faces_detected'), 'warning');\n1225: // Continue scanning - user needs to ensure only one person in frame"
+            "line": 1232,
+            "context": "1231: console.warn('[FaceScan] ⚠️ Multiple faces detected in frame');\n1232: updateFaceScanMessage(t('detail_hub.punch_clock.messages.multiple_faces_detected'), 'warning');\n1233: // Continue scanning - user needs to ensure only one person in frame"
           },
           {
             "key": "detail_hub.punch_clock.messages.employee_recognized",
-            "line": 1248,
-            "context": "1247: setShowSuccessOverlay(true);\n1248: updateFaceScanMessage(t('detail_hub.punch_clock.messages.employee_recognized'), 'success');\n1249: "
+            "line": 1256,
+            "context": "1255: setShowSuccessOverlay(true);\n1256: updateFaceScanMessage(t('detail_hub.punch_clock.messages.employee_recognized'), 'success');\n1257: "
           },
           {
             "key": "detail_hub.punch_clock.messages.employee_recognized",
-            "line": 1263,
-            "context": "1262: toast({\n1263: title: t('detail_hub.punch_clock.messages.employee_recognized'),\n1264: description: t('detail_hub.punch_clock.messages.welcome_back', { name: match.employeeName }),"
+            "line": 1271,
+            "context": "1270: toast({\n1271: title: t('detail_hub.punch_clock.messages.employee_recognized'),\n1272: description: t('detail_hub.punch_clock.messages.welcome_back', { name: match.employeeName }),"
           },
           {
             "key": "detail_hub.punch_clock.messages.welcome_back",
-            "line": 1264,
-            "context": "1263: title: t('detail_hub.punch_clock.messages.employee_recognized'),\n1264: description: t('detail_hub.punch_clock.messages.welcome_back', { name: match.employeeName }),\n1265: className: \"bg-emerald-50 border-emerald-500\""
+            "line": 1272,
+            "context": "1271: title: t('detail_hub.punch_clock.messages.employee_recognized'),\n1272: description: t('detail_hub.punch_clock.messages.welcome_back', { name: match.employeeName }),\n1273: className: \"bg-emerald-50 border-emerald-500\""
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 1290,
-            "context": "1289: console.error('[FaceScan] ❌ Error during scan:', err);\n1290: updateFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'), 'error');\n1291: }"
+            "line": 1298,
+            "context": "1297: console.error('[FaceScan] ❌ Error during scan:', err);\n1298: updateFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'), 'error');\n1299: }"
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_error",
-            "line": 1314,
-            "context": "1313: console.warn('[FaceScan] ⚠️ TensorFlow internal error (likely corrupted descriptor), stopping scan');\n1314: updateFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'), 'error');\n1315: handleStopFaceScan(); // ✅ Release camera and intervals"
+            "line": 1322,
+            "context": "1321: console.warn('[FaceScan] ⚠️ TensorFlow internal error (likely corrupted descriptor), stopping scan');\n1322: updateFaceScanMessage(t('detail_hub.punch_clock.messages.face_scan_error'), 'error');\n1323: handleStopFaceScan(); // ✅ Release camera and intervals"
           },
           {
             "key": "detail_hub.punch_clock.camera_error",
-            "line": 1323,
-            "context": "1322: toast({\n1323: title: t('detail_hub.punch_clock.camera_error'),\n1324: description: t('detail_hub.punch_clock.messages.camera_denied'),"
+            "line": 1331,
+            "context": "1330: toast({\n1331: title: t('detail_hub.punch_clock.camera_error'),\n1332: description: t('detail_hub.punch_clock.messages.camera_denied'),"
           },
           {
             "key": "detail_hub.punch_clock.kiosk_description",
-            "line": 1371,
-            "context": "1370: <DialogDescription>\n1371: {t('detail_hub.punch_clock.kiosk_description')}\n1372: </DialogDescription>"
+            "line": 1379,
+            "context": "1378: <DialogDescription>\n1379: {t('detail_hub.punch_clock.kiosk_description')}\n1380: </DialogDescription>"
           },
           {
             "key": "detail_hub.punch_clock.messages.use_face_recognition",
-            "line": 1412,
-            "context": "1411: <h2 className=\"text-xl font-bold text-gray-900\">\n1412: {t('detail_hub.punch_clock.messages.use_face_recognition')}\n1413: </h2>"
+            "line": 1420,
+            "context": "1419: <h2 className=\"text-xl font-bold text-gray-900\">\n1420: {t('detail_hub.punch_clock.messages.use_face_recognition')}\n1421: </h2>"
           },
           {
             "key": "detail_hub.punch_clock.messages.no_enrolled_faces",
-            "line": 1524,
-            "context": "1523: <AlertDescription className=\"text-center\">\n1524: {t('detail_hub.punch_clock.messages.no_enrolled_faces')}\n1525: <br />"
+            "line": 1532,
+            "context": "1531: <AlertDescription className=\"text-center\">\n1532: {t('detail_hub.punch_clock.messages.no_enrolled_faces')}\n1533: <br />"
           },
           {
             "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1526,
-            "context": "1525: <br />\n1526: {t('detail_hub.punch_clock.messages.use_search_instead')}\n1527: </AlertDescription>"
+            "line": 1534,
+            "context": "1533: <br />\n1534: {t('detail_hub.punch_clock.messages.use_search_instead')}\n1535: </AlertDescription>"
           },
           {
             "key": "detail_hub.punch_clock.messages.face_scan_cancelled",
-            "line": 1539,
-            "context": "1538: toast({\n1539: title: t('detail_hub.punch_clock.messages.face_scan_cancelled'),\n1540: description: t('detail_hub.punch_clock.messages.use_search_instead'),"
+            "line": 1547,
+            "context": "1546: toast({\n1547: title: t('detail_hub.punch_clock.messages.face_scan_cancelled'),\n1548: description: t('detail_hub.punch_clock.messages.use_search_instead'),"
           },
           {
             "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1540,
-            "context": "1539: title: t('detail_hub.punch_clock.messages.face_scan_cancelled'),\n1540: description: t('detail_hub.punch_clock.messages.use_search_instead'),\n1541: variant: \"default\""
+            "line": 1548,
+            "context": "1547: title: t('detail_hub.punch_clock.messages.face_scan_cancelled'),\n1548: description: t('detail_hub.punch_clock.messages.use_search_instead'),\n1549: variant: \"default\""
           },
           {
             "key": "detail_hub.punch_clock.cancel_face_scan",
-            "line": 1549,
-            "context": "1548: <X className=\"w-5 h-5 mr-2\" />\n1549: {t('detail_hub.punch_clock.cancel_face_scan')}\n1550: </Button>"
+            "line": 1557,
+            "context": "1556: <X className=\"w-5 h-5 mr-2\" />\n1557: {t('detail_hub.punch_clock.cancel_face_scan')}\n1558: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1561,
-            "context": "1560: >\n1561: {t('detail_hub.punch_clock.messages.use_search_instead')}\n1562: </Button>"
+            "line": 1569,
+            "context": "1568: >\n1569: {t('detail_hub.punch_clock.messages.use_search_instead')}\n1570: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.search_placeholder",
-            "line": 1574,
-            "context": "1573: <div className=\"text-center text-sm text-gray-600 mb-2\">\n1574: {t('detail_hub.punch_clock.search_placeholder')}\n1575: </div>"
+            "line": 1582,
+            "context": "1581: <div className=\"text-center text-sm text-gray-600 mb-2\">\n1582: {t('detail_hub.punch_clock.search_placeholder')}\n1583: </div>"
           },
           {
             "key": "detail_hub.punch_clock.messages.use_search_instead",
-            "line": 1580,
-            "context": "1579: <div className=\"text-center text-sm text-gray-600 mb-2\">\n1580: {t('detail_hub.punch_clock.messages.use_search_instead')}\n1581: </div>"
+            "line": 1588,
+            "context": "1587: <div className=\"text-center text-sm text-gray-600 mb-2\">\n1588: {t('detail_hub.punch_clock.messages.use_search_instead')}\n1589: </div>"
           },
           {
             "key": "detail_hub.punch_clock.search_placeholder",
-            "line": 1586,
-            "context": "1585: type=\"text\"\n1586: placeholder={t('detail_hub.punch_clock.search_placeholder')}\n1587: value={searchQuery}"
+            "line": 1594,
+            "context": "1593: type=\"text\"\n1594: placeholder={t('detail_hub.punch_clock.search_placeholder')}\n1595: value={searchQuery}"
           },
           {
             "key": "detail_hub.punch_clock.messages.use_face_recognition",
-            "line": 1616,
-            "context": "1615: <Camera className=\"w-5 h-5 mr-2\" />\n1616: {t('detail_hub.punch_clock.messages.use_face_recognition')}\n1617: </Button>"
+            "line": 1624,
+            "context": "1623: <Camera className=\"w-5 h-5 mr-2\" />\n1624: {t('detail_hub.punch_clock.messages.use_face_recognition')}\n1625: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.messages.face_recognition_unavailable",
-            "line": 1624,
-            "context": "1623: <AlertDescription className=\"text-center text-sm text-gray-600\">\n1624: {t('detail_hub.punch_clock.messages.face_recognition_unavailable')}\n1625: </AlertDescription>"
+            "line": 1632,
+            "context": "1631: <AlertDescription className=\"text-center text-sm text-gray-600\">\n1632: {t('detail_hub.punch_clock.messages.face_recognition_unavailable')}\n1633: </AlertDescription>"
           },
           {
             "key": "detail_hub.punch_clock.loading_employees",
-            "line": 1638,
-            "context": "1637: <div className=\"text-center py-8 text-gray-500\">\n1638: {t('detail_hub.punch_clock.loading_employees')}\n1639: </div>"
+            "line": 1646,
+            "context": "1645: <div className=\"text-center py-8 text-gray-500\">\n1646: {t('detail_hub.punch_clock.loading_employees')}\n1647: </div>"
           },
           {
             "key": "detail_hub.punch_clock.no_results",
-            "line": 1642,
-            "context": "1641: <div className=\"text-center py-8 text-gray-500\">\n1642: {t('detail_hub.punch_clock.no_results')}\n1643: </div>"
+            "line": 1650,
+            "context": "1649: <div className=\"text-center py-8 text-gray-500\">\n1650: {t('detail_hub.punch_clock.no_results')}\n1651: </div>"
           },
           {
             "key": "detail_hub.punch_clock.enter_pin",
-            "line": 1698,
-            "context": "1697: <h2 className=\"text-2xl font-bold text-center\">\n1698: {t('detail_hub.punch_clock.enter_pin')}\n1699: </h2>"
+            "line": 1706,
+            "context": "1705: <h2 className=\"text-2xl font-bold text-center\">\n1706: {t('detail_hub.punch_clock.enter_pin')}\n1707: </h2>"
           },
           {
             "key": "detail_hub.punch_clock.pin_incorrect",
-            "line": 1707,
-            "context": "1706: <p className=\"text-center text-red-600 text-sm\">\n1707: {t('detail_hub.punch_clock.pin_incorrect', { attempts: 3 - pinAttempts })}\n1708: </p>"
+            "line": 1715,
+            "context": "1714: <p className=\"text-center text-red-600 text-sm\">\n1715: {t('detail_hub.punch_clock.pin_incorrect', { attempts: 3 - pinAttempts })}\n1716: </p>"
           },
           {
             "key": "detail_hub.punch_clock.pin_locked",
-            "line": 1714,
-            "context": "1713: <p className=\"text-center text-red-600 text-sm font-semibold\">\n1714: {t('detail_hub.punch_clock.pin_locked', { seconds: lockTimer })}\n1715: </p>"
+            "line": 1722,
+            "context": "1721: <p className=\"text-center text-red-600 text-sm font-semibold\">\n1722: {t('detail_hub.punch_clock.pin_locked', { seconds: lockTimer })}\n1723: </p>"
           },
           {
             "key": "detail_hub.punch_clock.back_to_search",
-            "line": 1740,
-            "context": "1739: >\n1740: {t('detail_hub.punch_clock.back_to_search')}\n1741: </Button>"
+            "line": 1748,
+            "context": "1747: >\n1748: {t('detail_hub.punch_clock.back_to_search')}\n1749: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.loading_employee_state",
-            "line": 1758,
-            "context": "1757: <p className=\"text-lg text-muted-foreground\">\n1758: {t('detail_hub.punch_clock.loading_employee_state', { defaultValue: 'Loading employee status...' })}\n1759: </p>"
+            "line": 1766,
+            "context": "1765: <p className=\"text-lg text-muted-foreground\">\n1766: {t('detail_hub.punch_clock.loading_employee_state', { defaultValue: 'Loading employee status...' })}\n1767: </p>"
           },
           {
             "key": "detail_hub.live_dashboard.active",
-            "line": 1839,
-            "context": "1838: >\n1839: {employeeState.state === 'clocked_in' ? t('detail_hub.live_dashboard.active') :\n1840: employeeState.state === 'on_break' ? t('detail_hub.live_dashboard.on_break') :"
+            "line": 1847,
+            "context": "1846: >\n1847: {employeeState.state === 'clocked_in' ? t('detail_hub.live_dashboard.active') :\n1848: employeeState.state === 'on_break' ? t('detail_hub.live_dashboard.on_break') :"
           },
           {
             "key": "detail_hub.live_dashboard.on_break",
-            "line": 1840,
-            "context": "1839: {employeeState.state === 'clocked_in' ? t('detail_hub.live_dashboard.active') :\n1840: employeeState.state === 'on_break' ? t('detail_hub.live_dashboard.on_break') :\n1841: t('detail_hub.punch_clock.status.online')}"
+            "line": 1848,
+            "context": "1847: {employeeState.state === 'clocked_in' ? t('detail_hub.live_dashboard.active') :\n1848: employeeState.state === 'on_break' ? t('detail_hub.live_dashboard.on_break') :\n1849: t('detail_hub.punch_clock.status.online')}"
           },
           {
             "key": "detail_hub.punch_clock.camera_checking",
-            "line": 1866,
-            "context": "1865: <AlertTitle className=\"mb-0\">\n1866: {cameraStatus === 'checking' && t('detail_hub.punch_clock.camera_checking')}\n1867: {cameraStatus === 'denied' && t('detail_hub.punch_clock.camera_denied')}"
+            "line": 1874,
+            "context": "1873: <AlertTitle className=\"mb-0\">\n1874: {cameraStatus === 'checking' && t('detail_hub.punch_clock.camera_checking')}\n1875: {cameraStatus === 'denied' && t('detail_hub.punch_clock.camera_denied')}"
           },
           {
             "key": "detail_hub.punch_clock.camera_denied",
-            "line": 1867,
-            "context": "1866: {cameraStatus === 'checking' && t('detail_hub.punch_clock.camera_checking')}\n1867: {cameraStatus === 'denied' && t('detail_hub.punch_clock.camera_denied')}\n1868: {cameraStatus === 'blocked' && t('detail_hub.punch_clock.camera_blocked')}"
+            "line": 1875,
+            "context": "1874: {cameraStatus === 'checking' && t('detail_hub.punch_clock.camera_checking')}\n1875: {cameraStatus === 'denied' && t('detail_hub.punch_clock.camera_denied')}\n1876: {cameraStatus === 'blocked' && t('detail_hub.punch_clock.camera_blocked')}"
           },
           {
             "key": "detail_hub.punch_clock.camera_blocked",
-            "line": 1868,
-            "context": "1867: {cameraStatus === 'denied' && t('detail_hub.punch_clock.camera_denied')}\n1868: {cameraStatus === 'blocked' && t('detail_hub.punch_clock.camera_blocked')}\n1869: {cameraStatus === 'not_found' && t('detail_hub.punch_clock.camera_not_found')}"
+            "line": 1876,
+            "context": "1875: {cameraStatus === 'denied' && t('detail_hub.punch_clock.camera_denied')}\n1876: {cameraStatus === 'blocked' && t('detail_hub.punch_clock.camera_blocked')}\n1877: {cameraStatus === 'not_found' && t('detail_hub.punch_clock.camera_not_found')}"
           },
           {
             "key": "detail_hub.punch_clock.camera_not_found",
-            "line": 1869,
-            "context": "1868: {cameraStatus === 'blocked' && t('detail_hub.punch_clock.camera_blocked')}\n1869: {cameraStatus === 'not_found' && t('detail_hub.punch_clock.camera_not_found')}\n1870: {cameraStatus === 'in_use' && t('detail_hub.punch_clock.camera_in_use')}"
+            "line": 1877,
+            "context": "1876: {cameraStatus === 'blocked' && t('detail_hub.punch_clock.camera_blocked')}\n1877: {cameraStatus === 'not_found' && t('detail_hub.punch_clock.camera_not_found')}\n1878: {cameraStatus === 'in_use' && t('detail_hub.punch_clock.camera_in_use')}"
           },
           {
             "key": "detail_hub.punch_clock.camera_in_use",
-            "line": 1870,
-            "context": "1869: {cameraStatus === 'not_found' && t('detail_hub.punch_clock.camera_not_found')}\n1870: {cameraStatus === 'in_use' && t('detail_hub.punch_clock.camera_in_use')}\n1871: {cameraStatus === 'error' && t('detail_hub.punch_clock.camera_error')}"
+            "line": 1878,
+            "context": "1877: {cameraStatus === 'not_found' && t('detail_hub.punch_clock.camera_not_found')}\n1878: {cameraStatus === 'in_use' && t('detail_hub.punch_clock.camera_in_use')}\n1879: {cameraStatus === 'error' && t('detail_hub.punch_clock.camera_error')}"
           },
           {
             "key": "detail_hub.punch_clock.camera_error",
-            "line": 1871,
-            "context": "1870: {cameraStatus === 'in_use' && t('detail_hub.punch_clock.camera_in_use')}\n1871: {cameraStatus === 'error' && t('detail_hub.punch_clock.camera_error')}\n1872: </AlertTitle>"
+            "line": 1879,
+            "context": "1878: {cameraStatus === 'in_use' && t('detail_hub.punch_clock.camera_in_use')}\n1879: {cameraStatus === 'error' && t('detail_hub.punch_clock.camera_error')}\n1880: </AlertTitle>"
           },
           {
             "key": "detail_hub.punch_clock.camera_required_message",
-            "line": 1875,
-            "context": "1874: <AlertDescription className=\"mt-2 text-sm\">\n1875: {cameraError || t('detail_hub.punch_clock.camera_required_message')}\n1876: </AlertDescription>"
+            "line": 1883,
+            "context": "1882: <AlertDescription className=\"mt-2 text-sm\">\n1883: {cameraError || t('detail_hub.punch_clock.camera_required_message')}\n1884: </AlertDescription>"
           },
           {
             "key": "detail_hub.punch_clock.clocked_in_at",
-            "line": 1888,
-            "context": "1887: <p className=\"text-xs text-gray-500 mb-1\">\n1888: {t('detail_hub.punch_clock.clocked_in_at', {\n1889: time: formatTime(new Date(employeeState.currentEntry.clock_in))"
+            "line": 1896,
+            "context": "1895: <p className=\"text-xs text-gray-500 mb-1\">\n1896: {t('detail_hub.punch_clock.clocked_in_at', {\n1897: time: formatTime(new Date(employeeState.currentEntry.clock_in))"
           },
           {
             "key": "detail_hub.punch_clock.elapsed",
-            "line": 1900,
-            "context": "1899: <div className=\"text-right\">\n1900: <p className=\"text-xs text-gray-500 mb-1\">{t('detail_hub.punch_clock.elapsed')}</p>\n1901: <p className=\"text-2xl font-bold text-gray-900\">"
+            "line": 1908,
+            "context": "1907: <div className=\"text-right\">\n1908: <p className=\"text-xs text-gray-500 mb-1\">{t('detail_hub.punch_clock.elapsed')}</p>\n1909: <p className=\"text-2xl font-bold text-gray-900\">"
           },
           {
             "key": "detail_hub.punch_clock.on_break_since",
-            "line": 1913,
-            "context": "1912: <p className=\"text-xs text-amber-600 mb-1\">\n1913: {t('detail_hub.punch_clock.on_break_since', {\n1914: time: formatTime(new Date(employeeState.currentEntry.break_start!))"
+            "line": 1921,
+            "context": "1920: <p className=\"text-xs text-amber-600 mb-1\">\n1921: {t('detail_hub.punch_clock.on_break_since', {\n1922: time: formatTime(new Date(employeeState.currentEntry.break_start!))"
           },
           {
             "key": "detail_hub.punch_clock.until_minimum",
-            "line": 1923,
-            "context": "1922: <p className=\"text-xs text-amber-600 mt-1\">\n1923: {30 - (employeeState.currentEntry.break_elapsed_minutes || 0)} min {t('detail_hub.punch_clock.until_minimum')}\n1924: </p>"
+            "line": 1931,
+            "context": "1930: <p className=\"text-xs text-amber-600 mt-1\">\n1931: {30 - (employeeState.currentEntry.break_elapsed_minutes || 0)} min {t('detail_hub.punch_clock.until_minimum')}\n1932: </p>"
           },
           {
             "key": "detail_hub.punch_clock.break_time",
-            "line": 1930,
-            "context": "1929: <div className=\"text-right\">\n1930: <p className=\"text-xs text-amber-600 mb-1\">{t('detail_hub.punch_clock.break_time')}</p>\n1931: <p className=\"text-2xl font-bold text-amber-700\">"
+            "line": 1938,
+            "context": "1937: <div className=\"text-right\">\n1938: <p className=\"text-xs text-amber-600 mb-1\">{t('detail_hub.punch_clock.break_time')}</p>\n1939: <p className=\"text-2xl font-bold text-amber-700\">"
           },
           {
             "key": "detail_hub.live_dashboard.clock_in",
-            "line": 1998,
-            "context": "1997: <div className=\"text-left\">\n1998: <div>{t('detail_hub.live_dashboard.clock_in')}</div>\n1999: <div className=\"text-xs font-normal opacity-90\">Start Your Shift</div>"
+            "line": 2006,
+            "context": "2005: <div className=\"text-left\">\n2006: <div>{t('detail_hub.live_dashboard.clock_in')}</div>\n2007: <div className=\"text-xs font-normal opacity-90\">Start Your Shift</div>"
           },
           {
             "key": "detail_hub.punch_clock.messages.lunch_break_label",
-            "line": 2019,
-            "context": "2018: {(currentBreak === null && employeeState.currentEntry?.break_start === null)\n2019: ? t('detail_hub.punch_clock.messages.lunch_break_label', { minutes: 30 })\n2020: : t('detail_hub.punch_clock.messages.short_break_label')}"
+            "line": 2027,
+            "context": "2026: {(currentBreak === null && employeeState.currentEntry?.break_start === null)\n2027: ? t('detail_hub.punch_clock.messages.lunch_break_label', { minutes: 30 })\n2028: : t('detail_hub.punch_clock.messages.short_break_label')}"
           },
           {
             "key": "detail_hub.punch_clock.messages.short_break_label",
-            "line": 2020,
-            "context": "2019: ? t('detail_hub.punch_clock.messages.lunch_break_label', { minutes: 30 })\n2020: : t('detail_hub.punch_clock.messages.short_break_label')}\n2021: </div>"
+            "line": 2028,
+            "context": "2027: ? t('detail_hub.punch_clock.messages.lunch_break_label', { minutes: 30 })\n2028: : t('detail_hub.punch_clock.messages.short_break_label')}\n2029: </div>"
           },
           {
             "key": "detail_hub.punch_clock.messages.clock_out",
-            "line": 2032,
-            "context": "2031: <LogOut className=\"w-8 h-8 mr-2\" />\n2032: {t('detail_hub.punch_clock.messages.clock_out')}\n2033: </Button>"
+            "line": 2040,
+            "context": "2039: <LogOut className=\"w-8 h-8 mr-2\" />\n2040: {t('detail_hub.punch_clock.messages.clock_out')}\n2041: </Button>"
           },
           {
             "key": "detail_hub.messages.break_minimum_required",
-            "line": 2046,
-            "context": "2045: title={breakSecondsRemaining !== null && breakSecondsRemaining > 0\n2046: ? t('detail_hub.messages.break_minimum_required', {\n2047: minutes: 30,"
+            "line": 2054,
+            "context": "2053: title={breakSecondsRemaining !== null && breakSecondsRemaining > 0\n2054: ? t('detail_hub.messages.break_minimum_required', {\n2055: minutes: 30,"
           },
           {
             "key": "detail_hub.punch_clock.messages.clock_out",
-            "line": 2077,
-            "context": "2076: <LogOut className=\"w-8 h-8 mr-2\" />\n2077: {t('detail_hub.punch_clock.messages.clock_out')}\n2078: </Button>"
+            "line": 2085,
+            "context": "2084: <LogOut className=\"w-8 h-8 mr-2\" />\n2085: {t('detail_hub.punch_clock.messages.clock_out')}\n2086: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.back_to_search",
-            "line": 2092,
-            "context": "2091: >\n2092: {t('detail_hub.punch_clock.back_to_search')}\n2093: </Button>"
+            "line": 2100,
+            "context": "2099: >\n2100: {t('detail_hub.punch_clock.back_to_search')}\n2101: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.state_fallback_info",
-            "line": 2110,
-            "context": "2109: <AlertDescription className=\"text-blue-700\">\n2110: {t('detail_hub.punch_clock.state_fallback_info', {\n2111: defaultValue: 'Showing basic punch options. Your current status will be verified during punch.'"
+            "line": 2118,
+            "context": "2117: <AlertDescription className=\"text-blue-700\">\n2118: {t('detail_hub.punch_clock.state_fallback_info', {\n2119: defaultValue: 'Showing basic punch options. Your current status will be verified during punch.'"
           },
           {
             "key": "detail_hub.punch_clock.messages.clock_in",
-            "line": 2130,
-            "context": "2129: <LogIn className=\"w-8 h-8 mr-2\" />\n2130: {t('detail_hub.punch_clock.messages.clock_in')}\n2131: </Button>"
+            "line": 2138,
+            "context": "2137: <LogIn className=\"w-8 h-8 mr-2\" />\n2138: {t('detail_hub.punch_clock.messages.clock_in')}\n2139: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.back_to_search",
-            "line": 2141,
-            "context": "2140: >\n2141: {t('detail_hub.punch_clock.back_to_search')}\n2142: </Button>"
+            "line": 2149,
+            "context": "2148: >\n2149: {t('detail_hub.punch_clock.back_to_search')}\n2150: </Button>"
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.position_capture_helper",
+            "line": 2254,
+            "context": "2253: <p className=\"text-xs sm:text-sm text-white/90 font-medium\">\n2254: {t('detail_hub.punch_clock.messages.position_capture_helper', \"Position yourself and click 'Capture'\")}\n2255: </p>"
           },
           {
             "key": "detail_hub.punch_clock.captured_photo_alt",
-            "line": 2216,
-            "context": "2215: src={capturedPhoto}\n2216: alt={t('detail_hub.punch_clock.captured_photo_alt')}\n2217: className=\"w-full h-full object-cover\""
-          },
-          {
-            "key": "detail_hub.punch_clock.note_label",
-            "line": 2234,
-            "context": "2233: <MessageSquare className=\"w-5 h-5 text-amber-600\" />\n2234: {t('detail_hub.punch_clock.note_label')}\n2235: <span className=\"text-amber-600 font-normal\">({t('common.optional')})</span>"
-          },
-          {
-            "key": "detail_hub.punch_clock.note_placeholder",
-            "line": 2240,
-            "context": "2239: onChange={(e) => setPunchNote(e.target.value)}\n2240: placeholder={t('detail_hub.punch_clock.note_placeholder')}\n2241: className=\"min-h-[100px] resize-none bg-white border-amber-200 focus:border-amber-400 focus:ring-amber-400\""
-          },
-          {
-            "key": "common.clear",
-            "line": 2254,
-            "context": "2253: >\n2254: {t('common.clear')}\n2255: </Button>"
+            "line": 2263,
+            "context": "2262: src={capturedPhoto}\n2263: alt={t('detail_hub.punch_clock.captured_photo_alt')}\n2264: className=\"w-full h-full object-cover\""
           },
           {
             "key": "detail_hub.punch_clock.messages.processing",
-            "line": 2312,
-            "context": "2311: <Loader2 className=\"w-5 h-5 mr-2 animate-spin\" />\n2312: {t('detail_hub.punch_clock.messages.processing')}\n2313: </>"
+            "line": 2288,
+            "context": "2287: <Loader2 className=\"w-5 h-5 mr-2 animate-spin\" />\n2288: {t('detail_hub.punch_clock.messages.processing')}\n2289: </>"
           },
           {
             "key": "detail_hub.punch_clock.confirm",
-            "line": 2317,
-            "context": "2316: <CheckCircle className=\"w-5 h-5 mr-2\" />\n2317: {t('detail_hub.punch_clock.confirm')}\n2318: </>"
+            "line": 2293,
+            "context": "2292: <CheckCircle className=\"w-5 h-5 mr-2\" />\n2293: {t('detail_hub.punch_clock.confirm')}\n2294: </>"
+          },
+          {
+            "key": "detail_hub.punch_clock.messages.photo_captured_confirm",
+            "line": 2301,
+            "context": "2300: <p className=\"text-xs sm:text-sm text-white/90 font-medium\">\n2301: {t('detail_hub.punch_clock.messages.photo_captured_confirm', \"Photo captured! Click 'Confirm' to proceed.\")}\n2302: </p>"
+          },
+          {
+            "key": "detail_hub.punch_clock.note_label",
+            "line": 2314,
+            "context": "2313: <MessageSquare className=\"w-5 h-5 text-amber-600\" />\n2314: {t('detail_hub.punch_clock.note_label')}\n2315: <span className=\"text-amber-600 font-normal\">({t('common.optional')})</span>"
+          },
+          {
+            "key": "detail_hub.punch_clock.note_placeholder",
+            "line": 2320,
+            "context": "2319: onChange={(e) => setPunchNote(e.target.value)}\n2320: placeholder={t('detail_hub.punch_clock.note_placeholder')}\n2321: className=\"min-h-[100px] resize-none bg-white border-amber-200 focus:border-amber-400 focus:ring-amber-400\""
+          },
+          {
+            "key": "common.clear",
+            "line": 2334,
+            "context": "2333: >\n2334: {t('common.clear')}\n2335: </Button>"
           },
           {
             "key": "detail_hub.punch_clock.camera_checking",
-            "line": 2358,
-            "context": "2357: <Loader2 className=\"w-4 h-4 text-gray-400 animate-spin\" />\n2358: <span className=\"text-gray-500\">{t('detail_hub.punch_clock.camera_checking')}</span>\n2359: </>"
+            "line": 2374,
+            "context": "2373: <Loader2 className=\"w-4 h-4 text-gray-400 animate-spin\" />\n2374: <span className=\"text-gray-500\">{t('detail_hub.punch_clock.camera_checking')}</span>\n2375: </>"
           },
           {
             "key": "detail_hub.punch_clock.camera_ready",
-            "line": 2364,
-            "context": "2363: <CheckCircle className=\"w-4 h-4 text-emerald-500\" />\n2364: <span className=\"text-emerald-600\">{t('detail_hub.punch_clock.camera_ready')}</span>\n2365: </>"
+            "line": 2380,
+            "context": "2379: <CheckCircle className=\"w-4 h-4 text-emerald-500\" />\n2380: <span className=\"text-emerald-600\">{t('detail_hub.punch_clock.camera_ready')}</span>\n2381: </>"
           },
           {
             "key": "detail_hub.punch_clock.camera_denied",
-            "line": 2370,
-            "context": "2369: <XCircle className=\"w-4 h-4 text-red-500\" />\n2370: <span className=\"text-red-600\">{t('detail_hub.punch_clock.camera_denied')}</span>\n2371: </>"
+            "line": 2386,
+            "context": "2385: <XCircle className=\"w-4 h-4 text-red-500\" />\n2386: <span className=\"text-red-600\">{t('detail_hub.punch_clock.camera_denied')}</span>\n2387: </>"
           },
           {
             "key": "detail_hub.punch_clock.camera_not_found",
-            "line": 2378,
-            "context": "2377: {cameraStatus === 'not_found'\n2378: ? t('detail_hub.punch_clock.camera_not_found')\n2379: : t('detail_hub.punch_clock.camera_in_use')}"
+            "line": 2394,
+            "context": "2393: {cameraStatus === 'not_found'\n2394: ? t('detail_hub.punch_clock.camera_not_found')\n2395: : t('detail_hub.punch_clock.camera_in_use')}"
           },
           {
             "key": "detail_hub.punch_clock.camera_in_use",
-            "line": 2379,
-            "context": "2378: ? t('detail_hub.punch_clock.camera_not_found')\n2379: : t('detail_hub.punch_clock.camera_in_use')}\n2380: </span>"
+            "line": 2395,
+            "context": "2394: ? t('detail_hub.punch_clock.camera_not_found')\n2395: : t('detail_hub.punch_clock.camera_in_use')}\n2396: </span>"
           },
           {
             "key": "detail_hub.punch_clock.camera_error",
-            "line": 2386,
-            "context": "2385: <XCircle className=\"w-4 h-4 text-red-500\" />\n2386: <span className=\"text-red-600\">{t('detail_hub.punch_clock.camera_error')}</span>\n2387: </>"
+            "line": 2402,
+            "context": "2401: <XCircle className=\"w-4 h-4 text-red-500\" />\n2402: <span className=\"text-red-600\">{t('detail_hub.punch_clock.camera_error')}</span>\n2403: </>"
           }
         ],
         "coverage": 96,
@@ -29127,145 +29147,145 @@
         "translationCalls": [
           {
             "key": "detail_hub.live_dashboard.active",
-            "line": 85,
+            "line": 86,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.status.complete",
-            "line": 93,
+            "line": 94,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.status.disputed",
-            "line": 101,
+            "line": 102,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.status.approved",
-            "line": 109,
+            "line": 110,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.recent_punches",
-            "line": 122,
+            "line": 123,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.no_history",
-            "line": 144,
+            "line": 145,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.clock_in",
-            "line": 172,
+            "line": 173,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.photo_verified",
-            "line": 180,
+            "line": 181,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.clock_out",
-            "line": 189,
+            "line": 190,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.photo_verified",
-            "line": 199,
+            "line": 200,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.in_progress",
-            "line": 205,
+            "line": 206,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.total_hours",
-            "line": 216,
+            "line": 217,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.hours",
-            "line": 219,
+            "line": 220,
             "exists": false
           },
           {
             "key": "detail_hub.punch_clock.requires_verification",
-            "line": 230,
+            "line": 231,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "detail_hub.live_dashboard.active",
-            "line": 85,
-            "context": "84: <Loader2 className=\"w-3 h-3 mr-1 animate-spin\" />\n85: {t('detail_hub.live_dashboard.active')}\n86: </Badge>"
+            "line": 86,
+            "context": "85: <Loader2 className=\"w-3 h-3 mr-1 animate-spin\" />\n86: {t('detail_hub.live_dashboard.active')}\n87: </Badge>"
           },
           {
             "key": "detail_hub.punch_clock.status.complete",
-            "line": 93,
-            "context": "92: <CheckCircle className=\"w-3 h-3 mr-1\" />\n93: {t('detail_hub.punch_clock.status.complete')}\n94: </Badge>"
+            "line": 94,
+            "context": "93: <CheckCircle className=\"w-3 h-3 mr-1\" />\n94: {t('detail_hub.punch_clock.status.complete')}\n95: </Badge>"
           },
           {
             "key": "detail_hub.punch_clock.status.disputed",
-            "line": 101,
-            "context": "100: <AlertCircle className=\"w-3 h-3 mr-1\" />\n101: {t('detail_hub.punch_clock.status.disputed')}\n102: </Badge>"
+            "line": 102,
+            "context": "101: <AlertCircle className=\"w-3 h-3 mr-1\" />\n102: {t('detail_hub.punch_clock.status.disputed')}\n103: </Badge>"
           },
           {
             "key": "detail_hub.punch_clock.status.approved",
-            "line": 109,
-            "context": "108: <CheckCircle className=\"w-3 h-3 mr-1\" />\n109: {t('detail_hub.punch_clock.status.approved')}\n110: </Badge>"
+            "line": 110,
+            "context": "109: <CheckCircle className=\"w-3 h-3 mr-1\" />\n110: {t('detail_hub.punch_clock.status.approved')}\n111: </Badge>"
           },
           {
             "key": "detail_hub.punch_clock.recent_punches",
-            "line": 122,
-            "context": "121: <CardTitle className=\"text-lg\">\n122: {t('detail_hub.punch_clock.recent_punches')}\n123: </CardTitle>"
+            "line": 123,
+            "context": "122: <CardTitle className=\"text-lg\">\n123: {t('detail_hub.punch_clock.recent_punches')}\n124: </CardTitle>"
           },
           {
             "key": "detail_hub.punch_clock.no_history",
-            "line": 144,
-            "context": "143: <Clock className=\"w-12 h-12 mx-auto mb-2 text-gray-300\" />\n144: <p className=\"text-sm\">{t('detail_hub.punch_clock.no_history')}</p>\n145: </div>"
+            "line": 145,
+            "context": "144: <Clock className=\"w-12 h-12 mx-auto mb-2 text-gray-300\" />\n145: <p className=\"text-sm\">{t('detail_hub.punch_clock.no_history')}</p>\n146: </div>"
           },
           {
             "key": "detail_hub.punch_clock.clock_in",
-            "line": 172,
-            "context": "171: <Clock className=\"w-3 h-3\" />\n172: <span>{t('detail_hub.punch_clock.clock_in')}</span>\n173: </div>"
+            "line": 173,
+            "context": "172: <Clock className=\"w-3 h-3\" />\n173: <span>{t('detail_hub.punch_clock.clock_in')}</span>\n174: </div>"
           },
           {
             "key": "detail_hub.punch_clock.photo_verified",
-            "line": 180,
-            "context": "179: <Camera className=\"w-3 h-3 mr-1\" />\n180: {t('detail_hub.punch_clock.photo_verified')}\n181: </Badge>"
+            "line": 181,
+            "context": "180: <Camera className=\"w-3 h-3 mr-1\" />\n181: {t('detail_hub.punch_clock.photo_verified')}\n182: </Badge>"
           },
           {
             "key": "detail_hub.punch_clock.clock_out",
-            "line": 189,
-            "context": "188: <Clock className=\"w-3 h-3\" />\n189: <span>{t('detail_hub.punch_clock.clock_out')}</span>\n190: </div>"
+            "line": 190,
+            "context": "189: <Clock className=\"w-3 h-3\" />\n190: <span>{t('detail_hub.punch_clock.clock_out')}</span>\n191: </div>"
           },
           {
             "key": "detail_hub.punch_clock.photo_verified",
-            "line": 199,
-            "context": "198: <Camera className=\"w-3 h-3 mr-1\" />\n199: {t('detail_hub.punch_clock.photo_verified')}\n200: </Badge>"
+            "line": 200,
+            "context": "199: <Camera className=\"w-3 h-3 mr-1\" />\n200: {t('detail_hub.punch_clock.photo_verified')}\n201: </Badge>"
           },
           {
             "key": "detail_hub.punch_clock.in_progress",
-            "line": 205,
-            "context": "204: <div className=\"text-sm text-gray-400 italic\">\n205: {t('detail_hub.punch_clock.in_progress')}\n206: </div>"
+            "line": 206,
+            "context": "205: <div className=\"text-sm text-gray-400 italic\">\n206: {t('detail_hub.punch_clock.in_progress')}\n207: </div>"
           },
           {
             "key": "detail_hub.punch_clock.total_hours",
-            "line": 216,
-            "context": "215: <span className=\"text-xs text-gray-600\">\n216: {t('detail_hub.punch_clock.total_hours')}\n217: </span>"
+            "line": 217,
+            "context": "216: <span className=\"text-xs text-gray-600\">\n217: {t('detail_hub.punch_clock.total_hours')}\n218: </span>"
           },
           {
             "key": "detail_hub.punch_clock.hours",
-            "line": 219,
-            "context": "218: <span className=\"text-sm font-bold text-gray-900\">\n219: {entry.total_hours.toFixed(2)} {t('detail_hub.punch_clock.hours')}\n220: </span>"
+            "line": 220,
+            "context": "219: <span className=\"text-sm font-bold text-gray-900\">\n220: {entry.total_hours.toFixed(2)} {t('detail_hub.punch_clock.hours')}\n221: </span>"
           },
           {
             "key": "detail_hub.punch_clock.requires_verification",
-            "line": 230,
-            "context": "229: <AlertCircle className=\"w-3 h-3 mr-1\" />\n230: {t('detail_hub.punch_clock.requires_verification')}\n231: </Badge>"
+            "line": 231,
+            "context": "230: <AlertCircle className=\"w-3 h-3 mr-1\" />\n231: {t('detail_hub.punch_clock.requires_verification')}\n232: </Badge>"
           }
         ],
         "coverage": 100,
@@ -30717,85 +30737,75 @@
         "translationCalls": [
           {
             "key": "detail_hub.employees.no_assignments",
-            "line": 84,
+            "line": 83,
             "exists": false
           },
           {
             "key": "detail_hub.employees.no_active_assignments",
-            "line": 94,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.employees.flexible_schedule",
-            "line": 133,
+            "line": 93,
             "exists": false
           },
           {
             "key": "detail_hub.employees.punch_window",
-            "line": 139,
+            "line": 132,
             "exists": false
           },
           {
             "key": "detail_hub.employees.punch_window",
-            "line": 167,
+            "line": 158,
             "exists": false
           },
           {
             "key": "detail_hub.employees.multiple_locations",
-            "line": 177,
+            "line": 167,
             "exists": false
           },
           {
             "key": "detail_hub.employees.all_assignments",
-            "line": 182,
+            "line": 172,
             "exists": false
           },
           {
             "key": "detail_hub.employees.punch_window",
-            "line": 213,
+            "line": 202,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "detail_hub.employees.no_assignments",
-            "line": 84,
-            "context": "83: <AlertCircle className=\"h-4 w-4\" />\n84: <span className=\"text-sm font-medium\">{t('detail_hub.employees.no_assignments')}</span>\n85: </div>"
+            "line": 83,
+            "context": "82: <AlertCircle className=\"h-4 w-4\" />\n83: <span className=\"text-sm font-medium\">{t('detail_hub.employees.no_assignments')}</span>\n84: </div>"
           },
           {
             "key": "detail_hub.employees.no_active_assignments",
-            "line": 94,
-            "context": "93: <AlertCircle className=\"h-3 w-3 mr-1\" />\n94: {t('detail_hub.employees.no_active_assignments')}\n95: </Badge>"
-          },
-          {
-            "key": "detail_hub.employees.flexible_schedule",
-            "line": 133,
-            "context": "132: <Badge variant=\"outline\" className=\"text-xs\">\n133: {t('detail_hub.employees.flexible_schedule')}\n134: </Badge>"
+            "line": 93,
+            "context": "92: <AlertCircle className=\"h-3 w-3 mr-1\" />\n93: {t('detail_hub.employees.no_active_assignments')}\n94: </Badge>"
           },
           {
             "key": "detail_hub.employees.punch_window",
-            "line": 139,
-            "context": "138: <div className=\"flex items-center gap-1 text-xs text-gray-500 ml-5\">\n139: <span>{t('detail_hub.employees.punch_window')}: {punchWindow}</span>\n140: </div>"
+            "line": 132,
+            "context": "131: <div className=\"flex items-center gap-1 text-xs text-gray-500 ml-5\">\n132: <span>{t('detail_hub.employees.punch_window')}: {punchWindow}</span>\n133: </div>"
           },
           {
             "key": "detail_hub.employees.punch_window",
-            "line": 167,
-            "context": "166: <div className=\"flex items-center gap-1 text-xs text-gray-500 ml-5\">\n167: <span>{t('detail_hub.employees.punch_window')}: {punchWindow}</span>\n168: </div>"
+            "line": 158,
+            "context": "157: <div className=\"flex items-center gap-1 text-xs text-gray-500 ml-5\">\n158: <span>{t('detail_hub.employees.punch_window')}: {punchWindow}</span>\n159: </div>"
           },
           {
             "key": "detail_hub.employees.multiple_locations",
-            "line": 177,
-            "context": "176: <Building2 className=\"h-3 w-3 mr-1\" />\n177: {t('detail_hub.employees.multiple_locations', { count: remainingCount })}\n178: </Button>"
+            "line": 167,
+            "context": "166: <Building2 className=\"h-3 w-3 mr-1\" />\n167: {t('detail_hub.employees.multiple_locations', { count: remainingCount })}\n168: </Button>"
           },
           {
             "key": "detail_hub.employees.all_assignments",
-            "line": 182,
-            "context": "181: <div className=\"space-y-3\">\n182: <h4 className=\"font-semibold text-sm\">{t('detail_hub.employees.all_assignments')}</h4>\n183: <div className=\"space-y-2\">"
+            "line": 172,
+            "context": "171: <div className=\"space-y-3\">\n172: <h4 className=\"font-semibold text-sm\">{t('detail_hub.employees.all_assignments')}</h4>\n173: <div className=\"space-y-2\">"
           },
           {
             "key": "detail_hub.employees.punch_window",
-            "line": 213,
-            "context": "212: <div className=\"text-xs text-gray-500 ml-7\">\n213: {t('detail_hub.employees.punch_window')}: {assignmentPunchWindow}\n214: </div>"
+            "line": 202,
+            "context": "201: <div className=\"text-xs text-gray-500 ml-7\">\n202: {t('detail_hub.employees.punch_window')}: {assignmentPunchWindow}\n203: </div>"
           }
         ],
         "coverage": 100,
@@ -73897,7 +73907,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3328 translation keys are referenced but missing",
+      "description": "3329 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "167 hours"
     }

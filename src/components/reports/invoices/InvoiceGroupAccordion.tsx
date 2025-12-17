@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Accordion,
   AccordionContent,
@@ -46,6 +47,9 @@ interface InvoiceGroupAccordionProps {
   onShowDetails: (invoice: Invoice, scrollToEmail?: boolean) => void;
   onShowPayment: (invoice: Invoice) => void;
   onDeleteInvoice: (invoice: Invoice) => void;
+  selectedInvoiceIds?: Set<string>;
+  onToggleInvoice?: (invoiceId: string) => void;
+  onSelectAllInGroup?: (group: InvoiceGroup, checked: boolean) => void;
 }
 
 const getStatusBadge = (status: InvoiceStatus) => {
@@ -95,6 +99,9 @@ export function InvoiceGroupAccordion({
   onShowDetails,
   onShowPayment,
   onDeleteInvoice,
+  selectedInvoiceIds,
+  onToggleInvoice,
+  onSelectAllInGroup,
 }: InvoiceGroupAccordionProps) {
   const { t } = useTranslation();
 
@@ -162,6 +169,22 @@ export function InvoiceGroupAccordion({
             <Table>
               <TableHeader>
                 <TableRow>
+                  {selectedInvoiceIds !== undefined && onToggleInvoice && (
+                    <TableHead className="w-12">
+                      <Checkbox
+                        checked={
+                          group.invoices.length > 0 &&
+                          group.invoices.every(inv => selectedInvoiceIds.has(inv.id))
+                        }
+                        onCheckedChange={(checked) => {
+                          if (onSelectAllInGroup) {
+                            onSelectAllInGroup(group, !!checked);
+                          }
+                        }}
+                        aria-label="Select all invoices in group"
+                      />
+                    </TableHead>
+                  )}
                   <TableHead className="text-center font-bold">
                     {t('reports.invoices.table.invoice')}
                   </TableHead>
@@ -249,6 +272,17 @@ export function InvoiceGroupAccordion({
                         onShowDetails(invoice);
                       }}
                     >
+                      {selectedInvoiceIds !== undefined && onToggleInvoice && (
+                        <TableCell
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Checkbox
+                            checked={selectedInvoiceIds.has(invoice.id)}
+                            onCheckedChange={() => onToggleInvoice(invoice.id)}
+                            aria-label={`Select invoice ${invoice.invoiceNumber}`}
+                          />
+                        </TableCell>
+                      )}
                       <TableCell className="text-center">
                         <div className="flex flex-col items-center">
                           <div className="flex items-center gap-2">

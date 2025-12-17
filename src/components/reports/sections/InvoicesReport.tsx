@@ -65,6 +65,7 @@ import {
   Eye,
   FileText,
   Filter,
+  Mail,
   MessageSquare,
   Plus,
   Printer,
@@ -83,8 +84,9 @@ import { RecordPaymentDialog } from '../invoices/RecordPaymentDialog';
 import { VehicleInvoiceSearch } from '../invoices/VehicleInvoiceSearch';
 import { InvoiceGroupAccordion } from '../invoices/InvoiceGroupAccordion';
 import { useInvoiceGrouping, useAccordionDefaultValue } from '@/hooks/useInvoiceGrouping';
-import { GroupByOption } from '@/utils/invoiceGrouping';
+import { GroupByOption, InvoiceGroup } from '@/utils/invoiceGrouping';
 import { TagsFilterSelect } from '../invoices/TagsFilterSelect';
+import { BulkEmailInvoicesDialog } from '../invoices/email/BulkEmailInvoicesDialog';
 
 interface InvoicesReportProps {
   filters: ReportsFilters;
@@ -376,6 +378,10 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
   const [showQuickCreateDialog, setShowQuickCreateDialog] = useState(false);
   const [showDetailsDialog, setShowDetailsDialog] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+
+  // Bulk selection state for email
+  const [selectedInvoiceIds, setSelectedInvoiceIds] = useState<Set<string>>(new Set());
+  const [showBulkEmailDialog, setShowBulkEmailDialog] = useState(false);
   const [showInvoicePreview, setShowInvoicePreview] = useState(false);
   const [invoiceHtml, setInvoiceHtml] = useState('');
 
@@ -1476,6 +1482,56 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
     setDeleteDialogOpen(true);
   };
 
+  // Bulk selection handlers
+  const handleSelectAllInvoices = (checked: boolean) => {
+    if (checked) {
+      const allIds = new Set(invoices.map(inv => inv.id));
+      setSelectedInvoiceIds(allIds);
+    } else {
+      setSelectedInvoiceIds(new Set());
+    }
+  };
+
+  const handleSelectInvoice = (invoiceId: string, checked: boolean) => {
+    const newSet = new Set(selectedInvoiceIds);
+    if (checked) {
+      newSet.add(invoiceId);
+    } else {
+      newSet.delete(invoiceId);
+    }
+    setSelectedInvoiceIds(newSet);
+  };
+
+  // Handle selecting all invoices in a specific group
+  const handleSelectAllInGroup = (group: InvoiceGroup, checked: boolean) => {
+    const updatedIds = new Set(selectedInvoiceIds);
+
+    if (checked) {
+      group.invoices.forEach(invoice => {
+        updatedIds.add(invoice.id);
+      });
+    } else {
+      group.invoices.forEach(invoice => {
+        updatedIds.delete(invoice.id);
+      });
+    }
+
+    setSelectedInvoiceIds(updatedIds);
+  };
+
+  // Handle toggling a single invoice
+  const handleToggleInvoice = (invoiceId: string) => {
+    const updatedIds = new Set(selectedInvoiceIds);
+
+    if (updatedIds.has(invoiceId)) {
+      updatedIds.delete(invoiceId);
+    } else {
+      updatedIds.add(invoiceId);
+    }
+
+    setSelectedInvoiceIds(updatedIds);
+  };
+
   const confirmDeleteInvoice = async () => {
     if (!invoiceToDelete) return;
 
@@ -1732,8 +1788,18 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                   </div>
                 )}
 
-                {/* Reset Filters Button */}
-                <div className="pt-3 border-t flex justify-end">
+                {/* Action Buttons */}
+                <div className="pt-3 border-t flex justify-between">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => setShowBulkEmailDialog(true)}
+                    disabled={selectedInvoiceIds.size === 0}
+                    className="gap-2"
+                  >
+                    <Mail className="h-4 w-4" />
+                    Send Email ({selectedInvoiceIds.size})
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"
@@ -1782,12 +1848,22 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                       setShowPaymentDialog(true);
                     }}
                     onDeleteInvoice={handleDeleteInvoice}
+                    selectedInvoiceIds={selectedInvoiceIds}
+                    onToggleInvoice={handleToggleInvoice}
+                    onSelectAllInGroup={handleSelectAllInGroup}
                   />
                 </div>
               ) : (
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead className="w-12">
+                        <Checkbox
+                          checked={invoices.length > 0 && selectedInvoiceIds.size === invoices.length}
+                          onCheckedChange={handleSelectAllInvoices}
+                          aria-label="Select all invoices"
+                        />
+                      </TableHead>
                       <TableHead className="text-center font-bold">{t('reports.invoices.table.invoice')}</TableHead>
                       <TableHead className="text-center font-bold">{t('reports.invoices.table.date_range')}</TableHead>
                       <TableHead className="text-center font-bold">{t('reports.invoices.issue_date')}</TableHead>
@@ -1852,12 +1928,24 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                         <TableRow
                           key={invoice.id}
                           className={`cursor-pointer ${getRowBackgroundClass(invoice.status)}`}
-                          onClick={() => {
-                            setSelectedInvoice(invoice);
-                            setShowDetailsDialog(true);
-                          }}
                         >
-                          <TableCell className="text-center">
+                          <TableCell
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-12"
+                          >
+                            <Checkbox
+                              checked={selectedInvoiceIds.has(invoice.id)}
+                              onCheckedChange={(checked) => handleSelectInvoice(invoice.id, checked as boolean)}
+                              aria-label={`Select invoice ${invoice.invoiceNumber}`}
+                            />
+                          </TableCell>
+                          <TableCell
+                            className="text-center"
+                            onClick={() => {
+                              setSelectedInvoice(invoice);
+                              setShowDetailsDialog(true);
+                            }}
+                          >
                             <div className="flex flex-col items-center">
                               <div className="flex items-center gap-2">
                                 <span className="font-mono text-sm font-medium">{invoice.invoiceNumber}</span>
@@ -1941,7 +2029,13 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                               )}
                             </div>
                           </TableCell>
-                          <TableCell className="text-center">
+                          <TableCell
+                            className="text-center"
+                            onClick={() => {
+                              setSelectedInvoice(invoice);
+                              setShowDetailsDialog(true);
+                            }}
+                          >
                             <div className="flex flex-col items-center">
                               <span className="text-sm font-medium">{dateRangeText}</span>
                               <span className="text-xs text-muted-foreground">
@@ -1949,18 +2043,54 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                               </span>
                             </div>
                           </TableCell>
-                          <TableCell className="text-sm text-center">{formatDate(invoice.issueDate)}</TableCell>
-                          <TableCell className="text-sm text-center">{formatDate(invoice.dueDate)}</TableCell>
-                          <TableCell className="text-center font-medium">
+                          <TableCell
+                            className="text-sm text-center"
+                            onClick={() => {
+                              setSelectedInvoice(invoice);
+                              setShowDetailsDialog(true);
+                            }}
+                          >{formatDate(invoice.issueDate)}</TableCell>
+                          <TableCell
+                            className="text-sm text-center"
+                            onClick={() => {
+                              setSelectedInvoice(invoice);
+                              setShowDetailsDialog(true);
+                            }}
+                          >{formatDate(invoice.dueDate)}</TableCell>
+                          <TableCell
+                            className="text-center font-medium"
+                            onClick={() => {
+                              setSelectedInvoice(invoice);
+                              setShowDetailsDialog(true);
+                            }}
+                          >
                             {formatCurrency(invoice.totalAmount)}
                           </TableCell>
-                          <TableCell className="text-center text-emerald-600">
+                          <TableCell
+                            className="text-center text-emerald-600"
+                            onClick={() => {
+                              setSelectedInvoice(invoice);
+                              setShowDetailsDialog(true);
+                            }}
+                          >
                             {formatCurrency(invoice.amountPaid)}
                           </TableCell>
-                          <TableCell className="text-center font-medium">
+                          <TableCell
+                            className="text-center font-medium"
+                            onClick={() => {
+                              setSelectedInvoice(invoice);
+                              setShowDetailsDialog(true);
+                            }}
+                          >
                             {formatCurrency(invoice.amountDue)}
                           </TableCell>
-                          <TableCell className="text-center">{getStatusBadge(invoice.status)}</TableCell>
+                          <TableCell
+                            className="text-center"
+                            onClick={() => {
+                              setSelectedInvoice(invoice);
+                              setShowDetailsDialog(true);
+                            }}
+                          >{getStatusBadge(invoice.status)}</TableCell>
                           <TableCell className="text-center">
                             <div className="flex gap-1 justify-center">
                               <Button
@@ -2010,6 +2140,37 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
               )}
             </CardContent>
           </Card>
+
+          {/* Floating Action Bar */}
+          {selectedInvoiceIds.size > 0 && (
+            <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+              <Card className="shadow-lg border-2">
+                <CardContent className="py-3 px-6">
+                  <div className="flex items-center gap-4">
+                    <div className="text-sm font-medium">
+                      {selectedInvoiceIds.size} invoice{selectedInvoiceIds.size !== 1 ? 's' : ''} selected
+                    </div>
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => setShowBulkEmailDialog(true)}
+                      className="gap-2"
+                    >
+                      <Mail className="h-4 w-4" />
+                      Send Email
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSelectedInvoiceIds(new Set())}
+                    >
+                      Clear Selection
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </TabsContent>
 
         {/* CREATE INVOICE TAB */}
@@ -2636,6 +2797,16 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
         onConfirm={confirmDeleteInvoice}
         variant="destructive"
       />
+
+      {/* Bulk Email Invoices Dialog */}
+      {showBulkEmailDialog && (
+        <BulkEmailInvoicesDialog
+          open={showBulkEmailDialog}
+          onOpenChange={setShowBulkEmailDialog}
+          invoices={invoices.filter(inv => selectedInvoiceIds.has(inv.id))}
+          dealershipId={filters.dealershipId}
+        />
+      )}
     </div>
   );
 };
