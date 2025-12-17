@@ -65,8 +65,9 @@ export function PunchHistoryCard({ employeeId, limit = 5 }: PunchHistoryCardProp
       return data as TimeEntry[];
     },
     enabled: !!employeeId,
-    staleTime: CACHE_TIMES.SHORT, // 1 minute
-    gcTime: GC_TIMES.MEDIUM,
+    staleTime: CACHE_TIMES.INSTANT, // Always fetch fresh for punch history
+    gcTime: GC_TIMES.SHORT,
+    refetchOnMount: true,
   });
 
   const formatTime = (date: string) => {

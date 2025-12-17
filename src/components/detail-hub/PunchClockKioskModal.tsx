@@ -44,6 +44,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Photo capture utilities
 import { capturePhotoFromVideo, uploadPhotoToStorage } from "@/utils/photoFallback";
@@ -87,6 +88,7 @@ type CaptureAction = 'clock_in' | 'clock_out' | 'break_start' | 'break_end';
 export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKioskModalProps) {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const { selectedDealerId } = useDealerFilter();
   const { mutateAsync: clockIn } = useClockIn();
   const { mutateAsync: clockOut } = useClockOut();
@@ -1016,6 +1018,12 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
       // Refresh employee state and return to employee detail view
       await refetchEmployeeState();
+
+      // Invalidate punch history to ensure Recent Punches updates
+      await queryClient.invalidateQueries({
+        queryKey: ['punch-history', selectedEmployee.id]
+      });
+
       setCurrentView('employee_detail');
       setCapturedPhoto(null);
       setPhotoUploadStatus("");
@@ -1434,13 +1442,13 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
                         {/* Face Guide Overlay */}
                         {faceScanning && !showSuccessOverlay && (
-                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                            <div className="relative">
+                          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[60]">
+                            <div className="relative -mt-8">
                               {/* Face outline guide - enhanced pulse when actively scanning */}
-                              <div className={`w-64 h-80 border-4 rounded-2xl transition-all duration-300 ${
+                              <div className={`w-64 h-64 border-4 rounded-2xl transition-all duration-300 ${
                                 faceScanMessageType === 'scanning'
-                                  ? 'border-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.6)] animate-pulse'
-                                  : 'border-emerald-500 animate-pulse-border'
+                                  ? 'border-emerald-400 shadow-[0_0_30px_rgba(52,211,153,0.8)] animate-pulse'
+                                  : 'border-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.4)] animate-pulse-border'
                               }`} />
 
                               {/* Scanning line - only when actively analyzing */}
@@ -2201,30 +2209,102 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                           className="w-full h-full object-cover"
                         />
                         {/* Face guide overlay - ENHANCED */}
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                          <div className="relative">
-                            <div className="w-64 h-80 border-4 border-emerald-500 rounded-2xl animate-pulse-border" />
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[60]">
+                          <div className="relative -mt-8">
+                            <div className="w-64 h-64 border-4 border-emerald-500 rounded-2xl animate-pulse-border shadow-[0_0_30px_rgba(16,185,129,0.3)]" />
                             <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg animate-fade-in whitespace-nowrap">
                               {t('detail_hub.punch_clock.messages.position_face')}
                             </div>
                           </div>
                         </div>
+
+                        {/* Buttons overlay with gradient - Capture mode */}
+                        <div className="absolute bottom-0 left-0 right-0 z-50 bg-gradient-to-t from-black/95 via-black/80 to-transparent pt-16 pb-3 px-4">
+                          <div className="flex gap-2 sm:gap-3">
+                            <Button
+                              variant="outline"
+                              size="lg"
+                              className="flex-1 bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 hover:text-white"
+                              onClick={handleCancelCapture}
+                            >
+                              {t('detail_hub.punch_clock.cancel')}
+                            </Button>
+                            <Button
+                              size="lg"
+                              className="flex-1 bg-blue-600/90 backdrop-blur-sm hover:bg-blue-700/90 text-white border-blue-500/50"
+                              onClick={handleCapturePhoto}
+                              disabled={isCapturing}
+                            >
+                              {isCapturing ? (
+                                <>
+                                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                                  {t('detail_hub.punch_clock.messages.capturing_photo')}
+                                </>
+                              ) : (
+                                <>
+                                  <Camera className="w-5 h-5 mr-2" />
+                                  {t('detail_hub.punch_clock.capture')}
+                                </>
+                              )}
+                            </Button>
+                          </div>
+                          {/* Helper text */}
+                          <div className="mt-2 text-center">
+                            <p className="text-xs sm:text-sm text-white/90 font-medium">
+                              {t('detail_hub.punch_clock.messages.position_capture_helper', "Position yourself and click 'Capture'")}
+                            </p>
+                          </div>
+                        </div>
                       </>
                     ) : (
-                      <img
-                        src={capturedPhoto}
-                        alt={t('detail_hub.punch_clock.captured_photo_alt')}
-                        className="w-full h-full object-cover"
-                      />
+                      <>
+                        <img
+                          src={capturedPhoto}
+                          alt={t('detail_hub.punch_clock.captured_photo_alt')}
+                          className="w-full h-full object-cover"
+                        />
+
+                        {/* Buttons overlay with gradient - Confirm mode */}
+                        <div className="absolute bottom-0 left-0 right-0 z-50 bg-gradient-to-t from-black/95 via-black/80 to-transparent pt-16 pb-3 px-4">
+                          <div className="flex gap-2 sm:gap-3">
+                            <Button
+                              variant="outline"
+                              size="lg"
+                              className="flex-1 bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 hover:text-white"
+                              onClick={handleRetake}
+                            >
+                              <RotateCcw className="w-5 h-5 mr-2" />
+                              {t('detail_hub.punch_clock.retake_photo')}
+                            </Button>
+                            <Button
+                              size="lg"
+                              className="flex-1 bg-emerald-600/90 backdrop-blur-sm hover:bg-emerald-700/90 text-white border-emerald-500/50"
+                              onClick={handleConfirmPunch}
+                              disabled={isProcessing}
+                            >
+                              {isProcessing ? (
+                                <>
+                                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                                  {t('detail_hub.punch_clock.messages.processing')}
+                                </>
+                              ) : (
+                                <>
+                                  <CheckCircle className="w-5 h-5 mr-2" />
+                                  {t('detail_hub.punch_clock.confirm')}
+                                </>
+                              )}
+                            </Button>
+                          </div>
+                          {/* Helper text */}
+                          <div className="mt-2 text-center">
+                            <p className="text-xs sm:text-sm text-white/90 font-medium">
+                              {t('detail_hub.punch_clock.messages.photo_captured_confirm', "Photo captured! Click 'Confirm' to proceed.")}
+                            </p>
+                          </div>
+                        </div>
+                      </>
                     )}
                   </div>
-
-                  {/* Status message */}
-                  <Alert>
-                    <AlertDescription className="text-center">
-                      {photoUploadStatus}
-                    </AlertDescription>
-                  </Alert>
 
                   {/* Note Input - Always Visible & Highlighted */}
                   {capturedPhoto && (
@@ -2257,70 +2337,6 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                       </div>
                     </div>
                   )}
-
-                  {/* Action buttons */}
-                  <div className="flex gap-3">
-                    {!capturedPhoto ? (
-                      <>
-                        <Button
-                          variant="outline"
-                          size="lg"
-                          className="flex-1"
-                          onClick={handleCancelCapture}
-                        >
-                          {t('detail_hub.punch_clock.cancel')}
-                        </Button>
-                        <Button
-                          size="lg"
-                          className="flex-1 bg-blue-600 hover:bg-blue-700"
-                          onClick={handleCapturePhoto}
-                          disabled={isCapturing}
-                        >
-                          {isCapturing ? (
-                            <>
-                              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                              {t('detail_hub.punch_clock.messages.capturing_photo')}
-                            </>
-                          ) : (
-                            <>
-                              <Camera className="w-5 h-5 mr-2" />
-                              {t('detail_hub.punch_clock.capture')}
-                            </>
-                          )}
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button
-                          variant="outline"
-                          size="lg"
-                          className="flex-1"
-                          onClick={handleRetake}
-                        >
-                          <RotateCcw className="w-5 h-5 mr-2" />
-                          {t('detail_hub.punch_clock.retake_photo')}
-                        </Button>
-                        <Button
-                          size="lg"
-                          className="flex-1 bg-emerald-600 hover:bg-emerald-700"
-                          onClick={handleConfirmPunch}
-                          disabled={isProcessing}
-                        >
-                          {isProcessing ? (
-                            <>
-                              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                              {t('detail_hub.punch_clock.messages.processing')}
-                            </>
-                          ) : (
-                            <>
-                              <CheckCircle className="w-5 h-5 mr-2" />
-                              {t('detail_hub.punch_clock.confirm')}
-                            </>
-                          )}
-                        </Button>
-                      </>
-                    )}
-                  </div>
                 </CardContent>
               </Card>
               </>

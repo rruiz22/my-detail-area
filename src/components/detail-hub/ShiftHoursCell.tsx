@@ -52,13 +52,12 @@ interface ShiftHoursCellProps {
  * Helper function to format punch window display
  */
 function formatPunchWindow(
-  early: number | null,
-  late: number | null
-): string | null {
-  if (early === null && late === null) return null;
-
-  const earlyStr = early !== null ? `-${early}m` : 'No limit';
-  const lateStr = late !== null ? `+${late}m` : 'No limit';
+  early: number | null | undefined,
+  late: number | null | undefined
+): string {
+  // Use != null to check that value is neither null nor undefined
+  const earlyStr = early != null ? `-${early}m` : 'No limit';
+  const lateStr = late != null ? `+${late}m` : 'No limit';
 
   return `${earlyStr} / ${lateStr}`;
 }
@@ -100,10 +99,10 @@ export function ShiftHoursCell({
   const primary = activeAssignments[0];
   const remainingCount = activeAssignments.length - 1;
 
-  // Check if schedule is flexible (no time restrictions)
-  const isFlexible =
-    primary.schedule_template.early_punch_allowed_minutes === null &&
-    primary.schedule_template.late_punch_grace_minutes === null;
+  // Check if schedule is flexible (no time restrictions) - removed since we always show punch window
+  // const isFlexible =
+  //   primary.schedule_template.early_punch_allowed_minutes == null &&
+  //   primary.schedule_template.late_punch_grace_minutes == null;
 
   // Format punch window for primary assignment
   const punchWindow = formatPunchWindow(
@@ -128,17 +127,10 @@ export function ShiftHoursCell({
             {primary.schedule_template.shift_start_time} -{' '}
             {primary.schedule_template.shift_end_time}
           </span>
-          {isFlexible && (
-            <Badge variant="outline" className="text-xs">
-              {t('detail_hub.employees.flexible_schedule')}
-            </Badge>
-          )}
         </div>
-        {punchWindow && (
-          <div className="flex items-center gap-1 text-xs text-gray-500 ml-5">
-            <span>{t('detail_hub.employees.punch_window')}: {punchWindow}</span>
-          </div>
-        )}
+        <div className="flex items-center gap-1 text-xs text-gray-500 ml-5">
+          <span>{t('detail_hub.employees.punch_window')}: {punchWindow}</span>
+        </div>
       </div>
     );
   }
@@ -162,11 +154,9 @@ export function ShiftHoursCell({
             {primary.schedule_template.shift_end_time}
           </span>
         </div>
-        {punchWindow && (
-          <div className="flex items-center gap-1 text-xs text-gray-500 ml-5">
-            <span>{t('detail_hub.employees.punch_window')}: {punchWindow}</span>
-          </div>
-        )}
+        <div className="flex items-center gap-1 text-xs text-gray-500 ml-5">
+          <span>{t('detail_hub.employees.punch_window')}: {punchWindow}</span>
+        </div>
       </div>
 
       {/* Additional assignments - in popover */}
@@ -208,11 +198,9 @@ export function ShiftHoursCell({
                         {assignment.schedule_template.shift_start_time} - {assignment.schedule_template.shift_end_time}
                       </div>
                     </div>
-                    {assignmentPunchWindow && (
-                      <div className="text-xs text-gray-500 ml-7">
-                        {t('detail_hub.employees.punch_window')}: {assignmentPunchWindow}
-                      </div>
-                    )}
+                    <div className="text-xs text-gray-500 ml-7">
+                      {t('detail_hub.employees.punch_window')}: {assignmentPunchWindow}
+                    </div>
                   </div>
                 );
               })}
