@@ -31,41 +31,55 @@ export function useEmployeeSearch(searchQuery: string) {
       // 1. Have this as their primary dealership, OR
       // 2. Have an active assignment to this dealership
       if (selectedDealerId !== 'all') {
-        // First, get all employee IDs that have active assignments to this dealership
-        const { data: assignments, error: assignmentError } = await supabase
-          .from('detail_hub_employee_assignments')
-          .select('employee_id')
-          .eq('dealership_id', selectedDealerId)
-          .eq('status', 'active');
+        // Build a combined query that includes both primary dealership and assignments
+        // Using a more efficient approach with a single query
 
-        if (assignmentError) throw assignmentError;
-
-        const assignedEmployeeIds = assignments?.map(a => a.employee_id) || [];
-
-        // Now query employees with either primary dealership or active assignment
-        let query = supabase
+        // First get employees with matching primary dealership
+        const primaryQuery = supabase
           .from('detail_hub_employees')
           .select('*')
-          .eq('status', 'active');
+          .eq('status', 'active')
+          .eq('dealership_id', selectedDealerId)
+          .or(`first_name.ilike.%${normalizedQuery}%,last_name.ilike.%${normalizedQuery}%,employee_number.ilike.%${normalizedQuery}%,phone.ilike.%${normalizedQuery}%`);
 
-        // Use OR condition: primary dealership OR has active assignment
-        if (assignedEmployeeIds.length > 0) {
-          query = query.or(`dealership_id.eq.${selectedDealerId},id.in.(${assignedEmployeeIds.map(id => `"${id}"`).join(',')})`);
-        } else {
-          // If no assignments found, just filter by primary dealership
-          query = query.eq('dealership_id', selectedDealerId);
-        }
+        // Then get employees with active assignments to this dealership
+        const assignmentQuery = supabase
+          .from('detail_hub_employees')
+          .select(`
+            *,
+            detail_hub_employee_assignments!inner (
+              dealership_id,
+              status
+            )
+          `)
+          .eq('status', 'active')
+          .eq('detail_hub_employee_assignments.dealership_id', selectedDealerId)
+          .eq('detail_hub_employee_assignments.status', 'active')
+          .or(`first_name.ilike.%${normalizedQuery}%,last_name.ilike.%${normalizedQuery}%,employee_number.ilike.%${normalizedQuery}%,phone.ilike.%${normalizedQuery}%`);
 
-        // Search by name, employee number, or phone
-        query = query.or(`first_name.ilike.%${normalizedQuery}%,last_name.ilike.%${normalizedQuery}%,employee_number.ilike.%${normalizedQuery}%,phone.ilike.%${normalizedQuery}%`);
+        // Execute both queries in parallel
+        const [primaryResult, assignmentResult] = await Promise.all([
+          primaryQuery,
+          assignmentQuery
+        ]);
 
-        const { data, error } = await query
-          .order('employee_number', { ascending: true })
-          .limit(10);
+        if (primaryResult.error) throw primaryResult.error;
+        if (assignmentResult.error) throw assignmentResult.error;
 
-        if (error) throw error;
+        // Combine results and remove duplicates
+        const allEmployees = [...(primaryResult.data || []), ...(assignmentResult.data || [])];
+        const uniqueEmployees = Array.from(
+          new Map(allEmployees.map(emp => [emp.id, emp])).values()
+        );
 
-        return data as DetailHubEmployee[];
+        // Sort by employee number and limit to 10
+        uniqueEmployees.sort((a, b) => {
+          const numA = parseInt(a.employee_number?.replace(/\D/g, '') || '0');
+          const numB = parseInt(b.employee_number?.replace(/\D/g, '') || '0');
+          return numA - numB;
+        });
+
+        return uniqueEmployees.slice(0, 10) as DetailHubEmployee[];
       } else {
         // When showing all dealerships, no dealership filtering needed
         let query = supabase
