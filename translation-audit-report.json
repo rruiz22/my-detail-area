@@ -1,5 +1,5 @@
 {
-  "scannedFiles": 965,
+  "scannedFiles": 966,
   "totalStrings": 10313,
   "hardcodedStrings": 2222,
   "translatedStrings": 8091,
@@ -51543,325 +51543,325 @@
         "translationCalls": [
           {
             "key": "reports.invoices.email.error",
-            "line": 159,
-            "exists": false
-          },
-          {
-            "key": "reports.invoices.email.no_recipients",
             "line": 160,
             "exists": false
           },
           {
-            "key": "reports.invoices.email.error",
-            "line": 168,
+            "key": "reports.invoices.email.no_recipients",
+            "line": 161,
             "exists": false
           },
           {
-            "key": "reports.invoices.email.no_attachments",
+            "key": "reports.invoices.email.error",
             "line": 169,
             "exists": false
           },
           {
-            "key": "reports.invoices.email.success",
-            "line": 189,
+            "key": "reports.invoices.email.no_attachments",
+            "line": 170,
             "exists": false
           },
           {
-            "key": "reports.invoices.email.sent_successfully",
+            "key": "reports.invoices.email.success",
             "line": 190,
             "exists": false
           },
           {
-            "key": "reports.invoices.email.error",
-            "line": 197,
+            "key": "reports.invoices.email.sent_successfully",
+            "line": 191,
             "exists": false
           },
           {
-            "key": "reports.invoices.email.send_failed",
+            "key": "reports.invoices.email.error",
             "line": 198,
             "exists": false
           },
           {
+            "key": "reports.invoices.email.send_failed",
+            "line": 199,
+            "exists": false
+          },
+          {
             "key": "reports.invoices.email.send_multiple",
-            "line": 215,
+            "line": 216,
             "exists": false
           },
           {
             "key": "reports.invoices.email.send_multiple_desc",
-            "line": 218,
+            "line": 219,
             "exists": false
           },
           {
             "key": "reports.invoices.email.invoice_summary",
-            "line": 229,
+            "line": 230,
             "exists": false
           },
           {
             "key": "reports.invoices.email.selected_invoices",
-            "line": 236,
+            "line": 237,
             "exists": false
           },
           {
             "key": "reports.invoices.total",
-            "line": 248,
+            "line": 249,
             "exists": true
           },
           {
             "key": "reports.invoices.paid",
-            "line": 252,
+            "line": 253,
             "exists": true
           },
           {
             "key": "reports.invoices.due",
-            "line": 256,
+            "line": 257,
             "exists": true
           },
           {
             "key": "reports.invoices.email.recipients",
-            "line": 268,
+            "line": 269,
             "exists": false
           },
           {
             "key": "reports.invoices.email.manage_contacts",
-            "line": 277,
+            "line": 278,
             "exists": false
           },
           {
             "key": "reports.invoices.email.default",
-            "line": 299,
+            "line": 300,
             "exists": false
           },
           {
             "key": "reports.invoices.email.additional_recipients",
-            "line": 310,
+            "line": 311,
             "exists": false
           },
           {
             "key": "reports.invoices.email.enter_email",
-            "line": 316,
+            "line": 317,
             "exists": false
           },
           {
             "key": "reports.invoices.email.cc",
-            "line": 357,
+            "line": 358,
             "exists": false
           },
           {
             "key": "reports.invoices.email.cc_placeholder",
-            "line": 362,
+            "line": 363,
             "exists": false
           },
           {
             "key": "reports.invoices.email.bcc",
-            "line": 369,
+            "line": 370,
             "exists": false
           },
           {
             "key": "reports.invoices.email.bcc_placeholder",
-            "line": 374,
+            "line": 375,
             "exists": false
           },
           {
             "key": "reports.invoices.email.subject",
-            "line": 386,
+            "line": 387,
             "exists": false
           },
           {
             "key": "reports.invoices.email.message",
-            "line": 398,
+            "line": 399,
             "exists": false
           },
           {
             "key": "reports.invoices.email.attachments",
-            "line": 412,
+            "line": 413,
             "exists": false
           },
           {
             "key": "reports.invoices.email.include_pdf",
-            "line": 423,
+            "line": 424,
             "exists": false
           },
           {
             "key": "reports.invoices.email.include_excel",
-            "line": 434,
+            "line": 435,
             "exists": false
           },
           {
             "key": "reports.invoices.email.estimated_size",
-            "line": 444,
+            "line": 445,
             "exists": false
           },
           {
             "key": "reports.invoices.email.total_recipients",
-            "line": 454,
+            "line": 455,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 470,
+            "line": 471,
             "exists": true
           },
           {
             "key": "reports.invoices.email.sending",
-            "line": 484,
+            "line": 485,
             "exists": false
           },
           {
             "key": "reports.invoices.email.send",
-            "line": 489,
+            "line": 490,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "reports.invoices.email.error",
-            "line": 159,
-            "context": "158: toast({\n159: title: t('reports.invoices.email.error'),\n160: description: t('reports.invoices.email.no_recipients'),"
+            "line": 160,
+            "context": "159: toast({\n160: title: t('reports.invoices.email.error'),\n161: description: t('reports.invoices.email.no_recipients'),"
           },
           {
             "key": "reports.invoices.email.no_recipients",
-            "line": 160,
-            "context": "159: title: t('reports.invoices.email.error'),\n160: description: t('reports.invoices.email.no_recipients'),\n161: variant: 'destructive',"
+            "line": 161,
+            "context": "160: title: t('reports.invoices.email.error'),\n161: description: t('reports.invoices.email.no_recipients'),\n162: variant: 'destructive',"
           },
           {
             "key": "reports.invoices.email.error",
-            "line": 168,
-            "context": "167: toast({\n168: title: t('reports.invoices.email.error'),\n169: description: t('reports.invoices.email.no_attachments'),"
+            "line": 169,
+            "context": "168: toast({\n169: title: t('reports.invoices.email.error'),\n170: description: t('reports.invoices.email.no_attachments'),"
           },
           {
             "key": "reports.invoices.email.no_attachments",
-            "line": 169,
-            "context": "168: title: t('reports.invoices.email.error'),\n169: description: t('reports.invoices.email.no_attachments'),\n170: variant: 'destructive',"
+            "line": 170,
+            "context": "169: title: t('reports.invoices.email.error'),\n170: description: t('reports.invoices.email.no_attachments'),\n171: variant: 'destructive',"
           },
           {
             "key": "reports.invoices.email.success",
-            "line": 189,
-            "context": "188: toast({\n189: title: t('reports.invoices.email.success'),\n190: description: t('reports.invoices.email.sent_successfully', { count: invoices.length }),"
+            "line": 190,
+            "context": "189: toast({\n190: title: t('reports.invoices.email.success'),\n191: description: t('reports.invoices.email.sent_successfully', { count: invoices.length }),"
           },
           {
             "key": "reports.invoices.email.sent_successfully",
-            "line": 190,
-            "context": "189: title: t('reports.invoices.email.success'),\n190: description: t('reports.invoices.email.sent_successfully', { count: invoices.length }),\n191: });"
+            "line": 191,
+            "context": "190: title: t('reports.invoices.email.success'),\n191: description: t('reports.invoices.email.sent_successfully', { count: invoices.length }),\n192: });"
           },
           {
             "key": "reports.invoices.email.error",
-            "line": 197,
-            "context": "196: toast({\n197: title: t('reports.invoices.email.error'),\n198: description: t('reports.invoices.email.send_failed'),"
+            "line": 198,
+            "context": "197: toast({\n198: title: t('reports.invoices.email.error'),\n199: description: t('reports.invoices.email.send_failed'),"
           },
           {
             "key": "reports.invoices.email.send_failed",
-            "line": 198,
-            "context": "197: title: t('reports.invoices.email.error'),\n198: description: t('reports.invoices.email.send_failed'),\n199: variant: 'destructive',"
+            "line": 199,
+            "context": "198: title: t('reports.invoices.email.error'),\n199: description: t('reports.invoices.email.send_failed'),\n200: variant: 'destructive',"
           },
           {
             "key": "reports.invoices.email.send_multiple",
-            "line": 215,
-            "context": "214: <Mail className=\"h-5 w-5\" />\n215: {t('reports.invoices.email.send_multiple', { count: invoices.length })}\n216: </DialogTitle>"
+            "line": 216,
+            "context": "215: <Mail className=\"h-5 w-5\" />\n216: {t('reports.invoices.email.send_multiple', { count: invoices.length })}\n217: </DialogTitle>"
           },
           {
             "key": "reports.invoices.email.send_multiple_desc",
-            "line": 218,
-            "context": "217: <DialogDescription>\n218: {t('reports.invoices.email.send_multiple_desc')}\n219: </DialogDescription>"
+            "line": 219,
+            "context": "218: <DialogDescription>\n219: {t('reports.invoices.email.send_multiple_desc')}\n220: </DialogDescription>"
           },
           {
             "key": "reports.invoices.email.invoice_summary",
-            "line": 229,
-            "context": "228: <FileText className=\"h-4 w-4\" />\n229: {t('reports.invoices.email.invoice_summary')}\n230: </CardTitle>"
+            "line": 230,
+            "context": "229: <FileText className=\"h-4 w-4\" />\n230: {t('reports.invoices.email.invoice_summary')}\n231: </CardTitle>"
           },
           {
             "key": "reports.invoices.email.selected_invoices",
-            "line": 236,
-            "context": "235: <p className=\"text-sm text-muted-foreground\">\n236: {t('reports.invoices.email.selected_invoices')}\n237: </p>"
+            "line": 237,
+            "context": "236: <p className=\"text-sm text-muted-foreground\">\n237: {t('reports.invoices.email.selected_invoices')}\n238: </p>"
           },
           {
             "key": "reports.invoices.email.recipients",
-            "line": 268,
-            "context": "267: <Label className=\"text-base font-semibold\">\n268: {t('reports.invoices.email.recipients')}\n269: </Label>"
+            "line": 269,
+            "context": "268: <Label className=\"text-base font-semibold\">\n269: {t('reports.invoices.email.recipients')}\n270: </Label>"
           },
           {
             "key": "reports.invoices.email.manage_contacts",
-            "line": 277,
-            "context": "276: <Settings className=\"h-4 w-4 mr-2\" />\n277: {t('reports.invoices.email.manage_contacts')}\n278: </Button>"
+            "line": 278,
+            "context": "277: <Settings className=\"h-4 w-4 mr-2\" />\n278: {t('reports.invoices.email.manage_contacts')}\n279: </Button>"
           },
           {
             "key": "reports.invoices.email.default",
-            "line": 299,
-            "context": "298: <Badge variant=\"secondary\" className=\"text-xs\">\n299: {t('reports.invoices.email.default')}\n300: </Badge>"
+            "line": 300,
+            "context": "299: <Badge variant=\"secondary\" className=\"text-xs\">\n300: {t('reports.invoices.email.default')}\n301: </Badge>"
           },
           {
             "key": "reports.invoices.email.additional_recipients",
-            "line": 310,
-            "context": "309: <Label htmlFor=\"custom-email\" className=\"text-sm\">\n310: {t('reports.invoices.email.additional_recipients')}\n311: </Label>"
+            "line": 311,
+            "context": "310: <Label htmlFor=\"custom-email\" className=\"text-sm\">\n311: {t('reports.invoices.email.additional_recipients')}\n312: </Label>"
           },
           {
             "key": "reports.invoices.email.enter_email",
-            "line": 316,
-            "context": "315: type=\"email\"\n316: placeholder={t('reports.invoices.email.enter_email')}\n317: value={customEmail}"
+            "line": 317,
+            "context": "316: type=\"email\"\n317: placeholder={t('reports.invoices.email.enter_email')}\n318: value={customEmail}"
           },
           {
             "key": "reports.invoices.email.cc",
-            "line": 357,
-            "context": "356: <Label htmlFor=\"cc\" className=\"text-sm\">\n357: {t('reports.invoices.email.cc')}\n358: </Label>"
+            "line": 358,
+            "context": "357: <Label htmlFor=\"cc\" className=\"text-sm\">\n358: {t('reports.invoices.email.cc')}\n359: </Label>"
           },
           {
             "key": "reports.invoices.email.cc_placeholder",
-            "line": 362,
-            "context": "361: type=\"text\"\n362: placeholder={t('reports.invoices.email.cc_placeholder')}\n363: value={cc}"
+            "line": 363,
+            "context": "362: type=\"text\"\n363: placeholder={t('reports.invoices.email.cc_placeholder')}\n364: value={cc}"
           },
           {
             "key": "reports.invoices.email.bcc",
-            "line": 369,
-            "context": "368: <Label htmlFor=\"bcc\" className=\"text-sm\">\n369: {t('reports.invoices.email.bcc')}\n370: </Label>"
+            "line": 370,
+            "context": "369: <Label htmlFor=\"bcc\" className=\"text-sm\">\n370: {t('reports.invoices.email.bcc')}\n371: </Label>"
           },
           {
             "key": "reports.invoices.email.bcc_placeholder",
-            "line": 374,
-            "context": "373: type=\"text\"\n374: placeholder={t('reports.invoices.email.bcc_placeholder')}\n375: value={bcc}"
+            "line": 375,
+            "context": "374: type=\"text\"\n375: placeholder={t('reports.invoices.email.bcc_placeholder')}\n376: value={bcc}"
           },
           {
             "key": "reports.invoices.email.subject",
-            "line": 386,
-            "context": "385: <Label htmlFor=\"subject\" className=\"text-sm font-semibold\">\n386: {t('reports.invoices.email.subject')}\n387: </Label>"
+            "line": 387,
+            "context": "386: <Label htmlFor=\"subject\" className=\"text-sm font-semibold\">\n387: {t('reports.invoices.email.subject')}\n388: </Label>"
           },
           {
             "key": "reports.invoices.email.message",
-            "line": 398,
-            "context": "397: <Label htmlFor=\"message\" className=\"text-sm font-semibold\">\n398: {t('reports.invoices.email.message')}\n399: </Label>"
+            "line": 399,
+            "context": "398: <Label htmlFor=\"message\" className=\"text-sm font-semibold\">\n399: {t('reports.invoices.email.message')}\n400: </Label>"
           },
           {
             "key": "reports.invoices.email.attachments",
-            "line": 412,
-            "context": "411: <Label className=\"text-sm font-semibold\">\n412: {t('reports.invoices.email.attachments')}\n413: </Label>"
+            "line": 413,
+            "context": "412: <Label className=\"text-sm font-semibold\">\n413: {t('reports.invoices.email.attachments')}\n414: </Label>"
           },
           {
             "key": "reports.invoices.email.include_pdf",
-            "line": 423,
-            "context": "422: <FileText className=\"h-4 w-4 text-red-500\" />\n423: {t('reports.invoices.email.include_pdf')}\n424: </Label>"
+            "line": 424,
+            "context": "423: <FileText className=\"h-4 w-4 text-red-500\" />\n424: {t('reports.invoices.email.include_pdf')}\n425: </Label>"
           },
           {
             "key": "reports.invoices.email.include_excel",
-            "line": 434,
-            "context": "433: <FileSpreadsheet className=\"h-4 w-4 text-green-500\" />\n434: {t('reports.invoices.email.include_excel')}\n435: </Label>"
+            "line": 435,
+            "context": "434: <FileSpreadsheet className=\"h-4 w-4 text-green-500\" />\n435: {t('reports.invoices.email.include_excel')}\n436: </Label>"
           },
           {
             "key": "reports.invoices.email.estimated_size",
-            "line": 444,
-            "context": "443: <span className=\"text-xs text-muted-foreground\">\n444: {t('reports.invoices.email.estimated_size', { size: sizeInMB })}\n445: </span>"
+            "line": 445,
+            "context": "444: <span className=\"text-xs text-muted-foreground\">\n445: {t('reports.invoices.email.estimated_size', { size: sizeInMB })}\n446: </span>"
           },
           {
             "key": "reports.invoices.email.total_recipients",
-            "line": 454,
-            "context": "453: <span className=\"text-sm font-medium\">\n454: {t('reports.invoices.email.total_recipients')}:\n455: </span>"
+            "line": 455,
+            "context": "454: <span className=\"text-sm font-medium\">\n455: {t('reports.invoices.email.total_recipients')}:\n456: </span>"
           },
           {
             "key": "reports.invoices.email.sending",
-            "line": 484,
-            "context": "483: <Loader2 className=\"h-4 w-4 mr-2 animate-spin\" />\n484: {t('reports.invoices.email.sending')}\n485: </>"
+            "line": 485,
+            "context": "484: <Loader2 className=\"h-4 w-4 mr-2 animate-spin\" />\n485: {t('reports.invoices.email.sending')}\n486: </>"
           },
           {
             "key": "reports.invoices.email.send",
-            "line": 489,
-            "context": "488: <Mail className=\"h-4 w-4 mr-2\" />\n489: {t('reports.invoices.email.send')}\n490: </>"
+            "line": 490,
+            "context": "489: <Mail className=\"h-4 w-4 mr-2\" />\n490: {t('reports.invoices.email.send')}\n491: </>"
           }
         ],
         "coverage": 100,

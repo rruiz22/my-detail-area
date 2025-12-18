@@ -35,6 +35,7 @@ import { ManageEmailContactsDialog } from './ManageEmailContactsDialog';
 import { useEmailContacts } from '@/hooks/useEmailContacts';
 import { useBulkSendInvoiceEmails } from '@/hooks/useBulkSendInvoiceEmails';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDealershipContext } from '@/contexts/DealershipContext';
 import { useToast } from '@/hooks/use-toast';
 import type { Invoice } from '@/types/invoices';
 import { useTranslation } from 'react-i18next';
@@ -56,6 +57,7 @@ export const BulkEmailInvoicesDialog: React.FC<BulkEmailInvoicesDialogProps> = (
   const { t } = useTranslation();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { currentDealership } = useDealershipContext();
 
   const [showManageContacts, setShowManageContacts] = useState(false);
   const [selectedRecipients, setSelectedRecipients] = useState<string[]>([]);
@@ -98,7 +100,14 @@ export const BulkEmailInvoicesDialog: React.FC<BulkEmailInvoicesDialogProps> = (
   // Initialize subject and message
   useEffect(() => {
     if (!subject && invoices.length > 0) {
-      const dealerName = invoices[0].dealership?.name || 'Dealership';
+      // Try to get dealer name from multiple sources - prioritize current context
+      const dealerName = currentDealership?.name
+        || invoices[0]?.dealership?.name
+        || invoices[0]?.dealer?.name
+        || invoices[0]?.metadata?.dealerName
+        || invoices[0]?.metadata?.dealership_name
+        || '';
+
       const invoiceNumbers = invoices.map(inv => formatInvoiceNumberWithDepartment(inv)).join(', ');
 
       // Limit invoice numbers in subject to prevent it from being too long
@@ -110,7 +119,14 @@ export const BulkEmailInvoicesDialog: React.FC<BulkEmailInvoicesDialogProps> = (
     }
 
     if (!message && invoices.length > 0) {
-      const dealerName = invoices[0].dealership?.name || 'Dealership';
+      // Try to get dealer name from multiple sources - prioritize current context
+      const dealerName = currentDealership?.name
+        || invoices[0]?.dealership?.name
+        || invoices[0]?.dealer?.name
+        || invoices[0]?.metadata?.dealerName
+        || invoices[0]?.metadata?.dealership_name
+        || '';
+
       const invoiceList = invoices.map(inv =>
         `• Invoice #${formatInvoiceNumberWithDepartment(inv)} - ${formatCurrency(inv.totalAmount)}`
       ).join('\n');
@@ -127,7 +143,7 @@ export const BulkEmailInvoicesDialog: React.FC<BulkEmailInvoicesDialogProps> = (
         `Best regards,\nDealer Detail Service LLC`
       );
     }
-  }, [invoices, subject, message, includePDF, includeExcel, totalAmount, totalPaid, totalDue]);
+  }, [invoices, subject, message, includePDF, includeExcel, totalAmount, totalPaid, totalDue, currentDealership]);
 
   const handleToggleRecipient = (email: string) => {
     setSelectedRecipients(prev =>
