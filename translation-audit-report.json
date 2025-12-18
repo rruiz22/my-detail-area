@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 963,
-  "totalStrings": 10275,
-  "hardcodedStrings": 2218,
-  "translatedStrings": 8057,
+  "scannedFiles": 965,
+  "totalStrings": 10313,
+  "hardcodedStrings": 2222,
+  "translatedStrings": 8091,
   "issues": {
     "critical": [
       {
@@ -4205,710 +4205,725 @@
         "hardcodedStrings": [
           {
             "text": "Date",
-            "line": 1333,
-            "context": "1332: <tr>\n1333: <th>Date</th>\n1334: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>"
+            "line": 1339,
+            "context": "1338: <tr>\n1339: <th>Date</th>\n1340: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>"
           },
           {
             "text": "Vehicle",
-            "line": 1335,
-            "context": "1334: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>\n1335: <th>Vehicle</th>\n1336: <th>VIN</th>"
+            "line": 1341,
+            "context": "1340: <th>${isServiceOrder ? 'RO/PO/Tag' : isCarWashOrder ? 'Stock/Tag' : 'Stock'}</th>\n1341: <th>Vehicle</th>\n1342: <th>VIN</th>"
           },
           {
             "text": "Amount",
-            "line": 1337,
-            "context": "1336: <th>VIN</th>\n1337: <th class=\"text-right\">Amount</th>\n1338: </tr>"
+            "line": 1343,
+            "context": "1342: <th>VIN</th>\n1343: <th class=\"text-right\">Amount</th>\n1344: </tr>"
           },
           {
             "text": "Invoice Management",
-            "line": 1544,
-            "context": "1543: <h2 className=\"text-2xl font-bold tracking-tight flex items-center gap-2\">\n1544: <Receipt className=\"h-6 w-6\" />\n1545: Invoice Management"
+            "line": 1600,
+            "context": "1599: <h2 className=\"text-2xl font-bold tracking-tight flex items-center gap-2\">\n1600: <Receipt className=\"h-6 w-6\" />\n1601: Invoice Management"
           },
           {
             "text": "Manage invoices and billing for your dealership",
-            "line": 1547,
-            "context": "1546: </h2>\n1547: <p className=\"text-muted-foreground text-sm\">Manage invoices and billing for your dealership</p>\n1548: </div>"
+            "line": 1603,
+            "context": "1602: </h2>\n1603: <p className=\"text-muted-foreground text-sm\">Manage invoices and billing for your dealership</p>\n1604: </div>"
           },
           {
             "text": "Quick Invoice",
-            "line": 1550,
-            "context": "1549: <Button onClick={() => setShowQuickCreateDialog(true)} className=\"hidden\">\n1550: <Plus className=\"h-4 w-4 mr-2\" />\n1551: Quick Invoice"
+            "line": 1606,
+            "context": "1605: <Button onClick={() => setShowQuickCreateDialog(true)} className=\"hidden\">\n1606: <Plus className=\"h-4 w-4 mr-2\" />\n1607: Quick Invoice"
           },
           {
             "text": "All Types",
-            "line": 1673,
-            "context": "1672: <SelectContent>\n1673: <SelectItem value=\"all\">All Types</SelectItem>\n1674: <SelectItem value=\"sales\">Sales</SelectItem>"
+            "line": 1729,
+            "context": "1728: <SelectContent>\n1729: <SelectItem value=\"all\">All Types</SelectItem>\n1730: <SelectItem value=\"sales\">Sales</SelectItem>"
           },
           {
             "text": "Sales",
-            "line": 1674,
-            "context": "1673: <SelectItem value=\"all\">All Types</SelectItem>\n1674: <SelectItem value=\"sales\">Sales</SelectItem>\n1675: <SelectItem value=\"service\">Service</SelectItem>"
+            "line": 1730,
+            "context": "1729: <SelectItem value=\"all\">All Types</SelectItem>\n1730: <SelectItem value=\"sales\">Sales</SelectItem>\n1731: <SelectItem value=\"service\">Service</SelectItem>"
           },
           {
             "text": "Service",
-            "line": 1675,
-            "context": "1674: <SelectItem value=\"sales\">Sales</SelectItem>\n1675: <SelectItem value=\"service\">Service</SelectItem>\n1676: <SelectItem value=\"recon\">Recon</SelectItem>"
+            "line": 1731,
+            "context": "1730: <SelectItem value=\"sales\">Sales</SelectItem>\n1731: <SelectItem value=\"service\">Service</SelectItem>\n1732: <SelectItem value=\"recon\">Recon</SelectItem>"
           },
           {
             "text": "Recon",
-            "line": 1676,
-            "context": "1675: <SelectItem value=\"service\">Service</SelectItem>\n1676: <SelectItem value=\"recon\">Recon</SelectItem>\n1677: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
+            "line": 1732,
+            "context": "1731: <SelectItem value=\"service\">Service</SelectItem>\n1732: <SelectItem value=\"recon\">Recon</SelectItem>\n1733: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
           },
           {
             "text": "Car Wash",
-            "line": 1677,
-            "context": "1676: <SelectItem value=\"recon\">Recon</SelectItem>\n1677: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1678: </SelectContent>"
+            "line": 1733,
+            "context": "1732: <SelectItem value=\"recon\">Recon</SelectItem>\n1733: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n1734: </SelectContent>"
           },
           {
             "text": "Pending",
-            "line": 1693,
-            "context": "1692: <SelectItem value=\"all\">{t('reports.invoices.all_status')}</SelectItem>\n1693: <SelectItem value=\"pending\">Pending</SelectItem>\n1694: <SelectItem value=\"paid\">Paid</SelectItem>"
+            "line": 1749,
+            "context": "1748: <SelectItem value=\"all\">{t('reports.invoices.all_status')}</SelectItem>\n1749: <SelectItem value=\"pending\">Pending</SelectItem>\n1750: <SelectItem value=\"paid\">Paid</SelectItem>"
           },
           {
             "text": "Paid",
-            "line": 1694,
-            "context": "1693: <SelectItem value=\"pending\">Pending</SelectItem>\n1694: <SelectItem value=\"paid\">Paid</SelectItem>\n1695: <SelectItem value=\"overdue\">Overdue</SelectItem>"
+            "line": 1750,
+            "context": "1749: <SelectItem value=\"pending\">Pending</SelectItem>\n1750: <SelectItem value=\"paid\">Paid</SelectItem>\n1751: <SelectItem value=\"overdue\">Overdue</SelectItem>"
           },
           {
             "text": "Overdue",
-            "line": 1695,
-            "context": "1694: <SelectItem value=\"paid\">Paid</SelectItem>\n1695: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1696: <SelectItem value=\"partially_paid\">Partial</SelectItem>"
+            "line": 1751,
+            "context": "1750: <SelectItem value=\"paid\">Paid</SelectItem>\n1751: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1752: <SelectItem value=\"partially_paid\">Partial</SelectItem>"
           },
           {
             "text": "Partial",
-            "line": 1696,
-            "context": "1695: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1696: <SelectItem value=\"partially_paid\">Partial</SelectItem>\n1697: </SelectContent>"
+            "line": 1752,
+            "context": "1751: <SelectItem value=\"overdue\">Overdue</SelectItem>\n1752: <SelectItem value=\"partially_paid\">Partial</SelectItem>\n1753: </SelectContent>"
           },
           {
             "text": "Reset Filters",
-            "line": 1743,
-            "context": "1742: >\n1743: <RefreshCw className=\"h-4 w-4\" />\n1744: Reset Filters"
+            "line": 1809,
+            "context": "1808: >\n1809: <RefreshCw className=\"h-4 w-4\" />\n1810: Reset Filters"
+          },
+          {
+            "text": "Send Email",
+            "line": 2159,
+            "context": "2158: >\n2159: <Mail className=\"h-4 w-4\" />\n2160: Send Email"
+          },
+          {
+            "text": "Clear Selection",
+            "line": 2166,
+            "context": "2165: onClick={() => setSelectedInvoiceIds(new Set())}\n2166: >\n2167: Clear Selection"
           },
           {
             "text": "Filter Vehicles",
-            "line": 2021,
-            "context": "2020: <CardTitle className=\"flex items-center gap-2 text-lg\">\n2021: <Filter className=\"h-5 w-5\" />\n2022: Filter Vehicles"
+            "line": 2182,
+            "context": "2181: <CardTitle className=\"flex items-center gap-2 text-lg\">\n2182: <Filter className=\"h-5 w-5\" />\n2183: Filter Vehicles"
           },
           {
             "text": "Use filters to find the vehicles you want to invoice",
-            "line": 2024,
-            "context": "2023: </CardTitle>\n2024: <CardDescription>Use filters to find the vehicles you want to invoice</CardDescription>\n2025: </CardHeader>"
+            "line": 2185,
+            "context": "2184: </CardTitle>\n2185: <CardDescription>Use filters to find the vehicles you want to invoice</CardDescription>\n2186: </CardHeader>"
           },
           {
             "text": "Department",
-            "line": 2030,
-            "context": "2029: <div className=\"space-y-1.5\">\n2030: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n2031: <Select value={orderType} onValueChange={setOrderType}>"
+            "line": 2191,
+            "context": "2190: <div className=\"space-y-1.5\">\n2191: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n2192: <Select value={orderType} onValueChange={setOrderType}>"
           },
           {
             "text": "All Departments",
-            "line": 2036,
-            "context": "2035: <SelectContent>\n2036: <SelectItem value=\"all\">All Departments</SelectItem>\n2037: <SelectItem value=\"sales\">Sales</SelectItem>"
+            "line": 2197,
+            "context": "2196: <SelectContent>\n2197: <SelectItem value=\"all\">All Departments</SelectItem>\n2198: <SelectItem value=\"sales\">Sales</SelectItem>"
           },
           {
             "text": "Sales",
-            "line": 2037,
-            "context": "2036: <SelectItem value=\"all\">All Departments</SelectItem>\n2037: <SelectItem value=\"sales\">Sales</SelectItem>\n2038: <SelectItem value=\"service\">Service</SelectItem>"
+            "line": 2198,
+            "context": "2197: <SelectItem value=\"all\">All Departments</SelectItem>\n2198: <SelectItem value=\"sales\">Sales</SelectItem>\n2199: <SelectItem value=\"service\">Service</SelectItem>"
           },
           {
             "text": "Service",
-            "line": 2038,
-            "context": "2037: <SelectItem value=\"sales\">Sales</SelectItem>\n2038: <SelectItem value=\"service\">Service</SelectItem>\n2039: <SelectItem value=\"recon\">Recon</SelectItem>"
+            "line": 2199,
+            "context": "2198: <SelectItem value=\"sales\">Sales</SelectItem>\n2199: <SelectItem value=\"service\">Service</SelectItem>\n2200: <SelectItem value=\"recon\">Recon</SelectItem>"
           },
           {
             "text": "Recon",
-            "line": 2039,
-            "context": "2038: <SelectItem value=\"service\">Service</SelectItem>\n2039: <SelectItem value=\"recon\">Recon</SelectItem>\n2040: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
+            "line": 2200,
+            "context": "2199: <SelectItem value=\"service\">Service</SelectItem>\n2200: <SelectItem value=\"recon\">Recon</SelectItem>\n2201: <SelectItem value=\"carwash\">Car Wash</SelectItem>"
           },
           {
             "text": "Car Wash",
-            "line": 2040,
-            "context": "2039: <SelectItem value=\"recon\">Recon</SelectItem>\n2040: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n2041: </SelectContent>"
+            "line": 2201,
+            "context": "2200: <SelectItem value=\"recon\">Recon</SelectItem>\n2201: <SelectItem value=\"carwash\">Car Wash</SelectItem>\n2202: </SelectContent>"
           },
           {
             "text": "Status",
-            "line": 2046,
-            "context": "2045: <div className=\"space-y-1.5\">\n2046: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n2047: <Select value={orderStatus} onValueChange={setOrderStatus}>"
+            "line": 2207,
+            "context": "2206: <div className=\"space-y-1.5\">\n2207: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n2208: <Select value={orderStatus} onValueChange={setOrderStatus}>"
           },
           {
             "text": "Date Range",
-            "line": 2072,
-            "context": "2071: <div className=\"space-y-1.5\">\n2072: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n2073: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
+            "line": 2233,
+            "context": "2232: <div className=\"space-y-1.5\">\n2233: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n2234: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
           },
           {
             "text": "Today",
-            "line": 2078,
-            "context": "2077: <SelectContent>\n2078: <SelectItem value=\"today\">Today</SelectItem>\n2079: <SelectItem value=\"this_week\">{t('reports.this_week')}</SelectItem>"
+            "line": 2239,
+            "context": "2238: <SelectContent>\n2239: <SelectItem value=\"today\">Today</SelectItem>\n2240: <SelectItem value=\"this_week\">{t('reports.this_week')}</SelectItem>"
           },
           {
             "text": "This Month",
-            "line": 2081,
-            "context": "2080: <SelectItem value=\"last_week\">{t('reports.last_week')}</SelectItem>\n2081: <SelectItem value=\"this_month\">This Month</SelectItem>\n2082: <SelectItem value=\"last_month\">Last Month</SelectItem>"
+            "line": 2242,
+            "context": "2241: <SelectItem value=\"last_week\">{t('reports.last_week')}</SelectItem>\n2242: <SelectItem value=\"this_month\">This Month</SelectItem>\n2243: <SelectItem value=\"last_month\">Last Month</SelectItem>"
           },
           {
             "text": "Last Month",
-            "line": 2082,
-            "context": "2081: <SelectItem value=\"this_month\">This Month</SelectItem>\n2082: <SelectItem value=\"last_month\">Last Month</SelectItem>\n2083: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>"
+            "line": 2243,
+            "context": "2242: <SelectItem value=\"this_month\">This Month</SelectItem>\n2243: <SelectItem value=\"last_month\">Last Month</SelectItem>\n2244: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>"
           },
           {
             "text": "Custom Range",
-            "line": 2084,
-            "context": "2083: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>\n2084: <SelectItem value=\"custom\">Custom Range</SelectItem>\n2085: </SelectContent>"
+            "line": 2245,
+            "context": "2244: <SelectItem value=\"last_3_months\">Last 3 Months</SelectItem>\n2245: <SelectItem value=\"custom\">Custom Range</SelectItem>\n2246: </SelectContent>"
           },
           {
             "text": "Search",
-            "line": 2090,
-            "context": "2089: <div className=\"space-y-1.5\">\n2090: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n2091: <div className=\"relative\">"
+            "line": 2251,
+            "context": "2250: <div className=\"space-y-1.5\">\n2251: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n2252: <div className=\"relative\">"
           },
           {
             "text": "From Date",
-            "line": 2108,
-            "context": "2107: <div className=\"space-y-1.5\">\n2108: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n2109: <Input"
+            "line": 2269,
+            "context": "2268: <div className=\"space-y-1.5\">\n2269: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n2270: <Input"
           },
           {
             "text": "To Date",
-            "line": 2121,
-            "context": "2120: <div className=\"space-y-1.5\">\n2121: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n2122: <Input"
+            "line": 2282,
+            "context": "2281: <div className=\"space-y-1.5\">\n2282: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n2283: <Input"
           },
           {
             "text": "Showing orders from",
-            "line": 2140,
-            "context": "2139: <Calendar className=\"h-3.5 w-3.5\" />\n2140: <span>\n2141: Showing orders from <span className=\"font-medium text-foreground\">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className=\"font-medium text-foreground\">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>"
+            "line": 2301,
+            "context": "2300: <Calendar className=\"h-3.5 w-3.5\" />\n2301: <span>\n2302: Showing orders from <span className=\"font-medium text-foreground\">{format(parseISO(startDate), 'MMM dd, yyyy')}</span> to <span className=\"font-medium text-foreground\">{format(parseISO(endDate), 'MMM dd, yyyy')}</span>"
           },
           {
             "text": "Include Only Service",
-            "line": 2149,
-            "context": "2148: <div className=\"space-y-2\">\n2149: <Label>Include Only Service</Label>\n2150: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
+            "line": 2310,
+            "context": "2309: <div className=\"space-y-2\">\n2310: <Label>Include Only Service</Label>\n2311: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
           },
           {
             "text": "No services found for this dealer",
-            "line": 2159,
-            "context": "2158: {availableServices.length === 0 && !loadingServices && (\n2159: <SelectItem value=\"none\" disabled>\n2160: No services found for this dealer"
+            "line": 2320,
+            "context": "2319: {availableServices.length === 0 && !loadingServices && (\n2320: <SelectItem value=\"none\" disabled>\n2321: No services found for this dealer"
           },
           {
             "text": "Exclude Services",
-            "line": 2175,
-            "context": "2174: <div className=\"space-y-2\">\n2175: <Label>Exclude Services</Label>\n2176: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
+            "line": 2336,
+            "context": "2335: <div className=\"space-y-2\">\n2336: <Label>Exclude Services</Label>\n2337: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
           },
           {
             "text": "No services excluded",
-            "line": 2192,
-            "context": "2191: ) : (\n2192: <span className=\"text-sm text-muted-foreground\">No services excluded</span>\n2193: )}"
+            "line": 2353,
+            "context": "2352: ) : (\n2353: <span className=\"text-sm text-muted-foreground\">No services excluded</span>\n2354: )}"
           },
           {
             "text": "Reset Filters",
-            "line": 2227,
-            "context": "2226: >\n2227: <RefreshCw className=\"h-4 w-4\" />\n2228: Reset Filters"
+            "line": 2388,
+            "context": "2387: >\n2388: <RefreshCw className=\"h-4 w-4\" />\n2389: Reset Filters"
           },
           {
             "text": "Available Orders",
-            "line": 2239,
-            "context": "2238: <div>\n2239: <CardTitle>Available Orders</CardTitle>\n2240: <CardDescription>"
+            "line": 2400,
+            "context": "2399: <div>\n2400: <CardTitle>Available Orders</CardTitle>\n2401: <CardDescription>"
           },
           {
             "text": "No orders found",
-            "line": 2262,
-            "context": "2261: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n2262: <p className=\"text-muted-foreground\">No orders found</p>\n2263: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
+            "line": 2423,
+            "context": "2422: <Car className=\"h-12 w-12 text-muted-foreground mb-4\" />\n2423: <p className=\"text-muted-foreground\">No orders found</p>\n2424: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>"
           },
           {
             "text": "Try adjusting your filters",
-            "line": 2263,
-            "context": "2262: <p className=\"text-muted-foreground\">No orders found</p>\n2263: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n2264: </div>"
+            "line": 2424,
+            "context": "2423: <p className=\"text-muted-foreground\">No orders found</p>\n2424: <p className=\"text-sm text-muted-foreground\">Try adjusting your filters</p>\n2425: </div>"
           },
           {
             "text": "Order Number",
-            "line": 2276,
-            "context": "2275: </TableHead>\n2276: <TableHead className=\"text-center font-bold\">Order Number</TableHead>\n2277: <TableHead className=\"text-center font-bold\">"
+            "line": 2437,
+            "context": "2436: </TableHead>\n2437: <TableHead className=\"text-center font-bold\">Order Number</TableHead>\n2438: <TableHead className=\"text-center font-bold\">"
           },
           {
             "text": "Vehicle",
-            "line": 2295,
-            "context": "2294: </TableHead>\n2295: <TableHead className=\"text-center font-bold\">Vehicle</TableHead>\n2296: <TableHead className=\"text-center font-bold\">VIN</TableHead>"
+            "line": 2456,
+            "context": "2455: </TableHead>\n2456: <TableHead className=\"text-center font-bold\">Vehicle</TableHead>\n2457: <TableHead className=\"text-center font-bold\">VIN</TableHead>"
           },
           {
             "text": "Services",
-            "line": 2297,
-            "context": "2296: <TableHead className=\"text-center font-bold\">VIN</TableHead>\n2297: <TableHead className=\"text-center font-bold\">Services</TableHead>\n2298: <TableHead className=\"text-center font-bold\">Dept</TableHead>"
+            "line": 2458,
+            "context": "2457: <TableHead className=\"text-center font-bold\">VIN</TableHead>\n2458: <TableHead className=\"text-center font-bold\">Services</TableHead>\n2459: <TableHead className=\"text-center font-bold\">Dept</TableHead>"
           },
           {
             "text": "Dept",
-            "line": 2298,
-            "context": "2297: <TableHead className=\"text-center font-bold\">Services</TableHead>\n2298: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n2299: <TableHead className=\"text-center font-bold\">Amount</TableHead>"
+            "line": 2459,
+            "context": "2458: <TableHead className=\"text-center font-bold\">Services</TableHead>\n2459: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n2460: <TableHead className=\"text-center font-bold\">Amount</TableHead>"
           },
           {
             "text": "Amount",
-            "line": 2299,
-            "context": "2298: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n2299: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n2300: </TableRow>"
+            "line": 2460,
+            "context": "2459: <TableHead className=\"text-center font-bold\">Dept</TableHead>\n2460: <TableHead className=\"text-center font-bold\">Amount</TableHead>\n2461: </TableRow>"
           },
           {
             "text": "Invoice Details",
-            "line": 2453,
-            "context": "2452: <CardTitle className=\"flex items-center gap-2\">\n2453: <FileText className=\"h-5 w-5\" />\n2454: Invoice Details"
+            "line": 2614,
+            "context": "2613: <CardTitle className=\"flex items-center gap-2\">\n2614: <FileText className=\"h-5 w-5\" />\n2615: Invoice Details"
           },
           {
             "text": "Selected Vehicles",
-            "line": 2507,
-            "context": "2506: <div>\n2507: <div className=\"text-sm text-muted-foreground mb-1\">Selected Vehicles</div>\n2508: <div className=\"text-3xl font-bold\">{selectedVehicleIds.size}</div>"
+            "line": 2668,
+            "context": "2667: <div>\n2668: <div className=\"text-sm text-muted-foreground mb-1\">Selected Vehicles</div>\n2669: <div className=\"text-3xl font-bold\">{selectedVehicleIds.size}</div>"
           },
           {
             "text": "Invoice Total",
-            "line": 2511,
-            "context": "2510: <div>\n2511: <div className=\"text-sm text-muted-foreground mb-1\">Invoice Total</div>\n2512: <div className=\"text-3xl font-bold text-gray-600\">"
+            "line": 2672,
+            "context": "2671: <div>\n2672: <div className=\"text-sm text-muted-foreground mb-1\">Invoice Total</div>\n2673: <div className=\"text-3xl font-bold text-gray-600\">"
           },
           {
             "text": "Cancel",
-            "line": 2543,
-            "context": "2542: }}\n2543: >\n2544: Cancel"
+            "line": 2704,
+            "context": "2703: }}\n2704: >\n2705: Cancel"
           },
           {
             "text": "Invoice Preview",
-            "line": 2607,
-            "context": "2606: <div className=\"flex items-center justify-between\">\n2607: <DialogTitle>Invoice Preview</DialogTitle>\n2608: <Button"
+            "line": 2768,
+            "context": "2767: <div className=\"flex items-center justify-between\">\n2768: <DialogTitle>Invoice Preview</DialogTitle>\n2769: <Button"
           },
           {
             "text": "Type",
-            "line": 1670,
-            "context": "1669: <SelectTrigger className=\"w-[150px] h-10\">\n1670: <SelectValue placeholder=\"Type\" />\n1671: </SelectTrigger>"
+            "line": 1726,
+            "context": "1725: <SelectTrigger className=\"w-[150px] h-10\">\n1726: <SelectValue placeholder=\"Type\" />\n1727: </SelectTrigger>"
+          },
+          {
+            "text": "Select all invoices",
+            "line": 1864,
+            "context": "1863: onCheckedChange={handleSelectAllInvoices}\n1864: aria-label=\"Select all invoices\"\n1865: />"
           },
           {
             "text": "VIN, stock, customer...",
-            "line": 2095,
-            "context": "2094: id=\"search-filter-inline\"\n2095: placeholder=\"VIN, stock, customer...\"\n2096: value={searchTerm}"
+            "line": 2256,
+            "context": "2255: id=\"search-filter-inline\"\n2256: placeholder=\"VIN, stock, customer...\"\n2257: value={searchTerm}"
           },
           {
             "text": "Department",
-            "line": 2030,
-            "context": "2029: <div className=\"space-y-1.5\">\n2030: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n2031: <Select value={orderType} onValueChange={setOrderType}>"
+            "line": 2191,
+            "context": "2190: <div className=\"space-y-1.5\">\n2191: <Label htmlFor=\"dept-filter-inline\" className=\"text-xs font-medium\">Department</Label>\n2192: <Select value={orderType} onValueChange={setOrderType}>"
           },
           {
             "text": "Status",
-            "line": 2046,
-            "context": "2045: <div className=\"space-y-1.5\">\n2046: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n2047: <Select value={orderStatus} onValueChange={setOrderStatus}>"
+            "line": 2207,
+            "context": "2206: <div className=\"space-y-1.5\">\n2207: <Label htmlFor=\"status-filter-inline\" className=\"text-xs font-medium\">Status</Label>\n2208: <Select value={orderStatus} onValueChange={setOrderStatus}>"
           },
           {
             "text": "Date Range",
-            "line": 2072,
-            "context": "2071: <div className=\"space-y-1.5\">\n2072: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n2073: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
+            "line": 2233,
+            "context": "2232: <div className=\"space-y-1.5\">\n2233: <Label htmlFor=\"daterange-filter-inline\" className=\"text-xs font-medium\">Date Range</Label>\n2234: <Select value={dateRange} onValueChange={handleDateRangeChange}>"
           },
           {
             "text": "Search",
-            "line": 2090,
-            "context": "2089: <div className=\"space-y-1.5\">\n2090: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n2091: <div className=\"relative\">"
+            "line": 2251,
+            "context": "2250: <div className=\"space-y-1.5\">\n2251: <Label htmlFor=\"search-filter-inline\" className=\"text-xs font-medium\">Search</Label>\n2252: <div className=\"relative\">"
           },
           {
             "text": "From Date",
-            "line": 2108,
-            "context": "2107: <div className=\"space-y-1.5\">\n2108: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n2109: <Input"
+            "line": 2269,
+            "context": "2268: <div className=\"space-y-1.5\">\n2269: <Label htmlFor=\"start-date-filter-inline\" className=\"text-xs font-medium\">From Date</Label>\n2270: <Input"
           },
           {
             "text": "To Date",
-            "line": 2121,
-            "context": "2120: <div className=\"space-y-1.5\">\n2121: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n2122: <Input"
+            "line": 2282,
+            "context": "2281: <div className=\"space-y-1.5\">\n2282: <Label htmlFor=\"end-date-filter-inline\" className=\"text-xs font-medium\">To Date</Label>\n2283: <Input"
           },
           {
             "text": "Include Only Service",
-            "line": 2149,
-            "context": "2148: <div className=\"space-y-2\">\n2149: <Label>Include Only Service</Label>\n2150: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
+            "line": 2310,
+            "context": "2309: <div className=\"space-y-2\">\n2310: <Label>Include Only Service</Label>\n2311: <Select value={selectedService} onValueChange={setSelectedService} disabled={loadingServices}>"
           },
           {
             "text": "Exclude Services",
-            "line": 2175,
-            "context": "2174: <div className=\"space-y-2\">\n2175: <Label>Exclude Services</Label>\n2176: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
+            "line": 2336,
+            "context": "2335: <div className=\"space-y-2\">\n2336: <Label>Exclude Services</Label>\n2337: <div className=\"flex flex-wrap gap-2 min-h-[40px] border rounded-md p-2\">"
           },
           {
             "text": "Invoice Preview",
-            "line": 2607,
-            "context": "2606: <div className=\"flex items-center justify-between\">\n2607: <DialogTitle>Invoice Preview</DialogTitle>\n2608: <Button"
+            "line": 2768,
+            "context": "2767: <div className=\"flex items-center justify-between\">\n2768: <DialogTitle>Invoice Preview</DialogTitle>\n2769: <Button"
           }
         ],
         "translationCalls": [
           {
             "key": "reports.invoices.messages.select_dealership",
-            "line": 1496,
+            "line": 1552,
             "exists": true
           },
           {
             "key": "reports.invoices.tabs.invoices_list",
-            "line": 1583,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.tabs.create_invoice",
-            "line": 1587,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.tabs.check_vehicle",
-            "line": 1591,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.title",
-            "line": 1599,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.messages.view_manage",
-            "line": 1600,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.grouping.label",
-            "line": 1606,
-            "exists": false
-          },
-          {
-            "key": "reports.invoices.grouping.none",
-            "line": 1616,
-            "exists": false
-          },
-          {
-            "key": "reports.invoices.grouping.status",
-            "line": 1617,
-            "exists": false
-          },
-          {
-            "key": "reports.invoices.grouping.department",
-            "line": 1618,
-            "exists": false
-          },
-          {
-            "key": "reports.invoices.grouping.week",
-            "line": 1619,
-            "exists": false
-          },
-          {
-            "key": "reports.invoices.filters.date_range",
-            "line": 1630,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.filters.all_time",
             "line": 1639,
             "exists": true
           },
           {
-            "key": "reports.invoices.filters.today",
-            "line": 1640,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.filters.this_week",
-            "line": 1641,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.filters.last_week",
-            "line": 1642,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.filters.this_month",
+            "key": "reports.invoices.tabs.create_invoice",
             "line": 1643,
             "exists": true
           },
           {
-            "key": "reports.invoices.filters.last_month",
-            "line": 1644,
+            "key": "reports.invoices.tabs.check_vehicle",
+            "line": 1647,
             "exists": true
           },
           {
-            "key": "reports.invoices.filters.custom_range",
-            "line": 1645,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.filters.search",
-            "line": 1651,
-            "exists": true
-          },
-          {
-            "key": "reports.invoices.search_placeholder",
+            "key": "reports.invoices.title",
             "line": 1655,
             "exists": true
           },
           {
+            "key": "reports.invoices.messages.view_manage",
+            "line": 1656,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.grouping.label",
+            "line": 1662,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.grouping.none",
+            "line": 1672,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.grouping.status",
+            "line": 1673,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.grouping.department",
+            "line": 1674,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.grouping.week",
+            "line": 1675,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.filters.date_range",
+            "line": 1686,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.filters.all_time",
+            "line": 1695,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.filters.today",
+            "line": 1696,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.filters.this_week",
+            "line": 1697,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.filters.last_week",
+            "line": 1698,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.filters.this_month",
+            "line": 1699,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.filters.last_month",
+            "line": 1700,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.filters.custom_range",
+            "line": 1701,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.filters.search",
+            "line": 1707,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.search_placeholder",
+            "line": 1711,
+            "exists": true
+          },
+          {
             "key": "reports.invoices.filters.type",
-            "line": 1664,
+            "line": 1720,
             "exists": true
           },
           {
             "key": "common.status_label",
-            "line": 1683,
+            "line": 1739,
             "exists": true
           },
           {
             "key": "common.status_label",
-            "line": 1689,
+            "line": 1745,
             "exists": true
           },
           {
             "key": "reports.invoices.all_status",
-            "line": 1692,
+            "line": 1748,
             "exists": true
           },
           {
             "key": "reports.invoices.tags.label",
-            "line": 1702,
+            "line": 1758,
             "exists": false
           },
           {
             "key": "reports.invoices.filters.from_date",
-            "line": 1715,
+            "line": 1771,
             "exists": true
           },
           {
             "key": "reports.invoices.filters.to_date",
-            "line": 1724,
+            "line": 1780,
             "exists": true
           },
           {
             "key": "reports.invoices.messages.loading",
-            "line": 1753,
+            "line": 1819,
             "exists": true
           },
           {
             "key": "reports.invoices.no_invoices",
-            "line": 1758,
+            "line": 1824,
             "exists": true
           },
           {
             "key": "reports.invoices.table.invoice",
-            "line": 1791,
+            "line": 1867,
             "exists": true
           },
           {
             "key": "reports.invoices.table.date_range",
-            "line": 1792,
+            "line": 1868,
             "exists": true
           },
           {
             "key": "reports.invoices.issue_date",
-            "line": 1793,
+            "line": 1869,
             "exists": true
           },
           {
             "key": "reports.invoices.due_date",
-            "line": 1794,
+            "line": 1870,
             "exists": true
           },
           {
             "key": "reports.invoices.amount",
-            "line": 1795,
+            "line": 1871,
             "exists": true
           },
           {
             "key": "reports.invoices.paid",
-            "line": 1796,
+            "line": 1872,
             "exists": true
           },
           {
             "key": "reports.invoices.due",
-            "line": 1797,
+            "line": 1873,
             "exists": true
           },
           {
             "key": "common.status_label",
-            "line": 1798,
+            "line": 1874,
             "exists": true
           },
           {
             "key": "reports.invoices.actions",
-            "line": 1799,
+            "line": 1875,
             "exists": true
           },
           {
             "key": "services.departments.sales_dept",
-            "line": 1912,
+            "line": 2000,
             "exists": true
           },
           {
             "key": "services.departments.service_dept",
-            "line": 1916,
+            "line": 2004,
             "exists": true
           },
           {
             "key": "services.departments.recon_dept",
-            "line": 1920,
+            "line": 2008,
             "exists": true
           },
           {
             "key": "services.departments.carwash_dept",
-            "line": 1926,
+            "line": 2014,
             "exists": true
           },
           {
             "key": "reports.add_payment",
-            "line": 1975,
+            "line": 2105,
             "exists": true
           },
           {
             "key": "reports.view_details",
-            "line": 1987,
+            "line": 2117,
             "exists": true
           },
           {
             "key": "reports.delete_invoice",
-            "line": 1999,
+            "line": 2129,
             "exists": true
           },
           {
             "key": "reports.this_week",
-            "line": 2079,
+            "line": 2240,
             "exists": true
           },
           {
             "key": "reports.last_week",
-            "line": 2080,
+            "line": 2241,
             "exists": true
           },
           {
             "key": "reports.loading_services",
-            "line": 2152,
+            "line": 2313,
             "exists": true
           },
           {
             "key": "reports.no_services_available",
-            "line": 2199,
+            "line": 2360,
             "exists": true
           },
           {
             "key": "reports.add_service_to_exclude",
-            "line": 2200,
+            "line": 2361,
             "exists": true
           },
           {
             "key": "reports.invoices.duplicate_order_warning",
-            "line": 2380,
+            "line": 2541,
             "exists": false
           },
           {
             "key": "reports.invoices.duplicate_vin_found",
-            "line": 2382,
+            "line": 2543,
             "exists": false
           },
           {
             "key": "reports.invoices.duplicate_stock_found",
-            "line": 2385,
+            "line": 2546,
             "exists": false
           },
           {
             "key": "reports.invoices.duplicate_tag_found",
-            "line": 2388,
+            "line": 2549,
             "exists": false
           },
           {
             "key": "reports.invoices.duplicate_orders_list",
-            "line": 2393,
+            "line": 2554,
             "exists": false
           },
           {
             "key": "reports.invoices.order_completed",
-            "line": 2402,
+            "line": 2563,
             "exists": false
           },
           {
             "key": "reports.invoices.duplicate_tooltip_hint",
-            "line": 2419,
+            "line": 2580,
             "exists": false
           },
           {
             "key": "invoices.delete_title",
-            "line": 2632,
+            "line": 2793,
             "exists": false
           },
           {
             "key": "invoices.delete_description",
-            "line": 2633,
+            "line": 2794,
             "exists": false
           },
           {
             "key": "common.action_buttons.delete",
-            "line": 2634,
+            "line": 2795,
             "exists": true
           },
           {
             "key": "common.action_buttons.cancel",
-            "line": 2635,
+            "line": 2796,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "reports.invoices.grouping.label",
-            "line": 1606,
-            "context": "1605: <Label className=\"text-sm font-medium whitespace-nowrap\">\n1606: {t('reports.invoices.grouping.label')}:\n1607: </Label>"
+            "line": 1662,
+            "context": "1661: <Label className=\"text-sm font-medium whitespace-nowrap\">\n1662: {t('reports.invoices.grouping.label')}:\n1663: </Label>"
           },
           {
             "key": "reports.invoices.grouping.none",
-            "line": 1616,
-            "context": "1615: <SelectContent>\n1616: <SelectItem value=\"none\">{t('reports.invoices.grouping.none')}</SelectItem>\n1617: <SelectItem value=\"status\">{t('reports.invoices.grouping.status')}</SelectItem>"
+            "line": 1672,
+            "context": "1671: <SelectContent>\n1672: <SelectItem value=\"none\">{t('reports.invoices.grouping.none')}</SelectItem>\n1673: <SelectItem value=\"status\">{t('reports.invoices.grouping.status')}</SelectItem>"
           },
           {
             "key": "reports.invoices.grouping.status",
-            "line": 1617,
-            "context": "1616: <SelectItem value=\"none\">{t('reports.invoices.grouping.none')}</SelectItem>\n1617: <SelectItem value=\"status\">{t('reports.invoices.grouping.status')}</SelectItem>\n1618: <SelectItem value=\"department\">{t('reports.invoices.grouping.department')}</SelectItem>"
+            "line": 1673,
+            "context": "1672: <SelectItem value=\"none\">{t('reports.invoices.grouping.none')}</SelectItem>\n1673: <SelectItem value=\"status\">{t('reports.invoices.grouping.status')}</SelectItem>\n1674: <SelectItem value=\"department\">{t('reports.invoices.grouping.department')}</SelectItem>"
           },
           {
             "key": "reports.invoices.grouping.department",
-            "line": 1618,
-            "context": "1617: <SelectItem value=\"status\">{t('reports.invoices.grouping.status')}</SelectItem>\n1618: <SelectItem value=\"department\">{t('reports.invoices.grouping.department')}</SelectItem>\n1619: <SelectItem value=\"week\">{t('reports.invoices.grouping.week')}</SelectItem>"
+            "line": 1674,
+            "context": "1673: <SelectItem value=\"status\">{t('reports.invoices.grouping.status')}</SelectItem>\n1674: <SelectItem value=\"department\">{t('reports.invoices.grouping.department')}</SelectItem>\n1675: <SelectItem value=\"week\">{t('reports.invoices.grouping.week')}</SelectItem>"
           },
           {
             "key": "reports.invoices.grouping.week",
-            "line": 1619,
-            "context": "1618: <SelectItem value=\"department\">{t('reports.invoices.grouping.department')}</SelectItem>\n1619: <SelectItem value=\"week\">{t('reports.invoices.grouping.week')}</SelectItem>\n1620: </SelectContent>"
+            "line": 1675,
+            "context": "1674: <SelectItem value=\"department\">{t('reports.invoices.grouping.department')}</SelectItem>\n1675: <SelectItem value=\"week\">{t('reports.invoices.grouping.week')}</SelectItem>\n1676: </SelectContent>"
           },
           {
             "key": "reports.invoices.tags.label",
-            "line": 1702,
-            "context": "1701: <div className=\"space-y-1.5 w-[150px]\">\n1702: <Label className=\"text-xs font-medium\">{t('reports.invoices.tags.label')}</Label>\n1703: <TagsFilterSelect"
+            "line": 1758,
+            "context": "1757: <div className=\"space-y-1.5 w-[150px]\">\n1758: <Label className=\"text-xs font-medium\">{t('reports.invoices.tags.label')}</Label>\n1759: <TagsFilterSelect"
           },
           {
             "key": "reports.invoices.duplicate_order_warning",
-            "line": 2380,
-            "context": "2379: <TooltipContent side=\"top\" className=\"max-w-md\">\n2380: <p className=\"font-semibold mb-2\">{t('reports.invoices.duplicate_order_warning')}</p>\n2381: {duplicateInfo.hasVinDuplicate && ("
+            "line": 2541,
+            "context": "2540: <TooltipContent side=\"top\" className=\"max-w-md\">\n2541: <p className=\"font-semibold mb-2\">{t('reports.invoices.duplicate_order_warning')}</p>\n2542: {duplicateInfo.hasVinDuplicate && ("
           },
           {
             "key": "reports.invoices.duplicate_vin_found",
-            "line": 2382,
-            "context": "2381: {duplicateInfo.hasVinDuplicate && (\n2382: <p className=\"text-xs mb-1\">• {t('reports.invoices.duplicate_vin_found', { count: duplicateInfo.vinCount })}</p>\n2383: )}"
+            "line": 2543,
+            "context": "2542: {duplicateInfo.hasVinDuplicate && (\n2543: <p className=\"text-xs mb-1\">• {t('reports.invoices.duplicate_vin_found', { count: duplicateInfo.vinCount })}</p>\n2544: )}"
           },
           {
             "key": "reports.invoices.duplicate_stock_found",
-            "line": 2385,
-            "context": "2384: {duplicateInfo.hasStockDuplicate && (\n2385: <p className=\"text-xs mb-1\">• {t('reports.invoices.duplicate_stock_found', { count: duplicateInfo.stockCount })}</p>\n2386: )}"
+            "line": 2546,
+            "context": "2545: {duplicateInfo.hasStockDuplicate && (\n2546: <p className=\"text-xs mb-1\">• {t('reports.invoices.duplicate_stock_found', { count: duplicateInfo.stockCount })}</p>\n2547: )}"
           },
           {
             "key": "reports.invoices.duplicate_tag_found",
-            "line": 2388,
-            "context": "2387: {duplicateInfo.hasTagDuplicate && (\n2388: <p className=\"text-xs mb-1\">• {t('reports.invoices.duplicate_tag_found', { count: duplicateInfo.tagCount })}</p>\n2389: )}"
+            "line": 2549,
+            "context": "2548: {duplicateInfo.hasTagDuplicate && (\n2549: <p className=\"text-xs mb-1\">• {t('reports.invoices.duplicate_tag_found', { count: duplicateInfo.tagCount })}</p>\n2550: )}"
           },
           {
             "key": "reports.invoices.duplicate_orders_list",
-            "line": 2393,
-            "context": "2392: <div className=\"mt-3 pt-2 border-t border-gray-200\">\n2393: <p className=\"text-xs font-semibold mb-2\">{t('reports.invoices.duplicate_orders_list')}</p>\n2394: <div className=\"space-y-1.5\">"
+            "line": 2554,
+            "context": "2553: <div className=\"mt-3 pt-2 border-t border-gray-200\">\n2554: <p className=\"text-xs font-semibold mb-2\">{t('reports.invoices.duplicate_orders_list')}</p>\n2555: <div className=\"space-y-1.5\">"
           },
           {
             "key": "reports.invoices.order_completed",
-            "line": 2402,
-            "context": "2401: <div className=\"text-[10px] text-gray-600 mt-0.5\">\n2402: {t('reports.invoices.order_completed', {\n2403: date: formatDate(dupOrder.completed_at || dupOrder.created_at)"
+            "line": 2563,
+            "context": "2562: <div className=\"text-[10px] text-gray-600 mt-0.5\">\n2563: {t('reports.invoices.order_completed', {\n2564: date: formatDate(dupOrder.completed_at || dupOrder.created_at)"
           },
           {
             "key": "reports.invoices.duplicate_tooltip_hint",
-            "line": 2419,
-            "context": "2418: <p className=\"text-xs text-muted-foreground mt-3 pt-2 border-t border-gray-200\">\n2419: {t('reports.invoices.duplicate_tooltip_hint')}\n2420: </p>"
+            "line": 2580,
+            "context": "2579: <p className=\"text-xs text-muted-foreground mt-3 pt-2 border-t border-gray-200\">\n2580: {t('reports.invoices.duplicate_tooltip_hint')}\n2581: </p>"
           },
           {
             "key": "invoices.delete_title",
-            "line": 2632,
-            "context": "2631: onOpenChange={setDeleteDialogOpen}\n2632: title={t('invoices.delete_title')}\n2633: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}"
+            "line": 2793,
+            "context": "2792: onOpenChange={setDeleteDialogOpen}\n2793: title={t('invoices.delete_title')}\n2794: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}"
           },
           {
             "key": "invoices.delete_description",
-            "line": 2633,
-            "context": "2632: title={t('invoices.delete_title')}\n2633: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}\n2634: confirmText={t('common.action_buttons.delete')}"
+            "line": 2794,
+            "context": "2793: title={t('invoices.delete_title')}\n2794: description={t('invoices.delete_description', { invoiceNumber: invoiceToDelete?.invoiceNumber })}\n2795: confirmText={t('common.action_buttons.delete')}"
           }
         ],
-        "coverage": 50,
+        "coverage": 48,
         "severity": "critical"
       },
       {
@@ -51523,6 +51538,336 @@
         "severity": "low"
       },
       {
+        "file": "src\\components\\reports\\invoices\\email\\BulkEmailInvoicesDialog.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "reports.invoices.email.error",
+            "line": 159,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.no_recipients",
+            "line": 160,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.error",
+            "line": 168,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.no_attachments",
+            "line": 169,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.success",
+            "line": 189,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.sent_successfully",
+            "line": 190,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.error",
+            "line": 197,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.send_failed",
+            "line": 198,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.send_multiple",
+            "line": 215,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.send_multiple_desc",
+            "line": 218,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.invoice_summary",
+            "line": 229,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.selected_invoices",
+            "line": 236,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.total",
+            "line": 248,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.paid",
+            "line": 252,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.due",
+            "line": 256,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.email.recipients",
+            "line": 268,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.manage_contacts",
+            "line": 277,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.default",
+            "line": 299,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.additional_recipients",
+            "line": 310,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.enter_email",
+            "line": 316,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.cc",
+            "line": 357,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.cc_placeholder",
+            "line": 362,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.bcc",
+            "line": 369,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.bcc_placeholder",
+            "line": 374,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.subject",
+            "line": 386,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.message",
+            "line": 398,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.attachments",
+            "line": 412,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.include_pdf",
+            "line": 423,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.include_excel",
+            "line": 434,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.estimated_size",
+            "line": 444,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.total_recipients",
+            "line": 454,
+            "exists": false
+          },
+          {
+            "key": "common.cancel",
+            "line": 470,
+            "exists": true
+          },
+          {
+            "key": "reports.invoices.email.sending",
+            "line": 484,
+            "exists": false
+          },
+          {
+            "key": "reports.invoices.email.send",
+            "line": 489,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "reports.invoices.email.error",
+            "line": 159,
+            "context": "158: toast({\n159: title: t('reports.invoices.email.error'),\n160: description: t('reports.invoices.email.no_recipients'),"
+          },
+          {
+            "key": "reports.invoices.email.no_recipients",
+            "line": 160,
+            "context": "159: title: t('reports.invoices.email.error'),\n160: description: t('reports.invoices.email.no_recipients'),\n161: variant: 'destructive',"
+          },
+          {
+            "key": "reports.invoices.email.error",
+            "line": 168,
+            "context": "167: toast({\n168: title: t('reports.invoices.email.error'),\n169: description: t('reports.invoices.email.no_attachments'),"
+          },
+          {
+            "key": "reports.invoices.email.no_attachments",
+            "line": 169,
+            "context": "168: title: t('reports.invoices.email.error'),\n169: description: t('reports.invoices.email.no_attachments'),\n170: variant: 'destructive',"
+          },
+          {
+            "key": "reports.invoices.email.success",
+            "line": 189,
+            "context": "188: toast({\n189: title: t('reports.invoices.email.success'),\n190: description: t('reports.invoices.email.sent_successfully', { count: invoices.length }),"
+          },
+          {
+            "key": "reports.invoices.email.sent_successfully",
+            "line": 190,
+            "context": "189: title: t('reports.invoices.email.success'),\n190: description: t('reports.invoices.email.sent_successfully', { count: invoices.length }),\n191: });"
+          },
+          {
+            "key": "reports.invoices.email.error",
+            "line": 197,
+            "context": "196: toast({\n197: title: t('reports.invoices.email.error'),\n198: description: t('reports.invoices.email.send_failed'),"
+          },
+          {
+            "key": "reports.invoices.email.send_failed",
+            "line": 198,
+            "context": "197: title: t('reports.invoices.email.error'),\n198: description: t('reports.invoices.email.send_failed'),\n199: variant: 'destructive',"
+          },
+          {
+            "key": "reports.invoices.email.send_multiple",
+            "line": 215,
+            "context": "214: <Mail className=\"h-5 w-5\" />\n215: {t('reports.invoices.email.send_multiple', { count: invoices.length })}\n216: </DialogTitle>"
+          },
+          {
+            "key": "reports.invoices.email.send_multiple_desc",
+            "line": 218,
+            "context": "217: <DialogDescription>\n218: {t('reports.invoices.email.send_multiple_desc')}\n219: </DialogDescription>"
+          },
+          {
+            "key": "reports.invoices.email.invoice_summary",
+            "line": 229,
+            "context": "228: <FileText className=\"h-4 w-4\" />\n229: {t('reports.invoices.email.invoice_summary')}\n230: </CardTitle>"
+          },
+          {
+            "key": "reports.invoices.email.selected_invoices",
+            "line": 236,
+            "context": "235: <p className=\"text-sm text-muted-foreground\">\n236: {t('reports.invoices.email.selected_invoices')}\n237: </p>"
+          },
+          {
+            "key": "reports.invoices.email.recipients",
+            "line": 268,
+            "context": "267: <Label className=\"text-base font-semibold\">\n268: {t('reports.invoices.email.recipients')}\n269: </Label>"
+          },
+          {
+            "key": "reports.invoices.email.manage_contacts",
+            "line": 277,
+            "context": "276: <Settings className=\"h-4 w-4 mr-2\" />\n277: {t('reports.invoices.email.manage_contacts')}\n278: </Button>"
+          },
+          {
+            "key": "reports.invoices.email.default",
+            "line": 299,
+            "context": "298: <Badge variant=\"secondary\" className=\"text-xs\">\n299: {t('reports.invoices.email.default')}\n300: </Badge>"
+          },
+          {
+            "key": "reports.invoices.email.additional_recipients",
+            "line": 310,
+            "context": "309: <Label htmlFor=\"custom-email\" className=\"text-sm\">\n310: {t('reports.invoices.email.additional_recipients')}\n311: </Label>"
+          },
+          {
+            "key": "reports.invoices.email.enter_email",
+            "line": 316,
+            "context": "315: type=\"email\"\n316: placeholder={t('reports.invoices.email.enter_email')}\n317: value={customEmail}"
+          },
+          {
+            "key": "reports.invoices.email.cc",
+            "line": 357,
+            "context": "356: <Label htmlFor=\"cc\" className=\"text-sm\">\n357: {t('reports.invoices.email.cc')}\n358: </Label>"
+          },
+          {
+            "key": "reports.invoices.email.cc_placeholder",
+            "line": 362,
+            "context": "361: type=\"text\"\n362: placeholder={t('reports.invoices.email.cc_placeholder')}\n363: value={cc}"
+          },
+          {
+            "key": "reports.invoices.email.bcc",
+            "line": 369,
+            "context": "368: <Label htmlFor=\"bcc\" className=\"text-sm\">\n369: {t('reports.invoices.email.bcc')}\n370: </Label>"
+          },
+          {
+            "key": "reports.invoices.email.bcc_placeholder",
+            "line": 374,
+            "context": "373: type=\"text\"\n374: placeholder={t('reports.invoices.email.bcc_placeholder')}\n375: value={bcc}"
+          },
+          {
+            "key": "reports.invoices.email.subject",
+            "line": 386,
+            "context": "385: <Label htmlFor=\"subject\" className=\"text-sm font-semibold\">\n386: {t('reports.invoices.email.subject')}\n387: </Label>"
+          },
+          {
+            "key": "reports.invoices.email.message",
+            "line": 398,
+            "context": "397: <Label htmlFor=\"message\" className=\"text-sm font-semibold\">\n398: {t('reports.invoices.email.message')}\n399: </Label>"
+          },
+          {
+            "key": "reports.invoices.email.attachments",
+            "line": 412,
+            "context": "411: <Label className=\"text-sm font-semibold\">\n412: {t('reports.invoices.email.attachments')}\n413: </Label>"
+          },
+          {
+            "key": "reports.invoices.email.include_pdf",
+            "line": 423,
+            "context": "422: <FileText className=\"h-4 w-4 text-red-500\" />\n423: {t('reports.invoices.email.include_pdf')}\n424: </Label>"
+          },
+          {
+            "key": "reports.invoices.email.include_excel",
+            "line": 434,
+            "context": "433: <FileSpreadsheet className=\"h-4 w-4 text-green-500\" />\n434: {t('reports.invoices.email.include_excel')}\n435: </Label>"
+          },
+          {
+            "key": "reports.invoices.email.estimated_size",
+            "line": 444,
+            "context": "443: <span className=\"text-xs text-muted-foreground\">\n444: {t('reports.invoices.email.estimated_size', { size: sizeInMB })}\n445: </span>"
+          },
+          {
+            "key": "reports.invoices.email.total_recipients",
+            "line": 454,
+            "context": "453: <span className=\"text-sm font-medium\">\n454: {t('reports.invoices.email.total_recipients')}:\n455: </span>"
+          },
+          {
+            "key": "reports.invoices.email.sending",
+            "line": 484,
+            "context": "483: <Loader2 className=\"h-4 w-4 mr-2 animate-spin\" />\n484: {t('reports.invoices.email.sending')}\n485: </>"
+          },
+          {
+            "key": "reports.invoices.email.send",
+            "line": 489,
+            "context": "488: <Mail className=\"h-4 w-4 mr-2\" />\n489: {t('reports.invoices.email.send')}\n490: </>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
         "file": "src\\components\\reports\\invoices\\EmailInvoiceDialog.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -51814,112 +52159,118 @@
       },
       {
         "file": "src\\components\\reports\\invoices\\InvoiceGroupAccordion.tsx",
-        "hardcodedStrings": [],
+        "hardcodedStrings": [
+          {
+            "text": "Select all invoices in group",
+            "line": 184,
+            "context": "183: }}\n184: aria-label=\"Select all invoices in group\"\n185: />"
+          }
+        ],
         "translationCalls": [
           {
             "key": "reports.invoices.total",
-            "line": 139,
+            "line": 146,
             "exists": true
           },
           {
             "key": "reports.invoices.due",
-            "line": 144,
+            "line": 151,
             "exists": true
           },
           {
             "key": "reports.invoices.paid",
-            "line": 152,
+            "line": 159,
             "exists": true
           },
           {
             "key": "reports.invoices.table.invoice",
-            "line": 166,
+            "line": 189,
             "exists": true
           },
           {
             "key": "reports.invoices.table.date_range",
-            "line": 169,
+            "line": 192,
             "exists": true
           },
           {
             "key": "reports.invoices.tags.label",
-            "line": 172,
+            "line": 195,
             "exists": false
           },
           {
             "key": "reports.invoices.issue_date",
-            "line": 175,
+            "line": 198,
             "exists": true
           },
           {
             "key": "reports.invoices.due_date",
-            "line": 178,
+            "line": 201,
             "exists": true
           },
           {
             "key": "reports.invoices.amount",
-            "line": 181,
+            "line": 204,
             "exists": true
           },
           {
             "key": "reports.invoices.paid",
-            "line": 184,
+            "line": 207,
             "exists": true
           },
           {
             "key": "reports.invoices.due",
-            "line": 187,
+            "line": 210,
             "exists": true
           },
           {
             "key": "common.status_label",
-            "line": 190,
+            "line": 213,
             "exists": true
           },
           {
             "key": "reports.invoices.actions",
-            "line": 193,
+            "line": 216,
             "exists": true
           },
           {
             "key": "services.departments.sales_dept",
-            "line": 286,
+            "line": 320,
             "exists": true
           },
           {
             "key": "services.departments.service_dept",
-            "line": 290,
+            "line": 324,
             "exists": true
           },
           {
             "key": "services.departments.recon_dept",
-            "line": 294,
+            "line": 328,
             "exists": true
           },
           {
             "key": "services.departments.carwash_dept",
-            "line": 300,
+            "line": 334,
             "exists": true
           },
           {
             "key": "reports.add_payment",
-            "line": 399,
+            "line": 433,
             "exists": true
           },
           {
             "key": "reports.delete_invoice",
-            "line": 411,
+            "line": 445,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "reports.invoices.tags.label",
-            "line": 172,
-            "context": "171: <TableHead className=\"text-center font-bold\">\n172: {t('reports.invoices.tags.label')}\n173: </TableHead>"
+            "line": 195,
+            "context": "194: <TableHead className=\"text-center font-bold\">\n195: {t('reports.invoices.tags.label')}\n196: </TableHead>"
           }
         ],
-        "coverage": 100,
+        "coverage": 95,
         "severity": "low"
       },
       {
@@ -73334,7 +73685,7 @@
       "title": "Batch Process Top 5 Files",
       "description": "Focus on files with most hardcoded strings for maximum impact",
       "files": [
-        "src\\components\\reports\\sections\\InvoicesReport.tsx (63 strings)",
+        "src\\components\\reports\\sections\\InvoicesReport.tsx (66 strings)",
         "src\\components\\detail-hub\\KioskManager.BACKUP.tsx (62 strings)",
         "src\\components\\detail-hub\\InvoiceCenter.BACKUP.tsx (50 strings)",
         "src\\components\\reports\\invoices\\CreateInvoiceDialog.tsx (40 strings)",
@@ -73435,7 +73786,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "464 Component components need translation",
+      "description": "465 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\detail-hub\\InvoiceCenter.BACKUP.tsx",
@@ -73689,6 +74040,7 @@
         "src\\components\\profile\\NotificationsPreferencesTab_OLD.tsx",
         "src\\components\\qr\\QRCodeCard.tsx",
         "src\\components\\recon-hub\\analytics\\BottleneckAnalysis.tsx",
+        "src\\components\\reports\\invoices\\InvoiceGroupAccordion.tsx",
         "src\\components\\reports\\invoices\\TagsFilterSelect.tsx",
         "src\\components\\sales\\OrderCard.tsx",
         "src\\components\\scanner\\engines\\StickerImageProcessor.tsx",
@@ -73848,9 +74200,9 @@
         "src\\components\\recon\\ReconDashboard.tsx",
         "src\\components\\reports\\charts\\OrderVolumeChart.tsx",
         "src\\components\\reports\\charts\\StatusDistributionChart.tsx",
+        "src\\components\\reports\\invoices\\email\\BulkEmailInvoicesDialog.tsx",
         "src\\components\\reports\\invoices\\EmailInvoiceDialog.tsx",
         "src\\components\\reports\\invoices\\EmailSentIndicator.tsx",
-        "src\\components\\reports\\invoices\\InvoiceGroupAccordion.tsx",
         "src\\components\\reports\\invoices\\InvoiceTagsDisplay.tsx",
         "src\\components\\reports\\invoices\\ReinvoiceSentIndicator.tsx",
         "src\\components\\reports\\ReportFilters.tsx",
@@ -73902,14 +74254,14 @@
         "src\\utils\\stockCSVHelpers.ts",
         "src\\utils\\translationAudit.ts"
       ],
-      "estimatedEffort": "232 hours"
+      "estimatedEffort": "233 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3329 translation keys are referenced but missing",
+      "description": "3359 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "167 hours"
+      "estimatedEffort": "168 hours"
     }
   ],
   "coverage": 78

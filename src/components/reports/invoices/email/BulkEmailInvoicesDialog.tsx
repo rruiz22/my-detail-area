@@ -38,6 +38,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import type { Invoice } from '@/types/invoices';
 import { useTranslation } from 'react-i18next';
+import { formatInvoiceNumberWithDepartment } from '@/utils/invoiceFormatting';
 
 interface BulkEmailInvoicesDialogProps {
   open: boolean;
@@ -98,11 +99,11 @@ export const BulkEmailInvoicesDialog: React.FC<BulkEmailInvoicesDialogProps> = (
   useEffect(() => {
     if (!subject && invoices.length > 0) {
       const dealerName = invoices[0].dealership?.name || 'Dealership';
-      const invoiceNumbers = invoices.map(inv => inv.invoiceNumber).join(', ');
+      const invoiceNumbers = invoices.map(inv => formatInvoiceNumberWithDepartment(inv)).join(', ');
 
       // Limit invoice numbers in subject to prevent it from being too long
       const displayNumbers = invoices.length > 3
-        ? `${invoices.slice(0, 3).map(inv => inv.invoiceNumber).join(', ')}...`
+        ? `${invoices.slice(0, 3).map(inv => formatInvoiceNumberWithDepartment(inv)).join(', ')}...`
         : invoiceNumbers;
 
       setSubject(`${dealerName} - Multiple Invoices (${invoices.length}) - ${displayNumbers}`);
@@ -111,7 +112,7 @@ export const BulkEmailInvoicesDialog: React.FC<BulkEmailInvoicesDialogProps> = (
     if (!message && invoices.length > 0) {
       const dealerName = invoices[0].dealership?.name || 'Dealership';
       const invoiceList = invoices.map(inv =>
-        `• Invoice #${inv.invoiceNumber} - ${formatCurrency(inv.totalAmount)}`
+        `• Invoice #${formatInvoiceNumberWithDepartment(inv)} - ${formatCurrency(inv.totalAmount)}`
       ).join('\n');
 
       setMessage(
@@ -238,7 +239,7 @@ export const BulkEmailInvoicesDialog: React.FC<BulkEmailInvoicesDialogProps> = (
                       <div className="mt-1 max-h-20 overflow-y-auto">
                         {invoices.map(inv => (
                           <Badge key={inv.id} variant="outline" className="mr-1 mb-1">
-                            #{inv.invoiceNumber}
+                            #{formatInvoiceNumberWithDepartment(inv)}
                           </Badge>
                         ))}
                       </div>
