@@ -47,6 +47,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
+import { DepartmentMultiSelect } from './DepartmentMultiSelect';
+import { QUERY_LIMITS } from '@/constants/queryLimits';
 
 interface CreateInvoiceDialogProps {
   open: boolean;
@@ -171,7 +173,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
   const { startDate: startOfThisWeek, endDate: endOfThisWeek } = calculateDateRange('this_week');
 
   // Filters
-  const [orderType, setOrderType] = useState<string>('all');
+  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [dateRange, setDateRange] = useState<'today' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'last_3_months' | 'custom'>('this_week');
   const [startDate, setStartDate] = useState<string>(startOfThisWeek);
   const [endDate, setEndDate] = useState<string>(endOfThisWeek);
@@ -226,7 +228,7 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
 
   // Fetch vehicles without invoices
   const { data: availableVehicles = [], isLoading: loadingVehicles } = useQuery({
-    queryKey: ['vehicles-without-invoice', dealerId, orderType, startDate, endDate],
+    queryKey: ['vehicles-without-invoice', dealerId, selectedDepartments, startDate, endDate],
     queryFn: async (): Promise<VehicleForInvoice[]> => {
       // Fetch orders without date filter (will filter client-side by appropriate date field)
       let query = supabase
@@ -237,9 +239,9 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
         .order('created_at', { ascending: false })
         .limit(QUERY_LIMITS.EXTENDED); // ✅ FIX: Increased from 5K to 50K for historical date range support
 
-      // Apply order type filter
-      if (orderType !== 'all') {
-        query = query.eq('order_type', orderType);
+      // Apply department filter (multiple selection)
+      if (selectedDepartments.length > 0) {
+        query = query.in('order_type', selectedDepartments);
       }
 
       const { data: orders, error: ordersError } = await query;
@@ -383,6 +385,9 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
 
       if (numberError) throw numberError;
 
+      // Get unique departments from selected vehicles
+      const uniqueDepartments = [...new Set(selectedVehicles.map(v => v.order_type))];
+
       // Create invoice (without order_id since this is a bulk invoice)
       const { data: invoice, error: invoiceError } = await supabase
         .from('invoices')
@@ -409,8 +414,8 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
               preset: dateRange
             },
             vehicle_count: selectedVehicles.length,
-            department: orderType === 'all' ? 'all' : orderType,
-            departments: [...new Set(selectedVehicles.map(v => v.order_type))]
+            departments: uniqueDepartments,
+            selected_filter_departments: selectedDepartments.length > 0 ? selectedDepartments : ['all']
           }
         })
         .select()
@@ -534,19 +539,12 @@ export const CreateInvoiceDialog: React.FC<CreateInvoiceDialogProps> = ({
             {/* First Row: Department and Date Range Preset */}
             <div className="grid grid-cols-3 gap-3 mb-3">
               <div className="space-y-1.5">
-                <Label htmlFor="orderType" className="text-xs font-medium">Department</Label>
-                <Select value={orderType} onValueChange={setOrderType}>
-                  <SelectTrigger id="orderType" className="h-10">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Departments</SelectItem>
-                    <SelectItem value="sales">Sales</SelectItem>
-                    <SelectItem value="service">Service</SelectItem>
-                    <SelectItem value="recon">Recon</SelectItem>
-                    <SelectItem value="carwash">Car Wash</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="departments" className="text-xs font-medium">Departments</Label>
+                <DepartmentMultiSelect
+                  value={selectedDepartments}
+                  onChange={setSelectedDepartments}
+                  className="h-10"
+                />
               </div>
 
               <div className="space-y-1.5">

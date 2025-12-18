@@ -56,6 +56,11 @@ import { InvoiceEmailLog } from './InvoiceEmailLog';
 import { ReinvoiceButton } from './ReinvoiceButton';
 import { ReinvoiceHistoryTimeline } from './ReinvoiceHistoryTimeline';
 import { InvoiceTagsManager } from './InvoiceTagsManager';
+import {
+  sortInvoiceItemsByDepartment,
+  shouldShowDepartmentGrouping,
+  DEPARTMENT_DISPLAY_NAMES
+} from '@/utils/invoiceSorting';
 
 interface InvoiceDetailsDialogProps {
   open: boolean;
@@ -239,12 +244,12 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
         ? invoice.metadata.departments.map((d: string) => d.charAt(0).toUpperCase() + d.slice(1)).join(', ')
         : null;
 
-      // Sort items by date (ascending) - using correct date based on order type
-      const sortedItems = (invoice.items || []).sort((a, b) => {
-        const dateA = getCorrectItemDate(a);
-        const dateB = getCorrectItemDate(b);
-        return new Date(dateA).getTime() - new Date(dateB).getTime();
-      });
+      // Sort items by department priority, then by date (ascending)
+      const sortedItems = sortInvoiceItemsByDepartment(
+        invoice.items || [],
+        getCorrectItemDate
+      );
+      const showDepartmentHeaders = shouldShowDepartmentGrouping(sortedItems);
 
       // Generate print-friendly HTML with proper URL (not about:blank)
       const printWindow = window.open('', '_blank');
@@ -985,15 +990,25 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                 <TableBody>
                   {invoice.items && invoice.items.length > 0 ? (
                     (() => {
-                      // Sort items by date (ascending) - using correct date based on order type
-                      const sortedItems = [...invoice.items].sort((a, b) => {
-                        const dateA = getCorrectItemDate(a);
-                        const dateB = getCorrectItemDate(b);
-                        return new Date(dateA).getTime() - new Date(dateB).getTime();
-                      });
+                      // Sort items by department priority, then by date (ascending)
+                      const sortedItems = sortInvoiceItemsByDepartment(
+                        [...invoice.items],
+                        getCorrectItemDate
+                      );
+                      const showDepartmentHeaders = shouldShowDepartmentGrouping(sortedItems);
 
                       let lastDate = '';
+                      let lastDepartment = '';
                       const rows: JSX.Element[] = [];
+                      const departmentCounts: Record<string, number> = {};
+
+                      // Count items per department
+                      if (showDepartmentHeaders) {
+                        sortedItems.forEach(item => {
+                          const dept = (item.metadata?.order_type as string) || 'unknown';
+                          departmentCounts[dept] = (departmentCounts[dept] || 0) + 1;
+                        });
+                      }
 
                       sortedItems.forEach((item, index) => {
                         const po = item.metadata?.po || '';
@@ -1011,9 +1026,24 @@ export const InvoiceDetailsDialog: React.FC<InvoiceDetailsDialogProps> = ({
                         }
 
                         const itemDate = format(parseISO(getCorrectItemDate(item)), 'MM/dd');
+                        const currentDepartment = (item.metadata?.order_type as string) || 'unknown';
 
-                        // Add separator row if date changes
-                        if (itemDate !== lastDate && index > 0) {
+                        // Add department header if department changes (for multi-department invoices)
+                        if (showDepartmentHeaders && currentDepartment !== lastDepartment) {
+                          rows.push(
+                            <TableRow key={`dept-${currentDepartment}-${index}`} className="bg-blue-50 hover:bg-blue-50 border-t-2 border-blue-200">
+                              <TableCell colSpan={8} className="text-center font-semibold text-blue-900 py-3">
+                                {DEPARTMENT_DISPLAY_NAMES[currentDepartment] || currentDepartment.toUpperCase()}
+                                {departmentCounts[currentDepartment] && ` (${departmentCounts[currentDepartment]} items)`}
+                              </TableCell>
+                            </TableRow>
+                          );
+                          lastDepartment = currentDepartment;
+                          lastDate = ''; // Reset date so first item in new department shows date
+                        }
+
+                        // Add separator row if date changes within department
+                        if (itemDate !== lastDate && index > 0 && (!showDepartmentHeaders || currentDepartment === lastDepartment)) {
                           rows.push(
                             <TableRow key={`separator-${index}`} className="bg-gray-200 hover:bg-gray-200">
                               <TableCell colSpan={8} className="text-center font-bold text-gray-600 py-2">

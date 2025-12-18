@@ -48,6 +48,7 @@ import { supabase } from '@/integrations/supabase/client';
 import type { Invoice, InvoiceFilters, InvoiceStatus } from '@/types/invoices';
 import type { OrderServiceItem } from '@/types/reports';
 import type { UnifiedOrderData } from '@/types/unifiedOrder';
+import { DepartmentMultiSelect } from '@/components/reports/invoices/DepartmentMultiSelect';
 import { invalidateInvoiceQueries } from '@/utils/queryInvalidation';
 import { toEndOfDay } from '@/utils/reportDateUtils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -268,7 +269,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
   const { startDate: startOfThisWeek, endDate: endOfThisWeek } = calculateDateRange('this_week');
 
   // Create invoice filters
-  const [orderType, setOrderType] = useState<string>('all');
+  const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [orderStatus, setOrderStatus] = useState<string>('completed');
   const [dateRange, setDateRange] = useState<'today' | 'this_week' | 'last_week' | 'this_month' | 'last_month' | 'last_3_months' | 'custom'>('this_week');
   const [startDate, setStartDate] = useState<string>(startOfThisWeek);
@@ -451,7 +452,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
   // Fetch TOTAL orders in period (including invoiced ones) - for displaying total count
   const { data: totalOrdersInPeriodData } = useQuery({
-    queryKey: ['total-orders-in-period', dealerId, orderType, startDate, endDate, orderStatus],
+    queryKey: ['total-orders-in-period', dealerId, selectedDepartments, startDate, endDate, orderStatus],
     queryFn: async (): Promise<{ total: number; excluded: number; available: number; invoiced: number }> => {
       if (!dealerId) return { total: 0, excluded: 0, available: 0, invoiced: 0 };
 
@@ -463,9 +464,9 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
         .limit(QUERY_LIMITS.EXTENDED) // 50000 - handles large dealers
         .order('created_at', { ascending: false }); // Most recent orders first
 
-      // Apply order type filter
-      if (orderType !== 'all') {
-        query = query.eq('order_type', orderType);
+      // Apply department filter
+      if (selectedDepartments.length > 0) {
+        query = query.in('order_type', selectedDepartments);
       }
 
       // Apply status filter
@@ -577,7 +578,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
 
   // Fetch ALL vehicles for counts (direct query, no RPC)
   const { data: allVehiclesForCounts = [], isLoading: loadingVehicles } = useQuery({
-    queryKey: ['all-vehicles-for-counts', dealerId, orderType, startDate, endDate],
+    queryKey: ['all-vehicles-for-counts', dealerId, selectedDepartments, startDate, endDate],
     queryFn: async (): Promise<VehicleForInvoice[]> => {
       if (!dealerId) return [];
 
@@ -589,9 +590,9 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
         .order('created_at', { ascending: false })
         .limit(QUERY_LIMITS.EXTENDED); // ✅ FIX: Increased from 5K to 50K for historical date range support
 
-      // Apply order type filter
-      if (orderType !== 'all') {
-        query = query.eq('order_type', orderType);
+      // Apply department filter
+      if (selectedDepartments.length > 0) {
+        query = query.in('order_type', selectedDepartments);
       }
 
       const { data: orders, error: ordersError } = await query;
@@ -755,19 +756,40 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
       });
     }
 
-    // Apply sorting
+    // Apply sorting - department first, then date
     if (sortField === 'date') {
-      filtered.sort((a, b) => {
-        // Get the appropriate date field based on order type
-        const getDate = (vehicle: VehicleForInvoice) => {
-          if (vehicle.order_type === 'sales' || vehicle.order_type === 'service') {
-            return vehicle.due_date || vehicle.created_at;
-          } else if (vehicle.order_type === 'recon' || vehicle.order_type === 'carwash') {
-            return vehicle.completed_at || vehicle.created_at;
-          }
-          return vehicle.created_at;
-        };
+      // Department priority for sorting (Sales first, then Service, Recon, Carwash)
+      const DEPARTMENT_PRIORITY: Record<string, number> = {
+        sales: 1,
+        service: 2,
+        recon: 3,
+        carwash: 4,
+      };
 
+      // Get the appropriate date field based on order type
+      const getDate = (vehicle: VehicleForInvoice) => {
+        if (vehicle.order_type === 'sales' || vehicle.order_type === 'service') {
+          return vehicle.due_date || vehicle.created_at;
+        } else if (vehicle.order_type === 'recon' || vehicle.order_type === 'carwash') {
+          return vehicle.completed_at || vehicle.created_at;
+        }
+        return vehicle.created_at;
+      };
+
+      // Sort by department priority first, then by date within each department
+      filtered.sort((a, b) => {
+        // First sort by department priority
+        const deptA = a.order_type || 'unknown';
+        const deptB = b.order_type || 'unknown';
+
+        const priorityA = DEPARTMENT_PRIORITY[deptA] || 99;
+        const priorityB = DEPARTMENT_PRIORITY[deptB] || 99;
+
+        if (priorityA !== priorityB) {
+          return priorityA - priorityB;
+        }
+
+        // Within same department, sort by date according to sortDirection
         const dateA = new Date(getDate(a)).getTime();
         const dateB = new Date(getDate(b)).getTime();
 
@@ -938,8 +960,8 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
               preset: dateRange
             },
             vehicle_count: selectedVehicles.length,
-            department: orderType === 'all' ? 'all' : orderType,
-            departments: [...new Set(selectedVehicles.map(v => v.order_type))]
+            department: selectedDepartments.length === 0 ? 'all' : selectedDepartments.length === 1 ? selectedDepartments[0] : 'multiple',
+            departments: selectedDepartments.length > 0 ? selectedDepartments : [...new Set(selectedVehicles.map(v => v.order_type))]
           }
         })
         .select()
@@ -2189,18 +2211,12 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
               <div className="grid grid-cols-4 gap-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="dept-filter-inline" className="text-xs font-medium">Department</Label>
-                  <Select value={orderType} onValueChange={setOrderType}>
-                    <SelectTrigger id="dept-filter-inline" className="h-10">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Departments</SelectItem>
-                      <SelectItem value="sales">Sales</SelectItem>
-                      <SelectItem value="service">Service</SelectItem>
-                      <SelectItem value="recon">Recon</SelectItem>
-                      <SelectItem value="carwash">Car Wash</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <DepartmentMultiSelect
+                    value={selectedDepartments}
+                    onChange={setSelectedDepartments}
+                    placeholder={t('reports.invoices.select_departments')}
+                    className="h-10"
+                  />
                 </div>
 
                 <div className="space-y-1.5">
@@ -2451,7 +2467,9 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                           </button>
                         </TableHead>
                         <TableHead className="text-center font-bold">
-                          {orderType === 'service' ? 'PO / RO / Tag' : orderType === 'carwash' ? 'Stock / Tag' : 'Stock'}
+                          {selectedDepartments.length === 1 && selectedDepartments[0] === 'service' ? 'PO / RO / Tag' :
+                           selectedDepartments.length === 1 && selectedDepartments[0] === 'carwash' ? 'Stock / Tag' :
+                           'Stock / Tag / PO'}
                         </TableHead>
                         <TableHead className="text-center font-bold">Vehicle</TableHead>
                         <TableHead className="text-center font-bold">VIN</TableHead>
@@ -2505,14 +2523,14 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
                               {formatDate(vehicle.completed_at || vehicle.created_at)}
                             </TableCell>
                             <TableCell className="font-medium text-sm text-center">
-                              {orderType === 'service' ? (
+                              {vehicle.order_type === 'service' ? (
                                 <div className="flex flex-col gap-0.5">
                                   {vehicle.po && <span className="text-xs text-muted-foreground">PO: {vehicle.po}</span>}
                                   {vehicle.ro && <span className="text-xs text-muted-foreground">RO: {vehicle.ro}</span>}
                                   {vehicle.tag && <span className="text-xs font-medium">Tag: {vehicle.tag}</span>}
                                   {!vehicle.po && !vehicle.ro && !vehicle.tag && 'N/A'}
                                 </div>
-                              ) : orderType === 'carwash' ? (
+                              ) : vehicle.order_type === 'carwash' ? (
                                 <div className="text-xs font-medium">
                                   {vehicle.stock_number || vehicle.tag || 'N/A'}
                                 </div>

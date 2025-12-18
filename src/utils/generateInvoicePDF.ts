@@ -8,6 +8,11 @@
 import type { InvoiceWithDetails } from '@/types/invoices';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import {
+  sortInvoiceItemsByDepartment,
+  shouldShowDepartmentGrouping,
+  DEPARTMENT_DISPLAY_NAMES
+} from '@/utils/invoiceSorting';
 
 // =====================================================
 // UTILITY FUNCTIONS
@@ -288,42 +293,101 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
   // Prepare table headers (Date and Order combined)
   const tableHeaders = [['#', 'Date / Order', poRoTagHeader, 'Vehicle', 'VIN', 'Services', 'Amount']];
 
-  // Sort items by date (ascending) - using correct date based on order type
-  const sortedItems = (invoice.items || []).sort((a, b) => {
-    const dateA = getCorrectItemDate(a);
-    const dateB = getCorrectItemDate(b);
-    return new Date(dateA).getTime() - new Date(dateB).getTime();
-  });
+  // Sort items by department priority, then by date (ascending)
+  const sortedItems = sortInvoiceItemsByDepartment(
+    invoice.items || [],
+    getCorrectItemDate
+  );
+  const showDepartmentHeaders = shouldShowDepartmentGrouping(sortedItems);
 
-  // Group items by date
-  const groupedByDate: { date: string; items: any[] }[] = [];
+  // Group items by department and date
+  interface GroupedData {
+    department?: string;
+    date: string;
+    items: any[];
+  }
+  const groupedData: GroupedData[] = [];
   let currentDate = '';
+  let currentDepartment = '';
   let currentGroup: any[] = [];
+  const departmentCounts: Record<string, number> = {};
+
+  // Count items per department if showing department headers
+  if (showDepartmentHeaders) {
+    sortedItems.forEach(item => {
+      const dept = item.metadata?.order_type || 'unknown';
+      departmentCounts[dept] = (departmentCounts[dept] || 0) + 1;
+    });
+  }
 
   sortedItems.forEach((item, index) => {
     const itemDate = formatShortDate(getCorrectItemDate(item));
+    const itemDepartment = item.metadata?.order_type || 'unknown';
 
-    if (itemDate !== currentDate) {
-      if (currentGroup.length > 0) {
-        groupedByDate.push({ date: currentDate, items: currentGroup });
-      }
-      currentDate = itemDate;
-      currentGroup = [item];
-    } else {
-      currentGroup.push(item);
+    // Check if we need to create a new group
+    const needNewGroup = showDepartmentHeaders
+      ? itemDepartment !== currentDepartment || itemDate !== currentDate
+      : itemDate !== currentDate;
+
+    if (needNewGroup && currentGroup.length > 0) {
+      groupedData.push({
+        department: showDepartmentHeaders ? currentDepartment : undefined,
+        date: currentDate,
+        items: currentGroup
+      });
+      currentGroup = [];
     }
 
+    // Update current tracking
+    if (showDepartmentHeaders && itemDepartment !== currentDepartment) {
+      currentDepartment = itemDepartment;
+      currentDate = ''; // Reset date for new department
+    }
+
+    if (itemDate !== currentDate) {
+      currentDate = itemDate;
+    }
+
+    currentGroup.push(item);
+
     // Last group
-    if (index === sortedItems.length - 1) {
-      groupedByDate.push({ date: currentDate, items: currentGroup });
+    if (index === sortedItems.length - 1 && currentGroup.length > 0) {
+      groupedData.push({
+        department: showDepartmentHeaders ? currentDepartment : undefined,
+        date: currentDate,
+        items: currentGroup
+      });
     }
   });
 
   // Build table data with separators
   const tableData: any[] = [];
   let orderCounter = 1; // Initialize order counter
+  let lastDepartment = '';
 
-  groupedByDate.forEach((group, groupIndex) => {
+  groupedData.forEach((group, groupIndex) => {
+    // Add department header if showing department headers and department changed
+    if (showDepartmentHeaders && group.department && group.department !== lastDepartment) {
+      const deptName = DEPARTMENT_DISPLAY_NAMES[group.department] || group.department.toUpperCase();
+      const itemCount = departmentCounts[group.department] || 0;
+
+      // Add department separator row
+      tableData.push([
+        {
+          content: `${deptName} (${itemCount} items)`,
+          colSpan: 7,
+          styles: {
+            halign: 'center',
+            fillColor: [230, 240, 255],
+            textColor: [0, 50, 100],
+            fontStyle: 'bold',
+            fontSize: 10
+          }
+        }
+      ]);
+      lastDepartment = group.department;
+    }
+
     group.items.forEach(item => {
       // Order number (sequential numbering)
       const orderNum = orderCounter.toString();
