@@ -2823,6 +2823,7 @@ export const InvoicesReport: React.FC<InvoicesReportProps> = ({ filters }) => {
           onOpenChange={setShowBulkEmailDialog}
           invoices={invoices.filter(inv => selectedInvoiceIds.has(inv.id))}
           dealershipId={filters.dealershipId}
+          onEmailSent={() => setSelectedInvoiceIds(new Set())}
         />
       )}
     </div>

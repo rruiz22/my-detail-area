@@ -133,6 +133,10 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
   const [serviceRequiredError, setServiceRequiredError] = useState(false);
   const [isManuallyEditingVehicleInfo, setIsManuallyEditingVehicleInfo] = useState(false);
 
+  // Submission control states (prevent double-click)
+  const [submitting, setSubmitting] = useState(false);
+  const [isDebouncing, setIsDebouncing] = useState(false);
+
   // Combine loading states
   const loading = dealershipsLoading || servicesLoading;
 
@@ -353,12 +357,23 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitError(null); // Reset any previous errors
+
+    // ✅ FIX: Debounce check to prevent double-submit
+    if (isDebouncing) {
+      logger.warn('⚠️ [CarWashOrderModal] Submit debounced - too fast, ignoring duplicate click');
+      return;
+    }
+
+    setIsDebouncing(true);   // Lock form immediately
+    setSubmitting(true);     // Show creating state
+    setSubmitError(null);    // Reset any previous errors
     setServiceRequiredError(false);
 
     if (selectedServices.length === 0) {
       setServiceRequiredError(true);
       toast({ variant: 'destructive', description: t('validation.option_required') });
+      setSubmitting(false);
+      setIsDebouncing(false);
       return;
     }
 
@@ -375,6 +390,10 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
       setSubmitError(errorMessage);
       toast({ variant: 'destructive', description: errorMessage });
       // Modal stays open with data intact
+    } finally {
+      setSubmitting(false);
+      // ✅ FIX: Reset debounce with 1s cooldown
+      setTimeout(() => setIsDebouncing(false), 1000);
     }
   };
 
@@ -438,7 +457,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                   <Select
                     value={selectedDealership}
                     onValueChange={handleDealershipChange}
-                    disabled={loading || isDealerFieldReadOnly}
+                    disabled={loading || isDealerFieldReadOnly || submitting}
                   >
                     <SelectTrigger className="border-input bg-background">
                       <SelectValue placeholder={loading ? t('common.loading') : t('car_wash_orders.select_dealership')} />
@@ -481,6 +500,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     value={formData.vehicleVin}
                     onChange={(e) => handleVinChange(e.target.value.toUpperCase())}
                     onVinScanned={(vin) => handleVinChange(vin.toUpperCase())}
+                    disabled={submitting}
                     className="border-input bg-background font-mono uppercase"
                   />
                   {vinError && (
@@ -503,6 +523,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     id="stockNumber"
                     value={formData.stockNumber}
                     onChange={(e) => handleInputChange('stockNumber', e.target.value.toUpperCase())}
+                    disabled={submitting}
                     className="border-input bg-background uppercase"
                     placeholder="ST-001"
                   />
@@ -523,6 +544,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                         setIsManuallyEditingVehicleInfo(false);
                       }
                     }}
+                    disabled={submitting}
                     className="border-input bg-background font-medium"
                     placeholder="2025 BMW X6 (xDrive40i)"
                   />
@@ -569,6 +591,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                   <Select
                     value={formData.status}
                     onValueChange={(value) => handleInputChange('status', value)}
+                    disabled={submitting}
                   >
                     <SelectTrigger id="status">
                       <SelectValue />
@@ -587,6 +610,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     id="waiter"
                     checked={formData.isWaiter}
                     onCheckedChange={(checked) => handleInputChange('isWaiter', checked)}
+                    disabled={submitting}
                   />
                   <Label
                     htmlFor="waiter"
@@ -651,7 +675,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                                       checked={isSelected}
                                       onCheckedChange={(checked) => handleServiceToggle(service.id, !!checked)}
                                       className="mt-0.5 w-4 h-4"
-                                      disabled={isDisabled}
+                                      disabled={isDisabled || submitting}
                                     />
                                     <div className="flex-1 min-w-0">
                                       <Label
@@ -728,6 +752,7 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
                     value={formData.notes}
                     onChange={(e) => handleInputChange('notes', e.target.value)}
                     rows={3}
+                    disabled={submitting}
                     className="border-input bg-background resize-none"
                     placeholder={t('car_wash_orders.notes_placeholder')}
                   />
@@ -806,11 +831,20 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={loading || !selectedDealership || selectedServices.length === 0}
+            disabled={submitting || loading || !selectedDealership || selectedServices.length === 0}
             className="w-1/2 sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 min-h-[44px]"
           >
-            {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            {order ? t('common.action_buttons.update') : t('common.action_buttons.create')}
+            {submitting ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                {order ? t('car_wash_orders.updating') : t('car_wash_orders.creating')}
+              </>
+            ) : (
+              <>
+                {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                {order ? t('common.action_buttons.update') : t('common.action_buttons.create')}
+              </>
+            )}
           </Button>
         </div>
       </DialogContent>

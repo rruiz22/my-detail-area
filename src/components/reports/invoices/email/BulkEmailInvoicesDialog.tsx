@@ -46,6 +46,7 @@ interface BulkEmailInvoicesDialogProps {
   onOpenChange: (open: boolean) => void;
   invoices: Invoice[];
   dealershipId: number;
+  onEmailSent?: () => void; // Callback to clear selected invoices
 }
 
 export const BulkEmailInvoicesDialog: React.FC<BulkEmailInvoicesDialogProps> = ({
@@ -53,6 +54,7 @@ export const BulkEmailInvoicesDialog: React.FC<BulkEmailInvoicesDialogProps> = (
   onOpenChange,
   invoices,
   dealershipId,
+  onEmailSent,
 }) => {
   const { t } = useTranslation();
   const { toast } = useToast();
@@ -206,6 +208,9 @@ export const BulkEmailInvoicesDialog: React.FC<BulkEmailInvoicesDialogProps> = (
         title: t('reports.invoices.email.success'),
         description: t('reports.invoices.email.sent_successfully', { count: invoices.length }),
       });
+
+      // Clear selected invoices after successful send
+      onEmailSent?.();
 
       onOpenChange(false);
     } catch (error) {
