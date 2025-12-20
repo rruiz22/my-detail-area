@@ -270,12 +270,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           userProfileCache.clearCache();
           clearPermissionsCache();
 
-          // ✅ FIX: Selective invalidation instead of queryClient.clear()
-          // Only clear user-specific queries, not all application data
+          // ✅ FIX: Use removeQueries instead of invalidateQueries to prevent refetch during logout
+          // invalidateQueries triggers immediate refetch, which fails because user is already signed out
+          // This causes RLS policy violations and caches empty/error states
           const userQueries = [
             'user-permissions',
             'user_profile',
-            'user_profile_permissions',  // 🛡️ CRITICAL: Added to fix race condition on login
+            'user_profile_permissions',  // 🛡️ CRITICAL: Must be removed to prevent cache poisoning
             'dealer-memberships',
             'user-dealerships',
             'user-roles',
@@ -283,10 +284,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           ];
 
           userQueries.forEach(queryKey => {
-            queryClient.invalidateQueries({ queryKey: [queryKey] });
+            queryClient.removeQueries({ queryKey: [queryKey] });
           });
 
-          console.log(`✅ [Cache Clear] Invalidated ${userQueries.length} user-specific query caches`);
+          console.log(`✅ [Cache Clear] Removed ${userQueries.length} user-specific query caches`);
           return;
         }
 
