@@ -608,7 +608,6 @@ Ejemplos válidos:
 |--------|----------|
 | **github** | Git operations, PR management, issue tracking |
 | **memory** | Session context persistence |
-| **railway** | Deployment operations |
 
 ### **Best Practices**
 
@@ -916,6 +915,84 @@ useMutation({
   onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] })
 });
 ```
+
+---
+
+## 🚀 Deployment Configuration
+
+### **Current Platform: Vercel** ⭐
+
+MyDetailArea is deployed on **Vercel** (previously Railway - now deprecated).
+
+#### **Deployment Flow**
+
+```bash
+# 1. Local Development
+npm run dev  # localhost:8080 (strict port)
+
+# 2. Production Deployment
+git commit -m "feat: new feature"
+git push origin main
+    ↓
+# Vercel detects push automatically
+    ↓
+# Vercel executes build process:
+npm install
+npm run build  # ← Generates dist/
+    ↓
+# Vercel serves dist/ folder
+    ↓
+✅ App live at production URL
+```
+
+#### **Configuration Files**
+
+| File | Purpose |
+|------|---------|
+| `vercel.json` | Vercel deployment configuration |
+| `.vercelignore` | Files excluded from deployment |
+| `server.cjs` | Custom Express server for production |
+| `package.json` | Build commands and Node version |
+
+#### **Build Settings (Vercel Dashboard)**
+
+```yaml
+Build Command: npm run build
+Output Directory: dist
+Install Command: npm install
+Node Version: 20.x (specified in package.json engines)
+Environment Variables:
+  - VITE_SUPABASE_URL
+  - VITE_SUPABASE_ANON_KEY
+  - (other env vars from .env.example)
+```
+
+#### **Important Notes**
+
+- ✅ **`dist/` is in `.gitignore`** - Correct! Vercel builds it on their servers
+- ✅ **Auto-deployment** - Every push to `main` triggers automatic deployment
+- ✅ **Preview deployments** - Pull requests get automatic preview URLs
+- ✅ **Zero-downtime** - Vercel handles blue-green deployments automatically
+- ❌ **Railway is legacy** - `railway.json`, `check-railway-status.sh`, `monitor-railway-deploy.sh` are deprecated files
+
+#### **Deployment Verification**
+
+After `git push origin main`:
+
+1. **Vercel Dashboard** - Check deployment status
+2. **Build logs** - Verify `npm run build` succeeded
+3. **Console check** - `🚀 MyDetailArea v{version} starting...`
+4. **Footer check** - Version display matches console
+5. **Cache verification** - Clear browser cache if needed (Ctrl+Shift+R)
+
+#### **Troubleshooting**
+
+| Issue | Solution |
+|-------|----------|
+| Version mismatch after deploy | Ensure `package.json` version updated before build |
+| Build fails on Vercel | Check build logs for missing env vars |
+| Old version cached | Hard refresh (Ctrl+Shift+R) or check Vercel deployment ID |
+| Port conflicts locally | Project uses strict port 8080 (see vite.config.ts) |
 
 ---
 
