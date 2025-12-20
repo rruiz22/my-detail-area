@@ -138,13 +138,16 @@ export function cachePermissions(user: EnhancedUserGranular): void {
  * Validates user ID to prevent cross-user cache leaks
  *
  * @param userId - User ID to validate against cache
+ * @param silent - If true, suppress "no cache found" log (useful during initial render with 36+ simultaneous checks)
  * @returns Cached permissions or null if not found/invalid
  */
-export function getCachedPermissions(userId: string): EnhancedUserGranular | null {
+export function getCachedPermissions(userId: string, silent = false): EnhancedUserGranular | null {
   try {
     const cached = localStorage.getItem(CACHE_KEY);
     if (!cached) {
-      console.log('📦 No permission cache found');
+      if (!silent) {
+        console.log('📦 No permission cache found');
+      }
       return null;
     }
 

@@ -841,14 +841,15 @@ export const usePermissions = () => {
 
       return userData;
     },
-    enabled: !!user && !!profileData && !isLoadingProfile,
+    enabled: !!user && !!profileData, // Start loading as soon as profileData is available (parallel loading)
     // ✅ PHASE 2.2: Load from localStorage cache for instant initial render
     initialData: () => {
       if (!user?.id) return undefined;
 
       // 🔒 CRITICAL FIX: Validate userId BEFORE attempting to load cache
       // This prevents race conditions where cache from previous user is used
-      const cached = getCachedPermissions(user.id);
+      // Silent mode: suppress logs during initial render (36+ components call this simultaneously)
+      const cached = getCachedPermissions(user.id, true);
 
       if (!cached) {
         return undefined; // No cache - will fetch fresh data
