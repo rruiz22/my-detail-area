@@ -29,7 +29,7 @@ interface SerializedPermissions {
   version: number;
 }
 
-const CACHE_VERSION = 6;  // 🆕 INCREMENTED: Force cache invalidation after RPC function recreation and fallback fixes
+const CACHE_VERSION = 7;  // 🆕 INCREMENTED: Force cache invalidation after fixing logout/login cache poisoning bug
 const CACHE_KEY = 'permissions_cache_v1';
 const CACHE_TTL = 30 * 60 * 1000; // 30 minutes (PHASE 2 OPTIMIZATION: doubled from 15min to reduce refetches)
 const CACHE_STALE_THRESHOLD = 0.8; // Pre-expiration refresh at 80% TTL (24 minutes)
@@ -159,6 +159,14 @@ export function getCachedPermissions(userId: string): EnhancedUserGranular | nul
 
     const deserialized = deserializePermissions(parsed);
 
+
+    // 🛡️ CAPA 2: Validate cache has valid data for regular users
+    // If cache has empty custom_roles for a non-admin user, it's likely corrupted
+    if (deserialized && deserialized.custom_roles.length === 0 && !deserialized.is_system_admin && !deserialized.is_supermanager) {
+      console.warn('⚠️ Cache has empty custom_roles for regular user - invalidating corrupted cache');
+      clearPermissionsCache();
+      return null; // Force fresh fetch
+    }
     if (deserialized) {
       const cacheAge = Math.round((Date.now() - parsed.cached_at) / 1000);
       console.log(`⚡ Permissions loaded from cache (age: ${cacheAge}s)`);
