@@ -29,7 +29,7 @@ interface SerializedPermissions {
   version: number;
 }
 
-const CACHE_VERSION = 7;  // 🆕 INCREMENTED: Force cache invalidation after fixing logout/login cache poisoning bug
+const CACHE_VERSION = 8;  // 🆕 v8: Fixed race condition where user_profile_permissions was not invalidated on logout
 const CACHE_KEY = 'permissions_cache_v1';
 const CACHE_TTL = 30 * 60 * 1000; // 30 minutes (PHASE 2 OPTIMIZATION: doubled from 15min to reduce refetches)
 const CACHE_STALE_THRESHOLD = 0.8; // Pre-expiration refresh at 80% TTL (24 minutes)

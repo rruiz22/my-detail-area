@@ -275,6 +275,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           const userQueries = [
             'user-permissions',
             'user_profile',
+            'user_profile_permissions',  // 🛡️ CRITICAL: Added to fix race condition on login
             'dealer-memberships',
             'user-dealerships',
             'user-roles',
