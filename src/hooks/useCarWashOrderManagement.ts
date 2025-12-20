@@ -202,6 +202,7 @@ export const useCarWashOrderManagement = () => {
       if (error) throw error;
 
       // Fetch related data in parallel for better performance
+      // 🔧 FIX: Use RPC function for profiles to bypass RLS caching issues
       const [
         { data: dealerships, error: dealershipsError },
         { data: dealerGroups, error: groupsError },
@@ -209,7 +210,7 @@ export const useCarWashOrderManagement = () => {
       ] = await Promise.all([
         supabase.from('dealerships').select('id, name'),
         supabase.from('dealer_groups').select('id, name'),
-        supabase.from('profiles').select('id, first_name, last_name, email')
+        supabase.rpc('get_dealer_user_profiles')
       ]);
 
       if (dealershipsError) {

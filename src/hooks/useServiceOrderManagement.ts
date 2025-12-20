@@ -246,9 +246,10 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
 
       // OPTIMIZATION: Use orderEnrichment service for DRY, type-safe, O(1) lookups
       // Benefits: Single source of truth, better maintainability, consistent across order types
+      // 🔧 FIX: Use RPC function for profiles to bypass RLS caching issues
       const [dealershipsResult, profilesResult, groupsResult] = await Promise.all([
         supabase.from('dealerships').select('id, name, city, state'),
-        supabase.from('profiles').select('id, first_name, last_name, email'),
+        supabase.rpc('get_dealer_user_profiles'),
         supabase.from('dealer_groups').select('id, name')
       ]);
 
