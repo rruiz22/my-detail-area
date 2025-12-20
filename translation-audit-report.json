@@ -1,8 +1,8 @@
 {
   "scannedFiles": 968,
-  "totalStrings": 10311,
+  "totalStrings": 10313,
   "hardcodedStrings": 2212,
-  "translatedStrings": 8099,
+  "translatedStrings": 8101,
   "issues": {
     "critical": [
       {
@@ -40611,272 +40611,292 @@
         "hardcodedStrings": [
           {
             "text": "ST-001",
-            "line": 507,
-            "context": "506: className=\"border-input bg-background uppercase\"\n507: placeholder=\"ST-001\"\n508: />"
+            "line": 528,
+            "context": "527: className=\"border-input bg-background uppercase\"\n528: placeholder=\"ST-001\"\n529: />"
           },
           {
             "text": ", error);\n      const errorMessage = error?.message || t(",
-            "line": 373,
-            "context": "372: // Keep modal open and show error\n373: logger.error('Submit error:', error);\n374: const errorMessage = error?.message || t('car_wash_orders.save_failed');"
+            "line": 388,
+            "context": "387: // Keep modal open and show error\n388: logger.error('Submit error:', error);\n389: const errorMessage = error?.message || t('car_wash_orders.save_failed');"
           }
         ],
         "translationCalls": [
           {
             "key": "car_wash_orders.max_one_service",
-            "line": 299,
+            "line": 303,
             "exists": true
           },
           {
             "key": "validation.option_required",
-            "line": 361,
+            "line": 374,
             "exists": true
           },
           {
             "key": "car_wash_orders.save_failed",
-            "line": 374,
+            "line": 389,
             "exists": false
           },
           {
             "key": "car_wash_orders.edit_order",
-            "line": 390,
+            "line": 409,
             "exists": true
           },
           {
             "key": "car_wash_orders.quick_car_wash_order",
-            "line": 390,
+            "line": 409,
             "exists": true
           },
           {
             "key": "car_wash_orders.waiter_priority",
-            "line": 394,
+            "line": 413,
             "exists": true
           },
           {
             "key": "car_wash_orders.modal_description_edit",
-            "line": 399,
+            "line": 418,
             "exists": false
           },
           {
             "key": "car_wash_orders.modal_description_create",
-            "line": 399,
+            "line": 418,
             "exists": false
           },
           {
             "key": "car_wash_orders.dealership",
-            "line": 425,
+            "line": 444,
             "exists": true
           },
           {
             "key": "car_wash_orders.dealership",
-            "line": 431,
+            "line": 450,
             "exists": true
           },
           {
             "key": "dealerships.auto_selected",
-            "line": 434,
+            "line": 453,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 444,
-            "exists": true
-          },
-          {
-            "key": "car_wash_orders.select_dealership",
-            "line": 444,
-            "exists": true
-          },
-          {
-            "key": "orders.vehicleInfo",
             "line": 463,
             "exists": true
           },
           {
+            "key": "car_wash_orders.select_dealership",
+            "line": 463,
+            "exists": true
+          },
+          {
+            "key": "orders.vehicleInfo",
+            "line": 482,
+            "exists": true
+          },
+          {
             "key": "orders.vin",
-            "line": 469,
+            "line": 488,
             "exists": true
           },
           {
             "key": "car_wash_orders.decoded",
-            "line": 474,
+            "line": 493,
             "exists": true
           },
           {
             "key": "car_wash_orders.characters_remaining",
-            "line": 494,
+            "line": 514,
             "exists": false
           },
           {
             "key": "car_wash_orders.stock_number",
-            "line": 501,
+            "line": 521,
             "exists": true
           },
           {
             "key": "car_wash_orders.vehicle_display",
-            "line": 512,
+            "line": 533,
             "exists": true
           },
           {
             "key": "car_wash_orders.auto_populated",
-            "line": 531,
+            "line": 553,
             "exists": true
           },
           {
             "key": "car_wash.service_date",
-            "line": 538,
+            "line": 560,
             "exists": true
           },
           {
             "key": "car_wash.select_service_date",
-            "line": 542,
+            "line": 564,
             "exists": true
           },
           {
             "key": "car_wash.service_date_help",
-            "line": 547,
+            "line": 569,
             "exists": true
           },
           {
             "key": "orders.services",
-            "line": 561,
+            "line": 583,
             "exists": true
           },
           {
             "key": "orders.status",
-            "line": 568,
+            "line": 590,
             "exists": true
           },
           {
             "key": "common.status.pending",
-            "line": 577,
+            "line": 600,
             "exists": true
           },
           {
             "key": "common.status.in_progress",
-            "line": 578,
+            "line": 601,
             "exists": true
           },
           {
             "key": "common.status.completed",
-            "line": 579,
+            "line": 602,
             "exists": true
           },
           {
             "key": "common.status.cancelled",
-            "line": 580,
+            "line": 603,
             "exists": true
           },
           {
             "key": "car_wash_orders.waiter_priority",
-            "line": 596,
-            "exists": true
-          },
-          {
-            "key": "orders.services",
-            "line": 604,
-            "exists": true
-          },
-          {
-            "key": "orders.available",
-            "line": 608,
-            "exists": true
-          },
-          {
-            "key": "orders.selected",
-            "line": 613,
-            "exists": true
-          },
-          {
-            "key": "car_wash_orders.one_service_limit",
             "line": 620,
             "exists": true
           },
           {
+            "key": "orders.services",
+            "line": 628,
+            "exists": true
+          },
+          {
+            "key": "orders.available",
+            "line": 632,
+            "exists": true
+          },
+          {
+            "key": "orders.selected",
+            "line": 637,
+            "exists": true
+          },
+          {
+            "key": "car_wash_orders.one_service_limit",
+            "line": 644,
+            "exists": true
+          },
+          {
             "key": "orders.selectDealershipFirst",
-            "line": 626,
+            "line": 650,
             "exists": true
           },
           {
             "key": "common.loading",
-            "line": 631,
+            "line": 655,
             "exists": true
           },
           {
             "key": "orders.noServicesAvailable",
-            "line": 639,
+            "line": 663,
             "exists": true
           },
           {
             "key": "services.minutes",
-            "line": 671,
+            "line": 695,
             "exists": true
           },
           {
             "key": "validation.option_required",
-            "line": 688,
+            "line": 712,
             "exists": true
           },
           {
             "key": "orders.total",
-            "line": 699,
+            "line": 723,
             "exists": true
           },
           {
             "key": "orders.servicesSelected",
-            "line": 708,
-            "exists": true
-          },
-          {
-            "key": "orders.notes",
-            "line": 720,
-            "exists": true
-          },
-          {
-            "key": "orders.notes",
-            "line": 725,
-            "exists": true
-          },
-          {
-            "key": "car_wash_orders.notes_placeholder",
             "line": 732,
             "exists": true
           },
           {
-            "key": "common.action_buttons.cancel",
-            "line": 805,
+            "key": "orders.notes",
+            "line": 744,
             "exists": true
           },
           {
+            "key": "orders.notes",
+            "line": 749,
+            "exists": true
+          },
+          {
+            "key": "car_wash_orders.notes_placeholder",
+            "line": 757,
+            "exists": true
+          },
+          {
+            "key": "common.action_buttons.cancel",
+            "line": 830,
+            "exists": true
+          },
+          {
+            "key": "car_wash_orders.updating",
+            "line": 840,
+            "exists": false
+          },
+          {
+            "key": "car_wash_orders.creating",
+            "line": 840,
+            "exists": false
+          },
+          {
             "key": "common.action_buttons.update",
-            "line": 813,
+            "line": 845,
             "exists": true
           },
           {
             "key": "common.action_buttons.create",
-            "line": 813,
+            "line": 845,
             "exists": true
           }
         ],
         "missingKeys": [
           {
             "key": "car_wash_orders.save_failed",
-            "line": 374,
-            "context": "373: logger.error('Submit error:', error);\n374: const errorMessage = error?.message || t('car_wash_orders.save_failed');\n375: setSubmitError(errorMessage);"
+            "line": 389,
+            "context": "388: logger.error('Submit error:', error);\n389: const errorMessage = error?.message || t('car_wash_orders.save_failed');\n390: setSubmitError(errorMessage);"
           },
           {
             "key": "car_wash_orders.modal_description_edit",
-            "line": 399,
-            "context": "398: <DialogDescription className=\"sr-only\" id=\"carwash-order-modal-description\">\n399: {order ? t('car_wash_orders.modal_description_edit') : t('car_wash_orders.modal_description_create')}\n400: </DialogDescription>"
+            "line": 418,
+            "context": "417: <DialogDescription className=\"sr-only\" id=\"carwash-order-modal-description\">\n418: {order ? t('car_wash_orders.modal_description_edit') : t('car_wash_orders.modal_description_create')}\n419: </DialogDescription>"
           },
           {
             "key": "car_wash_orders.modal_description_create",
-            "line": 399,
-            "context": "398: <DialogDescription className=\"sr-only\" id=\"carwash-order-modal-description\">\n399: {order ? t('car_wash_orders.modal_description_edit') : t('car_wash_orders.modal_description_create')}\n400: </DialogDescription>"
+            "line": 418,
+            "context": "417: <DialogDescription className=\"sr-only\" id=\"carwash-order-modal-description\">\n418: {order ? t('car_wash_orders.modal_description_edit') : t('car_wash_orders.modal_description_create')}\n419: </DialogDescription>"
           },
           {
             "key": "car_wash_orders.characters_remaining",
-            "line": 494,
-            "context": "493: <div className=\"text-sm text-muted-foreground mt-1\">\n494: {t('car_wash_orders.characters_remaining', { count: 17 - formData.vehicleVin.length })}\n495: </div>"
+            "line": 514,
+            "context": "513: <div className=\"text-sm text-muted-foreground mt-1\">\n514: {t('car_wash_orders.characters_remaining', { count: 17 - formData.vehicleVin.length })}\n515: </div>"
+          },
+          {
+            "key": "car_wash_orders.updating",
+            "line": 840,
+            "context": "839: <Loader2 className=\"w-4 h-4 mr-2 animate-spin\" />\n840: {order ? t('car_wash_orders.updating') : t('car_wash_orders.creating')}\n841: </>"
+          },
+          {
+            "key": "car_wash_orders.creating",
+            "line": 840,
+            "context": "839: <Loader2 className=\"w-4 h-4 mr-2 animate-spin\" />\n840: {order ? t('car_wash_orders.updating') : t('car_wash_orders.creating')}\n841: </>"
           }
         ],
         "coverage": 96,
@@ -51583,325 +51603,325 @@
         "translationCalls": [
           {
             "key": "reports.invoices.email.error",
-            "line": 176,
+            "line": 178,
             "exists": false
           },
           {
             "key": "reports.invoices.email.no_recipients",
-            "line": 177,
+            "line": 179,
             "exists": false
           },
           {
             "key": "reports.invoices.email.error",
-            "line": 185,
+            "line": 187,
             "exists": false
           },
           {
             "key": "reports.invoices.email.no_attachments",
-            "line": 186,
+            "line": 188,
             "exists": false
           },
           {
             "key": "reports.invoices.email.success",
-            "line": 206,
+            "line": 208,
             "exists": false
           },
           {
             "key": "reports.invoices.email.sent_successfully",
-            "line": 207,
+            "line": 209,
             "exists": false
           },
           {
             "key": "reports.invoices.email.error",
-            "line": 214,
+            "line": 219,
             "exists": false
           },
           {
             "key": "reports.invoices.email.send_failed",
-            "line": 215,
+            "line": 220,
             "exists": false
           },
           {
             "key": "reports.invoices.email.send_multiple",
-            "line": 232,
+            "line": 237,
             "exists": false
           },
           {
             "key": "reports.invoices.email.send_multiple_desc",
-            "line": 235,
+            "line": 240,
             "exists": false
           },
           {
             "key": "reports.invoices.email.invoice_summary",
-            "line": 246,
+            "line": 251,
             "exists": false
           },
           {
             "key": "reports.invoices.email.selected_invoices",
-            "line": 253,
+            "line": 258,
             "exists": false
           },
           {
             "key": "reports.invoices.total",
-            "line": 265,
+            "line": 270,
             "exists": true
           },
           {
             "key": "reports.invoices.paid",
-            "line": 269,
+            "line": 274,
             "exists": true
           },
           {
             "key": "reports.invoices.due",
-            "line": 273,
+            "line": 278,
             "exists": true
           },
           {
             "key": "reports.invoices.email.recipients",
-            "line": 285,
+            "line": 290,
             "exists": false
           },
           {
             "key": "reports.invoices.email.manage_contacts",
-            "line": 294,
+            "line": 299,
             "exists": false
           },
           {
             "key": "reports.invoices.email.default",
-            "line": 316,
+            "line": 321,
             "exists": false
           },
           {
             "key": "reports.invoices.email.additional_recipients",
-            "line": 327,
+            "line": 332,
             "exists": false
           },
           {
             "key": "reports.invoices.email.enter_email",
-            "line": 333,
+            "line": 338,
             "exists": false
           },
           {
             "key": "reports.invoices.email.cc",
-            "line": 374,
-            "exists": false
-          },
-          {
-            "key": "reports.invoices.email.cc_placeholder",
             "line": 379,
             "exists": false
           },
           {
-            "key": "reports.invoices.email.bcc",
-            "line": 386,
+            "key": "reports.invoices.email.cc_placeholder",
+            "line": 384,
             "exists": false
           },
           {
-            "key": "reports.invoices.email.bcc_placeholder",
+            "key": "reports.invoices.email.bcc",
             "line": 391,
             "exists": false
           },
           {
+            "key": "reports.invoices.email.bcc_placeholder",
+            "line": 396,
+            "exists": false
+          },
+          {
             "key": "reports.invoices.email.subject",
-            "line": 403,
+            "line": 408,
             "exists": false
           },
           {
             "key": "reports.invoices.email.message",
-            "line": 415,
+            "line": 420,
             "exists": false
           },
           {
             "key": "reports.invoices.email.attachments",
-            "line": 429,
+            "line": 434,
             "exists": false
           },
           {
             "key": "reports.invoices.email.include_pdf",
-            "line": 440,
+            "line": 445,
             "exists": false
           },
           {
             "key": "reports.invoices.email.include_excel",
-            "line": 451,
+            "line": 456,
             "exists": false
           },
           {
             "key": "reports.invoices.email.estimated_size",
-            "line": 461,
+            "line": 466,
             "exists": false
           },
           {
             "key": "reports.invoices.email.total_recipients",
-            "line": 471,
+            "line": 476,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 487,
+            "line": 492,
             "exists": true
           },
           {
             "key": "reports.invoices.email.sending",
-            "line": 501,
+            "line": 506,
             "exists": false
           },
           {
             "key": "reports.invoices.email.send",
-            "line": 506,
+            "line": 511,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "reports.invoices.email.error",
-            "line": 176,
-            "context": "175: toast({\n176: title: t('reports.invoices.email.error'),\n177: description: t('reports.invoices.email.no_recipients'),"
+            "line": 178,
+            "context": "177: toast({\n178: title: t('reports.invoices.email.error'),\n179: description: t('reports.invoices.email.no_recipients'),"
           },
           {
             "key": "reports.invoices.email.no_recipients",
-            "line": 177,
-            "context": "176: title: t('reports.invoices.email.error'),\n177: description: t('reports.invoices.email.no_recipients'),\n178: variant: 'destructive',"
+            "line": 179,
+            "context": "178: title: t('reports.invoices.email.error'),\n179: description: t('reports.invoices.email.no_recipients'),\n180: variant: 'destructive',"
           },
           {
             "key": "reports.invoices.email.error",
-            "line": 185,
-            "context": "184: toast({\n185: title: t('reports.invoices.email.error'),\n186: description: t('reports.invoices.email.no_attachments'),"
+            "line": 187,
+            "context": "186: toast({\n187: title: t('reports.invoices.email.error'),\n188: description: t('reports.invoices.email.no_attachments'),"
           },
           {
             "key": "reports.invoices.email.no_attachments",
-            "line": 186,
-            "context": "185: title: t('reports.invoices.email.error'),\n186: description: t('reports.invoices.email.no_attachments'),\n187: variant: 'destructive',"
+            "line": 188,
+            "context": "187: title: t('reports.invoices.email.error'),\n188: description: t('reports.invoices.email.no_attachments'),\n189: variant: 'destructive',"
           },
           {
             "key": "reports.invoices.email.success",
-            "line": 206,
-            "context": "205: toast({\n206: title: t('reports.invoices.email.success'),\n207: description: t('reports.invoices.email.sent_successfully', { count: invoices.length }),"
+            "line": 208,
+            "context": "207: toast({\n208: title: t('reports.invoices.email.success'),\n209: description: t('reports.invoices.email.sent_successfully', { count: invoices.length }),"
           },
           {
             "key": "reports.invoices.email.sent_successfully",
-            "line": 207,
-            "context": "206: title: t('reports.invoices.email.success'),\n207: description: t('reports.invoices.email.sent_successfully', { count: invoices.length }),\n208: });"
+            "line": 209,
+            "context": "208: title: t('reports.invoices.email.success'),\n209: description: t('reports.invoices.email.sent_successfully', { count: invoices.length }),\n210: });"
           },
           {
             "key": "reports.invoices.email.error",
-            "line": 214,
-            "context": "213: toast({\n214: title: t('reports.invoices.email.error'),\n215: description: t('reports.invoices.email.send_failed'),"
+            "line": 219,
+            "context": "218: toast({\n219: title: t('reports.invoices.email.error'),\n220: description: t('reports.invoices.email.send_failed'),"
           },
           {
             "key": "reports.invoices.email.send_failed",
-            "line": 215,
-            "context": "214: title: t('reports.invoices.email.error'),\n215: description: t('reports.invoices.email.send_failed'),\n216: variant: 'destructive',"
+            "line": 220,
+            "context": "219: title: t('reports.invoices.email.error'),\n220: description: t('reports.invoices.email.send_failed'),\n221: variant: 'destructive',"
           },
           {
             "key": "reports.invoices.email.send_multiple",
-            "line": 232,
-            "context": "231: <Mail className=\"h-5 w-5\" />\n232: {t('reports.invoices.email.send_multiple', { count: invoices.length })}\n233: </DialogTitle>"
+            "line": 237,
+            "context": "236: <Mail className=\"h-5 w-5\" />\n237: {t('reports.invoices.email.send_multiple', { count: invoices.length })}\n238: </DialogTitle>"
           },
           {
             "key": "reports.invoices.email.send_multiple_desc",
-            "line": 235,
-            "context": "234: <DialogDescription>\n235: {t('reports.invoices.email.send_multiple_desc')}\n236: </DialogDescription>"
+            "line": 240,
+            "context": "239: <DialogDescription>\n240: {t('reports.invoices.email.send_multiple_desc')}\n241: </DialogDescription>"
           },
           {
             "key": "reports.invoices.email.invoice_summary",
-            "line": 246,
-            "context": "245: <FileText className=\"h-4 w-4\" />\n246: {t('reports.invoices.email.invoice_summary')}\n247: </CardTitle>"
+            "line": 251,
+            "context": "250: <FileText className=\"h-4 w-4\" />\n251: {t('reports.invoices.email.invoice_summary')}\n252: </CardTitle>"
           },
           {
             "key": "reports.invoices.email.selected_invoices",
-            "line": 253,
-            "context": "252: <p className=\"text-sm text-muted-foreground\">\n253: {t('reports.invoices.email.selected_invoices')}\n254: </p>"
+            "line": 258,
+            "context": "257: <p className=\"text-sm text-muted-foreground\">\n258: {t('reports.invoices.email.selected_invoices')}\n259: </p>"
           },
           {
             "key": "reports.invoices.email.recipients",
-            "line": 285,
-            "context": "284: <Label className=\"text-base font-semibold\">\n285: {t('reports.invoices.email.recipients')}\n286: </Label>"
+            "line": 290,
+            "context": "289: <Label className=\"text-base font-semibold\">\n290: {t('reports.invoices.email.recipients')}\n291: </Label>"
           },
           {
             "key": "reports.invoices.email.manage_contacts",
-            "line": 294,
-            "context": "293: <Settings className=\"h-4 w-4 mr-2\" />\n294: {t('reports.invoices.email.manage_contacts')}\n295: </Button>"
+            "line": 299,
+            "context": "298: <Settings className=\"h-4 w-4 mr-2\" />\n299: {t('reports.invoices.email.manage_contacts')}\n300: </Button>"
           },
           {
             "key": "reports.invoices.email.default",
-            "line": 316,
-            "context": "315: <Badge variant=\"secondary\" className=\"text-xs\">\n316: {t('reports.invoices.email.default')}\n317: </Badge>"
+            "line": 321,
+            "context": "320: <Badge variant=\"secondary\" className=\"text-xs\">\n321: {t('reports.invoices.email.default')}\n322: </Badge>"
           },
           {
             "key": "reports.invoices.email.additional_recipients",
-            "line": 327,
-            "context": "326: <Label htmlFor=\"custom-email\" className=\"text-sm\">\n327: {t('reports.invoices.email.additional_recipients')}\n328: </Label>"
+            "line": 332,
+            "context": "331: <Label htmlFor=\"custom-email\" className=\"text-sm\">\n332: {t('reports.invoices.email.additional_recipients')}\n333: </Label>"
           },
           {
             "key": "reports.invoices.email.enter_email",
-            "line": 333,
-            "context": "332: type=\"email\"\n333: placeholder={t('reports.invoices.email.enter_email')}\n334: value={customEmail}"
+            "line": 338,
+            "context": "337: type=\"email\"\n338: placeholder={t('reports.invoices.email.enter_email')}\n339: value={customEmail}"
           },
           {
             "key": "reports.invoices.email.cc",
-            "line": 374,
-            "context": "373: <Label htmlFor=\"cc\" className=\"text-sm\">\n374: {t('reports.invoices.email.cc')}\n375: </Label>"
+            "line": 379,
+            "context": "378: <Label htmlFor=\"cc\" className=\"text-sm\">\n379: {t('reports.invoices.email.cc')}\n380: </Label>"
           },
           {
             "key": "reports.invoices.email.cc_placeholder",
-            "line": 379,
-            "context": "378: type=\"text\"\n379: placeholder={t('reports.invoices.email.cc_placeholder')}\n380: value={cc}"
+            "line": 384,
+            "context": "383: type=\"text\"\n384: placeholder={t('reports.invoices.email.cc_placeholder')}\n385: value={cc}"
           },
           {
             "key": "reports.invoices.email.bcc",
-            "line": 386,
-            "context": "385: <Label htmlFor=\"bcc\" className=\"text-sm\">\n386: {t('reports.invoices.email.bcc')}\n387: </Label>"
+            "line": 391,
+            "context": "390: <Label htmlFor=\"bcc\" className=\"text-sm\">\n391: {t('reports.invoices.email.bcc')}\n392: </Label>"
           },
           {
             "key": "reports.invoices.email.bcc_placeholder",
-            "line": 391,
-            "context": "390: type=\"text\"\n391: placeholder={t('reports.invoices.email.bcc_placeholder')}\n392: value={bcc}"
+            "line": 396,
+            "context": "395: type=\"text\"\n396: placeholder={t('reports.invoices.email.bcc_placeholder')}\n397: value={bcc}"
           },
           {
             "key": "reports.invoices.email.subject",
-            "line": 403,
-            "context": "402: <Label htmlFor=\"subject\" className=\"text-sm font-semibold\">\n403: {t('reports.invoices.email.subject')}\n404: </Label>"
+            "line": 408,
+            "context": "407: <Label htmlFor=\"subject\" className=\"text-sm font-semibold\">\n408: {t('reports.invoices.email.subject')}\n409: </Label>"
           },
           {
             "key": "reports.invoices.email.message",
-            "line": 415,
-            "context": "414: <Label htmlFor=\"message\" className=\"text-sm font-semibold\">\n415: {t('reports.invoices.email.message')}\n416: </Label>"
+            "line": 420,
+            "context": "419: <Label htmlFor=\"message\" className=\"text-sm font-semibold\">\n420: {t('reports.invoices.email.message')}\n421: </Label>"
           },
           {
             "key": "reports.invoices.email.attachments",
-            "line": 429,
-            "context": "428: <Label className=\"text-sm font-semibold\">\n429: {t('reports.invoices.email.attachments')}\n430: </Label>"
+            "line": 434,
+            "context": "433: <Label className=\"text-sm font-semibold\">\n434: {t('reports.invoices.email.attachments')}\n435: </Label>"
           },
           {
             "key": "reports.invoices.email.include_pdf",
-            "line": 440,
-            "context": "439: <FileText className=\"h-4 w-4 text-red-500\" />\n440: {t('reports.invoices.email.include_pdf')}\n441: </Label>"
+            "line": 445,
+            "context": "444: <FileText className=\"h-4 w-4 text-red-500\" />\n445: {t('reports.invoices.email.include_pdf')}\n446: </Label>"
           },
           {
             "key": "reports.invoices.email.include_excel",
-            "line": 451,
-            "context": "450: <FileSpreadsheet className=\"h-4 w-4 text-green-500\" />\n451: {t('reports.invoices.email.include_excel')}\n452: </Label>"
+            "line": 456,
+            "context": "455: <FileSpreadsheet className=\"h-4 w-4 text-green-500\" />\n456: {t('reports.invoices.email.include_excel')}\n457: </Label>"
           },
           {
             "key": "reports.invoices.email.estimated_size",
-            "line": 461,
-            "context": "460: <span className=\"text-xs text-muted-foreground\">\n461: {t('reports.invoices.email.estimated_size', { size: sizeInMB })}\n462: </span>"
+            "line": 466,
+            "context": "465: <span className=\"text-xs text-muted-foreground\">\n466: {t('reports.invoices.email.estimated_size', { size: sizeInMB })}\n467: </span>"
           },
           {
             "key": "reports.invoices.email.total_recipients",
-            "line": 471,
-            "context": "470: <span className=\"text-sm font-medium\">\n471: {t('reports.invoices.email.total_recipients')}:\n472: </span>"
+            "line": 476,
+            "context": "475: <span className=\"text-sm font-medium\">\n476: {t('reports.invoices.email.total_recipients')}:\n477: </span>"
           },
           {
             "key": "reports.invoices.email.sending",
-            "line": 501,
-            "context": "500: <Loader2 className=\"h-4 w-4 mr-2 animate-spin\" />\n501: {t('reports.invoices.email.sending')}\n502: </>"
+            "line": 506,
+            "context": "505: <Loader2 className=\"h-4 w-4 mr-2 animate-spin\" />\n506: {t('reports.invoices.email.sending')}\n507: </>"
           },
           {
             "key": "reports.invoices.email.send",
-            "line": 506,
-            "context": "505: <Mail className=\"h-4 w-4 mr-2\" />\n506: {t('reports.invoices.email.send')}\n507: </>"
+            "line": 511,
+            "context": "510: <Mail className=\"h-4 w-4 mr-2\" />\n511: {t('reports.invoices.email.send')}\n512: </>"
           }
         ],
         "coverage": 100,
@@ -74300,7 +74320,7 @@
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3367 translation keys are referenced but missing",
+      "description": "3369 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
       "estimatedEffort": "169 hours"
     }
