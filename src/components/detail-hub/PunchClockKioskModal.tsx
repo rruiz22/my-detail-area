@@ -1112,12 +1112,51 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     try {
       // Step 1: Load enrolled employees and initialize face matcher
       console.log('[FaceScan] Loading enrolled employees...');
-      const { data: enrolledEmployees, error: loadError } = await supabase
-        .from('detail_hub_employees')
-        .select('id, first_name, last_name, face_descriptor')
-        .eq('dealership_id', selectedDealerId)
-        .eq('status', 'active')
-        .not('face_descriptor', 'is', null);
+
+      // Load employees from both primary dealership AND active assignments
+      // This allows multi-dealer employees to be recognized in all their assigned kiosks
+      const [primaryResult, assignmentResult] = await Promise.all([
+        // Query 1: Employees with primary dealership
+        supabase
+          .from('detail_hub_employees')
+          .select('id, first_name, last_name, face_descriptor')
+          .eq('dealership_id', selectedDealerId)
+          .eq('status', 'active')
+          .not('face_descriptor', 'is', null),
+
+        // Query 2: Employees with active assignments to this dealership
+        supabase
+          .from('detail_hub_employees')
+          .select(`
+            id,
+            first_name,
+            last_name,
+            face_descriptor,
+            detail_hub_employee_assignments!inner (
+              dealership_id,
+              status
+            )
+          `)
+          .eq('detail_hub_employee_assignments.dealership_id', selectedDealerId)
+          .eq('detail_hub_employee_assignments.status', 'active')
+          .eq('status', 'active')
+          .not('face_descriptor', 'is', null)
+      ]);
+
+      // Check for errors in either query
+      const loadError = primaryResult.error || assignmentResult.error;
+
+      // Combine results and remove duplicates
+      const allEmployees = [...(primaryResult.data || []), ...(assignmentResult.data || [])];
+      const enrolledEmployees = Array.from(
+        new Map(allEmployees.map(emp => [emp.id, emp])).values()
+      );
+
+      console.log('[FaceScan] Loaded employees:', {
+        fromPrimary: primaryResult.data?.length || 0,
+        fromAssignments: assignmentResult.data?.length || 0,
+        totalUnique: enrolledEmployees.length
+      });
 
       if (loadError) {
         console.error('[FaceScan] Error loading enrolled employees:', loadError);
