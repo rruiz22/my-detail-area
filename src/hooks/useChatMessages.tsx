@@ -124,10 +124,9 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
     if (uncachedIds.length === 0) return;
 
     try {
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id, first_name, last_name, email, avatar_url, avatar_seed')
-        .in('id', uncachedIds);
+      // Use RPC to bypass RLS caching issue
+      const { data: allProfiles } = await supabase.rpc('get_dealer_user_profiles');
+      const profiles = allProfiles?.filter(p => uncachedIds.includes(p.id));
 
       if (profiles) {
         profiles.forEach(profile => {
@@ -287,10 +286,9 @@ export const useChatMessages = (conversationId: string): UseChatMessagesReturn =
         let senderProfiles: Record<string, any> = {};
 
         if (userIds.length > 0) {
-          const { data: profiles } = await supabase
-            .from('profiles')
-            .select('id, first_name, last_name, email, avatar_url, avatar_seed')
-            .in('id', userIds);
+          // Use RPC to bypass RLS caching issue
+          const { data: allProfiles } = await supabase.rpc('get_dealer_user_profiles');
+          const profiles = allProfiles?.filter(p => userIds.includes(p.id));
 
           if (profiles) {
             senderProfiles = profiles.reduce((acc, profile) => {

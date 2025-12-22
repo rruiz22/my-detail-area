@@ -43696,169 +43696,169 @@
         "hardcodedStrings": [
           {
             "text": ", error);\n      setError(",
-            "line": 453,
-            "context": "452: } catch (error) {\n453: console.error('💥 [RecentActivity] Critical error:', error);\n454: setError('Failed to load activity. Please try again.');"
+            "line": 452,
+            "context": "451: } catch (error) {\n452: console.error('💥 [RecentActivity] Critical error:', error);\n453: setError('Failed to load activity. Please try again.');"
           }
         ],
         "translationCalls": [
           {
             "key": "recent_activity.user.system",
-            "line": 311,
+            "line": 310,
             "exists": true
           },
           {
             "key": "recent_activity.user.team_member",
-            "line": 313,
+            "line": 312,
             "exists": true
           },
           {
             "key": "recent_activity.user.team_member",
-            "line": 316,
+            "line": 315,
             "exists": true
           },
           {
             "key": "recent_activity.actions.replied_to_internal_note",
-            "line": 330,
+            "line": 329,
             "exists": true
           },
           {
             "key": "recent_activity.actions.added_internal_note",
-            "line": 331,
+            "line": 330,
             "exists": true
           },
           {
             "key": "recent_activity.actions.replied_to_comment",
-            "line": 334,
+            "line": 333,
             "exists": true
           },
           {
             "key": "recent_activity.actions.added_comment",
-            "line": 335,
+            "line": 334,
             "exists": true
           },
           {
             "key": "recent_activity.actions.uploaded_file",
-            "line": 357,
+            "line": 356,
             "exists": true
           },
           {
             "key": "recent_activity.files.attached",
-            "line": 358,
+            "line": 357,
             "exists": true
           },
           {
             "key": "recent_activity.actions.order_created",
-            "line": 426,
+            "line": 425,
             "exists": true
           },
           {
             "key": "recent_activity.actions.initial_creation",
-            "line": 427,
+            "line": 426,
             "exists": true
           },
           {
             "key": "recent_activity.user.system",
-            "line": 428,
+            "line": 427,
             "exists": true
           },
           {
             "key": "recent_activity.time.just_now",
-            "line": 602,
+            "line": 601,
             "exists": true
           },
           {
             "key": "recent_activity.time.minutes_ago",
-            "line": 603,
+            "line": 602,
             "exists": true
           },
           {
             "key": "recent_activity.time.hours_ago",
-            "line": 604,
+            "line": 603,
             "exists": true
           },
           {
             "key": "recent_activity.time.days_ago",
-            "line": 605,
+            "line": 604,
             "exists": true
           },
           {
             "key": "recent_activity.title",
-            "line": 615,
+            "line": 614,
             "exists": true
           },
           {
             "key": "recent_activity.hide_debug",
-            "line": 627,
+            "line": 626,
             "exists": true
           },
           {
             "key": "recent_activity.show_debug",
-            "line": 627,
+            "line": 626,
             "exists": true
           },
           {
             "key": "recent_activity.debug_mode",
-            "line": 637,
+            "line": 636,
             "exists": true
           },
           {
             "key": "recent_activity.sources.comments",
-            "line": 638,
+            "line": 637,
             "exists": true
           },
           {
             "key": "recent_activity.sources.attachments",
-            "line": 639,
+            "line": 638,
             "exists": true
           },
           {
             "key": "recent_activity.sources.activity_log",
-            "line": 640,
+            "line": 639,
             "exists": true
           },
           {
             "key": "recent_activity.sources.order_data",
-            "line": 641,
+            "line": 640,
             "exists": true
           },
           {
             "key": "recent_activity.loading",
-            "line": 658,
+            "line": 657,
             "exists": true
           },
           {
             "key": "recent_activity.error_loading",
-            "line": 665,
+            "line": 664,
             "exists": true
           },
           {
             "key": "recent_activity.retry",
-            "line": 670,
+            "line": 669,
             "exists": true
           },
           {
             "key": "recent_activity.no_activity",
-            "line": 678,
+            "line": 677,
             "exists": true
           },
           {
             "key": "recent_activity.no_activity_description",
-            "line": 679,
+            "line": 678,
             "exists": true
           },
           {
             "key": "recent_activity.user.by",
-            "line": 735,
+            "line": 734,
             "exists": true
           },
           {
             "key": "recent_activity.last_activity",
-            "line": 749,
+            "line": 748,
             "exists": true
           },
           {
             "key": "recent_activity.none",
-            "line": 749,
+            "line": 748,
             "exists": true
           }
         ],

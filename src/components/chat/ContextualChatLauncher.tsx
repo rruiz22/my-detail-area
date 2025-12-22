@@ -63,11 +63,9 @@ export function ContextualChatLauncher({
 
       setLoadingUserInfo(true);
       try {
-        const { data: profile, error } = await supabase
-          .from('profiles')
-          .select('phone, email, first_name, last_name')
-          .eq('id', assignedUserId)
-          .single();
+        // Use RPC to bypass RLS caching issue
+        const { data: allProfiles, error } = await supabase.rpc('get_dealer_user_profiles');
+        const profile = allProfiles?.find(p => p.id === assignedUserId);
 
         if (profile && !error) {
           setAssignedUserPhone(profile.phone || '');
