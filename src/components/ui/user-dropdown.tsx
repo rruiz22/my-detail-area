@@ -15,7 +15,7 @@ import { usePermissions } from '@/hooks/usePermissions';
 import { clearAllCachesSelective } from '@/utils/cacheManagement';
 import { useQueryClient } from '@tanstack/react-query';
 import { Building2, LogOut, RefreshCw, Shield, User } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -73,6 +73,28 @@ export function UserDropdown() {
     if (enhancedUser?.custom_roles.some(role => role.role_name === 'dealer_manager')) return t('roles.dealer_manager');
     return t('roles.user');
   };
+
+  // Keyboard shortcut: Ctrl+Shift+R (or Cmd+Shift+R on Mac) for Quick Clear
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Detect Ctrl+Shift+R (Windows/Linux) or Cmd+Shift+R (Mac)
+      const isModifierPressed = event.ctrlKey || event.metaKey;
+      const isShiftPressed = event.shiftKey;
+      const isRKey = event.key === 'r' || event.key === 'R';
+
+      if (isModifierPressed && isShiftPressed && isRKey) {
+        event.preventDefault(); // Prevent browser's default refresh behavior
+        handleQuickClearClick();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup: Remove listener when component unmounts
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <DropdownMenu>
@@ -160,7 +182,12 @@ export function UserDropdown() {
         {/* Quick Clear - Auto Clear */}
         <DropdownMenuItem onClick={handleQuickClearClick} className="cursor-pointer text-emerald-600 focus:text-emerald-600">
           <RefreshCw className="mr-2 h-4 w-4" />
-          <span>{t('cache.quick_clear', 'Quick Clear')}</span>
+          <div className="flex items-center justify-between flex-1">
+            <span>{t('cache.quick_clear', 'Quick Clear')}</span>
+            <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+              <span className="text-xs">⌘</span>⇧R
+            </kbd>
+          </div>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
