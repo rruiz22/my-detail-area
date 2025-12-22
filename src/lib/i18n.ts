@@ -4,7 +4,7 @@ import Backend from 'i18next-http-backend';
 
 // 🔴 CRITICAL FIX: Use STATIC version from package.json instead of dynamic Date.now()
 // This allows proper cache validation and automatic invalidation on version bumps
-const APP_VERSION = '1.3.97'; // 🚀 v1.3.93: Fix permission cache poisoning on logout/login
+const APP_VERSION = '1.3.98'; // 🚀 v1.3.93: Fix permission cache poisoning on logout/login
 const TRANSLATION_VERSION = APP_VERSION; // Tied to app version for cache invalidation
 
 // 🎛️ FEATURE FLAG: Enable code splitting (set to false for rollback)
