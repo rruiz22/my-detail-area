@@ -60,11 +60,9 @@ export function useTeamPerformance(allowedOrderTypes?: string[]) {
         // Get unique user IDs
         const userIds = [...new Set(orders.map(o => o.created_by).filter(Boolean))];
 
-        // Fetch profiles for all users
-        const { data: profiles, error: profileError } = await supabase
-          .from('profiles')
-          .select('id, first_name, last_name, email')
-          .in('id', userIds);
+        // Fetch profiles for all users - Use RPC to bypass RLS caching issue
+        const { data: allProfiles, error: profileError } = await supabase.rpc('get_dealer_user_profiles');
+        const profiles = allProfiles?.filter(p => userIds.includes(p.id));
 
         if (profileError) {
           console.error('Error fetching profiles:', profileError);

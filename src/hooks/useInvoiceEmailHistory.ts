@@ -19,15 +19,11 @@ export const useInvoiceEmailHistory = (invoiceId: string) => {
       // Get unique user IDs
       const userIds = [...new Set(emailHistory.map(e => e.sent_by).filter(Boolean))];
 
-      // Fetch user data if there are any user IDs
+      // Fetch user data if there are any user IDs - Use RPC to bypass RLS caching issue
       let users: any[] = [];
       if (userIds.length > 0) {
-        const { data: userData } = await supabase
-          .from('profiles')
-          .select('id, first_name, last_name, email')
-          .in('id', userIds);
-
-        users = userData || [];
+        const { data: allProfiles } = await supabase.rpc('get_dealer_user_profiles');
+        users = allProfiles?.filter(p => userIds.includes(p.id)) || [];
       }
 
       // Map users to email history

@@ -284,10 +284,9 @@ export function RecentActivityBlock({ orderId }: RecentActivityBlockProps) {
 
       if (uniqueUserIds.length > 0) {
         try {
-          const { data: profiles, error: profileError } = await supabase
-            .from('profiles')
-            .select('id, first_name, last_name, email')
-            .in('id', uniqueUserIds);
+          // Use RPC to bypass RLS caching issue
+          const { data: allProfiles, error: profileError } = await supabase.rpc('get_dealer_user_profiles');
+          const profiles = allProfiles?.filter(p => uniqueUserIds.includes(p.id));
 
           if (profileError) {
             console.error('❌ [Profiles] Error:', profileError);

@@ -20,15 +20,11 @@ export const useInvoiceComments = (invoiceId: string) => {
       // Get unique user IDs
       const userIds = [...new Set(comments.map(c => c.user_id).filter(Boolean))];
 
-      // Fetch user data
+      // Fetch user data - Use RPC to bypass RLS caching issue
       let users: any[] = [];
       if (userIds.length > 0) {
-        const { data: userData } = await supabase
-          .from('profiles')
-          .select('id, first_name, last_name, email')
-          .in('id', userIds);
-
-        users = userData || [];
+        const { data: allProfiles } = await supabase.rpc('get_dealer_user_profiles');
+        users = allProfiles?.filter(p => userIds.includes(p.id)) || [];
       }
 
       // Map users to comments

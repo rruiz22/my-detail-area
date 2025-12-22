@@ -149,19 +149,9 @@ export const useOrderComments = (orderId: string): OrderCommentsHookResult => {
       // Get user IDs for profiles lookup
       const userIds = [...new Set(commentsData.map(c => c.user_id))];
 
-      // Get profiles data
-      const { data: profilesData, error: profilesError } = await supabase
-        .from('profiles')
-        .select(`
-          id,
-          first_name,
-          last_name,
-          email,
-          user_type,
-          avatar_seed,
-          avatar_variant
-        `)
-        .in('id', userIds);
+      // Get profiles data - Use RPC to bypass RLS caching issue
+      const { data: allProfiles, error: profilesError } = await supabase.rpc('get_dealer_user_profiles');
+      const profilesData = allProfiles?.filter(p => userIds.includes(p.id));
 
       if (profilesError) {
         console.error('❌ Error fetching profiles:', profilesError);
