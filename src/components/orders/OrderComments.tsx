@@ -25,6 +25,7 @@ interface OrderCommentsProps {
 
 export function OrderComments({ orderId, isDetailUser = false }: OrderCommentsProps) {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [commentType, setCommentType] = useState<'public' | 'internal'>('public');
@@ -46,10 +47,9 @@ export function OrderComments({ orderId, isDetailUser = false }: OrderCommentsPr
 
       // Get user names separately
       const userIds = [...new Set(data?.map(c => c.user_id) || [])];
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id, first_name, last_name')
-        .in('id', userIds);
+      // 🔧 FIX: Use RPC to bypass RLS caching issue
+      const { data: allProfiles } = await supabase.rpc('get_dealer_user_profiles');
+      const profiles = allProfiles?.filter(p => userIds.includes(p.id));
 
       const profileMap = profiles?.reduce((acc: any, profile) => {
         acc[profile.id] = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'Unknown User';
