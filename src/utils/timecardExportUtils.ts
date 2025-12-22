@@ -26,6 +26,9 @@ export interface TimecardEntry {
   /** Employee full name */
   employeeName: string;
 
+  /** Dealership/Location name where punch occurred */
+  dealershipName: string;
+
   /** Date of time entry (formatted string) */
   date: string;
 
@@ -123,6 +126,7 @@ export function createTimecardReport(
   const headers = [
     'Employee',
     'Date',
+    'Location',
     'Clock In',
     'Clock Out',
     'Break',
@@ -138,6 +142,7 @@ export function createTimecardReport(
   const rows: (string | number)[][] = entries.map((entry) => [
     `${entry.employeeName} (${entry.employeeId})`,
     entry.date,
+    entry.dealershipName,
     entry.clockIn,
     entry.clockOut,
     entry.breakTimes,
@@ -153,6 +158,7 @@ export function createTimecardReport(
   rows.push([
     `TOTALS (${summary.totalEntries} entries)`,
     '',
+    '', // Location (empty for totals)
     '',
     '',
     '',

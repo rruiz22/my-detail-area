@@ -138,6 +138,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     kiosk_code: string | null;
     name: string | null;
     location: string | null;
+    dealership_id: number | null;
   }>({
     face_recognition_enabled: true,
     allow_manual_entry: true,
@@ -145,6 +146,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
     kiosk_code: null,
     name: null,
     location: null,
+    dealership_id: null,
   });
 
   // Fetch kiosk configuration from database
@@ -153,7 +155,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       debugLog('[Kiosk] Fetching configuration for kiosk ID:', KIOSK_ID);
       supabase
         .from('detail_hub_kiosks')
-        .select('face_recognition_enabled, allow_manual_entry, sleep_timeout_minutes, kiosk_code, name, location')
+        .select('face_recognition_enabled, allow_manual_entry, sleep_timeout_minutes, kiosk_code, name, location, dealership_id')
         .eq('id', KIOSK_ID)
         .single()
         .then(({ data, error }) => {
@@ -170,6 +172,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
               kiosk_code: data.kiosk_code,
               name: data.name,
               location: data.location,
+              dealership_id: data.dealership_id,
             });
           }
         });
@@ -901,7 +904,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
       // Upload photo to Supabase Storage
       const uploadResult = await uploadPhotoToStorage(capturedPhoto, {
         employeeId: selectedEmployee.id,
-        dealershipId: selectedDealerId as number,
+        dealershipId: kioskConfig.dealership_id || (selectedDealerId as number),
         action: captureAction
       });
 
@@ -920,7 +923,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
 
         const { data: revalidation, error: revalidationError } = await supabase.rpc('validate_punch_in_assignment', {
           p_employee_id: selectedEmployee.id,
-          p_dealership_id: selectedDealerId as number,
+          p_dealership_id: kioskConfig.dealership_id || (selectedDealerId as number),
           p_kiosk_id: KIOSK_ID, // Use UUID, not kiosk_code
           p_punch_time: currentTime
         });
@@ -942,7 +945,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
         case 'clock_in':
           await clockIn({
             employeeId: selectedEmployee.id,
-            dealershipId: selectedDealerId as number,
+            dealershipId: kioskConfig.dealership_id || (selectedDealerId as number),
             method: 'photo_fallback',
             photoUrl: uploadResult.photoUrl,
             kioskId: KIOSK_ID || undefined, // Always use UUID, never fallback to kiosk_code string
