@@ -265,6 +265,9 @@ export function useDetailHubTimeEntries() {
             first_name,
             last_name,
             employee_number
+          ),
+          dealership:dealerships!detail_hub_time_entries_dealership_id_fkey(
+            name
           )
         `)
         .neq('status', 'disabled') // Filter out disabled entries
@@ -279,13 +282,14 @@ export function useDetailHubTimeEntries() {
 
       if (error) throw error;
 
-      // Transform data to include employee name
+      // Transform data to include employee name and dealership name
       const enrichedData = (data as TimeEntryWithEmployeeRelation[] || []).map((entry) => ({
         ...entry,
         employee_name: entry.employee
           ? `${entry.employee.first_name} ${entry.employee.last_name}`
           : 'Unknown Employee',
-        employee_number: entry.employee?.employee_number || 'N/A'
+        employee_number: entry.employee?.employee_number || 'N/A',
+        dealership_name: entry.dealership?.name || 'Unknown Location'
       })) as TimeEntryWithEmployee[];
 
       return enrichedData;
@@ -1094,6 +1098,7 @@ export function useAddBreak() {
 export interface TimeEntryWithEmployee extends DetailHubTimeEntry {
   employee_name: string;
   employee_number: string;
+  dealership_name: string;
 }
 
 export interface TimeEntryAuditLog {
@@ -1120,6 +1125,9 @@ interface TimeEntryWithEmployeeRelation extends DetailHubTimeEntry {
     last_name: string;
     employee_number: string;
   } | null;
+  dealership: {
+    name: string;
+  } | null;
 }
 
 export function usePendingReviews() {
@@ -1139,6 +1147,9 @@ export function usePendingReviews() {
             first_name,
             last_name,
             employee_number
+          ),
+          dealership:dealerships!detail_hub_time_entries_dealership_id_fkey(
+            name
           )
         `)
         .eq('requires_manual_verification', true)
@@ -1154,13 +1165,14 @@ export function usePendingReviews() {
 
       if (error) throw error;
 
-      // Transform data to include employee name
+      // Transform data to include employee name and dealership name
       const enrichedData = (data as TimeEntryWithEmployeeRelation[] || []).map((entry) => ({
         ...entry,
         employee_name: entry.employee
           ? `${entry.employee.first_name} ${entry.employee.last_name}`
           : 'Unknown Employee',
-        employee_number: entry.employee?.employee_number || 'N/A'
+        employee_number: entry.employee?.employee_number || 'N/A',
+        dealership_name: entry.dealership?.name || 'Unknown Location'
       })) as TimeEntryWithEmployee[];
 
       return enrichedData;
@@ -1655,6 +1667,9 @@ export function useRecentActivity(limit: number = 5) {
             first_name,
             last_name,
             employee_number
+          ),
+          dealership:dealerships!detail_hub_time_entries_dealership_id_fkey(
+            name
           )
         `)
         .order('clock_in', { ascending: false })
@@ -1669,13 +1684,14 @@ export function useRecentActivity(limit: number = 5) {
 
       if (error) throw error;
 
-      // Transform data to include employee name
+      // Transform data to include employee name and dealership name
       const enrichedData = (data as TimeEntryWithEmployeeRelation[] || []).map((entry) => ({
         ...entry,
         employee_name: entry.employee
           ? `${entry.employee.first_name} ${entry.employee.last_name}`
           : 'Unknown Employee',
-        employee_number: entry.employee?.employee_number || 'N/A'
+        employee_number: entry.employee?.employee_number || 'N/A',
+        dealership_name: entry.dealership?.name || 'Unknown Location'
       })) as TimeEntryWithEmployee[];
 
       return enrichedData;

@@ -265,6 +265,7 @@ const TimecardSystem = () => {
       id: entry.id, // Use unique time entry ID as key
       employeeId: entry.employee_number || 'N/A',
       employeeName: entry.employee_name,
+      dealershipName: entry.dealership_name || 'Unknown Location',
       date: localDateString,
       clockIn: formatTime(entry.clock_in),
       clockOut: formatTime(entry.clock_out),
@@ -461,6 +462,7 @@ const TimecardSystem = () => {
       const exportEntries: TimecardEntry[] = timecards.map((tc) => ({
         employeeId: tc.employeeId,
         employeeName: tc.employeeName,
+        dealershipName: tc.dealershipName,
         date: tc.date,
         clockIn: tc.clockIn,
         clockOut: tc.clockOut,
@@ -515,6 +517,7 @@ const TimecardSystem = () => {
       const exportEntries: TimecardEntry[] = timecards.map((tc) => ({
         employeeId: tc.employeeId,
         employeeName: tc.employeeName,
+        dealershipName: tc.dealershipName,
         date: tc.date,
         clockIn: tc.clockIn,
         clockOut: tc.clockOut,
