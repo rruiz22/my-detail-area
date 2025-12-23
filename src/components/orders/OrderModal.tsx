@@ -815,13 +815,9 @@ export const OrderModal: React.FC<OrderModalProps> = ({ order, open, onClose, on
     // Validate required fields with immediate toast feedback
     // Customer name is now optional - removed validation
 
-    // Validate VIN (always required)
+    // Validate VIN (always required, but no length restriction)
     if (!formData.vehicleVin.trim()) {
       toast({ variant: 'destructive', description: t('validation.vinRequired') });
-      return false;
-    }
-    if (formData.vehicleVin.length !== 17) {
-      toast({ variant: 'destructive', description: t('validation.vinInvalidLength') });
       return false;
     }
 
