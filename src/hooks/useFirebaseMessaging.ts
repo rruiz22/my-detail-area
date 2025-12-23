@@ -232,9 +232,14 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
   /**
    * Auto-request permission if previously granted AND user has enabled push notifications
    * Only auto-register if user explicitly enabled push_enabled in their preferences
+   *
+   * ⚡ PERF FIX: Deferred until user.email is available (after AuthContext.loadUserProfile completes)
+   * This naturally serializes queries and eliminates connection pool competition on initial load
    */
   useEffect(() => {
-    if (!state.isSupported || !user?.id) return;
+    // Wait for user profile to fully load before checking push preferences
+    // user.email is only available after AuthContext.loadUserProfile() completes
+    if (!state.isSupported || !user?.id || !user?.email) return;
 
     const autoRegisterIfEnabled = async () => {
       // Check if user has push notifications enabled in their preferences
@@ -242,7 +247,7 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
         .from('user_push_notification_preferences')
         .select('push_enabled')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle(); // ⚡ PERF FIX: Use maybeSingle() instead of single() to avoid 406 error if row doesn't exist
 
       // Only auto-register if:
       // 1. Browser permission is granted
@@ -261,7 +266,7 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
     };
 
     autoRegisterIfEnabled();
-  }, [state.isSupported, user?.id, state.permission, state.token, state.loading, requestPermission]);
+  }, [state.isSupported, user?.id, user?.email, state.permission, state.token, state.loading, requestPermission]);
 
   return {
     ...state,
