@@ -498,13 +498,9 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
   };
 
   const validateForm = async (): Promise<boolean> => {
-    // Validate VIN (always required)
+    // Validate VIN (always required, but no length restriction)
     if (!formData.vehicleVin.trim()) {
       toast({ variant: 'destructive', description: t('validation.vinRequired') });
-      return false;
-    }
-    if (formData.vehicleVin.length !== 17) {
-      toast({ variant: 'destructive', description: t('validation.vinInvalidLength') });
       return false;
     }
 
