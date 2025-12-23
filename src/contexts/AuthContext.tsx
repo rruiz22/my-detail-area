@@ -73,6 +73,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       auth('⏱️ [Profile Load] Starting for user:', authUser.id, '@ ' + new Date(startTime).toISOString());
 
+      // 📊 Connection Pool Telemetry: Track concurrent query
+      console.log('🔌 [Connection Pool] Profile query started - AuthContext.loadUserProfile()');
+
       // Add timeout to prevent infinite loading
       const profilePromise = supabase
         .from('profiles')
@@ -94,6 +97,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const loadDuration = Date.now() - startTime;
 
       if (error) {
+        console.log(`🔌 [Connection Pool] Profile query FAILED after ${loadDuration}ms - AuthContext.loadUserProfile()`);
         logError(`❌ [Profile Load] Failed after ${loadDuration}ms:`, error);
         // Return basic user with minimal extension
         return {
@@ -102,6 +106,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           role: 'admin'
         };
       }
+
+      // 📊 Connection Pool Telemetry: Track query completion
+      console.log(`🔌 [Connection Pool] Profile query COMPLETED in ${loadDuration}ms - AuthContext.loadUserProfile()`);
 
       // Extend auth user with profile data (no dealership for now)
       const extendedUser: ExtendedUser = {
@@ -118,6 +125,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // 📊 Telemetry: Log success with duration and warn if slow
       if (loadDuration > 10000) {
         warn(`⚠️ [Profile Load] SLOW: Took ${loadDuration}ms (>10s threshold) for user ${authUser.id}`);
+        warn(`⚠️ [Connection Pool] Possible saturation detected - query took >10s`);
       } else {
         auth(`✅ [Profile Load] Success in ${loadDuration}ms:`, {
           user_type: extendedUser.user_type,

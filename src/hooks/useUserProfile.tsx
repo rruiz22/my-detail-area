@@ -141,20 +141,14 @@ export function useUserProfileForPermissions() {
         return null;
       }
 
-      const { data, error} = await supabase
-        .from('profiles')
-        .select('id, email, role, user_type, dealership_id, first_name, last_name')
-        .eq('id', user.id)
-        .single();
+      // ⚡ PERF FIX: Use profile data from AuthContext (already loaded by loadUserProfile)
+      // This eliminates redundant query to profiles table that was competing for connection pool
+      // All needed fields are already available in ExtendedUser from AuthContext
+      console.log('⚡ [useUserProfileForPermissions] Using cached profile from AuthContext');
 
-      if (error) {
-        console.error('Error fetching profile for permissions:', error);
-        return null;
-      }
-
-      // 🆕 Load allowed_modules for supermanagers
+      // 🆕 Load allowed_modules for supermanagers (only RPC call needed, profile data is cached)
       let allowedModules: string[] = [];
-      if (data?.role === 'supermanager') {
+      if (user.role === 'supermanager') {
         const { data: modules, error: modulesError } = await supabase
           .rpc('get_user_allowed_modules', { target_user_id: user.id });
 
@@ -167,8 +161,15 @@ export function useUserProfileForPermissions() {
         }
       }
 
+      // Return profile data from AuthContext (no DB query needed)
       return {
-        ...data,
+        id: user.id,
+        email: user.email || '',
+        role: user.role || 'admin',
+        user_type: user.user_type || 'system_admin',
+        dealership_id: user.dealershipId,
+        first_name: user.first_name,
+        last_name: user.last_name,
         allowed_modules: allowedModules
       };
     },
