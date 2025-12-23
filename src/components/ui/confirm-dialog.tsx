@@ -19,7 +19,7 @@ export interface ConfirmDialogProps {
   confirmText?: string;
   cancelText?: string;
   onConfirm: () => void | Promise<void>;
-  variant?: 'default' | 'destructive';
+  variant?: 'default' | 'destructive' | 'success';
   loading?: boolean;
 }
 
@@ -71,7 +71,9 @@ export function ConfirmDialog({
             disabled={isLoading}
             className={cn(
               variant === 'destructive' &&
-                'bg-destructive hover:bg-destructive/90'
+                'bg-destructive hover:bg-destructive/90',
+              variant === 'success' &&
+                'bg-success hover:bg-success/90 text-success-foreground'
             )}
           >
             {isLoading ? 'Processing...' : confirmText}

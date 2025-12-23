@@ -152,7 +152,7 @@ export function StatusBadgeInteractive({
         confirmText={t('common.confirm', 'Confirm')}
         cancelText={t('common.cancel', 'Cancel')}
         onConfirm={confirmChange}
-        variant={pendingStatus === 'cancelled' ? 'destructive' : 'default'}
+        variant={pendingStatus === 'cancelled' ? 'destructive' : pendingStatus === 'completed' ? 'success' : 'default'}
       />
     </>
   );
