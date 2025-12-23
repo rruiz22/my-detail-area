@@ -235,10 +235,9 @@ export const useReconOrderManagement = () => {
       // Fetch profiles for all creators in one query
       let profilesMap = new Map();
       if (creatorIds.length > 0) {
-        const { data: profiles, error: profilesError } = await supabase
-          .from('profiles')
-          .select('id, first_name, last_name, email')
-          .in('id', creatorIds);
+        // 🔧 FIX: Use RPC to bypass RLS caching issue
+        const { data: allProfiles, error: profilesError } = await supabase.rpc('get_dealer_user_profiles');
+        const profiles = allProfiles?.filter(p => creatorIds.includes(p.id));
 
         if (profilesError) {
           console.error('Error fetching creator profiles:', profilesError);

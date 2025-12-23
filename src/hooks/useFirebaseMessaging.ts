@@ -69,14 +69,9 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
       }
 
       try {
-        // Get user's dealership_id from profile
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('dealership_id')
-          .eq('id', user.id)
-          .single();
-
-        const dealershipId = profile?.dealership_id;
+        // ⚡ PERF FIX: Use dealership_id from AuthContext (already loaded by loadUserProfile)
+        // This eliminates redundant query to profiles table that was competing for connection pool
+        const dealershipId = (user as any).dealershipId;
 
         if (!dealershipId) {
           console.warn('[FCM] No dealership_id found for user, cannot save token');

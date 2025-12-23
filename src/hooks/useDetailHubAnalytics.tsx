@@ -131,6 +131,25 @@ export function useHoursByEmployee(dateRange: DateRange) {
     queryFn: async (): Promise<EmployeeHoursData[]> => {
       if (!user) throw new Error('User not authenticated');
 
+      // Step 1: Get employees who worked at this dealership (directly or via assignment)
+      let employeeIds: string[] = [];
+
+      if (selectedDealerId !== 'all') {
+        // Get employees with entries at this dealership
+        const { data: employeesAtDealer, error: employeeError } = await supabase
+          .from('detail_hub_time_entries')
+          .select('employee_id')
+          .eq('dealership_id', selectedDealerId)
+          .gte('clock_in', dateRange.from.toISOString())
+          .lte('clock_in', dateRange.to.toISOString());
+
+        if (employeeError) throw employeeError;
+
+        // Extract unique employee IDs
+        employeeIds = Array.from(new Set(employeesAtDealer?.map(e => e.employee_id) || []));
+      }
+
+      // Step 2: Get ALL time entries for these employees (cross-dealer)
       let query = supabase
         .from('detail_hub_time_entries')
         .select(`
@@ -151,9 +170,12 @@ export function useHoursByEmployee(dateRange: DateRange) {
         .not('clock_out', 'is', null) // Only completed entries
         .not('total_hours', 'is', null); // Only entries with calculated hours
 
-      // Filter by dealership
-      if (selectedDealerId !== 'all') {
-        query = query.eq('dealership_id', selectedDealerId);
+      // Filter by employee IDs if specific dealer selected
+      if (selectedDealerId !== 'all' && employeeIds.length > 0) {
+        query = query.in('employee_id', employeeIds);
+      } else if (selectedDealerId !== 'all' && employeeIds.length === 0) {
+        // No employees worked at this dealer - return empty
+        return [];
       }
 
       const { data, error } = await query;

@@ -117,12 +117,9 @@ export function GlobalChatProvider({ children, dealerId }: GlobalChatProviderPro
     }
 
     try {
-      // Get user profile for naming
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('first_name, last_name, email')
-        .eq('id', userId)
-        .single();
+      // Get user profile for naming - Use RPC to bypass RLS caching issue
+      const { data: allProfiles } = await supabase.rpc('get_dealer_user_profiles');
+      const profile = allProfiles?.find(p => p.id === userId);
 
       const userName = profile ? `${profile.first_name} ${profile.last_name}` : 'Direct Message';
 

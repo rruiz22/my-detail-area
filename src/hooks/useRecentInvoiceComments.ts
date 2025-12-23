@@ -47,12 +47,10 @@ export const useRecentInvoiceComments = ({
           return [];
         }
 
-        // Fetch profiles separately
+        // Fetch profiles separately - Use RPC to bypass RLS caching issue
         const userIds = [...new Set(commentsData.map(c => c.user_id))];
-        const { data: profilesData } = await supabase
-          .from('profiles')
-          .select('id, first_name, last_name, email, avatar_seed')
-          .in('id', userIds);
+        const { data: allProfiles } = await supabase.rpc('get_dealer_user_profiles');
+        const profilesData = allProfiles?.filter(p => userIds.includes(p.id));
 
         // Create profile map
         const profileMap = new Map(

@@ -49,6 +49,7 @@ export function useRecentActivity(limit = 20) {
     queryFn: async () => {
       if (!user) return [];
 
+      // PASO 1: Query principal SIN profiles join (bypass RLS issue)
       const { data, error } = await supabase
         .from('order_activity_log')
         .select(`
@@ -70,10 +71,6 @@ export function useRecentActivity(limit = 20) {
             dealerships (
               name
             )
-          ),
-          profiles (
-            first_name,
-            last_name
           )
         `)
         .order('created_at', { ascending: false })
@@ -84,27 +81,50 @@ export function useRecentActivity(limit = 20) {
         throw error;
       }
 
-      // Transform data to flatten the joined tables
-      const allActivities: ActivityLog[] = (data || []).map((item: any) => ({
-        id: item.id,
-        order_id: item.order_id,
-        user_id: item.user_id,
-        activity_type: item.activity_type,
-        field_name: item.field_name,
-        old_value: item.old_value,
-        new_value: item.new_value,
-        description: item.description,
-        metadata: item.metadata,
-        created_at: item.created_at,
-        order_number: item.orders?.order_number,
-        customer_name: item.orders?.customer_name,
-        order_type: item.orders?.order_type,
-        dealer_id: item.orders?.dealer_id,
-        dealer_name: item.orders?.dealerships?.name || 'Unknown Dealership',
-        user_name: item.profiles
-          ? `${item.profiles.first_name || ''} ${item.profiles.last_name || ''}`.trim()
-          : 'Unknown User'
-      }));
+      // PASO 2: Get unique user IDs and fetch profiles via RPC (bypass RLS)
+      const uniqueUserIds = [...new Set(data?.map((item: any) => item.user_id).filter(Boolean))];
+      let profilesMap = new Map<string, { first_name: string; last_name: string }>();
+
+      if (uniqueUserIds.length > 0) {
+        const { data: allProfiles, error: profilesError } = await supabase.rpc('get_dealer_user_profiles');
+        if (profilesError) {
+          console.error('❌ Error fetching profiles for recent activity:', profilesError);
+        } else if (allProfiles) {
+          const profiles = allProfiles.filter(p => uniqueUserIds.includes(p.id));
+          profilesMap = new Map(
+            profiles.map(profile => [
+              profile.id,
+              { first_name: profile.first_name || '', last_name: profile.last_name || '' }
+            ])
+          );
+        }
+      }
+
+      // PASO 3: Transform data with profile lookup
+      const allActivities: ActivityLog[] = (data || []).map((item: any) => {
+        const profile = item.user_id ? profilesMap.get(item.user_id) : null;
+
+        return {
+          id: item.id,
+          order_id: item.order_id,
+          user_id: item.user_id,
+          activity_type: item.activity_type,
+          field_name: item.field_name,
+          old_value: item.old_value,
+          new_value: item.new_value,
+          description: item.description,
+          metadata: item.metadata,
+          created_at: item.created_at,
+          order_number: item.orders?.order_number,
+          customer_name: item.orders?.customer_name,
+          order_type: item.orders?.order_type,
+          dealer_id: item.orders?.dealer_id,
+          dealer_name: item.orders?.dealerships?.name || 'Unknown Dealership',
+          user_name: profile
+            ? `${profile.first_name} ${profile.last_name}`.trim() || 'Unknown User'
+            : 'Unknown User'
+        };
+      });
 
       // Apply dealer filter (after RLS has already filtered by security)
       const filteredActivities = selectedDealer === 'all'

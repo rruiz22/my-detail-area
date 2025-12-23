@@ -381,7 +381,8 @@ export const useOperationalOrdersList = (filters: ReportsFilters) => {
         return dateMatch;
       });
 
-      const { data: userProfiles } = await supabase.from('profiles').select('id, first_name, last_name, email');
+      // Use RPC to bypass RLS caching issue
+      const { data: userProfiles } = await supabase.rpc('get_dealer_user_profiles');
       const orderIds = filteredOrders.map(o => o.id);
       const { data: invoiceItems } = await supabase.from('invoice_items').select('service_reference, invoice:invoices(invoice_number)').in('service_reference', orderIds);
 

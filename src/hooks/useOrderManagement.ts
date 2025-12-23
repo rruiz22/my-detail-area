@@ -444,7 +444,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       // Fetch related data in parallel
       const [dealershipsResult, userProfilesResult, dealerGroupsResult] = await Promise.all([
         supabase.from('dealerships').select('id, name').eq('id', order.dealer_id).single(),
-        supabase.from('profiles').select('id, first_name, last_name, email'),
+        supabase.rpc('get_dealer_user_profiles'), // 🔧 FIX: Use RPC to bypass RLS caching issue
         supabase.from('dealer_groups').select('id, name')
       ]);
 
@@ -719,7 +719,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         { data: dealerGroups, error: groupsError }
       ] = await Promise.all([
         supabase.from('dealerships').select('id, name'),
-        supabase.from('profiles').select('id, first_name, last_name, email'),
+        supabase.rpc('get_dealer_user_profiles'), // 🔧 FIX: Use RPC to bypass RLS caching issue
         supabase.from('dealer_groups').select('id, name')
       ]);
 
@@ -990,11 +990,9 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       // 🔍 Fetch creator name for Slack notification
       let createdByName: string | undefined = undefined;
       try {
-        const { data: creatorProfile } = await supabase
-          .from('profiles')
-          .select('first_name, last_name, email')
-          .eq('id', user.id)
-          .single();
+        // 🔧 FIX: Use RPC to bypass RLS caching issue
+        const { data: allProfiles } = await supabase.rpc('get_dealer_user_profiles');
+        const creatorProfile = allProfiles?.find(p => p.id === user.id);
 
         if (creatorProfile?.first_name) {
           createdByName = `${creatorProfile.first_name} ${creatorProfile.last_name || ''}`.trim();
@@ -1367,11 +1365,9 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
               // Get assigned user's name
               let assignedToName: string | undefined = undefined;
               if (orderData.assigned_group_id) {
-                const { data: assignedProfile } = await supabase
-                  .from('profiles')
-                  .select('first_name, last_name, email')
-                  .eq('id', orderData.assigned_group_id)
-                  .single();
+                // 🔧 FIX: Use RPC to bypass RLS caching issue
+                const { data: allProfiles } = await supabase.rpc('get_dealer_user_profiles');
+                const assignedProfile = allProfiles?.find(p => p.id === orderData.assigned_group_id);
 
                 if (assignedProfile?.first_name) {
                   assignedToName = `${assignedProfile.first_name} ${assignedProfile.last_name || ''}`.trim();
@@ -1638,7 +1634,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       // Batch fetch related data for ALL orders (3 queries instead of N×3)
       const [dealershipsRes, profilesRes, groupsRes] = await Promise.all([
         supabase.from('dealerships').select('id, name'),
-        supabase.from('profiles').select('id, first_name, last_name, email'),
+        supabase.rpc('get_dealer_user_profiles'), // 🔧 FIX: Use RPC to bypass RLS caching issue
         supabase.from('dealer_groups').select('id, name')
       ]);
 

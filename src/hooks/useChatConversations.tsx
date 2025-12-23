@@ -204,11 +204,9 @@ export const useChatConversations = (dealerId?: number): UseChatConversationsRet
           // Get unique user IDs
           const uniqueUserIds = [...new Set(allParticipants.map(p => p.user_id))];
 
-          // Fetch all profiles in one query
-          const { data: profiles, error: profilesError } = await supabase
-            .from('profiles')
-            .select('id, first_name, last_name, email, avatar_url')
-            .in('id', uniqueUserIds);
+          // Fetch all profiles in one query - Use RPC to bypass RLS caching issue
+          const { data: allProfiles, error: profilesError } = await supabase.rpc('get_dealer_user_profiles');
+          const profiles = allProfiles?.filter(p => uniqueUserIds.includes(p.id));
 
           if (profilesError) {
             console.error('Error fetching profiles (non-critical):', profilesError);
