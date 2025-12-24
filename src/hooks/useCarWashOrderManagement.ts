@@ -130,7 +130,6 @@ export const useCarWashOrderManagement = () => {
     ['orders', 'car_wash', selectedDealerId],  // ✅ FIX: Added selectedDealerId to queryKey
     async () => {
       if (!user || !enhancedUser) {
-        console.log('⚠️ [CarWash] Polling skipped - no user or enhancedUser');
         return [];
       }
 
@@ -143,7 +142,6 @@ export const useCarWashOrderManagement = () => {
 
       // ✅ FIX: Use selectedDealerId from context instead of reading localStorage
       const dealerFilter = selectedDealerId;
-      console.log(`🔍 CarWash Polling - Dealer filter resolved: ${dealerFilter}`);
 
       // Handle dealer filtering based on user type and global filter
       // ✅ FIX: System admins and supermanagers should ALWAYS respect global filter
@@ -168,33 +166,26 @@ export const useCarWashOrderManagement = () => {
             .eq('is_active', true);
 
           if (dealershipError) {
-            // 🔒 SECURITY: Database error - log and return empty results (fail-secure)
-            console.error('❌ CarWash Polling - Failed to fetch dealer memberships:', dealershipError);
+            // 🔒 SECURITY: Database error - return empty results (fail-secure)
             ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
           } else if (!userDealerships || userDealerships.length === 0) {
             // 🔒 SECURITY: No memberships = no data access (fail-secure)
-            console.warn('⚠️ CarWash Polling - Multi-dealer user has NO dealer memberships - returning empty dataset');
             ordersQuery = ordersQuery.eq('dealer_id', -1);
           } else {
             const dealerIds = userDealerships.map(d => d.dealer_id);
-            console.log(`🏢 CarWash Polling - ${isSystemAdminPolling ? 'System admin' : 'Multi-dealer user'} - showing all dealers: [${dealerIds.join(', ')}]`);
             ordersQuery = ordersQuery.in('dealer_id', dealerIds);
           }
         } else {
           // Filter by specific dealer selected in dropdown - validate it's a number
           if (typeof dealerFilter === 'number' && !isNaN(dealerFilter)) {
-            console.log(`🎯 CarWash Polling - ${isSystemAdminPolling ? 'System admin' : 'Multi-dealer user'} - filtering by selected dealer: ${dealerFilter}`);
             ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
           } else {
             // 🔒 SECURITY: Invalid dealer filter - return empty results (fail-secure)
-            console.error(`❌ CarWash Polling - Invalid dealerFilter value: ${dealerFilter} (type: ${typeof dealerFilter})`);
-            console.warn('⚠️ CarWash Polling - Invalid dealer filter - returning empty dataset');
             ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
           }
         }
       } else {
         // Single-dealer regular users - use their assigned dealership (ignore global filter)
-        console.log(`🏢 CarWash Polling - Single-dealer user - using assigned dealership: ${enhancedUser.dealership_id}`);
         ordersQuery = ordersQuery.eq('dealer_id', enhancedUser.dealership_id);
       }
 
@@ -212,16 +203,6 @@ export const useCarWashOrderManagement = () => {
         supabase.from('dealer_groups').select('id, name'),
         supabase.rpc('get_dealer_user_profiles')
       ]);
-
-      if (dealershipsError) {
-        console.error('Error fetching dealerships:', dealershipsError);
-      }
-      if (groupsError) {
-        console.error('Error fetching dealer groups:', groupsError);
-      }
-      if (profilesError) {
-        console.error('Error fetching user profiles:', profilesError);
-      }
 
       // Create lookup maps for better performance
       const dealershipMap = new Map(dealerships?.map(d => [d.id, d.name]) || []);
@@ -274,24 +255,11 @@ export const useCarWashOrderManagement = () => {
     setLoading(true);
 
     try {
-      console.log('📥 [CarWash Hook] createOrder received:', {
-        dealerId: orderData.dealerId,
-        tag: orderData.tag,
-        stockNumber: orderData.stockNumber,
-        vehicleInfo: orderData.vehicleInfo,
-        isWaiter: orderData.isWaiter,
-        services: orderData.services,
-        completedAt: orderData.completedAt,
-        completedAtType: typeof orderData.completedAt,
-        fullData: orderData
-      });
-
       // Use database function to generate sequential car wash order number
       const { data: orderNumberData, error: numberError } = await supabase
         .rpc('generate_car_wash_order_number');
 
       if (numberError || !orderNumberData) {
-        console.error('Error generating car wash order number:', numberError);
         throw new Error('Failed to generate car wash order number');
       }
 
@@ -317,27 +285,13 @@ export const useCarWashOrderManagement = () => {
         created_by: user.id, // ✅ Track which USER created the order
       };
 
-      console.log('💾 [CarWash Hook] Sending INSERT to Supabase:', {
-        order_number: insertData.order_number,
-        tag: insertData.tag,
-        stock_number: insertData.stock_number,
-        vehicle_info: insertData.vehicle_info,
-        priority: insertData.priority,
-        isWaiter: insertData.priority === 'urgent',
-        services: insertData.services,
-        completed_at: insertData.completed_at,
-        completed_at_type: typeof insertData.completed_at,
-        fullInsertData: insertData
-      });
-
-      const { data, error} = await supabase
+      const { data, error } = await supabase
         .from('orders')
         .insert(insertData)
         .select()
         .single();
 
       if (error) {
-        console.error('Error creating car wash order:', error);
         throw error;
       }
 
@@ -349,14 +303,9 @@ export const useCarWashOrderManagement = () => {
       );
 
       // Auto-generate QR code and shortlink in background (fire-and-forget, non-blocking)
-      generateQR(data.id, data.order_number, data.dealer_id)
-        .then(() => {
-          console.log('✅ QR code and shortlink generated for car wash order:', data.order_number);
-        })
-        .catch((qrError) => {
-          console.error('❌ Failed to generate QR code:', qrError);
-          // QR generation failure doesn't affect order creation
-        });
+      generateQR(data.id, data.order_number, data.dealer_id).catch(() => {
+        // QR generation failure doesn't affect order creation
+      });
 
       // Show success immediately (don't wait for QR)
       toast({
@@ -366,11 +315,9 @@ export const useCarWashOrderManagement = () => {
 
       // Invalidate queries to trigger immediate table refresh
       await queryClient.invalidateQueries({ queryKey: ['orders', 'car_wash'] });
-      console.log('✅ Car wash order cache invalidated - table will refresh immediately');
 
       return newOrder;
     } catch (error) {
-      console.error('Error in createOrder:', error);
       toast({
         description: t('car_wash.error_creating_order') || 'Error creating car wash order',
         variant: 'destructive'
@@ -387,16 +334,6 @@ export const useCarWashOrderManagement = () => {
     setLoading(true);
 
     try {
-      console.log('📥 [CarWash Hook] updateOrder received:', {
-        orderId: orderId,
-        orderData: orderData,
-        completedAt: orderData.completedAt,
-        tag: orderData.tag,
-        isWaiter: orderData.isWaiter,
-        services: orderData.services,
-        status: orderData.status
-      });
-
       // Build updateData dynamically - only include fields explicitly provided
       // This prevents accidental data loss when doing partial updates (e.g., status change)
       const updateData: SupabaseOrderUpdate = {};
@@ -458,17 +395,6 @@ export const useCarWashOrderManagement = () => {
           : null;
       }
 
-      console.log('💾 [CarWash Hook] Sending UPDATE to Supabase:', {
-        orderId: orderId,
-        updateData: updateData,
-        completed_at: updateData.completed_at,
-        tag: updateData.tag,
-        priority: updateData.priority,
-        services: updateData.services,
-        status: updateData.status,
-        fieldsToUpdate: Object.keys(updateData)
-      });
-
       const { data, error } = await supabase
         .from('orders')
         .update(updateData)
@@ -477,19 +403,8 @@ export const useCarWashOrderManagement = () => {
         .single();
 
       if (error) {
-        console.error('❌ [CarWash Hook] Error updating order:', error);
         throw error;
       }
-
-      console.log('✅ [CarWash Hook] Supabase UPDATE successful:', {
-        id: data.id,
-        completed_at: data.completed_at,
-        tag: data.tag,
-        priority: data.priority,
-        services: data.services,
-        status: data.status,
-        fullData: data
-      });
 
       const updatedOrder = transformCarWashOrder(data);
 
@@ -506,7 +421,6 @@ export const useCarWashOrderManagement = () => {
 
       return updatedOrder;
     } catch (error) {
-      console.error('Error in updateOrder:', error);
       toast({
         description: t('car_wash.error_updating_order') || 'Error updating car wash order',
         variant: 'destructive'
@@ -529,7 +443,6 @@ export const useCarWashOrderManagement = () => {
         .eq('id', orderId);
 
       if (error) {
-        console.error('Error deleting car wash order:', error);
         toast({
           description: t('car_wash.error_deleting_order') || 'Error deleting car wash order',
           variant: 'destructive'
@@ -552,7 +465,6 @@ export const useCarWashOrderManagement = () => {
 
       return true;
     } catch (error) {
-      console.error('Error in deleteOrder:', error);
       toast({
         description: t('car_wash.error_deleting_order') || 'Error deleting car wash order',
         variant: 'destructive'
@@ -581,7 +493,6 @@ export const useCarWashOrderManagement = () => {
   // Listen for status updates to trigger immediate refresh using EventBus
   useEffect(() => {
     const handleStatusUpdate = () => {
-      console.log('🔄 [CarWash] Status update detected, triggering immediate polling refresh');
       carWashOrdersPollingQuery.refetch();
     };
 

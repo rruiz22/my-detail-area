@@ -16,7 +16,6 @@ import { useDealerServices, useDealerships } from '@/hooks/useDealerships';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { safeParseDate } from '@/utils/dateUtils';
 import { formatVehicleDisplay } from '@/utils/vehicleUtils';
-import { logger } from '@/utils/logger';
 import { AlertCircle, Building2, Car, Clock, FileText, Loader2, Wrench, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -360,7 +359,6 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
 
     // ✅ FIX: Debounce check to prevent double-submit
     if (isDebouncing) {
-      logger.warn('⚠️ [CarWashOrderModal] Submit debounced - too fast, ignoring duplicate click');
       return;
     }
 
@@ -385,7 +383,6 @@ const CarWashOrderModal: React.FC<CarWashOrderModalProps> = ({ order, open, onCl
       onClose();
     } catch (error: any) {
       // Keep modal open and show error
-      logger.error('Submit error:', error);
       const errorMessage = error?.message || t('car_wash_orders.save_failed');
       setSubmitError(errorMessage);
       toast({ variant: 'destructive', description: errorMessage });

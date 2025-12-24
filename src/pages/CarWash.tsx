@@ -10,7 +10,6 @@ import { useTabPersistence } from '@/hooks/useTabPersistence';
 import { getSystemTimezone } from '@/utils/dateUtils';
 import { orderEvents } from '@/utils/eventBus';
 import { generateOrderListPDF } from '@/utils/generateOrderListPDF';
-import logger from '@/utils/logger';
 import { determineTabForOrder } from '@/utils/orderUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus, RefreshCw } from 'lucide-react';
@@ -101,27 +100,21 @@ export default function CarWash() {
   // Auto-open order modal when URL contains ?order=ID parameter
   useEffect(() => {
     if (orderIdFromUrl && allOrders.length > 0 && !hasProcessedUrlOrder) {
-      logger.dev('[CarWash] Processing order from URL (one-time):', orderIdFromUrl);
-
       // Find the order in ALL orders (not just filtered by active tab)
       const targetOrder = allOrders.find(order => order.id === orderIdFromUrl);
 
       if (targetOrder) {
-        logger.success('[CarWash] Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
-
         // Determine the correct tab for this order
         const correctTab = determineTabForOrder(targetOrder);
 
         // Auto-navigate to the correct tab if not already there
         if (correctTab !== activeFilter) {
-          logger.dev('[CarWash] Auto-navigating to correct tab:', correctTab);
           setActiveFilter(correctTab);
         }
 
         setPreviewOrder(targetOrder);
         setHasProcessedUrlOrder(true); // Prevent loop
       } else {
-        logger.warn('[CarWash] Order not found in orders list:', orderIdFromUrl);
         toast({
           description: t('orders.order_not_found'),
           variant: 'destructive'
@@ -216,7 +209,6 @@ export default function CarWash() {
 
   const handleCreateOrder = useCallback(() => {
     if (!canCreate) {
-      logger.warn('[CarWash] User does not have permission to create car wash orders');
       toast({
         title: t('errors.no_permission', 'No Permission'),
         description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
@@ -225,7 +217,6 @@ export default function CarWash() {
       return;
     }
 
-    logger.success('[CarWash] User has permission to create car wash orders');
     setSelectedOrder(null);
     setShowModal(true);
   }, [canCreate, t, toast]);
@@ -257,7 +248,6 @@ export default function CarWash() {
         title: t('orders.deleted_success', 'Order deleted successfully')
       });
     } catch (error) {
-      logger.error('[CarWash] Delete failed:', error);
       toast({
         variant: 'destructive',
         title: t('orders.delete_error', 'Failed to delete order')
@@ -266,34 +256,19 @@ export default function CarWash() {
   }, [orderToDelete, deleteOrder, t, toast, setLiveRegionMessage]);
 
   const handleSaveOrder = useCallback(async (orderData: CarWashOrderData) => {
-    logger.dev('[CarWash] handleSaveOrder called with:', {
-      hasSelectedOrder: !!selectedOrder,
-      selectedOrderId: selectedOrder?.id,
-      orderData: orderData,
-      completedAt: orderData.completedAt,
-      tag: orderData.tag,
-      isWaiter: orderData.isWaiter,
-      services: orderData.services
-    });
-
     try {
       if (selectedOrder) {
-        logger.dev('[CarWash] Calling updateOrder...');
         await updateOrder(selectedOrder.id, orderData);
-        logger.success('[CarWash] updateOrder completed');
         // Accessibility: Announce update to screen readers
         setLiveRegionMessage(t('accessibility.car_wash_orders.order_updated'));
       } else {
-        logger.dev('[CarWash] Calling createOrder...');
         await createOrder(orderData);
-        logger.success('[CarWash] createOrder completed');
         // Accessibility: Announce creation to screen readers
         setLiveRegionMessage(t('accessibility.car_wash_orders.order_created'));
       }
       setShowModal(false);
       refreshData();
     } catch (error) {
-      logger.error('[CarWash] Error in handleSaveOrder:', error);
       // Re-throw to let modal handle it
       throw error;
     }
@@ -303,7 +278,6 @@ export default function CarWash() {
     // Find the order
     const order = allOrders.find(o => o.id === orderId);
     if (!order) {
-      logger.error('[CarWash] Order not found for status change:', orderId);
       toast({
         description: t('orders.order_not_found'),
         variant: 'destructive'
@@ -351,7 +325,6 @@ export default function CarWash() {
         throw new Error('Status update failed');
       }
     } catch (error) {
-      logger.error('[CarWash] Status change failed:', error);
       toast({
         description: t('orders.status_change_failed'),
         variant: 'destructive'
@@ -371,7 +344,6 @@ export default function CarWash() {
       // Emit typed event using EventBus
       orderEvents.emit('orderUpdated', { orderId, updates, timestamp: Date.now() });
     } catch (error) {
-      logger.error('[CarWash] Order update failed:', error);
       throw error;
     }
   }, [updateOrder, queryClient]);
@@ -431,7 +403,6 @@ export default function CarWash() {
         description: t('common.action_buttons.print_success')
       });
     } catch (error) {
-      logger.error('Print list failed:', error);
       toast({
         variant: 'destructive',
         description: t('common.action_buttons.print_failed')
