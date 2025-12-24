@@ -6,13 +6,13 @@
 // =====================================================
 
 import type { InvoiceWithDetails } from '@/types/invoices';
+import {
+    DEPARTMENT_DISPLAY_NAMES,
+    shouldShowDepartmentGrouping,
+    sortInvoiceItemsByDepartment
+} from '@/utils/invoiceSorting';
 import { format } from 'date-fns';
 import ExcelJS from 'exceljs';
-import {
-  sortInvoiceItemsByDepartment,
-  shouldShowDepartmentGrouping,
-  DEPARTMENT_DISPLAY_NAMES
-} from '@/utils/invoiceSorting';
 
 /**
  * Format currency for Excel display
@@ -438,8 +438,8 @@ export async function generateInvoiceExcel(invoice: InvoiceWithDetails): Promise
     });
 
     // Add separator row with date between groups
-    if (groupIndex < groupedByDate.length - 1) {
-      const nextGroupDate = groupedByDate[groupIndex + 1].date;
+    if (groupIndex < groupedData.length - 1) {
+      const nextGroupDate = groupedData[groupIndex + 1].date;
       const separatorRow = worksheet.getRow(currentRow);
       separatorRow.height = 8; // Double height (was 4)
 

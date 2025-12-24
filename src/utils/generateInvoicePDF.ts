@@ -6,13 +6,13 @@
 // =====================================================
 
 import type { InvoiceWithDetails } from '@/types/invoices';
+import {
+    DEPARTMENT_DISPLAY_NAMES,
+    shouldShowDepartmentGrouping,
+    sortInvoiceItemsByDepartment
+} from '@/utils/invoiceSorting';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import {
-  sortInvoiceItemsByDepartment,
-  shouldShowDepartmentGrouping,
-  DEPARTMENT_DISPLAY_NAMES
-} from '@/utils/invoiceSorting';
 
 // =====================================================
 // UTILITY FUNCTIONS
@@ -73,16 +73,6 @@ function formatLongDate(dateString: string): string {
 function getCorrectItemDate(item: any): string {
   const orderType = item.metadata?.order_type;
 
-  // Console log for debugging - remove in production
-  console.log('🔍 [DATE DEBUG] Item:', {
-    orderType,
-    due_date: item.metadata?.due_date,
-    completed_at: item.metadata?.completed_at,
-    completed_date: item.metadata?.completed_date,
-    createdAt: item.createdAt,
-    metadata: item.metadata
-  });
-
   if (orderType === 'sales' || orderType === 'service') {
     // Priority order for sales/service: due_date -> completed_at -> createdAt
     const dueDate = item.metadata?.due_date;
@@ -91,15 +81,12 @@ function getCorrectItemDate(item: any): string {
 
     // Return the first valid date found
     if (dueDate && dueDate !== 'null' && dueDate !== '') {
-      console.log(`✅ [${orderType}] Using due_date:`, dueDate);
       return dueDate;
     }
     if (completedAt && completedAt !== 'null' && completedAt !== '') {
-      console.log(`⚠️ [${orderType}] Fallback to completed_at:`, completedAt);
       return completedAt;
     }
     if (createdAt && createdAt !== 'null' && createdAt !== '') {
-      console.log(`⚠️ [${orderType}] Fallback to createdAt:`, createdAt);
       return createdAt;
     }
   } else if (orderType === 'recon' || orderType === 'carwash') {
@@ -110,23 +97,18 @@ function getCorrectItemDate(item: any): string {
 
     // Return the first valid date found
     if (completedAt && completedAt !== 'null' && completedAt !== '') {
-      console.log(`✅ [${orderType}] Using completed_at:`, completedAt);
       return completedAt;
     }
     if (completedDate && completedDate !== 'null' && completedDate !== '') {
-      console.log(`✅ [${orderType}] Using completed_date:`, completedDate);
       return completedDate;
     }
     if (createdAt && createdAt !== 'null' && createdAt !== '') {
-      console.log(`⚠️ [${orderType}] Fallback to createdAt:`, createdAt);
       return createdAt;
     }
   }
 
   // Final fallback for unknown order types or when no dates are available
-  const fallbackDate = item.metadata?.completed_at || item.createdAt;
-  console.log(`⚠️ [${orderType || 'unknown'}] Using fallback date:`, fallbackDate);
-  return fallbackDate;
+  return item.metadata?.completed_at || item.createdAt;
 }
 
 // =====================================================
@@ -475,8 +457,8 @@ export async function generateInvoicePDF(invoice: InvoiceWithDetails): Promise<v
     });
 
     // Add separator row with date after each group (except last)
-    if (groupIndex < groupedByDate.length - 1) {
-      const nextGroupDate = groupedByDate[groupIndex + 1].date;
+    if (groupIndex < groupedData.length - 1) {
+      const nextGroupDate = groupedData[groupIndex + 1].date;
       tableData.push([
         {
           content: nextGroupDate,

@@ -7,11 +7,11 @@
  * Used by TimeClockButton and PunchClockKioskModal.
  */
 
-import { useEffect, useState } from 'react';
-import { useDeviceFingerprint } from './useDeviceFingerprint';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from './use-toast';
 import * as logger from '@/utils/logger';
+import { useEffect, useState } from 'react';
+import { useToast } from './use-toast';
+import { useDeviceFingerprint } from './useDeviceFingerprint';
 
 const KIOSK_ID_KEY = 'kiosk_id';
 const KIOSK_FINGERPRINT_KEY = 'kiosk_device_fingerprint';
@@ -97,14 +97,14 @@ export function useKioskConfig() {
             if (registrationCode) {
               console.log('[KioskConfig] 🔑 Attempting recovery by registration code:', registrationCode);
 
-              const { data: codeData, error: codeError } = await supabase
+              const { data: codeData } = await supabase
                 .from('detail_hub_kiosk_devices')
                 .select('*, detail_hub_kiosks!inner(*)')
                 .eq('registration_code', registrationCode)
                 .eq('is_active', true)
-                .single();
+                .maybeSingle();
 
-              if (!codeError && codeData) {
+              if (codeData) {
                 await logRecoveryAttempt('registration_code', 'success', codeData, registrationCode);
                 await restoreConfiguration(codeData, 'registration_code', registrationCode);
                 return;
@@ -117,14 +117,14 @@ export function useKioskConfig() {
             // STEP 2: Try recovery by exact fingerprint match
             console.log('[KioskConfig] 🔍 Attempting recovery by fingerprint:', fingerprint.substring(0, 12) + '...');
 
-            const { data: fingerprintData, error: fingerprintError } = await supabase
+            const { data: fingerprintData } = await supabase
               .from('detail_hub_kiosk_devices')
               .select('*, detail_hub_kiosks!inner(*)')
               .eq('device_fingerprint', fingerprint)
               .eq('is_active', true)
-              .single();
+              .maybeSingle();
 
-            if (!fingerprintError && fingerprintData) {
+            if (fingerprintData) {
               await logRecoveryAttempt('fingerprint', 'success', fingerprintData, registrationCode);
               await restoreConfiguration(fingerprintData, 'fingerprint', registrationCode);
               return;
@@ -136,14 +136,14 @@ export function useKioskConfig() {
             // STEP 3: Try recovery by searching fingerprint history (JSONB array)
             console.log('[KioskConfig] 🕵️ Attempting recovery by fingerprint history...');
 
-            const { data: historyData, error: historyError } = await supabase
+            const { data: historyData } = await supabase
               .from('detail_hub_kiosk_devices')
               .select('*, detail_hub_kiosks!inner(*)')
               .contains('device_fingerprint_history', [fingerprint])
               .eq('is_active', true)
-              .single();
+              .maybeSingle();
 
-            if (!historyError && historyData) {
+            if (historyData) {
               await logRecoveryAttempt('fingerprint_history', 'success', historyData, registrationCode);
               await restoreConfiguration(historyData, 'fingerprint_history', registrationCode);
 
