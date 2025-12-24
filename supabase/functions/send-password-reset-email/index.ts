@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.190.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
+import { Resend } from "npm:resend@2.0.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -27,16 +28,13 @@ const handler = async (req: Request): Promise<Response> => {
     console.log('[PASSWORD RESET EMAIL] Starting email send process');
 
     // Validate environment variables
-    const sendgridApiKey = Deno.env.get('SENDGRID_API_KEY');
-    if (!sendgridApiKey) {
-      throw new Error('SENDGRID_API_KEY not configured');
+    const resendApiKey = Deno.env.get('RESEND_API_KEY');
+    if (!resendApiKey) {
+      throw new Error('RESEND_API_KEY not configured');
     }
 
-    const fromAddress = Deno.env.get('EMAIL_FROM_ADDRESS');
+    const fromAddress = Deno.env.get('EMAIL_FROM_ADDRESS') || 'security@mydetailarea.com';
     const fromName = Deno.env.get('EMAIL_FROM_NAME') || 'My Detail Area';
-    if (!fromAddress) {
-      throw new Error('EMAIL_FROM_ADDRESS not configured');
-    }
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL');
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
@@ -44,8 +42,9 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error('Supabase configuration missing');
     }
 
-    // Initialize Supabase client
+    // Initialize Supabase client and Resend
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const resend = new Resend(resendApiKey);
 
     // Parse request body
     const requestBody: PasswordResetEmailRequest = await req.json();
@@ -93,64 +92,39 @@ const handler = async (req: Request): Promise<Response> => {
       tempPassword
     });
 
-    console.log('[PASSWORD RESET EMAIL] Sending email via SendGrid to:', userEmail);
+    console.log('[PASSWORD RESET EMAIL] Sending email via Resend to:', userEmail);
 
-    // Prepare SendGrid email payload
-    const emailPayload = {
-      personalizations: [
-        {
-          to: [{ email: userEmail }],
-          subject: template.subject,
-        },
-      ],
-      from: {
-        email: fromAddress,
-        name: fromName,
-      },
-      content: [
-        {
-          type: 'text/plain',
-          value: template.text,
-        },
-        {
-          type: 'text/html',
-          value: template.html,
-        },
-      ],
-      categories: ['password_reset', resetType],
-    };
-
-    // Send email via SendGrid API
-    const sendgridResponse = await fetch('https://api.sendgrid.com/v3/mail/send', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${sendgridApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(emailPayload),
+    // Send email via Resend
+    const { data, error } = await resend.emails.send({
+      from: `${fromName} <${fromAddress}>`,
+      to: [userEmail],
+      subject: template.subject,
+      html: template.html,
+      text: template.text,
+      tags: [
+        { name: 'type', value: 'password_reset' },
+        { name: 'reset_type', value: resetType }
+      ]
     });
 
-    if (!sendgridResponse.ok) {
-      const errorText = await sendgridResponse.text();
-      console.error('[PASSWORD RESET EMAIL] SendGrid error:', errorText);
-      throw new Error(`SendGrid API error: ${sendgridResponse.status} - ${errorText}`);
+    if (error) {
+      console.error('[PASSWORD RESET EMAIL] Resend error:', error);
+      throw new Error(`Failed to send email: ${error.message}`);
     }
 
-    // SendGrid returns 202 Accepted with X-Message-Id header
-    const messageId = sendgridResponse.headers.get('X-Message-Id') || 'unknown';
-    console.log('[PASSWORD RESET EMAIL] Email sent successfully via SendGrid:', messageId);
+    console.log('[PASSWORD RESET EMAIL] Email sent successfully via Resend:', data?.id);
 
     // Update reset request with email sent status
     await supabase
       .from('password_reset_requests')
       .update({
-        metadata: { email_sent: true, email_id: messageId, provider: 'sendgrid' },
+        metadata: { email_sent: true, email_id: data?.id },
         updated_at: new Date().toISOString()
       })
       .eq('id', resetRequestId);
 
     return new Response(
-      JSON.stringify({ success: true, emailId: messageId, provider: 'sendgrid' }),
+      JSON.stringify({ success: true, emailId: data?.id }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
 

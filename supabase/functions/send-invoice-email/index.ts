@@ -1,14 +1,15 @@
 // =====================================================
 // SEND INVOICE EMAIL - EDGE FUNCTION
 // Created: 2025-11-03
-// Updated: 2025-11-25 - Migrated to SendGrid
-// Description: Send invoice emails with PDF/Excel attachments via SendGrid
+// Updated: 2025-12-24 - Migrated to Resend
+// Description: Send invoice emails with PDF/Excel attachments via Resend
 // =====================================================
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4'
+import { Resend } from "npm:resend@2.0.0";
 
-const SENDGRID_API_KEY = Deno.env.get('SENDGRID_API_KEY')!
+const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!
 const EMAIL_FROM_ADDRESS = Deno.env.get('EMAIL_FROM_ADDRESS') || 'invoices@mydetailarea.com'
 const EMAIL_FROM_NAME = Deno.env.get('EMAIL_FROM_NAME') || 'Dealer Detail Service'
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
@@ -94,62 +95,46 @@ serve(async (req) => {
 </html>
     `.trim();
 
-    // Prepare attachments in SendGrid format
-    const sendgridAttachments = (request.attachments || []).map(att => ({
+    // Initialize Resend
+    const resend = new Resend(RESEND_API_KEY)
+
+    // Prepare attachments in Resend format
+    const resendAttachments = (request.attachments || []).map(att => ({
       content: att.content, // base64 string
       filename: att.filename,
-      type: att.content_type || 'application/octet-stream',
-      disposition: 'attachment',
     }))
 
-    console.log(`📎 Attaching ${sendgridAttachments.length} file(s)`)
+    console.log(`📎 Attaching ${resendAttachments.length} file(s)`)
 
-    // Build SendGrid personalizations
-    const personalizations = [{
-      to: request.recipients.map(email => ({ email })),
-      ...(request.cc && request.cc.length > 0 && { cc: request.cc.map(email => ({ email })) }),
-      ...(request.bcc && request.bcc.length > 0 && { bcc: request.bcc.map(email => ({ email })) }),
+    // Send email via Resend
+    const { data, error } = await resend.emails.send({
+      from: `${EMAIL_FROM_NAME} <${EMAIL_FROM_ADDRESS}>`,
+      to: request.recipients,
+      ...(request.cc && request.cc.length > 0 && { cc: request.cc }),
+      ...(request.bcc && request.bcc.length > 0 && { bcc: request.bcc }),
+      ...(request.reply_to && { reply_to: request.reply_to }),
       subject: request.subject,
-    }]
-
-    // Send email via SendGrid
-    const sendgridResponse = await fetch('https://api.sendgrid.com/v3/mail/send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${SENDGRID_API_KEY}`,
-      },
-      body: JSON.stringify({
-        personalizations,
-        from: {
-          email: EMAIL_FROM_ADDRESS,
-          name: EMAIL_FROM_NAME,
-        },
-        ...(request.reply_to && { reply_to: { email: request.reply_to } }),
-        content: [{
-          type: 'text/html',
-          value: emailHtml,
-        }],
-        attachments: sendgridAttachments,
-      }),
+      html: emailHtml,
+      attachments: resendAttachments.length > 0 ? resendAttachments : undefined,
+      tags: [
+        { name: 'type', value: 'invoice' },
+        { name: 'dealership_id', value: String(request.dealership_id) }
+      ]
     })
 
-    // SendGrid returns 202 Accepted on success (no JSON body)
-    if (!sendgridResponse.ok) {
-      const errorText = await sendgridResponse.text()
-      throw new Error(`SendGrid API error: ${sendgridResponse.status} - ${errorText}`)
+    if (error) {
+      console.error('❌ Resend API error:', error)
+      throw new Error(`Failed to send email: ${error.message}`)
     }
 
-    // Get message ID from headers
-    const messageId = sendgridResponse.headers.get('X-Message-Id') || 'unknown'
-    console.log('✅ Email sent successfully via SendGrid:', messageId)
+    console.log('✅ Email sent successfully via Resend:', data?.id)
 
     // Update email history status
     const { error: updateError } = await supabase
       .from('invoice_email_history')
       .update({
         status: 'sent',
-        provider_response: { provider: 'sendgrid', message_id: messageId },
+        provider_response: { message_id: data?.id },
       })
       .eq('id', request.email_history_id)
 
@@ -160,9 +145,8 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        email_id: messageId,
-        message: 'Email sent successfully via SendGrid',
-        provider: 'sendgrid',
+        email_id: data?.id,
+        message: 'Email sent successfully via Resend',
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

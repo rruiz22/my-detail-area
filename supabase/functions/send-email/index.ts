@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { Resend } from "npm:resend@2.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -20,16 +21,12 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     // Get credentials from Supabase Secrets
-    const sendgridApiKey = Deno.env.get("SENDGRID_API_KEY");
-    const fromAddress = Deno.env.get("EMAIL_FROM_ADDRESS");
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    const fromAddress = Deno.env.get("EMAIL_FROM_ADDRESS") || "notifications@mydetailarea.com";
     const fromName = Deno.env.get("EMAIL_FROM_NAME") || "My Detail Area";
 
-    if (!sendgridApiKey) {
-      throw new Error("Sendgrid API key not configured. Set SENDGRID_API_KEY in Supabase Secrets");
-    }
-
-    if (!fromAddress) {
-      throw new Error("From address not configured. Set EMAIL_FROM_ADDRESS in Supabase Secrets");
+    if (!resendApiKey) {
+      throw new Error("Resend API key not configured. Set RESEND_API_KEY in Supabase Secrets");
     }
 
     const { to, subject, text, html, from_name }: EmailRequest = await req.json();
@@ -38,62 +35,30 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Missing required fields: to, subject, and (text or html)");
     }
 
-    // Prepare email payload for Sendgrid
-    const emailPayload = {
-      personalizations: [
-        {
-          to: [{ email: to }],
-          subject: subject,
-        },
-      ],
-      from: {
-        email: fromAddress,
-        name: from_name || fromName,
-      },
-      content: [],
-    };
+    const resend = new Resend(resendApiKey);
 
-    // Add text content if provided
-    if (text) {
-      emailPayload.content.push({
-        type: "text/plain",
-        value: text,
-      });
-    }
-
-    // Add HTML content if provided
-    if (html) {
-      emailPayload.content.push({
-        type: "text/html",
-        value: html,
-      });
-    }
-
-    // Send email using Sendgrid API
-    const sendgridUrl = "https://api.sendgrid.com/v3/mail/send";
-
-    const response = await fetch(sendgridUrl, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${sendgridApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(emailPayload),
+    // Send email using Resend
+    const { data, error } = await resend.emails.send({
+      from: `${from_name || fromName} <${fromAddress}>`,
+      to: [to],
+      subject: subject,
+      text: text,
+      html: html,
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Sendgrid API error: ${response.status} - ${errorText}`);
-      throw new Error(`Sendgrid API error: ${response.status}`);
+    if (error) {
+      console.error(`Resend API error:`, error);
+      throw new Error(`Failed to send email: ${error.message}`);
     }
 
-    console.log(`Email sent successfully to ${to}`);
+    console.log(`Email sent successfully to ${to} with ID: ${data?.id}`);
 
     return new Response(
       JSON.stringify({
         success: true,
         to,
         subject,
+        emailId: data?.id,
       }),
       {
         status: 200,

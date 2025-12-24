@@ -199,9 +199,6 @@ export function NotificationsPreferencesTab() {
    * Handle push notification toggle with FCM token management
    */
   const handlePushToggle = async (enabled: boolean) => {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/56b3cffb-5a48-451a-8ffb-de0d6680f06b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'NotificationsPreferencesTab.tsx:handlePushToggle:entry',message:'Push toggle called',data:{enabled,userId:user?.id,hasUser:!!user},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H4'})}).catch(()=>{});
-    // #endregion
 
     if (!user?.id) return;
 
@@ -209,28 +206,13 @@ export function NotificationsPreferencesTab() {
 
     try {
       if (enabled) {
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/56b3cffb-5a48-451a-8ffb-de0d6680f06b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'NotificationsPreferencesTab.tsx:handlePushToggle:beforeRequestPermission',message:'About to call requestPermission',data:{enabled},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1'})}).catch(()=>{});
-        // #endregion
         // Request notification permission and register FCM token
         await requestPermission();
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/56b3cffb-5a48-451a-8ffb-de0d6680f06b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'NotificationsPreferencesTab.tsx:handlePushToggle:afterRequestPermission',message:'requestPermission completed successfully',data:{enabled},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1'})}).catch(()=>{});
-        // #endregion
       } else {
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/56b3cffb-5a48-451a-8ffb-de0d6680f06b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'NotificationsPreferencesTab.tsx:handlePushToggle:beforeClearToken',message:'About to call clearToken',data:{enabled},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H3'})}).catch(()=>{});
-        // #endregion
         // Deactivate all user's FCM tokens
         await clearToken();
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/56b3cffb-5a48-451a-8ffb-de0d6680f06b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'NotificationsPreferencesTab.tsx:handlePushToggle:afterClearToken',message:'clearToken completed successfully',data:{enabled},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H3'})}).catch(()=>{});
-        // #endregion
       }
 
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/56b3cffb-5a48-451a-8ffb-de0d6680f06b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'NotificationsPreferencesTab.tsx:handlePushToggle:beforeUpsert',message:'About to upsert preferences',data:{userId:user.id,enabled},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2'})}).catch(()=>{});
-      // #endregion
 
       // Update user_push_notification_preferences table
       const { error } = await supabase
@@ -246,18 +228,12 @@ export function NotificationsPreferencesTab() {
           }
         );
 
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/56b3cffb-5a48-451a-8ffb-de0d6680f06b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'NotificationsPreferencesTab.tsx:handlePushToggle:afterUpsert',message:'Upsert completed',data:{error:error?.message||null,errorCode:error?.code||null},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H2'})}).catch(()=>{});
-      // #endregion
 
       if (error) throw error;
 
       // Update local state
       setFormData((prev) => ({ ...prev, notification_push: enabled }));
 
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/56b3cffb-5a48-451a-8ffb-de0d6680f06b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'NotificationsPreferencesTab.tsx:handlePushToggle:success',message:'Push toggle SUCCESS',data:{enabled},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H5'})}).catch(()=>{});
-      // #endregion
 
       toast({
         title: t('common.success'),
@@ -266,9 +242,6 @@ export function NotificationsPreferencesTab() {
           : t('notifications.push_disabled', 'Push notifications disabled'),
       });
     } catch (error) {
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/56b3cffb-5a48-451a-8ffb-de0d6680f06b',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'NotificationsPreferencesTab.tsx:handlePushToggle:catch',message:'Push toggle FAILED',data:{errorMessage:(error as Error)?.message,errorName:(error as Error)?.name},timestamp:Date.now(),sessionId:'debug-session',hypothesisId:'H1-H3'})}).catch(()=>{});
-      // #endregion
       console.error('Failed to toggle push notifications:', error);
       toast({
         variant: 'destructive',

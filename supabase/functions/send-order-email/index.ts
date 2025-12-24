@@ -25,11 +25,14 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("RESEND_API_KEY not configured");
     }
 
+    const fromAddress = Deno.env.get("EMAIL_FROM_ADDRESS") || "orders@mydetailarea.com";
+    const fromName = Deno.env.get("EMAIL_FROM_NAME") || "My Detail Area";
+
     const resend = new Resend(resendApiKey);
     const { to, subject, orderNumber, customerName, orderDetails }: EmailRequest = await req.json();
 
     const emailResponse = await resend.emails.send({
-      from: "Orders <orders@yourdomain.com>", // Replace with your domain
+      from: `${fromName} <${fromAddress}>`,
       to: [to],
       subject: subject || `Order Update - ${orderNumber}`,
       html: `
