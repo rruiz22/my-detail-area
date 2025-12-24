@@ -1,25 +1,24 @@
-import React, { memo, useCallback } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { ServicesDisplay } from '@/components/orders/ServicesDisplay';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  MoreHorizontal,
-  Edit,
-  Eye,
-  Trash,
-} from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ServicesDisplay } from '@/components/orders/ServicesDisplay';
 import { DueDateIndicator } from '@/components/ui/due-date-indicator';
-import { getStatusBorder, getStatusRowColor } from '@/utils/statusUtils';
-import { getSystemTimezone } from '@/utils/dateUtils';
 import type { Order } from '@/hooks/useOrderManagement';
-import type { OrderStatus } from '@/constants/orderStatus';
+import { getSystemTimezone } from '@/utils/dateUtils';
+import { getStatusBorder, getStatusRowColor } from '@/utils/statusUtils';
+import {
+  Edit,
+  Eye,
+  MoreHorizontal,
+  Trash,
+} from 'lucide-react';
+import React, { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 /**

@@ -1,9 +1,9 @@
 {
-  "version": "1.3.98",
-  "buildTime": "2025-12-22T17:26:01.781Z",
-  "buildTimestamp": 1766424361782,
-  "gitCommit": "feae47d",
-  "gitBranch": "fix/unknown-user-rls-all-modules",
-  "buildNumber": "1766424361881",
+  "version": "1.3.99",
+  "buildTime": "2025-12-24T04:35:52.743Z",
+  "buildTimestamp": 1766550952744,
+  "gitCommit": "3752553",
+  "gitBranch": "main",
+  "buildNumber": "1766550952854",
   "environment": "production"
 }

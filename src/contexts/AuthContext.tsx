@@ -65,87 +65,183 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
-  // Load extended user profile data with timeout and fallback
-  const loadUserProfile = async (authUser: User): Promise<ExtendedUser> => {
-    // 📊 Telemetry: Track profile load start time
-    const startTime = Date.now();
-
+  // 🚀 Pre-warm Supabase connection to avoid cold start delays
+  const prewarmConnection = async (): Promise<void> => {
     try {
-      auth('⏱️ [Profile Load] Starting for user:', authUser.id, '@ ' + new Date(startTime).toISOString());
+      // Simple count query to warm up the connection pool
+      await supabase.from('profiles').select('id', { count: 'exact', head: true }).limit(1);
+      console.log('🔥 [Pre-warm] Connection warmed up');
+    } catch {
+      // Ignore errors - this is just a warm-up
+      console.log('🔥 [Pre-warm] Warm-up attempt completed (may have failed)');
+    }
+  };
 
-      // 📊 Connection Pool Telemetry: Track concurrent query
+  // 🔄 Single attempt to load profile with timeout
+  const attemptProfileLoad = async (
+    authUser: User, 
+    timeoutMs: number,
+    attemptNumber: number
+  ): Promise<{ data: { user_type?: string; role?: string; first_name?: string; last_name?: string; dealership_id?: number; avatar_seed?: string; avatar_url?: string | null } | null; error: Error | null }> => {
+    const profilePromise = supabase
+      .from('profiles')
+      .select('user_type, role, first_name, last_name, dealership_id, avatar_seed, avatar_url')
+      .eq('id', authUser.id)
+      .single();
+
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`Profile load timeout after ${timeoutMs}ms (attempt ${attemptNumber})`)), timeoutMs)
+    );
+
+    return Promise.race([profilePromise, timeoutPromise]) as Promise<{ 
+      data: { user_type?: string; role?: string; first_name?: string; last_name?: string; dealership_id?: number; avatar_seed?: string; avatar_url?: string | null } | null; 
+      error: Error | null 
+    }>;
+  };
+
+  // Load extended user profile data with retry mechanism and pre-warm
+  const loadUserProfile = async (authUser: User): Promise<ExtendedUser> => {
+    const startTime = Date.now();
+    const RETRY_TIMEOUTS = [3000, 5000, 10000]; // Progressive timeouts: 3s, 5s, 10s
+    
+    try {
+      auth('⏱️ [Profile Load] Starting for user:', authUser.id);
       console.log('🔌 [Connection Pool] Profile query started - AuthContext.loadUserProfile()');
 
-      // Add timeout to prevent infinite loading
-      const profilePromise = supabase
-        .from('profiles')
-        .select('user_type, role, first_name, last_name, dealership_id, avatar_seed, avatar_url')
-        .eq('id', authUser.id)
-        .single();
+      // 🔥 Pre-warm on first attempt to combat cold starts
+      await prewarmConnection();
 
-      // ✅ FIX: Increased from 5s to 15s for slow networks
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Profile load timeout after 15 seconds')), 15000)
-      );
+      let lastError: Error | null = null;
+      
+      // 🔄 Retry loop with progressive timeouts
+      for (let attempt = 0; attempt < RETRY_TIMEOUTS.length; attempt++) {
+        const timeout = RETRY_TIMEOUTS[attempt];
+        const attemptStart = Date.now();
+        
+        try {
+          console.log(`🔄 [Profile Load] Attempt ${attempt + 1}/${RETRY_TIMEOUTS.length} (timeout: ${timeout}ms)`);
+          
+          const { data: profile, error } = await attemptProfileLoad(authUser, timeout, attempt + 1);
+          const attemptDuration = Date.now() - attemptStart;
 
-      const { data: profile, error } = await Promise.race([
-        profilePromise,
-        timeoutPromise
-      ]) as { data: { user_type?: string; role?: string; first_name?: string; last_name?: string; dealership_id?: number; avatar_seed?: string; avatar_url?: string | null } | null; error: Error | null };
+          if (error) {
+            console.log(`⚠️ [Profile Load] Attempt ${attempt + 1} failed after ${attemptDuration}ms:`, error.message);
+            lastError = error;
+            continue; // Try next attempt
+          }
 
-      // 📊 Telemetry: Calculate load duration
-      const loadDuration = Date.now() - startTime;
+          if (profile) {
+            const totalDuration = Date.now() - startTime;
+            console.log(`✅ [Profile Load] Success on attempt ${attempt + 1} in ${attemptDuration}ms (total: ${totalDuration}ms)`);
 
-      if (error) {
-        console.log(`🔌 [Connection Pool] Profile query FAILED after ${loadDuration}ms - AuthContext.loadUserProfile()`);
-        logError(`❌ [Profile Load] Failed after ${loadDuration}ms:`, error);
-        // Return basic user with minimal extension
+            return {
+              ...authUser,
+              user_type: profile.user_type || 'system_admin',
+              role: profile.role || 'admin',
+              first_name: profile.first_name,
+              last_name: profile.last_name,
+              dealershipId: profile.dealership_id,
+              avatar_seed: profile.avatar_seed,
+              avatar_url: profile.avatar_url
+            };
+          }
+        } catch (attemptError: any) {
+          const attemptDuration = Date.now() - attemptStart;
+          console.log(`⚠️ [Profile Load] Attempt ${attempt + 1} threw error after ${attemptDuration}ms:`, attemptError.message);
+          lastError = attemptError;
+          
+          // Small delay before retry (except on last attempt)
+          if (attempt < RETRY_TIMEOUTS.length - 1) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+          }
+        }
+      }
+
+      // All retries exhausted - try to use last known profile from localStorage
+      const totalDuration = Date.now() - startTime;
+      console.log(`❌ [Profile Load] All ${RETRY_TIMEOUTS.length} attempts failed after ${totalDuration}ms`);
+      
+      // 🔄 Try to recover from localStorage backup
+      const lastKnownProfile = getLastKnownProfile(authUser.id);
+      if (lastKnownProfile) {
+        console.log('🔄 [Profile Load] Using last known profile from localStorage');
         return {
           ...authUser,
-          user_type: 'system_admin', // Default for your user
-          role: 'admin'
+          ...lastKnownProfile
         };
       }
 
-      // 📊 Connection Pool Telemetry: Track query completion
-      console.log(`🔌 [Connection Pool] Profile query COMPLETED in ${loadDuration}ms - AuthContext.loadUserProfile()`);
-
-      // Extend auth user with profile data (no dealership for now)
-      const extendedUser: ExtendedUser = {
-        ...authUser,
-        user_type: profile.user_type || 'system_admin',
-        role: profile.role || 'admin',
-        first_name: profile.first_name,
-        last_name: profile.last_name,
-        dealershipId: profile.dealership_id,
-        avatar_seed: profile.avatar_seed,
-        avatar_url: profile.avatar_url
-      };
-
-      // 📊 Telemetry: Log success with duration and warn if slow
-      if (loadDuration > 10000) {
-        warn(`⚠️ [Profile Load] SLOW: Took ${loadDuration}ms (>10s threshold) for user ${authUser.id}`);
-        warn(`⚠️ [Connection Pool] Possible saturation detected - query took >10s`);
-      } else {
-        auth(`✅ [Profile Load] Success in ${loadDuration}ms:`, {
-          user_type: extendedUser.user_type,
-          role: extendedUser.role
-        });
-      }
-
-      return extendedUser;
-
-    } catch (error) {
-      // 📊 Telemetry: Log fallback with duration
-      const loadDuration = Date.now() - startTime;
-      logError(`❌ [Profile Load] FALLBACK after ${loadDuration}ms:`, error);
-
-      // Emergency fallback to unblock app
+      logError(`❌ [Profile Load] FALLBACK after ${totalDuration}ms:`, lastError);
       return {
         ...authUser,
         user_type: 'system_admin',
         role: 'admin'
       };
+
+    } catch (error) {
+      const loadDuration = Date.now() - startTime;
+      logError(`❌ [Profile Load] CRITICAL ERROR after ${loadDuration}ms:`, error);
+
+      // Last resort: try localStorage backup
+      const lastKnownProfile = getLastKnownProfile(authUser.id);
+      if (lastKnownProfile) {
+        console.log('🔄 [Profile Load] Emergency recovery from localStorage');
+        return {
+          ...authUser,
+          ...lastKnownProfile
+        };
+      }
+
+      return {
+        ...authUser,
+        user_type: 'system_admin',
+        role: 'admin'
+      };
+    }
+  };
+
+  // 📦 Get last known profile from localStorage (backup for cold start issues)
+  const getLastKnownProfile = (userId: string): Partial<ExtendedUser> | null => {
+    try {
+      const key = `profile_backup_${userId}`;
+      const stored = localStorage.getItem(key);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        // Check if backup is less than 7 days old
+        if (parsed.timestamp && Date.now() - parsed.timestamp < 7 * 24 * 60 * 60 * 1000) {
+          return {
+            user_type: parsed.user_type,
+            role: parsed.role,
+            first_name: parsed.first_name,
+            last_name: parsed.last_name,
+            dealershipId: parsed.dealershipId,
+            avatar_seed: parsed.avatar_seed,
+            avatar_url: parsed.avatar_url
+          };
+        }
+      }
+    } catch {
+      // Ignore localStorage errors
+    }
+    return null;
+  };
+
+  // 💾 Save profile backup to localStorage
+  const saveProfileBackup = (user: ExtendedUser): void => {
+    try {
+      const key = `profile_backup_${user.id}`;
+      localStorage.setItem(key, JSON.stringify({
+        user_type: user.user_type,
+        role: user.role,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        dealershipId: user.dealershipId,
+        avatar_seed: user.avatar_seed,
+        avatar_url: user.avatar_url,
+        timestamp: Date.now()
+      }));
+    } catch {
+      // Ignore localStorage errors
     }
   };
 
@@ -195,6 +291,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             dealership_name: freshProfile.dealership_name,
             avatar_seed: freshProfile.avatar_seed
           });
+
+          // 💾 Save backup for cold start recovery
+          saveProfileBackup(freshProfile);
         });
       }
     } else {
@@ -219,6 +318,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         dealership_name: freshProfile.dealership_name,
         avatar_seed: freshProfile.avatar_seed
       });
+
+      // 💾 Save backup for cold start recovery
+      saveProfileBackup(freshProfile);
     }
   };
 

@@ -4,12 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { 
-  Edit, 
-  Calendar, 
-  Clock, 
-  User, 
-  Car, 
+import {
+  Edit,
+  Calendar,
+  Clock,
+  User,
+  Car,
   DollarSign,
   FileText,
   Phone,
@@ -45,34 +45,34 @@ export function OrderPreviewPanel({
 
   const formatDueDate = (dueDate?: string) => {
     if (!dueDate) return null;
-    
+
     const diffDays = calculateDaysFromNow(dueDate);
     if (diffDays === null) return null;
-    
+
     if (diffDays < 0) {
-      return { 
-        text: t('orders.due_status.overdue_days', { days: Math.abs(diffDays) }), 
+      return {
+        text: t('orders.due_status.overdue_days', { days: Math.abs(diffDays) }),
         variant: 'destructive' as const,
         icon: AlertCircle,
         urgent: true
       };
     } else if (diffDays === 0) {
-      return { 
-        text: t('orders.due_status.due_today'), 
+      return {
+        text: t('orders.due_status.due_today'),
         variant: 'warning' as const,
         icon: Clock,
         urgent: true
       };
     } else if (diffDays === 1) {
-      return { 
-        text: t('orders.due_status.due_tomorrow'), 
+      return {
+        text: t('orders.due_status.due_tomorrow'),
         variant: 'secondary' as const,
         icon: Calendar,
         urgent: false
       };
     } else {
-      return { 
-        text: t('orders.due_status.due_in_days', { days: diffDays }), 
+      return {
+        text: t('orders.due_status.due_in_days', { days: diffDays }),
         variant: 'outline' as const,
         icon: Calendar,
         urgent: false
@@ -81,8 +81,8 @@ export function OrderPreviewPanel({
   };
 
   const dueInfo = formatDueDate(order.dueDate);
-  const vehicleDisplay = order.vehicleInfo || 
-    (order.vehicleYear && order.vehicleMake && order.vehicleModel 
+  const vehicleDisplay = order.vehicleInfo ||
+    (order.vehicleYear && order.vehicleMake && order.vehicleModel
       ? `${order.vehicleYear} ${order.vehicleMake} ${order.vehicleModel}`
       : 'Vehicle details not available');
 
@@ -104,7 +104,7 @@ export function OrderPreviewPanel({
               {t('orders.edit')}
             </Button>
           </div>
-          
+
           {/* Status & Due Date */}
           <div className="flex items-center gap-3">
             <StatusBadgeInteractive
@@ -115,8 +115,8 @@ export function OrderPreviewPanel({
               onStatusChange={onStatusChange || (() => {})}
             />
             {dueInfo && (
-              <Badge 
-                variant={dueInfo.variant === 'warning' ? 'secondary' : dueInfo.variant} 
+              <Badge
+                variant={dueInfo.variant === 'warning' ? 'secondary' : dueInfo.variant}
                 className={`flex items-center gap-1 ${dueInfo.urgent ? 'animate-pulse' : ''} ${
                   dueInfo.variant === 'warning' ? 'bg-warning/20 text-warning border-warning' : ''
                 }`}
@@ -199,11 +199,11 @@ export function OrderPreviewPanel({
                   <Badge variant="outline">{order.orderType}</Badge>
                 </div>
               )}
-              
+
               {order.priority && (
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Priority:</span>
-                  <Badge 
+                  <Badge
                     variant={order.priority === 'urgent' ? 'destructive' : 'secondary'}
                     className={order.priority === 'high' ? 'bg-warning/20 text-warning border-warning' : ''}
                   >
@@ -258,7 +258,7 @@ export function OrderPreviewPanel({
                     </div>
                   </div>
                 )}
-                
+
                 {order.totalAmount && (
                   <>
                     <Separator />
