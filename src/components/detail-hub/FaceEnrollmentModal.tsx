@@ -214,7 +214,7 @@ export function FaceEnrollmentModal({
     try {
       // Detect face with landmarks and descriptor
       const detection = await faceapi
-        .detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions())
+        .detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions({ inputSize: 416 }))
         .withFaceLandmarks()
         .withFaceDescriptor();
 

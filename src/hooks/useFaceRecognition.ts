@@ -43,6 +43,13 @@ interface BestMatch {
   confidence: number;
 }
 
+interface MultipleFacesError {
+  error: 'multiple_faces';
+  count: number;
+}
+
+export type FaceMatchResult = BestMatch | MultipleFacesError | null;
+
 export function useFaceRecognition(options: UseFaceRecognitionOptions = {}) {
   const {
     modelUrl = import.meta.env.PROD
@@ -251,7 +258,7 @@ export function useFaceRecognition(options: UseFaceRecognitionOptions = {}) {
 
       // Validate and filter descriptors
       const validDescriptors: faceapi.LabeledFaceDescriptors[] = [];
-      const invalidCount = 0;
+      let invalidCount = 0;
 
       for (const employee of enrolledEmployees) {
         try {
@@ -263,6 +270,7 @@ export function useFaceRecognition(options: UseFaceRecognitionOptions = {}) {
           // Validate descriptor length (should be 128 for face-api.js)
           if (descriptor.length !== 128) {
             console.warn(`[FaceAPI] ⚠️ Invalid descriptor for ${employee.name} - length ${descriptor.length}, expected 128`);
+            invalidCount++;
             continue;
           }
 
@@ -275,6 +283,7 @@ export function useFaceRecognition(options: UseFaceRecognitionOptions = {}) {
           ));
         } catch (descError) {
           console.warn(`[FaceAPI] ⚠️ Failed to process descriptor for ${employee.name}:`, descError);
+          invalidCount++;
         }
       }
 
@@ -316,7 +325,7 @@ export function useFaceRecognition(options: UseFaceRecognitionOptions = {}) {
    */
   const findBestMatch = useCallback(async (
     imageElement: HTMLImageElement | HTMLVideoElement
-  ): Promise<BestMatch | null> => {
+  ): Promise<FaceMatchResult> => {
     if (!isLoaded) {
       console.warn('[FaceAPI] Models not loaded');
       return null;
@@ -344,7 +353,7 @@ export function useFaceRecognition(options: UseFaceRecognitionOptions = {}) {
       // Security check: Multiple faces detected
       if (allDetections.length > 1) {
         console.warn('[FaceAPI] ⚠️ Multiple faces detected:', allDetections.length);
-        return { error: 'multiple_faces', count: allDetections.length } as any;
+        return { error: 'multiple_faces', count: allDetections.length };
       }
 
       // Only one face detected - proceed with match

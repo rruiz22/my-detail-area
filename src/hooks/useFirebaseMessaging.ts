@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -57,6 +57,10 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
     loading: false,
     error: null,
   });
+
+  // 🔴 FIX: Prevent infinite loop when auto-registration fails
+  // This ref ensures we only attempt auto-registration ONCE per component lifecycle
+  const hasAttemptedAutoRegister = useRef(false);
 
   /**
    * Save FCM token to Supabase database
@@ -235,11 +239,18 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
    *
    * ⚡ PERF FIX: Deferred until user.email is available (after AuthContext.loadUserProfile completes)
    * This naturally serializes queries and eliminates connection pool competition on initial load
+   *
+   * 🔴 FIX: Uses hasAttemptedAutoRegister ref to prevent infinite loop when FCM registration fails
+   * (e.g., AbortError: Registration failed - push service error in localhost)
    */
   useEffect(() => {
     // Wait for user profile to fully load before checking push preferences
     // user.email is only available after AuthContext.loadUserProfile() completes
     if (!state.isSupported || !user?.id || !user?.email) return;
+
+    // 🔴 FIX: Only attempt auto-registration ONCE per component lifecycle
+    // This prevents infinite loop when FCM registration fails
+    if (hasAttemptedAutoRegister.current) return;
 
     const autoRegisterIfEnabled = async () => {
       // Check if user has push notifications enabled in their preferences
@@ -261,6 +272,9 @@ export function useFirebaseMessaging(): UseFirebaseMessagingReturn {
         !state.token &&
         !state.loading
       ) {
+        // 🔴 FIX: Mark as attempted BEFORE calling requestPermission
+        // This prevents re-entry if requestPermission fails and triggers a re-render
+        hasAttemptedAutoRegister.current = true;
         requestPermission();
       }
     };

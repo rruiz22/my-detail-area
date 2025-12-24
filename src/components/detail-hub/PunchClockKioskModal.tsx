@@ -1341,7 +1341,7 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
               }
             }
           }
-        }, 2000);
+        }, 1000);
 
         // Cleanup function - now properly accesses refs
         return () => {
@@ -1989,14 +1989,6 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                   </CardContent>
                 </Card>
 
-                {/* Week Stats */}
-                <WeekStatsCard
-                  totalHours={employeeState.weekStats.total_hours}
-                  regularHours={employeeState.weekStats.regular_hours}
-                  overtimeHours={employeeState.weekStats.overtime_hours}
-                  daysWorked={employeeState.weekStats.days_worked}
-                />
-
                 {/* Punch Validation Alert - Only for not_clocked_in state */}
                 {employeeState.state === 'not_clocked_in' && templateValidation && (
                   <Alert className={templateValidation.allowed
@@ -2143,6 +2135,14 @@ export function PunchClockKioskModal({ open, onClose, kioskId }: PunchClockKiosk
                     </Button>
                   </CardContent>
                 </Card>
+
+                {/* Week Stats */}
+                <WeekStatsCard
+                  totalHours={employeeState.weekStats.total_hours}
+                  regularHours={employeeState.weekStats.regular_hours}
+                  overtimeHours={employeeState.weekStats.overtime_hours}
+                  daysWorked={employeeState.weekStats.days_worked}
+                />
 
                 {/* Punch History */}
                 <PunchHistoryCard

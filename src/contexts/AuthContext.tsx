@@ -69,10 +69,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const prewarmConnection = (): void => {
     // Fire and forget - don't await, just start the connection
     const warmupPromise = supabase.from('profiles').select('id', { count: 'exact', head: true }).limit(1);
-    
+
     // Set a timeout to prevent hanging
     const timeoutPromise = new Promise<void>((resolve) => setTimeout(resolve, 2000));
-    
+
     Promise.race([warmupPromise, timeoutPromise])
       .then(() => console.log('🔥 [Pre-warm] Connection warmed up'))
       .catch(() => console.log('🔥 [Pre-warm] Warm-up skipped'));

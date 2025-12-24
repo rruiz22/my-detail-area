@@ -17,8 +17,10 @@ import * as faceapi from '@vladmandic/face-api';
 // CONFIGURATION
 // =====================================================
 
-// Model URLs (served from public/models/)
-const MODEL_URL = '/models';
+// Model URLs (CDN in production for reliability, local for development)
+const MODEL_URL = import.meta.env.PROD
+  ? 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/model'
+  : '/models';
 
 // Quality thresholds
 export const QUALITY_THRESHOLDS = {

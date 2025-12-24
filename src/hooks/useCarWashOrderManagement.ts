@@ -304,8 +304,8 @@ export const useCarWashOrderManagement = () => {
 
       // Auto-generate QR code and shortlink in background (fire-and-forget, non-blocking)
       generateQR(data.id, data.order_number, data.dealer_id).catch(() => {
-        // QR generation failure doesn't affect order creation
-      });
+          // QR generation failure doesn't affect order creation
+        });
 
       // Show success immediately (don't wait for QR)
       toast({
