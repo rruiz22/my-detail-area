@@ -785,6 +785,9 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
   const createOrder = useCallback(async (orderData: OrderFormData) => {
     if (!user) return;
 
+    // ⏱️ PERFORMANCE: Measure total order creation time
+    console.time('⏱️ createOrder:total');
+
     // ✅ SECURITY: Validate dealer context consistency
     if (!selectedDealerId) {
       throw new Error('No dealer context available. Please select a dealership.');
@@ -807,7 +810,9 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       const orderType = (orderData.order_type || 'sales') as OrderType;
 
       // Generate order number using new service
+      console.time('⏱️ createOrder:generateNumber');
       const orderNumber = await orderNumberService.generateOrderNumber(orderType, orderData.dealer_id);
+      console.timeEnd('⏱️ createOrder:generateNumber');
 
       // Determine created_by_group_id from user's groups/roles
       let createdByGroupId: string | null = null;
@@ -868,11 +873,13 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
 
       dev('Inserting order to DB:', newOrder);
 
+      console.time('⏱️ createOrder:insertDB');
       const { data, error } = await supabase
         .from('orders')
         .insert(newOrder)
         .select()
         .single();
+      console.timeEnd('⏱️ createOrder:insertDB');
 
       if (error) {
         logError('Error creating order:', error);
@@ -882,24 +889,27 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       dev('Order created successfully:', data);
 
       // 👥 AUTO-FOLLOW: Add creator and assigned user as followers
+      // ⚡ OPTIMIZED: Run both follow operations in parallel
+      console.time('⏱️ createOrder:autoFollow');
       try {
-        // Add creator as follower (type: 'creator', notification: 'important')
-        await followersService.autoFollowOnCreation(data.id, user.id);
-        dev('✅ Auto-follow: Creator added as follower');
-
-        // Add assigned user as follower if exists (type: 'assigned', notification: 'all')
-        if (data.assigned_group_id) {
-          await followersService.autoFollowOnAssignment(
-            data.id,
-            data.assigned_group_id, // Contains user_id despite field name
-            user.id
-          );
-          dev('✅ Auto-follow: Assigned user added as follower');
-        }
+        await Promise.all([
+          // Add creator as follower (type: 'creator', notification: 'important')
+          followersService.autoFollowOnCreation(data.id, user.id)
+            .then(() => dev('✅ Auto-follow: Creator added as follower')),
+          // Add assigned user as follower if exists (type: 'assigned', notification: 'all')
+          data.assigned_group_id
+            ? followersService.autoFollowOnAssignment(
+                data.id,
+                data.assigned_group_id, // Contains user_id despite field name
+                user.id
+              ).then(() => dev('✅ Auto-follow: Assigned user added as follower'))
+            : Promise.resolve()
+        ]);
       } catch (followError) {
         logError('❌ Failed to auto-add followers (non-blocking):', followError);
         // Don't throw - followers error shouldn't block order creation
       }
+      console.timeEnd('⏱️ createOrder:autoFollow');
 
       // 🔔 NOTIFICATION: Order Created (dynamic module based on order_type)
       void createOrderNotification({
@@ -919,6 +929,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       );
 
       // 🔗 GENERATE SHORT LINK: Must happen BEFORE SMS to include it in the message
+      console.time('⏱️ createOrder:generateQR');
       let shortLink: string | undefined = undefined;
       try {
         const qrData = await generateQR(data.id, data.order_number, data.dealer_id);
@@ -928,6 +939,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         logError('❌ Failed to generate QR code:', qrError);
         // Continue with SMS even if QR generation fails
       }
+      console.timeEnd('⏱️ createOrder:generateQR');
 
       // 📱 SMS NOTIFICATION: Send SMS to users with notification rules
       // Format services for SMS
@@ -959,49 +971,65 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
         }
       });
 
-      // 🔍 Fetch assigned user/group name BEFORE Slack check (prevents blocking Slack)
-      let assignedToName: string | undefined = undefined;
-      if (data.assigned_group_id) {
-        try {
-          const { data: groupData } = await supabase
-            .from('dealer_groups')
-            .select('name')
-            .eq('id', data.assigned_group_id)
-            .maybeSingle();
-          assignedToName = groupData?.name || undefined;
-        } catch (error) {
-          console.warn('⚠️ Failed to fetch group name:', error);
+      // 🔍 Fetch assigned user/group name and creator name for Slack
+      // ⚡ OPTIMIZED: Run both fetches in parallel
+      console.time('⏱️ createOrder:fetchNamesForSlack');
+      
+      // Helper functions for parallel execution
+      const fetchAssignedName = async (): Promise<string | undefined> => {
+        if (data.assigned_group_id) {
+          try {
+            const { data: groupData } = await supabase
+              .from('dealer_groups')
+              .select('name')
+              .eq('id', data.assigned_group_id)
+              .maybeSingle();
+            return groupData?.name || undefined;
+          } catch (error) {
+            console.warn('⚠️ Failed to fetch group name:', error);
+            return undefined;
+          }
+        } else if (data.assigned_contact_id) {
+          try {
+            const { data: contactData } = await supabase
+              .from('dealership_contacts')
+              .select('first_name, last_name')
+              .eq('id', data.assigned_contact_id)
+              .maybeSingle();
+            if (contactData) {
+              return `${contactData.first_name || ''} ${contactData.last_name || ''}`.trim();
+            }
+          } catch (error) {
+            console.warn('⚠️ Failed to fetch contact name:', error);
+          }
         }
-      } else if (data.assigned_contact_id) {
+        return undefined;
+      };
+
+      const fetchCreatorName = async (): Promise<string | undefined> => {
         try {
-          const { data: contactData } = await supabase
-            .from('dealership_contacts')
-            .select('first_name, last_name')
-            .eq('id', data.assigned_contact_id)
-            .maybeSingle();
-          if (contactData) {
-            assignedToName = `${contactData.first_name || ''} ${contactData.last_name || ''}`.trim();
+          // 🔧 FIX: Use RPC to bypass RLS caching issue
+          const { data: allProfiles } = await supabase.rpc('get_dealer_user_profiles');
+          const creatorProfile = allProfiles?.find((p: any) => p.id === user.id);
+
+          if (creatorProfile?.first_name) {
+            return `${creatorProfile.first_name} ${creatorProfile.last_name || ''}`.trim();
+          } else if (creatorProfile?.email) {
+            return creatorProfile.email;
           }
         } catch (error) {
-          console.warn('⚠️ Failed to fetch contact name:', error);
+          console.warn('⚠️ Failed to fetch creator profile:', error);
         }
-      }
+        return undefined;
+      };
 
-      // 🔍 Fetch creator name for Slack notification
-      let createdByName: string | undefined = undefined;
-      try {
-        // 🔧 FIX: Use RPC to bypass RLS caching issue
-        const { data: allProfiles } = await supabase.rpc('get_dealer_user_profiles');
-        const creatorProfile = allProfiles?.find(p => p.id === user.id);
-
-        if (creatorProfile?.first_name) {
-          createdByName = `${creatorProfile.first_name} ${creatorProfile.last_name || ''}`.trim();
-        } else if (creatorProfile?.email) {
-          createdByName = creatorProfile.email;
-        }
-      } catch (error) {
-        console.warn('⚠️ Failed to fetch creator profile:', error);
-      }
+      // ⚡ Run both fetches in parallel
+      const [assignedToName, createdByName] = await Promise.all([
+        fetchAssignedName(),
+        fetchCreatorName()
+      ]);
+      
+      console.timeEnd('⏱️ createOrder:fetchNamesForSlack');
 
       // Send Slack notification (if enabled)
       const moduleForNotif = getNotificationModule(data.order_type || 'sales');
@@ -1066,6 +1094,7 @@ export const useOrderManagement = (activeTab: string, weekOffset: number = 0) =>
       throw error;
     } finally {
       setLoading(false);
+      console.timeEnd('⏱️ createOrder:total');
     }
   }, [user, enhancedUser, generateQR, queryClient, enrichOrderData, selectedDealerId]);
 

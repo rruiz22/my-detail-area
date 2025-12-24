@@ -50,17 +50,21 @@ export class OrderNumberService {
 
   /**
    * Get last sequence number for order type (global counter)
+   * ⚡ OPTIMIZED: Uses ORDER BY + LIMIT instead of fetching all records
    */
   private async getLastSequenceNumber(orderType: OrderType): Promise<number> {
     try {
       const prefix = this.prefixes[orderType];
       const prefixPattern = `${prefix}-%`;
 
-      // Query ALL order numbers for this type to find the highest sequence number
+      // ⚡ OPTIMIZATION: Only fetch top 50 order numbers sorted descending
+      // This is much faster than fetching all 600+ records
       const { data, error } = await supabase
         .from('orders')
         .select('order_number')
-        .ilike('order_number', prefixPattern);
+        .ilike('order_number', prefixPattern)
+        .order('order_number', { ascending: false })
+        .limit(50);
 
       if (error) {
         console.warn('Error querying last sequence:', error);
@@ -68,7 +72,7 @@ export class OrderNumberService {
       }
 
       if (data && data.length > 0) {
-        // Extract all sequence numbers and find the maximum
+        // Extract max sequence from top 50 (sorted, so likely first valid one is max)
         let maxSequence = 0;
 
         for (const row of data) {
@@ -83,7 +87,7 @@ export class OrderNumberService {
           }
         }
 
-        console.log(`🔍 Found max sequence for ${orderType}: ${maxSequence} (from ${data.length} orders)`);
+        console.log(`🔍 Found max sequence for ${orderType}: ${maxSequence} (optimized query)`);
         return maxSequence;
       }
 
