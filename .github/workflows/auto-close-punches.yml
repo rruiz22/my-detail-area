@@ -1,0 +1,72 @@
+# Auto-Close Forgotten Punches
+#
+# This workflow runs every 15 minutes to automatically close forgotten
+# punch-out entries for employees who forgot to clock out at the end of their shift.
+#
+# Prerequisites:
+# - SUPABASE_URL secret configured
+# - SUPABASE_SERVICE_ROLE_KEY secret configured
+# - Edge function 'auto-close-forgotten-punches' deployed to Supabase
+#
+# How it works:
+# 1. Cron triggers every 15 minutes
+# 2. Invokes Supabase Edge Function
+# 3. Edge Function finds overdue punches based on employee's shift_end_time
+# 4. Sends SMS/Push reminders at configured intervals (default: 30min, 60min)
+# 5. Auto-closes punch after configured window (default: 120min)
+#
+# Employee configuration (via AssignmentModal):
+# - auto_close_enabled: true/false
+# - shift_end_time: e.g., "18:00"
+# - auto_close_first_reminder: minutes (default: 30)
+# - auto_close_second_reminder: minutes (default: 60)
+# - auto_close_window_minutes: minutes (default: 120)
+
+name: Auto-Close Forgotten Punches
+
+on:
+  schedule:
+    # Run every 15 minutes
+    - cron: '*/15 * * * *'
+
+  # Allow manual trigger for testing
+  workflow_dispatch:
+
+jobs:
+  auto-close:
+    name: Process Overdue Punches
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Invoke Supabase Edge Function
+        id: invoke
+        run: |
+          echo "Starting auto-close process at $(date -u)"
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "${{ secrets.SUPABASE_URL }}/functions/v1/auto-close-forgotten-punches" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json")
+
+          # Extract HTTP status code (last line)
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          # Extract response body (all but last line)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+
+          echo "HTTP Status: $HTTP_CODE"
+          echo "Response: $BODY"
+
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "✅ Auto-close process completed successfully"
+            echo "status=success" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Auto-close process failed with status $HTTP_CODE"
+            echo "status=failed" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+      - name: Log Result
+        if: always()
+        run: |
+          echo "Workflow completed at $(date -u)"
+          echo "Status: ${{ steps.invoke.outputs.status }}"
