@@ -65,21 +65,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
-  // 🚀 Pre-warm Supabase connection to avoid cold start delays
-  const prewarmConnection = async (): Promise<void> => {
-    try {
-      // Simple count query to warm up the connection pool
-      await supabase.from('profiles').select('id', { count: 'exact', head: true }).limit(1);
-      console.log('🔥 [Pre-warm] Connection warmed up');
-    } catch {
-      // Ignore errors - this is just a warm-up
-      console.log('🔥 [Pre-warm] Warm-up attempt completed (may have failed)');
-    }
+  // 🚀 Pre-warm Supabase connection (non-blocking, with timeout)
+  const prewarmConnection = (): void => {
+    // Fire and forget - don't await, just start the connection
+    const warmupPromise = supabase.from('profiles').select('id', { count: 'exact', head: true }).limit(1);
+    
+    // Set a timeout to prevent hanging
+    const timeoutPromise = new Promise<void>((resolve) => setTimeout(resolve, 2000));
+    
+    Promise.race([warmupPromise, timeoutPromise])
+      .then(() => console.log('🔥 [Pre-warm] Connection warmed up'))
+      .catch(() => console.log('🔥 [Pre-warm] Warm-up skipped'));
   };
 
   // 🔄 Single attempt to load profile with timeout
   const attemptProfileLoad = async (
-    authUser: User, 
+    authUser: User,
     timeoutMs: number,
     attemptNumber: number
   ): Promise<{ data: { user_type?: string; role?: string; first_name?: string; last_name?: string; dealership_id?: number; avatar_seed?: string; avatar_url?: string | null } | null; error: Error | null }> => {
@@ -93,34 +94,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setTimeout(() => reject(new Error(`Profile load timeout after ${timeoutMs}ms (attempt ${attemptNumber})`)), timeoutMs)
     );
 
-    return Promise.race([profilePromise, timeoutPromise]) as Promise<{ 
-      data: { user_type?: string; role?: string; first_name?: string; last_name?: string; dealership_id?: number; avatar_seed?: string; avatar_url?: string | null } | null; 
-      error: Error | null 
+    return Promise.race([profilePromise, timeoutPromise]) as Promise<{
+      data: { user_type?: string; role?: string; first_name?: string; last_name?: string; dealership_id?: number; avatar_seed?: string; avatar_url?: string | null } | null;
+      error: Error | null
     }>;
   };
 
   // Load extended user profile data with retry mechanism and pre-warm
   const loadUserProfile = async (authUser: User): Promise<ExtendedUser> => {
     const startTime = Date.now();
-    const RETRY_TIMEOUTS = [3000, 5000, 10000]; // Progressive timeouts: 3s, 5s, 10s
-    
+    const RETRY_TIMEOUTS = [2000, 4000, 6000]; // Progressive timeouts: 2s, 4s, 6s (total max: 12s)
+
     try {
       auth('⏱️ [Profile Load] Starting for user:', authUser.id);
       console.log('🔌 [Connection Pool] Profile query started - AuthContext.loadUserProfile()');
 
-      // 🔥 Pre-warm on first attempt to combat cold starts
-      await prewarmConnection();
+      // 🔥 Pre-warm on first attempt to combat cold starts (non-blocking)
+      prewarmConnection();
 
       let lastError: Error | null = null;
-      
+
       // 🔄 Retry loop with progressive timeouts
       for (let attempt = 0; attempt < RETRY_TIMEOUTS.length; attempt++) {
         const timeout = RETRY_TIMEOUTS[attempt];
         const attemptStart = Date.now();
-        
+
         try {
           console.log(`🔄 [Profile Load] Attempt ${attempt + 1}/${RETRY_TIMEOUTS.length} (timeout: ${timeout}ms)`);
-          
+
           const { data: profile, error } = await attemptProfileLoad(authUser, timeout, attempt + 1);
           const attemptDuration = Date.now() - attemptStart;
 
@@ -149,7 +150,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           const attemptDuration = Date.now() - attemptStart;
           console.log(`⚠️ [Profile Load] Attempt ${attempt + 1} threw error after ${attemptDuration}ms:`, attemptError.message);
           lastError = attemptError;
-          
+
           // Small delay before retry (except on last attempt)
           if (attempt < RETRY_TIMEOUTS.length - 1) {
             await new Promise(resolve => setTimeout(resolve, 500));
@@ -160,7 +161,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // All retries exhausted - try to use last known profile from localStorage
       const totalDuration = Date.now() - startTime;
       console.log(`❌ [Profile Load] All ${RETRY_TIMEOUTS.length} attempts failed after ${totalDuration}ms`);
-      
+
       // 🔄 Try to recover from localStorage backup
       const lastKnownProfile = getLastKnownProfile(authUser.id);
       if (lastKnownProfile) {
