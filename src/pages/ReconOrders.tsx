@@ -22,7 +22,6 @@ import { useTabPersistence, useViewModePersistence } from '@/hooks/useTabPersist
 import { getSystemTimezone } from '@/utils/dateUtils';
 import { orderEvents } from '@/utils/eventBus';
 import { generateOrderListPDF } from '@/utils/generateOrderListPDF';
-import logger from '@/utils/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { Plus, RefreshCw } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -98,17 +97,13 @@ export default function ReconOrders() {
   // Auto-open order modal when URL contains ?order=ID parameter
   useEffect(() => {
     if (orderIdFromUrl && allOrders.length > 0 && !hasProcessedUrlOrder) {
-      logger.dev('🎯 [Recon] Processing order from URL (one-time):', orderIdFromUrl);
-
       // Find the order in the loaded orders
       const targetOrder = allOrders.find(order => order.id === orderIdFromUrl);
 
       if (targetOrder) {
-        logger.success('[Recon] Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
         setPreviewOrder(targetOrder);
         setHasProcessedUrlOrder(true); // Prevent loop
       } else {
-        logger.warn('[Recon] Order not found in current orders list:', orderIdFromUrl);
         toast({
           description: t('orders.order_not_found'),
           variant: 'destructive'
@@ -208,7 +203,6 @@ export default function ReconOrders() {
 
   const handleCreateOrder = useCallback(() => {
     if (!canCreate) {
-      logger.warn('[Recon] User does not have permission to create recon orders');
       toast({
         title: t('errors.no_permission', 'No Permission'),
         description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
@@ -217,14 +211,12 @@ export default function ReconOrders() {
       return;
     }
 
-    logger.success('[Recon] User has permission to create recon orders');
     setSelectedOrder(null);
     setShowModal(true);
   }, [canCreate, t, toast]);
 
   const handleCreateOrderWithDate = useCallback((selectedDate?: Date) => {
     if (!canCreate) {
-      logger.warn('[Recon] User does not have permission to create recon orders');
       toast({
         title: t('errors.no_permission', 'No Permission'),
         description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
@@ -266,7 +258,6 @@ export default function ReconOrders() {
         title: t('orders.deleted_success', 'Order deleted successfully')
       });
     } catch (error) {
-      logger.error('[Recon] Delete failed:', error);
       toast({
         variant: 'destructive',
         title: t('orders.delete_error', 'Failed to delete order')
@@ -277,25 +268,16 @@ export default function ReconOrders() {
   const handleSaveOrder = useCallback(async (orderData: ReconOrderData | ReconOrderData[]) => {
     // Check if we received an array of orders (multiple services)
     if (Array.isArray(orderData)) {
-      logger.dev('[Recon] handleSaveOrder called with multiple orders:', {
-        count: orderData.length
-      });
-
       try {
         const createdOrders: ReconOrder[] = [];
 
         // Create each order sequentially
         for (const singleOrderData of orderData) {
-          logger.dev('[Recon] Calling createOrder with:', {
-            orderData: singleOrderData
-          });
           const newOrder = await createOrder(singleOrderData);
           if (newOrder) {
             createdOrders.push(newOrder);
           }
         }
-
-        logger.success('[Recon] Multiple orders created successfully:', createdOrders.length);
 
         // Show success message with order numbers
         const orderNumbers = createdOrders
@@ -317,56 +299,34 @@ export default function ReconOrders() {
         setShowModal(false);
         refreshData();
       } catch (error) {
-        logger.error('[Recon] Error creating multiple orders:', error);
         // Re-throw to let modal handle it
         throw error;
       }
     } else {
       // Single order
-      logger.dev('[Recon] handleSaveOrder called with:', {
-        hasSelectedOrder: !!selectedOrder,
-        selectedOrderId: selectedOrder?.id,
-        orderData: orderData,
-        completedAt: orderData.completedAt,
-        completedAtType: typeof orderData.completedAt,
-        stockNumber: orderData.stockNumber,
-        services: orderData.services
-      });
-
       try {
         if (selectedOrder) {
-          logger.dev('[Recon] Calling updateOrder with:', {
-            orderId: selectedOrder.id,
-            orderData: orderData
-          });
           await updateOrder(selectedOrder.id, orderData);
-          logger.success('[Recon] updateOrder completed successfully');
           // Accessibility: Announce update to screen readers
           setLiveRegionMessage(t('accessibility.recon_orders.order_updated'));
         } else {
-          logger.dev('[Recon] Calling createOrder with:', {
-            orderData: orderData
-          });
           await createOrder(orderData);
-          logger.success('[Recon] createOrder completed successfully');
           // Accessibility: Announce creation to screen readers
           setLiveRegionMessage(t('accessibility.recon_orders.order_created'));
         }
         setShowModal(false);
         refreshData();
       } catch (error) {
-        logger.error('[Recon] Error in handleSaveOrder:', error);
         // Re-throw to let modal handle it
         throw error;
       }
     }
-  }, [selectedOrder, updateOrder, createOrder, refreshData, t, toast]);
+  }, [selectedOrder, updateOrder, createOrder, refreshData, t]);
 
   const handleStatusChange = useCallback(async (orderId: string, newStatus: string) => {
     // Find the order
     const order = allOrders.find(o => o.id === orderId);
     if (!order) {
-      logger.error('[Recon] Order not found for status change:', orderId);
       toast({
         description: t('orders.order_not_found'),
         variant: 'destructive'
@@ -415,7 +375,6 @@ export default function ReconOrders() {
         throw new Error('Status update failed');
       }
     } catch (error) {
-      logger.error('[Recon] Status change failed:', error);
       toast({
         description: t('orders.status_change_failed'),
         variant: 'destructive'
@@ -435,7 +394,6 @@ export default function ReconOrders() {
       // Emit typed event using EventBus
       orderEvents.emit('orderUpdated', { orderId, updates, timestamp: Date.now() });
     } catch (error) {
-      logger.error('[Recon] Order update failed:', error);
       throw error;
     }
   }, [updateOrder, queryClient]);

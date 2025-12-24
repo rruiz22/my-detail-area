@@ -21,7 +21,6 @@ import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { type ModulePermissionKey } from '@/types/permissions';
 import { safeParseDate } from '@/utils/dateUtils';
-import { logger } from '@/utils/logger';
 import { AlertCircle, Building2, Car, FileText, Loader2, Wrench, Zap } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -329,11 +328,9 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
       );
 
       if (validServiceIds.length > 0) {
-        logger.dev('✅ Recon Modal: Applying pending service IDs:', validServiceIds);
         setSelectedServices(validServiceIds);
         setPendingServiceIds([]); // Clear pending state
       } else {
-        logger.warn('⚠️ Recon Modal: No valid service IDs found in loaded services');
         setPendingServiceIds([]); // Clear pending state even if no matches
       }
     }
@@ -577,7 +574,6 @@ export const ReconOrderModal: React.FC<ReconOrderModalProps> = ({ order, open, o
 
     } catch (error: any) {
       // Keep modal open and show error
-      logger.error('Submit error:', error);
       const errorMessage = error?.message || t('orders.creation_failed') || 'Failed to save order';
       setSubmitError(errorMessage);
       toast({ variant: 'destructive', description: errorMessage });

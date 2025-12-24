@@ -157,7 +157,6 @@ export const useReconOrderManagement = () => {
     ['orders', 'recon', selectedDealerId],  // ✅ FIX: Added selectedDealerId to queryKey
     async () => {
       if (!user || !enhancedUser) {
-        console.log('⚠️ Polling skipped - no user or enhancedUser');
         return [];
       }
 
@@ -171,7 +170,6 @@ export const useReconOrderManagement = () => {
 
       // ✅ FIX: Use selectedDealerId from context instead of reading localStorage
       const dealerFilter = selectedDealerId;
-      console.log(`🔍 Recon Polling - Dealer filter resolved: ${dealerFilter}`);
 
       // Handle dealer filtering based on user type and global filter
       // ✅ FIX: System admins and supermanagers should ALWAYS respect global filter
@@ -196,33 +194,26 @@ export const useReconOrderManagement = () => {
             .eq('is_active', true);
 
           if (dealershipError) {
-            // 🔒 SECURITY: Database error - log and return empty results (fail-secure)
-            console.error('❌ Recon Polling - Failed to fetch dealer memberships:', dealershipError);
+            // 🔒 SECURITY: Database error - return empty results (fail-secure)
             ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
           } else if (!userDealerships || userDealerships.length === 0) {
             // 🔒 SECURITY: No memberships = no data access (fail-secure)
-            console.warn('⚠️ Recon Polling - Multi-dealer user has NO dealer memberships - returning empty dataset');
             ordersQuery = ordersQuery.eq('dealer_id', -1);
           } else {
             const dealerIds = userDealerships.map(d => d.dealer_id);
-            console.log(`🏢 Recon Polling - ${isSystemAdminPolling ? 'System admin' : 'Multi-dealer user'} - showing all dealers: [${dealerIds.join(', ')}]`);
             ordersQuery = ordersQuery.in('dealer_id', dealerIds);
           }
         } else {
           // Filter by specific dealer selected in dropdown - validate it's a number
           if (typeof dealerFilter === 'number' && !isNaN(dealerFilter)) {
-            console.log(`🎯 Recon Polling - ${isSystemAdminPolling ? 'System admin' : 'Multi-dealer user'} - filtering by selected dealer: ${dealerFilter}`);
             ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
           } else {
             // 🔒 SECURITY: Invalid dealer filter - return empty results (fail-secure)
-            console.error(`❌ Recon Polling - Invalid dealerFilter value: ${dealerFilter} (type: ${typeof dealerFilter})`);
-            console.warn('⚠️ Recon Polling - Invalid dealer filter - returning empty dataset');
             ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
           }
         }
       } else {
         // Single-dealer regular users - use their assigned dealership (ignore global filter)
-        console.log(`🏢 Recon Polling - Single-dealer user - using assigned dealership: ${enhancedUser.dealership_id}`);
         ordersQuery = ordersQuery.eq('dealer_id', enhancedUser.dealership_id);
       }
 
@@ -239,9 +230,7 @@ export const useReconOrderManagement = () => {
         const { data: allProfiles, error: profilesError } = await supabase.rpc('get_dealer_user_profiles');
         const profiles = allProfiles?.filter(p => creatorIds.includes(p.id));
 
-        if (profilesError) {
-          console.error('Error fetching creator profiles:', profilesError);
-        } else if (profiles) {
+        if (!profilesError && profiles) {
           profiles.forEach(profile => {
             const name = profile.first_name && profile.last_name
               ? `${profile.first_name} ${profile.last_name}`
@@ -252,22 +241,14 @@ export const useReconOrderManagement = () => {
       }
 
       // Fetch dealerships data separately
-      const { data: dealerships, error: dealershipsError } = await supabase
+      const { data: dealerships } = await supabase
         .from('dealerships')
         .select('id, name');
 
-      if (dealershipsError) {
-        console.error('Error fetching dealerships:', dealershipsError);
-      }
-
       // Fetch dealer groups data separately
-      const { data: dealerGroups, error: groupsError } = await supabase
+      const { data: dealerGroups } = await supabase
         .from('dealer_groups')
         .select('id, name');
-
-      if (groupsError) {
-        console.error('Error fetching dealer groups:', groupsError);
-      }
 
       // Create lookup maps for better performance
       const dealershipMap = new Map(dealerships?.map(d => [d.id, d.name]) || []);
@@ -314,19 +295,6 @@ export const useReconOrderManagement = () => {
   // Create new recon order
   const createOrder = useCallback(async (orderData: ReconOrderData) => {
     try {
-      console.log('📥 Hook received orderData:', {
-        dealerId: orderData.dealerId,
-        stockNumber: orderData.stockNumber,
-        services: orderData.services,
-        servicesLength: orderData.services?.length,
-        servicesType: typeof orderData.services,
-        isArray: Array.isArray(orderData.services),
-        completedAt: orderData.completedAt,
-        completedAtType: typeof orderData.completedAt,
-        completedAtValue: orderData.completedAt ? orderData.completedAt.toString() : 'undefined',
-        fullData: orderData
-      });
-
       // Validate dealerId before conversion
       if (!orderData.dealerId) {
         throw new Error('Dealership ID is required');
@@ -342,7 +310,6 @@ export const useReconOrderManagement = () => {
         .rpc('generate_recon_order_number');
 
       if (numberError || !orderNumberData) {
-        console.error('Error generating recon order number:', numberError);
         throw new Error('Failed to generate recon order number');
       }
 
@@ -367,21 +334,6 @@ export const useReconOrderManagement = () => {
         created_by: user.id,
       };
 
-      console.log('💾 Sending to Supabase:', {
-        stock_number: insertData.stock_number,
-        services: insertData.services,
-        servicesLength: insertData.services?.length,
-        servicesType: typeof insertData.services,
-        isArray: Array.isArray(insertData.services),
-        servicesContent: JSON.stringify(insertData.services),
-        completed_at: insertData.completed_at,
-        completed_at_type: typeof insertData.completed_at,
-        completed_at_value: insertData.completed_at ? insertData.completed_at.toString() : 'null',
-        total_amount: insertData.total_amount,
-        vehicle_info: insertData.vehicle_info,
-        fullInsertData: insertData
-      });
-
       const { data, error } = await supabase
         .from('orders')
         .insert(insertData)
@@ -389,7 +341,6 @@ export const useReconOrderManagement = () => {
         .single();
 
       if (error) {
-        console.error('Error creating recon order:', error);
         toast({
           description: t('recon.error_creating_order'),
           variant: 'destructive'
@@ -400,14 +351,9 @@ export const useReconOrderManagement = () => {
       const newOrder = transformReconOrder(data);
 
       // Auto-generate QR code and shortlink in background (fire-and-forget, non-blocking)
-      generateQR(data.id, data.order_number, data.dealer_id)
-        .then(() => {
-          console.log('✅ QR code and shortlink generated for recon order:', data.order_number);
-        })
-        .catch((qrError) => {
-          console.error('❌ Failed to generate QR code:', qrError);
-          // QR generation failure doesn't affect order creation
-        });
+      generateQR(data.id, data.order_number, data.dealer_id).catch(() => {
+        // QR generation failure doesn't affect order creation
+      });
 
       // Show success immediately (don't wait for QR)
       toast({
@@ -417,11 +363,9 @@ export const useReconOrderManagement = () => {
 
       // Invalidate queries to trigger immediate table refresh
       await queryClient.invalidateQueries({ queryKey: ['orders', 'recon'] });
-      console.log('✅ Recon order cache invalidated - table will refresh immediately');
 
       return newOrder;
     } catch (error) {
-      console.error('Error creating recon order:', error);
       toast({
         description: t('recon.error_creating_order'),
         variant: 'destructive'
@@ -433,16 +377,6 @@ export const useReconOrderManagement = () => {
   // Update existing recon order
   const updateOrder = useCallback(async (orderId: string, orderData: Partial<ReconOrderData>) => {
     try {
-      console.log('📥 updateOrder received:', {
-        orderId: orderId,
-        orderData: orderData,
-        completedAt: orderData.completedAt,
-        completedAtType: typeof orderData.completedAt,
-        stockNumber: orderData.stockNumber,
-        services: orderData.services,
-        status: orderData.status
-      });
-
       // Build updateData dynamically - only include fields explicitly provided
       // This prevents accidental data loss when doing partial updates (e.g., status change)
       const updateData: SupabaseOrderUpdate = {};
@@ -506,17 +440,6 @@ export const useReconOrderManagement = () => {
         updateData.assigned_contact_id = orderData.assignedContactId ? orderData.assignedContactId.toString() : null;
       }
 
-      console.log('💾 Sending UPDATE to Supabase:', {
-        orderId: orderId,
-        updateData: updateData,
-        completed_at: updateData.completed_at,
-        completed_at_type: typeof updateData.completed_at,
-        stock_number: updateData.stock_number,
-        services: updateData.services,
-        status: updateData.status,
-        fieldsToUpdate: Object.keys(updateData)
-      });
-
       const { data, error } = await supabase
         .from('orders')
         .update(updateData)
@@ -525,22 +448,12 @@ export const useReconOrderManagement = () => {
         .single();
 
       if (error) {
-        console.error('Error updating recon order:', error);
         toast({
           description: t('recon.error_updating_order'),
           variant: 'destructive'
         });
         return null;
       }
-
-      console.log('✅ Supabase UPDATE successful, received data:', {
-        id: data.id,
-        completed_at: data.completed_at,
-        stock_number: data.stock_number,
-        services: data.services,
-        status: data.status,
-        fullData: data
-      });
 
       const updatedOrder = transformReconOrder(data);
 
@@ -554,7 +467,6 @@ export const useReconOrderManagement = () => {
 
       return updatedOrder;
     } catch (error) {
-      console.error('Error updating recon order:', error);
       toast({
         description: t('recon.error_updating_order'),
         variant: 'destructive'
@@ -572,7 +484,6 @@ export const useReconOrderManagement = () => {
         .eq('id', orderId);
 
       if (error) {
-        console.error('Error deleting recon order:', error);
         toast({
           description: t('recon.error_deleting_order'),
           variant: 'destructive'
@@ -590,7 +501,6 @@ export const useReconOrderManagement = () => {
 
       return true;
     } catch (error) {
-      console.error('Error deleting recon order:', error);
       toast({
         description: t('recon.error_deleting_order'),
         variant: 'destructive'
@@ -617,7 +527,6 @@ export const useReconOrderManagement = () => {
   // Listen for status updates to trigger immediate refresh using EventBus
   useEffect(() => {
     const handleStatusUpdate = () => {
-      console.log('🔄 [Recon] Status update detected, triggering immediate polling refresh');
       reconOrdersPollingQuery.refetch();
     };
 
