@@ -8,6 +8,11 @@
 import type { InvoiceWithDetails } from '@/types/invoices';
 import { format } from 'date-fns';
 import ExcelJS from 'exceljs';
+import {
+  DEPARTMENT_DISPLAY_NAMES,
+  shouldShowDepartmentGrouping,
+  sortInvoiceItemsByDepartment,
+} from '@/utils/invoiceSorting';
 
 /**
  * Format currency for Excel display
@@ -295,41 +300,106 @@ export async function generateInvoiceExcelBlob(invoice: InvoiceWithDetails): Pro
   // TABLE DATA ROWS (with zebra striping)
   // ===============================================
 
-  // Sort items by date (ascending) - using correct date based on order type
-  const sortedItems = (invoice.items || []).sort((a, b) => {
-    const dateA = getCorrectItemDate(a);
-    const dateB = getCorrectItemDate(b);
-    return new Date(dateA).getTime() - new Date(dateB).getTime();
-  });
+  // Sort items by department priority, then by date (matching download version)
+  const sortedItems = sortInvoiceItemsByDepartment(
+    invoice.items || [],
+    getCorrectItemDate
+  );
+  const showDepartmentHeaders = shouldShowDepartmentGrouping(sortedItems);
 
-  // Group items by date
-  const groupedByDate: { date: string; items: any[] }[] = [];
+  // Group items by department and date
+  interface GroupedData {
+    department?: string;
+    date: string;
+    items: any[];
+  }
+  const groupedData: GroupedData[] = [];
   let currentDate = '';
+  let currentDepartment = '';
   let currentGroup: any[] = [];
+  const departmentCounts: Record<string, number> = {};
+
+  // Count items per department if showing department headers
+  if (showDepartmentHeaders) {
+    sortedItems.forEach(item => {
+      const dept = item.metadata?.order_type || 'unknown';
+      departmentCounts[dept] = (departmentCounts[dept] || 0) + 1;
+    });
+  }
 
   sortedItems.forEach((item, index) => {
     const itemDate = formatDate(getCorrectItemDate(item));
+    const itemDepartment = item.metadata?.order_type || 'unknown';
 
-    if (itemDate !== currentDate) {
-      if (currentGroup.length > 0) {
-        groupedByDate.push({ date: currentDate, items: currentGroup });
-      }
-      currentDate = itemDate;
-      currentGroup = [item];
-    } else {
-      currentGroup.push(item);
+    // Check if we need to create a new group
+    const needNewGroup = showDepartmentHeaders
+      ? itemDepartment !== currentDepartment || itemDate !== currentDate
+      : itemDate !== currentDate;
+
+    if (needNewGroup && currentGroup.length > 0) {
+      groupedData.push({
+        department: showDepartmentHeaders ? currentDepartment : undefined,
+        date: currentDate,
+        items: currentGroup
+      });
+      currentGroup = [];
     }
 
+    // Update current tracking
+    if (showDepartmentHeaders && itemDepartment !== currentDepartment) {
+      currentDepartment = itemDepartment;
+      currentDate = ''; // Reset date for new department
+    }
+
+    if (itemDate !== currentDate) {
+      currentDate = itemDate;
+    }
+
+    currentGroup.push(item);
+
     // Last group
-    if (index === sortedItems.length - 1) {
-      groupedByDate.push({ date: currentDate, items: currentGroup });
+    if (index === sortedItems.length - 1 && currentGroup.length > 0) {
+      groupedData.push({
+        department: showDepartmentHeaders ? currentDepartment : undefined,
+        date: currentDate,
+        items: currentGroup
+      });
     }
   });
 
   const dataStartRow = currentRow;
   let rowIndex = 0; // Track overall row index for zebra striping
+  let lastDepartment = '';
 
-  groupedByDate.forEach((group, groupIndex) => {
+  groupedData.forEach((group, groupIndex) => {
+    // Add department header if showing department headers and department changed
+    if (showDepartmentHeaders && group.department && group.department !== lastDepartment) {
+      const deptRow = worksheet.getRow(currentRow);
+      const deptName = DEPARTMENT_DISPLAY_NAMES[group.department] || group.department.toUpperCase();
+      const itemCount = departmentCounts[group.department] || 0;
+
+      // Merge cells for department header
+      worksheet.mergeCells(currentRow, 1, currentRow, 7);
+      const deptCell = deptRow.getCell(1);
+      deptCell.value = `${deptName} (${itemCount} items)`;
+      deptCell.font = { bold: true, size: 11, color: { argb: 'FF003264' } };
+      deptCell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFE6F0FF' }
+      };
+      deptCell.alignment = { horizontal: 'center', vertical: 'middle' };
+      deptCell.border = {
+        top: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+        bottom: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+        left: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+        right: { style: 'thin', color: { argb: 'FFD1D5DB' } }
+      };
+
+      currentRow++;
+      lastDepartment = group.department;
+    }
+
     group.items.forEach((item) => {
       const row = worksheet.getRow(currentRow);
       row.height = 20;
@@ -436,8 +506,8 @@ export async function generateInvoiceExcelBlob(invoice: InvoiceWithDetails): Pro
     });
 
     // Add separator row with date between groups
-    if (groupIndex < groupedByDate.length - 1) {
-      const nextGroupDate = groupedByDate[groupIndex + 1].date;
+    if (groupIndex < groupedData.length - 1) {
+      const nextGroupDate = groupedData[groupIndex + 1].date;
       const separatorRow = worksheet.getRow(currentRow);
       separatorRow.height = 8; // Double height (was 4)
 
