@@ -9,11 +9,20 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.4'
 import { Resend } from "npm:resend@2.0.0";
 
-const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!
+// Validate environment variables
+const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
+if (!RESEND_API_KEY) {
+  throw new Error('RESEND_API_KEY not configured. Please set it in Supabase secrets.');
+}
+
 const EMAIL_FROM_ADDRESS = Deno.env.get('EMAIL_FROM_ADDRESS') || 'invoices@mydetailarea.com'
 const EMAIL_FROM_NAME = Deno.env.get('EMAIL_FROM_NAME') || 'Dealer Detail Service'
-const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  throw new Error('Supabase configuration missing');
+}
 
 // CORS headers
 const corsHeaders = {
@@ -28,7 +37,7 @@ interface EmailAttachment {
 }
 
 interface SendEmailRequest {
-  email_history_id: string
+  email_history_id?: string // Optional now - will be created if not provided
   invoice_id: string
   dealership_id: number
   recipients: string[]
@@ -40,6 +49,8 @@ interface SendEmailRequest {
   include_pdf: boolean
   include_excel: boolean
   attachments?: EmailAttachment[]
+  sent_by?: string // User ID for RLS
+  metadata?: any // Additional metadata
 }
 
 serve(async (req) => {
@@ -106,6 +117,41 @@ serve(async (req) => {
 
     console.log(`📎 Attaching ${resendAttachments.length} file(s)`)
 
+    // Create or get email history record
+    let emailHistoryId = request.email_history_id;
+
+    if (!emailHistoryId) {
+      // Create history record using service role (bypasses RLS)
+      const { data: historyRecord, error: historyError } = await supabase
+        .from('invoice_email_history')
+        .insert({
+          invoice_id: request.invoice_id,
+          dealership_id: request.dealership_id,
+          sent_to: request.recipients,
+          cc: request.cc && request.cc.length > 0 ? request.cc : null,
+          bcc: request.bcc && request.bcc.length > 0 ? request.bcc : null,
+          subject: request.subject,
+          message: request.message,
+          sent_by: request.sent_by || null,
+          status: 'pending',
+          attachments: (request.attachments || []).map(a => ({
+            filename: a.filename,
+            size: Math.ceil(a.content.length * 0.75), // Approximate size from base64
+          })),
+          metadata: request.metadata,
+        })
+        .select()
+        .single();
+
+      if (historyError) {
+        console.error('❌ Failed to create email history:', historyError);
+        throw new Error(`Failed to create email history: ${historyError.message}`);
+      }
+
+      emailHistoryId = historyRecord.id;
+      console.log('📝 Created email history record:', emailHistoryId);
+    }
+
     // Send email via Resend
     const { data, error } = await resend.emails.send({
       from: `${EMAIL_FROM_NAME} <${EMAIL_FROM_ADDRESS}>`,
@@ -134,9 +180,10 @@ serve(async (req) => {
       .from('invoice_email_history')
       .update({
         status: 'sent',
+        sent_at: new Date().toISOString(),
         provider_response: { message_id: data?.id },
       })
-      .eq('id', request.email_history_id)
+      .eq('id', emailHistoryId)
 
     if (updateError) {
       console.error('⚠️ Failed to update email history:', updateError)
@@ -146,6 +193,7 @@ serve(async (req) => {
       JSON.stringify({
         success: true,
         email_id: data?.id,
+        email_history_id: emailHistoryId,
         message: 'Email sent successfully via Resend',
       }),
       {

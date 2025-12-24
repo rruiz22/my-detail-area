@@ -168,81 +168,43 @@ export const useBulkSendInvoiceEmails = () => {
         );
       }
 
-      // Create email history record BEFORE sending (matching single email pattern)
-      const { data: historyRecord, error: historyError } = await supabase
-        .from('invoice_email_history')
-        .insert({
+      // Send the email with all attachments via Edge Function
+      // Edge Function will create the email history record (bypassing RLS)
+      const { data: emailData, error: sendError } = await supabase.functions.invoke('send-invoice-email', {
+        body: {
           invoice_id: invoiceIds[0], // Primary invoice for reference
           dealership_id: dealershipId,
-          sent_to: recipients,
-          cc: cc.length > 0 ? cc : null,
-          bcc: bcc.length > 0 ? bcc : null,
+          sent_by: user.user?.id, // Pass user ID for tracking
+          recipients,
+          reply_to: user.user?.email,
+          cc: cc.length > 0 ? cc : undefined,
+          bcc: bcc.length > 0 ? bcc : undefined,
           subject,
           message,
-          sent_by: user.user?.id,
-          status: 'pending', // Start as pending, update after send
-          attachments: attachments.map(a => ({
-            filename: a.filename,
-            size: Math.ceil(a.content.length * 0.75),
-          })),
+          include_pdf: includePDF,
+          include_excel: includeExcel,
+          attachments,
           metadata: {
             bulk_send: true,
             invoice_ids: invoiceIds,
             total_invoices: invoices.length,
             total_amount: invoices.reduce((sum, inv) => sum + inv.totalAmount, 0),
+            attachment_count: attachments.length,
+            processing_errors: processingErrors,
           },
-        })
-        .select()
-        .single();
+        },
+      });
 
-      if (historyError) throw historyError;
+      if (sendError) throw sendError;
 
-      try {
-        // Send the email with all attachments via Edge Function
-        const { data: emailData, error: sendError } = await supabase.functions.invoke('send-invoice-email', {
-          body: {
-            invoice_id: invoiceIds[0],
-            dealership_id: dealershipId,
-            email_history_id: historyRecord.id, // Link to history record
-            recipients,
-            reply_to: user.user?.email,
-            cc: cc.length > 0 ? cc : undefined,
-            bcc: bcc.length > 0 ? bcc : undefined,
-            subject,
-            message,
-            attachments,
-            metadata: {
-              bulk_send: true,
-              invoice_ids: invoiceIds,
-              total_invoices: invoices.length,
-              attachment_count: attachments.length,
-              processing_errors: processingErrors,
-            },
-          },
-        });
-
-        if (sendError) throw sendError;
-
-        return {
-          success: true,
-          email_history_id: historyRecord.id,
-          invoiceCount: invoices.length,
-          attachmentCount: attachments.length,
-          processingErrors,
-          email_id: emailData?.email_id,
-        };
-      } catch (error: any) {
-        // Update history with error (matching single email pattern)
-        await supabase
-          .from('invoice_email_history')
-          .update({
-            status: 'failed',
-            error_message: error.message
-          })
-          .eq('id', historyRecord.id);
-
-        throw error;
-      }
+      return {
+        success: true,
+        email_history_id: emailData?.email_history_id,
+        invoiceCount: invoices.length,
+        attachmentCount: attachments.length,
+        processingErrors,
+        email_id: emailData?.email_id,
+      };
     },
 
     onSuccess: () => {

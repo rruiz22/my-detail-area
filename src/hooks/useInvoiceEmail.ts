@@ -172,59 +172,24 @@ export const useSendInvoiceEmail = () => {
         }
       }
 
-      // Create email history record
-      const { data: historyRecord, error: historyError } = await supabase
-        .from('invoice_email_history')
-        .insert({
-          invoice_id: request.invoice_id,
-          dealership_id: request.dealership_id,
-          sent_to: request.recipients,
-          cc: request.cc,
-          bcc: request.bcc,
-          subject: request.subject || `Invoice ${request.invoice_id}`,
-          message: request.message,
-          sent_by: user.user?.id,
-          status: 'pending',
-          attachments: attachments.map(att => ({
-            filename: att.filename,
-            size: Math.round(att.content.length * 0.75) // Approximate size from base64
-          })),
-        })
-        .select()
-        .single();
+      // Call Edge Function to send the email
+      // Edge Function will create the email history record (bypassing RLS)
+      const { data: emailResult, error: emailError } = await supabase.functions.invoke('send-invoice-email', {
+        body: {
+          ...request,
+          sent_by: user.user?.id, // Pass user ID for tracking
+          attachments
+        }
+      });
 
-      if (historyError) throw historyError;
+      if (emailError) throw emailError;
 
-      try {
-        // Call Edge Function to send the email
-        const { data: emailResult, error: emailError } = await supabase.functions.invoke('send-invoice-email', {
-          body: {
-            ...request,
-            email_history_id: historyRecord.id,
-            attachments
-          }
-        });
-
-        if (emailError) throw emailError;
-
-        return {
-          success: true,
-          email_history_id: historyRecord.id,
-          message: 'Email sent successfully',
-          email_id: emailResult?.email_id,
-        };
-      } catch (error: any) {
-        // Update history with error
-        await supabase
-          .from('invoice_email_history')
-          .update({
-            status: 'failed',
-            error_message: error.message
-          })
-          .eq('id', historyRecord.id);
-
-        throw error;
-      }
+      return {
+        success: true,
+        email_history_id: emailResult?.email_history_id,
+        message: 'Email sent successfully',
+        email_id: emailResult?.email_id,
+      };
     },
     onSuccess: (data, variables) => {
       // Invalidate email history queries
