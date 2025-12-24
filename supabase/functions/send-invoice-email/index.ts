@@ -63,6 +63,7 @@ serve(async (req) => {
     // Parse request
     const request: SendEmailRequest = await req.json()
     console.log('📧 Sending invoice email:', request.invoice_id)
+    console.log('📋 Request dealership_id:', request.dealership_id)
 
     // Initialize Supabase client
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
@@ -81,6 +82,13 @@ serve(async (req) => {
     if (invoiceError || !invoice) {
       throw new Error(`Invoice not found: ${invoiceError?.message}`)
     }
+
+    // Use dealership_id from request, or fallback to invoice's dealership_id
+    const dealershipId = request.dealership_id || invoice.dealership_id;
+    if (!dealershipId) {
+      throw new Error('dealership_id is required but was not provided in request or found in invoice');
+    }
+    console.log('🏢 Using dealership_id:', dealershipId)
 
     // Convert message to simple HTML (preserve line breaks)
     const userMessage = request.message || 'Please find attached invoice.';
@@ -126,7 +134,7 @@ serve(async (req) => {
         .from('invoice_email_history')
         .insert({
           invoice_id: request.invoice_id,
-          dealership_id: request.dealership_id,
+          dealership_id: dealershipId, // Use the validated dealershipId
           sent_to: request.recipients,
           cc: request.cc && request.cc.length > 0 ? request.cc : null,
           bcc: request.bcc && request.bcc.length > 0 ? request.bcc : null,
@@ -164,7 +172,7 @@ serve(async (req) => {
       attachments: resendAttachments.length > 0 ? resendAttachments : undefined,
       tags: [
         { name: 'type', value: 'invoice' },
-        { name: 'dealership_id', value: String(request.dealership_id) }
+        { name: 'dealership_id', value: String(dealershipId) }
       ]
     })
 
