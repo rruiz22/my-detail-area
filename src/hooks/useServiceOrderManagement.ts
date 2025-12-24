@@ -6,7 +6,7 @@ import { useOrderPolling } from '@/hooks/useSmartPolling';
 import { supabase } from '@/integrations/supabase/client';
 import type { Database } from '@/integrations/supabase/types';
 import { isDateInWeek } from '@/utils/weekUtils';
-import { dev, warn, error as logError } from '@/utils/logger';
+import { error as logError } from '@/utils/logger';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { enrichOrdersArray, createUserDisplayName, type EnrichmentLookups } from '@/services/orderEnrichment';
@@ -175,8 +175,6 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
     async () => {
       if (!user || !enhancedUser) return [];
 
-      dev('🔄 Smart polling: Fetching service orders...');
-
       // Apply same dealer filtering logic as Sales Orders
       let ordersQuery = supabase
         .from('orders')
@@ -184,9 +182,7 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
         .eq('order_type', 'service')
         .order('created_at', { ascending: false });
 
-      // ✅ FIX: Use selectedDealerId from context instead of reading localStorage
       const dealerFilter = selectedDealerId;
-      dev(`🔍 Service Polling - Dealer filter resolved: ${dealerFilter}`);
 
       // Handle dealer filtering based on user type and global filter
       // ✅ FIX: System admins and supermanagers should ALWAYS respect global filter
@@ -211,33 +207,25 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
             .eq('is_active', true);
 
           if (dealershipError) {
-            // 🔒 SECURITY: Database error - log and return empty results (fail-secure)
-            logError('❌ Service Polling - Failed to fetch dealer memberships:', dealershipError);
-            ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
+            logError('Failed to fetch dealer memberships:', dealershipError);
+            ordersQuery = ordersQuery.eq('dealer_id', -1);
           } else if (!userDealerships || userDealerships.length === 0) {
-            // 🔒 SECURITY: No memberships = no data access (fail-secure)
-            warn('⚠️ Service Polling - Multi-dealer user has NO dealer memberships - returning empty dataset');
             ordersQuery = ordersQuery.eq('dealer_id', -1);
           } else {
             const dealerIds = userDealerships.map(d => d.dealer_id);
-            dev(`🏢 Service Polling - ${isSystemAdminPolling ? 'System admin' : 'Multi-dealer user'} - showing all dealers: [${dealerIds.join(', ')}]`);
             ordersQuery = ordersQuery.in('dealer_id', dealerIds);
           }
         } else {
-          // Filter by specific dealer selected in dropdown - validate it's a number
+          // Filter by specific dealer selected in dropdown
           if (typeof dealerFilter === 'number' && !isNaN(dealerFilter)) {
-            dev(`🎯 Service Polling - ${isSystemAdminPolling ? 'System admin' : 'Multi-dealer user'} - filtering by selected dealer: ${dealerFilter}`);
             ordersQuery = ordersQuery.eq('dealer_id', dealerFilter);
           } else {
-            // 🔒 SECURITY: Invalid dealer filter - return empty results (fail-secure)
-            logError(`❌ Service Polling - Invalid dealerFilter value: ${dealerFilter} (type: ${typeof dealerFilter})`);
-            warn('⚠️ Service Polling - Invalid dealer filter - returning empty dataset');
-            ordersQuery = ordersQuery.eq('dealer_id', -1); // No dealer has ID -1, returns empty
+            logError('Invalid dealerFilter value:', dealerFilter);
+            ordersQuery = ordersQuery.eq('dealer_id', -1);
           }
         }
       } else {
-        // Single-dealer regular users - use their assigned dealership (ignore global filter)
-        dev(`🏢 Service Polling - Single-dealer user - using assigned dealership: ${enhancedUser.dealership_id}`);
+        // Single-dealer regular users - use their assigned dealership
         ordersQuery = ordersQuery.eq('dealer_id', enhancedUser.dealership_id);
       }
 
@@ -280,9 +268,6 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
       const serviceOrders = enrichedOrders.map(order => {
         const transformed = transformServiceOrder(order);
 
-        // DEBUG: Removed excessive polling logs for cleaner console
-        // dev('🔄 Polling Assignment Debug:', { orderId, orderNumber, assigned_group_id, due_date });
-
         // Enriched fields from orderEnrichment service
         transformed.dealershipName = order.dealershipName;
         transformed.assignedTo = order.assignedTo;
@@ -290,8 +275,6 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
         transformed.createdByGroupName = order.createdByGroupName;
         transformed.dueTime = order.dueTime;
         transformed.comments = order.comments;
-
-        // dev('✅ Polling mapped:', transformed.assignedTo, 'dueDate:', transformed.dueDate);
 
         return transformed;
       });
@@ -417,7 +400,6 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
 
   // Simplified refreshData - uses polling query for consistency
   const refreshData = useCallback(async () => {
-    dev('🔄 Manual refresh triggered - using polling query');
     await serviceOrdersPollingQuery.refetch();
   }, [serviceOrdersPollingQuery]);
 
@@ -431,8 +413,6 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
     setLoading(true);
 
     try {
-      dev('Creating service order with data:', orderData);
-
       // Use database function to generate sequential order number
       const { data: orderNumberData, error: numberError } = await supabase
         .rpc('generate_service_order_number');
@@ -463,10 +443,8 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
         due_date: orderData.dueDate || null, // Use due_date, NOT sla_deadline
         dealer_id: orderData.dealerId ? parseInt(orderData.dealerId.toString()) : 5,
         notes: orderData.notes,
-        created_by: user.id, // Track creator for auto-follower
+        created_by: user.id,
       };
-
-      dev('Inserting service order to DB:', insertData);
 
       const { data, error } = await supabase
         .from('orders')
@@ -479,26 +457,16 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
         throw error;
       }
 
-      dev('Service order created successfully:', data);
-
-      // 👥 AUTO-FOLLOW: Add creator and assigned user as followers
+      // 👥 AUTO-FOLLOW: Add creator and assigned user as followers (parallel)
       try {
-        // Add creator as follower (type: 'creator', notification: 'important')
-        await followersService.autoFollowOnCreation(data.id, user.id);
-        dev('✅ Auto-follow: Creator added as follower');
-
-        // Add assigned user as follower if exists (type: 'assigned', notification: 'all')
-        if (data.assigned_group_id) {
-          await followersService.autoFollowOnAssignment(
-            data.id,
-            data.assigned_group_id, // Contains user_id despite field name
-            user.id
-          );
-          dev('✅ Auto-follow: Assigned user added as follower');
-        }
+        await Promise.all([
+          followersService.autoFollowOnCreation(data.id, user.id),
+          data.assigned_group_id
+            ? followersService.autoFollowOnAssignment(data.id, data.assigned_group_id, user.id)
+            : Promise.resolve()
+        ]);
       } catch (followError) {
-        logError('❌ Failed to auto-add followers (non-blocking):', followError);
-        // Don't throw - followers error shouldn't block order creation
+        logError('Failed to auto-add followers (non-blocking):', followError);
       }
 
       // 🔔 NOTIFICATION: Order Created
@@ -523,27 +491,15 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
       try {
         const qrData = await generateQR(data.id, data.order_number, data.dealer_id);
         shortLink = qrData?.shortLink;
-        dev('✅ QR code and shortlink generated for service order:', data.order_number, shortLink);
       } catch (qrError) {
-        logError('❌ Failed to generate QR code:', qrError);
-        // Continue with SMS even if QR generation fails
+        logError('Failed to generate QR code:', qrError);
       }
 
       // 📱 SMS NOTIFICATION: Send SMS to users with notification rules
       if (user?.id) {
-        // Format services for SMS
         const servicesText = Array.isArray(data.services) && data.services.length > 0
           ? data.services.map((s: any) => s.name || s.type).filter(Boolean).join(', ')
           : '';
-
-        // Debug logging to verify data
-        dev('🔍 Service SMS Data Debug:', {
-          services: data.services,
-          servicesText,
-          tag: data.tag,
-          dueDate: data.due_date,
-          shortLink
-        });
 
         void sendOrderCreatedSMS({
           orderId: data.id,
@@ -560,31 +516,23 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
           }
         });
 
-        // 🔍 Fetch assigned user/group name for Slack notification
+        // Fetch assigned user/group name for Slack notification
         let assignedToName: string | undefined = undefined;
         if (data.assigned_group_id) {
-          try {
-            const { data: groupData } = await supabase
-              .from('dealer_groups')
-              .select('name')
-              .eq('id', data.assigned_group_id)
-              .single();
-            assignedToName = groupData?.name || undefined;
-          } catch (error) {
-            warn('⚠️ Failed to fetch group name for service order:', error);
-          }
+          const { data: groupData } = await supabase
+            .from('dealer_groups')
+            .select('name')
+            .eq('id', data.assigned_group_id)
+            .maybeSingle();
+          assignedToName = groupData?.name || undefined;
         } else if (data.assigned_contact_id) {
-          try {
-            const { data: contactData } = await supabase
-              .from('dealership_contacts')
-              .select('first_name, last_name')
-              .eq('id', data.assigned_contact_id)
-              .single();
-            if (contactData) {
-              assignedToName = `${contactData.first_name || ''} ${contactData.last_name || ''}`.trim();
-            }
-          } catch (error) {
-            warn('⚠️ Failed to fetch contact name for service order:', error);
+          const { data: contactData } = await supabase
+            .from('dealership_contacts')
+            .select('first_name, last_name')
+            .eq('id', data.assigned_contact_id)
+            .maybeSingle();
+          if (contactData) {
+            assignedToName = `${contactData.first_name || ''} ${contactData.last_name || ''}`.trim();
           }
         }
 
@@ -595,7 +543,6 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
           'order_created'
         ).then(async (slackEnabled) => {
           if (slackEnabled) {
-            dev('📤 Slack enabled for service order, sending notification...');
             await slackNotificationService.notifyOrderCreated({
               orderId: data.id,
               dealerId: data.dealer_id,
@@ -612,14 +559,11 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
               }
             });
           }
-        }).catch((error) => {
-          logError('❌ [Slack] Failed to send service order creation notification:', error);
-        });
+        }).catch(() => {});
       }
 
       // Invalidate queries to trigger immediate table refresh
       await queryClient.invalidateQueries({ queryKey: ['orders', 'service'] });
-      dev('✅ Service order cache invalidated - table will refresh immediately');
     } catch (error) {
       logError('Error in createOrder:', error);
       throw error;
@@ -724,8 +668,6 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
         throw error;
       }
 
-      dev('Service order updated successfully:', data);
-
       // Force immediate refetch to get fresh data
       await queryClient.refetchQueries({ queryKey: ['orders', 'service'] });
     } catch (error) {
@@ -752,8 +694,6 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
         throw error;
       }
 
-      dev('Service order deleted successfully');
-
       // Force immediate refetch to refresh order list
       await queryClient.refetchQueries({ queryKey: ['orders', 'service'] });
     } catch (error) {
@@ -769,14 +709,12 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
   useEffect(() => {
     if (!serviceOrdersPollingQuery.isFetching && serviceOrdersPollingQuery.dataUpdatedAt) {
       setLastRefresh(new Date(serviceOrdersPollingQuery.dataUpdatedAt));
-      dev('⏰ Service Orders LastRefresh updated:', new Date(serviceOrdersPollingQuery.dataUpdatedAt).toLocaleTimeString());
     }
   }, [serviceOrdersPollingQuery.isFetching, serviceOrdersPollingQuery.dataUpdatedAt]);
 
   // Listen for status updates to trigger immediate refresh using EventBus
   useEffect(() => {
     const handleStatusUpdate = () => {
-      dev('🔄 [Service] Status update detected, triggering immediate polling refresh');
       serviceOrdersPollingQuery.refetch();
     };
 

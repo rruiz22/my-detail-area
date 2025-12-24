@@ -12,7 +12,7 @@ import { useSearchPersistence, useTabPersistence, useViewModePersistence } from 
 import { useStatusPermissions } from '@/hooks/useStatusPermissions';
 import { useDealerFilter } from '@/contexts/DealerFilterContext';
 import { orderEvents } from '@/utils/eventBus';
-import { dev, warn, error as logError } from '@/utils/logger';
+import { error as logError } from '@/utils/logger';
 import { determineTabForOrder } from '@/utils/orderUtils';
 import { generateOrderListPDF } from '@/utils/generateOrderListPDF';
 import { Plus, RefreshCw } from 'lucide-react';
@@ -43,8 +43,6 @@ import { SmartDashboard } from '@/components/sales/SmartDashboard';
 import { OrderCalendarView } from '@/components/orders/OrderCalendarView';
 
 export default function ServiceOrders() {
-  dev('🔵 ServiceOrders component is RENDERING');
-  // 🚀 CODE SPLITTING: Load service_orders + orders + common namespaces
   const { t } = useTranslation(['service_orders', 'orders', 'common']);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -107,39 +105,27 @@ export default function ServiceOrders() {
   // Auto-open order modal when URL contains ?order=ID parameter
   useEffect(() => {
     if (orderIdFromUrl && allOrders.length > 0 && !hasProcessedUrlOrder) {
-      dev('🎯 [Service] Processing order from URL (one-time):', orderIdFromUrl);
-
-      // Find the order in ALL orders (not just filtered by active tab)
       const targetOrder = allOrders.find(order => order.id === orderIdFromUrl);
 
       if (targetOrder) {
-        dev('✅ [Service] Found order, auto-opening modal:', targetOrder.orderNumber || targetOrder.id);
-
-        // Determine the correct tab for this order
         const correctTab = determineTabForOrder(targetOrder);
-
-        // Auto-navigate to the correct tab if not already there
         if (correctTab !== activeFilter) {
-          dev('📍 [Service] Auto-navigating to correct tab:', correctTab);
           setActiveFilter(correctTab);
         }
-
         setPreviewOrder(targetOrder);
-        setHasProcessedUrlOrder(true); // Prevent loop
+        setHasProcessedUrlOrder(true);
       } else {
-        warn('⚠️ [Service] Order not found in orders list:', orderIdFromUrl);
         toast({
           description: t('orders.order_not_found', 'Order not found'),
           variant: 'destructive'
         });
-        setHasProcessedUrlOrder(true); // Prevent retrying
+        setHasProcessedUrlOrder(true);
       }
     }
   }, [orderIdFromUrl, allOrders, hasProcessedUrlOrder, activeFilter, setActiveFilter, t, toast]);
 
   const handleCreateOrder = useCallback(() => {
     if (!canCreate) {
-      warn('⚠️ User does not have permission to create service orders');
       toast({
         title: t('errors.no_permission', 'No Permission'),
         description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
@@ -147,15 +133,12 @@ export default function ServiceOrders() {
       });
       return;
     }
-
-    dev('✅ User has permission to create service orders');
     setSelectedOrder(null);
     setShowModal(true);
   }, [canCreate, t, toast]);
 
   const handleCreateOrderWithDate = useCallback((selectedDate?: Date) => {
     if (!canCreate) {
-      warn('⚠️ User does not have permission to create service orders');
       toast({
         title: t('errors.no_permission', 'No Permission'),
         description: t('errors.no_permission_create_order', 'You do not have permission to create orders'),
@@ -163,10 +146,7 @@ export default function ServiceOrders() {
       });
       return;
     }
-
     setSelectedOrder(null);
-    // If date is provided from calendar, we could pre-populate the due_date
-    // For now, just open the modal
     setShowModal(true);
   }, [canCreate, t, toast]);
 

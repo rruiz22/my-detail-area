@@ -24,7 +24,7 @@ import { VehicleSearchResult } from '@/hooks/useVehicleAutoPopulation';
 import { useVinDecoding } from '@/hooks/useVinDecoding';
 import { supabase } from '@/integrations/supabase/client';
 import { safeParseDate } from '@/utils/dateUtils';
-import { dev, error as logError, warn } from '@/utils/logger';
+import { error as logError } from '@/utils/logger';
 import { AlertCircle, Building2, CalendarClock, Car, Check, ChevronsUpDown, ClipboardList, FileText, Info, Loader2, Scan, User, Wrench, Zap } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -169,18 +169,6 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
         setSelectedDealership('');
         setSelectedAssignedTo('');
 
-        // Debug logging - investigate dealer fields (similar to Sales modal)
-        dev('🔍 Service Order Edit Mode - Investigating dealer fields:');
-        dev('🔍 All order fields:', Object.keys(order));
-        dev('🔍 Dealership fields:', {
-          dealer_id: order.dealer_id,
-          dealerId: order.dealerId
-        });
-        dev('🔍 Assignment fields:', {
-          assignedTo: order.assignedTo,
-          assigned_group_id: order.assigned_group_id
-        });
-
         setFormData({
           orderNumber: order.orderNumber || '',
           orderType: order.order_type || 'service',
@@ -253,33 +241,24 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
     }
   }, [order, open]);
 
-  // Set selectedAssignedTo when assignedUsers are loaded and order exists (similar to Sales modal)
+  // Set selectedAssignedTo when assignedUsers are loaded and order exists
   useEffect(() => {
     if (assignedUsers.length > 0 && order && selectedAssignedTo === '') {
-      // Find the user that matches the order's assignment
       let matchingUser = null;
 
       // Try to find by ID first (most reliable)
       const assignedId = order.assigned_group_id;
       if (assignedId) {
         matchingUser = assignedUsers.find(user => user.id === assignedId);
-        dev('🔧 Searching by ID:', assignedId, 'found:', matchingUser?.name);
       }
 
       // Fallback to name search
       if (!matchingUser && order.assignedTo && order.assignedTo !== 'Unassigned') {
         matchingUser = assignedUsers.find(user => user.name === order.assignedTo);
-        dev('🔧 Searching by name:', order.assignedTo, 'found:', matchingUser?.name);
       }
 
       if (matchingUser) {
-        dev('🔧 Setting assigned user AFTER users loaded:', matchingUser.id);
         setSelectedAssignedTo(matchingUser.id);
-      } else {
-        warn('⚠️ Could not find assigned user:', {
-          assignedTo: order.assignedTo,
-          assigned_group_id: order.assigned_group_id
-        });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -290,7 +269,6 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
     if (!order && assignedUsers.length > 0 && !selectedAssignedTo && authUser) {
       const currentUser = assignedUsers.find(u => u.id === authUser.id);
       if (currentUser) {
-        dev('🎯 Auto-selecting current user for Assigned To:', currentUser.name);
         setSelectedAssignedTo(currentUser.id);
         setFormData(prev => ({
           ...prev,
@@ -304,38 +282,27 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
   // Set dealership from global filter for new orders
   useEffect(() => {
     if (!order && isGlobalFilterActive && dealerships.length > 0 && !selectedDealership) {
-      dev('🎯 Service Orders: Setting dealership from global filter:', globalDealerFilter);
       handleDealershipChange(globalDealerFilter);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order, isGlobalFilterActive, globalDealerFilter, dealerships.length, selectedDealership]);
 
-  // Auto-populate dealership when flag is set AND dealerships are loaded (FLAG PATTERN)
+  // Auto-populate dealership when flag is set AND dealerships are loaded
   useEffect(() => {
     if (needsAutopopulate && dealerships.length > 0 && order) {
       const dealerIdStr = order.dealerId?.toString() || order.dealer_id?.toString();
 
       if (dealerIdStr) {
-        // Verify dealer exists in list
         const dealerExists = dealerships.some((d: DealershipInfo) => d.id.toString() === dealerIdStr);
 
         if (dealerExists) {
-          dev('🔧 [FLAG PATTERN] Service Order Edit: Auto-setting dealership:', dealerIdStr);
           setSelectedDealership(dealerIdStr);
-
-          // Immediately fetch dealer data (users and services)
-          dev('🔧 [FLAG PATTERN] Service Order Edit: Auto-loading dealer data');
           fetchDealerData(dealerIdStr);
-
-          // Reset flag to prevent re-execution
           setNeedsAutopopulate(false);
-          dev('✅ [FLAG PATTERN] Auto-population completed, flag reset');
         } else {
-          warn('⚠️ Dealer not found in accessible dealerships:', dealerIdStr);
           setNeedsAutopopulate(false);
         }
       } else {
-        warn('⚠️ No dealerId found in order');
         setNeedsAutopopulate(false);
       }
     }
@@ -345,19 +312,14 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
   // Apply pending service IDs once services are loaded (CRITICAL for edit mode)
   useEffect(() => {
     if (pendingServiceIds.length > 0 && services.length > 0 && !loading) {
-      // Validate that pending service IDs exist in loaded services
       const validServiceIds = pendingServiceIds.filter(serviceId =>
         services.some((service: DealerService) => service.id === serviceId)
       );
 
       if (validServiceIds.length > 0) {
-        dev('✅ Service Modal: Applying pending service IDs:', validServiceIds);
         setSelectedServices(validServiceIds);
-        setPendingServiceIds([]); // Clear pending state
-      } else {
-        warn('⚠️ Service Modal: No valid service IDs found in loaded services');
-        setPendingServiceIds([]); // Clear pending state even if no matches
       }
+      setPendingServiceIds([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pendingServiceIds.length, services.length, loading]);
@@ -444,7 +406,6 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
           isSystemAdmin: user.is_system_admin
         }));
 
-        dev(`✅ Loaded ${mappedUsers.length} users with service_orders access for dealership ${dealerId}`);
         setAssignedUsers(mappedUsers);
       } else {
         setAssignedUsers([]);
@@ -627,37 +588,16 @@ const ServiceOrderModal: React.FC<ServiceOrderModalProps> = React.memo(({ order,
         assignedGroupId: selectedAssignedTo || undefined,
         services: selectedServices.map(serviceId => {
           const service = services.find(s => s.id === serviceId);
-
-          // ✅ VALIDATION: Warn if service has no price
-          if (service && (service.price === null || service.price === undefined)) {
-            warn('⚠️ [ServiceOrderModal] Service has NULL price:', {
-              serviceId: serviceId,
-              serviceName: service.name,
-              price: service.price
-            });
-          }
-
           return {
             id: serviceId,
             name: service?.name || 'Unknown Service',
-            price: service?.price ?? 0,  // ✅ Default to 0 instead of undefined
+            price: service?.price ?? 0,
             description: service?.description
           };
         }),
         totalAmount: selectedServices.reduce((total, serviceId) => {
           const service = services.find(s => s.id === serviceId);
-          const servicePrice = service?.price ?? 0;  // ✅ Default to 0 instead of undefined
-
-          // ✅ VALIDATION: Log if we're adding a zero price
-          if (servicePrice === 0 && service) {
-            warn('⚠️ [ServiceOrderModal] Adding service with $0 price to total:', {
-              serviceId,
-              serviceName: service.name,
-              price: service.price
-            });
-          }
-
-          return total + servicePrice;
+          return total + (service?.price ?? 0);
         }, 0),
         notes: formData.notes || undefined,
         dueDate: formData.dueDate ? formData.dueDate.toISOString() : undefined,
