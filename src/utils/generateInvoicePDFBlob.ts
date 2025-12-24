@@ -4,15 +4,14 @@
 // Description: Generate PDF as blob for email attachments
 // =====================================================
 
+import type { InvoiceWithDetails } from '@/types/invoices';
+import {
+    DEPARTMENT_DISPLAY_NAMES,
+    shouldShowDepartmentGrouping,
+    sortInvoiceItemsByDepartment,
+} from '@/utils/invoiceSorting';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import type { InvoiceWithDetails } from '@/types/invoices';
-import { format, parseISO } from 'date-fns';
-import {
-  DEPARTMENT_DISPLAY_NAMES,
-  shouldShowDepartmentGrouping,
-  sortInvoiceItemsByDepartment,
-} from '@/utils/invoiceSorting';
 
 /**
  * Format currency for PDF display

@@ -6,13 +6,13 @@
 // =====================================================
 
 import type { InvoiceWithDetails } from '@/types/invoices';
+import {
+    DEPARTMENT_DISPLAY_NAMES,
+    shouldShowDepartmentGrouping,
+    sortInvoiceItemsByDepartment,
+} from '@/utils/invoiceSorting';
 import { format } from 'date-fns';
 import ExcelJS from 'exceljs';
-import {
-  DEPARTMENT_DISPLAY_NAMES,
-  shouldShowDepartmentGrouping,
-  sortInvoiceItemsByDepartment,
-} from '@/utils/invoiceSorting';
 
 /**
  * Format currency for Excel display
