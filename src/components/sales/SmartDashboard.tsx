@@ -144,32 +144,32 @@ export const SmartDashboard = memo(function SmartDashboard({ allOrders, tabCount
     },
     {
       id: 'delayed',
-      title: 'Delayed Orders',
+      title: t('sales_orders.dashboard.delayed_orders'),
       value: metrics.delayed,
       icon: AlertTriangle,
       color: 'text-red-600',
       bgColor: 'bg-red-50',
-      subtitle: 'Require immediate attention',
+      subtitle: t('sales_orders.dashboard.delayed_orders_subtitle'),
       badge: null
     },
     {
       id: 'unassigned',
-      title: 'Unassigned Orders',
+      title: t('sales_orders.dashboard.unassigned_orders'),
       value: metrics.unassigned,
       icon: UserX,
       color: 'text-amber-600',
       bgColor: 'bg-amber-50',
-      subtitle: 'Awaiting assignment',
+      subtitle: t('sales_orders.dashboard.unassigned_orders_subtitle'),
       badge: null
     },
     {
       id: 'in_process',
-      title: 'In Progress',
+      title: t('sales_orders.dashboard.in_progress'),
       value: tabCounts.in_process || 0,
       icon: Loader2,
       color: 'text-blue-600',
       bgColor: 'bg-blue-50',
-      subtitle: 'Active work orders',
+      subtitle: t('sales_orders.dashboard.in_progress_subtitle'),
       badge: null
     }
   ];
@@ -228,18 +228,18 @@ export const SmartDashboard = memo(function SmartDashboard({ allOrders, tabCount
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <CheckCircle className="h-4 w-4" aria-hidden="true" />
-              Completion Rate
+              {t('sales_orders.dashboard.completion_rate')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span>Progress</span>
+                <span>{t('sales_orders.dashboard.progress')}</span>
                 <span className="font-medium" aria-label={t('accessibility.dashboard.progress_percentage', { value: metrics.completionRate })}>{metrics.completionRate}%</span>
               </div>
               <Progress value={metrics.completionRate} className="h-2" aria-label={`${metrics.completionRate}% complete`} />
               <p className="text-xs text-muted-foreground">
-                {metrics.completed} of {metrics.total} orders completed
+                {t('sales_orders.dashboard.orders_completed', { completed: metrics.completed, total: metrics.total })}
               </p>
             </div>
           </CardContent>
@@ -250,21 +250,21 @@ export const SmartDashboard = memo(function SmartDashboard({ allOrders, tabCount
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <MessageSquare className="h-4 w-4" aria-hidden="true" />
-              Team Activity
+              {t('sales_orders.dashboard.team_activity')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span>Orders with comments</span>
+                <span>{t('sales_orders.dashboard.orders_with_comments')}</span>
                 <span className="font-semibold" aria-label={t('accessibility.dashboard.orders_with_comments', { count: metrics.withComments })}>{metrics.withComments}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span>Total comments</span>
+                <span>{t('sales_orders.dashboard.total_comments')}</span>
                 <span className="font-semibold" aria-label={t('accessibility.dashboard.total_comments', { count: metrics.totalComments })}>{metrics.totalComments}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span>Avg per order</span>
+                <span>{t('sales_orders.dashboard.avg_per_order')}</span>
                 <span className="font-semibold" aria-label={t('accessibility.dashboard.average_comments', { value: metrics.avgComments })}>{metrics.avgComments}</span>
               </div>
             </div>
@@ -276,14 +276,14 @@ export const SmartDashboard = memo(function SmartDashboard({ allOrders, tabCount
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Car className="h-4 w-4" aria-hidden="true" />
-              Vehicle Insights
+              {t('sales_orders.dashboard.vehicle_insights')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
               {metrics.topMakes.length > 0 ? (
                 <>
-                  <div className="text-xs font-medium text-muted-foreground">Top Makes:</div>
+                  <div className="text-xs font-medium text-muted-foreground">{t('sales_orders.dashboard.top_makes')}</div>
                   {metrics.topMakes.map(([make, count]) => (
                     <div key={make} className="flex justify-between text-sm">
                       <span className="font-medium">{make}</span>
@@ -292,7 +292,7 @@ export const SmartDashboard = memo(function SmartDashboard({ allOrders, tabCount
                   ))}
                 </>
               ) : (
-                <p className="text-sm text-muted-foreground" role="status">No vehicle data yet</p>
+                <p className="text-sm text-muted-foreground" role="status">{t('sales_orders.dashboard.no_vehicle_data')}</p>
               )}
             </div>
           </CardContent>

@@ -181,6 +181,7 @@ export const OrderCard = memo<OrderCardProps>(function OrderCard({
       role="article"
       aria-label={orderAriaLabel}
       aria-grabbed={isDragging}
+      data-testid="order-item"
       className={`border-l-4 cursor-move hover:shadow-md transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 ${getStatusBorder(order.status)} ${getStatusRowColor(order.status)} group ${
         isDragging ? 'opacity-50 scale-95' : ''
       }`}

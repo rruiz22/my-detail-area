@@ -122,5 +122,11 @@
   "field_updated": "Field updated successfully",
   "field_update_failed": "Failed to update field",
   "date_updated": "Date updated successfully",
-  "date_update_failed": "Failed to update date"
+  "date_update_failed": "Failed to update date",
+  "due_status": {
+    "overdue_days": "{{days}} days overdue",
+    "due_today": "Due today",
+    "due_tomorrow": "Due tomorrow",
+    "due_in_days": "Due in {{days}} days"
+  }
 }

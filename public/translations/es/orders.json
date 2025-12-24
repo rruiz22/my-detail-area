@@ -110,5 +110,11 @@
   "status_updated_successfully": "Estado actualizado exitosamente",
   "status_change_failed": "Error al actualizar estado",
   "new_order": "Nueva Orden",
-  "today_orders": "Órdenes de Hoy"
+  "today_orders": "Órdenes de Hoy",
+  "due_status": {
+    "overdue_days": "{{days}} días de retraso",
+    "due_today": "Vence hoy",
+    "due_tomorrow": "Vence mañana",
+    "due_in_days": "Vence en {{days}} días"
+  }
 }

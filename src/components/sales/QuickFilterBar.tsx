@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { WeekNavigator } from '@/components/ui/WeekNavigator';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { AlertCircle, BarChart3, Calendar, Clock, Kanban, List, Printer, Search, X, CalendarDays, ChevronDown } from 'lucide-react';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { DateRange } from '@/hooks/useDetailHubAnalytics';
 import {
@@ -64,10 +64,9 @@ export const QuickFilterBar = memo(function QuickFilterBar({
 }: QuickFilterBarProps) {
   const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(false);
-  const [showDatePresets, setShowDatePresets] = useState(false);
 
-  // Date preset helper functions
-  const getDatePresets = () => {
+  // Memoized date presets - only recalculate when component mounts (dates change at midnight)
+  const presets = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -89,9 +88,7 @@ export const QuickFilterBar = memo(function QuickFilterBar({
       thisMonth: { from: startOfMonth, to: today },
       last30Days: { from: last30Days, to: today }
     };
-  };
-
-  const presets = getDatePresets();
+  }, []);
 
   // Check if mobile on mount and resize
   useEffect(() => {
@@ -175,7 +172,7 @@ export const QuickFilterBar = memo(function QuickFilterBar({
   });
 
   return (
-    <Card className="border-border shadow-sm">
+    <Card className="border-border shadow-sm" data-testid="quick-filter-bar">
       <div className="p-4 space-y-4">
         {/* Search and View Toggle */}
         <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">

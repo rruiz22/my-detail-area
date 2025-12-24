@@ -51,28 +51,28 @@ export function OrderPreviewPanel({
     
     if (diffDays < 0) {
       return { 
-        text: `${Math.abs(diffDays)} days overdue`, 
+        text: t('orders.due_status.overdue_days', { days: Math.abs(diffDays) }), 
         variant: 'destructive' as const,
         icon: AlertCircle,
         urgent: true
       };
     } else if (diffDays === 0) {
       return { 
-        text: 'Due today', 
+        text: t('orders.due_status.due_today'), 
         variant: 'warning' as const,
         icon: Clock,
         urgent: true
       };
     } else if (diffDays === 1) {
       return { 
-        text: 'Due tomorrow', 
+        text: t('orders.due_status.due_tomorrow'), 
         variant: 'secondary' as const,
         icon: Calendar,
         urgent: false
       };
     } else {
       return { 
-        text: `Due in ${diffDays} days`, 
+        text: t('orders.due_status.due_in_days', { days: diffDays }), 
         variant: 'outline' as const,
         icon: Calendar,
         urgent: false
@@ -88,7 +88,7 @@ export function OrderPreviewPanel({
 
   return (
     <Sheet open={open} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className="sm:max-w-lg overflow-y-auto">
+      <SheetContent className="sm:max-w-lg overflow-y-auto" data-testid="order-modal">
         <SheetHeader className="space-y-4">
           <div className="flex items-center justify-between">
             <SheetTitle className="text-xl font-semibold">
@@ -101,7 +101,7 @@ export function OrderPreviewPanel({
               className="flex items-center gap-2"
             >
               <Edit className="w-4 h-4" />
-              Edit Order
+              {t('orders.edit')}
             </Button>
           </div>
           
@@ -134,7 +134,7 @@ export function OrderPreviewPanel({
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
                 <User className="w-4 h-4" />
-                Customer Information
+                {t('orders.customer_information')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -164,7 +164,7 @@ export function OrderPreviewPanel({
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
                 <Car className="w-4 h-4" />
-                Vehicle Information
+                {t('orders.vehicle_information')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -299,11 +299,11 @@ export function OrderPreviewPanel({
                 onClick={() => onEdit(order)}
               >
                 <Edit className="w-4 h-4 mr-2" />
-                Edit Order
+                {t('orders.edit')}
               </Button>
             )}
             <Button variant="outline" onClick={onClose}>
-              Close
+              {t('common.close')}
             </Button>
           </div>
         </div>
