@@ -83,8 +83,8 @@ serve(async (req) => {
       throw new Error(`Invoice not found: ${invoiceError?.message}`)
     }
 
-    // Use dealership_id from request, or fallback to invoice's dealership_id
-    const dealershipId = request.dealership_id || invoice.dealership_id;
+    // Use dealership_id from request, or fallback to invoice's dealer_id
+    const dealershipId = request.dealership_id || invoice.dealer_id;
     if (!dealershipId) {
       throw new Error('dealership_id is required but was not provided in request or found in invoice');
     }
