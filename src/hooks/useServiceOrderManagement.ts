@@ -516,23 +516,19 @@ export const useServiceOrderManagement = (activeTab: string, weekOffset: number 
           }
         });
 
-        // Fetch assigned user/group name for Slack notification
+        // Fetch assigned user name for Slack notification
+        // NOTE: assigned_group_id contains user_id (UUID), NOT group_id
         let assignedToName: string | undefined = undefined;
         if (data.assigned_group_id) {
-          const { data: groupData } = await supabase
-            .from('dealer_groups')
-            .select('name')
+          const { data: userData } = await supabase
+            .from('profiles')
+            .select('first_name, last_name, email')
             .eq('id', data.assigned_group_id)
             .maybeSingle();
-          assignedToName = groupData?.name || undefined;
-        } else if (data.assigned_contact_id) {
-          const { data: contactData } = await supabase
-            .from('dealership_contacts')
-            .select('first_name, last_name')
-            .eq('id', data.assigned_contact_id)
-            .maybeSingle();
-          if (contactData) {
-            assignedToName = `${contactData.first_name || ''} ${contactData.last_name || ''}`.trim();
+          if (userData?.first_name) {
+            assignedToName = `${userData.first_name} ${userData.last_name || ''}`.trim();
+          } else if (userData?.email) {
+            assignedToName = userData.email;
           }
         }
 
