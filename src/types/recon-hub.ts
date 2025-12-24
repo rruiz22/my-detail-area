@@ -1,4 +1,4 @@
-import { Database } from "@/integrations/supabase/types";
+import { Database } from "@/types/supabase";
 
 // Base types from database
 export type ReconWorkflow = Database['public']['Tables']['recon_workflows']['Row'];
