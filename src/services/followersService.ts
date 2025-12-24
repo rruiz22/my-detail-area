@@ -19,8 +19,6 @@ export class FollowersService {
    */
   async autoFollowOnAssignment(orderId: string, assignedUserId: string, assignedByUserId: string): Promise<void> {
     try {
-      console.log(`🎯 Auto-following user ${assignedUserId} on order ${orderId}`);
-
       // Get user's dealership for proper scoping
       const { data: userProfile } = await supabase
         .from('profiles')
@@ -30,8 +28,8 @@ export class FollowersService {
 
       const dealerId = userProfile?.dealership_id || 5;
 
-      // ⚡ OPTIMIZATION: Use upsert instead of check + insert (saves 1 query)
-      const { error } = await supabase
+      // Use upsert to avoid duplicate check query
+      await supabase
         .from('entity_followers')
         .upsert({
           entity_type: 'order',
@@ -39,7 +37,7 @@ export class FollowersService {
           user_id: assignedUserId,
           dealer_id: dealerId,
           follow_type: 'assigned',
-          notification_level: 'all', // Assigned users get all notifications
+          notification_level: 'all',
           followed_at: new Date().toISOString(),
           followed_by: assignedByUserId,
           is_active: true,
@@ -49,20 +47,7 @@ export class FollowersService {
           ignoreDuplicates: true
         });
 
-      if (error) {
-        // If conflict, user already following - that's fine
-        if (error.code !== '23505') {
-          console.warn('⚠️ Auto-follow upsert warning:', error.message);
-        } else {
-          console.log('ℹ️ User already following this order');
-        }
-        return;
-      }
-
-      console.log('✅ Auto-follow completed for assigned user');
-
     } catch (error) {
-      console.error('❌ Auto-follow failed:', error);
       // Don't throw error to avoid breaking order assignment
     }
   }
@@ -73,8 +58,6 @@ export class FollowersService {
    */
   async autoFollowOnCreation(orderId: string, creatorUserId: string): Promise<void> {
     try {
-      console.log(`🎯 Auto-following creator ${creatorUserId} on order ${orderId}`);
-
       // Get creator's dealership
       const { data: userProfile } = await supabase
         .from('profiles')
@@ -84,8 +67,8 @@ export class FollowersService {
 
       const dealerId = userProfile?.dealership_id || 5;
 
-      // ⚡ OPTIMIZATION: Use upsert instead of check + insert (saves 1 query)
-      const { error } = await supabase
+      // Use upsert to avoid duplicate check query
+      await supabase
         .from('entity_followers')
         .upsert({
           entity_type: 'order',
@@ -93,7 +76,7 @@ export class FollowersService {
           user_id: creatorUserId,
           dealer_id: dealerId,
           follow_type: 'creator',
-          notification_level: 'important', // Creators get important notifications
+          notification_level: 'important',
           followed_at: new Date().toISOString(),
           followed_by: creatorUserId,
           is_active: true,
@@ -103,20 +86,7 @@ export class FollowersService {
           ignoreDuplicates: true
         });
 
-      if (error) {
-        // If conflict, creator already following - that's fine
-        if (error.code !== '23505') {
-          console.warn('⚠️ Auto-follow creator upsert warning:', error.message);
-        } else {
-          console.log('ℹ️ Creator already following this order');
-        }
-        return;
-      }
-
-      console.log('✅ Auto-follow completed for creator');
-
     } catch (error) {
-      console.error('❌ Auto-follow creator failed:', error);
       // Don't throw error to avoid breaking order creation
     }
   }

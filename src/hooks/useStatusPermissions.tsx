@@ -28,39 +28,22 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
     try {
       // System admins can always update status
       if (enhancedUser?.is_system_admin) {
-        console.log('✅ System admin - status change allowed');
         return true;
       }
 
       // Must have enhanced user loaded
       if (!enhancedUser) {
-        console.warn('⚠️ No enhanced user loaded - denying status change');
         return false;
       }
 
       // Supermanagers can update orders from ALL dealerships
-      if (enhancedUser.is_supermanager) {
-        console.log('✅ Supermanager - multi-dealer status change allowed', {
-          userDealership: enhancedUser.dealership_id,
-          orderDealership: dealerId
-        });
-        // Continue to permission check below (don't return yet)
-      }
       // Dealer users can only update orders from own dealership
-      else if (parseInt(dealerId) !== enhancedUser.dealership_id) {
-        console.warn('⚠️ Dealer user cannot update orders from different dealership', {
-          userDealership: enhancedUser.dealership_id,
-          orderDealership: dealerId
-        });
+      if (!enhancedUser.is_supermanager && parseInt(dealerId) !== enhancedUser.dealership_id) {
         return false;
       }
 
-      // NOTE: Removed validation that prevented changing status on completed/cancelled orders
-      // Users with proper permissions should be able to reopen completed/cancelled orders
-
       // Determine which module to check based on order type
-      let module: AppModule = 'sales_orders'; // default
-
+      let module: AppModule = 'sales_orders';
       if (orderType) {
         const moduleMap: Record<string, AppModule> = {
           'sales': 'sales_orders',
@@ -72,18 +55,9 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
       }
 
       // Check if user has change_status permission for this module
-      const hasChangeStatus = hasModulePermission(module, 'change_status');
-
-      if (!hasChangeStatus) {
-        console.warn(`⚠️ User does not have change_status permission for ${module}`);
-        return false;
-      }
-
-      console.log(`✅ User has permission to change status for ${module}`);
-      return true;
+      return hasModulePermission(module, 'change_status');
 
     } catch (error) {
-      console.error('Error in canUpdateStatus:', error);
       return false;
     }
   }, [enhancedUser, hasModulePermission]);
@@ -161,17 +135,12 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
         // Use mda.to short link if available, otherwise fallback to correct module URL
         const shortLink = currentOrder.short_link || `https://app.mydetailarea.com/${urlPath}/${orderId}`;
 
-        // 📱 SMS NOTIFICATION: Send SMS to users based on their notification rules
-        // This uses the new 3-level validation architecture (Follower → Custom Role → User Preferences)
-        // BUSINESS RULE: Only send SMS when status changes to "completed" (for sales_orders and service_orders)
+        // 📱 SMS NOTIFICATION: Only send when status changes to "completed" (for sales_orders and service_orders)
         const shouldSendSMS = (module === 'sales_orders' || module === 'service_orders')
           ? newStatus === 'completed'
-          : true; // Other modules: send for all status changes
+          : true;
 
         if (shouldSendSMS) {
-          console.log(`📱 [SMS] Status changed to "${newStatus}" - sending SMS notification`);
-
-          // Await SMS result to show toast confirmation
           const smsResult = await sendStatusChangedSMS({
             orderId: orderId,
             dealerId: parseInt(dealerId),
@@ -197,105 +166,62 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
               })
             });
           }
-        } else {
-          console.log(`ℹ️ [SMS] Status changed to "${newStatus}" - SMS not sent (only sent for "completed" status in ${module})`);
         }
 
         // 🔔 PUSH NOTIFICATION: Send push notification to followers
         try {
-          console.log(`🔔 [PUSH] Sending push notification for status change to "${newStatus}"`);
-
           const { pushNotificationHelper } = await import('@/services/pushNotificationHelper');
-
-          // Send push notification asynchronously (don't block the status update)
-          // NEW: Now includes module and eventType for 4-level validation
           pushNotificationHelper.notifyOrderStatusChange(
             orderId,
             currentOrder.order_number || orderId,
             newStatus,
             userName,
-            enhancedUser.id,  // ✅ Exclude user who made the change
-            module,           // ✅ Pass module for validation
-            'order_status_changed'  // ✅ Pass event type for validation
-          ).catch(error => {
-            console.error('[PUSH] Failed to send push notification (non-critical):', error);
-          });
-
-          console.log('✅ [PUSH] Push notification triggered successfully');
+            enhancedUser.id,
+            module,
+            'order_status_changed'
+          ).catch(() => {});
         } catch (error) {
-          console.error('[PUSH] Error triggering push notification (non-critical):', error);
+          // Non-critical - don't log
         }
 
         // 📤 SLACK NOTIFICATION: Status Changed
-        console.log('🔍 [DEBUG] Checking Slack for status change:', {
-          dealerId,
-          module,
-          oldStatus,
-          newStatus
-        });
-
         void slackNotificationService.isEnabled(
           parseInt(dealerId),
           module,
           'order_status_changed'
         ).then(async (slackEnabled) => {
-          console.log('🔍 [DEBUG] Slack enabled result:', slackEnabled);
-
           if (slackEnabled) {
-            console.log('📤 Slack enabled for status change, sending notification...');
-
-            // 🔍 Fetch assigned user/group name (or creator if not assigned)
+            // Fetch assigned user/group name
             let assignedToName: string | undefined = undefined;
             if (currentOrder.assigned_group_id) {
-              try {
-                const { data: groupData, error: groupError } = await supabase
-                  .from('dealer_groups')
-                  .select('name')
-                  .eq('id', currentOrder.assigned_group_id)
-                  .single();
-
-                if (groupError) {
-                  console.warn('⚠️ Group not found:', currentOrder.assigned_group_id, groupError);
-                } else if (groupData?.name) {
-                  assignedToName = groupData.name;
-                }
-              } catch (error) {
-                console.warn('⚠️ Failed to fetch group name:', error);
-              }
+              const { data: groupData } = await supabase
+                .from('dealer_groups')
+                .select('name')
+                .eq('id', currentOrder.assigned_group_id)
+                .maybeSingle();
+              assignedToName = groupData?.name;
             } else if (currentOrder.assigned_contact_id) {
-              try {
-                const { data: contactData, error: contactError } = await supabase
-                  .from('dealership_contacts')
-                  .select('first_name, last_name')
-                  .eq('id', currentOrder.assigned_contact_id)
-                  .single();
-
-                if (contactError) {
-                  console.warn('⚠️ Contact not found:', currentOrder.assigned_contact_id, contactError);
-                } else if (contactData) {
-                  assignedToName = `${contactData.first_name || ''} ${contactData.last_name || ''}`.trim();
-                }
-              } catch (error) {
-                console.warn('⚠️ Failed to fetch contact name:', error);
+              const { data: contactData } = await supabase
+                .from('dealership_contacts')
+                .select('first_name, last_name')
+                .eq('id', currentOrder.assigned_contact_id)
+                .maybeSingle();
+              if (contactData) {
+                assignedToName = `${contactData.first_name || ''} ${contactData.last_name || ''}`.trim();
               }
             }
 
             // If no assignment, use creator name
             if (!assignedToName && currentOrder.created_by) {
-              try {
-                const { data: creatorData } = await supabase
-                  .from('profiles')
-                  .select('first_name, last_name, email')
-                  .eq('id', currentOrder.created_by)
-                  .single();
-
-                if (creatorData?.first_name) {
-                  assignedToName = `${creatorData.first_name} ${creatorData.last_name || ''}`.trim();
-                } else if (creatorData?.email) {
-                  assignedToName = creatorData.email;
-                }
-              } catch (error) {
-                console.warn('⚠️ Failed to fetch creator name:', error);
+              const { data: creatorData } = await supabase
+                .from('profiles')
+                .select('first_name, last_name, email')
+                .eq('id', currentOrder.created_by)
+                .maybeSingle();
+              if (creatorData?.first_name) {
+                assignedToName = `${creatorData.first_name} ${creatorData.last_name || ''}`.trim();
+              } else if (creatorData?.email) {
+                assignedToName = creatorData.email;
               }
             }
 
@@ -307,22 +233,18 @@ export function useStatusPermissions(): UseStatusPermissionsReturn {
                 orderNumber: currentOrder.order_number,
                 stockNumber: currentOrder.stock_number,
                 tag: currentOrder.tag,
-                vinNumber: undefined, // Not available in this context
+                vinNumber: undefined,
                 vehicleInfo: vehicleInfo,
                 status: newStatus,
                 oldStatus: oldStatus,
                 shortLink: shortLink,
                 assignedTo: assignedToName,
-                changedBy: userName, // Add who made the change
+                changedBy: userName,
                 dueDateTime: currentOrder.due_date
               }
             });
-          } else {
-            console.log('🔕 Slack NOT enabled for status change');
           }
-        }).catch(err => {
-          logError('❌ [Slack] Error sending status change notification:', err);
-        });
+        }).catch(() => {});
       }
 
       return true;

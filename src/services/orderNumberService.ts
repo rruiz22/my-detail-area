@@ -33,11 +33,7 @@ export class OrderNumberService {
       const nextSequence = lastSequence + 1;
 
       // Format: SA-21, SE-22, CW-23, RC-24 (simple format without padding)
-      const formattedNumber = `${prefix}-${nextSequence}`;
-
-      console.log(`🔢 Generated order number: ${formattedNumber} (type: ${orderType}, sequence: ${nextSequence})`);
-
-      return formattedNumber;
+      return `${prefix}-${nextSequence}`;
 
     } catch (error) {
       console.error('❌ Error generating order number:', error);
@@ -87,7 +83,6 @@ export class OrderNumberService {
           }
         }
 
-        console.log(`🔍 Found max sequence for ${orderType}: ${maxSequence} (optimized query)`);
         return maxSequence;
       }
 
