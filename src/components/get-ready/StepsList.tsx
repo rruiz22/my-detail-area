@@ -1,5 +1,7 @@
 import { useGetReadySteps } from '@/hooks/useGetReady';
 import { useStepManagement } from '@/hooks/useStepManagement';
+import { useStepAssignments, StepAssignment } from '@/hooks/useStepAssignments';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,12 +15,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { AlertCircle, Clock, DollarSign, Edit2, Layers, Plus, Trash2, TrendingUp, GripVertical } from 'lucide-react';
+import { AlertCircle, Clock, DollarSign, Edit2, Flag, Layers, Plus, TimerOff, Trash2, GripVertical, Users } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTranslation } from 'react-i18next';
 import { StepFormModal } from './StepFormModal';
 import { GetReadyStep } from '@/types/getReady';
 import { AVAILABLE_ICONS } from './IconPicker';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -38,10 +41,11 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 
 export function StepsList() {
-  console.log('🎯 [StepsList] Component RENDERED');
   const { t } = useTranslation();
   const { data: steps, isLoading, error } = useGetReadySteps();
   const { deleteStep, reorderSteps, isDeleting } = useStepManagement();
+  // Get all step assignments (without stepId filter to get all)
+  const { assignments: allAssignments, isLoading: isLoadingAssignments } = useStepAssignments();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStep, setSelectedStep] = useState<GetReadyStep | null>(null);
@@ -54,6 +58,16 @@ export function StepsList() {
       setLocalSteps(steps.filter(s => s.id !== 'all').sort((a, b) => a.order_index - b.order_index));
     }
   }, [steps]);
+
+  // Group assignments by step_id for easy lookup
+  const assignmentsByStep = useMemo(() => {
+    const map = new Map<string, StepAssignment[]>();
+    allAssignments.forEach(assignment => {
+      const existing = map.get(assignment.step_id) || [];
+      map.set(assignment.step_id, [...existing, assignment]);
+    });
+    return map;
+  }, [allAssignments]);
 
   // Drag and drop sensors
   const sensors = useSensors(
@@ -170,10 +184,12 @@ export function StepsList() {
           strategy={verticalListSortingStrategy}
         >
           <div className="space-y-3">
-            {localSteps.map((step) => (
+            {localSteps.map((step, index) => (
               <SortableStepCard
                 key={step.id}
                 step={step}
+                stepNumber={index + 1}
+                assignments={assignmentsByStep.get(step.id) || []}
                 onEdit={handleEditStep}
                 onDelete={handleDeleteClick}
               />
@@ -220,11 +236,13 @@ export function StepsList() {
 // Sortable Step Card Component
 interface SortableStepCardProps {
   step: GetReadyStep;
+  stepNumber: number;
+  assignments: StepAssignment[];
   onEdit: (step: GetReadyStep) => void;
   onDelete: (step: GetReadyStep) => void;
 }
 
-function SortableStepCard({ step, onEdit, onDelete }: SortableStepCardProps) {
+function SortableStepCard({ step, stepNumber, assignments, onEdit, onDelete }: SortableStepCardProps) {
   const { t } = useTranslation();
   const {
     attributes,
@@ -241,11 +259,32 @@ function SortableStepCard({ step, onEdit, onDelete }: SortableStepCardProps) {
     opacity: isDragging ? 0.5 : 1,
   };
 
+  // Handle double click to edit
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    // Don't trigger if clicking on buttons or drag handle
+    if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('[data-drag-handle]')) {
+      return;
+    }
+    onEdit(step);
+  };
+
+  // Get initials for avatar
+  const getInitials = (firstName?: string | null, lastName?: string | null, email?: string) => {
+    if (firstName && lastName) {
+      return `${firstName[0]}${lastName[0]}`.toUpperCase();
+    }
+    if (firstName) return firstName[0].toUpperCase();
+    if (email) return email[0].toUpperCase();
+    return '?';
+  };
+
   return (
+    <TooltipProvider>
     <Card
       ref={setNodeRef}
       style={style}
-      className="border-gray-200 hover:border-gray-300 transition-colors"
+        className={`border-gray-200 hover:border-gray-300 hover:shadow-md transition-all cursor-pointer ${step.is_last_step ? 'ring-2 ring-amber-200 dark:ring-amber-800' : ''}`}
+        onDoubleClick={handleDoubleClick}
     >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
@@ -254,14 +293,20 @@ function SortableStepCard({ step, onEdit, onDelete }: SortableStepCardProps) {
             <div
               {...attributes}
               {...listeners}
+                data-drag-handle
               className="cursor-grab active:cursor-grabbing touch-none"
             >
               <GripVertical className="h-5 w-5 text-gray-400 hover:text-gray-600" />
             </div>
 
+              {/* Step Number */}
+              <div className="flex items-center justify-center w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-800 text-xs font-bold text-gray-600 dark:text-gray-300">
+                {stepNumber}
+              </div>
+
             {/* Step Icon */}
             <div
-              className="w-10 h-10 rounded-lg flex items-center justify-center text-white shadow-sm"
+                className="w-10 h-10 rounded-lg flex items-center justify-center text-white shadow-sm relative"
               style={{ backgroundColor: step.color }}
             >
               {(() => {
@@ -269,13 +314,21 @@ function SortableStepCard({ step, onEdit, onDelete }: SortableStepCardProps) {
                 const Icon = iconOption ? iconOption.icon : Layers;
                 return <Icon className="h-5 w-5" />;
               })()}
+                {/* Last Step indicator on icon */}
+                {step.is_last_step && (
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 rounded-full flex items-center justify-center">
+                    <Flag className="h-2.5 w-2.5 text-white" />
+                  </div>
+                )}
             </div>
 
             {/* Step Name and Description */}
             <div>
-              <CardTitle className="text-base font-semibold text-gray-900">
+                <div className="flex items-center gap-2">
+                  <CardTitle className="text-base font-semibold text-gray-900 dark:text-gray-100">
                 {step.name}
               </CardTitle>
+                </div>
               <CardDescription className="text-sm text-gray-500 mt-0.5">
                 {step.description}
               </CardDescription>
@@ -283,6 +336,23 @@ function SortableStepCard({ step, onEdit, onDelete }: SortableStepCardProps) {
           </div>
 
           <div className="flex items-center gap-2">
+              {/* Last Step Badge */}
+              {step.is_last_step && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>
+                      <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-700 gap-1 cursor-help">
+                        <TimerOff className="h-3 w-3" />
+                        {t('get_ready.step_list.timer_stops') || 'Timer Stops'}
+                      </Badge>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t('get_ready.step_list.timer_stops_tooltip') || 'Vehicles entering this step will stop counting days'}</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+
             {/* Default Badge */}
             {step.is_default && (
               <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
@@ -315,11 +385,11 @@ function SortableStepCard({ step, onEdit, onDelete }: SortableStepCardProps) {
         {/* Metrics Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {/* SLA Hours */}
-          <div className="flex items-center gap-2 p-2 rounded-md bg-gray-50">
+            <div className="flex items-center gap-2 p-2 rounded-md bg-gray-50 dark:bg-gray-800">
             <Clock className="h-4 w-4 text-gray-500" />
             <div>
               <p className="text-xs text-gray-500">SLA</p>
-              <p className="text-sm font-semibold text-gray-900">
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                 {step.sla_hours}h
               </p>
             </div>
@@ -327,11 +397,11 @@ function SortableStepCard({ step, onEdit, onDelete }: SortableStepCardProps) {
 
           {/* Cost per Day */}
           {step.cost_per_day > 0 && (
-            <div className="flex items-center gap-2 p-2 rounded-md bg-gray-50">
+              <div className="flex items-center gap-2 p-2 rounded-md bg-gray-50 dark:bg-gray-800">
               <DollarSign className="h-4 w-4 text-gray-500" />
               <div>
                 <p className="text-xs text-gray-500">Cost/Day</p>
-                <p className="text-sm font-semibold text-gray-900">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                   ${step.cost_per_day}
                 </p>
               </div>
@@ -339,17 +409,81 @@ function SortableStepCard({ step, onEdit, onDelete }: SortableStepCardProps) {
           )}
 
           {/* Vehicle Count */}
-          <div className="flex items-center gap-2 p-2 rounded-md bg-gray-50">
+            <div className="flex items-center gap-2 p-2 rounded-md bg-gray-50 dark:bg-gray-800">
             <Layers className="h-4 w-4 text-gray-500" />
             <div>
               <p className="text-xs text-gray-500">Vehicles</p>
-              <p className="text-sm font-semibold text-gray-900">
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                 {step.vehicle_count}
               </p>
+              </div>
+            </div>
+
+            {/* Assigned Users */}
+            <div className="flex items-center gap-2 p-2 rounded-md bg-gray-50 dark:bg-gray-800">
+              <Users className="h-4 w-4 text-gray-500" />
+              <div>
+                <p className="text-xs text-gray-500">{t('get_ready.step_list.assigned_users') || 'Assigned'}</p>
+                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                  {assignments.length} {t('get_ready.step_list.users') || 'users'}
+                </p>
+              </div>
+            </div>
+
+            {/* Last Step indicator in metrics */}
+            {step.is_last_step && (
+              <div className="flex items-center gap-2 p-2 rounded-md bg-amber-50 dark:bg-amber-900/20">
+                <Flag className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                <div>
+                  <p className="text-xs text-amber-600 dark:text-amber-400">Status</p>
+                  <p className="text-sm font-semibold text-amber-700 dark:text-amber-300">
+                    {t('get_ready.step_list.final_step') || 'Final Step'}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Assigned Users Avatars */}
+          {assignments.length > 0 && (
+            <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">
+                  {t('get_ready.step_list.team') || 'Team'}:
+                </span>
+                <div className="flex -space-x-2">
+                  {assignments.slice(0, 5).map((assignment) => (
+                    <Tooltip key={assignment.id}>
+                      <TooltipTrigger asChild>
+                        <span>
+                          <Avatar className="h-7 w-7 border-2 border-white dark:border-gray-900">
+                            <AvatarImage src={assignment.user?.avatar_url || undefined} />
+                            <AvatarFallback className="text-xs bg-primary/10 text-primary">
+                              {getInitials(assignment.user?.first_name, assignment.user?.last_name, assignment.user?.email)}
+                            </AvatarFallback>
+                          </Avatar>
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          {assignment.user?.first_name && assignment.user?.last_name
+                            ? `${assignment.user.first_name} ${assignment.user.last_name}`
+                            : assignment.user?.email || 'Unknown User'}
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ))}
+                  {assignments.length > 5 && (
+                    <div className="h-7 w-7 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs font-medium text-gray-600 dark:text-gray-300 border-2 border-white dark:border-gray-900">
+                      +{assignments.length - 5}
+                    </div>
+                  )}
             </div>
           </div>
         </div>
+          )}
       </CardContent>
     </Card>
+    </TooltipProvider>
   );
 }

@@ -7,7 +7,7 @@
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -28,7 +28,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from "@/components/ui/alert-dialog";
-import { Plus, Edit2, Trash2, Building2, Clock, AlertCircle } from "lucide-react";
+import { Plus, Edit2, Trash2, Clock, AlertCircle, Bell } from "lucide-react";
 import { useEmployeeAssignments, useDeleteAssignment, type EmployeeAssignment } from "@/hooks/useEmployeeAssignments";
 import { useEmployeeById } from "@/hooks/useEmployeeById";
 import { AssignmentModal } from "./AssignmentModal";
@@ -85,17 +85,8 @@ export function EmployeeAssignmentsTable({
   return (
     <>
       <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <Building2 className="h-5 w-5" />
-                {t('detail_hub.assignments.title')}
-              </CardTitle>
-              <p className="text-sm text-gray-500 mt-1">
-                {t('detail_hub.assignments.subtitle')}
-              </p>
-            </div>
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-end">
             <Button onClick={() => setShowCreateModal(true)} size="sm">
               <Plus className="h-4 w-4 mr-2" />
               {t('detail_hub.assignments.assign_button')}
@@ -120,6 +111,7 @@ export function EmployeeAssignmentsTable({
                   <TableHead>{t('detail_hub.assignments.table.punch_window')}</TableHead>
                   <TableHead>{t('detail_hub.assignments.table.break')}</TableHead>
                   <TableHead>{t('detail_hub.assignments.table.status')}</TableHead>
+                  <TableHead>Auto-Close</TableHead>
                   <TableHead className="text-right">{t('detail_hub.assignments.table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
@@ -170,6 +162,23 @@ export function EmployeeAssignmentsTable({
                       >
                         {assignment.status}
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {assignment.schedule_template.auto_close_enabled ? (
+                        <div className="flex items-center gap-1.5">
+                          <Badge variant="outline" className="bg-indigo-50 text-indigo-700 border-indigo-200">
+                            <Bell className="h-3 w-3 mr-1" />
+                            Enabled
+                          </Badge>
+                          <span className="text-xs text-gray-500">
+                            ({assignment.schedule_template.auto_close_first_reminder ?? 30}min → {assignment.schedule_template.auto_close_window_minutes ?? 60}min)
+                          </span>
+                        </div>
+                      ) : (
+                        <Badge variant="outline" className="text-gray-500 border-gray-200">
+                          Disabled
+                        </Badge>
+                      )}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">

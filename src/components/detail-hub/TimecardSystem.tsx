@@ -56,6 +56,7 @@ const TimecardSystem = () => {
     selectedEmployeeId,
     selectedStatus,
     selectedMethod,
+    selectedApprovalStatus,
     showAdvancedFilters
   } = filters;
 
@@ -330,6 +331,11 @@ const TimecardSystem = () => {
         if (!matchesInMethod && !matchesOutMethod) {
           return false;
         }
+      }
+
+      // Approval status filter (handle undefined for backwards compatibility)
+      if (selectedApprovalStatus && selectedApprovalStatus !== "all" && entry.approval_status !== selectedApprovalStatus) {
+        return false;
       }
 
       return true;
@@ -770,7 +776,7 @@ const TimecardSystem = () => {
       {showAdvancedFilters && (
         <Card className="border-indigo-200 bg-indigo-50/30">
           <CardContent className="pt-4">
-            <div className="grid gap-4 md:grid-cols-4">
+            <div className="grid gap-4 md:grid-cols-5">
               {/* Search Input */}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -823,6 +829,19 @@ const TimecardSystem = () => {
                   <SelectItem value="pin">{t('detail_hub.timecard.filters.methods.pin')}</SelectItem>
                   <SelectItem value="manual">{t('detail_hub.timecard.filters.methods.manual')}</SelectItem>
                   <SelectItem value="photo_fallback">{t('detail_hub.timecard.filters.methods.photo_fallback')}</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Approval Status Filter */}
+              <Select value={selectedApprovalStatus || 'all'} onValueChange={(val) => setFilters({ selectedApprovalStatus: val })}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t('detail_hub.timecard.filters.all_approval_statuses') || 'All Approval Statuses'} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t('detail_hub.timecard.filters.all_approval_statuses') || 'All Approval Statuses'}</SelectItem>
+                  <SelectItem value="pending">{t('detail_hub.timecard.approval.status.pending') || 'Pending'}</SelectItem>
+                  <SelectItem value="approved">{t('detail_hub.timecard.approval.status.approved') || 'Approved'}</SelectItem>
+                  <SelectItem value="rejected">{t('detail_hub.timecard.approval.status.rejected') || 'Rejected'}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -1173,7 +1192,20 @@ const TimecardSystem = () => {
                         </div>
                       </TableCell>
                       <TableCell className="py-2 text-sm">{timecard.clockIn}</TableCell>
-                      <TableCell className="py-2 text-sm">{timecard.clockOut}</TableCell>
+                      <TableCell className="py-2 text-sm">
+                        <div className="flex items-center gap-1.5">
+                          <span>{timecard.clockOut}</span>
+                          {timecard.punchOutMethod === 'auto_close' && (
+                            <Badge
+                              variant="outline"
+                              className="text-[9px] px-1 py-0 bg-amber-50 text-amber-700 border-amber-300"
+                              title={t('detail_hub.timecard.auto_closed_tooltip')}
+                            >
+                              Auto
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
                       <TableCell className="py-2 text-sm">
                         {timecard.breakDuration > 0 ? `${timecard.breakDuration} min` : '--'}
                       </TableCell>
@@ -1353,7 +1385,20 @@ const TimecardSystem = () => {
                         </div>
                       </TableCell>
                       <TableCell className="py-2 text-sm">{timecard.clockIn}</TableCell>
-                      <TableCell className="py-2 text-sm">{timecard.clockOut}</TableCell>
+                      <TableCell className="py-2 text-sm">
+                        <div className="flex items-center gap-1.5">
+                          <span>{timecard.clockOut}</span>
+                          {timecard.punchOutMethod === 'auto_close' && (
+                            <Badge
+                              variant="outline"
+                              className="text-[9px] px-1 py-0 bg-amber-50 text-amber-700 border-amber-300"
+                              title={t('detail_hub.timecard.auto_closed_tooltip')}
+                            >
+                              Auto
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
                       <TableCell className="py-2 text-sm">
                         {timecard.breakDuration > 0 ? `${timecard.breakDuration} min` : '--'}
                       </TableCell>

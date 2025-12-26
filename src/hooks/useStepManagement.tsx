@@ -14,6 +14,16 @@ interface CreateStepInput {
   sla_hours: number;
   cost_per_day?: number;
   is_default?: boolean;
+  // Last step configuration
+  is_last_step?: boolean;
+  // Sidebar display options
+  show_sidebar_count?: boolean;
+  show_sidebar_breakdown?: boolean;
+  // Advanced settings
+  target_throughput?: number;
+  bottleneck_threshold?: number;
+  parallel_capable?: boolean;
+  express_lane_eligible?: boolean;
 }
 
 interface UpdateStepInput extends Partial<CreateStepInput> {
@@ -50,6 +60,16 @@ export function useStepManagement() {
           cost_per_day: input.cost_per_day || 0,
           is_default: input.is_default || false,
           is_active: true,
+          // Last step configuration
+          is_last_step: input.is_last_step || false,
+          // Sidebar display options
+          show_sidebar_count: input.show_sidebar_count ?? true,
+          show_sidebar_breakdown: input.show_sidebar_breakdown ?? true,
+          // Advanced settings
+          target_throughput: input.target_throughput || 5,
+          bottleneck_threshold: input.bottleneck_threshold || 48,
+          parallel_capable: input.parallel_capable || false,
+          express_lane_eligible: input.express_lane_eligible || false,
         })
         .select()
         .single();

@@ -37,7 +37,8 @@
       "clocked_in": "Registrados",
       "on_break": "En Descanso",
       "total_hours_today": "Horas Totales Hoy",
-      "active_departments": "Departamentos Activos"
+      "active_departments": "Departamentos Activos",
+      "auto_closed": "Auto-Cerrados Pendientes"
     }
   },
   "punch_clock": {
@@ -308,18 +309,20 @@
     "auto_close_section_title": "Auto-Cierre de Fichajes Olvidados",
     "auto_close_enabled": "Habilitar Auto-Cierre para este Empleado",
     "auto_close_enabled_help": "Cerrar automáticamente fichajes olvidados después del fin del turno",
-    "auto_close_first_reminder_label": "Primer Recordatorio (minutos)",
-    "auto_close_first_reminder_help": "Minutos después del fin del turno",
-    "auto_close_second_reminder_label": "Segundo Recordatorio (minutos)",
-    "auto_close_second_reminder_help": "Advertencia urgente antes del auto-cierre",
-    "auto_close_window_label": "Ventana de Auto-Cierre (minutos)",
-    "auto_close_window_help": "Tiempo final de auto-cierre",
+    "auto_close_timing": "Tiempos de Auto-Cierre",
+    "auto_close_reminder_label": "Recordatorio (minutos)",
+    "auto_close_reminder_help": "Enviar recordatorio estos minutos después de terminar el turno",
+    "auto_close_window_label": "Auto-Cierre (minutos)",
+    "auto_close_window_help": "Cerrar automáticamente el fichaje estos minutos después del turno",
+    "preferred_language": "Idioma Preferido",
+    "preferred_language_help": "Idioma para los SMS de recordatorio",
     "auto_close_status": "Estado Auto-Cierre",
     "no_auto_close_issues": "Sin Problemas",
     "pending_supervisor_review": "{{count}} Pendiente",
     "pending_supervisor_review_plural": "{{count}} Pendientes",
     "auto_closed_recently": "Auto-Cerrado {{timeAgo}}",
     "click_to_review": "Click para revisar entradas auto-cerradas",
+    "preview_reminder": "Vista Previa",
     "kiosk_pin": "Código PIN del Kiosco",
     "kiosk_pin_help": "Código de acceso de 4-6 dígitos requerido para autenticación en el reloj de tiempo del kiosco",
     "kiosk_pin_placeholder": "Ingrese 4-6 dígitos",
@@ -377,7 +380,56 @@
       "role_changed": "Rol cambiado",
       "pin_reset": "Código PIN restablecido",
       "face_enrolled": "Face ID registrado"
+    },
+    "toast": {
+      "created": "Empleado Creado",
+      "updated": "Empleado Actualizado",
+      "error": "Error"
     }
+  },
+  "wizard": {
+    "description": "Crea un nuevo empleado y configura sus asignaciones de concesionario en un solo paso",
+    "step1_label": "Info Empleado",
+    "step2_label": "Asignaciones",
+    "basic_info": "Información Básica",
+    "role_department": "Rol y Departamento",
+    "security": "Seguridad y Acceso",
+    "configure_assignment": "Configurar Asignación",
+    "select_dealership": "Seleccionar Concesionario",
+    "select_dealership_placeholder": "Seleccione un concesionario...",
+    "dealership_assigned": "Asignación de Concesionario",
+    "shift_start": "Inicio de Turno",
+    "shift_end": "Fin de Turno",
+    "work_days": "Días de Trabajo",
+    "break_duration": "Descanso (minutos)",
+    "break_is_paid": "Descanso Pagado",
+    "reminder": "Recordatorio (min)",
+    "reminder_help": "Minutos después del turno",
+    "auto_close": "Auto-Cierre (min)",
+    "auto_close_help": "Cerrar después de este tiempo",
+    "add_another_assignment": "Agregar Otra Asignación",
+    "all_dealers_assigned": "El empleado está asignado a todos los concesionarios disponibles",
+    "create_employee": "Crear Empleado",
+    "error_no_assignments": "Asignación Requerida",
+    "error_no_assignments_description": "Por favor agregue al menos una asignación de concesionario antes de crear el empleado.",
+    "error_incomplete_assignment": "Asignación Incompleta",
+    "error_select_dealer": "Por favor seleccione un concesionario para cada asignación.",
+    "no_active_assignments": "Este empleado no tiene asignaciones activas. Puede agregar nuevas asignaciones abajo.",
+    "existing_assignment": "Existente",
+    "new_assignment": "Nueva",
+    "mark_for_deletion": "Marcar para eliminar (se eliminará al guardar)"
+  },
+  "auto_close": {
+    "preview_title": "Vista Previa del Recordatorio",
+    "preview_description": "Esto es lo que el empleado recibirá cuando olvide marcar salida",
+    "timeline": "Línea de Tiempo",
+    "shift_ends": "Fin del Turno",
+    "reminder_sent": "SMS de Recordatorio Enviado",
+    "auto_closed": "Auto-Cerrado + SMS de Confirmación",
+    "sms_preview": "SMS de Recordatorio",
+    "confirmation_preview": "SMS de Confirmación",
+    "note_title": "Cómo funciona",
+    "note_description": "Si el empleado no marca salida antes del tiempo de auto-cierre, su tarjeta de tiempo se cerrará automáticamente y recibirá un SMS de confirmación. El supervisor será notificado para revisión."
   },
   "schedules": {
     "calendar_title": "Horarios de Empleados",
@@ -496,6 +548,7 @@
       "actions": "Acciones",
       "hours_abbr": "h"
     },
+    "auto_closed_tooltip": "Esta entrada fue cerrada automáticamente porque el empleado no marcó salida",
     "loading": "Cargando tarjetas de tiempo...",
     "no_entries": "No se encontraron entradas de tiempo para esta fecha",
     "no_entries_for_date": "No hay entradas para esta fecha",
@@ -516,6 +569,8 @@
       "select_status": "Estado",
       "all_methods": "Todos los Métodos",
       "select_method": "Método de Registro",
+      "all_approval_statuses": "Todos los Estados de Aprobación",
+      "select_approval_status": "Estado de Aprobación",
       "search_placeholder": "Buscar por nombre o ID...",
       "clear_all": "Limpiar Filtros",
       "clear_filters": "Limpiar Filtros",
@@ -611,7 +666,8 @@
       "buttons": {
         "approve": "Aprobar",
         "reject": "Rechazar",
-        "approve_all": "Aprobar Todos Pendientes"
+        "approve_all": "Aprobar Todos Pendientes",
+        "unapprove": "Desaprobar"
       },
       "dialog": {
         "reject_title": "Rechazar Entrada de Timecard",
@@ -620,7 +676,10 @@
         "reason_placeholder": "ej., Hora de entrada/salida incorrecta, horas no autorizadas, etc.",
         "cancel": "Cancelar",
         "confirm_reject": "Rechazar Entrada",
-        "reason_display": "Razón del Rechazo:"
+        "reason_display": "Razón del Rechazo:",
+        "unapprove_title": "Desaprobar Timecard",
+        "unapprove_description": "Esto revertirá el timecard a estado pendiente. La entrada necesitará ser aprobada nuevamente.",
+        "confirm_unapprove": "Confirmar Desaprobación"
       },
       "toast": {
         "approved": "Timecard Aprobado",
@@ -671,6 +730,11 @@
       "saving": "Guardando...",
       "cancel": "Cancelar",
       "audit_warning": "Todos los cambios se registrarán en el historial de auditoría.",
+      "approved_warning_title": "Este timecard está aprobado",
+      "approved_warning_description": "Editar restablecerá el estado de aprobación a pendiente. El timecard necesitará ser aprobado nuevamente.",
+      "rejected_warning_title": "Este timecard fue rechazado",
+      "rejected_warning_description": "Editar restablecerá el estado de aprobación a pendiente. El timecard necesitará ser aprobado nuevamente.",
+      "editing_disabled_approved": "No se puede editar un timecard aprobado. Desapruébelo primero para hacer cambios.",
       "breaks_taken": "Descansos Tomados",
       "add_break": "Agregar Descanso",
       "lunch": "Almuerzo",

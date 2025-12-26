@@ -44,6 +44,9 @@ export interface DetailHubEmployee {
   fallback_photo_enabled: boolean;
   pin_code: string | null;
 
+  // Language Preference
+  preferred_language: 'en' | 'es' | 'pt-BR';
+
   created_at: string;
   updated_at: string;
 }
@@ -2115,6 +2118,78 @@ export function useBulkApproveTimecards() {
       toast({
         title: "Bulk Approval Failed",
         description: error instanceof Error ? error.message : 'Failed to approve timecards',
+        variant: "destructive"
+      });
+    }
+  });
+}
+
+/**
+ * Unapprove a timecard entry (revert from approved to pending)
+ * Permissions: Only system_admin and supermanager can unapprove
+ * Use case: When a supervisor needs to make corrections to an already-approved timecard
+ */
+export function useUnapproveTimecard() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const { selectedDealerId } = useDealerFilter();
+  const { user } = useAuth();
+
+  return useMutation({
+    mutationFn: async (timeEntryId: string) => {
+      if (!user) throw new Error('User not authenticated');
+
+      // Permission check
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      if (profile?.role !== 'system_admin' && profile?.role !== 'supermanager') {
+        throw new Error('Insufficient permissions. Only system administrators and supermanagers can unapprove timecards.');
+      }
+
+      // Verify the timecard is currently approved
+      const { data: currentEntry, error: fetchError } = await supabase
+        .from('detail_hub_time_entries')
+        .select('id, approval_status')
+        .eq('id', timeEntryId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      if (currentEntry.approval_status !== 'approved') {
+        throw new Error('Only approved timecards can be unapproved.');
+      }
+
+      const { data, error } = await supabase
+        .from('detail_hub_time_entries')
+        .update({
+          approval_status: 'pending',
+          approved_by: null,
+          approved_at: null,
+          rejection_reason: null
+        })
+        .eq('id', timeEntryId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as DetailHubTimeEntry;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.timeEntries(selectedDealerId) });
+
+      toast({
+        title: "Timecard Unapproved",
+        description: "The timecard has been reverted to pending status."
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Unapprove Failed",
+        description: error instanceof Error ? error.message : 'Failed to unapprove timecard',
         variant: "destructive"
       });
     }

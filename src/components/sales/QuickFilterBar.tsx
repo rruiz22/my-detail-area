@@ -173,26 +173,26 @@ export const QuickFilterBar = memo(function QuickFilterBar({
 
   return (
     <Card className="border-border shadow-sm" data-testid="quick-filter-bar">
-      <div className="p-4 space-y-4">
+      <div className="p-3 sm:p-4 space-y-3 sm:space-y-4">
         {/* Search and View Toggle */}
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-          {/* Search and Date Filter */}
-          <div className="flex flex-1 gap-2 max-w-2xl">
-            {/* Search */}
-            <div className="relative flex-1 max-w-md">
+        <div className="flex flex-col gap-3 sm:gap-4">
+          {/* Row 1: Search (full-width on mobile) */}
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-stretch sm:items-center">
+            {/* Search - Full width on mobile */}
+            <div className="relative flex-1 w-full sm:max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder={t('layout.search_placeholder')}
                 value={searchTerm}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="pl-10 pr-10 bg-background"
+                className="pl-10 pr-10 bg-background h-10"
               />
               {searchTerm && (
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => onSearchChange('')}
-                  className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 hover:bg-muted"
+                  className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-muted"
                   aria-label={t('layout.clear_search')}
                 >
                   <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
@@ -200,118 +200,116 @@ export const QuickFilterBar = memo(function QuickFilterBar({
               )}
             </div>
 
-            {/* Date Range Filter - Only show if callback provided */}
-            {onDateRangeChange && (
-              <div className="flex gap-2">
-                <div className="relative">
-                  <DateRangePicker
-                    value={dateRange || { from: null, to: null }}
-                    onChange={onDateRangeChange}
-                    className="w-full"
-                  />
-                  {(dateRange?.from || dateRange?.to) && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onDateRangeChange({ from: null, to: null })}
-                      className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 hover:bg-muted z-10"
-                      aria-label={t('orders.filters.clear')}
-                    >
-                      <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-                    </Button>
-                  )}
+            {/* Row 2 on mobile: Date + View Mode + Print */}
+            <div className="flex items-center justify-between gap-2">
+              {/* Date Range Filter - Compact on mobile */}
+              {onDateRangeChange && (
+                <div className="flex gap-1 sm:gap-2">
+                  {/* Full DateRangePicker - Hidden on mobile */}
+                  <div className="relative hidden sm:block">
+                    <DateRangePicker
+                      value={dateRange || { from: null, to: null }}
+                      onChange={onDateRangeChange}
+                      className="w-full"
+                    />
+                    {(dateRange?.from || dateRange?.to) && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onDateRangeChange({ from: null, to: null })}
+                        className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 hover:bg-muted z-10"
+                        aria-label={t('orders.filters.clear')}
+                      >
+                        <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                      </Button>
+                    )}
+                  </div>
+
+                  {/* Date Presets Dropdown - Always visible */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="h-9 sm:h-10 px-2 sm:px-3">
+                        <CalendarDays className="w-4 h-4 sm:mr-2" />
+                        <span className="hidden sm:inline">{t('orders.filters.quick_dates')}</span>
+                        <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem onClick={() => onDateRangeChange(presets.yesterday)}>
+                        {t('orders.filters.yesterday')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onDateRangeChange(presets.today)}>
+                        {t('orders.filters.today')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onDateRangeChange(presets.thisWeek)}>
+                        {t('orders.filters.this_week')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onDateRangeChange(presets.thisMonth)}>
+                        {t('orders.filters.this_month')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onDateRangeChange(presets.last30Days)}>
+                        {t('orders.filters.last_30_days')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onDateRangeChange({ from: null, to: null })}>
+                        {t('orders.filters.clear')}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
+              )}
 
-                {/* Date Presets Dropdown */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="h-10">
-                      <CalendarDays className="w-4 h-4 mr-2" />
-                      <span className="hidden sm:inline">{t('orders.filters.quick_dates')}</span>
-                      <ChevronDown className="w-4 h-4 ml-1" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuItem onClick={() => onDateRangeChange(presets.yesterday)}>
-                      {t('orders.filters.yesterday')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onDateRangeChange(presets.today)}>
-                      {t('orders.filters.today')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onDateRangeChange(presets.thisWeek)}>
-                      {t('orders.filters.this_week')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onDateRangeChange(presets.thisMonth)}>
-                      {t('orders.filters.this_month')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onDateRangeChange(presets.last30Days)}>
-                      {t('orders.filters.last_30_days')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => onDateRangeChange({ from: null, to: null })}>
-                      {t('orders.filters.clear')}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            )}
-          </div>
-
-          {/* View Mode & Filters Toggle */}
-          <div className="flex items-center gap-2">
-            {/* Print List Button - Only show if callback provided */}
-            {onPrintList && (
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={onPrintList}
-                disabled={isPrinting}
-                className="h-8 px-3"
-                title={t('common.action_buttons.print_filtered_orders')}
-              >
-                <Printer className="w-4 h-4 mr-2" />
-                <span className="hidden sm:inline">
-                  {isPrinting ? t('common.action_buttons.printing') : t('common.action_buttons.print_list')}
-                </span>
-              </Button>
-            )}
-
-            {/* View Mode Toggle - Only show if viewMode props are provided */}
-            {viewMode && onViewModeChange && (
-              <div className="flex items-center bg-muted/50 rounded-lg p-1">
-                {/* Table - Always first and available */}
-                <Button
-                  size="sm"
-                  variant={viewMode === 'table' ? 'default' : 'ghost'}
-                  onClick={() => onViewModeChange('table')}
-                  className="h-8 px-2 sm:px-3"
-                >
-                  <List className="w-4 h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Table</span>
-                </Button>
-
-                {/* Kanban - Only on desktop */}
-                {!isMobile && (
+              {/* View Mode & Print */}
+              <div className="flex items-center gap-1 sm:gap-2">
+                {/* Print List Button */}
+                {onPrintList && (
                   <Button
                     size="sm"
-                    variant={viewMode === 'kanban' ? 'default' : 'ghost'}
-                    onClick={() => onViewModeChange('kanban')}
-                    className="h-8 px-2 sm:px-3"
+                    variant="outline"
+                    onClick={onPrintList}
+                    disabled={isPrinting}
+                    className="h-9 sm:h-10 px-2 sm:px-3"
+                    title={t('common.action_buttons.print_filtered_orders')}
                   >
-                    <Kanban className="w-4 h-4 sm:mr-2" />
-                    <span className="hidden sm:inline">Kanban</span>
+                    <Printer className="w-4 h-4" />
+                    <span className="hidden md:inline ml-2">
+                      {isPrinting ? t('common.action_buttons.printing') : t('common.action_buttons.print_list')}
+                    </span>
                   </Button>
                 )}
 
+                {/* View Mode Toggle */}
+                {viewMode && onViewModeChange && (
+                  <div className="flex items-center bg-muted/50 rounded-lg p-0.5 sm:p-1">
+                    <Button
+                      size="sm"
+                      variant={viewMode === 'table' ? 'default' : 'ghost'}
+                      onClick={() => onViewModeChange('table')}
+                      className="h-8 w-8 sm:w-auto sm:px-3 p-0 sm:p-2"
+                    >
+                      <List className="w-4 h-4" />
+                      <span className="hidden sm:inline ml-2">Table</span>
+                    </Button>
 
+                    {!isMobile && (
+                      <Button
+                        size="sm"
+                        variant={viewMode === 'kanban' ? 'default' : 'ghost'}
+                        onClick={() => onViewModeChange('kanban')}
+                        className="h-8 w-8 sm:w-auto sm:px-3 p-0 sm:p-2"
+                      >
+                        <Kanban className="w-4 h-4" />
+                        <span className="hidden sm:inline ml-2">Kanban</span>
+                      </Button>
+                    )}
+                  </div>
+                )}
               </div>
-            )}
-
-
+            </div>
           </div>
         </div>
 
-        {/* Filter Pills - Mobile Responsive */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:flex lg:flex-wrap gap-2">
+        {/* Filter Pills - Horizontally scrollable on mobile */}
+        <div className="flex gap-2 overflow-x-auto pb-1 -mx-3 px-3 sm:mx-0 sm:px-0 sm:flex-wrap scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {filterOptions.map((option) => {
             const Icon = option.icon;
             const isActive = activeFilter === option.id;
@@ -323,20 +321,20 @@ export const QuickFilterBar = memo(function QuickFilterBar({
                 size="sm"
                 onClick={() => onFilterChange(option.id)}
                 className={`
-                  h-9 px-2 sm:px-3 border-2 transition-all duration-200 hover:scale-105
+                  h-8 sm:h-9 px-2 sm:px-3 border-2 transition-all duration-200 hover:scale-105 flex-shrink-0 whitespace-nowrap
                   ${isActive
                     ? `${option.color} shadow-sm`
                     : 'bg-background hover:bg-muted/50 border-border text-muted-foreground hover:text-foreground'
                   }
                 `}
               >
-                <Icon className="w-4 h-4 mr-1 sm:mr-2" />
-                <span className="text-sm sm:text-base">{option.label}</span>
+                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="text-xs sm:text-sm">{option.label}</span>
                 {option.count > 0 && (
                   <Badge
                     variant="secondary"
                     className={`
-                      ml-2 text-xs px-1.5 py-0 min-w-[20px] h-5
+                      ml-1 sm:ml-2 text-[10px] sm:text-xs px-1 sm:px-1.5 py-0 min-w-[18px] sm:min-w-[20px] h-4 sm:h-5
                       ${isActive
                         ? 'bg-white/20 text-current'
                         : 'bg-muted text-muted-foreground'

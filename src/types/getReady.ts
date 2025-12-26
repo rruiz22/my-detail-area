@@ -17,6 +17,11 @@ export interface GetReadyStep {
   parallel_capable: boolean;
   express_lane_eligible: boolean;
   cost_per_day: number;
+  // Last step configuration - timer stops when vehicle enters this step
+  is_last_step: boolean;
+  // Sidebar display options
+  show_sidebar_count: boolean;
+  show_sidebar_breakdown: boolean;
   // Vehicle grouping by days (for sidebar)
   vehicles_1_day?: number;
   vehicles_2_3_days?: number;

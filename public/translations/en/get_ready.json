@@ -209,6 +209,8 @@
     "image": "Image",
     "stock": "Stock",
     "vehicle": "Vehicle",
+    "indicators": "Info",
+    "indicators_tooltip": "Media, Notes, Work Items, Alerts",
     "media": "Media",
     "work_items": "Work Items",
     "days_in_step": "Days in Step",
@@ -756,13 +758,39 @@
   "step_form": {
     "fields": {
       "assigned_users": "Assigned Users",
-      "assigned_users_description": "Select users who will be notified when vehicles enter this step"
+      "assigned_users_description": "Select users who will be notified when vehicles enter this step",
+      "is_last_step": "Last Step (Timer Stops)",
+      "is_last_step_description": "When enabled, vehicles entering this step will stop counting days. Use for Front Line, Wholesale, etc.",
+      "show_sidebar_count": "Show vehicle count",
+      "show_sidebar_count_hint": "Display total vehicles badge",
+      "show_sidebar_breakdown": "Show day breakdown",
+      "show_sidebar_breakdown_hint": "Display Fresh/Normal/Critical",
+      "target_throughput": "Target Throughput",
+      "target_throughput_hint": "Vehicles per day",
+      "bottleneck_threshold": "Bottleneck Threshold",
+      "bottleneck_threshold_hint": "Hours before flagging as bottleneck",
+      "parallel_capable": "Parallel Capable",
+      "parallel_capable_hint": "Can run alongside other steps",
+      "express_lane_eligible": "Express Lane",
+      "express_lane_eligible_hint": "Can be fast-tracked"
     },
     "errors": {
       "users_required": "At least one user must be assigned"
     },
     "select_users_placeholder": "Select users...",
-    "users_selected": "{{count}} user(s) selected"
+    "users_selected": "{{count}} user(s) selected",
+    "advanced_settings": "Advanced Settings",
+    "sidebar_display": "Sidebar Display",
+    "sidebar_display_hint": "Control what information is displayed in the sidebar for this step"
+  },
+  "step_list": {
+    "timer_stops": "Timer Stops",
+    "timer_stops_tooltip": "Vehicles entering this step will stop counting days",
+    "final_step": "Final Step",
+    "assigned_users": "Assigned",
+    "users": "users",
+    "team": "Team",
+    "double_click_hint": "Double-click to edit"
   },
   "export": {
     "no_vehicles": "No vehicles to export"

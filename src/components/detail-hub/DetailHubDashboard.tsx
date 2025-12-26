@@ -70,6 +70,13 @@ const DetailHubDashboard = () => {
   });
   const todayHours = todayEntries.reduce((sum, e) => sum + (e.total_hours || 0), 0);
 
+  // Count auto-closed entries requiring review
+  const autoClosedCount = timeEntries.filter(e =>
+    e.punch_out_method === 'auto_close' &&
+    e.requires_supervisor_review === true &&
+    !e.verified_at
+  ).length;
+
   const stats = [
     { title: t('detail_hub.dashboard.stats.active_employees'), value: activeEmployees.toString(), icon: Users, change: "+2", color: "text-gray-600" },
     { title: t('detail_hub.dashboard.stats.todays_hours'), value: todayHours.toFixed(1), icon: Clock, change: "+5%", color: "text-emerald-600" },

@@ -224,7 +224,8 @@
       "clocked_in": "Registrados",
       "on_break": "Em Intervalo",
       "total_hours_today": "Horas Totais Hoje",
-      "active_departments": "Departamentos Ativos"
+      "active_departments": "Departamentos Ativos",
+      "auto_closed": "Auto-Fechados Pendentes"
     }
   },
   "employees": {
@@ -314,18 +315,20 @@
     "auto_close_section_title": "Fechamento Automático de Pontos Esquecidos",
     "auto_close_enabled": "Habilitar Fechamento Automático para este Funcionário",
     "auto_close_enabled_help": "Fechar automaticamente pontos esquecidos após o fim do turno",
-    "auto_close_first_reminder_label": "Primeiro Lembrete (minutos)",
-    "auto_close_first_reminder_help": "Minutos após o fim do turno",
-    "auto_close_second_reminder_label": "Segundo Lembrete (minutos)",
-    "auto_close_second_reminder_help": "Aviso urgente antes do fechamento automático",
-    "auto_close_window_label": "Janela de Fechamento Automático (minutos)",
-    "auto_close_window_help": "Tempo final de fechamento automático",
+    "auto_close_timing": "Tempos de Fechamento Automático",
+    "auto_close_reminder_label": "Lembrete (minutos)",
+    "auto_close_reminder_help": "Enviar lembrete estes minutos após o fim do turno",
+    "auto_close_window_label": "Fechamento Automático (minutos)",
+    "auto_close_window_help": "Fechar automaticamente o ponto estes minutos após o turno",
+    "preferred_language": "Idioma Preferido",
+    "preferred_language_help": "Idioma para os SMS de lembrete",
     "auto_close_status": "Status de Fechamento Automático",
     "no_auto_close_issues": "Sem Problemas",
     "pending_supervisor_review": "{{count}} Pendente",
     "pending_supervisor_review_plural": "{{count}} Pendentes",
     "auto_closed_recently": "Fechado Automaticamente {{timeAgo}}",
     "click_to_review": "Clique para revisar entradas fechadas automaticamente",
+    "preview_reminder": "Visualizar Lembrete",
     "kiosk_pin": "Código PIN do Quiosque",
     "kiosk_pin_help": "Senha obrigatória de 4-6 dígitos para autenticação no relógio de ponto",
     "kiosk_pin_placeholder": "Digite 4-6 dígitos",
@@ -383,7 +386,56 @@
       "role_changed": "Função alterada",
       "pin_reset": "Código PIN redefinido",
       "face_enrolled": "ID Facial registrado"
+    },
+    "toast": {
+      "created": "Funcionário Criado",
+      "updated": "Funcionário Atualizado",
+      "error": "Erro"
     }
+  },
+  "wizard": {
+    "description": "Crie um novo funcionário e configure suas atribuições de concessionária em uma única etapa",
+    "step1_label": "Info Funcionário",
+    "step2_label": "Atribuições",
+    "basic_info": "Informações Básicas",
+    "role_department": "Função e Departamento",
+    "security": "Segurança e Acesso",
+    "configure_assignment": "Configurar Atribuição",
+    "select_dealership": "Selecionar Concessionária",
+    "select_dealership_placeholder": "Selecione uma concessionária...",
+    "dealership_assigned": "Atribuição de Concessionária",
+    "shift_start": "Início do Turno",
+    "shift_end": "Fim do Turno",
+    "work_days": "Dias de Trabalho",
+    "break_duration": "Intervalo (minutos)",
+    "break_is_paid": "Intervalo Pago",
+    "reminder": "Lembrete (min)",
+    "reminder_help": "Minutos após o turno",
+    "auto_close": "Fechamento Auto (min)",
+    "auto_close_help": "Fechar após este tempo",
+    "add_another_assignment": "Adicionar Outra Atribuição",
+    "all_dealers_assigned": "O funcionário está atribuído a todas as concessionárias disponíveis",
+    "create_employee": "Criar Funcionário",
+    "error_no_assignments": "Atribuição Necessária",
+    "error_no_assignments_description": "Por favor, adicione pelo menos uma atribuição de concessionária antes de criar o funcionário.",
+    "error_incomplete_assignment": "Atribuição Incompleta",
+    "error_select_dealer": "Por favor, selecione uma concessionária para cada atribuição.",
+    "no_active_assignments": "Este funcionário não tem atribuições ativas. Você pode adicionar novas atribuições abaixo.",
+    "existing_assignment": "Existente",
+    "new_assignment": "Nova",
+    "mark_for_deletion": "Marcar para remoção (será excluído ao salvar)"
+  },
+  "auto_close": {
+    "preview_title": "Visualização do Lembrete",
+    "preview_description": "Isto é o que o funcionário receberá quando esquecer de marcar saída",
+    "timeline": "Linha do Tempo",
+    "shift_ends": "Fim do Turno",
+    "reminder_sent": "SMS de Lembrete Enviado",
+    "auto_closed": "Fechado Automaticamente + SMS de Confirmação",
+    "sms_preview": "SMS de Lembrete",
+    "confirmation_preview": "SMS de Confirmação",
+    "note_title": "Como funciona",
+    "note_description": "Se o funcionário não marcar saída até o tempo de fechamento automático, seu ponto será fechado automaticamente e ele receberá um SMS de confirmação. O supervisor será notificado para revisão."
   },
   "schedules": {
     "calendar_title": "Horários dos Funcionários",
@@ -505,6 +557,7 @@
       "actions": "Ações",
       "hours_abbr": "h"
     },
+    "auto_closed_tooltip": "Esta entrada foi fechada automaticamente porque o funcionário não marcou saída",
     "loading": "Carregando cartões de ponto...",
     "no_entries": "Nenhum registro encontrado para esta data",
     "no_entries_for_date": "Nenhum registro para esta data",
@@ -525,6 +578,8 @@
       "select_status": "Status",
       "all_methods": "Todos os Métodos",
       "select_method": "Método de Registro",
+      "all_approval_statuses": "Todos os Status de Aprovação",
+      "select_approval_status": "Status de Aprovação",
       "search_placeholder": "Pesquisar por nome ou ID...",
       "clear_all": "Limpar Filtros",
       "clear_filters": "Limpar Filtros",
@@ -620,7 +675,8 @@
       "buttons": {
         "approve": "Aprovar",
         "reject": "Rejeitar",
-        "approve_all": "Aprovar Todos Pendentes"
+        "approve_all": "Aprovar Todos Pendentes",
+        "unapprove": "Desaprovar"
       },
       "dialog": {
         "reject_title": "Rejeitar Registro de Ponto",
@@ -629,7 +685,10 @@
         "reason_placeholder": "ex., Horário de entrada/saída incorreto, horas não autorizadas, etc.",
         "cancel": "Cancelar",
         "confirm_reject": "Rejeitar Registro",
-        "reason_display": "Razão da Rejeição:"
+        "reason_display": "Razão da Rejeição:",
+        "unapprove_title": "Desaprovar Ponto",
+        "unapprove_description": "Isso reverterá o ponto para o status pendente. O registro precisará ser aprovado novamente.",
+        "confirm_unapprove": "Confirmar Desaprovação"
       },
       "toast": {
         "approved": "Ponto Aprovado",
@@ -680,6 +739,11 @@
       "saving": "Salvando...",
       "cancel": "Cancelar",
       "audit_warning": "Todas as alterações serão registradas no histórico de auditoria.",
+      "approved_warning_title": "Este ponto está aprovado",
+      "approved_warning_description": "Editar redefinirá o status de aprovação para pendente. O ponto precisará ser aprovado novamente.",
+      "rejected_warning_title": "Este ponto foi rejeitado",
+      "rejected_warning_description": "Editar redefinirá o status de aprovação para pendente. O ponto precisará ser aprovado novamente.",
+      "editing_disabled_approved": "Não é possível editar um ponto aprovado. Desaprove-o primeiro para fazer alterações.",
       "breaks_taken": "Intervalos Realizados",
       "add_break": "Adicionar Intervalo",
       "lunch": "Almoço",

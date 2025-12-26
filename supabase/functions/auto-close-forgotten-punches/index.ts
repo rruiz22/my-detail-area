@@ -6,23 +6,55 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+// =====================================================
+// TYPES
+// =====================================================
+
 interface OverduePunch {
   time_entry_id: string;
   employee_id: string;
   employee_name: string;
   employee_phone: string;
+  employee_preferred_language: 'en' | 'es' | 'pt-BR';
   dealership_id: number;
   clock_in: string;
   shift_end_time: string;
   shift_end_datetime: string;
   minutes_overdue: number;
-  action: 'first_reminder' | 'second_reminder' | 'auto_close';
+  action: 'first_reminder' | 'auto_close';
   reminder_count: number;
   last_reminder_at: string | null;
   employee_first_reminder: number;
-  employee_second_reminder: number;
   employee_auto_close_window: number;
 }
+
+type SupportedLanguage = 'en' | 'es' | 'pt-BR';
+
+// =====================================================
+// LOCALIZED MESSAGES (No reply expected - one-way SMS)
+// =====================================================
+
+function getReminderMessage(language: SupportedLanguage, shiftEndTime: string): string {
+  const messages = {
+    'en': `Reminder: Please clock out your shift that ended at ${shiftEndTime}.`,
+    'es': `Recordatorio: Por favor registra tu salida del turno que terminó a las ${shiftEndTime}.`,
+    'pt-BR': `Lembrete: Por favor registre sua saída do turno que terminou às ${shiftEndTime}.`
+  };
+  return messages[language] || messages['en'];
+}
+
+function getAutoCloseConfirmationMessage(language: SupportedLanguage): string {
+  const messages = {
+    'en': 'Your timecard has been automatically closed. Your supervisor will be notified for review.',
+    'es': 'Tu tarjeta de tiempo ha sido cerrada automáticamente. Tu supervisor será notificado para revisión.',
+    'pt-BR': 'Seu cartão de ponto foi fechado automaticamente. Seu supervisor será notificado para revisão.'
+  };
+  return messages[language] || messages['en'];
+}
+
+// =====================================================
+// MAIN HANDLER
+// =====================================================
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === 'OPTIONS') {
@@ -87,10 +119,7 @@ const handler = async (req: Request): Promise<Response> => {
       for (const punch of overduePunches as OverduePunch[]) {
         try {
           if (punch.action === 'first_reminder') {
-            await sendFirstReminder(punch);
-            totalProcessed++;
-          } else if (punch.action === 'second_reminder') {
-            await sendSecondReminder(punch);
+            await sendReminder(punch);
             totalProcessed++;
           } else if (punch.action === 'auto_close') {
             await autoClosePunch(punch);
@@ -127,14 +156,20 @@ const handler = async (req: Request): Promise<Response> => {
   }
 };
 
-async function sendFirstReminder(punch: OverduePunch) {
-  console.log(`Sending first reminder for punch ${punch.time_entry_id}`);
+// =====================================================
+// SEND REMINDER (SMS only, no push notification)
+// =====================================================
 
-  const message = `Recordatorio: Por favor registra tu salida del turno que terminó a las ${punch.shift_end_time}. Responde DONE cuando hayas registrado tu salida.`;
+async function sendReminder(punch: OverduePunch) {
+  console.log(`Sending reminder for punch ${punch.time_entry_id} in language: ${punch.employee_preferred_language}`);
 
-  // Send SMS (always enabled for per-employee auto-close)
+  const language = punch.employee_preferred_language || 'en';
+  const message = getReminderMessage(language, punch.shift_end_time);
+
+  // Send SMS only (no push notifications)
   let smsSent = false;
   let smsSid = null;
+
   if (punch.employee_phone) {
     try {
       const smsResponse = await supabase.functions.invoke('enhanced-sms', {
@@ -150,32 +185,16 @@ async function sendFirstReminder(punch: OverduePunch) {
       if (smsResponse.data?.messageSid) {
         smsSent = true;
         smsSid = smsResponse.data.messageSid;
+        console.log(`SMS sent successfully: ${smsSid}`);
       }
     } catch (error) {
       console.error('Error sending SMS:', error);
     }
+  } else {
+    console.log(`No phone number for employee ${punch.employee_id}, skipping SMS`);
   }
 
-  // Send push notification (always enabled for per-employee auto-close)
-  let pushSent = false;
-  try {
-    await supabase.functions.invoke('push-notification-sender', {
-      body: {
-        dealerId: punch.dealership_id,
-        payload: {
-          title: 'Recordatorio de Salida',
-          body: message,
-          url: '/detail-hub/kiosk',
-          requireInteraction: false
-        }
-      }
-    });
-    pushSent = true;
-  } catch (error) {
-    console.error('Error sending push notification:', error);
-  }
-
-  // Log reminder
+  // Log reminder (push_sent always false - no push notifications)
   await supabase.from('detail_hub_punch_out_reminders').insert({
     time_entry_id: punch.time_entry_id,
     employee_id: punch.employee_id,
@@ -183,96 +202,42 @@ async function sendFirstReminder(punch: OverduePunch) {
     reminder_type: 'first',
     sms_sent: smsSent,
     sms_sid: smsSid,
-    push_sent: pushSent,
+    push_sent: false, // No push notifications
     shift_end_time: punch.shift_end_time,
     minutes_overdue: punch.minutes_overdue
   });
 
-  console.log(`First reminder sent for punch ${punch.time_entry_id}`);
+  console.log(`Reminder sent for punch ${punch.time_entry_id}`);
 }
 
-async function sendSecondReminder(punch: OverduePunch) {
-  console.log(`Sending second reminder for punch ${punch.time_entry_id}`);
-
-  const remainingMinutes = punch.employee_auto_close_window - punch.minutes_overdue;
-  const message = `URGENTE: No has registrado tu salida del turno que terminó a las ${punch.shift_end_time}. Este registro se cerrará automáticamente en ${remainingMinutes} minutos.`;
-
-  // Send SMS (always enabled for per-employee auto-close)
-  let smsSent = false;
-  let smsSid = null;
-  if (punch.employee_phone) {
-    try {
-      const smsResponse = await supabase.functions.invoke('enhanced-sms', {
-        body: {
-          to: punch.employee_phone,
-          message,
-          entityType: 'time_entry',
-          entityId: punch.time_entry_id,
-          dealerId: punch.dealership_id
-        }
-      });
-
-      if (smsResponse.data?.messageSid) {
-        smsSent = true;
-        smsSid = smsResponse.data.messageSid;
-      }
-    } catch (error) {
-      console.error('Error sending SMS:', error);
-    }
-  }
-
-  // Send push notification with requireInteraction (always enabled for per-employee auto-close)
-  let pushSent = false;
-  try {
-    await supabase.functions.invoke('push-notification-sender', {
-      body: {
-        dealerId: punch.dealership_id,
-        payload: {
-          title: 'URGENTE: Registrar Salida',
-          body: message,
-          url: '/detail-hub/kiosk',
-          requireInteraction: true
-        }
-      }
-    });
-    pushSent = true;
-  } catch (error) {
-    console.error('Error sending push notification:', error);
-  }
-
-  // Log reminder
-  await supabase.from('detail_hub_punch_out_reminders').insert({
-    time_entry_id: punch.time_entry_id,
-    employee_id: punch.employee_id,
-    dealership_id: punch.dealership_id,
-    reminder_type: 'second',
-    sms_sent: smsSent,
-    sms_sid: smsSid,
-    push_sent: pushSent,
-    shift_end_time: punch.shift_end_time,
-    minutes_overdue: punch.minutes_overdue
-  });
-
-  console.log(`Second reminder sent for punch ${punch.time_entry_id}`);
-}
+// =====================================================
+// AUTO-CLOSE PUNCH (with SMS confirmation)
+// =====================================================
 
 async function autoClosePunch(punch: OverduePunch) {
   console.log(`Auto-closing punch ${punch.time_entry_id}`);
 
   const now = new Date().toISOString();
-  const autoCloseReason = `Auto-cerrado después de ${punch.employee_auto_close_window} minutos desde el fin del turno (${punch.shift_end_time}). ${punch.reminder_count} recordatorios enviados.`;
+  const language = punch.employee_preferred_language || 'en';
 
-  // Close the time entry (always require supervisor review for per-employee auto-close)
+  // Language-specific auto-close reason for database
+  const autoCloseReason = language === 'es'
+    ? `Auto-cerrado después de ${punch.employee_auto_close_window} minutos desde el fin del turno (${punch.shift_end_time}). ${punch.reminder_count} recordatorio(s) enviado(s).`
+    : language === 'pt-BR'
+    ? `Fechado automaticamente após ${punch.employee_auto_close_window} minutos do fim do turno (${punch.shift_end_time}). ${punch.reminder_count} lembrete(s) enviado(s).`
+    : `Auto-closed after ${punch.employee_auto_close_window} minutes from shift end (${punch.shift_end_time}). ${punch.reminder_count} reminder(s) sent.`;
+
+  // Close the time entry
   const { error: updateError } = await supabase
     .from('detail_hub_time_entries')
     .update({
-      clock_out: punch.shift_end_datetime, // Use shift end as clock_out time
+      clock_out: punch.shift_end_datetime,
       punch_out_method: 'auto_close',
       status: 'complete',
       auto_close_reason: autoCloseReason,
       auto_closed_at: now,
       requires_supervisor_review: true,
-      notes: `AUTO-CERRADO: Turno terminó a las ${punch.shift_end_time}. No se registró salida manual. ${punch.reminder_count} recordatorios enviados. Requiere revisión del supervisor.`
+      notes: autoCloseReason
     })
     .eq('id', punch.time_entry_id);
 
@@ -281,14 +246,42 @@ async function autoClosePunch(punch: OverduePunch) {
     throw updateError;
   }
 
+  // Send confirmation SMS to employee
+  let confirmationSmsSent = false;
+  let confirmationSmsSid = null;
+
+  if (punch.employee_phone) {
+    try {
+      const confirmationMessage = getAutoCloseConfirmationMessage(language);
+      const smsResponse = await supabase.functions.invoke('enhanced-sms', {
+        body: {
+          to: punch.employee_phone,
+          message: confirmationMessage,
+          entityType: 'time_entry',
+          entityId: punch.time_entry_id,
+          dealerId: punch.dealership_id
+        }
+      });
+
+      if (smsResponse.data?.messageSid) {
+        confirmationSmsSent = true;
+        confirmationSmsSid = smsResponse.data.messageSid;
+        console.log(`Auto-close confirmation SMS sent: ${confirmationSmsSid}`);
+      }
+    } catch (error) {
+      console.error('Error sending auto-close confirmation SMS:', error);
+    }
+  }
+
   // Log auto-close event
   await supabase.from('detail_hub_punch_out_reminders').insert({
     time_entry_id: punch.time_entry_id,
     employee_id: punch.employee_id,
     dealership_id: punch.dealership_id,
     reminder_type: 'auto_close',
-    sms_sent: false,
-    push_sent: false,
+    sms_sent: confirmationSmsSent,
+    sms_sid: confirmationSmsSid,
+    push_sent: false, // No push notifications
     shift_end_time: punch.shift_end_time,
     minutes_overdue: punch.minutes_overdue
   });
@@ -302,12 +295,13 @@ async function autoClosePunch(punch: OverduePunch) {
       clock_out: punch.shift_end_datetime,
       punch_out_method: 'auto_close',
       auto_close_reason: autoCloseReason,
-      requires_supervisor_review: true
+      requires_supervisor_review: true,
+      confirmation_sms_sent: confirmationSmsSent
     },
     notes: autoCloseReason
   });
 
-  console.log(`Punch ${punch.time_entry_id} auto-closed successfully`);
+  console.log(`Punch ${punch.time_entry_id} auto-closed successfully. Confirmation SMS sent: ${confirmationSmsSent}`);
 }
 
 serve(handler);

@@ -64,21 +64,21 @@ export function StepDropdown({
   // Table variant - compact button with color dot
   if (variant === 'table') {
     return (
-      <div className={`flex items-center gap-1 ${className}`}>
+      <div className={`flex items-center gap-0.5 sm:gap-1 max-w-full ${className}`}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
               size="sm"
-              className="h-auto py-0.5 px-1 text-xs hover:bg-accent justify-start flex-1"
+              className="h-auto py-0.5 px-1 text-[10px] sm:text-xs hover:bg-accent justify-start flex-1 min-w-0"
               disabled={isMoving}
             >
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
                 <div
                   className="w-2 h-2 rounded-full flex-shrink-0"
                   style={{ backgroundColor: currentStep?.color }}
                 />
-                <span className="font-medium truncate">{currentStepName}</span>
+                <span className="font-medium truncate max-w-[50px] sm:max-w-[80px] md:max-w-none">{currentStepName}</span>
               </div>
             </Button>
           </DropdownMenuTrigger>
@@ -114,7 +114,7 @@ export function StepDropdown({
           <Button
             variant="ghost"
             size="sm"
-            className="h-5 w-5 p-0 flex-shrink-0"
+            className="h-5 w-5 p-0 flex-shrink-0 hidden sm:flex"
             onClick={(e) => {
               e.stopPropagation();
               onAdvanceStep();

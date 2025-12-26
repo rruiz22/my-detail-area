@@ -473,32 +473,49 @@ export default function SalesOrders() {
           {liveRegionMessage}
         </div>
 
-        {/* Header Actions */}
-        <div className="flex flex-col gap-4">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold">{t('pages.sales_orders')}</h1>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <LiveTimer
-                lastRefresh={managementLastRefresh}
-                isRefreshing={isRefreshing}
-              />
+        {/* Header Actions - Mobile Optimized */}
+        <div className="flex flex-col gap-3 sm:gap-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+            {/* Title Row */}
+            <div className="flex items-center justify-between sm:justify-start">
+              <h1 className="text-xl sm:text-2xl font-bold">{t('pages.sales_orders')}</h1>
+              {/* Mobile-only: Compact LiveTimer */}
+              <div className="sm:hidden">
+                <LiveTimer
+                  lastRefresh={managementLastRefresh}
+                  isRefreshing={isRefreshing}
+                />
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-2">
+              {/* Desktop: LiveTimer */}
+              <div className="hidden sm:block">
+                <LiveTimer
+                  lastRefresh={managementLastRefresh}
+                  isRefreshing={isRefreshing}
+                />
+              </div>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleRefresh}
                 disabled={isRefreshing}
+                className="h-9 px-2 sm:px-3"
               >
-                <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''} sm:mr-2`} />
-                <span className="hidden sm:inline">{t('common.refresh')}</span>
+                <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                <span className="hidden sm:inline ml-2">{t('common.refresh')}</span>
               </Button>
               <Button
                 size="sm"
                 onClick={handleCreateOrder}
                 disabled={!canCreate}
                 title={!canCreate ? t('errors.no_permission_create_order', 'No permission to create orders') : ''}
+                className="h-9 px-3 sm:px-4"
               >
-                <Plus className="h-4 w-4 sm:mr-2" />
-                <span className="hidden sm:inline">{t('common.new_order')}</span>
+                <Plus className="h-4 w-4" />
+                <span className="ml-1 sm:ml-2">{isMobile ? t('common.new') : t('common.new_order')}</span>
               </Button>
             </div>
           </div>

@@ -364,18 +364,18 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
           </Button>
         </div>
 
-        <div className="p-4 pr-20">
+        <div className="p-3 sm:p-4 pr-16 sm:pr-20">
           {/* Two-Row Responsive Layout */}
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {/* Row 1: Vehicle Info */}
             <div>
-              <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
+              <h2 className="text-sm sm:text-lg font-semibold leading-tight">
                 {vehicle.vehicle_year} {vehicle.vehicle_make} {vehicle.vehicle_model}
                 {vehicle.vehicle_trim && (
-                  <span className="text-xs sm:text-sm font-normal text-muted-foreground">({vehicle.vehicle_trim})</span>
+                  <span className="text-[10px] sm:text-sm font-normal text-muted-foreground ml-1">({vehicle.vehicle_trim})</span>
                 )}
               </h2>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1 flex-wrap">
+              <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground mt-0.5 flex-wrap">
                 <span className="font-medium">ST: {vehicle.stock_number}</span>
                 <span>•</span>
                 <span className="font-mono">VIN: {vehicle.vin?.slice(-8) || 'N/A'}</span>
@@ -404,16 +404,16 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
             </div>
 
             {/* Row 2: Metrics - Grid Responsive (Always Visible) */}
-            <div className="grid grid-cols-3 sm:grid-cols-4 lg:flex lg:flex-wrap gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2">
               {/* T2L - Time to Line (Always Visible, Compact) */}
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/30 px-2 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800 cursor-help">
-                      <Clock className="h-4 w-4 text-blue-600 flex-shrink-0" />
-                      <div className="flex flex-col">
-                        <span className="text-[10px] text-muted-foreground hidden sm:block">T2L</span>
-                        <span className="font-bold text-blue-900 dark:text-blue-100 whitespace-nowrap text-xs sm:text-sm">
+                    <div className="flex items-center gap-1 sm:gap-1.5 bg-blue-50 dark:bg-blue-950/30 px-1.5 sm:px-2 py-1 sm:py-1.5 rounded-md sm:rounded-lg border border-blue-200 dark:border-blue-800 cursor-help">
+                      <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-600 flex-shrink-0" />
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-[8px] sm:text-[10px] text-muted-foreground leading-none">T2L</span>
+                        <span className="font-bold text-blue-900 dark:text-blue-100 whitespace-nowrap text-[10px] sm:text-sm truncate">
                           {timeToLine?.total_hours ? formatTimeDuration(timeToLine?.total_hours * 60 * 60 * 1000) : '-'}
                         </span>
                       </div>
@@ -429,24 +429,23 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
               </TooltipProvider>
 
               {/* Work Items (Always Visible, Compact) */}
-              <div className="flex items-center gap-1.5 bg-purple-50 dark:bg-purple-950/30 px-2 py-1.5 rounded-lg border border-purple-200 dark:border-purple-800">
-                <Wrench className="h-4 w-4 text-purple-600 flex-shrink-0" />
-                <div className="flex flex-col">
-                  <span className="text-[10px] text-muted-foreground hidden sm:block">Work</span>
-                  <span className="font-bold text-purple-900 dark:text-purple-100 text-xs sm:text-sm">
+              <div className="flex items-center gap-1 sm:gap-1.5 bg-purple-50 dark:bg-purple-950/30 px-1.5 sm:px-2 py-1 sm:py-1.5 rounded-md sm:rounded-lg border border-purple-200 dark:border-purple-800">
+                <Wrench className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-purple-600 flex-shrink-0" />
+                <div className="flex flex-col min-w-0">
+                  <span className="text-[8px] sm:text-[10px] text-muted-foreground leading-none">Work</span>
+                  <span className="font-bold text-purple-900 dark:text-purple-100 text-[10px] sm:text-sm">
                     {counts.workItems}
                   </span>
                 </div>
               </div>
 
               {/* Current Step Time - Previous + Current (Compact) */}
-              <div className="flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/30 px-2 py-1.5 rounded-lg border border-amber-200 dark:border-amber-800">
-                <Clock className="h-4 w-4 text-amber-600 flex-shrink-0" />
-                <div className="flex flex-col">
-                  <span className="text-[10px] text-muted-foreground hidden sm:block">Step</span>
-
+              <div className="flex items-center gap-1 sm:gap-1.5 bg-amber-50 dark:bg-amber-950/30 px-1.5 sm:px-2 py-1 sm:py-1.5 rounded-md sm:rounded-lg border border-amber-200 dark:border-amber-800">
+                <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-600 flex-shrink-0" />
+                <div className="flex flex-col min-w-0">
+                  <span className="text-[8px] sm:text-[10px] text-muted-foreground leading-none">Step</span>
                   {/* Simplified: Show current time (total if revisited) */}
-                  <span className="font-bold text-amber-900 dark:text-amber-100 whitespace-nowrap text-xs sm:text-sm">
+                  <span className="font-bold text-amber-900 dark:text-amber-100 whitespace-nowrap text-[10px] sm:text-sm truncate">
                     {currentVisit?.current_visit_hours
                       ? formatTimeDuration(currentVisit.current_visit_hours * 60 * 60 * 1000)
                       : '-'}
@@ -455,18 +454,18 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
               </div>
 
               {/* Total Cost (NEW - Compact) */}
-              <div className="flex items-center gap-1.5 bg-green-50 dark:bg-green-950/30 px-2 py-1.5 rounded-lg border border-green-200 dark:border-green-800">
-                <DollarSign className="h-4 w-4 text-green-600 flex-shrink-0" />
-                <div className="flex flex-col">
-                  <span className="text-[10px] text-muted-foreground hidden sm:block">Cost</span>
-                  <span className="font-bold text-green-900 dark:text-green-100 whitespace-nowrap text-xs sm:text-sm">
+              <div className="flex items-center gap-1 sm:gap-1.5 bg-green-50 dark:bg-green-950/30 px-1.5 sm:px-2 py-1 sm:py-1.5 rounded-md sm:rounded-lg border border-green-200 dark:border-green-800">
+                <DollarSign className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-600 flex-shrink-0" />
+                <div className="flex flex-col min-w-0">
+                  <span className="text-[8px] sm:text-[10px] text-muted-foreground leading-none">Cost</span>
+                  <span className="font-bold text-green-900 dark:text-green-100 whitespace-nowrap text-[10px] sm:text-sm truncate">
                     ${counts.totalCost.toLocaleString()}
                   </span>
                 </div>
               </div>
 
               {/* Step Dropdown - Editable (Reuses table component) */}
-              <div className="col-span-3 sm:col-span-1">
+              <div className="col-span-2 sm:col-span-4 flex justify-center items-center">
                 <StepDropdown
                   currentStepId={vehicle.step_id}
                   currentStepName={vehicle.step_name || vehicle.current_step?.name || t('get_ready.detail_panel.no_step')}
@@ -475,20 +474,20 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
                   onStepChange={handleMoveToStep}
                   onAdvanceStep={handleAdvanceStep}
                   variant="badge"
-                  className="w-full"
+                  className=""
                 />
               </div>
 
               {/* Add to Recon Button - Show only if NOT in Recon and has permission */}
               {!reconOrder && !statusLoading && hasModulePermission('recon_orders', 'create_orders') && (
-                <div className="col-span-3 sm:col-span-1">
+                <div className="col-span-2 sm:col-span-4 flex justify-center items-center">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={handleAddToRecon}
-                    className="w-full h-full bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/40"
+                    className="bg-orange-50 dark:bg-orange-950/30 border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-300 hover:bg-orange-100 dark:hover:bg-orange-900/40 text-xs"
                   >
-                    <Wrench className="h-4 w-4 mr-2" />
+                    <Wrench className="h-4 w-4 mr-1" />
                     {t('stock.vehicleDetails.actions.addToRecon')}
                   </Button>
                 </div>
@@ -499,120 +498,95 @@ export function VehicleDetailPanel({ className }: VehicleDetailPanelProps) {
       </div>
 
       {/* Tabs Content */}
-      <div className="flex-1">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col">
-          <TabsList className="grid w-full grid-cols-5 mt-4">
+      <div className="flex-1 overflow-hidden">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col h-full">
+          <TabsList className="grid grid-cols-5 w-full h-auto p-1 mx-auto mt-2">
             {/* Work Items Tab */}
-            <TabsTrigger value="work-items" className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-1.5 py-2 relative">
+            <TabsTrigger value="work-items" className="flex flex-col items-center gap-0.5 py-1.5 px-1 text-xs relative data-[state=active]:bg-background">
               <div className="relative">
                 <Wrench className="h-4 w-4" />
                 {counts.workItems > 0 && (
-                  <Badge variant="destructive" className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-[8px] sm:hidden">
+                  <Badge variant="destructive" className="absolute -top-1.5 -right-1.5 h-3.5 w-3.5 p-0 flex items-center justify-center text-[8px]">
                     {counts.workItems}
                   </Badge>
                 )}
               </div>
-              <span className="text-[10px] sm:text-sm">{t('get_ready.tabs.work_items')}</span>
-              {counts.workItems > 0 && (
-                <Badge variant="secondary" className="hidden sm:flex ml-1 h-5 min-w-[20px] px-1.5 text-xs">
-                  {counts.workItems}
-                </Badge>
-              )}
+              <span className="text-[10px] leading-tight">{t('get_ready.tabs.work_items')}</span>
             </TabsTrigger>
 
             {/* Media Tab */}
-            <TabsTrigger value="media" className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-1.5 py-2 relative">
+            <TabsTrigger value="media" className="flex flex-col items-center gap-0.5 py-1.5 px-1 text-xs relative data-[state=active]:bg-background">
               <div className="relative">
                 <Image className="h-4 w-4" />
                 {counts.media > 0 && (
-                  <Badge variant="destructive" className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-[8px] sm:hidden">
+                  <Badge variant="destructive" className="absolute -top-1.5 -right-1.5 h-3.5 w-3.5 p-0 flex items-center justify-center text-[8px]">
                     {counts.media}
                   </Badge>
                 )}
               </div>
-              <span className="text-[10px] sm:text-sm">{t('get_ready.tabs.media')}</span>
-              {counts.media > 0 && (
-                <Badge variant="secondary" className="hidden sm:flex ml-1 h-5 min-w-[20px] px-1.5 text-xs">
-                  {counts.media}
-                </Badge>
-              )}
+              <span className="text-[10px] leading-tight">{t('get_ready.tabs.media')}</span>
             </TabsTrigger>
 
             {/* Notes Tab */}
-            <TabsTrigger value="notes" className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-1.5 py-2 relative">
+            <TabsTrigger value="notes" className="flex flex-col items-center gap-0.5 py-1.5 px-1 text-xs relative data-[state=active]:bg-background">
               <div className="relative">
                 <MessageSquare className="h-4 w-4" />
                 {counts.notes > 0 && (
-                  <Badge variant="destructive" className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-[8px] sm:hidden">
+                  <Badge variant="destructive" className="absolute -top-1.5 -right-1.5 h-3.5 w-3.5 p-0 flex items-center justify-center text-[8px]">
                     {counts.notes}
                   </Badge>
                 )}
               </div>
-              <span className="text-[10px] sm:text-sm">{t('get_ready.tabs.notes')}</span>
-              {counts.notes > 0 && (
-                <Badge variant="secondary" className="hidden sm:flex ml-1 h-5 min-w-[20px] px-1.5 text-xs">
-                  {counts.notes}
-                </Badge>
-              )}
+              <span className="text-[10px] leading-tight">{t('get_ready.tabs.notes')}</span>
             </TabsTrigger>
 
             {/* Vendors Tab */}
-            <TabsTrigger value="vendors" className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-1.5 py-2 relative">
+            <TabsTrigger value="vendors" className="flex flex-col items-center gap-0.5 py-1.5 px-1 text-xs relative data-[state=active]:bg-background">
               <div className="relative">
                 <Users className="h-4 w-4" />
                 {counts.vendors > 0 && (
-                  <Badge variant="destructive" className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-[8px] sm:hidden">
+                  <Badge variant="destructive" className="absolute -top-1.5 -right-1.5 h-3.5 w-3.5 p-0 flex items-center justify-center text-[8px]">
                     {counts.vendors}
                   </Badge>
                 )}
               </div>
-              <span className="text-[10px] sm:text-sm">{t('get_ready.tabs.vendors')}</span>
-              {counts.vendors > 0 && (
-                <Badge variant="secondary" className="hidden sm:flex ml-1 h-5 min-w-[20px] px-1.5 text-xs">
-                  {counts.vendors}
-                </Badge>
-              )}
+              <span className="text-[10px] leading-tight">{t('get_ready.tabs.vendors')}</span>
             </TabsTrigger>
 
             {/* Timeline Tab */}
-            <TabsTrigger value="timeline" className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-1.5 py-2 relative">
+            <TabsTrigger value="timeline" className="flex flex-col items-center gap-0.5 py-1.5 px-1 text-xs relative data-[state=active]:bg-background">
               <div className="relative">
                 <Clock className="h-4 w-4" />
                 {counts.timeline > 0 && (
-                  <Badge variant="destructive" className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center text-[8px] sm:hidden">
+                  <Badge variant="destructive" className="absolute -top-1.5 -right-1.5 h-3.5 w-3.5 p-0 flex items-center justify-center text-[8px]">
                     {counts.timeline}
                   </Badge>
                 )}
               </div>
-              <span className="text-[10px] sm:text-sm">{t('get_ready.tabs.timeline')}</span>
-              {counts.timeline > 0 && (
-                <Badge variant="secondary" className="hidden sm:flex ml-1 h-5 min-w-[20px] px-1.5 text-xs">
-                  {counts.timeline}
-                </Badge>
-              )}
+              <span className="text-[10px] leading-tight">{t('get_ready.tabs.timeline')}</span>
             </TabsTrigger>
           </TabsList>
 
           {/* Work Items Tab */}
-          <TabsContent value="work-items" className="px-4 pt-4 pb-6 overflow-auto">
+          <TabsContent value="work-items" className="px-2 sm:px-4 pt-3 pb-6 overflow-auto flex-1">
             <VehicleWorkItemsTab vehicleId={selectedVehicleId} onSwitchTab={setActiveTab} />
           </TabsContent>
 
           {/* Media Tab */}
-          <TabsContent value="media" className="px-4 pt-4 pb-6">
+          <TabsContent value="media" className="px-2 sm:px-4 pt-3 pb-6 flex-1">
             <VehicleMediaTab vehicleId={selectedVehicleId} />
           </TabsContent>
 
-          <TabsContent value="notes" className="px-4 pt-4 pb-6">
+          <TabsContent value="notes" className="px-2 sm:px-4 pt-3 pb-6 flex-1">
             <VehicleNotesTab vehicleId={selectedVehicleId} />
           </TabsContent>
 
-          {/* Vendors Tab - NEW: Full vendor integration */}
-          <TabsContent value="vendors" className="px-4 pt-4 pb-6">
+          {/* Vendors Tab - Full vendor integration */}
+          <TabsContent value="vendors" className="px-2 sm:px-4 pt-3 pb-6 flex-1">
             <VehicleVendorsTab vehicleId={selectedVehicleId} />
           </TabsContent>
 
-          <TabsContent value="timeline" className="px-4 pt-4 pb-8">
+          <TabsContent value="timeline" className="px-2 sm:px-4 pt-3 pb-8 flex-1">
             {selectedVehicleId && (
               <VehicleActivityLog vehicleId={selectedVehicleId} />
             )}

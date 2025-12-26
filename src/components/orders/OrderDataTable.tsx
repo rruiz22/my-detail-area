@@ -249,8 +249,8 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
 
   return (
     <>
-      {/* Mobile Card Layout */}
-      <div className="block lg:hidden space-y-4">
+      {/* Mobile Card Layout - Optimized for touch */}
+      <div className="block lg:hidden space-y-3">
         {paginatedOrders.map((order) => {
           // Calculate attention level for row styling
           const showDueDateIndicator = isTimeBasedOrder(tabType) &&
@@ -262,47 +262,54 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
             : '';
 
           return (
-            <Card key={order.id} className={cn("border-border shadow-sm", attentionClasses)}>
-              <CardContent className="p-4">
-                <div className="space-y-3">
-                  {/* Header Row */}
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold text-foreground">
-                          {formatOrderNumber(order)}
+            <Card
+              key={order.id}
+              className={cn("border-border shadow-sm active:scale-[0.99] transition-transform", attentionClasses)}
+              onClick={() => onView(order)}
+            >
+              <CardContent className="p-3">
+                <div className="space-y-2">
+                  {/* Header Row - Compact */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-base font-bold text-foreground">
+                          #{formatOrderNumber(order)}
                         </span>
-                        {/* Comments Indicator */}
-                        {typeof order.comments === 'number' && order.comments > 0 && (
-                          <CommentsTooltip
-                            orderId={order.id}
-                            count={order.comments}
-                            onViewAllClick={() => onView(order)}
-                          >
-                            <span className="inline-flex items-center gap-0.5 cursor-pointer hover:bg-blue-50 px-1.5 py-0.5 rounded transition-colors">
-                              <MessageSquare className="w-3.5 h-3.5 text-blue-500" />
-                              <span className="text-xs font-semibold text-blue-600">{order.comments}</span>
-                            </span>
-                          </CommentsTooltip>
-                        )}
-                        {/* Notes Indicator */}
-                        {order.notes && order.notes.trim() !== '' && (
-                          <NotesTooltip
-                            noteContent={order.notes}
-                            onViewClick={() => onView(order)}
-                          >
-                            <span className="inline-flex items-center gap-0.5 cursor-pointer hover:bg-amber-50 px-1.5 py-0.5 rounded transition-colors">
-                              <StickyNote className="w-3.5 h-3.5 text-amber-500" />
-                            </span>
-                          </NotesTooltip>
-                        )}
+                        {/* Indicators - Inline */}
+                        <div className="flex items-center gap-1">
+                          {typeof order.comments === 'number' && order.comments > 0 && (
+                            <CommentsTooltip
+                              orderId={order.id}
+                              count={order.comments}
+                              onViewAllClick={() => onView(order)}
+                            >
+                              <span className="inline-flex items-center gap-0.5 cursor-pointer bg-blue-50 dark:bg-blue-900/30 px-1.5 py-0.5 rounded-full transition-colors">
+                                <MessageSquare className="w-3 h-3 text-blue-500" />
+                                <span className="text-[10px] font-semibold text-blue-600 dark:text-blue-400">{order.comments}</span>
+                              </span>
+                            </CommentsTooltip>
+                          )}
+                          {order.notes && order.notes.trim() !== '' && (
+                            <NotesTooltip
+                              noteContent={order.notes}
+                              onViewClick={() => onView(order)}
+                            >
+                              <span className="inline-flex items-center cursor-pointer bg-amber-50 dark:bg-amber-900/30 p-1 rounded-full transition-colors">
+                                <StickyNote className="w-3 h-3 text-amber-500" />
+                              </span>
+                            </NotesTooltip>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex items-center text-sm text-muted-foreground mt-1">
-                        <Building2 className="w-4 h-4 mr-2 text-gray-700 flex-shrink-0" />
-                        <span className="whitespace-nowrap truncate">{order.dealershipName || t('data_table.unknown_dealer')}</span>
+                      {/* Dealership - Smaller */}
+                      <div className="flex items-center text-xs text-muted-foreground mt-0.5">
+                        <Building2 className="w-3 h-3 mr-1 flex-shrink-0" />
+                        <span className="truncate">{order.dealershipName || t('data_table.unknown_dealer')}</span>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end gap-2">
+                    {/* Status Badge */}
+                    <div className="flex flex-col items-end gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                       <StatusBadgeInteractive
                         status={order.status}
                         orderId={order.id}
@@ -310,29 +317,27 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                         orderType={order.order_type}
                         onStatusChange={handleStatusChange}
                       />
-                      {/* Due Date Indicator for time-based orders */}
                       {isTimeBasedOrder(tabType) &&
                        isSameDayOrder(order.createdAt, order.dueDate) && (
                         <DueDateIndicator
                           dueDate={order.dueDate}
                           orderStatus={order.status}
                           orderType={tabType}
-                          compact={false}
+                          compact={true}
                           showDateTime={true}
                         />
                       )}
                     </div>
                   </div>
 
-                  {/* Vehicle and Stock Row */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-2 rounded">
-                      <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Vehicle</label>
-                      <div className="text-sm font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis">
-                        {order.vehicleInfo ||
-                         `${order.vehicleYear || ''} ${order.vehicleMake || ''} ${order.vehicleModel || ''}`.trim() ||
-                         'Vehicle info not available'}
-                      </div>
+                  {/* Vehicle Info - Full Width */}
+                  <div className="bg-muted/30 rounded-md p-2">
+                    <div className="text-sm font-semibold text-foreground truncate">
+                      {order.vehicleInfo ||
+                       `${order.vehicleYear || ''} ${order.vehicleMake || ''} ${order.vehicleModel || ''}`.trim() ||
+                       'Vehicle info not available'}
+                    </div>
+                    <div className="flex items-center justify-between gap-2 mt-1">
                       <DuplicateTooltip
                         orders={duplicateData.vinDuplicateOrders.get(order.id) || []}
                         field="vehicleVin"
@@ -341,27 +346,24 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                         debug={import.meta.env.DEV}
                       >
                         <span
-                          className="inline-flex items-baseline gap-2 cursor-pointer hover:text-orange-600 transition-colors whitespace-nowrap overflow-hidden text-ellipsis mt-1 leading-none"
-                          onClick={() => order.vehicleVin && copyVinToClipboard(order.vehicleVin)}
-                          title={order.vehicleVin ? `Last 8 VIN - Tap to copy full: ${order.vehicleVin}` : 'No VIN'}
+                          className="inline-flex items-center gap-1 cursor-pointer text-xs"
+                          onClick={(e) => { e.stopPropagation(); order.vehicleVin && copyVinToClipboard(order.vehicleVin); }}
+                          title={order.vehicleVin ? `Tap to copy: ${order.vehicleVin}` : 'No VIN'}
                         >
                           {order.vehicleVin ? (
                             <>
-                              <span className="text-xs text-muted-foreground/60">L8V: </span>
-                              <span className="font-mono text-base font-semibold text-foreground">{order.vehicleVin.slice(-8)}</span>
+                              <span className="text-muted-foreground">VIN:</span>
+                              <span className="font-mono font-semibold text-foreground">...{order.vehicleVin.slice(-8)}</span>
                               <DuplicateBadge count={(duplicateData.vinDuplicateOrders.get(order.id) || []).length} inline={true} />
                             </>
                           ) : (
-                            <span className="text-sm text-muted-foreground">{t('data_table.vin_not_provided')}</span>
+                            <span className="text-muted-foreground">{t('data_table.vin_not_provided')}</span>
                           )}
                         </span>
                       </DuplicateTooltip>
-                    </div>
-                    <div className="p-2 rounded">
-                      <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                        {tabType === 'service' ? 'Tag' : 'Stock'}
-                      </label>
-                      {order.stockNumber || order.tag ? (
+
+                      {/* Stock/Tag */}
+                      {(order.stockNumber || order.tag) && (
                         <DuplicateTooltip
                           orders={duplicateData.stockDuplicateOrders.get(order.id) || []}
                           field="stockNumber"
@@ -369,98 +371,99 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                           onOrderClick={onView}
                           debug={import.meta.env.DEV}
                         >
-                          <span className="inline-flex items-baseline gap-2 text-sm font-semibold text-foreground cursor-pointer hover:text-gray-700 transition-colors leading-none">
-                            {order.stockNumber || order.tag || 'N/A'}
+                          <span className="inline-flex items-center gap-1 text-xs">
+                            <span className="text-muted-foreground">{tabType === 'service' ? 'Tag:' : 'Stock:'}</span>
+                            <span className="font-semibold text-foreground">{order.stockNumber || order.tag}</span>
                             <DuplicateBadge count={(duplicateData.stockDuplicateOrders.get(order.id) || []).length} inline={true} />
                           </span>
                         </DuplicateTooltip>
-                      ) : (
-                        <span className="text-sm font-semibold text-muted-foreground">
-                          {t('data_table.no_stock')}
-                        </span>
-                      )}
-                      {/* Assigned To */}
-                      {order.assignedTo && (
-                        <div className="text-sm font-semibold text-foreground mt-2">
-                          {order.assignedTo}
-                        </div>
                       )}
                     </div>
                   </div>
 
-                  {/* Due Date / Completed Date Row */}
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                      {(tabType === 'recon' || tabType === 'carwash') ? t('recon.completion_date') : 'Due'}
-                    </label>
-                    <div className="flex flex-col gap-1">
-                      <div className="text-sm font-semibold">
-                        {(tabType === 'recon' || tabType === 'carwash') ? (
-                          order.completedAt || order.completed_at ? (
-                            <>
-                              {new Date(order.completedAt || order.completed_at).toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric'
-                              })}
-                            </>
+                  {/* Services Row */}
+                  {order.services && order.services.length > 0 && (
+                    <div>
+                      <ServicesDisplay
+                        services={order.services}
+                        dealerId={order.dealer_id}
+                        variant="compact"
+                        showPrices={false}
+                      />
+                    </div>
+                  )}
+
+                  {/* Footer: Due Date + Assigned + Actions */}
+                  <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                    <div className="flex items-center gap-3 text-xs">
+                      {/* Due Date */}
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-3 h-3 text-muted-foreground" />
+                        <span className="text-muted-foreground">
+                          {(tabType === 'recon' || tabType === 'carwash') ? (
+                            order.completedAt || order.completed_at ?
+                              new Date(order.completedAt || order.completed_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) :
+                              'No date'
                           ) : (
-                            t('data_table.no_date_set')
-                          )
-                        ) : (
-                          <>
-                            {order.dueTime || '12:00 PM'} - {order.dueDate ? new Date(order.dueDate).toLocaleDateString() : 'No date'}
-                          </>
-                        )}
+                            <>
+                              {order.dueTime || '12:00 PM'} {order.dueDate ? `• ${new Date(order.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}` : ''}
+                            </>
+                          )}
+                        </span>
                       </div>
 
-                      {/* Waiter indicator for CarWash orders */}
+                      {/* Waiter indicator */}
                       {tabType === 'carwash' && order.isWaiter && (
-                        <span className="inline-flex items-center gap-0.5 bg-destructive/10 px-1.5 py-0.5 rounded" title={t('car_wash_orders.waiter_priority')}>
-                          <Clock className="w-3.5 h-3.5 text-destructive animate-pulse" />
-                          <span className="text-xs font-semibold text-destructive">Waiter</span>
+                        <span className="inline-flex items-center gap-0.5 bg-destructive/10 px-1.5 py-0.5 rounded-full">
+                          <Clock className="w-3 h-3 text-destructive animate-pulse" />
+                          <span className="text-[10px] font-semibold text-destructive">Waiter</span>
+                        </span>
+                      )}
+
+                      {/* Assigned To */}
+                      {order.assignedTo && order.assignedTo !== 'Unassigned' && (
+                        <span className="text-muted-foreground truncate max-w-[80px]">
+                          {order.assignedTo}
                         </span>
                       )}
                     </div>
-                  </div>
 
-                  {/* Actions Row */}
-                  <div className="flex items-center justify-end gap-2 pt-2 border-t">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onView(order)}
-                      className="flex items-center gap-2 text-foreground dark:text-gray-200 hover:bg-muted/50 dark:hover:bg-muted/30 transition-all hover:scale-105"
-                    >
-                      <Eye className="h-4 w-4" />
-                      {t('data_table.view')}
-                    </Button>
-
-                    {/* Edit - Only if user can edit this specific order */}
-                    {canEditOrder(order) && (
+                    {/* Action Buttons - Touch Friendly */}
+                    <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => onEdit(order)}
-                        className="flex items-center gap-2 text-emerald-600 hover:bg-emerald-50 transition-all hover:scale-105"
+                        onClick={() => onView(order)}
+                        className="h-9 w-9 p-0 rounded-full hover:bg-muted"
+                        aria-label={t('data_table.view')}
                       >
-                        <Edit className="h-4 w-4" />
-                        {t('data_table.edit')}
+                        <Eye className="h-4 w-4" />
                       </Button>
-                    )}
 
-                    {/* Delete - Only if user can delete orders (system admin only) */}
-                    {canDeleteOrder(order) && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onDelete(order.id)}
-                        className="flex items-center gap-2 text-rose-600 hover:bg-rose-50 transition-all hover:scale-105"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        {t('data_table.delete')}
-                      </Button>
-                    )}
+                      {canEditOrder(order) && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onEdit(order)}
+                          className="h-9 w-9 p-0 rounded-full text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/30"
+                          aria-label={t('data_table.edit')}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                      )}
+
+                      {canDeleteOrder(order) && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onDelete(order.id)}
+                          className="h-9 w-9 p-0 rounded-full text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30"
+                          aria-label={t('data_table.delete')}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -468,29 +471,34 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
           );
         })}
 
-        {/* Mobile Pagination */}
+        {/* Mobile Pagination - Touch Friendly */}
         {totalPages > 1 && (
-          <div className="flex flex-col items-center gap-2 pt-4">
-            <div className="text-sm text-muted-foreground font-medium">
+          <div className="flex flex-col items-center gap-3 pt-4">
+            <div className="text-xs text-muted-foreground font-medium">
               {t('data_table.showing_range', { start: startRange, end: endRange, total: orders.length })}
             </div>
-            <div className="flex justify-center space-x-2">
+            <div className="flex justify-center gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
+                className="h-10 px-4 min-w-[80px]"
               >
                 Previous
               </Button>
               <span className="flex items-center px-3 text-sm text-muted-foreground">
                 {t('data_table.page_of', { current: currentPage, total: totalPages })}
               </span>
+              <span className="text-sm text-muted-foreground px-2">
+                {currentPage} / {totalPages}
+              </span>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage >= totalPages}
+                className="h-10 px-4 min-w-[80px]"
               >
                 Next
               </Button>

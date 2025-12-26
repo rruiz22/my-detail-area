@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Save, X, Coffee, Edit2, Trash2, PlayCircle, Plus } from "lucide-react";
+import { Clock, Save, X, Coffee, Edit2, Trash2, PlayCircle, Plus, AlertTriangle, CheckCircle2, XCircle } from "lucide-react";
 import {
   useUpdateTimeEntry,
   useEndBreakById,
@@ -170,6 +170,40 @@ export function EditTimeEntryModal({
           </DialogHeader>
 
           <div className="space-y-4">
+            {/* ⚠️ APPROVAL STATUS WARNING: Show if timecard is approved - EDITING DISABLED */}
+            {timeEntry.approval_status === 'approved' && (
+              <div className="p-3 bg-amber-50 border border-amber-300 rounded-lg flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-amber-800">
+                    {t('detail_hub.timecard.edit_entry.approved_warning_title')}
+                  </p>
+                  <p className="text-sm text-amber-700 mt-1">
+                    {t('detail_hub.timecard.edit_entry.editing_disabled_approved')}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* ⚠️ REJECTED WARNING: Allow editing but warn */}
+            {timeEntry.approval_status === 'rejected' && (
+              <div className="p-3 bg-red-50 border border-red-300 rounded-lg flex items-start gap-3">
+                <XCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-red-800">
+                    {t('detail_hub.timecard.edit_entry.rejected_warning_title')}
+                  </p>
+                  {timeEntry.rejection_reason && (
+                    <p className="text-sm text-red-600 mt-1 italic">
+                      "{timeEntry.rejection_reason}"
+                    </p>
+                  )}
+                  <p className="text-sm text-red-700 mt-1">
+                    {t('detail_hub.timecard.edit_entry.rejected_warning_description')}
+                  </p>
+                </div>
+              </div>
+            )}
             {/* Time Inputs */}
             <div className="grid grid-cols-2 gap-4">
               {/* Clock In */}
@@ -183,6 +217,7 @@ export function EditTimeEntryModal({
                     value={clockInTime}
                     onChange={(e) => setClockInTime(e.target.value)}
                     className={`pl-10 ${errors.clockIn ? 'border-red-500' : ''}`}
+                    disabled={timeEntry.approval_status === 'approved'}
                   />
                 </div>
                 {errors.clockIn && <p className="text-sm text-red-500">{errors.clockIn}</p>}
@@ -199,6 +234,7 @@ export function EditTimeEntryModal({
                     value={clockOutTime}
                     onChange={(e) => setClockOutTime(e.target.value)}
                     className={`pl-10 ${errors.clockOut ? 'border-red-500' : ''}`}
+                    disabled={timeEntry.approval_status === 'approved'}
                   />
                 </div>
                 {errors.clockOut && <p className="text-sm text-red-500">{errors.clockOut}</p>}
@@ -217,6 +253,7 @@ export function EditTimeEntryModal({
                   variant="outline"
                   size="sm"
                   onClick={() => setAddBreakDialogOpen(true)}
+                  disabled={timeEntry.approval_status === 'approved'}
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   {t('detail_hub.timecard.edit_entry.add_break')}
@@ -275,7 +312,7 @@ export function EditTimeEntryModal({
                             variant="ghost"
                             size="sm"
                             onClick={() => handleEndBreak(breakRecord)}
-                            disabled={isEndingBreak}
+                            disabled={isEndingBreak || timeEntry.approval_status === 'approved'}
                             title={t('detail_hub.timecard.edit_entry.end_now')}
                           >
                             <PlayCircle className="w-4 h-4 text-green-600" />
@@ -287,6 +324,7 @@ export function EditTimeEntryModal({
                           variant="ghost"
                           size="sm"
                           onClick={() => handleEditBreak(breakRecord)}
+                          disabled={timeEntry.approval_status === 'approved'}
                           title={t('detail_hub.timecard.edit_entry.edit_break')}
                         >
                           <Edit2 className="w-4 h-4" />
@@ -297,7 +335,7 @@ export function EditTimeEntryModal({
                           variant="ghost"
                           size="sm"
                           onClick={() => setDeletingBreakId(breakRecord.id)}
-                          disabled={isDeletingBreak}
+                          disabled={isDeletingBreak || timeEntry.approval_status === 'approved'}
                           title={t('detail_hub.timecard.edit_entry.delete_break')}
                         >
                           <Trash2 className="w-4 h-4 text-red-600" />
@@ -322,6 +360,7 @@ export function EditTimeEntryModal({
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder={t('detail_hub.timecard.edit_entry.notes_placeholder')}
                 rows={3}
+                disabled={timeEntry.approval_status === 'approved'}
               />
             </div>
 
@@ -338,7 +377,11 @@ export function EditTimeEntryModal({
               <X className="w-4 h-4 mr-2" />
               {t('detail_hub.timecard.edit_entry.cancel')}
             </Button>
-            <Button onClick={handleSubmit} disabled={isPending}>
+            <Button
+              onClick={handleSubmit}
+              disabled={isPending || timeEntry.approval_status === 'approved'}
+              title={timeEntry.approval_status === 'approved' ? t('detail_hub.timecard.edit_entry.editing_disabled_approved') : undefined}
+            >
               <Save className="w-4 h-4 mr-2" />
               {isPending ? t('detail_hub.timecard.edit_entry.saving') : t('detail_hub.timecard.edit_entry.save')}
             </Button>

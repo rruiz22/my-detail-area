@@ -492,11 +492,7 @@ export function useUpdateAssignment() {
       queryClient.invalidateQueries({
         queryKey: ASSIGNMENT_QUERY_KEYS.byDealership(data.dealership_id)
       });
-
-      toast({
-        title: t('detail_hub.assignments.toast.updated_title'),
-        description: t('detail_hub.assignments.toast.updated_description')
-      });
+      // Toast handled by parent component to avoid duplicates when updating multiple assignments
     },
     onError: (error, variables, context) => {
       console.error('Update assignment error:', error);

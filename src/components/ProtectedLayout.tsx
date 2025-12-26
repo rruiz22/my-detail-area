@@ -30,6 +30,9 @@ interface ProtectedLayoutProps {
   title?: string;
 }
 
+// Breakpoint for sidebar behavior
+const LARGE_SCREEN_BREAKPOINT = 770; // Below: always expanded | Above: auto-collapse in Get Ready
+
 // Inner component that has access to useSidebar hook
 const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
   const location = useLocation();
@@ -41,23 +44,64 @@ const ProtectedLayoutInner = ({ children, title }: ProtectedLayoutProps) => {
   const [termsModalOpen, setTermsModalOpen] = useState(false);
   const currentYear = useCurrentYear();
 
-  // ✅ OPTIMIZATION: Auto-collapse/expand sidebar for Get Ready module
-  // Immediate state update without setTimeout for better performance
+  // ✅ Sidebar auto-collapse/expand logic based on screen size and module
+  // Rules:
+  // - Small screens (< 770px): Always expanded - collapsed icons are confusing
+  // - Large screens (>= 770px): Auto-collapse ONLY in Get Ready, user controls elsewhere
   useEffect(() => {
+    const screenWidth = window.innerWidth;
+    const isSmallScreen = screenWidth < LARGE_SCREEN_BREAKPOINT; // < 770px
+    const isLargeScreen = screenWidth >= LARGE_SCREEN_BREAKPOINT; // >= 770px
     const isGetReadyModule = location.pathname.startsWith('/get-ready');
     const wasGetReadyModule = previousPathRef.current.startsWith('/get-ready');
+    const isInitialMount = previousPathRef.current === '';
 
-    // Only act if module state changed (entering or leaving Get Ready)
-    if (isGetReadyModule !== wasGetReadyModule) {
-      const targetState = !isGetReadyModule;
-      logger.dev(`🔧 [PROTECTED LAYOUT] ${isGetReadyModule ? 'Entering' : 'Leaving'} Get Ready - ${targetState ? 'Opening' : 'Collapsing'} sidebar`);
+    logger.dev(`🔧 [PROTECTED LAYOUT] Sidebar check:`, {
+      screenWidth,
+      isSmall: isSmallScreen,
+      isLarge: isLargeScreen,
+      isGetReady: isGetReadyModule,
+      wasGetReady: wasGetReadyModule,
+      isInitialMount,
+      currentOpen: open
+    });
 
-      // Immediate update - CSS transition handles animation smoothly
-      setOpen(targetState);
+    // Small screens (< 770px): Sidebar should ALWAYS be expanded
+    // A collapsed sidebar (icons only) makes no sense on smaller screens
+    if (isSmallScreen) {
+      if (!open) {
+        logger.dev(`🔧 [PROTECTED LAYOUT] Small screen (< 770px) - forcing sidebar expanded`);
+        setOpen(true);
+      }
+      previousPathRef.current = location.pathname;
+      return;
+    }
+
+    // Large screens (>= 770px): Context-aware behavior
+    if (isLargeScreen) {
+      if (isGetReadyModule) {
+        // In Get Ready: always collapse sidebar (module has its own sidebar)
+        if (open) {
+          logger.dev(`🔧 [PROTECTED LAYOUT] Large screen + Get Ready - collapsing sidebar`);
+          setOpen(false);
+        }
+      } else if (wasGetReadyModule && !isGetReadyModule) {
+        // Just LEFT Get Ready: expand sidebar
+        if (!open) {
+          logger.dev(`🔧 [PROTECTED LAYOUT] Large screen + Just left Get Ready - expanding sidebar`);
+          setOpen(true);
+        }
+      } else if (isInitialMount && !open) {
+        // Initial mount outside Get Ready with collapsed sidebar (from bad cookie)
+        // Expand to fix broken state - only on first load
+        logger.dev(`🔧 [PROTECTED LAYOUT] Large screen + Initial mount with collapsed sidebar - expanding`);
+        setOpen(true);
+      }
+      // Otherwise: let user control the sidebar manually
     }
 
     previousPathRef.current = location.pathname;
-  }, [location.pathname, setOpen]);
+  }, [location.pathname, setOpen, open]);
 
   return (
     <div className="min-h-screen flex w-full bg-background">
@@ -250,14 +294,19 @@ export const ProtectedLayout = ({ children, title }: ProtectedLayoutProps) => {
     return <Navigate to={`/auth?redirect=${encodeURIComponent(intendedPath)}`} replace />;
   }
 
-  // Check if we're in Get Ready to set initial sidebar state
+  // Check if we're in Get Ready module
   const isGetReadyModule = location.pathname.startsWith('/get-ready');
-  const initialOpen = !isGetReadyModule; // Closed if in Get Ready, open otherwise
+
+  // Let SidebarProvider read from cookie initially, then useEffect corrects it:
+  // - Mobile (< 768px): No correction (uses drawer)
+  // - Medium (768-1279px): Forces expanded (collapsed icons are confusing)
+  // - Large (>= 1280px): Collapsed in Get Ready, expanded elsewhere
+  const initialOpen = undefined; // Cookie value, corrected by useEffect
 
   logger.dev('🏗️ [PROTECTED LAYOUT] Sidebar initial state:', {
     pathname: location.pathname,
     isGetReadyModule,
-    initialOpen,
+    initialOpen: 'from cookie (corrected by useEffect)',
     timestamp: new Date().toISOString()
   });
 

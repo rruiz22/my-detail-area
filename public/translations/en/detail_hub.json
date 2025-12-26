@@ -37,7 +37,8 @@
       "clocked_in": "Clocked In",
       "on_break": "On Break",
       "total_hours_today": "Total Hours Today",
-      "active_departments": "Active Departments"
+      "active_departments": "Active Departments",
+      "auto_closed": "Auto-Closed Review"
     }
   },
   "punch_clock": {
@@ -308,18 +309,20 @@
     "auto_close_section_title": "Auto-Close Forgotten Punches",
     "auto_close_enabled": "Enable Auto-Close for this Employee",
     "auto_close_enabled_help": "Automatically close forgotten punch-outs after shift end",
-    "auto_close_first_reminder_label": "First Reminder (minutes)",
-    "auto_close_first_reminder_help": "Minutes after shift end",
-    "auto_close_second_reminder_label": "Second Reminder (minutes)",
-    "auto_close_second_reminder_help": "Urgent warning before auto-close",
-    "auto_close_window_label": "Auto-Close Window (minutes)",
-    "auto_close_window_help": "Final auto-close time",
+    "auto_close_timing": "Auto-Close Timing",
+    "auto_close_reminder_label": "Reminder (minutes)",
+    "auto_close_reminder_help": "Send reminder this many minutes after shift ends",
+    "auto_close_window_label": "Auto-Close (minutes)",
+    "auto_close_window_help": "Automatically close punch this many minutes after shift ends",
+    "preferred_language": "Preferred Language",
+    "preferred_language_help": "Language for SMS reminders",
     "auto_close_status": "Auto-Close Status",
     "no_auto_close_issues": "No Issues",
     "pending_supervisor_review": "{{count}} Pending Review",
     "pending_supervisor_review_plural": "{{count}} Pending Review",
     "auto_closed_recently": "Auto-Closed {{timeAgo}}",
     "click_to_review": "Click to review auto-closed entries",
+    "preview_reminder": "Preview Reminder",
     "kiosk_pin": "Kiosk PIN Code",
     "kiosk_pin_help": "Required 4-6 digit passcode for kiosk time clock authentication",
     "kiosk_pin_placeholder": "Enter 4-6 digits",
@@ -377,7 +380,56 @@
       "role_changed": "Role changed",
       "pin_reset": "PIN code reset",
       "face_enrolled": "Face ID enrolled"
+    },
+    "toast": {
+      "created": "Employee Created",
+      "updated": "Employee Updated",
+      "error": "Error"
     }
+  },
+  "wizard": {
+    "description": "Create a new employee and configure their dealership assignments in one step",
+    "step1_label": "Employee Info",
+    "step2_label": "Assignments",
+    "basic_info": "Basic Information",
+    "role_department": "Role & Department",
+    "security": "Security & Access",
+    "configure_assignment": "Configure Assignment",
+    "select_dealership": "Select Dealership",
+    "select_dealership_placeholder": "Select a dealership...",
+    "dealership_assigned": "Dealership Assignment",
+    "shift_start": "Shift Start",
+    "shift_end": "Shift End",
+    "work_days": "Work Days",
+    "break_duration": "Break (minutes)",
+    "break_is_paid": "Paid Break",
+    "reminder": "Reminder (min)",
+    "reminder_help": "Minutes after shift ends",
+    "auto_close": "Auto-Close (min)",
+    "auto_close_help": "Auto-close after this time",
+    "add_another_assignment": "Add Another Dealership Assignment",
+    "all_dealers_assigned": "Employee is assigned to all available dealerships",
+    "create_employee": "Create Employee",
+    "error_no_assignments": "Assignment Required",
+    "error_no_assignments_description": "Please add at least one dealership assignment before creating the employee.",
+    "error_incomplete_assignment": "Incomplete Assignment",
+    "error_select_dealer": "Please select a dealership for each assignment.",
+    "no_active_assignments": "This employee has no active dealership assignments. You can add new assignments below.",
+    "existing_assignment": "Existing",
+    "new_assignment": "New",
+    "mark_for_deletion": "Mark for removal (will be deleted on save)"
+  },
+  "auto_close": {
+    "preview_title": "Auto-Close Reminder Preview",
+    "preview_description": "This is what the employee will receive when they forget to clock out",
+    "timeline": "Event Timeline",
+    "shift_ends": "Shift Ends",
+    "reminder_sent": "Reminder SMS Sent",
+    "auto_closed": "Auto-Closed + Confirmation SMS",
+    "sms_preview": "Reminder SMS",
+    "confirmation_preview": "Confirmation SMS",
+    "note_title": "How it works",
+    "note_description": "If the employee doesn't clock out by the auto-close time, their timecard will be automatically closed and they'll receive a confirmation SMS. The supervisor will be notified for review."
   },
   "schedules": {
     "calendar_title": "Employee Schedules",
@@ -496,6 +548,7 @@
       "actions": "Actions",
       "hours_abbr": "h"
     },
+    "auto_closed_tooltip": "This entry was auto-closed because the employee did not clock out",
     "loading": "Loading timecards...",
     "no_entries": "No time entries found for this date",
     "no_entries_for_date": "No entries for this date",
@@ -516,6 +569,8 @@
       "select_status": "Status",
       "all_methods": "All Methods",
       "select_method": "Punch Method",
+      "all_approval_statuses": "All Approval Statuses",
+      "select_approval_status": "Approval Status",
       "search_placeholder": "Search by name or ID...",
       "clear_all": "Clear Filters",
       "clear_filters": "Clear Filters",
@@ -611,7 +666,8 @@
       "buttons": {
         "approve": "Approve",
         "reject": "Reject",
-        "approve_all": "Approve All Pending"
+        "approve_all": "Approve All Pending",
+        "unapprove": "Unapprove"
       },
       "dialog": {
         "reject_title": "Reject Timecard Entry",
@@ -620,7 +676,10 @@
         "reason_placeholder": "e.g., Incorrect clock in/out time, unauthorized hours, etc.",
         "cancel": "Cancel",
         "confirm_reject": "Reject Entry",
-        "reason_display": "Rejection Reason:"
+        "reason_display": "Rejection Reason:",
+        "unapprove_title": "Unapprove Timecard",
+        "unapprove_description": "This will revert the timecard to pending status. The entry will need to be approved again.",
+        "confirm_unapprove": "Confirm Unapprove"
       },
       "toast": {
         "approved": "Timecard Approved",
@@ -671,6 +730,11 @@
       "saving": "Saving...",
       "cancel": "Cancel",
       "audit_warning": "All changes will be logged in the audit trail.",
+      "approved_warning_title": "This timecard is approved",
+      "approved_warning_description": "Editing will reset the approval status to pending. The timecard will need to be approved again.",
+      "rejected_warning_title": "This timecard was rejected",
+      "rejected_warning_description": "Editing will reset the approval status to pending. The timecard will need to be approved again.",
+      "editing_disabled_approved": "Cannot edit an approved timecard. Unapprove it first to make changes.",
       "breaks_taken": "Breaks Taken",
       "add_break": "Add Break",
       "lunch": "Lunch",

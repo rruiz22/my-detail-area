@@ -175,15 +175,20 @@ export const SmartDashboard = memo(function SmartDashboard({ allOrders, tabCount
   ];
 
   return (
-    <div className="space-y-6" role="region" aria-label={t('accessibility.dashboard.overview')}>
-      {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" role="list" aria-label={t('accessibility.dashboard.kpi_cards')}>
+    <div className="space-y-4 sm:space-y-6" role="region" aria-label={t('accessibility.dashboard.overview')}>
+      {/* KPI Cards - Horizontally scrollable on mobile, grid on larger screens */}
+      <div
+        className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-4 sm:overflow-visible scrollbar-hide"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        role="list"
+        aria-label={t('accessibility.dashboard.kpi_cards')}
+      >
         {kpiCards.map((card) => {
           const Icon = card.icon;
           return (
             <Card
               key={card.id}
-              className="border-border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-[1.02] group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2"
+              className="border-border shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer active:scale-[0.98] sm:hover:scale-[1.02] group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 min-w-[160px] sm:min-w-0 flex-shrink-0 sm:flex-shrink"
               onClick={() => onCardClick(card.id)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -195,22 +200,22 @@ export const SmartDashboard = memo(function SmartDashboard({ allOrders, tabCount
               role="button"
               aria-label={t('accessibility.dashboard.kpi_card', { title: card.title, value: card.value })}
             >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1 sm:pb-2 p-3 sm:p-6">
+                <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
                   {card.title}
                 </CardTitle>
-                <div className={`p-2 rounded-lg ${card.bgColor}`}>
-                  <Icon className={`h-4 w-4 ${card.color}`} />
+                <div className={`p-1.5 sm:p-2 rounded-lg ${card.bgColor}`}>
+                  <Icon className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${card.color}`} />
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-3 pt-0 sm:p-6 sm:pt-0">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-2xl font-bold text-foreground">{card.value}</div>
-                    <p className="text-xs text-muted-foreground">{card.subtitle}</p>
+                    <div className="text-xl sm:text-2xl font-bold text-foreground">{card.value}</div>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">{card.subtitle}</p>
                   </div>
                   {card.badge && (
-                    <Badge variant={card.badge.variant} className="text-xs">
+                    <Badge variant={card.badge.variant} className="text-[10px] sm:text-xs px-1.5 py-0.5">
                       {card.badge.count} {card.badge.label}
                     </Badge>
                   )}
@@ -221,24 +226,24 @@ export const SmartDashboard = memo(function SmartDashboard({ allOrders, tabCount
         })}
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4" role="list" aria-label={t('accessibility.dashboard.stats_cards')}>
+      {/* Stats Cards - Stack on mobile, grid on larger screens */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4" role="list" aria-label={t('accessibility.dashboard.stats_cards')}>
         {/* Completion Rate */}
         <Card className="border-border shadow-sm" role="article" aria-label={t('accessibility.dashboard.completion_rate')}>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <CheckCircle className="h-4 w-4" aria-hidden="true" />
+          <CardHeader className="pb-2 sm:pb-3 p-3 sm:p-6">
+            <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
               {t('sales_orders.dashboard.completion_rate')}
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-3 pt-0 sm:p-6 sm:pt-0">
             <div className="space-y-2">
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-xs sm:text-sm">
                 <span>{t('sales_orders.dashboard.progress')}</span>
                 <span className="font-medium" aria-label={t('accessibility.dashboard.progress_percentage', { value: metrics.completionRate })}>{metrics.completionRate}%</span>
               </div>
-              <Progress value={metrics.completionRate} className="h-2" aria-label={`${metrics.completionRate}% complete`} />
-              <p className="text-xs text-muted-foreground">
+              <Progress value={metrics.completionRate} className="h-1.5 sm:h-2" aria-label={`${metrics.completionRate}% complete`} />
+              <p className="text-[10px] sm:text-xs text-muted-foreground">
                 {t('sales_orders.dashboard.orders_completed', { completed: metrics.completed, total: metrics.total })}
               </p>
             </div>
@@ -247,23 +252,23 @@ export const SmartDashboard = memo(function SmartDashboard({ allOrders, tabCount
 
         {/* Team Activity */}
         <Card className="border-border shadow-sm" role="article" aria-label={t('accessibility.dashboard.team_activity')}>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <MessageSquare className="h-4 w-4" aria-hidden="true" />
+          <CardHeader className="pb-2 sm:pb-3 p-3 sm:p-6">
+            <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
               {t('sales_orders.dashboard.team_activity')}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
+          <CardContent className="p-3 pt-0 sm:p-6 sm:pt-0">
+            <div className="space-y-1.5 sm:space-y-2">
+              <div className="flex justify-between text-xs sm:text-sm">
                 <span>{t('sales_orders.dashboard.orders_with_comments')}</span>
                 <span className="font-semibold" aria-label={t('accessibility.dashboard.orders_with_comments', { count: metrics.withComments })}>{metrics.withComments}</span>
               </div>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-xs sm:text-sm">
                 <span>{t('sales_orders.dashboard.total_comments')}</span>
                 <span className="font-semibold" aria-label={t('accessibility.dashboard.total_comments', { count: metrics.totalComments })}>{metrics.totalComments}</span>
               </div>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-xs sm:text-sm">
                 <span>{t('sales_orders.dashboard.avg_per_order')}</span>
                 <span className="font-semibold" aria-label={t('accessibility.dashboard.average_comments', { value: metrics.avgComments })}>{metrics.avgComments}</span>
               </div>
@@ -272,27 +277,27 @@ export const SmartDashboard = memo(function SmartDashboard({ allOrders, tabCount
         </Card>
 
         {/* Vehicle Insights */}
-        <Card className="border-border shadow-sm" role="article" aria-label={t('accessibility.dashboard.vehicle_insights')}>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Car className="h-4 w-4" aria-hidden="true" />
+        <Card className="border-border shadow-sm sm:col-span-2 lg:col-span-1" role="article" aria-label={t('accessibility.dashboard.vehicle_insights')}>
+          <CardHeader className="pb-2 sm:pb-3 p-3 sm:p-6">
+            <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <Car className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
               {t('sales_orders.dashboard.vehicle_insights')}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
+          <CardContent className="p-3 pt-0 sm:p-6 sm:pt-0">
+            <div className="space-y-1.5 sm:space-y-2">
               {metrics.topMakes.length > 0 ? (
                 <>
-                  <div className="text-xs font-medium text-muted-foreground">{t('sales_orders.dashboard.top_makes')}</div>
+                  <div className="text-[10px] sm:text-xs font-medium text-muted-foreground">{t('sales_orders.dashboard.top_makes')}</div>
                   {metrics.topMakes.map(([make, count]) => (
-                    <div key={make} className="flex justify-between text-sm">
+                    <div key={make} className="flex justify-between text-xs sm:text-sm">
                       <span className="font-medium">{make}</span>
                       <span className="text-muted-foreground" aria-label={t('accessibility.dashboard.vehicle_count', { make, count })}>{count} orders</span>
                     </div>
                   ))}
                 </>
               ) : (
-                <p className="text-sm text-muted-foreground" role="status">{t('sales_orders.dashboard.no_vehicle_data')}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground" role="status">{t('sales_orders.dashboard.no_vehicle_data')}</p>
               )}
             </div>
           </CardContent>

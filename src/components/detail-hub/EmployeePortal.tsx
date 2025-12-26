@@ -2,10 +2,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -14,21 +12,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useEmployeePortalPersistence } from "@/hooks/useEmployeePortalPersistence";
 import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { Ban, Building2, Calendar, Camera, ClipboardList, Clock, DollarSign, Edit2, Eye, EyeOff, FileText, Filter, Scan, Search, Shield, Sparkles, Trash2, UserCheck, UserPlus, UserX, X } from "lucide-react";
+import { Ban, Building2, Calendar, Camera, Clock, DollarSign, Edit2, Eye, EyeOff, FileText, Filter, Scan, Search, Shield, Trash2, UserCheck, UserPlus, UserX, X } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import * as z from "zod";
 import { EmployeeAuditLogsModal } from "./EmployeeAuditLogsModal";
 import { FaceEnrollmentModal } from "./FaceEnrollmentModal";
 import { EmployeeAssignmentsTable } from "./EmployeeAssignmentsTable";
+import { EmployeeWizardModal } from "./EmployeeWizardModal";
 
 // REAL DATABASE INTEGRATION
 import { useDealerFilter } from "@/contexts/DealerFilterContext";
 import {
-  useCreateEmployee,
   useDeleteEmployee,
   useDetailHubEmployees,
   useUpdateEmployee,
@@ -38,30 +33,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { CACHE_TIMES, GC_TIMES } from "@/constants/cacheConfig";
 import { ShiftHoursCell } from "./ShiftHoursCell";
-import { AutoCloseStatusCell } from "./AutoCloseStatusCell";
 import { AutoClosedPunchReviewModal } from "./AutoClosedPunchReviewModal";
-
-// =====================================================
-// VALIDATION SCHEMA
-// =====================================================
-
-// Note: Validation messages are now handled by FormMessage component with translations
-const employeeFormSchema = z.object({
-  first_name: z.string().min(1, "First name is required"),
-  last_name: z.string().min(1, "Last name is required"),
-  email: z.string().email("Invalid email address").nullable().optional(),
-  phone: z.string().nullable().optional(),
-  role: z.enum(["detailer", "car_wash", "supervisor", "manager", "technician"]),
-  department: z.enum(["detail", "car_wash", "service", "management"]),
-  hourly_rate: z.coerce.number().positive("Hourly rate must be positive").nullable().optional(),
-  hire_date: z.date(),
-  status: z.enum(["active", "inactive", "suspended", "terminated"]).default("active"),
-  pin_code: z.string()
-    .min(1, "PIN code is required")
-    .regex(/^\d{4,6}$/, "PIN must be 4-6 digits"),
-});
-
-type EmployeeFormValues = z.infer<typeof employeeFormSchema>;
 
 const EmployeePortal = () => {
   const { t } = useTranslation();
@@ -69,7 +41,6 @@ const EmployeePortal = () => {
   const [editingEmployee, setEditingEmployee] = useState<DetailHubEmployee | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState<DetailHubEmployee | null>(null);
-  const [showPIN, setShowPIN] = useState(false);
   const [showLogsModal, setShowLogsModal] = useState(false);
   const [selectedEmployeeForLogs, setSelectedEmployeeForLogs] = useState<DetailHubEmployee | null>(null);
   const [showTerminatedModal, setShowTerminatedModal] = useState(false);
@@ -105,7 +76,6 @@ const EmployeePortal = () => {
 
   // REAL DATABASE INTEGRATION
   const { data: dbEmployees = [], isLoading, error } = useDetailHubEmployees();
-  const { mutate: createEmployee, isPending: isCreating } = useCreateEmployee();
   const { mutate: updateEmployee, isPending: isUpdating } = useUpdateEmployee();
   const { mutate: deleteEmployee, isPending: isDeleting } = useDeleteEmployee();
 
@@ -225,99 +195,6 @@ const EmployeePortal = () => {
     gcTime: GC_TIMES.SHORT, // 5 minutes
   });
 
-  // Form setup
-  const form = useForm<EmployeeFormValues>({
-    resolver: zodResolver(employeeFormSchema),
-    defaultValues: {
-      first_name: "",
-      last_name: "",
-      email: null,
-      phone: null,
-      role: "detailer",
-      department: "detail",
-      hourly_rate: null,
-      hire_date: new Date(),
-      status: "active",
-      pin_code: "",
-    },
-  });
-
-  // =====================================================
-  // EMPLOYEE NUMBER GENERATION
-  // =====================================================
-  const generateEmployeeNumber = async (): Promise<string> => {
-    try {
-      const { data, error } = await supabase
-        .from('detail_hub_employees')
-        .select('employee_number')
-        .order('employee_number', { ascending: false })
-        .limit(1);
-
-      if (error) throw error;
-
-      if (!data || data.length === 0) {
-        return 'EMP001';
-      }
-
-      const lastNumber = data[0].employee_number;
-      const numericPart = parseInt(lastNumber.replace('EMP', ''), 10);
-      const nextNumber = numericPart + 1;
-      return `EMP${nextNumber.toString().padStart(3, '0')}`;
-    } catch (error) {
-      console.error('Error generating employee number:', error);
-      return 'EMP001';
-    }
-  };
-
-  // =====================================================
-  // PIN CODE GENERATION
-  // =====================================================
-  const generateQuickPIN = async (): Promise<string> => {
-    // Generate a random 6-digit PIN and ensure it's unique
-    let pin: string;
-    let isUnique = false;
-    let attempts = 0;
-    const maxAttempts = 10;
-
-    while (!isUnique && attempts < maxAttempts) {
-      // Generate random 6-digit PIN
-      pin = Math.floor(100000 + Math.random() * 900000).toString();
-
-      try {
-        // Check if PIN already exists in database
-        const { data, error } = await supabase
-          .from('detail_hub_employees')
-          .select('pin_code')
-          .eq('pin_code', pin)
-          .maybeSingle();
-
-        if (error) {
-          console.error('Error checking PIN uniqueness:', error);
-          break;
-        }
-
-        // If no employee found with this PIN, it's unique
-        if (!data) {
-          isUnique = true;
-          return pin;
-        }
-
-        attempts++;
-      } catch (error) {
-        console.error('Error generating unique PIN:', error);
-        break;
-      }
-    }
-
-    // Fallback: return a timestamp-based PIN if all attempts fail
-    return Date.now().toString().slice(-6);
-  };
-
-  const handleGeneratePIN = async () => {
-    const newPIN = await generateQuickPIN();
-    form.setValue('pin_code', newPIN);
-  };
-
   // =====================================================
   // CRUD OPERATIONS
   // =====================================================
@@ -325,40 +202,8 @@ const EmployeePortal = () => {
   const handleOpenDialog = (employee?: DetailHubEmployee) => {
     if (employee) {
       setEditingEmployee(employee);
-
-      // ✅ FIX: Show PIN when editing (so user can see existing PIN)
-      setShowPIN(true);
-
-      form.reset({
-        first_name: employee.first_name,
-        last_name: employee.last_name,
-        email: employee.email,
-        phone: employee.phone,
-        role: employee.role,
-        department: employee.department,
-        hourly_rate: employee.hourly_rate,
-        hire_date: new Date(employee.hire_date),
-        status: employee.status,
-        pin_code: employee.pin_code || "",
-      });
     } else {
       setEditingEmployee(null);
-
-      // ✅ FIX: Hide PIN when creating new employee (will be auto-generated)
-      setShowPIN(false);
-
-      form.reset({
-        first_name: "",
-        last_name: "",
-        email: null,
-        phone: null,
-        role: "detailer",
-        department: "detail",
-        hourly_rate: null,
-        hire_date: new Date(),
-        status: "active",
-        pin_code: "",
-      });
     }
     setIsDialogOpen(true);
   };
@@ -366,65 +211,6 @@ const EmployeePortal = () => {
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setEditingEmployee(null);
-    setShowPIN(false); // ✅ FIX: Reset PIN visibility when closing dialog
-    form.reset();
-  };
-
-  const onSubmit = async (values: EmployeeFormValues) => {
-    if (selectedDealerId === 'all') {
-      return;
-    }
-
-    if (editingEmployee) {
-      // UPDATE existing employee
-      updateEmployee(
-        {
-          id: editingEmployee.id,
-          updates: {
-            first_name: values.first_name,
-            last_name: values.last_name,
-            email: values.email || null,
-            phone: values.phone || null,
-            role: values.role,
-            department: values.department,
-            hourly_rate: values.hourly_rate || null,
-            hire_date: format(values.hire_date, 'yyyy-MM-dd'),
-            status: values.status,
-            pin_code: values.pin_code,
-          },
-        },
-        {
-          onSuccess: () => {
-            handleCloseDialog();
-          },
-        }
-      );
-    } else {
-      // CREATE new employee
-      const employeeNumber = await generateEmployeeNumber();
-
-      createEmployee(
-        {
-          dealership_id: selectedDealerId as number,
-          employee_number: employeeNumber,
-          first_name: values.first_name,
-          last_name: values.last_name,
-          email: values.email || null,
-          phone: values.phone || null,
-          role: values.role,
-          department: values.department,
-          hourly_rate: values.hourly_rate || null,
-          hire_date: format(values.hire_date, 'yyyy-MM-dd'),
-          status: values.status,
-          pin_code: values.pin_code,
-        },
-        {
-          onSuccess: () => {
-            handleCloseDialog();
-          },
-        }
-      );
-    }
   };
 
   const handleDeleteClick = (employee: DetailHubEmployee) => {
@@ -589,357 +375,18 @@ const EmployeePortal = () => {
             <Ban className="w-4 h-4 mr-2" />
             {t('detail_hub.employees.view_terminated')}
           </Button>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={() => handleOpenDialog()}>
-                <UserPlus className="w-4 h-4 mr-2" />
-                {t('detail_hub.employees.add_employee')}
-              </Button>
-            </DialogTrigger>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden p-0">
-            <div className="px-6 pt-6">
-              <DialogHeader>
-                <DialogTitle>
-                  {editingEmployee ? t('detail_hub.employees.edit') : t('detail_hub.employees.add_employee')}
-                </DialogTitle>
-                <DialogDescription>
-                  {editingEmployee
-                    ? t('detail_hub.employees.edit_description')
-                    : t('detail_hub.employees.add_description')}
-                </DialogDescription>
-              </DialogHeader>
-            </div>
+          <Button onClick={() => handleOpenDialog()}>
+            <UserPlus className="w-4 h-4 mr-2" />
+            {t('detail_hub.employees.add_employee')}
+          </Button>
 
-            <div className="overflow-y-auto max-h-[calc(90vh-120px)] px-6">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="first_name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('common.first_name')}</FormLabel>
-                        <FormControl>
-                          <Input placeholder="John" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="last_name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('common.last_name')}</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Smith" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('common.email')}</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="email"
-                            placeholder="john.smith@dealership.com"
-                            {...field}
-                            value={field.value || ''}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('common.phone')}</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="tel"
-                            placeholder="(555) 123-4567"
-                            {...field}
-                            value={field.value || ''}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="role"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('detail_hub.employees.role')}</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder={t('validation.option_required')} />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="detailer">{t('detail_hub.employees.roles.detailer')}</SelectItem>
-                            <SelectItem value="technician">{t('detail_hub.employees.roles.technician')}</SelectItem>
-                            <SelectItem value="car_wash">{t('detail_hub.employees.roles.car_wash')}</SelectItem>
-                            <SelectItem value="supervisor">{t('detail_hub.employees.roles.supervisor')}</SelectItem>
-                            <SelectItem value="manager">{t('detail_hub.employees.roles.manager')}</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="department"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('detail_hub.employees.department')}</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder={t('validation.option_required')} />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="detail">{t('detail_hub.employees.departments.detail')}</SelectItem>
-                            <SelectItem value="car_wash">{t('detail_hub.employees.departments.car_wash')}</SelectItem>
-                            <SelectItem value="service">{t('detail_hub.employees.departments.service')}</SelectItem>
-                            <SelectItem value="management">{t('detail_hub.employees.departments.management')}</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="hourly_rate"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('detail_hub.employees.hourly_rate')} ($)</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="number"
-                            placeholder="25.00"
-                            step="0.01"
-                            {...field}
-                            value={field.value || ''}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="hire_date"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>{t('detail_hub.employees.hire_date')}</FormLabel>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "w-full pl-3 text-left font-normal",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value ? (
-                                  format(field.value, "PPP")
-                                ) : (
-                                  <span>{t('detail_hub.timecard.pick_date')}</span>
-                                )}
-                                <Calendar className="ml-auto h-4 w-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <CalendarComponent
-                              mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              disabled={(date) =>
-                                date > new Date() || date < new Date("1900-01-01")
-                              }
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="status"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('detail_hub.employees.status')}</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="active">{t('detail_hub.employees.active')}</SelectItem>
-                            <SelectItem value="inactive">{t('detail_hub.employees.inactive')}</SelectItem>
-                            <SelectItem value="suspended">{t('detail_hub.employees.suspended')}</SelectItem>
-                            <SelectItem value="terminated">{t('detail_hub.employees.terminated')}</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="pin_code"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center gap-2">
-                          <Shield className="w-4 h-4" />
-                          {t('detail_hub.employees.kiosk_pin')}
-                          <span className="text-destructive">*</span>
-                        </FormLabel>
-                        <div className="flex gap-2">
-                          <div className="relative flex-1">
-                            <FormControl>
-                              <Input
-                                type={showPIN ? "text" : "password"}
-                                placeholder={t('detail_hub.employees.kiosk_pin_placeholder')}
-                                maxLength={6}
-                                pattern="\d*"
-                                inputMode="numeric"
-                                {...field}
-                                value={field.value || ''}
-                                onChange={(e) => {
-                                  const value = e.target.value.replace(/\D/g, '');
-                                  field.onChange(value);
-                                }}
-                                required
-                                className="pr-10"
-                              />
-                            </FormControl>
-                            <button
-                              type="button"
-                              onClick={() => setShowPIN(!showPIN)}
-                              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded transition-colors"
-                              title={showPIN ? t('common.hide') : t('common.show')}
-                            >
-                              {showPIN ? (
-                                <EyeOff className="w-4 h-4 text-gray-500" />
-                              ) : (
-                                <Eye className="w-4 h-4 text-gray-500" />
-                              )}
-                            </button>
-                          </div>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={handleGeneratePIN}
-                            className="shrink-0"
-                            title={t('detail_hub.employees.generate_pin')}
-                          >
-                            <Sparkles className="w-4 h-4" />
-                          </Button>
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                          {t('detail_hub.employees.kiosk_pin_help')}
-                        </p>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                {/* Schedule Configuration Notice */}
-                <Card className="border-2 border-blue-200 bg-blue-50/50 mt-6">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base flex items-center gap-2 text-blue-900">
-                      <Clock className="w-5 h-5" />
-                      Work Schedule Configuration
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <p className="text-sm text-gray-700">
-                        Configure employee shift hours, work days, and punch windows in the <strong>Assignments</strong> tab after creating the employee.
-                      </p>
-                      <div className="p-3 bg-white rounded-lg border border-blue-200">
-                        <p className="text-sm text-gray-600 mb-2">
-                          <strong className="text-blue-700">Multi-Dealership Support:</strong>
-                        </p>
-                        <ul className="text-sm text-gray-600 space-y-1 ml-4 list-disc">
-                          <li>Assign employees to one or multiple dealerships</li>
-                          <li>Each dealership can have different shift hours and work days</li>
-                          <li>Configure early/late punch windows per location</li>
-                          <li>Set break requirements and auto-close settings</li>
-                        </ul>
-                      </div>
-                      <p className="text-xs text-gray-500 italic">
-                        💡 Tip: After creating the employee, navigate to the Assignments tab to configure schedules for each dealership.
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-
-                <div className="flex justify-center py-2">
-                  <Button type="button" variant="outline" className="w-40">
-                    <Camera className="w-4 h-4 mr-2" />
-                    {t('detail_hub.employees.enroll_face_id')}
-                  </Button>
-                </div>
-
-                <div className="flex justify-end space-x-2 pt-4">
-                  <Button type="button" variant="outline" onClick={handleCloseDialog}>
-                    {t('detail_hub.common.cancel')}
-                  </Button>
-                  <Button type="submit" disabled={isCreating || isUpdating}>
-                    {isCreating || isUpdating ? (
-                      <Clock className="w-4 h-4 mr-2 animate-spin" />
-                    ) : null}
-                    {editingEmployee ? t('common.save') : t('detail_hub.employees.add_employee')}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+          <EmployeeWizardModal
+            open={isDialogOpen}
+            onClose={handleCloseDialog}
+            editingEmployee={editingEmployee}
+            selectedDealerId={selectedDealerId}
+          />
+        </div>
       </div>
 
       {/* Quick Stats - Moved to top */}
@@ -1107,14 +554,13 @@ const EmployeePortal = () => {
                 <TableHead>{t('detail_hub.employees.status')}</TableHead>
                 <TableHead>{t('detail_hub.employees.hourly_rate')}</TableHead>
                 <TableHead>{t('detail_hub.employees.last_punch')}</TableHead>
-                <TableHead>{t('detail_hub.auto_close_status')}</TableHead>
                 <TableHead>{t('detail_hub.employees.actions')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8">
+                  <TableCell colSpan={6} className="text-center py-8">
                     <div className="flex items-center justify-center gap-2">
                       <Clock className="w-4 h-4 animate-spin" />
                       {t('detail_hub.common.loading')}
@@ -1123,12 +569,16 @@ const EmployeePortal = () => {
                 </TableRow>
               ) : filteredEmployees.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                     No employees found
                   </TableCell>
                 </TableRow>
               ) : filteredEmployees.map((employee) => (
-                <TableRow key={employee.id}>
+                <TableRow
+                  key={employee.id}
+                  className="cursor-pointer hover:bg-muted/50"
+                  onDoubleClick={() => handleOpenDialog(employee.rawData)}
+                >
                   <TableCell>
                     <div className="flex items-center space-x-3">
                       <Avatar className="w-8 h-8">
@@ -1196,13 +646,6 @@ const EmployeePortal = () => {
                     )}
                   </TableCell>
                   <TableCell>
-                    <AutoCloseStatusCell
-                      employeeId={employee.id}
-                      autoCloseEntries={autoCloseMap[employee.id] || []}
-                      onReviewClick={handleAutoCloseReviewClick}
-                    />
-                  </TableCell>
-                  <TableCell>
                     <div className="flex items-center gap-1">
                       {/* View Logs */}
                       <button
@@ -1227,18 +670,6 @@ const EmployeePortal = () => {
                         className="p-1 hover:bg-blue-50 rounded transition-colors"
                       >
                         <Edit2 className="w-3.5 h-3.5 text-blue-600" />
-                      </button>
-
-                      {/* View Timecard */}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          // TODO: Navigate to timecard view
-                        }}
-                        title={t('detail_hub.employees.view_timecard')}
-                        className="p-1 hover:bg-indigo-50 rounded transition-colors"
-                      >
-                        <ClipboardList className="w-3.5 h-3.5 text-indigo-600" />
                       </button>
 
                       {/* Enroll Face ID */}

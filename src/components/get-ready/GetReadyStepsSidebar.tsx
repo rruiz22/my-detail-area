@@ -300,7 +300,7 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
                         )} />
 
                         {/* Vehicle count badge - top right corner */}
-                        {step.vehicle_count > 0 && (
+                        {step.vehicle_count > 0 && step.show_sidebar_count !== false && (
                           <Badge
                             variant={isActive ? "secondary" : "outline"}
                             className="absolute right-0.5 top-0.5 h-4 min-w-[16px] px-1 text-[10px] font-semibold flex items-center justify-center pointer-events-none"
@@ -314,7 +314,7 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
                           <span className="font-semibold">{step.name}</span>
-                          {step.vehicle_count > 0 && (
+                          {step.vehicle_count > 0 && step.show_sidebar_count !== false && (
                             <Badge variant="outline" className="h-4 px-1.5 text-xs">
                               {step.vehicle_count}
                             </Badge>
@@ -325,7 +325,7 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
                         </div>
 
                         {/* Vehicle breakdown by days */}
-                        {step.vehicle_count > 0 && (
+                        {step.vehicle_count > 0 && step.show_sidebar_breakdown !== false && (
                           <div className="text-xs space-y-1 border-t pt-2">
                             <div className="font-medium text-muted-foreground mb-1">{t('get_ready.sidebar.by_days')}:</div>
                             {step.vehicles_1_day > 0 && (
@@ -396,7 +396,7 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
                       )}>
                         {step.name}
                       </span>
-                      {step.vehicle_count > 0 && (
+                      {step.vehicle_count > 0 && step.show_sidebar_count !== false && (
                         <Badge
                           variant={isActive ? "secondary" : "outline"}
                           className={cn(
@@ -410,7 +410,7 @@ export function GetReadyStepsSidebar({ collapsed, onToggleCollapse }: GetReadySt
                     </div>
 
                     {/* Vehicle Breakdown by Days */}
-                    {step.vehicle_count > 0 && (step.vehicles_1_day > 0 || step.vehicles_2_3_days > 0 || step.vehicles_4_plus_days > 0) && (
+                    {step.vehicle_count > 0 && step.show_sidebar_breakdown !== false && (step.vehicles_1_day > 0 || step.vehicles_2_3_days > 0 || step.vehicles_4_plus_days > 0) && (
                       <div className="grid grid-cols-3 gap-1.5 text-xs">
                         {/* 1 Day - Fresh */}
                         <div className={cn(

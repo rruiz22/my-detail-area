@@ -35,12 +35,16 @@ import {
 import { EmployeeDetailModal } from "./EmployeeDetailModal";
 import { EditTimeEntryModal } from "./EditTimeEntryModal";
 import { TimeEntryWithEmployee, useApproveEarlyPunch } from "@/hooks/useDetailHubDatabase";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useDealerFilter } from "@/contexts/DealerFilterContext";
+import { useNavigate } from "react-router-dom";
 
 const LiveStatusDashboard = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { selectedDealerId } = useDealerFilter();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedEmployee, setSelectedEmployee] = useState<CurrentlyWorkingEmployee | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
@@ -53,6 +57,39 @@ const LiveStatusDashboard = () => {
   // Real-time data (updates every 30 seconds)
   const { data: employees = [], isLoading } = useCurrentlyWorking();
   const { data: stats } = useLiveDashboardStats();
+
+  // Auto-closed entries requiring review
+  const { data: autoClosedCount = 0 } = useQuery({
+    queryKey: ['auto-closed-count', selectedDealerId],
+    queryFn: async () => {
+      try {
+        let query = supabase
+          .from('detail_hub_time_entries')
+          .select('id', { count: 'exact', head: true })
+          .eq('requires_supervisor_review', true)
+          .eq('punch_out_method', 'auto_close')
+          .is('verified_at', null);
+
+        if (selectedDealerId && selectedDealerId !== 'all') {
+          query = query.eq('dealership_id', selectedDealerId);
+        }
+
+        const { count, error } = await query;
+        if (error) {
+          // Silently fail if columns don't exist (migration not applied)
+          if (error.code === '42703' || error.message?.includes('column')) {
+            return 0;
+          }
+          throw error;
+        }
+        return count || 0;
+      } catch {
+        return 0;
+      }
+    },
+    staleTime: 60000,
+    refetchInterval: 60000,
+  });
 
   // Update clock every second for live time display
   useEffect(() => {
@@ -173,7 +210,7 @@ const LiveStatusDashboard = () => {
       </div>
 
       {/* Stats Bar */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
         <Card className="card-enhanced">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
@@ -241,6 +278,40 @@ const LiveStatusDashboard = () => {
               </div>
               <div className="p-3 rounded-lg bg-indigo-50">
                 <Building2 className="w-6 h-6 text-indigo-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Auto-Closed Requiring Review */}
+        <Card
+          className={cn(
+            "card-enhanced cursor-pointer transition-all",
+            autoClosedCount > 0 && "ring-2 ring-amber-300 bg-amber-50/50"
+          )}
+          onClick={() => navigate('/detail-hub?tab=timecards&filter=auto_closed')}
+        >
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-500">
+                  {t('detail_hub.live_dashboard.stats.auto_closed')}
+                </p>
+                <p className={cn(
+                  "text-3xl font-bold mt-2",
+                  autoClosedCount > 0 ? "text-amber-600" : "text-gray-900"
+                )}>
+                  {autoClosedCount}
+                </p>
+              </div>
+              <div className={cn(
+                "p-3 rounded-lg",
+                autoClosedCount > 0 ? "bg-amber-100" : "bg-gray-100"
+              )}>
+                <AlertCircle className={cn(
+                  "w-6 h-6",
+                  autoClosedCount > 0 ? "text-amber-600" : "text-gray-400"
+                )} />
               </div>
             </div>
           </CardContent>

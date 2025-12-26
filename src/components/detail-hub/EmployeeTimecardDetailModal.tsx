@@ -17,14 +17,16 @@ import {
   Eye,
   EyeOff,
   CheckCircle2,
-  XCircle
+  XCircle,
+  Undo2
 } from "lucide-react";
 import { format } from "date-fns";
 import {
   TimeEntryWithEmployee,
   useApproveTimecard,
   useRejectTimecard,
-  useBulkApproveTimecards
+  useBulkApproveTimecards,
+  useUnapproveTimecard
 } from "@/hooks/useDetailHubDatabase";
 import { usePermissions } from "@/hooks/usePermissions";
 import {
@@ -86,10 +88,15 @@ export function EmployeeTimecardDetailModal({
   const approveTimecard = useApproveTimecard();
   const rejectTimecard = useRejectTimecard();
   const bulkApproveTimecards = useBulkApproveTimecards();
+  const unapproveTimecard = useUnapproveTimecard();
 
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [timeEntryToReject, setTimeEntryToReject] = useState<string | null>(null);
   const [rejectionReason, setRejectionReason] = useState("");
+
+  // 🔄 UNAPPROVE SYSTEM: State for unapprove confirmation
+  const [unapproveDialogOpen, setUnapproveDialogOpen] = useState(false);
+  const [timeEntryToUnapprove, setTimeEntryToUnapprove] = useState<string | null>(null);
 
   // ✏️ EDIT SYSTEM: State for edit modal
   const [showEditModal, setShowEditModal] = useState(false);
@@ -227,6 +234,20 @@ export function EmployeeTimecardDetailModal({
     if (pendingEntries.length > 0) {
       bulkApproveTimecards.mutate(pendingEntries);
     }
+  };
+
+  // 🔄 UNAPPROVE HANDLERS
+  const handleUnapproveClick = (timeEntryId: string) => {
+    setTimeEntryToUnapprove(timeEntryId);
+    setUnapproveDialogOpen(true);
+  };
+
+  const handleUnapproveConfirm = () => {
+    if (!timeEntryToUnapprove) return;
+
+    unapproveTimecard.mutate(timeEntryToUnapprove);
+    setUnapproveDialogOpen(false);
+    setTimeEntryToUnapprove(null);
   };
 
   // ✏️ EDIT HANDLER
@@ -502,7 +523,7 @@ export function EmployeeTimecardDetailModal({
                           </div>
                         </div>
 
-                        {/* Approval Buttons (vertical stack) */}
+                        {/* Approval Buttons (vertical stack) - For PENDING entries */}
                         {canApprove && entry.status === 'complete' && entry.approval_status === 'pending' && (
                           <div className="flex flex-col gap-1.5 flex-shrink-0">
                             <Button
@@ -524,6 +545,22 @@ export function EmployeeTimecardDetailModal({
                             >
                               <XCircle className="w-3.5 h-3.5 mr-1" />
                               {t('detail_hub.timecard.approval.buttons.reject')}
+                            </Button>
+                          </div>
+                        )}
+
+                        {/* Unapprove Button - For APPROVED entries */}
+                        {canApprove && entry.status === 'complete' && entry.approval_status === 'approved' && (
+                          <div className="flex flex-col gap-1.5 flex-shrink-0">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="bg-amber-50 hover:bg-amber-100 text-amber-700 border-amber-300 h-8 px-3 text-xs"
+                              onClick={() => handleUnapproveClick(entry.id)}
+                              disabled={unapproveTimecard.isPending}
+                            >
+                              <Undo2 className="w-3.5 h-3.5 mr-1" />
+                              {t('detail_hub.timecard.approval.buttons.unapprove') || 'Unapprove'}
                             </Button>
                           </div>
                         )}
@@ -626,6 +663,38 @@ export function EmployeeTimecardDetailModal({
           >
             <XCircle className="w-4 h-4 mr-2" />
             {t('detail_hub.timecard.approval.dialog.confirm_reject')}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+
+    {/* Unapprove Confirmation Dialog */}
+    <AlertDialog open={unapproveDialogOpen} onOpenChange={setUnapproveDialogOpen}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            {t('detail_hub.timecard.approval.dialog.unapprove_title') || 'Unapprove Timecard'}
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            {t('detail_hub.timecard.approval.dialog.unapprove_description') ||
+              'This will revert the timecard to pending status. The entry will need to be approved again.'}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={() => {
+            setUnapproveDialogOpen(false);
+            setTimeEntryToUnapprove(null);
+          }}>
+            {t('detail_hub.timecard.approval.dialog.cancel')}
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleUnapproveConfirm}
+            className="bg-amber-600 hover:bg-amber-700 text-white"
+            disabled={unapproveTimecard.isPending}
+          >
+            <Undo2 className="w-4 h-4 mr-2" />
+            {t('detail_hub.timecard.approval.dialog.confirm_unapprove') || 'Confirm Unapprove'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

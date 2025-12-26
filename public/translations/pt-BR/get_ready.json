@@ -209,6 +209,8 @@
     "image": "Imagem",
     "stock": "Estoque",
     "vehicle": "Veículo",
+    "indicators": "Info",
+    "indicators_tooltip": "Mídia, Notas, Trabalhos, Alertas",
     "media": "Mídia",
     "work_items": "Itens de Trabalho",
     "days_in_step": "Dias na Etapa",
@@ -756,13 +758,39 @@
   "step_form": {
     "fields": {
       "assigned_users": "Usuários Atribuídos",
-      "assigned_users_description": "Selecione usuários que serão notificados quando os veículos entrarem nesta etapa"
+      "assigned_users_description": "Selecione usuários que serão notificados quando os veículos entrarem nesta etapa",
+      "is_last_step": "Última Etapa (Timer Para)",
+      "is_last_step_description": "Quando habilitado, os veículos que entrarem nesta etapa pararão de contar dias. Use para Front Line, Atacado, etc.",
+      "show_sidebar_count": "Mostrar contagem de veículos",
+      "show_sidebar_count_hint": "Exibir badge com total de veículos",
+      "show_sidebar_breakdown": "Mostrar divisão por dias",
+      "show_sidebar_breakdown_hint": "Exibir Fresh/Normal/Critical",
+      "target_throughput": "Meta de Produção",
+      "target_throughput_hint": "Veículos por dia",
+      "bottleneck_threshold": "Limite de Gargalo",
+      "bottleneck_threshold_hint": "Horas antes de marcar como gargalo",
+      "parallel_capable": "Capaz de Paralelo",
+      "parallel_capable_hint": "Pode executar junto com outras etapas",
+      "express_lane_eligible": "Faixa Express",
+      "express_lane_eligible_hint": "Pode ser acelerado"
     },
     "errors": {
       "users_required": "Pelo menos um usuário deve ser atribuído"
     },
     "select_users_placeholder": "Selecionar usuários...",
-    "users_selected": "{{count}} usuário(s) selecionado(s)"
+    "users_selected": "{{count}} usuário(s) selecionado(s)",
+    "advanced_settings": "Configurações Avançadas",
+    "sidebar_display": "Exibição na Barra Lateral",
+    "sidebar_display_hint": "Controla quais informações são exibidas na barra lateral para esta etapa"
+  },
+  "step_list": {
+    "timer_stops": "Timer Para",
+    "timer_stops_tooltip": "Veículos que entrarem nesta etapa pararão de contar dias",
+    "final_step": "Etapa Final",
+    "assigned_users": "Atribuídos",
+    "users": "usuários",
+    "team": "Equipe",
+    "double_click_hint": "Clique duplo para editar"
   },
   "export": {
     "no_vehicles": "Não há veículos para exportar"

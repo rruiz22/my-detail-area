@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { useGetReady } from "@/hooks/useGetReady";
@@ -51,6 +52,7 @@ import {
   Plus,
   RefreshCw,
   Search,
+  X,
   XCircle
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -138,9 +140,6 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const processedVehicleIdRef = useRef<string | null>(null);
   const prefillProcessedRef = useRef(false);
 
-  // Ref to control auto-fetch for Overview (prevent infinite loop)
-  const isAutoFetchingRef = useRef(false);
-
   // Use the selected step from sidebar, or 'all' if none selected
   const selectedStep = selectedStepId || "all";
 
@@ -197,40 +196,13 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   });
 
   // Fetch ALL vehicles without step filter for Approvals tab & Overview tab
-  const {
-    data: allVehiclesData,
-    fetchNextPage: fetchNextApprovalPage,
-    hasNextPage: hasNextApprovalPage,
-    isFetchingNextPage: isFetchingNextApprovalPage
-  } = useGetReadyVehiclesInfinite({});
+  // ✅ OPTIMIZATION: Only fetch first page (50 vehicles) - no auto-fetch of all pages
+  const { data: allVehiclesData } = useGetReadyVehiclesInfinite({});
 
-  // ✅ FIX: Auto-fetch ALL pages for Overview tab ONLY
-  // Overview needs complete data for accurate step timing averages
-  useEffect(() => {
-    // Reset auto-fetch control when entering/leaving Overview
-    if (!isOverview) {
-      isAutoFetchingRef.current = false;
-      return;
-    }
-
-    // Start auto-fetch sequence only once when entering Overview
-    if (isOverview && !isAutoFetchingRef.current) {
-      isAutoFetchingRef.current = true;
-      console.log('📊 [Overview] Starting auto-fetch sequence for complete statistics');
-    }
-
-    // Continue fetching pages if we're auto-fetching and there are more pages
-    if (isOverview && isAutoFetchingRef.current && hasNextApprovalPage && !isFetchingNextApprovalPage) {
-      console.log('📊 [Overview] Auto-fetching next page');
-      fetchNextApprovalPage();
-    }
-
-    // Stop auto-fetching when we reach the end
-    if (isOverview && isAutoFetchingRef.current && !hasNextApprovalPage) {
-      console.log('📊 [Overview] Auto-fetch complete!');
-      isAutoFetchingRef.current = false;
-    }
-  }, [isOverview, hasNextApprovalPage, isFetchingNextApprovalPage, fetchNextApprovalPage]);
+  // ✅ OPTIMIZATION: Removed aggressive auto-fetch of ALL pages
+  // With PAGE_SIZE=50, first page already provides enough data for Overview statistics
+  // This reduces initial load from 40+ queries to just 1-2 queries
+  // If full statistics are needed, they should come from a server-side RPC function
 
   // PHASE 3 OPTIMIZATION: Removed auto-fetch ALL pages loop FOR OTHER TABS
   // Approvals tab uses server-side RPC function get_pending_approvals_count() for accurate counts
@@ -756,54 +728,74 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   // Details View Tab - Enhanced Vehicle List
   if (isDetailsView) {
     return (
-      <div className={cn("h-full flex flex-col space-y-4", className)}>
-        {/* Header with Actions */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-lg font-semibold">
-              {selectedStep === "all"
-                ? "Vehicle Management"
-                : `${steps.find((s) => s.id === selectedStep)?.name || "Step"} - Vehicles`}
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              {selectedStep === "all"
-                ? "Enhanced vehicle list with advanced filtering"
-                : `Showing vehicles in ${steps.find((s) => s.id === selectedStep)?.name || "selected"} step`}
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Search Box - Now in Details View with Clear Button */}
-            <div className="relative w-full sm:w-64">
-              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-              <Input
-                placeholder={t('get_ready.search_placeholder')}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 pr-8 h-9 text-sm"
-              />
-              {searchQuery && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 hover:bg-transparent"
-                >
-                  <XCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
-                </Button>
-              )}
+      <div className={cn("h-full flex flex-col space-y-2 sm:space-y-4", className)}>
+        {/* Header with Actions - Mobile optimized */}
+        <div className="flex flex-col gap-3">
+          {/* Title row */}
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <h2 className="text-base sm:text-lg font-semibold truncate">
+                {selectedStep === "all"
+                  ? "Vehicle Management"
+                  : `${steps.find((s) => s.id === selectedStep)?.name || "Step"} - Vehicles`}
+              </h2>
+              <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">
+                {selectedStep === "all"
+                  ? "Enhanced vehicle list with advanced filtering"
+                  : `Showing vehicles in ${steps.find((s) => s.id === selectedStep)?.name || "selected"} step`}
+              </p>
             </div>
 
+            {/* Add vehicle button always visible */}
+            <Button
+              size="sm"
+              onClick={() => {
+                setEditingVehicleId(null);
+                setVehicleFormOpen(true);
+              }}
+              className="flex-shrink-0"
+            >
+              <Plus className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">
+                {t("get_ready.vehicle_form.add_vehicle")}
+              </span>
+            </Button>
+          </div>
+
+          {/* Search Box - Full width on mobile */}
+          <div className="relative w-full">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            <Input
+              placeholder={t('get_ready.search_placeholder')}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 pr-9 h-10 sm:h-9 text-base sm:text-sm"
+            />
+            {searchQuery && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
+              >
+                <XCircle className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+              </Button>
+            )}
+          </div>
+
+          {/* Action buttons row - scrollable on mobile */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1">
             <Button
               variant="outline"
               size="sm"
               onClick={handleRefresh}
               disabled={isManualRefreshing}
+              className="flex-shrink-0 h-9"
             >
               <RefreshCw
-                className={`h-4 w-4 mr-2 ${isManualRefreshing ? "animate-spin" : ""}`}
+                className={`h-4 w-4 ${isManualRefreshing ? "animate-spin" : ""}`}
               />
-              <span className="hidden sm:inline">
+              <span className="hidden sm:inline ml-2">
                 {t("common.action_buttons.refresh")}
               </span>
             </Button>
@@ -811,16 +803,16 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
             {/* Export Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" disabled={isExporting}>
+                <Button variant="outline" size="sm" disabled={isExporting} className="flex-shrink-0 h-9">
                   <Download
-                    className={`h-4 w-4 mr-2 ${isExporting ? "animate-pulse" : ""}`}
+                    className={`h-4 w-4 ${isExporting ? "animate-pulse" : ""}`}
                   />
-                  <span className="hidden sm:inline">
+                  <span className="hidden sm:inline ml-2">
                     {isExporting
                       ? t("common.action_buttons.exporting")
                       : t("common.action_buttons.export")}
                   </span>
-                  <ChevronDown className="h-3 w-3 ml-1 opacity-50" />
+                  <ChevronDown className="h-3 w-3 ml-1 opacity-50 hidden sm:inline" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -838,30 +830,17 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-
-            <Button
-              size="sm"
-              onClick={() => {
-                setEditingVehicleId(null);
-                setVehicleFormOpen(true);
-              }}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              <span className="hidden sm:inline">
-                {t("get_ready.vehicle_form.add_vehicle")}
-              </span>
-            </Button>
           </div>
         </div>
 
-        {/* Compact Filters Bar */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 px-4 py-3 bg-muted/30 rounded-lg border">
-          {/* Step indicator (read-only from sidebar) */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Step:</span>
+        {/* Compact Filters Bar - Mobile optimized */}
+        <div className="flex flex-col gap-2 px-2 sm:px-4 py-2 sm:py-3 bg-muted/30 rounded-lg border">
+          {/* Step indicator row */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-xs sm:text-sm text-muted-foreground">Step:</span>
             <Badge
               variant="outline"
-              className="bg-primary/10 text-primary border-primary/20"
+              className="bg-primary/10 text-primary border-primary/20 text-xs"
             >
               {selectedStep === "all"
                 ? "All Steps"
@@ -869,31 +848,33 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
             </Badge>
             {/* Global search indicator */}
             {searchQuery && selectedStep !== "all" && (
-              <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/30 dark:text-amber-400">
+              <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-300 dark:bg-amber-950/30 dark:text-amber-400 text-xs">
                 <Search className="h-3 w-3 mr-1" />
-                Searching all steps
+                <span className="hidden sm:inline">Searching all steps</span>
+                <span className="sm:hidden">All</span>
               </Badge>
             )}
           </div>
 
-          {/* Priority filter */}
-          <Select value={selectedPriority} onValueChange={setSelectedPriority}>
-            <SelectTrigger className="w-32 h-9">
-              <SelectValue placeholder="Priority" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Priorities</SelectItem>
-              <SelectItem value="low">Low</SelectItem>
-              <SelectItem value="normal">Normal</SelectItem>
-              <SelectItem value="high">High</SelectItem>
-              <SelectItem value="urgent">Urgent</SelectItem>
-            </SelectContent>
-          </Select>
+          {/* Filters row - scrollable on mobile */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1">
+            {/* Priority filter */}
+            <Select value={selectedPriority} onValueChange={setSelectedPriority}>
+              <SelectTrigger className="w-28 sm:w-32 h-9 text-xs sm:text-sm flex-shrink-0">
+                <SelectValue placeholder="Priority" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Priorities</SelectItem>
+                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="normal">Normal</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+                <SelectItem value="urgent">Urgent</SelectItem>
+              </SelectContent>
+            </Select>
 
-          {/* Sort controls */}
-          <div className="flex items-center gap-2">
+            {/* Sort controls */}
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-36 h-9">
+              <SelectTrigger className="w-28 sm:w-36 h-9 text-xs sm:text-sm flex-shrink-0">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -910,26 +891,24 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
             <Button
               variant="outline"
               size="sm"
-              className="h-9 w-9 p-0"
+              className="h-9 w-9 p-0 flex-shrink-0"
               onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
             >
               {sortOrder === "asc" ? "↑" : "↓"}
             </Button>
+
+            {/* Clear filters button (only when active) */}
+            {hasActiveFilters && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-9 text-xs flex-shrink-0"
+                onClick={clearFilters}
+              >
+                Clear
+              </Button>
+            )}
           </div>
-
-          <div className="flex-1" />
-
-          {/* Clear filters button (only when active) */}
-          {hasActiveFilters && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-9"
-              onClick={clearFilters}
-            >
-              Clear Filters
-            </Button>
-          )}
         </div>
 
         {/* Enhanced Vehicle List with Detail Panel Below */}
@@ -950,11 +929,26 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
             />
           </div>
 
-          {/* Detail Panel Below - Expands naturally without height restriction */}
+          {/* Detail Panel - Full screen sheet on mobile, inline on desktop */}
           {selectedVehicleId && (
-            <div className="border-t pt-4 pb-4">
-              <VehicleDetailPanel />
-            </div>
+            <>
+              {/* Desktop: Inline detail panel */}
+              <div className="border-t pt-4 pb-4 hidden md:block">
+                <VehicleDetailPanel />
+              </div>
+
+              {/* Mobile: Full screen sheet */}
+              <Sheet open={!!selectedVehicleId} onOpenChange={(open) => !open && setSelectedVehicleId(null)}>
+                <SheetContent side="bottom" className="h-[90vh] p-0 md:hidden">
+                  <SheetHeader className="sr-only">
+                    <SheetTitle>{t('get_ready.detail_panel.title')}</SheetTitle>
+                  </SheetHeader>
+                  <div className="h-full overflow-y-auto">
+                    <VehicleDetailPanel className="border-0 shadow-none rounded-none" />
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </>
           )}
         </div>
 

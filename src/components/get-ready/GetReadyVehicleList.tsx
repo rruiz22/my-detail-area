@@ -16,10 +16,12 @@ import { useGetReadyViewMode } from '@/hooks/useGetReadyPersistence';
 import { useGetReadyStore } from '@/hooks/useGetReadyStore';
 import { useGetReadyVehiclesInfinite } from '@/hooks/useGetReadyVehicles';
 import { useVehicleManagement } from '@/hooks/useVehicleManagement';
+import { useVehicleImagesCache } from '@/hooks/useVehicleImagesCache';
 import { cn } from '@/lib/utils';
 import type { GetReadyVehicle } from '@/types/getReady';
 import { getProgressColor } from '@/utils/progressCalculation';
 import { formatTimeForTable } from '@/utils/timeFormatUtils';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import {
     AlertTriangle,
     Car,
@@ -27,6 +29,8 @@ import {
     CheckCircle,
     ChevronLeft,
     ChevronRight,
+    ChevronsLeft,
+    ChevronsRight,
     Clock,
     Edit,
     Eye,
@@ -36,9 +40,10 @@ import {
     MoreHorizontal,
     Trash2,
     User,
+    Wrench,
     XCircle
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface GetReadyVehicleListProps {
@@ -82,6 +87,13 @@ export function GetReadyVehicleList({
 
   // Get vehicle management functions
   const { moveVehicle, isMoving, updateVehicle, isUpdating } = useVehicleManagement();
+
+  // ✅ OPTIMIZATION: Pre-cached vehicle images (single query instead of per-page)
+  const { getImageUrl } = useVehicleImagesCache();
+
+  // Refs for virtualization
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  const gridContainerRef = useRef<HTMLDivElement>(null);
 
   // Handle image click - ALWAYS open lightbox (even without image)
   const handleImageClick = (e: React.MouseEvent, vehicle: { vin: string; year: number; make: string; model: string; stock_number: string }) => {
@@ -176,11 +188,16 @@ export function GetReadyVehicleList({
   // Flatten pages into single array
   const allVehicles = data?.pages.flatMap(page => page.vehicles) ?? [];
 
-  // Pagination calculations
-  const totalVehicles = allVehicles.length;
-  const totalPages = Math.ceil(totalVehicles / itemsPerPage);
+  // ✅ OPTIMIZATION: Get REAL total count directly from the query (server-side count)
+  // The first page contains the totalCount with the exact same filters applied
+  // This ensures the count always matches the actual query results
+  const realTotalVehicles = data?.pages[0]?.totalCount ?? allVehicles.length;
+
+  // Pagination calculations - use loaded vehicles for actual pagination
+  const loadedVehicles = allVehicles.length;
+  const totalPages = Math.ceil(realTotalVehicles / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, totalVehicles);
+  const endIndex = Math.min(startIndex + itemsPerPage, loadedVehicles);
   const vehicles = allVehicles.slice(startIndex, endIndex);
 
   // Reset to page 1 when filters change
@@ -188,12 +205,23 @@ export function GetReadyVehicleList({
     setCurrentPage(1);
   }, [searchQuery, selectedStep, selectedPriority, sortBy, sortOrder]);
 
-  // Auto-load more pages in background for smooth navigation
-  useEffect(() => {
-    if (hasNextPage && !isFetchingNextPage && allVehicles.length < totalVehicles + itemsPerPage) {
+  // ✅ OPTIMIZATION: Fetch next page ONLY when user approaches end of current data
+  // Removed aggressive auto-fetch that loaded ALL pages (40+ queries)
+  const handleFetchMore = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [currentPage, hasNextPage, isFetchingNextPage, allVehicles.length, fetchNextPage, totalVehicles]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // Fetch more when approaching end of loaded data or when navigating to unloaded pages
+  useEffect(() => {
+    const needsMoreData = endIndex >= loadedVehicles - 10; // Fetch when 10 items from end
+    const navigatedBeyondLoaded = startIndex >= loadedVehicles; // User navigated to page without data
+
+    if ((needsMoreData || navigatedBeyondLoaded) && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [endIndex, startIndex, loadedVehicles, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const getSLAStatusIcon = (status: string) => {
     switch (status) {
@@ -267,7 +295,7 @@ export function GetReadyVehicleList({
         {/* Header */}
         <div className="flex-none flex items-center justify-between">
           <h3 className="text-lg font-medium">
-            Vehicles ({vehicles.length})
+            Vehicles ({realTotalVehicles})
           </h3>
           <div className="flex items-center gap-2">
             <Button
@@ -301,25 +329,30 @@ export function GetReadyVehicleList({
             >
               <CardHeader className="pb-2">
                 {/* Vehicle Image - Click to open lightbox */}
-                <div
-                  className={cn(
-                    "mb-2 relative",
-                    vehicle.images[0] && "cursor-pointer group"
-                  )}
-                  onClick={(e) => handleImageClick(e, vehicle)}
-                >
-                  <VehicleImageWithLoader
-                    src={vehicle.images[0]}
-                    alt={`${vehicle.make} ${vehicle.model}`}
-                    className="h-32 w-full rounded-md transition-opacity group-hover:opacity-90"
-                    fallbackClassName="rounded-md"
-                  />
-                  {vehicle.images[0] && (
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-md flex items-center justify-center">
-                      <Eye className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                {(() => {
+                  const imageUrl = getImageUrl(vehicle.vin);
+                  return (
+                    <div
+                      className={cn(
+                        "mb-2 relative",
+                        imageUrl && "cursor-pointer group"
+                      )}
+                      onClick={(e) => handleImageClick(e, vehicle)}
+                    >
+                      <VehicleImageWithLoader
+                        src={imageUrl}
+                        alt={`${vehicle.make} ${vehicle.model}`}
+                        className="h-32 w-full rounded-md transition-opacity group-hover:opacity-90"
+                        fallbackClassName="rounded-md"
+                      />
+                      {imageUrl && (
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-md flex items-center justify-center">
+                          <Eye className="h-6 w-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
+                  );
+                })()}
 
                 <div className="flex items-start justify-between">
                   <div className="space-y-0.5 flex-1 min-w-0">
@@ -437,21 +470,22 @@ export function GetReadyVehicleList({
 
   // Table View
   return (
-    <div className={cn("space-y-4", className)}>
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h3 className="text-lg font-medium">
-            Vehicles ({totalVehicles})
+    <div className={cn("space-y-2 sm:space-y-4", className)}>
+      {/* Header - Compact on mobile */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <h3 className="text-sm sm:text-lg font-medium whitespace-nowrap">
+            Vehicles ({realTotalVehicles})
           </h3>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-[10px] sm:text-xs text-muted-foreground hidden sm:block">
             {t('get_ready.table.click_to_view')}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <Button
             variant="default"
             size="sm"
+            className="h-7 sm:h-9 px-2 sm:px-3 text-xs"
             onClick={() => setViewMode('table')}
           >
             Table
@@ -459,6 +493,7 @@ export function GetReadyVehicleList({
           <Button
             variant="outline"
             size="sm"
+            className="h-7 sm:h-9 px-2 sm:px-3 text-xs"
             onClick={() => setViewMode('grid')}
           >
             Grid
@@ -468,17 +503,29 @@ export function GetReadyVehicleList({
 
       {/* Table */}
       <Card className="flex flex-col">
-        {/* Table container - No scroll needed, shows exactly 5 rows */}
-        <div>
+        {/* Table container - Responsive with horizontal scroll */}
+        <div className="overflow-x-auto -mx-2 sm:mx-0">
           <TooltipProvider>
-            <Table data-sticky-header>
+            <Table data-sticky-header className="w-full">
               <TableHeader className="sticky top-0 bg-background z-10 after:absolute after:inset-x-0 after:bottom-0 after:border-b">
                 <TableRow className="h-9 hover:bg-transparent border-b-0">
-                  <TableHead className="w-[70px] text-center py-2 bg-background">{t('get_ready.table.image')}</TableHead>
-                  <TableHead className="w-[100px] text-center py-2 bg-background">{t('get_ready.table.stock')}</TableHead>
-                  <TableHead className="w-[200px] text-center py-2 bg-background">{t('get_ready.table.vehicle')}</TableHead>
-                  <TableHead className="w-[140px] text-center py-2 bg-background">{t('get_ready.table.step')}</TableHead>
-                  <TableHead className="w-[80px] text-center py-2 bg-background">
+                  {/* Mobile: Image + Stock combined, Vehicle, Step, Actions */}
+                  {/* Desktop: All columns */}
+                  <TableHead className="w-[50px] sm:w-[70px] text-center py-2 bg-background">{t('get_ready.table.image')}</TableHead>
+                  <TableHead className="w-[70px] sm:w-[90px] text-center py-2 bg-background">{t('get_ready.table.stock')}</TableHead>
+                  <TableHead className="w-[100px] sm:w-[140px] text-center py-2 bg-background hidden lg:table-cell">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-help">{t('get_ready.table.indicators') || 'Info'}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{t('get_ready.table.indicators_tooltip') || 'Media, Notes, Work Items, Alerts'}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TableHead>
+                  <TableHead className="min-w-[120px] sm:w-[200px] text-center py-2 bg-background">{t('get_ready.table.vehicle')}</TableHead>
+                  <TableHead className="w-[80px] sm:w-[140px] text-center py-2 bg-background">{t('get_ready.table.step')}</TableHead>
+                  <TableHead className="w-[60px] sm:w-[80px] text-center py-2 bg-background hidden xl:table-cell">
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <span className="cursor-help">{t('get_ready.vehicle_list.t2l_short')}</span>
@@ -489,7 +536,7 @@ export function GetReadyVehicleList({
                       </TooltipContent>
                     </Tooltip>
                   </TableHead>
-                  <TableHead className="w-[80px] text-center py-2 bg-background">
+                  <TableHead className="w-[60px] sm:w-[80px] text-center py-2 bg-background hidden xl:table-cell">
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <span className="cursor-help">{t('get_ready.steps.dis')}</span>
@@ -500,15 +547,25 @@ export function GetReadyVehicleList({
                       </TooltipContent>
                     </Tooltip>
                   </TableHead>
-                  <TableHead className="w-[100px] text-center py-2 bg-background">{t('get_ready.table.priority')}</TableHead>
-                  <TableHead className="w-[150px] text-center py-2 bg-background">{t('get_ready.table.progress')}</TableHead>
-                  <TableHead className="w-[100px] text-center py-2 bg-background">Actions</TableHead>
+                  <TableHead className="w-[70px] sm:w-[100px] text-center py-2 bg-background hidden lg:table-cell">{t('get_ready.table.priority')}</TableHead>
+                  <TableHead className="w-[80px] sm:w-[150px] text-center py-2 bg-background hidden sm:table-cell">{t('get_ready.table.progress')}</TableHead>
+                  <TableHead className="w-[44px] sm:w-[100px] text-center py-2 bg-background"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-              {vehicles.length === 0 && !isLoading ? (
+              {/* Loading state when navigating to unloaded page */}
+              {vehicles.length === 0 && isFetchingNextPage ? (
                 <TableRow>
-                  <TableCell colSpan={10} className="text-center py-12">
+                  <TableCell colSpan={11} className="text-center py-12">
+                    <div className="flex flex-col items-center gap-4">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                      <p className="text-sm text-muted-foreground">{t('common.loading')}</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : vehicles.length === 0 && !isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={11} className="text-center py-12">
                     <div className="text-muted-foreground">
                       <Car className="h-12 w-12 mx-auto mb-4 opacity-50" />
                       <h3 className="text-lg font-medium mb-2">
@@ -534,160 +591,199 @@ export function GetReadyVehicleList({
                     )}
                   >
                 {/* Image - Click to open lightbox */}
-                <TableCell className="w-[70px] py-1 text-center">
-                  <div
-                    className={cn(
-                      "flex justify-center relative",
-                      vehicle.images[0] && "cursor-pointer group"
-                    )}
-                    onClick={(e) => handleImageClick(e, vehicle)}
-                  >
-                    <VehicleImageWithLoader
-                      src={vehicle.images[0]}
-                      alt={`${vehicle.make} ${vehicle.model}`}
-                      className="h-8 w-12 rounded-sm transition-opacity group-hover:opacity-90"
-                      fallbackClassName="rounded-sm"
-                    />
-                    {vehicle.images[0] && (
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors rounded-sm flex items-center justify-center">
-                        <Eye className="h-3 w-3 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                <TableCell className="w-[50px] sm:w-[70px] py-1 text-center px-1">
+                  {(() => {
+                    const imageUrl = getImageUrl(vehicle.vin);
+                    return (
+                      <div
+                        className={cn(
+                          "flex justify-center relative",
+                          imageUrl && "cursor-pointer group"
+                        )}
+                        onClick={(e) => handleImageClick(e, vehicle)}
+                      >
+                        <VehicleImageWithLoader
+                          src={imageUrl}
+                          alt={`${vehicle.make} ${vehicle.model}`}
+                          className="h-8 w-10 sm:w-12 rounded-sm transition-opacity group-hover:opacity-90"
+                          fallbackClassName="rounded-sm"
+                        />
+                        {imageUrl && (
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors rounded-sm flex items-center justify-center">
+                            <Eye className="h-3 w-3 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
+                    );
+                  })()}
                 </TableCell>
 
                 {/* Stock Number */}
-                <TableCell className="w-[100px] py-1 text-center">
-                  <div className="space-y-0.5">
-                    <div className="font-medium text-sm">{vehicle.stock_number}</div>
-                    {/* Compact badges with popovers */}
-                    {((vehicle.media_count ?? 0) > 0 || (parseInt(vehicle.notes_preview || '0')) > 0 || (vehicle.work_item_counts && (vehicle.work_item_counts.pending + vehicle.work_item_counts.in_progress + vehicle.work_item_counts.completed) > 0)) && (
-                      <div className="flex items-center justify-center gap-1 flex-wrap">
-                        {/* Media Badge */}
+                <TableCell className="w-[70px] sm:w-[90px] py-1 text-center px-1">
+                  <div className="font-medium text-[11px] sm:text-sm truncate">{vehicle.stock_number}</div>
+                </TableCell>
+
+                {/* Indicators Column - Media, Notes, Work Items, SLA - Hidden on mobile/tablet */}
+                <TableCell className="w-[100px] sm:w-[140px] py-1 hidden lg:table-cell">
+                  <div className="flex items-center justify-center gap-1.5 flex-wrap">
+                    {/* SLA Alert - Critical/Warning */}
+                    {(vehicle.sla_status === 'red' || vehicle.sla_status === 'critical') && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center justify-center w-7 h-7 rounded-md bg-red-100 dark:bg-red-900/30 cursor-help">
+                            <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="top">
+                          <div className="flex items-center gap-2">
+                            <AlertTriangle className="h-4 w-4 text-red-500" />
+                            <span className="font-medium">SLA Critical</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground">Vehicle is overdue</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                    {(vehicle.sla_status === 'yellow' || vehicle.sla_status === 'warning') && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center justify-center w-7 h-7 rounded-md bg-amber-100 dark:bg-amber-900/30 cursor-help">
+                            <Clock className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="top">
+                          <div className="flex items-center gap-2">
+                            <Clock className="h-4 w-4 text-amber-500" />
+                            <span className="font-medium">SLA Warning</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground">Approaching deadline</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+
+                    {/* Media */}
                         {(vehicle.media_count ?? 0) > 0 && (
-                          <HoverCard openDelay={200} closeDelay={100}>
-                            <HoverCardTrigger asChild>
-                              <span className="inline-flex">
-                                <Badge variant="secondary" className="h-3.5 px-1 text-[9px] bg-purple-100 text-purple-700 gap-0.5 cursor-pointer">
-                                  <Image className="h-2 w-2" />
-                                  {vehicle.media_count}
-                                </Badge>
-                              </span>
-                            </HoverCardTrigger>
-                            <HoverCardContent side="top" className="w-auto p-2 text-xs">
-                              <div className="flex items-center gap-1.5">
-                                <Image className="h-3 w-3 text-purple-600" />
-                                <span className="font-medium">Media:</span>
-                                <span>{vehicle.media_count} {vehicle.media_count === 1 ? 'file' : 'files'}</span>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center justify-center gap-0.5 h-7 px-1.5 rounded-md bg-purple-100 dark:bg-purple-900/30 cursor-help">
+                            <Image className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                            <span className="text-xs font-semibold text-purple-700 dark:text-purple-300">{vehicle.media_count}</span>
                               </div>
-                            </HoverCardContent>
-                          </HoverCard>
+                        </TooltipTrigger>
+                        <TooltipContent side="top">
+                          <div className="flex items-center gap-2">
+                            <Image className="h-4 w-4 text-purple-500" />
+                            <span className="font-medium">Media Files</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground">{vehicle.media_count} {vehicle.media_count === 1 ? 'photo/file' : 'photos/files'} attached</p>
+                        </TooltipContent>
+                      </Tooltip>
                         )}
 
-                        {/* Notes Badge */}
+                    {/* Notes */}
                         {(parseInt(vehicle.notes_preview || '0')) > 0 && (
-                          <HoverCard openDelay={200} closeDelay={100}>
-                            <HoverCardTrigger asChild>
-                              <span className="inline-flex">
-                                <Badge variant="secondary" className="h-3.5 px-1 text-[9px] bg-blue-100 text-blue-700 gap-0.5 cursor-pointer">
-                                  <FileText className="h-2 w-2" />
-                                  {vehicle.notes_preview}
-                                </Badge>
-                              </span>
-                            </HoverCardTrigger>
-                            <HoverCardContent side="top" className="w-auto p-2 text-xs">
-                              <div className="flex items-center gap-1.5">
-                                <FileText className="h-3 w-3 text-blue-600" />
-                                <span className="font-medium">Notes:</span>
-                                <span>{vehicle.notes_preview} {parseInt(vehicle.notes_preview) === 1 ? 'note' : 'notes'}</span>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center justify-center gap-0.5 h-7 px-1.5 rounded-md bg-blue-100 dark:bg-blue-900/30 cursor-help">
+                            <FileText className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                            <span className="text-xs font-semibold text-blue-700 dark:text-blue-300">{vehicle.notes_preview}</span>
                               </div>
-                            </HoverCardContent>
-                          </HoverCard>
+                        </TooltipTrigger>
+                        <TooltipContent side="top">
+                          <div className="flex items-center gap-2">
+                            <FileText className="h-4 w-4 text-blue-500" />
+                            <span className="font-medium">Notes</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground">{vehicle.notes_preview} {parseInt(vehicle.notes_preview) === 1 ? 'note' : 'notes'}</p>
+                        </TooltipContent>
+                      </Tooltip>
                         )}
 
                         {/* Work Items - Pending */}
                         {vehicle.work_item_counts && vehicle.work_item_counts.pending > 0 && (
-                          <HoverCard openDelay={200} closeDelay={100}>
-                            <HoverCardTrigger asChild>
-                              <span className="inline-flex">
-                                <Badge variant="secondary" className="h-3.5 px-1 text-[9px] bg-amber-100 text-amber-700 gap-0.5 cursor-pointer">
-                                  <AlertTriangle className="h-2 w-2" />
-                                  {vehicle.work_item_counts.pending}
-                                </Badge>
-                              </span>
-                            </HoverCardTrigger>
-                            <HoverCardContent side="top" className="w-auto p-2 text-xs">
-                              <div className="flex items-center gap-1.5">
-                                <AlertTriangle className="h-3 w-3 text-amber-600" />
-                                <span className="font-medium">Pending:</span>
-                                <span>{vehicle.work_item_counts.pending} {vehicle.work_item_counts.pending === 1 ? 'item' : 'items'}</span>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center justify-center gap-0.5 h-7 px-1.5 rounded-md bg-amber-100 dark:bg-amber-900/30 cursor-help">
+                            <Wrench className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                            <span className="text-xs font-semibold text-amber-700 dark:text-amber-300">{vehicle.work_item_counts.pending}</span>
                               </div>
-                            </HoverCardContent>
-                          </HoverCard>
+                        </TooltipTrigger>
+                        <TooltipContent side="top">
+                          <div className="flex items-center gap-2">
+                            <Wrench className="h-4 w-4 text-amber-500" />
+                            <span className="font-medium">Pending Work</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground">{vehicle.work_item_counts.pending} {vehicle.work_item_counts.pending === 1 ? 'item' : 'items'} waiting</p>
+                        </TooltipContent>
+                      </Tooltip>
                         )}
 
                         {/* Work Items - In Progress */}
                         {vehicle.work_item_counts && vehicle.work_item_counts.in_progress > 0 && (
-                          <HoverCard openDelay={200} closeDelay={100}>
-                            <HoverCardTrigger asChild>
-                              <span className="inline-flex">
-                                <Badge variant="secondary" className="h-3.5 px-1 text-[9px] bg-sky-100 text-sky-700 gap-0.5 cursor-pointer">
-                                  <Clock className="h-2 w-2" />
-                                  {vehicle.work_item_counts.in_progress}
-                                </Badge>
-                              </span>
-                            </HoverCardTrigger>
-                            <HoverCardContent side="top" className="w-auto p-2 text-xs">
-                              <div className="flex items-center gap-1.5">
-                                <Clock className="h-3 w-3 text-sky-600" />
-                                <span className="font-medium">In Progress:</span>
-                                <span>{vehicle.work_item_counts.in_progress} {vehicle.work_item_counts.in_progress === 1 ? 'item' : 'items'}</span>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center justify-center gap-0.5 h-7 px-1.5 rounded-md bg-sky-100 dark:bg-sky-900/30 cursor-help">
+                            <Clock className="h-4 w-4 text-sky-600 dark:text-sky-400" />
+                            <span className="text-xs font-semibold text-sky-700 dark:text-sky-300">{vehicle.work_item_counts.in_progress}</span>
                               </div>
-                            </HoverCardContent>
-                          </HoverCard>
+                        </TooltipTrigger>
+                        <TooltipContent side="top">
+                          <div className="flex items-center gap-2">
+                            <Clock className="h-4 w-4 text-sky-500" />
+                            <span className="font-medium">In Progress</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground">{vehicle.work_item_counts.in_progress} {vehicle.work_item_counts.in_progress === 1 ? 'item' : 'items'} active</p>
+                        </TooltipContent>
+                      </Tooltip>
                         )}
 
                         {/* Work Items - Completed */}
                         {vehicle.work_item_counts && vehicle.work_item_counts.completed > 0 && (
-                          <HoverCard openDelay={200} closeDelay={100}>
-                            <HoverCardTrigger asChild>
-                              <span className="inline-flex">
-                                <Badge variant="secondary" className="h-3.5 px-1 text-[9px] bg-emerald-100 text-emerald-700 gap-0.5 cursor-pointer">
-                                  <CheckCircle className="h-2 w-2" />
-                                  {vehicle.work_item_counts.completed}
-                                </Badge>
-                              </span>
-                            </HoverCardTrigger>
-                            <HoverCardContent side="top" className="w-auto p-2 text-xs">
-                              <div className="flex items-center gap-1.5">
-                                <CheckCircle className="h-3 w-3 text-emerald-600" />
-                                <span className="font-medium">Completed:</span>
-                                <span>{vehicle.work_item_counts.completed} {vehicle.work_item_counts.completed === 1 ? 'item' : 'items'}</span>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center justify-center gap-0.5 h-7 px-1.5 rounded-md bg-emerald-100 dark:bg-emerald-900/30 cursor-help">
+                            <CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                            <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">{vehicle.work_item_counts.completed}</span>
                               </div>
-                            </HoverCardContent>
-                          </HoverCard>
-                        )}
+                        </TooltipTrigger>
+                        <TooltipContent side="top">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-emerald-500" />
+                            <span className="font-medium">Completed</span>
                       </div>
+                          <p className="text-xs text-muted-foreground">{vehicle.work_item_counts.completed} {vehicle.work_item_counts.completed === 1 ? 'item' : 'items'} done</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+
+                    {/* Empty state - show subtle dash if no indicators */}
+                    {!((vehicle.media_count ?? 0) > 0) &&
+                     !(parseInt(vehicle.notes_preview || '0') > 0) &&
+                     !(vehicle.work_item_counts?.pending > 0) &&
+                     !(vehicle.work_item_counts?.in_progress > 0) &&
+                     !(vehicle.work_item_counts?.completed > 0) &&
+                     vehicle.sla_status !== 'red' && vehicle.sla_status !== 'critical' &&
+                     vehicle.sla_status !== 'yellow' && vehicle.sla_status !== 'warning' && (
+                      <span className="text-muted-foreground/40 text-xs">—</span>
                     )}
                   </div>
                 </TableCell>
 
                 {/* Vehicle Info */}
-                <TableCell className="w-[200px] py-1 text-center">
+                <TableCell className="min-w-[120px] sm:w-[200px] py-1 text-center px-1">
                   <div className="space-y-0">
-                    <div className="font-medium whitespace-nowrap overflow-hidden text-ellipsis text-sm">
-                      {vehicle.year} {vehicle.make} {vehicle.model} {vehicle.trim && `(${vehicle.trim})`}
+                    <div className="font-medium overflow-hidden text-ellipsis text-[11px] sm:text-sm line-clamp-1">
+                      {vehicle.year} {vehicle.make} {vehicle.model}
                     </div>
-                    <div className="text-xs whitespace-nowrap overflow-hidden text-ellipsis">
-                      <span className="text-muted-foreground/60">L8V: </span>
-                      <span className="font-mono text-sm font-semibold text-foreground">{vehicle.vin.slice(-8)}</span>
+                    <div className="text-[10px] sm:text-xs overflow-hidden text-ellipsis">
+                      <span className="text-muted-foreground/60 hidden sm:inline">L8V: </span>
+                      <span className="font-mono font-semibold text-foreground">{vehicle.vin.slice(-8)}</span>
                     </div>
                   </div>
                 </TableCell>
 
                 {/* Step */}
-                <TableCell className="w-[140px] py-1 text-center" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex items-center justify-center gap-1">
+                <TableCell className="w-[80px] sm:w-[140px] py-1 text-center px-1" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-center justify-center">
                     <StepDropdown
                       currentStepId={vehicle.step_id}
                       currentStepName={vehicle.step_name}
@@ -700,25 +796,25 @@ export function GetReadyVehicleList({
                   </div>
                 </TableCell>
 
-                {/* Time in Process - Compact Format */}
-                <TableCell className="w-[80px] py-1 text-center">
+                {/* Time in Process - Hidden on mobile/tablet */}
+                <TableCell className="w-[60px] sm:w-[80px] py-1 text-center hidden xl:table-cell">
                   <span className={cn(
-                    "font-medium text-sm whitespace-nowrap",
+                    "font-medium text-xs whitespace-nowrap",
                     getTimeInProcessColor(vehicle.step_id, parseInt(vehicle.days_in_step) || 0)
                   )}>
                     {formatTimeForTable(vehicle.t2l).primary}
                   </span>
                 </TableCell>
 
-                {/* Current Step - Compact Format */}
-                <TableCell className="w-[80px] py-1 text-center">
-                  <span className="font-medium text-sm whitespace-nowrap">
+                {/* Current Step Time - Hidden on mobile/tablet */}
+                <TableCell className="w-[60px] sm:w-[80px] py-1 text-center hidden xl:table-cell">
+                  <span className="font-medium text-xs whitespace-nowrap">
                     {formatTimeForTable(vehicle.days_in_step).primary}
                   </span>
                 </TableCell>
 
-                {/* Priority - Editable */}
-                <TableCell className="w-[100px] py-1 text-center" onClick={(e) => e.stopPropagation()}>
+                {/* Priority - Hidden on mobile/tablet */}
+                <TableCell className="w-[70px] sm:w-[100px] py-1 text-center hidden lg:table-cell" onClick={(e) => e.stopPropagation()}>
                   <div className="flex justify-center">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -809,46 +905,48 @@ export function GetReadyVehicleList({
                   </div>
                 </TableCell>
 
-                {/* Progress & Assigned - Combined */}
-                <TableCell className="w-[150px] py-1 text-center">
+                {/* Progress & Assigned - Hidden on mobile */}
+                <TableCell className="w-[80px] sm:w-[150px] py-1 text-center hidden sm:table-cell">
                   <div className="space-y-1">
                     {/* Progress bar with percentage */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 sm:gap-2">
                       <Progress
                         value={vehicle.progress}
                         className="h-1.5 flex-1"
                         indicatorClassName={getProgressColor(vehicle.progress)}
                       />
-                      <span className="text-xs text-muted-foreground w-8">
+                      <span className="text-[10px] sm:text-xs text-muted-foreground w-6 sm:w-8">
                         {vehicle.progress}%
                       </span>
                     </div>
                     {/* Assigned user */}
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-[10px] sm:text-xs text-muted-foreground truncate hidden md:block">
                       {vehicle.assigned_to}
                     </div>
                   </div>
                 </TableCell>
 
-                {/* Actions */}
-                <TableCell className="w-[100px] text-center py-1" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex items-center justify-center gap-1">
+                {/* Actions - Single button on mobile, multiple on desktop */}
+                <TableCell className="w-[44px] sm:w-[100px] text-center py-1 px-1" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-center justify-center gap-0.5">
+                    {/* Mobile: Just Eye button */}
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-6 w-6 p-0"
+                      className="h-8 w-8 sm:h-7 sm:w-7 p-0"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleViewDetails(vehicle.id);
                       }}
                       title={t('get_ready.actions.view_details')}
                     >
-                      <Eye className="h-3.5 w-3.5" />
+                      <Eye className="h-4 w-4" />
                     </Button>
+                    {/* Desktop: Edit and Delete */}
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-6 w-6 p-0"
+                      className="h-7 w-7 p-0 hidden sm:flex"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleEditVehicle(vehicle.id);
@@ -860,7 +958,7 @@ export function GetReadyVehicleList({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-6 w-6 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                      className="h-7 w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 hidden sm:flex"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteVehicle(vehicle.id);
@@ -876,7 +974,7 @@ export function GetReadyVehicleList({
                 {/* Loading indicator for next page */}
                 {isFetchingNextPage && (
                   <TableRow>
-                    <TableCell colSpan={10} className="text-center py-4">
+                    <TableCell colSpan={11} className="text-center py-4">
                       <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
                     </TableCell>
                   </TableRow>
@@ -888,34 +986,61 @@ export function GetReadyVehicleList({
           </TooltipProvider>
         </div>
 
-        {/* Pagination Controls */}
-        <div className="flex items-center justify-between border-t px-4 py-3 bg-muted/30">
-          <div className="text-sm text-muted-foreground">
-            {t('common.showing')} {startIndex + 1}-{endIndex} {t('common.of')} {totalVehicles}
+        {/* Pagination Controls - Mobile friendly */}
+        <div className="flex flex-col sm:flex-row items-center justify-between border-t px-2 sm:px-4 py-2 sm:py-3 bg-muted/30 gap-2">
+          <div className="text-xs sm:text-sm text-muted-foreground">
+            {vehicles.length > 0 ? (
+              <>
+                <span className="hidden sm:inline">{t('common.showing')} </span>
+                {startIndex + 1}-{Math.min(startIndex + vehicles.length, realTotalVehicles)}
+                <span className="hidden sm:inline"> {t('common.of')}</span>
+                <span className="sm:hidden">/</span> {realTotalVehicles}
+              </>
+            ) : isFetchingNextPage ? (
+              <>{t('common.loading')}...</>
+            ) : (
+              <>{realTotalVehicles} {t('get_ready.table.vehicles')}</>
+            )}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-0.5 sm:gap-1">
+            {/* Go to first page - hidden on mobile */}
             <Button
               variant="outline"
               size="sm"
+              className="h-9 w-9 sm:h-8 sm:w-8 p-0 hidden sm:flex"
+              onClick={() => setCurrentPage(1)}
+              disabled={currentPage === 1}
+              title={t('common.first_page') || 'First page'}
+            >
+              <ChevronsLeft className="h-4 w-4" />
+            </Button>
+
+            {/* Previous page */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-9 w-9 sm:h-8 sm:w-8 p-0"
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
+              title={t('common.previous_page') || 'Previous page'}
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
 
-            {/* Page numbers */}
-            <div className="flex items-center gap-1">
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+            {/* Page numbers - show fewer on mobile */}
+            <div className="flex items-center gap-0.5 sm:gap-1">
+              {Array.from({ length: Math.min(totalPages, typeof window !== 'undefined' && window.innerWidth < 640 ? 3 : 5) }, (_, i) => {
+                const maxPages = typeof window !== 'undefined' && window.innerWidth < 640 ? 3 : 5;
                 let pageNum;
-                if (totalPages <= 5) {
+                if (totalPages <= maxPages) {
                   pageNum = i + 1;
-                } else if (currentPage <= 3) {
+                } else if (currentPage <= Math.ceil(maxPages / 2)) {
                   pageNum = i + 1;
-                } else if (currentPage >= totalPages - 2) {
-                  pageNum = totalPages - 4 + i;
+                } else if (currentPage >= totalPages - Math.floor(maxPages / 2)) {
+                  pageNum = totalPages - maxPages + 1 + i;
                 } else {
-                  pageNum = currentPage - 2 + i;
+                  pageNum = currentPage - Math.floor(maxPages / 2) + i;
                 }
 
                 return (
@@ -923,7 +1048,7 @@ export function GetReadyVehicleList({
                     key={pageNum}
                     variant={currentPage === pageNum ? "default" : "outline"}
                     size="sm"
-                    className="h-8 w-8 p-0"
+                    className="h-9 w-9 sm:h-8 sm:w-8 p-0 text-xs sm:text-sm"
                     onClick={() => setCurrentPage(pageNum)}
                   >
                     {pageNum}
@@ -932,13 +1057,28 @@ export function GetReadyVehicleList({
               })}
             </div>
 
+            {/* Next page */}
             <Button
               variant="outline"
               size="sm"
+              className="h-9 w-9 sm:h-8 sm:w-8 p-0"
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
+              disabled={currentPage === totalPages || totalPages === 0}
+              title={t('common.next_page') || 'Next page'}
             >
               <ChevronRight className="h-4 w-4" />
+            </Button>
+
+            {/* Go to last page - hidden on mobile */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-9 w-9 sm:h-8 sm:w-8 p-0 hidden sm:flex"
+              onClick={() => setCurrentPage(totalPages)}
+              disabled={currentPage === totalPages || totalPages === 0}
+              title={t('common.last_page') || 'Last page'}
+            >
+              <ChevronsRight className="h-4 w-4" />
             </Button>
           </div>
         </div>

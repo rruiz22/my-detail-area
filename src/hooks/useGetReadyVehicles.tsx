@@ -398,27 +398,8 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
 
       if (!data) return [];
 
-      // BATCH QUERY: Get vehicle images from Stock inventory by VIN
-      const vins = data.map(v => v.vin).filter(Boolean);
-      const stockImagesMap = new Map<string, string>();
-
-      if (vins.length > 0) {
-        const { data: stockImages, error: stockError } = await supabase
-          .from('dealer_vehicle_inventory')
-          .select('vin, key_photo_url')
-          .eq('dealer_id', dealerId)
-          .in('vin', vins)
-          .not('key_photo_url', 'is', null);
-
-        if (!stockError && stockImages) {
-          stockImages.forEach(img => {
-            if (img.vin && img.key_photo_url) {
-              stockImagesMap.set(img.vin, img.key_photo_url);
-            }
-          });
-          console.log(`📸 [Get Ready] Loaded ${stockImagesMap.size} vehicle images from Stock inventory`);
-        }
-      }
+      // ✅ OPTIMIZATION: Images are now loaded via useVehicleImagesCache hook
+      // This eliminates per-query image lookups
 
       // Transform to match MockVehicle interface
       return data.map((vehicle: VehicleDatabaseResponse) => {
@@ -454,7 +435,8 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
           progress: calculateVehicleProgress(workItems), // Calculate progress based on work items completion
           created_at: vehicle.created_at,
           updated_at: vehicle.updated_at,
-          images: stockImagesMap.has(vehicle.vin) ? [stockImagesMap.get(vehicle.vin)!] : [],
+          // ✅ OPTIMIZATION: Images now come from useVehicleImagesCache
+          images: [],
           work_items: workItems.length,
           work_item_counts,
           media_count: 0, // TODO: Count media
@@ -475,7 +457,8 @@ export function useGetReadyVehiclesList(filters: GetReadyVehicleListFilters = {}
 }
 
 // Hook for infinite scroll vehicle list
-const PAGE_SIZE = 5; // Show 5 vehicles initially, load more with infinite scroll
+// OPTIMIZED: Increased from 5 to 50 to reduce number of queries from 40+ to 4-8
+const PAGE_SIZE = 50;
 
 export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters = {}) {
   const { currentDealership } = useAccessibleDealerships();
@@ -512,7 +495,37 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
     queryFn: async ({ pageParam = 0 }) => {
       if (!dealerId) {
         console.warn('No dealership selected for vehicle list query');
-        return { vehicles: [], hasMore: false };
+        return { vehicles: [], hasMore: false, totalCount: 0 };
+      }
+
+      // ✅ OPTIMIZATION: Get total count with same filters (only on first page for efficiency)
+      let totalCount = 0;
+      if (pageParam === 0) {
+        let countQuery = supabase
+          .from('get_ready_vehicles')
+          .select('*', { count: 'exact', head: true })
+          .eq('dealer_id', dealerId)
+          .is('deleted_at', null);
+
+        // Apply same filters as main query
+        if (selectedStep && selectedStep !== 'all' && !searchQuery) {
+          countQuery = countQuery.eq('step_id', selectedStep);
+        }
+        if (selectedPriority && selectedPriority !== 'all') {
+          countQuery = countQuery.eq('priority', selectedPriority);
+        }
+        if (searchQuery) {
+          const sanitized = sanitizeAndLowercase(searchQuery);
+          if (sanitized) {
+            countQuery = countQuery.or(`stock_number.ilike.%${sanitized}%,vin.ilike.%${sanitized}%,vehicle_make.ilike.%${sanitized}%,vehicle_model.ilike.%${sanitized}%,assigned_to.ilike.%${sanitized}%`);
+          }
+        }
+
+        const { count, error: countError } = await countQuery;
+        if (!countError && count !== null) {
+          totalCount = count;
+          console.log(`📊 [Get Ready Infinite] Total vehicles matching filters: ${totalCount}`);
+        }
       }
 
       // Build base query
@@ -607,32 +620,14 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
         throw error;
       }
 
-      if (!data) return { vehicles: [], hasMore: false };
+      if (!data) return { vehicles: [], hasMore: false, totalCount };
 
       // ✅ OPTIMIZATION: No longer need separate queries for media/notes counts
       // media_count and notes_count are now maintained by database triggers
 
-      // BATCH QUERY: Get vehicle images from Stock inventory by VIN
-      const vins = data.map(v => v.vin).filter(Boolean);
-      const stockImagesMap = new Map<string, string>();
-
-      if (vins.length > 0) {
-        const { data: stockImages, error: stockError } = await supabase
-          .from('dealer_vehicle_inventory')
-          .select('vin, key_photo_url')
-          .eq('dealer_id', dealerId)
-          .in('vin', vins)
-          .not('key_photo_url', 'is', null);
-
-        if (!stockError && stockImages) {
-          stockImages.forEach(img => {
-            if (img.vin && img.key_photo_url) {
-              stockImagesMap.set(img.vin, img.key_photo_url);
-            }
-          });
-          console.log(`📸 [Get Ready Infinite] Loaded ${stockImagesMap.size} vehicle images from Stock inventory`);
-        }
-      }
+      // ✅ OPTIMIZATION: Images are now loaded via useVehicleImagesCache hook
+      // This eliminates per-page image queries (40+ queries -> 1 query)
+      // The component should use useVehicleImagesCache.getImageUrl(vin) to get images
 
       // Transform data
       const vehicles = data.map((vehicle: VehicleDatabaseResponse) => {
@@ -678,7 +673,9 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
           progress: calculateVehicleProgress(workItems), // Calculate progress based on work items completion
           created_at: vehicle.created_at,
           updated_at: vehicle.updated_at,
-          images: stockImagesMap.has(vehicle.vin) ? [stockImagesMap.get(vehicle.vin)!] : [],
+          // ✅ OPTIMIZATION: Images now come from useVehicleImagesCache
+          // Keep empty array here - component will use getImageUrl(vin)
+          images: [],
           work_items: workItems, // ARRAY COMPLETO
           work_items_count: workItems.length, // Count separado
           work_item_counts,
@@ -699,7 +696,8 @@ export function useGetReadyVehiclesInfinite(filters: GetReadyVehicleListFilters 
 
       return {
         vehicles,
-        hasMore: data.length === PAGE_SIZE
+        hasMore: data.length === PAGE_SIZE,
+        totalCount // Include total count (only meaningful on first page)
       };
     },
     initialPageParam: 0,

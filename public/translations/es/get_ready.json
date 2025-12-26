@@ -209,6 +209,8 @@
     "image": "Imagen",
     "stock": "Stock",
     "vehicle": "Vehículo",
+    "indicators": "Info",
+    "indicators_tooltip": "Medios, Notas, Trabajos, Alertas",
     "media": "Medios",
     "work_items": "Elementos de Trabajo",
     "days_in_step": "Días en Paso",
@@ -756,13 +758,39 @@
   "step_form": {
     "fields": {
       "assigned_users": "Usuarios Asignados",
-      "assigned_users_description": "Seleccione usuarios que serán notificados cuando los vehículos ingresen a este paso"
+      "assigned_users_description": "Seleccione usuarios que serán notificados cuando los vehículos ingresen a este paso",
+      "is_last_step": "Último Paso (Timer se Detiene)",
+      "is_last_step_description": "Cuando está habilitado, los vehículos que ingresen a este paso dejarán de contar días. Usar para Front Line, Wholesale, etc.",
+      "show_sidebar_count": "Mostrar conteo de vehículos",
+      "show_sidebar_count_hint": "Mostrar badge con total de vehículos",
+      "show_sidebar_breakdown": "Mostrar desglose por días",
+      "show_sidebar_breakdown_hint": "Mostrar Fresh/Normal/Critical",
+      "target_throughput": "Rendimiento Objetivo",
+      "target_throughput_hint": "Vehículos por día",
+      "bottleneck_threshold": "Umbral de Cuello de Botella",
+      "bottleneck_threshold_hint": "Horas antes de marcar como cuello de botella",
+      "parallel_capable": "Capaz de Paralelo",
+      "parallel_capable_hint": "Puede ejecutarse junto a otros pasos",
+      "express_lane_eligible": "Carril Express",
+      "express_lane_eligible_hint": "Puede acelerarse"
     },
     "errors": {
       "users_required": "Debe asignarse al menos un usuario"
     },
     "select_users_placeholder": "Seleccione usuarios...",
-    "users_selected": "{{count}} usuario(s) seleccionado(s)"
+    "users_selected": "{{count}} usuario(s) seleccionado(s)",
+    "advanced_settings": "Configuración Avanzada",
+    "sidebar_display": "Visualización en Sidebar",
+    "sidebar_display_hint": "Controla qué información se muestra en la barra lateral para este paso"
+  },
+  "step_list": {
+    "timer_stops": "Timer se Detiene",
+    "timer_stops_tooltip": "Los vehículos que ingresen a este paso dejarán de contar días",
+    "final_step": "Paso Final",
+    "assigned_users": "Asignados",
+    "users": "usuarios",
+    "team": "Equipo",
+    "double_click_hint": "Doble clic para editar"
   },
   "export": {
     "no_vehicles": "No hay vehículos para exportar"

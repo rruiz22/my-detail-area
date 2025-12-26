@@ -60,10 +60,10 @@ export function AssignmentModal({
   const [selectedDealerId, setSelectedDealerId] = useState<number | null>(null);
   const [scheduleTemplate, setScheduleTemplate] = useState<ScheduleTemplate>({
     shift_start_time: '08:00',
-    shift_end_time: '17:00',
-    days_of_week: [0, 1, 2, 3, 4, 5, 6], // All days (flexible)
-    early_punch_allowed_minutes: undefined, // undefined = no time restriction (flexible)
-    late_punch_grace_minutes: undefined,    // undefined = no time restriction (flexible)
+    shift_end_time: '18:00', // 8am - 6pm default
+    days_of_week: [1, 2, 3, 4, 5, 6], // Monday-Saturday
+    early_punch_allowed_minutes: 5, // Can punch in 5 min early
+    late_punch_grace_minutes: undefined, // No late limit (flexible)
     required_break_minutes: 30,
     break_is_paid: false,
     require_face_validation: false
@@ -77,27 +77,37 @@ export function AssignmentModal({
       setSelectedDealerId(assignment.dealership_id);
       setScheduleTemplate({
         shift_start_time: assignment.schedule_template.shift_start_time || '08:00',
-        shift_end_time: assignment.schedule_template.shift_end_time || '17:00',
+        shift_end_time: assignment.schedule_template.shift_end_time || '18:00',
         days_of_week: assignment.schedule_template.days_of_week || [1, 2, 3, 4, 5, 6],
         early_punch_allowed_minutes: assignment.schedule_template.early_punch_allowed_minutes,
         late_punch_grace_minutes: assignment.schedule_template.late_punch_grace_minutes,
         required_break_minutes: assignment.schedule_template.required_break_minutes ?? 30,
         break_is_paid: assignment.schedule_template.break_is_paid ?? false,
-        require_face_validation: assignment.schedule_template.require_face_validation ?? false
+        require_face_validation: assignment.schedule_template.require_face_validation ?? false,
+        // Auto-close configuration
+        auto_close_enabled: assignment.schedule_template.auto_close_enabled ?? false,
+        auto_close_first_reminder: assignment.schedule_template.auto_close_first_reminder ?? 30,
+        auto_close_second_reminder: assignment.schedule_template.auto_close_second_reminder, // No second reminder
+        auto_close_window_minutes: assignment.schedule_template.auto_close_window_minutes ?? 60
       });
       setNotes(assignment.notes || '');
     } else {
-      // CREATE MODE: Use system defaults (Mon-Sat, 8AM-5PM, flexible punch times)
+      // CREATE MODE: Use system defaults (Mon-Sat, 8AM-6PM)
       setSelectedDealerId(null);
       setScheduleTemplate({
         shift_start_time: '08:00',
-        shift_end_time: '17:00',
+        shift_end_time: '18:00',
         days_of_week: [1, 2, 3, 4, 5, 6], // Monday-Saturday (no Sunday)
-        early_punch_allowed_minutes: undefined, // Flexible (no time restriction)
-        late_punch_grace_minutes: undefined,    // Flexible (no time restriction)
+        early_punch_allowed_minutes: 5, // Can punch in 5 min early
+        late_punch_grace_minutes: undefined, // No late limit (flexible)
         required_break_minutes: 30,
         break_is_paid: false,
-        require_face_validation: false
+        require_face_validation: false,
+        // Auto-close defaults (disabled by default)
+        auto_close_enabled: false,
+        auto_close_first_reminder: 30, // Single reminder at 30 min after shift end
+        auto_close_second_reminder: undefined, // No second reminder
+        auto_close_window_minutes: 60 // Auto-close at 60 min after shift end
       });
       setNotes('');
     }
@@ -493,14 +503,14 @@ export function AssignmentModal({
               {/* Auto-Close Timing (only if enabled) */}
               {scheduleTemplate.auto_close_enabled && (
                 <div className="space-y-4 pt-2 border-t border-indigo-100">
-                  <h4 className="text-sm font-medium text-gray-700">Reminder Schedule</h4>
-                  <div className="grid grid-cols-3 gap-4">
+                  <h4 className="text-sm font-medium text-gray-700">{t('detail_hub.employees.auto_close_timing')}</h4>
+                  <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="first-reminder" className="text-sm">
-                        {t('detail_hub.employees.auto_close_first_reminder_label')}
+                      <Label htmlFor="reminder" className="text-sm">
+                        {t('detail_hub.employees.auto_close_reminder_label')}
                       </Label>
                       <Input
-                        id="first-reminder"
+                        id="reminder"
                         type="number"
                         min="5"
                         max="180"
@@ -515,31 +525,7 @@ export function AssignmentModal({
                         className="bg-white"
                       />
                       <p className="text-xs text-gray-600">
-                        {t('detail_hub.employees.auto_close_first_reminder_help')}
-                      </p>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="second-reminder" className="text-sm">
-                        {t('detail_hub.employees.auto_close_second_reminder_label')}
-                      </Label>
-                      <Input
-                        id="second-reminder"
-                        type="number"
-                        min="10"
-                        max="240"
-                        placeholder="60"
-                        value={scheduleTemplate.auto_close_second_reminder ?? 60}
-                        onChange={(e) =>
-                          setScheduleTemplate({
-                            ...scheduleTemplate,
-                            auto_close_second_reminder: parseInt(e.target.value) || 60
-                          })
-                        }
-                        className="bg-white"
-                      />
-                      <p className="text-xs text-gray-600">
-                        {t('detail_hub.employees.auto_close_second_reminder_help')}
+                        {t('detail_hub.employees.auto_close_reminder_help')}
                       </p>
                     </div>
 
@@ -552,12 +538,12 @@ export function AssignmentModal({
                         type="number"
                         min="30"
                         max="480"
-                        placeholder="120"
-                        value={scheduleTemplate.auto_close_window_minutes ?? 120}
+                        placeholder="60"
+                        value={scheduleTemplate.auto_close_window_minutes ?? 60}
                         onChange={(e) =>
                           setScheduleTemplate({
                             ...scheduleTemplate,
-                            auto_close_window_minutes: parseInt(e.target.value) || 120
+                            auto_close_window_minutes: parseInt(e.target.value) || 60
                           })
                         }
                         className="bg-white"

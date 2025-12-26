@@ -13,6 +13,7 @@ export interface TimecardFilters {
   selectedEmployeeId: string;
   selectedStatus: string;
   selectedMethod: string;
+  selectedApprovalStatus: string; // 'all' | 'pending' | 'approved' | 'rejected'
   showAdvancedFilters: boolean;
 }
 
@@ -26,6 +27,7 @@ const DEFAULT_FILTERS: TimecardFilters = {
   selectedEmployeeId: 'all',
   selectedStatus: 'all',
   selectedMethod: 'all',
+  selectedApprovalStatus: 'all',
   showAdvancedFilters: false
 };
 
@@ -51,6 +53,12 @@ export function useTimecardPersistence() {
     }
     if (stored.customDateRange.to && typeof stored.customDateRange.to === 'string') {
       stored.customDateRange.to = new Date(stored.customDateRange.to);
+    }
+
+    // Migrate old localStorage data: ensure new fields have default values
+    // This handles cases where localStorage has old data without the new fields
+    if (stored.selectedApprovalStatus === undefined) {
+      stored.selectedApprovalStatus = 'all';
     }
 
     return stored;
@@ -85,6 +93,7 @@ export function useTimecardPersistence() {
       selectedEmployeeId: 'all',
       selectedStatus: 'all',
       selectedMethod: 'all',
+      selectedApprovalStatus: 'all',
       searchQuery: ''
     });
   }, [setFilters]);
@@ -96,6 +105,8 @@ export function useTimecardPersistence() {
     if (filters.selectedEmployeeId !== 'all') count++;
     if (filters.selectedStatus !== 'all') count++;
     if (filters.selectedMethod !== 'all') count++;
+    // Handle backwards compatibility: undefined should be treated as 'all'
+    if (filters.selectedApprovalStatus && filters.selectedApprovalStatus !== 'all') count++;
     return count;
   }, [filters]);
 
