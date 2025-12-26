@@ -521,6 +521,7 @@ export const BulkEmailInvoicesDialog: React.FC<BulkEmailInvoicesDialogProps> = (
         open={showManageContacts}
         onOpenChange={setShowManageContacts}
         dealershipId={dealershipId}
+        dealershipName={currentDealership?.name || ''}
       />
     </>
   );

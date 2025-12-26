@@ -38,6 +38,13 @@ export const EmailContactForm: React.FC<EmailContactFormProps> = ({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Sync dealership_id when prop changes (important for new contacts)
+  useEffect(() => {
+    if (!contact && dealershipId) {
+      setFormData(prev => ({ ...prev, dealership_id: dealershipId }));
+    }
+  }, [dealershipId, contact]);
+
   useEffect(() => {
     if (contact) {
       setFormData({

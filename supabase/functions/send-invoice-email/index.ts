@@ -39,6 +39,7 @@ interface EmailAttachment {
 interface SendEmailRequest {
   email_history_id?: string // Optional now - will be created if not provided
   invoice_id: string
+  all_invoice_ids?: string[] // All invoice IDs for bulk send - creates history record for each
   dealership_id: number
   recipients: string[]
   reply_to?: string
@@ -125,39 +126,57 @@ serve(async (req) => {
 
     console.log(`📎 Attaching ${resendAttachments.length} file(s)`)
 
-    // Create or get email history record
-    let emailHistoryId = request.email_history_id;
+    // Determine which invoice IDs need history records
+    // For bulk send, create a record for EACH invoice
+    const invoiceIdsToLog = request.all_invoice_ids || [request.invoice_id];
+    const isBulkSend = invoiceIdsToLog.length > 1;
 
-    if (!emailHistoryId) {
-      // Create history record using service role (bypasses RLS)
-      const { data: historyRecord, error: historyError } = await supabase
+    console.log(`📋 Creating history for ${invoiceIdsToLog.length} invoice(s), bulk_send: ${isBulkSend}`);
+
+    // Create or get email history records
+    let emailHistoryIds: string[] = [];
+
+    if (!request.email_history_id) {
+      // Prepare attachment metadata (same for all records)
+      const attachmentsMeta = (request.attachments || []).map(a => ({
+        filename: a.filename,
+        size: Math.ceil(a.content.length * 0.75), // Approximate size from base64
+      }));
+
+      // Create history records for ALL invoices in bulk send
+      const historyRecords = invoiceIdsToLog.map(invId => ({
+        invoice_id: invId,
+        dealership_id: dealershipId,
+        sent_to: request.recipients,
+        cc: request.cc && request.cc.length > 0 ? request.cc : null,
+        bcc: request.bcc && request.bcc.length > 0 ? request.bcc : null,
+        subject: request.subject,
+        message: request.message,
+        sent_by: request.sent_by || null,
+        status: 'pending',
+        attachments: attachmentsMeta,
+        metadata: {
+          ...request.metadata,
+          bulk_send: isBulkSend,
+          related_invoices: isBulkSend ? invoiceIdsToLog : undefined,
+          total_invoices_in_email: invoiceIdsToLog.length,
+        },
+      }));
+
+      const { data: historyData, error: historyError } = await supabase
         .from('invoice_email_history')
-        .insert({
-          invoice_id: request.invoice_id,
-          dealership_id: dealershipId, // Use the validated dealershipId
-          sent_to: request.recipients,
-          cc: request.cc && request.cc.length > 0 ? request.cc : null,
-          bcc: request.bcc && request.bcc.length > 0 ? request.bcc : null,
-          subject: request.subject,
-          message: request.message,
-          sent_by: request.sent_by || null,
-          status: 'pending',
-          attachments: (request.attachments || []).map(a => ({
-            filename: a.filename,
-            size: Math.ceil(a.content.length * 0.75), // Approximate size from base64
-          })),
-          metadata: request.metadata,
-        })
-        .select()
-        .single();
+        .insert(historyRecords)
+        .select();
 
       if (historyError) {
         console.error('❌ Failed to create email history:', historyError);
         throw new Error(`Failed to create email history: ${historyError.message}`);
       }
 
-      emailHistoryId = historyRecord.id;
-      console.log('📝 Created email history record:', emailHistoryId);
+      emailHistoryIds = historyData.map((h: any) => h.id);
+      console.log(`📝 Created ${emailHistoryIds.length} email history record(s):`, emailHistoryIds);
+    } else {
+      emailHistoryIds = [request.email_history_id];
     }
 
     // Send email via Resend
@@ -183,7 +202,7 @@ serve(async (req) => {
 
     console.log('✅ Email sent successfully via Resend:', data?.id)
 
-    // Update email history status
+    // Update ALL email history records status
     const { error: updateError } = await supabase
       .from('invoice_email_history')
       .update({
@@ -191,17 +210,20 @@ serve(async (req) => {
         sent_at: new Date().toISOString(),
         provider_response: { message_id: data?.id },
       })
-      .eq('id', emailHistoryId)
+      .in('id', emailHistoryIds)
 
     if (updateError) {
       console.error('⚠️ Failed to update email history:', updateError)
+    } else {
+      console.log(`📝 Updated ${emailHistoryIds.length} history record(s) to 'sent'`)
     }
 
     return new Response(
       JSON.stringify({
         success: true,
         email_id: data?.id,
-        email_history_id: emailHistoryId,
+        email_history_id: emailHistoryIds[0], // Primary for backwards compatibility
+        email_history_ids: emailHistoryIds, // All history IDs
         message: 'Email sent successfully via Resend',
       }),
       {

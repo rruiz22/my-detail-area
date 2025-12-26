@@ -169,10 +169,11 @@ export const useBulkSendInvoiceEmails = () => {
       }
 
       // Send the email with all attachments via Edge Function
-      // Edge Function will create the email history record (bypassing RLS)
+      // Edge Function will create email history records for ALL invoices (bypassing RLS)
       const { data: emailData, error: sendError } = await supabase.functions.invoke('send-invoice-email', {
         body: {
           invoice_id: invoiceIds[0], // Primary invoice for reference
+          all_invoice_ids: invoiceIds, // All invoice IDs - creates history for each
           dealership_id: dealershipId,
           sent_by: user.user?.id, // Pass user ID for tracking
           recipients,
