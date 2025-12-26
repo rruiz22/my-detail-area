@@ -462,7 +462,7 @@ export default function SalesOrders() {
   }, [filteredOrders, activeFilter, searchTerm, t, toast]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-x-hidden max-w-full">
         {/* Accessibility: Live region for screen reader announcements */}
         <div
           role="status"

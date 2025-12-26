@@ -172,20 +172,20 @@ export const QuickFilterBar = memo(function QuickFilterBar({
   });
 
   return (
-    <Card className="border-border shadow-sm" data-testid="quick-filter-bar">
+    <Card className="border-border shadow-sm overflow-hidden" data-testid="quick-filter-bar">
       <div className="p-3 sm:p-4 space-y-3 sm:space-y-4">
         {/* Search and View Toggle */}
         <div className="flex flex-col gap-3 sm:gap-4">
           {/* Row 1: Search (full-width on mobile) */}
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-stretch sm:items-center">
             {/* Search - Full width on mobile */}
-            <div className="relative flex-1 w-full sm:max-w-md">
+            <div className="relative flex-1 w-full sm:max-w-md min-w-0">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder={t('layout.search_placeholder')}
                 value={searchTerm}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="pl-10 pr-10 bg-background h-10"
+                className="pl-10 pr-10 bg-background h-10 w-full"
               />
               {searchTerm && (
                 <Button
@@ -201,10 +201,10 @@ export const QuickFilterBar = memo(function QuickFilterBar({
             </div>
 
             {/* Row 2 on mobile: Date + View Mode + Print */}
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center justify-between gap-2 flex-shrink-0">
               {/* Date Range Filter - Compact on mobile */}
               {onDateRangeChange && (
-                <div className="flex gap-1 sm:gap-2">
+                <div className="flex gap-1 sm:gap-2 flex-shrink-0">
                   {/* Full DateRangePicker - Hidden on mobile */}
                   <div className="relative hidden sm:block">
                     <DateRangePicker
@@ -228,7 +228,7 @@ export const QuickFilterBar = memo(function QuickFilterBar({
                   {/* Date Presets Dropdown - Always visible */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="h-9 sm:h-10 px-2 sm:px-3">
+                      <Button variant="outline" size="sm" className="h-9 sm:h-10 px-2 sm:px-3 flex-shrink-0">
                         <CalendarDays className="w-4 h-4 sm:mr-2" />
                         <span className="hidden sm:inline">{t('orders.filters.quick_dates')}</span>
                         <ChevronDown className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
@@ -259,7 +259,7 @@ export const QuickFilterBar = memo(function QuickFilterBar({
               )}
 
               {/* View Mode & Print */}
-              <div className="flex items-center gap-1 sm:gap-2">
+              <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                 {/* Print List Button */}
                 {onPrintList && (
                   <Button
@@ -267,7 +267,7 @@ export const QuickFilterBar = memo(function QuickFilterBar({
                     variant="outline"
                     onClick={onPrintList}
                     disabled={isPrinting}
-                    className="h-9 sm:h-10 px-2 sm:px-3"
+                    className="h-9 sm:h-10 px-2 sm:px-3 flex-shrink-0"
                     title={t('common.action_buttons.print_filtered_orders')}
                   >
                     <Printer className="w-4 h-4" />
@@ -279,7 +279,7 @@ export const QuickFilterBar = memo(function QuickFilterBar({
 
                 {/* View Mode Toggle */}
                 {viewMode && onViewModeChange && (
-                  <div className="flex items-center bg-muted/50 rounded-lg p-0.5 sm:p-1">
+                  <div className="flex items-center bg-muted/50 rounded-lg p-0.5 sm:p-1 flex-shrink-0">
                     <Button
                       size="sm"
                       variant={viewMode === 'table' ? 'default' : 'ghost'}
@@ -309,7 +309,7 @@ export const QuickFilterBar = memo(function QuickFilterBar({
         </div>
 
         {/* Filter Pills - Horizontally scrollable on mobile */}
-        <div className="flex gap-2 overflow-x-auto pb-1 -mx-3 px-3 sm:mx-0 sm:px-0 sm:flex-wrap scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide sm:flex-wrap sm:overflow-visible" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {filterOptions.map((option) => {
             const Icon = option.icon;
             const isActive = activeFilter === option.id;
@@ -351,10 +351,10 @@ export const QuickFilterBar = memo(function QuickFilterBar({
 
         {/* Active Filter Indicator */}
         {activeFilter !== 'dashboard' && (
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground flex-wrap">
               <span>Active filter:</span>
-              <Badge variant="secondary" className="bg-primary/10 text-primary">
+              <Badge variant="secondary" className="bg-primary/10 text-primary text-xs">
                 {filterOptions.find(f => f.id === activeFilter)?.label}
               </Badge>
               <Button

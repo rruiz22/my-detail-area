@@ -394,12 +394,12 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
                   )}
 
                   {/* Footer: Due Date + Assigned + Actions */}
-                  <div className="flex items-center justify-between pt-2 border-t border-border/50">
-                    <div className="flex items-center gap-3 text-xs">
+                  <div className="flex items-center justify-between pt-2 border-t border-border/50 gap-2 min-w-0">
+                    <div className="flex items-center gap-2 text-xs min-w-0 flex-1">
                       {/* Due Date */}
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 flex-shrink-0">
                         <Calendar className="w-3 h-3 text-muted-foreground" />
-                        <span className="text-muted-foreground">
+                        <span className="text-muted-foreground whitespace-nowrap">
                           {(tabType === 'recon' || tabType === 'carwash') ? (
                             order.completedAt || order.completed_at ?
                               new Date(order.completedAt || order.completed_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) :
@@ -414,7 +414,7 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
 
                       {/* Waiter indicator */}
                       {tabType === 'carwash' && order.isWaiter && (
-                        <span className="inline-flex items-center gap-0.5 bg-destructive/10 px-1.5 py-0.5 rounded-full">
+                        <span className="inline-flex items-center gap-0.5 bg-destructive/10 px-1.5 py-0.5 rounded-full flex-shrink-0">
                           <Clock className="w-3 h-3 text-destructive animate-pulse" />
                           <span className="text-[10px] font-semibold text-destructive">Waiter</span>
                         </span>
@@ -422,7 +422,7 @@ export const OrderDataTable = memo(function OrderDataTable({ orders, loading, on
 
                       {/* Assigned To */}
                       {order.assignedTo && order.assignedTo !== 'Unassigned' && (
-                        <span className="text-muted-foreground truncate max-w-[80px]">
+                        <span className="text-muted-foreground truncate min-w-0">
                           {order.assignedTo}
                         </span>
                       )}

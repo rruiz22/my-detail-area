@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useAccessibleDealerships } from "@/hooks/useAccessibleDealerships";
 import { useGetReady } from "@/hooks/useGetReady";
 import {
@@ -104,6 +105,7 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
   const { vehicleId } = useParams<{ vehicleId?: string }>();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const isMobile = useIsMobile();
   const {
     splitLayout,
     selectedStepId,
@@ -933,21 +935,25 @@ export function GetReadySplitContent({ className }: GetReadySplitContentProps) {
           {selectedVehicleId && (
             <>
               {/* Desktop: Inline detail panel */}
-              <div className="border-t pt-4 pb-4 hidden md:block">
-                <VehicleDetailPanel />
-              </div>
+              {!isMobile && (
+                <div className="border-t pt-4 pb-4">
+                  <VehicleDetailPanel />
+                </div>
+              )}
 
               {/* Mobile: Full screen sheet */}
-              <Sheet open={!!selectedVehicleId} onOpenChange={(open) => !open && setSelectedVehicleId(null)}>
-                <SheetContent side="bottom" className="h-[90vh] p-0 md:hidden">
-                  <SheetHeader className="sr-only">
-                    <SheetTitle>{t('get_ready.detail_panel.title')}</SheetTitle>
-                  </SheetHeader>
-                  <div className="h-full overflow-y-auto">
-                    <VehicleDetailPanel className="border-0 shadow-none rounded-none" />
-                  </div>
-                </SheetContent>
-              </Sheet>
+              {isMobile && (
+                <Sheet open={!!selectedVehicleId} onOpenChange={(open) => !open && setSelectedVehicleId(null)}>
+                  <SheetContent side="bottom" className="h-[90vh] p-0">
+                    <SheetHeader className="sr-only">
+                      <SheetTitle>{t('get_ready.detail_panel.title')}</SheetTitle>
+                    </SheetHeader>
+                    <div className="h-full overflow-y-auto">
+                      <VehicleDetailPanel className="border-0 shadow-none rounded-none" />
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              )}
             </>
           )}
         </div>
