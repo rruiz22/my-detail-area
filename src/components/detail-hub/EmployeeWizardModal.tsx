@@ -499,8 +499,21 @@ export function EmployeeWizardModal({
         // Toast is handled by useCreateEmployee hook
       }
 
-      // Refresh employee list after save
-      queryClient.invalidateQueries({ queryKey: ['detail-hub', 'employees'] });
+      // Refresh employee list after save - use predicate to match all employee queries
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          const key = query.queryKey;
+          return Array.isArray(key) && key[0] === 'detail-hub' && key[1] === 'employees';
+        }
+      });
+
+      // Also invalidate assignments queries
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          const key = query.queryKey;
+          return Array.isArray(key) && key[0] === 'employee-assignments';
+        }
+      });
 
       onClose();
     } catch (error) {
