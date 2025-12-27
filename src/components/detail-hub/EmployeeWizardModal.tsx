@@ -10,7 +10,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import * as z from "zod";
@@ -56,7 +56,7 @@ import {
 
 // Utilities
 import { useToast } from "@/hooks/use-toast";
-import { useDealerships } from "@/hooks/useDealerships";
+import { useDealerships, type Dealership } from "@/hooks/useDealerships";
 import {
   useCreateEmployee,
   useUpdateEmployee,
@@ -135,7 +135,11 @@ export function EmployeeWizardModal({
 }: EmployeeWizardModalProps) {
   const { t } = useTranslation();
   const { toast } = useToast();
-  const { data: dealerships } = useDealerships();
+  const { data: dealershipsData } = useDealerships();
+  const dealerships = useMemo<Dealership[]>(() => {
+    if (!dealershipsData) return [];
+    return dealershipsData as Dealership[];
+  }, [dealershipsData]);
   const queryClient = useQueryClient();
 
   // Mutations
@@ -221,7 +225,7 @@ export function EmployeeWizardModal({
 
         // Pre-select current dealer as default assignment
         const dealerIdToUse = defaultDealerId || selectedDealerId;
-        if (dealerIdToUse && dealerships) {
+        if (dealerIdToUse && dealerships.length > 0) {
           const dealer = dealerships.find(d => d.id === dealerIdToUse);
           if (dealer) {
             setPendingAssignments([{
@@ -575,7 +579,7 @@ export function EmployeeWizardModal({
               pendingAssignments={pendingAssignments}
               editingAssignmentId={editingAssignmentId}
               setEditingAssignmentId={setEditingAssignmentId}
-              dealerships={dealerships || []}
+              dealerships={dealerships}
               onAddAssignment={handleAddAssignment}
               onRemoveAssignment={handleRemoveAssignment}
               onUpdateAssignment={handleUpdateAssignment}
@@ -1006,13 +1010,13 @@ interface Step2Props {
   pendingAssignments: PendingAssignment[];
   editingAssignmentId: string | null;
   setEditingAssignmentId: (id: string | null) => void;
-  dealerships: Array<{ id: number; name: string; logo_url: string | null }>;
+  dealerships: Dealership[];
   onAddAssignment: () => void;
   onRemoveAssignment: (id: string) => void;
   onUpdateAssignment: (id: string, updates: Partial<PendingAssignment>) => void;
   onSelectDealer: (assignmentId: string, dealerId: number) => void;
   formatDaysOfWeek: (days: number[] | undefined) => string;
-  t: (key: string) => string;
+  t: (key: string, options?: Record<string, unknown>) => string;
   isEditMode?: boolean;
 }
 
@@ -1103,10 +1107,10 @@ interface AssignmentCardProps {
   onRemove: () => void;
   onUpdate: (updates: Partial<PendingAssignment>) => void;
   onSelectDealer: (dealerId: number) => void;
-  availableDealers: Array<{ id: number; name: string; logo_url: string | null }>;
-  allDealerships: Array<{ id: number; name: string; logo_url: string | null }>;
+  availableDealers: Dealership[];
+  allDealerships: Dealership[];
   formatDaysOfWeek: (days: number[] | undefined) => string;
-  t: (key: string) => string;
+  t: (key: string, options?: Record<string, unknown>) => string;
 }
 
 function AssignmentCard({

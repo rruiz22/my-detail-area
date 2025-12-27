@@ -1,8 +1,8 @@
 {
-  "scannedFiles": 971,
-  "totalStrings": 10412,
-  "hardcodedStrings": 2215,
-  "translatedStrings": 8197,
+  "scannedFiles": 973,
+  "totalStrings": 10458,
+  "hardcodedStrings": 2217,
+  "translatedStrings": 8241,
   "issues": {
     "critical": [
       {
@@ -159,225 +159,235 @@
         "hardcodedStrings": [
           {
             "text": "Dealership Assignment",
-            "line": 199,
-            "context": "198: <CardTitle className=\"text-base flex items-center gap-2\">\n199: <Building2 className=\"h-4 w-4 text-emerald-600\" />\n200: Dealership Assignment"
+            "line": 198,
+            "context": "197: <CardTitle className=\"text-base flex items-center gap-2\">\n198: <Building2 className=\"h-4 w-4 text-emerald-600\" />\n199: Dealership Assignment"
           },
           {
             "text": "Select which dealership this employee will work at",
-            "line": 202,
-            "context": "201: </CardTitle>\n202: <CardDescription>\n203: Select which dealership this employee will work at"
+            "line": 201,
+            "context": "200: </CardTitle>\n201: <CardDescription>\n202: Select which dealership this employee will work at"
           },
           {
             "text": "Employees can work at multiple dealerships with different schedules",
-            "line": 229,
-            "context": "228: </Select>\n229: <p className=\"text-xs text-gray-600\">\n230: Employees can work at multiple dealerships with different schedules"
+            "line": 228,
+            "context": "227: </Select>\n228: <p className=\"text-xs text-gray-600\">\n229: Employees can work at multiple dealerships with different schedules"
           },
           {
             "text": "Shift Start Time",
-            "line": 252,
-            "context": "251: <div className=\"space-y-2\">\n252: <Label htmlFor=\"shift-start\" className=\"text-sm font-medium\">\n253: Shift Start Time"
+            "line": 251,
+            "context": "250: <div className=\"space-y-2\">\n251: <Label htmlFor=\"shift-start\" className=\"text-sm font-medium\">\n252: Shift Start Time"
           },
           {
             "text": "Shift End Time",
-            "line": 266,
-            "context": "265: <div className=\"space-y-2\">\n266: <Label htmlFor=\"shift-end\" className=\"text-sm font-medium\">\n267: Shift End Time"
+            "line": 265,
+            "context": "264: <div className=\"space-y-2\">\n265: <Label htmlFor=\"shift-end\" className=\"text-sm font-medium\">\n266: Shift End Time"
           },
           {
             "text": "Punch Window Restrictions",
-            "line": 283,
-            "context": "282: <div className=\"pt-3 border-t border-blue-100\">\n283: <h4 className=\"text-sm font-medium text-gray-700 mb-3\">Punch Window Restrictions</h4>\n284: <div className=\"grid grid-cols-2 gap-4\">"
+            "line": 282,
+            "context": "281: <div className=\"pt-3 border-t border-blue-100\">\n282: <h4 className=\"text-sm font-medium text-gray-700 mb-3\">Punch Window Restrictions</h4>\n283: <div className=\"grid grid-cols-2 gap-4\">"
           },
           {
             "text": "Work Days",
-            "line": 342,
-            "context": "341: <CardTitle className=\"text-base flex items-center gap-2\">\n342: <Calendar className=\"h-4 w-4 text-purple-600\" />\n343: Work Days"
+            "line": 341,
+            "context": "340: <CardTitle className=\"text-base flex items-center gap-2\">\n341: <Calendar className=\"h-4 w-4 text-purple-600\" />\n342: Work Days"
           },
           {
             "text": "Select which days this employee works at this location",
-            "line": 345,
-            "context": "344: </CardTitle>\n345: <CardDescription>\n346: Select which days this employee works at this location"
+            "line": 344,
+            "context": "343: </CardTitle>\n344: <CardDescription>\n345: Select which days this employee works at this location"
           },
           {
             "text": "Break Configuration",
-            "line": 396,
-            "context": "395: <CardTitle className=\"text-base flex items-center gap-2\">\n396: <Coffee className=\"h-4 w-4 text-amber-600\" />\n397: Break Configuration"
+            "line": 395,
+            "context": "394: <CardTitle className=\"text-base flex items-center gap-2\">\n395: <Coffee className=\"h-4 w-4 text-amber-600\" />\n396: Break Configuration"
           },
           {
             "text": "Required break duration for this shift",
-            "line": 399,
-            "context": "398: </CardTitle>\n399: <CardDescription>\n400: Required break duration for this shift"
+            "line": 398,
+            "context": "397: </CardTitle>\n398: <CardDescription>\n399: Required break duration for this shift"
+          },
+          {
+            "text": "Break is Paid",
+            "line": 435,
+            "context": "434: />\n435: <Label className=\"text-sm font-medium\">Break is Paid</Label>\n436: </div>"
           },
           {
             "text": "Security Settings",
-            "line": 435,
-            "context": "434: <CardTitle className=\"text-base flex items-center gap-2\">\n435: <AlertCircle className=\"h-4 w-4 text-red-600\" />\n436: Security Settings"
+            "line": 445,
+            "context": "444: <CardTitle className=\"text-base flex items-center gap-2\">\n445: <AlertCircle className=\"h-4 w-4 text-red-600\" />\n446: Security Settings"
           },
           {
             "text": "Configure security requirements for this assignment",
-            "line": 438,
-            "context": "437: </CardTitle>\n438: <CardDescription>\n439: Configure security requirements for this assignment"
+            "line": 448,
+            "context": "447: </CardTitle>\n448: <CardDescription>\n449: Configure security requirements for this assignment"
           },
           {
             "text": "Require Face Recognition",
-            "line": 445,
-            "context": "444: <div>\n445: <p className=\"font-medium text-sm text-gray-900\">\n446: Require Face Recognition"
+            "line": 455,
+            "context": "454: <div>\n455: <p className=\"font-medium text-sm text-gray-900\">\n456: Require Face Recognition"
           },
           {
             "text": "Add any additional information about this assignment",
-            "line": 565,
-            "context": "564: <CardTitle className=\"text-base\">Notes (Optional)</CardTitle>\n565: <CardDescription>\n566: Add any additional information about this assignment"
+            "line": 575,
+            "context": "574: <CardTitle className=\"text-base\">Notes (Optional)</CardTitle>\n575: <CardDescription>\n576: Add any additional information about this assignment"
           },
           {
             "text": "Cancel",
-            "line": 588,
-            "context": "587: className=\"min-w-24\"\n588: >\n589: Cancel"
+            "line": 598,
+            "context": "597: className=\"min-w-24\"\n598: >\n599: Cancel"
           },
           {
             "text": "Select dealership",
-            "line": 214,
-            "context": "213: <SelectTrigger id=\"dealership\" className=\"bg-white\">\n214: <SelectValue placeholder=\"Select dealership\" />\n215: </SelectTrigger>"
+            "line": 213,
+            "context": "212: <SelectTrigger id=\"dealership\" className=\"bg-white\">\n213: <SelectValue placeholder=\"Select dealership\" />\n214: </SelectTrigger>"
           },
           {
             "text": "No limit",
-            "line": 294,
-            "context": "293: max=\"60\"\n294: placeholder=\"No limit\"\n295: value={scheduleTemplate.early_punch_allowed_minutes ?? ''}"
+            "line": 293,
+            "context": "292: max=\"60\"\n293: placeholder=\"No limit\"\n294: value={scheduleTemplate.early_punch_allowed_minutes ?? ''}"
           },
           {
             "text": "No limit",
-            "line": 318,
-            "context": "317: max=\"60\"\n318: placeholder=\"No limit\"\n319: value={scheduleTemplate.late_punch_grace_minutes ?? ''}"
+            "line": 317,
+            "context": "316: max=\"60\"\n317: placeholder=\"No limit\"\n318: value={scheduleTemplate.late_punch_grace_minutes ?? ''}"
           },
           {
             "text": "e.g., Training schedule, special accommodations, temporary assignment details...",
-            "line": 572,
-            "context": "571: id=\"notes\"\n572: placeholder=\"e.g., Training schedule, special accommodations, temporary assignment details...\"\n573: value={notes}"
+            "line": 582,
+            "context": "581: id=\"notes\"\n582: placeholder=\"e.g., Training schedule, special accommodations, temporary assignment details...\"\n583: value={notes}"
           },
           {
             "text": "Shift Start Time\r\n                  ",
-            "line": 252,
-            "context": "251: <div className=\"space-y-2\">\n252: <Label htmlFor=\"shift-start\" className=\"text-sm font-medium\">\n253: Shift Start Time"
+            "line": 251,
+            "context": "250: <div className=\"space-y-2\">\n251: <Label htmlFor=\"shift-start\" className=\"text-sm font-medium\">\n252: Shift Start Time"
           },
           {
             "text": "Shift End Time\r\n                  ",
-            "line": 266,
-            "context": "265: <div className=\"space-y-2\">\n266: <Label htmlFor=\"shift-end\" className=\"text-sm font-medium\">\n267: Shift End Time"
+            "line": 265,
+            "context": "264: <div className=\"space-y-2\">\n265: <Label htmlFor=\"shift-end\" className=\"text-sm font-medium\">\n266: Shift End Time"
+          },
+          {
+            "text": "Break is Paid",
+            "line": 435,
+            "context": "434: />\n435: <Label className=\"text-sm font-medium\">Break is Paid</Label>\n436: </div>"
           },
           {
             "text": "Cancel\r\n          ",
-            "line": 583,
-            "context": "582: <DialogFooter className=\"pt-5 border-t gap-3\">\n583: <Button\n584: variant=\"outline\""
+            "line": 593,
+            "context": "592: <DialogFooter className=\"pt-5 border-t gap-3\">\n593: <Button\n594: variant=\"outline\""
           }
         ],
         "translationCalls": [
           {
             "key": "validation.invalid_time_range",
-            "line": 124,
+            "line": 123,
             "exists": false
           },
           {
             "key": "validation.shift_end_must_be_after_start",
-            "line": 125,
+            "line": 124,
             "exists": false
           },
           {
             "key": "validation.dealershipRequired",
-            "line": 152,
+            "line": 151,
             "exists": true
           },
           {
             "key": "detail_hub.employees.auto_close_section_title",
-            "line": 478,
+            "line": 488,
             "exists": false
           },
           {
             "key": "detail_hub.employees.auto_close_enabled",
-            "line": 489,
+            "line": 499,
             "exists": false
           },
           {
             "key": "detail_hub.employees.auto_close_enabled_help",
-            "line": 492,
+            "line": 502,
             "exists": false
           },
           {
             "key": "detail_hub.employees.auto_close_timing",
-            "line": 506,
+            "line": 516,
             "exists": false
           },
           {
             "key": "detail_hub.employees.auto_close_reminder_label",
-            "line": 510,
+            "line": 520,
             "exists": false
           },
           {
             "key": "detail_hub.employees.auto_close_reminder_help",
-            "line": 528,
+            "line": 538,
             "exists": false
           },
           {
             "key": "detail_hub.employees.auto_close_window_label",
-            "line": 534,
+            "line": 544,
             "exists": false
           },
           {
             "key": "detail_hub.employees.auto_close_window_help",
-            "line": 552,
+            "line": 562,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "validation.invalid_time_range",
-            "line": 124,
-            "context": "123: toast({\n124: title: t('validation.invalid_time_range'),\n125: description: t('validation.shift_end_must_be_after_start'),"
+            "line": 123,
+            "context": "122: toast({\n123: title: t('validation.invalid_time_range'),\n124: description: t('validation.shift_end_must_be_after_start'),"
           },
           {
             "key": "validation.shift_end_must_be_after_start",
-            "line": 125,
-            "context": "124: title: t('validation.invalid_time_range'),\n125: description: t('validation.shift_end_must_be_after_start'),\n126: variant: \"destructive\""
+            "line": 124,
+            "context": "123: title: t('validation.invalid_time_range'),\n124: description: t('validation.shift_end_must_be_after_start'),\n125: variant: \"destructive\""
           },
           {
             "key": "detail_hub.employees.auto_close_section_title",
-            "line": 478,
-            "context": "477: <Bell className=\"h-4 w-4 text-indigo-600\" />\n478: {t('detail_hub.employees.auto_close_section_title')}\n479: </CardTitle>"
+            "line": 488,
+            "context": "487: <Bell className=\"h-4 w-4 text-indigo-600\" />\n488: {t('detail_hub.employees.auto_close_section_title')}\n489: </CardTitle>"
           },
           {
             "key": "detail_hub.employees.auto_close_enabled",
-            "line": 489,
-            "context": "488: <p className=\"font-medium text-sm text-gray-900\">\n489: {t('detail_hub.employees.auto_close_enabled')}\n490: </p>"
+            "line": 499,
+            "context": "498: <p className=\"font-medium text-sm text-gray-900\">\n499: {t('detail_hub.employees.auto_close_enabled')}\n500: </p>"
           },
           {
             "key": "detail_hub.employees.auto_close_enabled_help",
-            "line": 492,
-            "context": "491: <p className=\"text-xs text-gray-600 mt-0.5\">\n492: {t('detail_hub.employees.auto_close_enabled_help')}\n493: </p>"
+            "line": 502,
+            "context": "501: <p className=\"text-xs text-gray-600 mt-0.5\">\n502: {t('detail_hub.employees.auto_close_enabled_help')}\n503: </p>"
           },
           {
             "key": "detail_hub.employees.auto_close_timing",
-            "line": 506,
-            "context": "505: <div className=\"space-y-4 pt-2 border-t border-indigo-100\">\n506: <h4 className=\"text-sm font-medium text-gray-700\">{t('detail_hub.employees.auto_close_timing')}</h4>\n507: <div className=\"grid grid-cols-2 gap-4\">"
+            "line": 516,
+            "context": "515: <div className=\"space-y-4 pt-2 border-t border-indigo-100\">\n516: <h4 className=\"text-sm font-medium text-gray-700\">{t('detail_hub.employees.auto_close_timing')}</h4>\n517: <div className=\"grid grid-cols-2 gap-4\">"
           },
           {
             "key": "detail_hub.employees.auto_close_reminder_label",
-            "line": 510,
-            "context": "509: <Label htmlFor=\"reminder\" className=\"text-sm\">\n510: {t('detail_hub.employees.auto_close_reminder_label')}\n511: </Label>"
+            "line": 520,
+            "context": "519: <Label htmlFor=\"reminder\" className=\"text-sm\">\n520: {t('detail_hub.employees.auto_close_reminder_label')}\n521: </Label>"
           },
           {
             "key": "detail_hub.employees.auto_close_reminder_help",
-            "line": 528,
-            "context": "527: <p className=\"text-xs text-gray-600\">\n528: {t('detail_hub.employees.auto_close_reminder_help')}\n529: </p>"
+            "line": 538,
+            "context": "537: <p className=\"text-xs text-gray-600\">\n538: {t('detail_hub.employees.auto_close_reminder_help')}\n539: </p>"
           },
           {
             "key": "detail_hub.employees.auto_close_window_label",
-            "line": 534,
-            "context": "533: <Label htmlFor=\"auto-close-window\" className=\"text-sm\">\n534: {t('detail_hub.employees.auto_close_window_label')}\n535: </Label>"
+            "line": 544,
+            "context": "543: <Label htmlFor=\"auto-close-window\" className=\"text-sm\">\n544: {t('detail_hub.employees.auto_close_window_label')}\n545: </Label>"
           },
           {
             "key": "detail_hub.employees.auto_close_window_help",
-            "line": 552,
-            "context": "551: <p className=\"text-xs text-gray-600\">\n552: {t('detail_hub.employees.auto_close_window_help')}\n553: </p>"
+            "line": 562,
+            "context": "561: <p className=\"text-xs text-gray-600\">\n562: {t('detail_hub.employees.auto_close_window_help')}\n563: </p>"
           }
         ],
-        "coverage": 33,
+        "coverage": 31,
         "severity": "critical"
       },
       {
@@ -1572,1095 +1582,1155 @@
         "hardcodedStrings": [
           {
             "text": "Disabled Entries",
-            "line": 768,
-            "context": "767: >\n768: <Trash2 className=\"w-4 h-4 mr-2\" />\n769: Disabled Entries"
+            "line": 775,
+            "context": "774: >\n775: <Trash2 className=\"w-4 h-4 mr-2\" />\n776: Disabled Entries"
           },
           {
             "text": "Auto",
-            "line": 1203,
-            "context": "1202: title={t('detail_hub.timecard.auto_closed_tooltip')}\n1203: >\n1204: Auto"
+            "line": 1251,
+            "context": "1250: title={t('detail_hub.timecard.auto_closed_tooltip')}\n1251: >\n1252: Auto"
           },
           {
             "text": "Auto",
-            "line": 1396,
-            "context": "1395: title={t('detail_hub.timecard.auto_closed_tooltip')}\n1396: >\n1397: Auto"
+            "line": 1489,
+            "context": "1488: title={t('detail_hub.timecard.auto_closed_tooltip')}\n1489: >\n1490: Auto"
           },
           {
             "text": "Employee",
-            "line": 1517,
-            "context": "1516: <TableRow className=\"bg-gray-100\">\n1517: <TableHead className=\"font-semibold\">Employee</TableHead>\n1518: <TableHead className=\"font-semibold text-right\">Days Worked</TableHead>"
+            "line": 1614,
+            "context": "1613: <TableRow className=\"bg-gray-100\">\n1614: <TableHead className=\"font-semibold\">Employee</TableHead>\n1615: <TableHead className=\"font-semibold text-right\">Days Worked</TableHead>"
           },
           {
             "text": "Days Worked",
-            "line": 1518,
-            "context": "1517: <TableHead className=\"font-semibold\">Employee</TableHead>\n1518: <TableHead className=\"font-semibold text-right\">Days Worked</TableHead>\n1519: <TableHead className=\"font-semibold text-right\">Regular Hours</TableHead>"
+            "line": 1615,
+            "context": "1614: <TableHead className=\"font-semibold\">Employee</TableHead>\n1615: <TableHead className=\"font-semibold text-right\">Days Worked</TableHead>\n1616: <TableHead className=\"font-semibold text-right\">Regular Hours</TableHead>"
           },
           {
             "text": "Regular Hours",
-            "line": 1519,
-            "context": "1518: <TableHead className=\"font-semibold text-right\">Days Worked</TableHead>\n1519: <TableHead className=\"font-semibold text-right\">Regular Hours</TableHead>\n1520: <TableHead className=\"font-semibold text-right\">Overtime</TableHead>"
+            "line": 1616,
+            "context": "1615: <TableHead className=\"font-semibold text-right\">Days Worked</TableHead>\n1616: <TableHead className=\"font-semibold text-right\">Regular Hours</TableHead>\n1617: <TableHead className=\"font-semibold text-right\">Overtime</TableHead>"
           },
           {
             "text": "Overtime",
-            "line": 1520,
-            "context": "1519: <TableHead className=\"font-semibold text-right\">Regular Hours</TableHead>\n1520: <TableHead className=\"font-semibold text-right\">Overtime</TableHead>\n1521: <TableHead className=\"font-semibold text-right\">Total Hours</TableHead>"
+            "line": 1617,
+            "context": "1616: <TableHead className=\"font-semibold text-right\">Regular Hours</TableHead>\n1617: <TableHead className=\"font-semibold text-right\">Overtime</TableHead>\n1618: <TableHead className=\"font-semibold text-right\">Total Hours</TableHead>"
           },
           {
             "text": "Total Hours",
-            "line": 1521,
-            "context": "1520: <TableHead className=\"font-semibold text-right\">Overtime</TableHead>\n1521: <TableHead className=\"font-semibold text-right\">Total Hours</TableHead>\n1522: <TableHead className=\"font-semibold text-right\">Hourly Rate</TableHead>"
+            "line": 1618,
+            "context": "1617: <TableHead className=\"font-semibold text-right\">Overtime</TableHead>\n1618: <TableHead className=\"font-semibold text-right\">Total Hours</TableHead>\n1619: <TableHead className=\"font-semibold text-right\">Hourly Rate</TableHead>"
           },
           {
             "text": "Hourly Rate",
-            "line": 1522,
-            "context": "1521: <TableHead className=\"font-semibold text-right\">Total Hours</TableHead>\n1522: <TableHead className=\"font-semibold text-right\">Hourly Rate</TableHead>\n1523: <TableHead className=\"font-semibold text-right\">Total Pay</TableHead>"
+            "line": 1619,
+            "context": "1618: <TableHead className=\"font-semibold text-right\">Total Hours</TableHead>\n1619: <TableHead className=\"font-semibold text-right\">Hourly Rate</TableHead>\n1620: <TableHead className=\"font-semibold text-right\">Total Pay</TableHead>"
           },
           {
             "text": "Total Pay",
-            "line": 1523,
-            "context": "1522: <TableHead className=\"font-semibold text-right\">Hourly Rate</TableHead>\n1523: <TableHead className=\"font-semibold text-right\">Total Pay</TableHead>\n1524: </TableRow>"
+            "line": 1620,
+            "context": "1619: <TableHead className=\"font-semibold text-right\">Hourly Rate</TableHead>\n1620: <TableHead className=\"font-semibold text-right\">Total Pay</TableHead>\n1621: </TableRow>"
           },
           {
             "text": "No employee data for this period",
-            "line": 1608,
-            "context": "1607: <Clock className=\"w-12 h-12 text-muted-foreground mx-auto mb-2\" />\n1608: <p className=\"text-muted-foreground\">No employee data for this period</p>\n1609: </TableCell>"
+            "line": 1705,
+            "context": "1704: <Clock className=\"w-12 h-12 text-muted-foreground mx-auto mb-2\" />\n1705: <p className=\"text-muted-foreground\">No employee data for this period</p>\n1706: </TableCell>"
           },
           {
             "text": "Approved",
-            "line": 1636,
-            "context": "1635: <Badge className=\"bg-emerald-100 text-emerald-800 border-emerald-300 ml-2\">\n1636: <CheckCircle2 className=\"w-3 h-3 mr-1\" />\n1637: Approved"
+            "line": 1733,
+            "context": "1732: <Badge className=\"bg-emerald-100 text-emerald-800 border-emerald-300 ml-2\">\n1733: <CheckCircle2 className=\"w-3 h-3 mr-1\" />\n1734: Approved"
           },
           {
             "text": "Pending",
-            "line": 1650,
-            "context": "1649: <Badge className=\"bg-gray-100 text-gray-700 border-gray-300 ml-2\">\n1650: <Clock className=\"w-3 h-3 mr-1\" />\n1651: Pending"
+            "line": 1747,
+            "context": "1746: <Badge className=\"bg-gray-100 text-gray-700 border-gray-300 ml-2\">\n1747: <Clock className=\"w-3 h-3 mr-1\" />\n1748: Pending"
           },
           {
             "text": "Not Approved",
-            "line": 1657,
-            "context": "1656: <Badge className=\"bg-red-100 text-red-800 border-red-300 ml-2\">\n1657: <XCircle className=\"w-3 h-3 mr-1\" />\n1658: Not Approved"
+            "line": 1754,
+            "context": "1753: <Badge className=\"bg-red-100 text-red-800 border-red-300 ml-2\">\n1754: <XCircle className=\"w-3 h-3 mr-1\" />\n1755: Not Approved"
           },
           {
             "text": "Monthly report functionality coming soon",
-            "line": 1790,
-            "context": "1789: <Clock className=\"w-12 h-12 text-muted-foreground mx-auto mb-4\" />\n1790: <p className=\"text-muted-foreground\">Monthly report functionality coming soon</p>\n1791: </div>"
+            "line": 1887,
+            "context": "1886: <Clock className=\"w-12 h-12 text-muted-foreground mx-auto mb-4\" />\n1887: <p className=\"text-muted-foreground\">Monthly report functionality coming soon</p>\n1888: </div>"
           },
           {
             "text": "Manage disabled entries to prevent overlap errors",
-            "line": 766,
-            "context": "765: className=\"text-amber-600 hover:text-amber-700 hover:bg-amber-50\"\n766: title=\"Manage disabled entries to prevent overlap errors\"\n767: >"
+            "line": 773,
+            "context": "772: className=\"text-amber-600 hover:text-amber-700 hover:bg-amber-50\"\n773: title=\"Manage disabled entries to prevent overlap errors\"\n774: >"
           },
           {
             "text": "View clock-in photo",
-            "line": 1141,
-            "context": "1140: className=\"relative group\"\n1141: title=\"View clock-in photo\"\n1142: >"
+            "line": 1148,
+            "context": "1147: className=\"relative group\"\n1148: title=\"View clock-in photo\"\n1149: >"
           },
           {
             "text": "Clock In",
-            "line": 1145,
-            "context": "1144: src={timecard.photoInUrl}\n1145: alt=\"Clock In\"\n1146: className=\"w-8 h-8 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer\""
+            "line": 1152,
+            "context": "1151: src={timecard.photoInUrl}\n1152: alt=\"Clock In\"\n1153: className=\"w-8 h-8 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer\""
           },
           {
             "text": "View clock-out photo",
-            "line": 1173,
-            "context": "1172: className=\"relative group\"\n1173: title=\"View clock-out photo\"\n1174: >"
+            "line": 1180,
+            "context": "1179: className=\"relative group\"\n1180: title=\"View clock-out photo\"\n1181: >"
           },
           {
             "text": "Clock Out",
-            "line": 1177,
-            "context": "1176: src={timecard.photoOutUrl}\n1177: alt=\"Clock Out\"\n1178: className=\"w-8 h-8 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer\""
+            "line": 1184,
+            "context": "1183: src={timecard.photoOutUrl}\n1184: alt=\"Clock Out\"\n1185: className=\"w-8 h-8 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer\""
           },
           {
             "text": "View clock-in photo",
-            "line": 1334,
-            "context": "1333: className=\"relative group\"\n1334: title=\"View clock-in photo\"\n1335: >"
+            "line": 1386,
+            "context": "1385: className=\"relative group\"\n1386: title=\"View clock-in photo\"\n1387: >"
           },
           {
             "text": "Clock In",
-            "line": 1338,
-            "context": "1337: src={timecard.photoInUrl}\n1338: alt=\"Clock In\"\n1339: className=\"w-8 h-8 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer\""
+            "line": 1390,
+            "context": "1389: src={timecard.photoInUrl}\n1390: alt=\"Clock In\"\n1391: className=\"w-8 h-8 rounded object-cover border-2 border-green-500 hover:border-green-600 transition-all cursor-pointer\""
           },
           {
             "text": "View clock-out photo",
-            "line": 1366,
-            "context": "1365: className=\"relative group\"\n1366: title=\"View clock-out photo\"\n1367: >"
+            "line": 1418,
+            "context": "1417: className=\"relative group\"\n1418: title=\"View clock-out photo\"\n1419: >"
           },
           {
             "text": "Clock Out",
-            "line": 1370,
-            "context": "1369: src={timecard.photoOutUrl}\n1370: alt=\"Clock Out\"\n1371: className=\"w-8 h-8 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer\""
+            "line": 1422,
+            "context": "1421: src={timecard.photoOutUrl}\n1422: alt=\"Clock Out\"\n1423: className=\"w-8 h-8 rounded object-cover border-2 border-red-500 hover:border-red-600 transition-all cursor-pointer\""
           },
           {
             "text": "Double-click to view employee details",
-            "line": 1677,
-            "context": "1676: }}\n1677: title=\"Double-click to view employee details\"\n1678: >"
+            "line": 1774,
+            "context": "1773: }}\n1774: title=\"Double-click to view employee details\"\n1775: >"
           },
           {
             "text": "Time clock photo",
-            "line": 1969,
-            "context": "1968: src={selectedPhoto.url}\n1969: alt=\"Time clock photo\"\n1970: className=\"max-w-full max-h-[60vh] rounded-lg object-contain\""
+            "line": 2066,
+            "context": "2065: src={selectedPhoto.url}\n2066: alt=\"Time clock photo\"\n2067: className=\"max-w-full max-h-[60vh] rounded-lg object-contain\""
           }
         ],
         "translationCalls": [
           {
             "key": "detail_hub.timecard.photo_reviews.bulk_approved",
-            "line": 179,
+            "line": 184,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_reviews.bulk_failed",
-            "line": 182,
+            "line": 187,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.status_badges.complete",
-            "line": 427,
+            "line": 434,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.status_badges.active",
-            "line": 429,
+            "line": 436,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.status_badges.late",
-            "line": 431,
+            "line": 438,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.export_success",
-            "line": 508,
+            "line": 515,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.pdf_downloaded",
-            "line": 509,
+            "line": 516,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.export_failed",
-            "line": 513,
+            "line": 520,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.export_success",
-            "line": 560,
+            "line": 567,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.excel_downloaded",
-            "line": 561,
+            "line": 568,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.export_failed",
-            "line": 565,
+            "line": 572,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.title",
-            "line": 644,
+            "line": 651,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.subtitle",
-            "line": 645,
+            "line": 652,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.manual_entry.add_button",
-            "line": 650,
+            "line": 657,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.export",
-            "line": 657,
+            "line": 664,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.export_pdf",
-            "line": 663,
+            "line": 670,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.export_excel",
-            "line": 667,
+            "line": 674,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.today",
-            "line": 683,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.filters.this_week",
             "line": 690,
             "exists": false
           },
           {
-            "key": "detail_hub.timecard.filters.last_week",
+            "key": "detail_hub.timecard.filters.this_week",
             "line": 697,
             "exists": false
           },
           {
+            "key": "detail_hub.timecard.filters.last_week",
+            "line": 704,
+            "exists": false
+          },
+          {
             "key": "detail_hub.timecard.filters.custom_date",
-            "line": 716,
+            "line": 723,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.filters",
-            "line": 743,
+            "line": 750,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.advanced_filters",
-            "line": 753,
+            "line": 760,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.search_placeholder",
-            "line": 785,
+            "line": 792,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.all_employees",
-            "line": 795,
+            "line": 802,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.all_employees",
-            "line": 798,
+            "line": 805,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.all_statuses",
-            "line": 810,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.filters.all_statuses",
-            "line": 813,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.filters.status.active",
-            "line": 814,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.filters.status.complete",
-            "line": 815,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.filters.status.disputed",
-            "line": 816,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.filters.status.approved",
             "line": 817,
             "exists": false
           },
           {
-            "key": "detail_hub.timecard.filters.all_methods",
+            "key": "detail_hub.timecard.filters.all_statuses",
+            "line": 820,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.filters.status.active",
+            "line": 821,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.filters.status.complete",
+            "line": 822,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.filters.status.disputed",
+            "line": 823,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.filters.status.approved",
             "line": 824,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.all_methods",
-            "line": 827,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.filters.methods.face",
-            "line": 828,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.filters.methods.pin",
-            "line": 829,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.filters.methods.manual",
-            "line": 830,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.filters.methods.photo_fallback",
             "line": 831,
             "exists": false
           },
           {
-            "key": "detail_hub.timecard.filters.all_approval_statuses",
+            "key": "detail_hub.timecard.filters.all_methods",
+            "line": 834,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.filters.methods.face",
+            "line": 835,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.filters.methods.pin",
+            "line": 836,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.filters.methods.manual",
+            "line": 837,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.filters.methods.photo_fallback",
             "line": 838,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.all_approval_statuses",
-            "line": 841,
+            "line": 845,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.filters.all_approval_statuses",
+            "line": 848,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.approval.status.pending",
-            "line": 842,
+            "line": 849,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.approval.status.approved",
-            "line": 843,
+            "line": 850,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.approval.status.rejected",
-            "line": 844,
+            "line": 851,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.filters_active",
-            "line": 853,
+            "line": 860,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.clear_all",
-            "line": 857,
+            "line": 864,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.stats.total_hours",
-            "line": 870,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.timecard.stats.overtime_hours",
             "line": 877,
             "exists": true
           },
           {
-            "key": "detail_hub.timecard.stats.employees",
+            "key": "detail_hub.timecard.stats.overtime_hours",
             "line": 884,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.timecard.stats.employees",
+            "line": 891,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.stats.active_employees",
-            "line": 891,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.timecard.stats.total_payroll",
             "line": 898,
             "exists": true
           },
           {
+            "key": "detail_hub.timecard.stats.total_payroll",
+            "line": 905,
+            "exists": true
+          },
+          {
             "key": "detail_hub.timecard.photo_reviews.title",
-            "line": 911,
+            "line": 918,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.photo_reviews.pending_count",
-            "line": 914,
+            "line": 921,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.photo_reviews.deselect_all",
-            "line": 928,
+            "line": 935,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_reviews.select_all",
-            "line": 929,
+            "line": 936,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_reviews.approve_selected",
-            "line": 941,
+            "line": 948,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.daily_view",
-            "line": 1009,
+            "line": 1016,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.weekly_summary",
-            "line": 1010,
+            "line": 1017,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.monthly_report",
-            "line": 1011,
+            "line": 1018,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.filters.todays_timecards",
-            "line": 1018,
+            "line": 1025,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.this_weeks_timecards",
-            "line": 1019,
+            "line": 1026,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.last_weeks_timecards",
-            "line": 1020,
+            "line": 1027,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.daily_timecards",
-            "line": 1023,
+            "line": 1030,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.daily_timecards",
-            "line": 1024,
+            "line": 1031,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.table.employee",
-            "line": 1032,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.timecard.table.photo",
-            "line": 1033,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.table.clock_in",
-            "line": 1034,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.timecard.table.clock_out",
-            "line": 1035,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.timecard.table.break",
-            "line": 1036,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.timecard.table.total_hours",
-            "line": 1037,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.timecard.table.overtime",
-            "line": 1038,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.timecard.table.pay",
             "line": 1039,
             "exists": true
           },
           {
-            "key": "detail_hub.timecard.table.status",
+            "key": "detail_hub.timecard.table.photo",
             "line": 1040,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.table.clock_in",
+            "line": 1041,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.timecard.table.clock_out",
+            "line": 1042,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.timecard.table.break",
+            "line": 1043,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.timecard.table.total_hours",
+            "line": 1044,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.timecard.table.overtime",
+            "line": 1045,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.timecard.table.pay",
+            "line": 1046,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.timecard.table.status",
+            "line": 1047,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.table.notes",
-            "line": 1041,
+            "line": 1048,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.table.actions",
-            "line": 1042,
+            "line": 1049,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.loading",
-            "line": 1051,
+            "line": 1058,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.no_entries",
-            "line": 1059,
+            "line": 1066,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.next_day_indicator",
+            "line": 1230,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.overnight_shift",
+            "line": 1238,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.long_shift_warning",
+            "line": 1243,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.auto_closed_tooltip",
-            "line": 1202,
+            "line": 1250,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.table.hours_abbr",
-            "line": 1212,
+            "line": 1264,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.table.hours_abbr",
-            "line": 1216,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.review_now",
-            "line": 1247,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.actions.view_logs",
-            "line": 1263,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.actions.edit",
-            "line": 1277,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.actions.disable",
-            "line": 1288,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.auto_closed_tooltip",
-            "line": 1395,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.table.hours_abbr",
-            "line": 1405,
-            "exists": true
-          },
-          {
-            "key": "detail_hub.timecard.table.hours_abbr",
-            "line": 1409,
+            "line": 1268,
             "exists": true
           },
           {
             "key": "detail_hub.review_now",
-            "line": 1440,
+            "line": 1299,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.actions.view_logs",
-            "line": 1456,
+            "line": 1315,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.actions.edit",
-            "line": 1470,
+            "line": 1329,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.actions.disable",
+            "line": 1340,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.next_day_indicator",
+            "line": 1468,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.overnight_shift",
+            "line": 1476,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.long_shift_warning",
             "line": 1481,
             "exists": false
           },
           {
-            "key": "detail_hub.timecard.filters.this_weeks_timecards",
+            "key": "detail_hub.timecard.auto_closed_tooltip",
+            "line": 1488,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.table.hours_abbr",
             "line": 1502,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.timecard.table.hours_abbr",
+            "line": 1506,
+            "exists": true
+          },
+          {
+            "key": "detail_hub.review_now",
+            "line": 1537,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.actions.view_logs",
+            "line": 1553,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.actions.edit",
+            "line": 1567,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.actions.disable",
+            "line": 1578,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.filters.this_weeks_timecards",
+            "line": 1599,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.filters.last_weeks_timecards",
-            "line": 1503,
+            "line": 1600,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.monthly_report",
-            "line": 1785,
+            "line": 1882,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.photo_reviews.bulk_approve_title",
-            "line": 1830,
+            "line": 1927,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_reviews.bulk_approve_description",
-            "line": 1833,
+            "line": 1930,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 1838,
+            "line": 1935,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.photo_reviews.approving",
-            "line": 1848,
+            "line": 1945,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_reviews.confirm_approve",
-            "line": 1853,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.disable_dialog.title",
-            "line": 1895,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.disable_dialog.description",
-            "line": 1897,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.disable_dialog.cancel",
-            "line": 1901,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.disable_dialog.confirm",
-            "line": 1911,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.photo_viewer.title",
-            "line": 1922,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.photo_viewer.employee",
-            "line": 1929,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.photo_viewer.timestamp",
-            "line": 1934,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.photo_viewer.clock_in",
-            "line": 1937,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.photo_viewer.clock_out",
-            "line": 1937,
-            "exists": false
-          },
-          {
-            "key": "detail_hub.timecard.photo_viewer.kiosk",
             "line": 1950,
             "exists": false
           },
           {
+            "key": "detail_hub.timecard.disable_dialog.title",
+            "line": 1992,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.disable_dialog.description",
+            "line": 1994,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.disable_dialog.cancel",
+            "line": 1998,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.disable_dialog.confirm",
+            "line": 2008,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.photo_viewer.title",
+            "line": 2019,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.photo_viewer.employee",
+            "line": 2026,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.photo_viewer.timestamp",
+            "line": 2031,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.photo_viewer.clock_in",
+            "line": 2034,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.photo_viewer.clock_out",
+            "line": 2034,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.photo_viewer.kiosk",
+            "line": 2047,
+            "exists": false
+          },
+          {
             "key": "detail_hub.timecard.photo_viewer.location",
-            "line": 1956,
+            "line": 2053,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_viewer.method",
-            "line": 1982,
+            "line": 2079,
             "exists": false
           },
           {
             "key": "detail_hub.timecard.photo_viewer.captured_at",
-            "line": 1991,
+            "line": 2088,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "detail_hub.timecard.photo_reviews.bulk_approved",
-            "line": 179,
-            "context": "178: if (successCount > 0) {\n179: toast.success(t('detail_hub.timecard.photo_reviews.bulk_approved', { count: successCount }));\n180: }"
+            "line": 184,
+            "context": "183: if (successCount > 0) {\n184: toast.success(t('detail_hub.timecard.photo_reviews.bulk_approved', { count: successCount }));\n185: }"
           },
           {
             "key": "detail_hub.timecard.photo_reviews.bulk_failed",
-            "line": 182,
-            "context": "181: if (failCount > 0) {\n182: toast.error(t('detail_hub.timecard.photo_reviews.bulk_failed', { count: failCount }));\n183: if (errors.length > 0) {"
+            "line": 187,
+            "context": "186: if (failCount > 0) {\n187: toast.error(t('detail_hub.timecard.photo_reviews.bulk_failed', { count: failCount }));\n188: if (errors.length > 0) {"
           },
           {
             "key": "detail_hub.timecard.export_success",
-            "line": 508,
-            "context": "507: \n508: toast.success(t('detail_hub.timecard.export_success'), {\n509: description: t('detail_hub.timecard.pdf_downloaded')"
+            "line": 515,
+            "context": "514: \n515: toast.success(t('detail_hub.timecard.export_success'), {\n516: description: t('detail_hub.timecard.pdf_downloaded')"
           },
           {
             "key": "detail_hub.timecard.pdf_downloaded",
-            "line": 509,
-            "context": "508: toast.success(t('detail_hub.timecard.export_success'), {\n509: description: t('detail_hub.timecard.pdf_downloaded')\n510: });"
+            "line": 516,
+            "context": "515: toast.success(t('detail_hub.timecard.export_success'), {\n516: description: t('detail_hub.timecard.pdf_downloaded')\n517: });"
           },
           {
             "key": "detail_hub.timecard.export_failed",
-            "line": 513,
-            "context": "512: console.error('Failed to export timecard PDF:', error);\n513: toast.error(t('detail_hub.timecard.export_failed'));\n514: }"
+            "line": 520,
+            "context": "519: console.error('Failed to export timecard PDF:', error);\n520: toast.error(t('detail_hub.timecard.export_failed'));\n521: }"
           },
           {
             "key": "detail_hub.timecard.export_success",
-            "line": 560,
-            "context": "559: \n560: toast.success(t('detail_hub.timecard.export_success'), {\n561: description: t('detail_hub.timecard.excel_downloaded')"
+            "line": 567,
+            "context": "566: \n567: toast.success(t('detail_hub.timecard.export_success'), {\n568: description: t('detail_hub.timecard.excel_downloaded')"
           },
           {
             "key": "detail_hub.timecard.excel_downloaded",
-            "line": 561,
-            "context": "560: toast.success(t('detail_hub.timecard.export_success'), {\n561: description: t('detail_hub.timecard.excel_downloaded')\n562: });"
+            "line": 568,
+            "context": "567: toast.success(t('detail_hub.timecard.export_success'), {\n568: description: t('detail_hub.timecard.excel_downloaded')\n569: });"
           },
           {
             "key": "detail_hub.timecard.export_failed",
-            "line": 565,
-            "context": "564: console.error('Failed to export timecard Excel:', error);\n565: toast.error(t('detail_hub.timecard.export_failed'));\n566: }"
+            "line": 572,
+            "context": "571: console.error('Failed to export timecard Excel:', error);\n572: toast.error(t('detail_hub.timecard.export_failed'));\n573: }"
           },
           {
             "key": "detail_hub.timecard.manual_entry.add_button",
-            "line": 650,
-            "context": "649: <Plus className=\"w-4 h-4 mr-2\" />\n650: {t('detail_hub.timecard.manual_entry.add_button')}\n651: </Button>"
+            "line": 657,
+            "context": "656: <Plus className=\"w-4 h-4 mr-2\" />\n657: {t('detail_hub.timecard.manual_entry.add_button')}\n658: </Button>"
           },
           {
             "key": "detail_hub.timecard.export_pdf",
-            "line": 663,
-            "context": "662: <FileText className=\"w-4 h-4 mr-2\" />\n663: {t('detail_hub.timecard.export_pdf')}\n664: </DropdownMenuItem>"
+            "line": 670,
+            "context": "669: <FileText className=\"w-4 h-4 mr-2\" />\n670: {t('detail_hub.timecard.export_pdf')}\n671: </DropdownMenuItem>"
           },
           {
             "key": "detail_hub.timecard.export_excel",
-            "line": 667,
-            "context": "666: <FileSpreadsheet className=\"w-4 h-4 mr-2\" />\n667: {t('detail_hub.timecard.export_excel')}\n668: </DropdownMenuItem>"
+            "line": 674,
+            "context": "673: <FileSpreadsheet className=\"w-4 h-4 mr-2\" />\n674: {t('detail_hub.timecard.export_excel')}\n675: </DropdownMenuItem>"
           },
           {
             "key": "detail_hub.timecard.filters.today",
-            "line": 683,
-            "context": "682: >\n683: {t('detail_hub.timecard.filters.today')}\n684: </Button>"
+            "line": 690,
+            "context": "689: >\n690: {t('detail_hub.timecard.filters.today')}\n691: </Button>"
           },
           {
             "key": "detail_hub.timecard.filters.this_week",
-            "line": 690,
-            "context": "689: >\n690: {t('detail_hub.timecard.filters.this_week')}\n691: </Button>"
+            "line": 697,
+            "context": "696: >\n697: {t('detail_hub.timecard.filters.this_week')}\n698: </Button>"
           },
           {
             "key": "detail_hub.timecard.filters.last_week",
-            "line": 697,
-            "context": "696: >\n697: {t('detail_hub.timecard.filters.last_week')}\n698: </Button>"
+            "line": 704,
+            "context": "703: >\n704: {t('detail_hub.timecard.filters.last_week')}\n705: </Button>"
           },
           {
             "key": "detail_hub.timecard.filters.custom_date",
-            "line": 716,
-            "context": "715: ) : (\n716: t('detail_hub.timecard.filters.custom_date')\n717: )}"
+            "line": 723,
+            "context": "722: ) : (\n723: t('detail_hub.timecard.filters.custom_date')\n724: )}"
           },
           {
             "key": "detail_hub.timecard.filters.filters",
-            "line": 743,
-            "context": "742: <Filter className=\"h-4 w-4\" />\n743: {t('detail_hub.timecard.filters.filters')}:\n744: </div>"
+            "line": 750,
+            "context": "749: <Filter className=\"h-4 w-4\" />\n750: {t('detail_hub.timecard.filters.filters')}:\n751: </div>"
           },
           {
             "key": "detail_hub.timecard.filters.advanced_filters",
-            "line": 753,
-            "context": "752: <Filter className=\"w-4 h-4 mr-2\" />\n753: {t('detail_hub.timecard.filters.advanced_filters')}\n754: {getActiveFiltersCount() > 0 && ("
+            "line": 760,
+            "context": "759: <Filter className=\"w-4 h-4 mr-2\" />\n760: {t('detail_hub.timecard.filters.advanced_filters')}\n761: {getActiveFiltersCount() > 0 && ("
           },
           {
             "key": "detail_hub.timecard.filters.search_placeholder",
-            "line": 785,
-            "context": "784: type=\"text\"\n785: placeholder={t('detail_hub.timecard.filters.search_placeholder')}\n786: value={searchQuery}"
+            "line": 792,
+            "context": "791: type=\"text\"\n792: placeholder={t('detail_hub.timecard.filters.search_placeholder')}\n793: value={searchQuery}"
           },
           {
             "key": "detail_hub.timecard.filters.all_employees",
-            "line": 795,
-            "context": "794: <SelectTrigger>\n795: <SelectValue placeholder={t('detail_hub.timecard.filters.all_employees')} />\n796: </SelectTrigger>"
+            "line": 802,
+            "context": "801: <SelectTrigger>\n802: <SelectValue placeholder={t('detail_hub.timecard.filters.all_employees')} />\n803: </SelectTrigger>"
           },
           {
             "key": "detail_hub.timecard.filters.all_employees",
-            "line": 798,
-            "context": "797: <SelectContent>\n798: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.all_employees')}</SelectItem>\n799: {employees.map((emp) => ("
+            "line": 805,
+            "context": "804: <SelectContent>\n805: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.all_employees')}</SelectItem>\n806: {employees.map((emp) => ("
           },
           {
             "key": "detail_hub.timecard.filters.all_statuses",
-            "line": 810,
-            "context": "809: <SelectTrigger>\n810: <SelectValue placeholder={t('detail_hub.timecard.filters.all_statuses')} />\n811: </SelectTrigger>"
+            "line": 817,
+            "context": "816: <SelectTrigger>\n817: <SelectValue placeholder={t('detail_hub.timecard.filters.all_statuses')} />\n818: </SelectTrigger>"
           },
           {
             "key": "detail_hub.timecard.filters.all_statuses",
-            "line": 813,
-            "context": "812: <SelectContent>\n813: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.all_statuses')}</SelectItem>\n814: <SelectItem value=\"active\">{t('detail_hub.timecard.filters.status.active')}</SelectItem>"
+            "line": 820,
+            "context": "819: <SelectContent>\n820: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.all_statuses')}</SelectItem>\n821: <SelectItem value=\"active\">{t('detail_hub.timecard.filters.status.active')}</SelectItem>"
           },
           {
             "key": "detail_hub.timecard.filters.status.active",
-            "line": 814,
-            "context": "813: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.all_statuses')}</SelectItem>\n814: <SelectItem value=\"active\">{t('detail_hub.timecard.filters.status.active')}</SelectItem>\n815: <SelectItem value=\"complete\">{t('detail_hub.timecard.filters.status.complete')}</SelectItem>"
+            "line": 821,
+            "context": "820: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.all_statuses')}</SelectItem>\n821: <SelectItem value=\"active\">{t('detail_hub.timecard.filters.status.active')}</SelectItem>\n822: <SelectItem value=\"complete\">{t('detail_hub.timecard.filters.status.complete')}</SelectItem>"
           },
           {
             "key": "detail_hub.timecard.filters.status.complete",
-            "line": 815,
-            "context": "814: <SelectItem value=\"active\">{t('detail_hub.timecard.filters.status.active')}</SelectItem>\n815: <SelectItem value=\"complete\">{t('detail_hub.timecard.filters.status.complete')}</SelectItem>\n816: <SelectItem value=\"disputed\">{t('detail_hub.timecard.filters.status.disputed')}</SelectItem>"
+            "line": 822,
+            "context": "821: <SelectItem value=\"active\">{t('detail_hub.timecard.filters.status.active')}</SelectItem>\n822: <SelectItem value=\"complete\">{t('detail_hub.timecard.filters.status.complete')}</SelectItem>\n823: <SelectItem value=\"disputed\">{t('detail_hub.timecard.filters.status.disputed')}</SelectItem>"
           },
           {
             "key": "detail_hub.timecard.filters.status.disputed",
-            "line": 816,
-            "context": "815: <SelectItem value=\"complete\">{t('detail_hub.timecard.filters.status.complete')}</SelectItem>\n816: <SelectItem value=\"disputed\">{t('detail_hub.timecard.filters.status.disputed')}</SelectItem>\n817: <SelectItem value=\"approved\">{t('detail_hub.timecard.filters.status.approved')}</SelectItem>"
+            "line": 823,
+            "context": "822: <SelectItem value=\"complete\">{t('detail_hub.timecard.filters.status.complete')}</SelectItem>\n823: <SelectItem value=\"disputed\">{t('detail_hub.timecard.filters.status.disputed')}</SelectItem>\n824: <SelectItem value=\"approved\">{t('detail_hub.timecard.filters.status.approved')}</SelectItem>"
           },
           {
             "key": "detail_hub.timecard.filters.status.approved",
-            "line": 817,
-            "context": "816: <SelectItem value=\"disputed\">{t('detail_hub.timecard.filters.status.disputed')}</SelectItem>\n817: <SelectItem value=\"approved\">{t('detail_hub.timecard.filters.status.approved')}</SelectItem>\n818: </SelectContent>"
-          },
-          {
-            "key": "detail_hub.timecard.filters.all_methods",
             "line": 824,
-            "context": "823: <SelectTrigger>\n824: <SelectValue placeholder={t('detail_hub.timecard.filters.all_methods')} />\n825: </SelectTrigger>"
+            "context": "823: <SelectItem value=\"disputed\">{t('detail_hub.timecard.filters.status.disputed')}</SelectItem>\n824: <SelectItem value=\"approved\">{t('detail_hub.timecard.filters.status.approved')}</SelectItem>\n825: </SelectContent>"
           },
           {
             "key": "detail_hub.timecard.filters.all_methods",
-            "line": 827,
-            "context": "826: <SelectContent>\n827: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.all_methods')}</SelectItem>\n828: <SelectItem value=\"face\">{t('detail_hub.timecard.filters.methods.face')}</SelectItem>"
+            "line": 831,
+            "context": "830: <SelectTrigger>\n831: <SelectValue placeholder={t('detail_hub.timecard.filters.all_methods')} />\n832: </SelectTrigger>"
+          },
+          {
+            "key": "detail_hub.timecard.filters.all_methods",
+            "line": 834,
+            "context": "833: <SelectContent>\n834: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.all_methods')}</SelectItem>\n835: <SelectItem value=\"face\">{t('detail_hub.timecard.filters.methods.face')}</SelectItem>"
           },
           {
             "key": "detail_hub.timecard.filters.methods.face",
-            "line": 828,
-            "context": "827: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.all_methods')}</SelectItem>\n828: <SelectItem value=\"face\">{t('detail_hub.timecard.filters.methods.face')}</SelectItem>\n829: <SelectItem value=\"pin\">{t('detail_hub.timecard.filters.methods.pin')}</SelectItem>"
+            "line": 835,
+            "context": "834: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.all_methods')}</SelectItem>\n835: <SelectItem value=\"face\">{t('detail_hub.timecard.filters.methods.face')}</SelectItem>\n836: <SelectItem value=\"pin\">{t('detail_hub.timecard.filters.methods.pin')}</SelectItem>"
           },
           {
             "key": "detail_hub.timecard.filters.methods.pin",
-            "line": 829,
-            "context": "828: <SelectItem value=\"face\">{t('detail_hub.timecard.filters.methods.face')}</SelectItem>\n829: <SelectItem value=\"pin\">{t('detail_hub.timecard.filters.methods.pin')}</SelectItem>\n830: <SelectItem value=\"manual\">{t('detail_hub.timecard.filters.methods.manual')}</SelectItem>"
+            "line": 836,
+            "context": "835: <SelectItem value=\"face\">{t('detail_hub.timecard.filters.methods.face')}</SelectItem>\n836: <SelectItem value=\"pin\">{t('detail_hub.timecard.filters.methods.pin')}</SelectItem>\n837: <SelectItem value=\"manual\">{t('detail_hub.timecard.filters.methods.manual')}</SelectItem>"
           },
           {
             "key": "detail_hub.timecard.filters.methods.manual",
-            "line": 830,
-            "context": "829: <SelectItem value=\"pin\">{t('detail_hub.timecard.filters.methods.pin')}</SelectItem>\n830: <SelectItem value=\"manual\">{t('detail_hub.timecard.filters.methods.manual')}</SelectItem>\n831: <SelectItem value=\"photo_fallback\">{t('detail_hub.timecard.filters.methods.photo_fallback')}</SelectItem>"
+            "line": 837,
+            "context": "836: <SelectItem value=\"pin\">{t('detail_hub.timecard.filters.methods.pin')}</SelectItem>\n837: <SelectItem value=\"manual\">{t('detail_hub.timecard.filters.methods.manual')}</SelectItem>\n838: <SelectItem value=\"photo_fallback\">{t('detail_hub.timecard.filters.methods.photo_fallback')}</SelectItem>"
           },
           {
             "key": "detail_hub.timecard.filters.methods.photo_fallback",
-            "line": 831,
-            "context": "830: <SelectItem value=\"manual\">{t('detail_hub.timecard.filters.methods.manual')}</SelectItem>\n831: <SelectItem value=\"photo_fallback\">{t('detail_hub.timecard.filters.methods.photo_fallback')}</SelectItem>\n832: </SelectContent>"
-          },
-          {
-            "key": "detail_hub.timecard.filters.all_approval_statuses",
             "line": 838,
-            "context": "837: <SelectTrigger>\n838: <SelectValue placeholder={t('detail_hub.timecard.filters.all_approval_statuses') || 'All Approval Statuses'} />\n839: </SelectTrigger>"
+            "context": "837: <SelectItem value=\"manual\">{t('detail_hub.timecard.filters.methods.manual')}</SelectItem>\n838: <SelectItem value=\"photo_fallback\">{t('detail_hub.timecard.filters.methods.photo_fallback')}</SelectItem>\n839: </SelectContent>"
           },
           {
             "key": "detail_hub.timecard.filters.all_approval_statuses",
-            "line": 841,
-            "context": "840: <SelectContent>\n841: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.all_approval_statuses') || 'All Approval Statuses'}</SelectItem>\n842: <SelectItem value=\"pending\">{t('detail_hub.timecard.approval.status.pending') || 'Pending'}</SelectItem>"
+            "line": 845,
+            "context": "844: <SelectTrigger>\n845: <SelectValue placeholder={t('detail_hub.timecard.filters.all_approval_statuses') || 'All Approval Statuses'} />\n846: </SelectTrigger>"
+          },
+          {
+            "key": "detail_hub.timecard.filters.all_approval_statuses",
+            "line": 848,
+            "context": "847: <SelectContent>\n848: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.all_approval_statuses') || 'All Approval Statuses'}</SelectItem>\n849: <SelectItem value=\"pending\">{t('detail_hub.timecard.approval.status.pending') || 'Pending'}</SelectItem>"
           },
           {
             "key": "detail_hub.timecard.approval.status.pending",
-            "line": 842,
-            "context": "841: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.all_approval_statuses') || 'All Approval Statuses'}</SelectItem>\n842: <SelectItem value=\"pending\">{t('detail_hub.timecard.approval.status.pending') || 'Pending'}</SelectItem>\n843: <SelectItem value=\"approved\">{t('detail_hub.timecard.approval.status.approved') || 'Approved'}</SelectItem>"
+            "line": 849,
+            "context": "848: <SelectItem value=\"all\">{t('detail_hub.timecard.filters.all_approval_statuses') || 'All Approval Statuses'}</SelectItem>\n849: <SelectItem value=\"pending\">{t('detail_hub.timecard.approval.status.pending') || 'Pending'}</SelectItem>\n850: <SelectItem value=\"approved\">{t('detail_hub.timecard.approval.status.approved') || 'Approved'}</SelectItem>"
           },
           {
             "key": "detail_hub.timecard.approval.status.approved",
-            "line": 843,
-            "context": "842: <SelectItem value=\"pending\">{t('detail_hub.timecard.approval.status.pending') || 'Pending'}</SelectItem>\n843: <SelectItem value=\"approved\">{t('detail_hub.timecard.approval.status.approved') || 'Approved'}</SelectItem>\n844: <SelectItem value=\"rejected\">{t('detail_hub.timecard.approval.status.rejected') || 'Rejected'}</SelectItem>"
+            "line": 850,
+            "context": "849: <SelectItem value=\"pending\">{t('detail_hub.timecard.approval.status.pending') || 'Pending'}</SelectItem>\n850: <SelectItem value=\"approved\">{t('detail_hub.timecard.approval.status.approved') || 'Approved'}</SelectItem>\n851: <SelectItem value=\"rejected\">{t('detail_hub.timecard.approval.status.rejected') || 'Rejected'}</SelectItem>"
           },
           {
             "key": "detail_hub.timecard.approval.status.rejected",
-            "line": 844,
-            "context": "843: <SelectItem value=\"approved\">{t('detail_hub.timecard.approval.status.approved') || 'Approved'}</SelectItem>\n844: <SelectItem value=\"rejected\">{t('detail_hub.timecard.approval.status.rejected') || 'Rejected'}</SelectItem>\n845: </SelectContent>"
+            "line": 851,
+            "context": "850: <SelectItem value=\"approved\">{t('detail_hub.timecard.approval.status.approved') || 'Approved'}</SelectItem>\n851: <SelectItem value=\"rejected\">{t('detail_hub.timecard.approval.status.rejected') || 'Rejected'}</SelectItem>\n852: </SelectContent>"
           },
           {
             "key": "detail_hub.timecard.filters.filters_active",
-            "line": 853,
-            "context": "852: <p className=\"text-sm text-muted-foreground\">\n853: {t('detail_hub.timecard.filters.filters_active', { count: getActiveFiltersCount() })}\n854: </p>"
+            "line": 860,
+            "context": "859: <p className=\"text-sm text-muted-foreground\">\n860: {t('detail_hub.timecard.filters.filters_active', { count: getActiveFiltersCount() })}\n861: </p>"
           },
           {
             "key": "detail_hub.timecard.filters.clear_all",
-            "line": 857,
-            "context": "856: <X className=\"w-4 h-4 mr-2\" />\n857: {t('detail_hub.timecard.filters.clear_all')}\n858: </Button>"
+            "line": 864,
+            "context": "863: <X className=\"w-4 h-4 mr-2\" />\n864: {t('detail_hub.timecard.filters.clear_all')}\n865: </Button>"
           },
           {
             "key": "detail_hub.timecard.stats.employees",
-            "line": 884,
-            "context": "883: <User className=\"w-4 h-4 text-violet-600\" />\n884: <p className=\"text-sm font-medium text-violet-900\">{t('detail_hub.timecard.stats.employees')}</p>\n885: </div>"
+            "line": 891,
+            "context": "890: <User className=\"w-4 h-4 text-violet-600\" />\n891: <p className=\"text-sm font-medium text-violet-900\">{t('detail_hub.timecard.stats.employees')}</p>\n892: </div>"
           },
           {
             "key": "detail_hub.timecard.photo_reviews.deselect_all",
-            "line": 928,
-            "context": "927: {selectedPhotoReviews.size === pendingReviews.length\n928: ? t('detail_hub.timecard.photo_reviews.deselect_all')\n929: : t('detail_hub.timecard.photo_reviews.select_all')"
+            "line": 935,
+            "context": "934: {selectedPhotoReviews.size === pendingReviews.length\n935: ? t('detail_hub.timecard.photo_reviews.deselect_all')\n936: : t('detail_hub.timecard.photo_reviews.select_all')"
           },
           {
             "key": "detail_hub.timecard.photo_reviews.select_all",
-            "line": 929,
-            "context": "928: ? t('detail_hub.timecard.photo_reviews.deselect_all')\n929: : t('detail_hub.timecard.photo_reviews.select_all')\n930: }"
+            "line": 936,
+            "context": "935: ? t('detail_hub.timecard.photo_reviews.deselect_all')\n936: : t('detail_hub.timecard.photo_reviews.select_all')\n937: }"
           },
           {
             "key": "detail_hub.timecard.photo_reviews.approve_selected",
-            "line": 941,
-            "context": "940: <CheckCircle2 className=\"w-3 h-3 mr-1.5\" />\n941: {t('detail_hub.timecard.photo_reviews.approve_selected', { count: selectedPhotoReviews.size })}\n942: </Button>"
+            "line": 948,
+            "context": "947: <CheckCircle2 className=\"w-3 h-3 mr-1.5\" />\n948: {t('detail_hub.timecard.photo_reviews.approve_selected', { count: selectedPhotoReviews.size })}\n949: </Button>"
           },
           {
             "key": "detail_hub.timecard.filters.todays_timecards",
-            "line": 1018,
-            "context": "1017: <CardTitle>\n1018: {dateFilter === 'today' && t('detail_hub.timecard.filters.todays_timecards')}\n1019: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}"
+            "line": 1025,
+            "context": "1024: <CardTitle>\n1025: {dateFilter === 'today' && t('detail_hub.timecard.filters.todays_timecards')}\n1026: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}"
           },
           {
             "key": "detail_hub.timecard.filters.this_weeks_timecards",
-            "line": 1019,
-            "context": "1018: {dateFilter === 'today' && t('detail_hub.timecard.filters.todays_timecards')}\n1019: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1020: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}"
+            "line": 1026,
+            "context": "1025: {dateFilter === 'today' && t('detail_hub.timecard.filters.todays_timecards')}\n1026: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1027: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}"
           },
           {
             "key": "detail_hub.timecard.filters.last_weeks_timecards",
-            "line": 1020,
-            "context": "1019: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1020: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1021: {dateFilter === 'custom' && customDateRange.from && ("
+            "line": 1027,
+            "context": "1026: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1027: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1028: {dateFilter === 'custom' && customDateRange.from && ("
           },
           {
             "key": "detail_hub.timecard.table.photo",
-            "line": 1033,
-            "context": "1032: <TableHead>{t('detail_hub.timecard.table.employee')}</TableHead>\n1033: <TableHead>{t('detail_hub.timecard.table.photo')}</TableHead>\n1034: <TableHead>{t('detail_hub.timecard.table.clock_in')}</TableHead>"
+            "line": 1040,
+            "context": "1039: <TableHead>{t('detail_hub.timecard.table.employee')}</TableHead>\n1040: <TableHead>{t('detail_hub.timecard.table.photo')}</TableHead>\n1041: <TableHead>{t('detail_hub.timecard.table.clock_in')}</TableHead>"
           },
           {
             "key": "detail_hub.timecard.table.notes",
-            "line": 1041,
-            "context": "1040: <TableHead>{t('detail_hub.timecard.table.status')}</TableHead>\n1041: <TableHead className=\"max-w-xs\">{t('detail_hub.timecard.table.notes')}</TableHead>\n1042: <TableHead className=\"w-[100px]\">{t('detail_hub.timecard.table.actions')}</TableHead>"
+            "line": 1048,
+            "context": "1047: <TableHead>{t('detail_hub.timecard.table.status')}</TableHead>\n1048: <TableHead className=\"max-w-xs\">{t('detail_hub.timecard.table.notes')}</TableHead>\n1049: <TableHead className=\"w-[100px]\">{t('detail_hub.timecard.table.actions')}</TableHead>"
           },
           {
             "key": "detail_hub.timecard.table.actions",
-            "line": 1042,
-            "context": "1041: <TableHead className=\"max-w-xs\">{t('detail_hub.timecard.table.notes')}</TableHead>\n1042: <TableHead className=\"w-[100px]\">{t('detail_hub.timecard.table.actions')}</TableHead>\n1043: </TableRow>"
+            "line": 1049,
+            "context": "1048: <TableHead className=\"max-w-xs\">{t('detail_hub.timecard.table.notes')}</TableHead>\n1049: <TableHead className=\"w-[100px]\">{t('detail_hub.timecard.table.actions')}</TableHead>\n1050: </TableRow>"
           },
           {
             "key": "detail_hub.timecard.loading",
-            "line": 1051,
-            "context": "1050: <div className=\"animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900\"></div>\n1051: <span className=\"text-muted-foreground\">{t('detail_hub.timecard.loading')}</span>\n1052: </div>"
+            "line": 1058,
+            "context": "1057: <div className=\"animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900\"></div>\n1058: <span className=\"text-muted-foreground\">{t('detail_hub.timecard.loading')}</span>\n1059: </div>"
           },
           {
             "key": "detail_hub.timecard.no_entries",
-            "line": 1059,
-            "context": "1058: <Clock className=\"w-12 h-12 text-muted-foreground mx-auto mb-2\" />\n1059: <p className=\"text-muted-foreground\">{t('detail_hub.timecard.no_entries')}</p>\n1060: </TableCell>"
+            "line": 1066,
+            "context": "1065: <Clock className=\"w-12 h-12 text-muted-foreground mx-auto mb-2\" />\n1066: <p className=\"text-muted-foreground\">{t('detail_hub.timecard.no_entries')}</p>\n1067: </TableCell>"
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.next_day_indicator",
+            "line": 1230,
+            "context": "1229: <span className=\"text-[9px] text-amber-600\">\n1230: ({t('detail_hub.timecard.time_tracking.next_day_indicator')})\n1231: </span>"
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.overnight_shift",
+            "line": 1238,
+            "context": "1237: <Moon className=\"w-2 h-2 mr-0.5\" />\n1238: {t('detail_hub.timecard.time_tracking.overnight_shift')}\n1239: </Badge>"
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.long_shift_warning",
+            "line": 1243,
+            "context": "1242: <Badge variant=\"destructive\" className=\"text-[9px] px-1 py-0\">\n1243: {t('detail_hub.timecard.time_tracking.long_shift_warning')}\n1244: </Badge>"
           },
           {
             "key": "detail_hub.timecard.auto_closed_tooltip",
-            "line": 1202,
-            "context": "1201: className=\"text-[9px] px-1 py-0 bg-amber-50 text-amber-700 border-amber-300\"\n1202: title={t('detail_hub.timecard.auto_closed_tooltip')}\n1203: >"
+            "line": 1250,
+            "context": "1249: className=\"text-[9px] px-1 py-0 bg-amber-50 text-amber-700 border-amber-300\"\n1250: title={t('detail_hub.timecard.auto_closed_tooltip')}\n1251: >"
           },
           {
             "key": "detail_hub.review_now",
-            "line": 1247,
-            "context": "1246: }}\n1247: title={t('detail_hub.review_now')}\n1248: className=\"p-1 hover:bg-amber-50 rounded transition-colors\""
+            "line": 1299,
+            "context": "1298: }}\n1299: title={t('detail_hub.review_now')}\n1300: className=\"p-1 hover:bg-amber-50 rounded transition-colors\""
           },
           {
             "key": "detail_hub.timecard.actions.view_logs",
-            "line": 1263,
-            "context": "1262: }}\n1263: title={t('detail_hub.timecard.actions.view_logs')}\n1264: className=\"p-1 hover:bg-gray-100 rounded transition-colors\""
+            "line": 1315,
+            "context": "1314: }}\n1315: title={t('detail_hub.timecard.actions.view_logs')}\n1316: className=\"p-1 hover:bg-gray-100 rounded transition-colors\""
           },
           {
             "key": "detail_hub.timecard.actions.edit",
-            "line": 1277,
-            "context": "1276: }}\n1277: title={t('detail_hub.timecard.actions.edit')}\n1278: className=\"p-1 hover:bg-blue-50 rounded transition-colors\""
+            "line": 1329,
+            "context": "1328: }}\n1329: title={t('detail_hub.timecard.actions.edit')}\n1330: className=\"p-1 hover:bg-blue-50 rounded transition-colors\""
           },
           {
             "key": "detail_hub.timecard.actions.disable",
-            "line": 1288,
-            "context": "1287: }}\n1288: title={t('detail_hub.timecard.actions.disable')}\n1289: className=\"p-1 hover:bg-red-50 rounded transition-colors\""
+            "line": 1340,
+            "context": "1339: }}\n1340: title={t('detail_hub.timecard.actions.disable')}\n1341: className=\"p-1 hover:bg-red-50 rounded transition-colors\""
           },
           {
-            "key": "detail_hub.timecard.auto_closed_tooltip",
-            "line": 1395,
-            "context": "1394: className=\"text-[9px] px-1 py-0 bg-amber-50 text-amber-700 border-amber-300\"\n1395: title={t('detail_hub.timecard.auto_closed_tooltip')}\n1396: >"
+            "key": "detail_hub.timecard.time_tracking.next_day_indicator",
+            "line": 1468,
+            "context": "1467: <span className=\"text-[9px] text-amber-600\">\n1468: ({t('detail_hub.timecard.time_tracking.next_day_indicator')})\n1469: </span>"
           },
           {
-            "key": "detail_hub.review_now",
-            "line": 1440,
-            "context": "1439: }}\n1440: title={t('detail_hub.review_now')}\n1441: className=\"p-1 hover:bg-amber-50 rounded transition-colors\""
+            "key": "detail_hub.timecard.time_tracking.overnight_shift",
+            "line": 1476,
+            "context": "1475: <Moon className=\"w-2 h-2 mr-0.5\" />\n1476: {t('detail_hub.timecard.time_tracking.overnight_shift')}\n1477: </Badge>"
           },
           {
-            "key": "detail_hub.timecard.actions.view_logs",
-            "line": 1456,
-            "context": "1455: }}\n1456: title={t('detail_hub.timecard.actions.view_logs')}\n1457: className=\"p-1 hover:bg-gray-100 rounded transition-colors\""
-          },
-          {
-            "key": "detail_hub.timecard.actions.edit",
-            "line": 1470,
-            "context": "1469: }}\n1470: title={t('detail_hub.timecard.actions.edit')}\n1471: className=\"p-1 hover:bg-blue-50 rounded transition-colors\""
-          },
-          {
-            "key": "detail_hub.timecard.actions.disable",
+            "key": "detail_hub.timecard.time_tracking.long_shift_warning",
             "line": 1481,
-            "context": "1480: }}\n1481: title={t('detail_hub.timecard.actions.disable')}\n1482: className=\"p-1 hover:bg-red-50 rounded transition-colors\""
+            "context": "1480: <Badge variant=\"destructive\" className=\"text-[9px] px-1 py-0\">\n1481: {t('detail_hub.timecard.time_tracking.long_shift_warning')}\n1482: </Badge>"
+          },
+          {
+            "key": "detail_hub.timecard.auto_closed_tooltip",
+            "line": 1488,
+            "context": "1487: className=\"text-[9px] px-1 py-0 bg-amber-50 text-amber-700 border-amber-300\"\n1488: title={t('detail_hub.timecard.auto_closed_tooltip')}\n1489: >"
+          },
+          {
+            "key": "detail_hub.review_now",
+            "line": 1537,
+            "context": "1536: }}\n1537: title={t('detail_hub.review_now')}\n1538: className=\"p-1 hover:bg-amber-50 rounded transition-colors\""
+          },
+          {
+            "key": "detail_hub.timecard.actions.view_logs",
+            "line": 1553,
+            "context": "1552: }}\n1553: title={t('detail_hub.timecard.actions.view_logs')}\n1554: className=\"p-1 hover:bg-gray-100 rounded transition-colors\""
+          },
+          {
+            "key": "detail_hub.timecard.actions.edit",
+            "line": 1567,
+            "context": "1566: }}\n1567: title={t('detail_hub.timecard.actions.edit')}\n1568: className=\"p-1 hover:bg-blue-50 rounded transition-colors\""
+          },
+          {
+            "key": "detail_hub.timecard.actions.disable",
+            "line": 1578,
+            "context": "1577: }}\n1578: title={t('detail_hub.timecard.actions.disable')}\n1579: className=\"p-1 hover:bg-red-50 rounded transition-colors\""
           },
           {
             "key": "detail_hub.timecard.filters.this_weeks_timecards",
-            "line": 1502,
-            "context": "1501: {dateFilter === 'today' && 'Today\\'s Summary'}\n1502: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1503: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}"
+            "line": 1599,
+            "context": "1598: {dateFilter === 'today' && 'Today\\'s Summary'}\n1599: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1600: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}"
           },
           {
             "key": "detail_hub.timecard.filters.last_weeks_timecards",
-            "line": 1503,
-            "context": "1502: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1503: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1504: {dateFilter === 'custom' && customDateRange.from && ("
+            "line": 1600,
+            "context": "1599: {dateFilter === 'this_week' && `${t('detail_hub.timecard.filters.this_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1600: {dateFilter === 'last_week' && `${t('detail_hub.timecard.filters.last_weeks_timecards')} (${format(dateRange.start, 'MMM d')} - ${format(dateRange.end, 'MMM d')})`}\n1601: {dateFilter === 'custom' && customDateRange.from && ("
           },
           {
             "key": "detail_hub.timecard.photo_reviews.bulk_approve_title",
-            "line": 1830,
-            "context": "1829: <CheckCircle2 className=\"w-5 h-5 text-emerald-600\" />\n1830: {t('detail_hub.timecard.photo_reviews.bulk_approve_title')}\n1831: </AlertDialogTitle>"
+            "line": 1927,
+            "context": "1926: <CheckCircle2 className=\"w-5 h-5 text-emerald-600\" />\n1927: {t('detail_hub.timecard.photo_reviews.bulk_approve_title')}\n1928: </AlertDialogTitle>"
           },
           {
             "key": "detail_hub.timecard.photo_reviews.bulk_approve_description",
-            "line": 1833,
-            "context": "1832: <AlertDialogDescription>\n1833: {t('detail_hub.timecard.photo_reviews.bulk_approve_description', { count: selectedPhotoReviews.size })}\n1834: </AlertDialogDescription>"
+            "line": 1930,
+            "context": "1929: <AlertDialogDescription>\n1930: {t('detail_hub.timecard.photo_reviews.bulk_approve_description', { count: selectedPhotoReviews.size })}\n1931: </AlertDialogDescription>"
           },
           {
             "key": "detail_hub.timecard.photo_reviews.approving",
-            "line": 1848,
-            "context": "1847: <div className=\"animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2\"></div>\n1848: {t('detail_hub.timecard.photo_reviews.approving')}\n1849: </>"
+            "line": 1945,
+            "context": "1944: <div className=\"animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2\"></div>\n1945: {t('detail_hub.timecard.photo_reviews.approving')}\n1946: </>"
           },
           {
             "key": "detail_hub.timecard.photo_reviews.confirm_approve",
-            "line": 1853,
-            "context": "1852: <CheckCircle2 className=\"w-4 h-4 mr-2\" />\n1853: {t('detail_hub.timecard.photo_reviews.confirm_approve')}\n1854: </>"
+            "line": 1950,
+            "context": "1949: <CheckCircle2 className=\"w-4 h-4 mr-2\" />\n1950: {t('detail_hub.timecard.photo_reviews.confirm_approve')}\n1951: </>"
           },
           {
             "key": "detail_hub.timecard.disable_dialog.title",
-            "line": 1895,
-            "context": "1894: <AlertDialogHeader>\n1895: <AlertDialogTitle>{t('detail_hub.timecard.disable_dialog.title')}</AlertDialogTitle>\n1896: <AlertDialogDescription>"
+            "line": 1992,
+            "context": "1991: <AlertDialogHeader>\n1992: <AlertDialogTitle>{t('detail_hub.timecard.disable_dialog.title')}</AlertDialogTitle>\n1993: <AlertDialogDescription>"
           },
           {
             "key": "detail_hub.timecard.disable_dialog.description",
-            "line": 1897,
-            "context": "1896: <AlertDialogDescription>\n1897: {t('detail_hub.timecard.disable_dialog.description')}\n1898: </AlertDialogDescription>"
+            "line": 1994,
+            "context": "1993: <AlertDialogDescription>\n1994: {t('detail_hub.timecard.disable_dialog.description')}\n1995: </AlertDialogDescription>"
           },
           {
             "key": "detail_hub.timecard.disable_dialog.cancel",
-            "line": 1901,
-            "context": "1900: <AlertDialogFooter>\n1901: <AlertDialogCancel>{t('detail_hub.timecard.disable_dialog.cancel')}</AlertDialogCancel>\n1902: <AlertDialogAction"
+            "line": 1998,
+            "context": "1997: <AlertDialogFooter>\n1998: <AlertDialogCancel>{t('detail_hub.timecard.disable_dialog.cancel')}</AlertDialogCancel>\n1999: <AlertDialogAction"
           },
           {
             "key": "detail_hub.timecard.disable_dialog.confirm",
-            "line": 1911,
-            "context": "1910: >\n1911: {t('detail_hub.timecard.disable_dialog.confirm')}\n1912: </AlertDialogAction>"
+            "line": 2008,
+            "context": "2007: >\n2008: {t('detail_hub.timecard.disable_dialog.confirm')}\n2009: </AlertDialogAction>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.title",
-            "line": 1922,
-            "context": "1921: <DialogHeader>\n1922: <DialogTitle>{t('detail_hub.timecard.photo_viewer.title')}</DialogTitle>\n1923: </DialogHeader>"
+            "line": 2019,
+            "context": "2018: <DialogHeader>\n2019: <DialogTitle>{t('detail_hub.timecard.photo_viewer.title')}</DialogTitle>\n2020: </DialogHeader>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.employee",
-            "line": 1929,
-            "context": "1928: <div>\n1929: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.employee')}</p>\n1930: <p className=\"font-medium\">{selectedPhoto.employeeName}</p>"
+            "line": 2026,
+            "context": "2025: <div>\n2026: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.employee')}</p>\n2027: <p className=\"font-medium\">{selectedPhoto.employeeName}</p>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.timestamp",
-            "line": 1934,
-            "context": "1933: <div>\n1934: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.timestamp')}</p>\n1935: <p className=\"font-medium\">{selectedPhoto.timestamp}</p>"
+            "line": 2031,
+            "context": "2030: <div>\n2031: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.timestamp')}</p>\n2032: <p className=\"font-medium\">{selectedPhoto.timestamp}</p>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.clock_in",
-            "line": 1937,
-            "context": "1936: <Badge variant=\"outline\" className={selectedPhoto.type === 'clock_in' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}>\n1937: {selectedPhoto.type === 'clock_in' ? t('detail_hub.timecard.photo_viewer.clock_in') : t('detail_hub.timecard.photo_viewer.clock_out')}\n1938: </Badge>"
+            "line": 2034,
+            "context": "2033: <Badge variant=\"outline\" className={selectedPhoto.type === 'clock_in' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}>\n2034: {selectedPhoto.type === 'clock_in' ? t('detail_hub.timecard.photo_viewer.clock_in') : t('detail_hub.timecard.photo_viewer.clock_out')}\n2035: </Badge>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.clock_out",
-            "line": 1937,
-            "context": "1936: <Badge variant=\"outline\" className={selectedPhoto.type === 'clock_in' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}>\n1937: {selectedPhoto.type === 'clock_in' ? t('detail_hub.timecard.photo_viewer.clock_in') : t('detail_hub.timecard.photo_viewer.clock_out')}\n1938: </Badge>"
+            "line": 2034,
+            "context": "2033: <Badge variant=\"outline\" className={selectedPhoto.type === 'clock_in' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}>\n2034: {selectedPhoto.type === 'clock_in' ? t('detail_hub.timecard.photo_viewer.clock_in') : t('detail_hub.timecard.photo_viewer.clock_out')}\n2035: </Badge>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.kiosk",
-            "line": 1950,
-            "context": "1949: <div>\n1950: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.kiosk')}</p>\n1951: <p className=\"font-medium text-sm\">{fullEntry.kiosk_id}</p>"
+            "line": 2047,
+            "context": "2046: <div>\n2047: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.kiosk')}</p>\n2048: <p className=\"font-medium text-sm\">{fullEntry.kiosk_id}</p>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.location",
-            "line": 1956,
-            "context": "1955: <div>\n1956: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.location')}</p>\n1957: <p className=\"font-medium text-sm\">{fullEntry.ip_address}</p>"
+            "line": 2053,
+            "context": "2052: <div>\n2053: <p className=\"text-sm text-muted-foreground\">{t('detail_hub.timecard.photo_viewer.location')}</p>\n2054: <p className=\"font-medium text-sm\">{fullEntry.ip_address}</p>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.method",
-            "line": 1982,
-            "context": "1981: <span className=\"text-muted-foreground\">\n1982: {t('detail_hub.timecard.photo_viewer.method')}: <span className=\"font-medium text-gray-700\">{selectedPhoto.method}</span>\n1983: </span>"
+            "line": 2079,
+            "context": "2078: <span className=\"text-muted-foreground\">\n2079: {t('detail_hub.timecard.photo_viewer.method')}: <span className=\"font-medium text-gray-700\">{selectedPhoto.method}</span>\n2080: </span>"
           },
           {
             "key": "detail_hub.timecard.photo_viewer.captured_at",
-            "line": 1991,
-            "context": "1990: <div className=\"text-muted-foreground\">\n1991: {t('detail_hub.timecard.photo_viewer.captured_at')}: <span className=\"font-medium text-gray-700\">{format(new Date(fullEntry.created_at), 'MMMM d, yyyy h:mm a')}</span>\n1992: </div>"
+            "line": 2088,
+            "context": "2087: <div className=\"text-muted-foreground\">\n2088: {t('detail_hub.timecard.photo_viewer.captured_at')}: <span className=\"font-medium text-gray-700\">{format(new Date(fullEntry.created_at), 'MMMM d, yyyy h:mm a')}</span>\n2089: </div>"
           }
         ],
-        "coverage": 81,
+        "coverage": 82,
         "severity": "critical"
       },
       {
@@ -27583,645 +27653,835 @@
         "hardcodedStrings": [
           {
             "text": "English",
-            "line": 774,
-            "context": "773: <SelectContent>\n774: <SelectItem value=\"en\">English</SelectItem>\n775: <SelectItem value=\"es\">Español</SelectItem>"
+            "line": 773,
+            "context": "772: <SelectContent>\n773: <SelectItem value=\"en\">English</SelectItem>\n774: <SelectItem value=\"es\">Español</SelectItem>"
           },
           {
             "text": "John",
-            "line": 703,
-            "context": "702: <FormControl>\n703: <Input placeholder=\"John\" {...field} />\n704: </FormControl>"
+            "line": 702,
+            "context": "701: <FormControl>\n702: <Input placeholder=\"John\" {...field} />\n703: </FormControl>"
           },
           {
             "text": "Smith",
-            "line": 716,
-            "context": "715: <FormControl>\n716: <Input placeholder=\"Smith\" {...field} />\n717: </FormControl>"
+            "line": 715,
+            "context": "714: <FormControl>\n715: <Input placeholder=\"Smith\" {...field} />\n716: </FormControl>"
           }
         ],
         "translationCalls": [
           {
             "key": "detail_hub.wizard.error_no_assignments",
+            "line": 393,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.error_no_assignments_description",
             "line": 394,
             "exists": false
           },
           {
-            "key": "detail_hub.wizard.error_no_assignments_description",
-            "line": 395,
-            "exists": false
-          },
-          {
             "key": "detail_hub.wizard.error_incomplete_assignment",
-            "line": 405,
+            "line": 404,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.error_select_dealer",
-            "line": 406,
+            "line": 405,
             "exists": false
           },
           {
             "key": "detail_hub.employees.toast.error",
-            "line": 506,
+            "line": 505,
             "exists": false
           },
           {
             "key": "detail_hub.employees.edit",
-            "line": 529,
+            "line": 528,
             "exists": true
           },
           {
             "key": "detail_hub.employees.add_employee",
-            "line": 534,
+            "line": 533,
             "exists": true
           },
           {
             "key": "detail_hub.employees.edit_description",
-            "line": 540,
+            "line": 539,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.description",
-            "line": 541,
+            "line": 540,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.step1_label",
-            "line": 550,
+            "line": 549,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.step2_label",
-            "line": 557,
+            "line": 556,
             "exists": false
           },
           {
             "key": "common.cancel",
-            "line": 594,
+            "line": 593,
             "exists": true
           },
           {
             "key": "common.back",
-            "line": 602,
+            "line": 601,
             "exists": false
           },
           {
             "key": "common.next",
-            "line": 609,
+            "line": 608,
             "exists": false
           },
           {
             "key": "common.save",
-            "line": 626,
+            "line": 625,
             "exists": true
           },
           {
             "key": "detail_hub.wizard.create_employee",
-            "line": 626,
+            "line": 625,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.basic_info",
-            "line": 691,
+            "line": 690,
             "exists": false
           },
           {
             "key": "common.first_name",
-            "line": 701,
+            "line": 700,
             "exists": false
           },
           {
             "key": "common.last_name",
-            "line": 714,
+            "line": 713,
             "exists": false
           },
           {
             "key": "common.email",
-            "line": 730,
+            "line": 729,
             "exists": true
           },
           {
             "key": "common.phone",
-            "line": 748,
+            "line": 747,
             "exists": false
           },
           {
             "key": "detail_hub.employees.preferred_language",
-            "line": 766,
+            "line": 765,
             "exists": false
           },
           {
             "key": "detail_hub.employees.preferred_language_help",
-            "line": 780,
+            "line": 779,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.role_department",
-            "line": 795,
+            "line": 794,
             "exists": false
           },
           {
             "key": "detail_hub.employees.role",
-            "line": 805,
+            "line": 804,
             "exists": true
           },
           {
             "key": "detail_hub.employees.roles.detailer",
-            "line": 813,
+            "line": 812,
             "exists": true
           },
           {
             "key": "detail_hub.employees.roles.technician",
-            "line": 814,
+            "line": 813,
             "exists": true
           },
           {
             "key": "detail_hub.employees.roles.car_wash",
-            "line": 815,
+            "line": 814,
             "exists": true
           },
           {
             "key": "detail_hub.employees.roles.supervisor",
-            "line": 816,
+            "line": 815,
             "exists": true
           },
           {
             "key": "detail_hub.employees.roles.manager",
-            "line": 817,
+            "line": 816,
             "exists": true
           },
           {
             "key": "detail_hub.employees.department",
-            "line": 830,
+            "line": 829,
             "exists": true
           },
           {
             "key": "detail_hub.employees.departments.detail",
-            "line": 838,
+            "line": 837,
             "exists": true
           },
           {
             "key": "detail_hub.employees.departments.car_wash",
-            "line": 839,
+            "line": 838,
             "exists": true
           },
           {
             "key": "detail_hub.employees.departments.service",
-            "line": 840,
+            "line": 839,
             "exists": true
           },
           {
             "key": "detail_hub.employees.departments.management",
-            "line": 841,
+            "line": 840,
             "exists": true
           },
           {
             "key": "detail_hub.employees.hourly_rate",
-            "line": 856,
+            "line": 855,
             "exists": true
           },
           {
             "key": "detail_hub.employees.hire_date",
-            "line": 876,
+            "line": 875,
             "exists": true
           },
           {
             "key": "detail_hub.timecard.pick_date",
-            "line": 887,
+            "line": 886,
             "exists": true
           },
           {
             "key": "detail_hub.employees.status",
-            "line": 913,
+            "line": 912,
             "exists": true
           },
           {
             "key": "detail_hub.employees.active",
-            "line": 921,
+            "line": 920,
             "exists": true
           },
           {
             "key": "detail_hub.employees.inactive",
-            "line": 922,
+            "line": 921,
             "exists": true
           },
           {
             "key": "detail_hub.employees.suspended",
-            "line": 923,
+            "line": 922,
             "exists": true
           },
           {
             "key": "detail_hub.employees.terminated",
-            "line": 924,
+            "line": 923,
             "exists": true
           },
           {
             "key": "detail_hub.wizard.security",
-            "line": 939,
+            "line": 938,
             "exists": false
           },
           {
             "key": "detail_hub.employees.kiosk_pin",
-            "line": 949,
+            "line": 948,
             "exists": false
           },
           {
             "key": "detail_hub.employees.kiosk_pin_placeholder",
-            "line": 957,
+            "line": 956,
             "exists": false
           },
           {
             "key": "detail_hub.employees.generate_pin",
-            "line": 987,
+            "line": 986,
             "exists": false
           },
           {
             "key": "detail_hub.employees.kiosk_pin_help",
-            "line": 993,
+            "line": 992,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.error_no_assignments_description",
-            "line": 1044,
+            "line": 1043,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.no_active_assignments",
-            "line": 1053,
+            "line": 1052,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.add_another_assignment",
-            "line": 1086,
+            "line": 1085,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.all_dealers_assigned",
-            "line": 1092,
+            "line": 1091,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.configure_assignment",
-            "line": 1136,
+            "line": 1135,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.mark_for_deletion",
-            "line": 1148,
+            "line": 1147,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 1148,
+            "line": 1147,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.dealership_assigned",
-            "line": 1172,
+            "line": 1171,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.select_dealership",
-            "line": 1177,
+            "line": 1176,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.select_dealership_placeholder",
-            "line": 1180,
+            "line": 1179,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.shift_hours_title",
+            "line": 1202,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.shift_start",
-            "line": 1201,
+            "line": 1209,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.shift_end",
-            "line": 1211,
+            "line": 1220,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.punch_windows_title",
+            "line": 1234,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.early_punch",
+            "line": 1237,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.no_limit",
+            "line": 1242,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.early_punch_help",
+            "line": 1255,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.late_punch",
+            "line": 1258,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.no_limit",
+            "line": 1263,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.late_punch_help",
+            "line": 1276,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.work_days",
-            "line": 1224,
+            "line": 1288,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.days_selected",
+            "line": 1331,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.break_config_title",
+            "line": 1342,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.break_duration",
-            "line": 1266,
+            "line": 1348,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.break_is_paid",
-            "line": 1284,
+            "line": 1367,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.security_settings_title",
+            "line": 1378,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.require_face_validation",
+            "line": 1385,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.require_face_validation_help",
+            "line": 1388,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.face_validation_warning",
+            "line": 1402,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.auto_close_section_title",
+            "line": 1414,
             "exists": false
           },
           {
             "key": "detail_hub.employees.auto_close_enabled",
-            "line": 1293,
+            "line": 1421,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.auto_close_enabled_help",
+            "line": 1424,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.employees.auto_close_timing",
+            "line": 1437,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.reminder",
-            "line": 1307,
+            "line": 1440,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.reminder_help",
-            "line": 1317,
+            "line": 1451,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.auto_close",
-            "line": 1320,
+            "line": 1454,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.auto_close_help",
-            "line": 1330,
+            "line": 1465,
             "exists": false
           },
           {
             "key": "detail_hub.employees.preview_reminder",
-            "line": 1343,
+            "line": 1478,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.notes_title",
+            "line": 1497,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.wizard.notes_placeholder",
+            "line": 1501,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.select_dealership_placeholder",
-            "line": 1389,
+            "line": 1541,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.existing_assignment",
-            "line": 1394,
+            "line": 1546,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.new_assignment",
-            "line": 1398,
+            "line": 1550,
             "exists": false
           },
           {
             "key": "detail_hub.wizard.mark_for_deletion",
-            "line": 1430,
+            "line": 1582,
             "exists": false
           },
           {
             "key": "common.delete",
-            "line": 1430,
+            "line": 1582,
             "exists": false
           }
         ],
         "missingKeys": [
           {
             "key": "detail_hub.wizard.error_no_assignments",
-            "line": 394,
-            "context": "393: toast({\n394: title: t('detail_hub.wizard.error_no_assignments'),\n395: description: t('detail_hub.wizard.error_no_assignments_description'),"
+            "line": 393,
+            "context": "392: toast({\n393: title: t('detail_hub.wizard.error_no_assignments'),\n394: description: t('detail_hub.wizard.error_no_assignments_description'),"
           },
           {
             "key": "detail_hub.wizard.error_no_assignments_description",
-            "line": 395,
-            "context": "394: title: t('detail_hub.wizard.error_no_assignments'),\n395: description: t('detail_hub.wizard.error_no_assignments_description'),\n396: variant: \"destructive\""
+            "line": 394,
+            "context": "393: title: t('detail_hub.wizard.error_no_assignments'),\n394: description: t('detail_hub.wizard.error_no_assignments_description'),\n395: variant: \"destructive\""
           },
           {
             "key": "detail_hub.wizard.error_incomplete_assignment",
-            "line": 405,
-            "context": "404: toast({\n405: title: t('detail_hub.wizard.error_incomplete_assignment'),\n406: description: t('detail_hub.wizard.error_select_dealer'),"
+            "line": 404,
+            "context": "403: toast({\n404: title: t('detail_hub.wizard.error_incomplete_assignment'),\n405: description: t('detail_hub.wizard.error_select_dealer'),"
           },
           {
             "key": "detail_hub.wizard.error_select_dealer",
-            "line": 406,
-            "context": "405: title: t('detail_hub.wizard.error_incomplete_assignment'),\n406: description: t('detail_hub.wizard.error_select_dealer'),\n407: variant: \"destructive\""
+            "line": 405,
+            "context": "404: title: t('detail_hub.wizard.error_incomplete_assignment'),\n405: description: t('detail_hub.wizard.error_select_dealer'),\n406: variant: \"destructive\""
           },
           {
             "key": "detail_hub.employees.toast.error",
-            "line": 506,
-            "context": "505: toast({\n506: title: t('detail_hub.employees.toast.error'),\n507: description: error instanceof Error ? error.message : 'Unknown error',"
+            "line": 505,
+            "context": "504: toast({\n505: title: t('detail_hub.employees.toast.error'),\n506: description: error instanceof Error ? error.message : 'Unknown error',"
           },
           {
             "key": "detail_hub.employees.edit_description",
-            "line": 540,
-            "context": "539: {isEditMode\n540: ? t('detail_hub.employees.edit_description')\n541: : t('detail_hub.wizard.description')}"
+            "line": 539,
+            "context": "538: {isEditMode\n539: ? t('detail_hub.employees.edit_description')\n540: : t('detail_hub.wizard.description')}"
           },
           {
             "key": "detail_hub.wizard.description",
-            "line": 541,
-            "context": "540: ? t('detail_hub.employees.edit_description')\n541: : t('detail_hub.wizard.description')}\n542: </DialogDescription>"
+            "line": 540,
+            "context": "539: ? t('detail_hub.employees.edit_description')\n540: : t('detail_hub.wizard.description')}\n541: </DialogDescription>"
           },
           {
             "key": "detail_hub.wizard.step1_label",
-            "line": 550,
-            "context": "549: currentStep={currentStep}\n550: label={t('detail_hub.wizard.step1_label')}\n551: icon={<User className=\"h-4 w-4\" />}"
+            "line": 549,
+            "context": "548: currentStep={currentStep}\n549: label={t('detail_hub.wizard.step1_label')}\n550: icon={<User className=\"h-4 w-4\" />}"
           },
           {
             "key": "detail_hub.wizard.step2_label",
-            "line": 557,
-            "context": "556: currentStep={currentStep}\n557: label={t('detail_hub.wizard.step2_label')}\n558: icon={<Building2 className=\"h-4 w-4\" />}"
+            "line": 556,
+            "context": "555: currentStep={currentStep}\n556: label={t('detail_hub.wizard.step2_label')}\n557: icon={<Building2 className=\"h-4 w-4\" />}"
           },
           {
             "key": "common.back",
-            "line": 602,
-            "context": "601: <ChevronLeft className=\"h-4 w-4 mr-1\" />\n602: {t('common.back')}\n603: </Button>"
+            "line": 601,
+            "context": "600: <ChevronLeft className=\"h-4 w-4 mr-1\" />\n601: {t('common.back')}\n602: </Button>"
           },
           {
             "key": "common.next",
-            "line": 609,
-            "context": "608: <Button onClick={handleNext}>\n609: {t('common.next')}\n610: <ChevronRight className=\"h-4 w-4 ml-1\" />"
+            "line": 608,
+            "context": "607: <Button onClick={handleNext}>\n608: {t('common.next')}\n609: <ChevronRight className=\"h-4 w-4 ml-1\" />"
           },
           {
             "key": "detail_hub.wizard.create_employee",
-            "line": 626,
-            "context": "625: )}\n626: {isEditMode ? t('common.save') : t('detail_hub.wizard.create_employee')}\n627: </Button>"
+            "line": 625,
+            "context": "624: )}\n625: {isEditMode ? t('common.save') : t('detail_hub.wizard.create_employee')}\n626: </Button>"
           },
           {
             "key": "detail_hub.wizard.basic_info",
-            "line": 691,
-            "context": "690: <User className=\"h-4 w-4 text-blue-600\" />\n691: {t('detail_hub.wizard.basic_info')}\n692: </CardTitle>"
+            "line": 690,
+            "context": "689: <User className=\"h-4 w-4 text-blue-600\" />\n690: {t('detail_hub.wizard.basic_info')}\n691: </CardTitle>"
           },
           {
             "key": "common.first_name",
-            "line": 701,
-            "context": "700: <FormItem>\n701: <FormLabel>{t('common.first_name')}</FormLabel>\n702: <FormControl>"
+            "line": 700,
+            "context": "699: <FormItem>\n700: <FormLabel>{t('common.first_name')}</FormLabel>\n701: <FormControl>"
           },
           {
             "key": "common.last_name",
-            "line": 714,
-            "context": "713: <FormItem>\n714: <FormLabel>{t('common.last_name')}</FormLabel>\n715: <FormControl>"
+            "line": 713,
+            "context": "712: <FormItem>\n713: <FormLabel>{t('common.last_name')}</FormLabel>\n714: <FormControl>"
           },
           {
             "key": "common.phone",
-            "line": 748,
-            "context": "747: <FormItem>\n748: <FormLabel>{t('common.phone')}</FormLabel>\n749: <FormControl>"
+            "line": 747,
+            "context": "746: <FormItem>\n747: <FormLabel>{t('common.phone')}</FormLabel>\n748: <FormControl>"
           },
           {
             "key": "detail_hub.employees.preferred_language",
-            "line": 766,
-            "context": "765: <FormItem>\n766: <FormLabel>{t('detail_hub.employees.preferred_language')}</FormLabel>\n767: <Select onValueChange={field.onChange} value={field.value}>"
+            "line": 765,
+            "context": "764: <FormItem>\n765: <FormLabel>{t('detail_hub.employees.preferred_language')}</FormLabel>\n766: <Select onValueChange={field.onChange} value={field.value}>"
           },
           {
             "key": "detail_hub.employees.preferred_language_help",
-            "line": 780,
-            "context": "779: <FormDescription className=\"text-xs\">\n780: {t('detail_hub.employees.preferred_language_help')}\n781: </FormDescription>"
+            "line": 779,
+            "context": "778: <FormDescription className=\"text-xs\">\n779: {t('detail_hub.employees.preferred_language_help')}\n780: </FormDescription>"
           },
           {
             "key": "detail_hub.wizard.role_department",
-            "line": 795,
-            "context": "794: <Settings className=\"h-4 w-4 text-purple-600\" />\n795: {t('detail_hub.wizard.role_department')}\n796: </CardTitle>"
+            "line": 794,
+            "context": "793: <Settings className=\"h-4 w-4 text-purple-600\" />\n794: {t('detail_hub.wizard.role_department')}\n795: </CardTitle>"
           },
           {
             "key": "detail_hub.wizard.security",
-            "line": 939,
-            "context": "938: <Shield className=\"h-4 w-4 text-amber-600\" />\n939: {t('detail_hub.wizard.security')}\n940: </CardTitle>"
+            "line": 938,
+            "context": "937: <Shield className=\"h-4 w-4 text-amber-600\" />\n938: {t('detail_hub.wizard.security')}\n939: </CardTitle>"
           },
           {
             "key": "detail_hub.employees.kiosk_pin",
-            "line": 949,
-            "context": "948: <FormLabel className=\"flex items-center gap-2\">\n949: {t('detail_hub.employees.kiosk_pin')}\n950: <span className=\"text-destructive\">*</span>"
+            "line": 948,
+            "context": "947: <FormLabel className=\"flex items-center gap-2\">\n948: {t('detail_hub.employees.kiosk_pin')}\n949: <span className=\"text-destructive\">*</span>"
           },
           {
             "key": "detail_hub.employees.kiosk_pin_placeholder",
-            "line": 957,
-            "context": "956: type={showPIN ? \"text\" : \"password\"}\n957: placeholder={t('detail_hub.employees.kiosk_pin_placeholder')}\n958: maxLength={6}"
+            "line": 956,
+            "context": "955: type={showPIN ? \"text\" : \"password\"}\n956: placeholder={t('detail_hub.employees.kiosk_pin_placeholder')}\n957: maxLength={6}"
           },
           {
             "key": "detail_hub.employees.generate_pin",
-            "line": 987,
-            "context": "986: onClick={generatePIN}\n987: title={t('detail_hub.employees.generate_pin')}\n988: >"
+            "line": 986,
+            "context": "985: onClick={generatePIN}\n986: title={t('detail_hub.employees.generate_pin')}\n987: >"
           },
           {
             "key": "detail_hub.employees.kiosk_pin_help",
-            "line": 993,
-            "context": "992: <p className=\"text-xs text-muted-foreground\">\n993: {t('detail_hub.employees.kiosk_pin_help')}\n994: </p>"
+            "line": 992,
+            "context": "991: <p className=\"text-xs text-muted-foreground\">\n992: {t('detail_hub.employees.kiosk_pin_help')}\n993: </p>"
           },
           {
             "key": "detail_hub.wizard.error_no_assignments_description",
-            "line": 1044,
-            "context": "1043: <AlertDescription>\n1044: {t('detail_hub.wizard.error_no_assignments_description')}\n1045: </AlertDescription>"
+            "line": 1043,
+            "context": "1042: <AlertDescription>\n1043: {t('detail_hub.wizard.error_no_assignments_description')}\n1044: </AlertDescription>"
           },
           {
             "key": "detail_hub.wizard.no_active_assignments",
-            "line": 1053,
-            "context": "1052: <AlertDescription>\n1053: {t('detail_hub.wizard.no_active_assignments')}\n1054: </AlertDescription>"
+            "line": 1052,
+            "context": "1051: <AlertDescription>\n1052: {t('detail_hub.wizard.no_active_assignments')}\n1053: </AlertDescription>"
           },
           {
             "key": "detail_hub.wizard.add_another_assignment",
-            "line": 1086,
-            "context": "1085: <Plus className=\"h-4 w-4 mr-2\" />\n1086: {t('detail_hub.wizard.add_another_assignment')}\n1087: </Button>"
+            "line": 1085,
+            "context": "1084: <Plus className=\"h-4 w-4 mr-2\" />\n1085: {t('detail_hub.wizard.add_another_assignment')}\n1086: </Button>"
           },
           {
             "key": "detail_hub.wizard.all_dealers_assigned",
-            "line": 1092,
-            "context": "1091: <p className=\"text-center text-sm text-gray-500\">\n1092: {t('detail_hub.wizard.all_dealers_assigned')}\n1093: </p>"
+            "line": 1091,
+            "context": "1090: <p className=\"text-center text-sm text-gray-500\">\n1091: {t('detail_hub.wizard.all_dealers_assigned')}\n1092: </p>"
           },
           {
             "key": "detail_hub.wizard.configure_assignment",
-            "line": 1136,
-            "context": "1135: <Building2 className=\"h-4 w-4 text-emerald-600\" />\n1136: {t('detail_hub.wizard.configure_assignment')}\n1137: </CardTitle>"
+            "line": 1135,
+            "context": "1134: <Building2 className=\"h-4 w-4 text-emerald-600\" />\n1135: {t('detail_hub.wizard.configure_assignment')}\n1136: </CardTitle>"
           },
           {
             "key": "detail_hub.wizard.mark_for_deletion",
-            "line": 1148,
-            "context": "1147: className=\"text-red-600 hover:text-red-700\"\n1148: title={assignment.isExisting ? t('detail_hub.wizard.mark_for_deletion') : t('common.delete')}\n1149: >"
+            "line": 1147,
+            "context": "1146: className=\"text-red-600 hover:text-red-700\"\n1147: title={assignment.isExisting ? t('detail_hub.wizard.mark_for_deletion') : t('common.delete')}\n1148: >"
           },
           {
             "key": "common.delete",
-            "line": 1148,
-            "context": "1147: className=\"text-red-600 hover:text-red-700\"\n1148: title={assignment.isExisting ? t('detail_hub.wizard.mark_for_deletion') : t('common.delete')}\n1149: >"
+            "line": 1147,
+            "context": "1146: className=\"text-red-600 hover:text-red-700\"\n1147: title={assignment.isExisting ? t('detail_hub.wizard.mark_for_deletion') : t('common.delete')}\n1148: >"
           },
           {
             "key": "detail_hub.wizard.dealership_assigned",
-            "line": 1172,
-            "context": "1171: <p className=\"font-semibold text-gray-900\">{assignment.dealership_name}</p>\n1172: <p className=\"text-xs text-gray-500\">{t('detail_hub.wizard.dealership_assigned')}</p>\n1173: </div>"
+            "line": 1171,
+            "context": "1170: <p className=\"font-semibold text-gray-900\">{assignment.dealership_name}</p>\n1171: <p className=\"text-xs text-gray-500\">{t('detail_hub.wizard.dealership_assigned')}</p>\n1172: </div>"
           },
           {
             "key": "detail_hub.wizard.select_dealership",
-            "line": 1177,
-            "context": "1176: <div className=\"space-y-2\">\n1177: <Label>{t('detail_hub.wizard.select_dealership')}</Label>\n1178: <Select onValueChange={(val) => onSelectDealer(parseInt(val))}>"
+            "line": 1176,
+            "context": "1175: <div className=\"space-y-2\">\n1176: <Label>{t('detail_hub.wizard.select_dealership')}</Label>\n1177: <Select onValueChange={(val) => onSelectDealer(parseInt(val))}>"
           },
           {
             "key": "detail_hub.wizard.select_dealership_placeholder",
-            "line": 1180,
-            "context": "1179: <SelectTrigger>\n1180: <SelectValue placeholder={t('detail_hub.wizard.select_dealership_placeholder')} />\n1181: </SelectTrigger>"
+            "line": 1179,
+            "context": "1178: <SelectTrigger>\n1179: <SelectValue placeholder={t('detail_hub.wizard.select_dealership_placeholder')} />\n1180: </SelectTrigger>"
+          },
+          {
+            "key": "detail_hub.wizard.shift_hours_title",
+            "line": 1202,
+            "context": "1201: <Clock className=\"h-4 w-4 text-blue-600\" />\n1202: {t('detail_hub.wizard.shift_hours_title')}\n1203: </CardTitle>"
           },
           {
             "key": "detail_hub.wizard.shift_start",
-            "line": 1201,
-            "context": "1200: <div className=\"space-y-2\">\n1201: <Label>{t('detail_hub.wizard.shift_start')}</Label>\n1202: <Input"
+            "line": 1209,
+            "context": "1208: <div className=\"space-y-2\">\n1209: <Label className=\"text-sm\">{t('detail_hub.wizard.shift_start')}</Label>\n1210: <Input"
           },
           {
             "key": "detail_hub.wizard.shift_end",
-            "line": 1211,
-            "context": "1210: <div className=\"space-y-2\">\n1211: <Label>{t('detail_hub.wizard.shift_end')}</Label>\n1212: <Input"
+            "line": 1220,
+            "context": "1219: <div className=\"space-y-2\">\n1220: <Label className=\"text-sm\">{t('detail_hub.wizard.shift_end')}</Label>\n1221: <Input"
+          },
+          {
+            "key": "detail_hub.wizard.punch_windows_title",
+            "line": 1234,
+            "context": "1233: <div className=\"pt-3 border-t border-blue-100\">\n1234: <h4 className=\"text-xs font-medium text-gray-700 mb-3\">{t('detail_hub.wizard.punch_windows_title')}</h4>\n1235: <div className=\"grid grid-cols-2 gap-4\">"
+          },
+          {
+            "key": "detail_hub.wizard.early_punch",
+            "line": 1237,
+            "context": "1236: <div className=\"space-y-2\">\n1237: <Label className=\"text-xs\">{t('detail_hub.wizard.early_punch')}</Label>\n1238: <Input"
+          },
+          {
+            "key": "detail_hub.wizard.no_limit",
+            "line": 1242,
+            "context": "1241: max=\"60\"\n1242: placeholder={t('detail_hub.wizard.no_limit')}\n1243: value={schedule.early_punch_allowed_minutes ?? ''}"
+          },
+          {
+            "key": "detail_hub.wizard.early_punch_help",
+            "line": 1255,
+            "context": "1254: />\n1255: <p className=\"text-[10px] text-gray-500\">{t('detail_hub.wizard.early_punch_help')}</p>\n1256: </div>"
+          },
+          {
+            "key": "detail_hub.wizard.late_punch",
+            "line": 1258,
+            "context": "1257: <div className=\"space-y-2\">\n1258: <Label className=\"text-xs\">{t('detail_hub.wizard.late_punch')}</Label>\n1259: <Input"
+          },
+          {
+            "key": "detail_hub.wizard.no_limit",
+            "line": 1263,
+            "context": "1262: max=\"60\"\n1263: placeholder={t('detail_hub.wizard.no_limit')}\n1264: value={schedule.late_punch_grace_minutes ?? ''}"
+          },
+          {
+            "key": "detail_hub.wizard.late_punch_help",
+            "line": 1276,
+            "context": "1275: />\n1276: <p className=\"text-[10px] text-gray-500\">{t('detail_hub.wizard.late_punch_help')}</p>\n1277: </div>"
           },
           {
             "key": "detail_hub.wizard.work_days",
-            "line": 1224,
-            "context": "1223: <div className=\"space-y-2\">\n1224: <Label>{t('detail_hub.wizard.work_days')}</Label>\n1225: <div className=\"grid grid-cols-7 gap-1\">"
+            "line": 1288,
+            "context": "1287: <Calendar className=\"h-4 w-4 text-purple-600\" />\n1288: {t('detail_hub.wizard.work_days')}\n1289: </CardTitle>"
+          },
+          {
+            "key": "detail_hub.wizard.days_selected",
+            "line": 1331,
+            "context": "1330: <p className=\"text-xs text-gray-600 text-center\">\n1331: {t('detail_hub.wizard.days_selected', { count: (schedule.days_of_week || []).length })}\n1332: </p>"
+          },
+          {
+            "key": "detail_hub.wizard.break_config_title",
+            "line": 1342,
+            "context": "1341: <Coffee className=\"h-4 w-4 text-amber-600\" />\n1342: {t('detail_hub.wizard.break_config_title')}\n1343: </CardTitle>"
           },
           {
             "key": "detail_hub.wizard.break_duration",
-            "line": 1266,
-            "context": "1265: <div className=\"space-y-2\">\n1266: <Label>{t('detail_hub.wizard.break_duration')}</Label>\n1267: <Input"
+            "line": 1348,
+            "context": "1347: <div className=\"space-y-2\">\n1348: <Label className=\"text-sm\">{t('detail_hub.wizard.break_duration')}</Label>\n1349: <Input"
           },
           {
             "key": "detail_hub.wizard.break_is_paid",
-            "line": 1284,
-            "context": "1283: />\n1284: <Label>{t('detail_hub.wizard.break_is_paid')}</Label>\n1285: </div>"
+            "line": 1367,
+            "context": "1366: />\n1367: <Label className=\"text-sm\">{t('detail_hub.wizard.break_is_paid')}</Label>\n1368: </div>"
+          },
+          {
+            "key": "detail_hub.wizard.security_settings_title",
+            "line": 1378,
+            "context": "1377: <AlertCircle className=\"h-4 w-4 text-red-600\" />\n1378: {t('detail_hub.wizard.security_settings_title')}\n1379: </CardTitle>"
+          },
+          {
+            "key": "detail_hub.wizard.require_face_validation",
+            "line": 1385,
+            "context": "1384: <p className=\"font-medium text-sm text-gray-900\">\n1385: {t('detail_hub.wizard.require_face_validation')}\n1386: </p>"
+          },
+          {
+            "key": "detail_hub.wizard.require_face_validation_help",
+            "line": 1388,
+            "context": "1387: <p className=\"text-xs text-gray-500 mt-0.5\">\n1388: {t('detail_hub.wizard.require_face_validation_help')}\n1389: </p>"
+          },
+          {
+            "key": "detail_hub.wizard.face_validation_warning",
+            "line": 1402,
+            "context": "1401: <AlertCircle className=\"h-3.5 w-3.5 mt-0.5 flex-shrink-0\" />\n1402: <span>{t('detail_hub.wizard.face_validation_warning')}</span>\n1403: </p>"
+          },
+          {
+            "key": "detail_hub.employees.auto_close_section_title",
+            "line": 1414,
+            "context": "1413: <Bell className=\"h-4 w-4 text-indigo-600\" />\n1414: {t('detail_hub.employees.auto_close_section_title')}\n1415: </CardTitle>"
           },
           {
             "key": "detail_hub.employees.auto_close_enabled",
-            "line": 1293,
-            "context": "1292: <Bell className=\"h-4 w-4 text-indigo-600\" />\n1293: <Label>{t('detail_hub.employees.auto_close_enabled')}</Label>\n1294: </div>"
+            "line": 1421,
+            "context": "1420: <p className=\"font-medium text-sm text-gray-900\">\n1421: {t('detail_hub.employees.auto_close_enabled')}\n1422: </p>"
+          },
+          {
+            "key": "detail_hub.employees.auto_close_enabled_help",
+            "line": 1424,
+            "context": "1423: <p className=\"text-xs text-gray-500 mt-0.5\">\n1424: {t('detail_hub.employees.auto_close_enabled_help')}\n1425: </p>"
+          },
+          {
+            "key": "detail_hub.employees.auto_close_timing",
+            "line": 1437,
+            "context": "1436: <div className=\"space-y-3 pt-2 border-t border-indigo-100\">\n1437: <h4 className=\"text-xs font-medium text-gray-700\">{t('detail_hub.employees.auto_close_timing')}</h4>\n1438: <div className=\"grid grid-cols-2 gap-3\">"
           },
           {
             "key": "detail_hub.wizard.reminder",
-            "line": 1307,
-            "context": "1306: <div className=\"space-y-1\">\n1307: <Label className=\"text-xs\">{t('detail_hub.wizard.reminder')}</Label>\n1308: <Input"
+            "line": 1440,
+            "context": "1439: <div className=\"space-y-1\">\n1440: <Label className=\"text-xs\">{t('detail_hub.wizard.reminder')}</Label>\n1441: <Input"
           },
           {
             "key": "detail_hub.wizard.reminder_help",
-            "line": 1317,
-            "context": "1316: />\n1317: <p className=\"text-[10px] text-gray-500\">{t('detail_hub.wizard.reminder_help')}</p>\n1318: </div>"
+            "line": 1451,
+            "context": "1450: />\n1451: <p className=\"text-[10px] text-gray-500\">{t('detail_hub.wizard.reminder_help')}</p>\n1452: </div>"
           },
           {
             "key": "detail_hub.wizard.auto_close",
-            "line": 1320,
-            "context": "1319: <div className=\"space-y-1\">\n1320: <Label className=\"text-xs\">{t('detail_hub.wizard.auto_close')}</Label>\n1321: <Input"
+            "line": 1454,
+            "context": "1453: <div className=\"space-y-1\">\n1454: <Label className=\"text-xs\">{t('detail_hub.wizard.auto_close')}</Label>\n1455: <Input"
           },
           {
             "key": "detail_hub.wizard.auto_close_help",
-            "line": 1330,
-            "context": "1329: />\n1330: <p className=\"text-[10px] text-gray-500\">{t('detail_hub.wizard.auto_close_help')}</p>\n1331: </div>"
+            "line": 1465,
+            "context": "1464: />\n1465: <p className=\"text-[10px] text-gray-500\">{t('detail_hub.wizard.auto_close_help')}</p>\n1466: </div>"
           },
           {
             "key": "detail_hub.employees.preview_reminder",
-            "line": 1343,
-            "context": "1342: <Eye className=\"h-4 w-4 mr-2\" />\n1343: {t('detail_hub.employees.preview_reminder')}\n1344: </Button>"
+            "line": 1478,
+            "context": "1477: <Eye className=\"h-4 w-4 mr-2\" />\n1478: {t('detail_hub.employees.preview_reminder')}\n1479: </Button>"
+          },
+          {
+            "key": "detail_hub.wizard.notes_title",
+            "line": 1497,
+            "context": "1496: <CardHeader className=\"py-3\">\n1497: <CardTitle className=\"text-sm\">{t('detail_hub.wizard.notes_title')}</CardTitle>\n1498: </CardHeader>"
+          },
+          {
+            "key": "detail_hub.wizard.notes_placeholder",
+            "line": 1501,
+            "context": "1500: <Textarea\n1501: placeholder={t('detail_hub.wizard.notes_placeholder')}\n1502: value={assignment.notes || ''}"
           },
           {
             "key": "detail_hub.wizard.select_dealership_placeholder",
-            "line": 1389,
-            "context": "1388: <p className=\"font-semibold text-gray-900\">\n1389: {assignment.dealership_name || t('detail_hub.wizard.select_dealership_placeholder')}\n1390: </p>"
+            "line": 1541,
+            "context": "1540: <p className=\"font-semibold text-gray-900\">\n1541: {assignment.dealership_name || t('detail_hub.wizard.select_dealership_placeholder')}\n1542: </p>"
           },
           {
             "key": "detail_hub.wizard.existing_assignment",
-            "line": 1394,
-            "context": "1393: <Badge variant=\"outline\" className=\"text-[10px] px-1.5 py-0 bg-emerald-50 text-emerald-700 border-emerald-300\">\n1394: {t('detail_hub.wizard.existing_assignment')}\n1395: </Badge>"
+            "line": 1546,
+            "context": "1545: <Badge variant=\"outline\" className=\"text-[10px] px-1.5 py-0 bg-emerald-50 text-emerald-700 border-emerald-300\">\n1546: {t('detail_hub.wizard.existing_assignment')}\n1547: </Badge>"
           },
           {
             "key": "detail_hub.wizard.new_assignment",
-            "line": 1398,
-            "context": "1397: <Badge variant=\"outline\" className=\"text-[10px] px-1.5 py-0 bg-blue-50 text-blue-700 border-blue-300\">\n1398: {t('detail_hub.wizard.new_assignment')}\n1399: </Badge>"
+            "line": 1550,
+            "context": "1549: <Badge variant=\"outline\" className=\"text-[10px] px-1.5 py-0 bg-blue-50 text-blue-700 border-blue-300\">\n1550: {t('detail_hub.wizard.new_assignment')}\n1551: </Badge>"
           },
           {
             "key": "detail_hub.wizard.mark_for_deletion",
-            "line": 1430,
-            "context": "1429: }\n1430: title={assignment.isExisting ? t('detail_hub.wizard.mark_for_deletion') : t('common.delete')}\n1431: >"
+            "line": 1582,
+            "context": "1581: }\n1582: title={assignment.isExisting ? t('detail_hub.wizard.mark_for_deletion') : t('common.delete')}\n1583: >"
           },
           {
             "key": "common.delete",
-            "line": 1430,
-            "context": "1429: }\n1430: title={assignment.isExisting ? t('detail_hub.wizard.mark_for_deletion') : t('common.delete')}\n1431: >"
+            "line": 1582,
+            "context": "1581: }\n1582: title={assignment.isExisting ? t('detail_hub.wizard.mark_for_deletion') : t('common.delete')}\n1583: >"
           }
         ],
-        "coverage": 96,
+        "coverage": 97,
         "severity": "low"
       },
       {
@@ -29601,7 +29861,7 @@
         "severity": "low"
       },
       {
-        "file": "src\\components\\detail-hub\\punch-clock\\PunchHistoryCard.tsx",
+        "file": "src\\components\\detail-hub\\punch-clock\\PunchHistoryCard.backup.tsx",
         "hardcodedStrings": [],
         "translationCalls": [
           {
@@ -29745,6 +30005,186 @@
             "key": "detail_hub.punch_clock.requires_verification",
             "line": 231,
             "context": "230: <AlertCircle className=\"w-3 h-3 mr-1\" />\n231: {t('detail_hub.punch_clock.requires_verification')}\n232: </Badge>"
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
+        "file": "src\\components\\detail-hub\\punch-clock\\PunchHistoryCard.tsx",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "detail_hub.live_dashboard.active",
+            "line": 89,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.status.complete",
+            "line": 97,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.status.disputed",
+            "line": 105,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.status.approved",
+            "line": 113,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.recent_punches",
+            "line": 126,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.no_history",
+            "line": 148,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.overnight_shift",
+            "line": 178,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.long_shift_warning",
+            "line": 186,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.auto_closed_indicator",
+            "line": 193,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.clock_in",
+            "line": 208,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.photo_verified",
+            "line": 219,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.clock_out",
+            "line": 228,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.next_day_indicator",
+            "line": 239,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.photo_verified",
+            "line": 246,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.in_progress",
+            "line": 252,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.duration_label",
+            "line": 263,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.punch_clock.requires_verification",
+            "line": 277,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "detail_hub.live_dashboard.active",
+            "line": 89,
+            "context": "88: <Loader2 className=\"w-3 h-3 mr-1 animate-spin\" />\n89: {t('detail_hub.live_dashboard.active')}\n90: </Badge>"
+          },
+          {
+            "key": "detail_hub.punch_clock.status.complete",
+            "line": 97,
+            "context": "96: <CheckCircle className=\"w-3 h-3 mr-1\" />\n97: {t('detail_hub.punch_clock.status.complete')}\n98: </Badge>"
+          },
+          {
+            "key": "detail_hub.punch_clock.status.disputed",
+            "line": 105,
+            "context": "104: <AlertCircle className=\"w-3 h-3 mr-1\" />\n105: {t('detail_hub.punch_clock.status.disputed')}\n106: </Badge>"
+          },
+          {
+            "key": "detail_hub.punch_clock.status.approved",
+            "line": 113,
+            "context": "112: <CheckCircle className=\"w-3 h-3 mr-1\" />\n113: {t('detail_hub.punch_clock.status.approved')}\n114: </Badge>"
+          },
+          {
+            "key": "detail_hub.punch_clock.recent_punches",
+            "line": 126,
+            "context": "125: <CardTitle className=\"text-lg\">\n126: {t('detail_hub.punch_clock.recent_punches')}\n127: </CardTitle>"
+          },
+          {
+            "key": "detail_hub.punch_clock.no_history",
+            "line": 148,
+            "context": "147: <Clock className=\"w-12 h-12 mx-auto mb-2 text-gray-300\" />\n148: <p className=\"text-sm\">{t('detail_hub.punch_clock.no_history')}</p>\n149: </div>"
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.overnight_shift",
+            "line": 178,
+            "context": "177: <Moon className=\"w-3 h-3 mr-1\" />\n178: {t('detail_hub.timecard.time_tracking.overnight_shift')}\n179: </Badge>"
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.long_shift_warning",
+            "line": 186,
+            "context": "185: <AlertCircle className=\"w-3 h-3 mr-1\" />\n186: {t('detail_hub.timecard.time_tracking.long_shift_warning')}\n187: </Badge>"
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.auto_closed_indicator",
+            "line": 193,
+            "context": "192: <Badge variant=\"outline\" className=\"text-xs border-amber-300 bg-amber-50 text-amber-700\">\n193: {t('detail_hub.timecard.time_tracking.auto_closed_indicator')}\n194: </Badge>"
+          },
+          {
+            "key": "detail_hub.punch_clock.clock_in",
+            "line": 208,
+            "context": "207: <Clock className=\"w-3 h-3\" />\n208: <span>{t('detail_hub.punch_clock.clock_in')}</span>\n209: </div>"
+          },
+          {
+            "key": "detail_hub.punch_clock.photo_verified",
+            "line": 219,
+            "context": "218: <Camera className=\"w-3 h-3 mr-1\" />\n219: {t('detail_hub.punch_clock.photo_verified')}\n220: </Badge>"
+          },
+          {
+            "key": "detail_hub.punch_clock.clock_out",
+            "line": 228,
+            "context": "227: <Clock className=\"w-3 h-3\" />\n228: <span>{t('detail_hub.punch_clock.clock_out')}</span>\n229: </div>"
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.next_day_indicator",
+            "line": 239,
+            "context": "238: <span className=\"text-xs text-amber-600 ml-1\">\n239: ({t('detail_hub.timecard.time_tracking.next_day_indicator')})\n240: </span>"
+          },
+          {
+            "key": "detail_hub.punch_clock.photo_verified",
+            "line": 246,
+            "context": "245: <Camera className=\"w-3 h-3 mr-1\" />\n246: {t('detail_hub.punch_clock.photo_verified')}\n247: </Badge>"
+          },
+          {
+            "key": "detail_hub.punch_clock.in_progress",
+            "line": 252,
+            "context": "251: <div className=\"text-sm text-gray-400 italic\">\n252: {t('detail_hub.punch_clock.in_progress')}\n253: </div>"
+          },
+          {
+            "key": "detail_hub.timecard.time_tracking.duration_label",
+            "line": 263,
+            "context": "262: <span className=\"text-xs text-gray-600\">\n263: {t('detail_hub.timecard.time_tracking.duration_label')}\n264: </span>"
+          },
+          {
+            "key": "detail_hub.punch_clock.requires_verification",
+            "line": 277,
+            "context": "276: <AlertCircle className=\"w-3 h-3 mr-1\" />\n277: {t('detail_hub.punch_clock.requires_verification')}\n278: </Badge>"
           }
         ],
         "coverage": 100,
@@ -74606,6 +75046,36 @@
         "severity": "low"
       },
       {
+        "file": "src\\utils\\timeTracking.ts",
+        "hardcodedStrings": [],
+        "translationCalls": [
+          {
+            "key": "detail_hub.time_tracking.hours_abbrev",
+            "line": 110,
+            "exists": false
+          },
+          {
+            "key": "detail_hub.time_tracking.minutes_abbrev",
+            "line": 111,
+            "exists": false
+          }
+        ],
+        "missingKeys": [
+          {
+            "key": "detail_hub.time_tracking.hours_abbrev",
+            "line": 110,
+            "context": "109: ): string {\n110: const hoursStr = hours > 0 ? `${hours}${t('detail_hub.time_tracking.hours_abbrev')}` : '';\n111: const minutesStr = minutes > 0 ? `${minutes}${t('detail_hub.time_tracking.minutes_abbrev')}` : '';"
+          },
+          {
+            "key": "detail_hub.time_tracking.minutes_abbrev",
+            "line": 111,
+            "context": "110: const hoursStr = hours > 0 ? `${hours}${t('detail_hub.time_tracking.hours_abbrev')}` : '';\n111: const minutesStr = minutes > 0 ? `${minutes}${t('detail_hub.time_tracking.minutes_abbrev')}` : '';\n112: "
+          }
+        ],
+        "coverage": 100,
+        "severity": "low"
+      },
+      {
         "file": "src\\utils\\translationAudit.ts",
         "hardcodedStrings": [],
         "translationCalls": [
@@ -74830,7 +75300,7 @@
     {
       "priority": "MEDIUM",
       "title": "Fix Component Components",
-      "description": "467 Component components need translation",
+      "description": "469 Component components need translation",
       "files": [
         "src\\components\\reports\\sections\\InvoicesReport.tsx",
         "src\\components\\detail-hub\\InvoiceCenter.BACKUP.tsx",
@@ -75170,6 +75640,7 @@
         "src\\components\\detail-hub\\BreakEditDialog.tsx",
         "src\\components\\detail-hub\\DetailHubAnalytics.tsx",
         "src\\components\\detail-hub\\KioskPinExample.tsx",
+        "src\\components\\detail-hub\\punch-clock\\PunchHistoryCard.backup.tsx",
         "src\\components\\detail-hub\\punch-clock\\PunchHistoryCard.tsx",
         "src\\components\\detail-hub\\punch-clock\\WeekStatsCard.tsx",
         "src\\components\\detail-hub\\ReminderPreviewDialog.tsx",
@@ -75298,16 +75769,17 @@
         "src\\pages\\Stock.tsx",
         "src\\pages\\VehicleDetailsPage.tsx",
         "src\\utils\\stockCSVHelpers.ts",
+        "src\\utils\\timeTracking.ts",
         "src\\utils\\translationAudit.ts"
       ],
-      "estimatedEffort": "234 hours"
+      "estimatedEffort": "235 hours"
     },
     {
       "priority": "MEDIUM",
       "title": "Add Missing Translation Keys",
-      "description": "3459 translation keys are referenced but missing",
+      "description": "3503 translation keys are referenced but missing",
       "action": "Add these keys to translation files",
-      "estimatedEffort": "173 hours"
+      "estimatedEffort": "176 hours"
     }
   ],
   "coverage": 79
