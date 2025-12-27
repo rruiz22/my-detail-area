@@ -4,6 +4,7 @@ import { corsHeaders } from "../_shared/cors.ts";
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 // =====================================================
@@ -12,11 +13,14 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 async function sendSmsViaFunction(to: string, message: string, dealerId: number): Promise<{ success: boolean; messageSid?: string; error?: string }> {
   try {
+    // Use service role key for function-to-function calls
+    // Both Authorization and apikey headers are needed for edge function auth
     const response = await fetch(`${supabaseUrl}/functions/v1/enhanced-sms`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${supabaseServiceKey}`,
+        'apikey': supabaseAnonKey,
       },
       body: JSON.stringify({ to, message, dealerId }),
     });
