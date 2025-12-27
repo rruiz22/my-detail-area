@@ -47,10 +47,10 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Clean and format phone number
     const formattedPhone = formatPhoneNumber(to);
-    
+
     // Create or find conversation if not provided
     let finalConversationId = conversationId;
-    
+
     if (!finalConversationId && dealerId) {
       const conversation = await findOrCreateSMSConversation({
         phoneNumber: to,
@@ -75,7 +75,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send SMS via Twilio
     const twilioUrl = `https://api.twilio.com/2010-04-01/Accounts/${twilioAccountSid}/Messages.json`;
-    
+
     const twilioResponse = await fetch(twilioUrl, {
       method: 'POST',
       headers: {
@@ -112,12 +112,19 @@ const handler = async (req: Request): Promise<Response> => {
       if (messageError) {
         console.error('Error creating message record:', messageError);
       } else {
-        // Update conversation
+        // Update conversation - increment message count via raw update
+        // Note: Can't use supabase.sql in edge functions, use RPC or simple update
+        const { data: currentConv } = await supabase
+          .from('sms_conversations')
+          .select('message_count')
+          .eq('id', finalConversationId)
+          .single();
+
         await supabase
           .from('sms_conversations')
           .update({
             last_message_at: new Date().toISOString(),
-            message_count: supabase.sql`message_count + 1`
+            message_count: (currentConv?.message_count || 0) + 1
           })
           .eq('id', finalConversationId);
       }
@@ -157,7 +164,7 @@ const handler = async (req: Request): Promise<Response> => {
 
   } catch (error: any) {
     console.error('Enhanced SMS error:', error);
-    
+
     // Update notification as failed if provided
     if (req.body) {
       try {
@@ -204,7 +211,7 @@ async function findOrCreateSMSConversation({
   entityId?: string;
 }) {
   const cleanPhone = phoneNumber.replace(/^\+?1?/, '').replace(/\D/g, '');
-  
+
   // Try to find existing conversation
   let query = supabase
     .from('sms_conversations')
@@ -217,7 +224,7 @@ async function findOrCreateSMSConversation({
   }
 
   const { data: existingConversation } = await query.single();
-  
+
   if (existingConversation) {
     return existingConversation;
   }
@@ -233,7 +240,7 @@ async function findOrCreateSMSConversation({
   if (entityType && entityId) {
     conversationData.entity_type = entityType;
     conversationData.entity_id = entityId;
-    
+
     // Get entity details for customer name
     if (entityType === 'order') {
       const { data: order } = await supabase
@@ -241,7 +248,7 @@ async function findOrCreateSMSConversation({
         .select('customer_name')
         .eq('id', entityId)
         .single();
-      
+
       if (order) {
         conversationData.customer_name = order.customer_name;
       }
@@ -264,17 +271,17 @@ async function findOrCreateSMSConversation({
 function formatPhoneNumber(phone: string): string {
   // Remove all non-digits
   const cleaned = phone.replace(/\D/g, '');
-  
+
   // Add +1 if it's a US number (10 digits)
   if (cleaned.length === 10) {
     return `+1${cleaned}`;
   }
-  
+
   // If it already has country code, ensure it starts with +
   if (cleaned.length === 11 && cleaned.startsWith('1')) {
     return `+${cleaned}`;
   }
-  
+
   // Otherwise, assume it's already properly formatted
   return cleaned.startsWith('+') ? phone : `+${cleaned}`;
 }

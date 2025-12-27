@@ -5,21 +5,20 @@
  * Allows assigning employees to multiple dealerships with different work schedules.
  */
 
-import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Building2, Clock, AlertCircle, Calendar, Coffee, Bell } from "lucide-react";
-import { useCreateAssignment, useUpdateAssignment, type EmployeeAssignment, type ScheduleTemplate } from "@/hooks/useEmployeeAssignments";
-import { useDealerships } from "@/hooks/useDealerships";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { useDealerships } from "@/hooks/useDealerships";
+import { useCreateAssignment, useUpdateAssignment, type EmployeeAssignment, type ScheduleTemplate } from "@/hooks/useEmployeeAssignments";
+import { AlertCircle, Bell, Building2, Calendar, Clock, Coffee } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface AssignmentModalProps {
   /** Existing assignment to edit (null for create mode) */
@@ -401,29 +400,40 @@ export function AssignmentModal({
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
-                <Label htmlFor="break-minutes" className="text-sm font-medium">
-                  Required Break (minutes)
-                </Label>
-                <Input
-                  id="break-minutes"
-                  type="number"
-                  min="0"
-                  max="120"
-                  placeholder="30"
-                  value={scheduleTemplate.required_break_minutes}
-                  onChange={(e) => {
-                    const value = e.target.value === '' ? 0 : parseInt(e.target.value);
-                    setScheduleTemplate({
-                      ...scheduleTemplate,
-                      required_break_minutes: isNaN(value) ? 0 : value
-                    });
-                  }}
-                  className="bg-white"
-                />
-                <p className="text-xs text-gray-600">
-                  Typical break: 30 minutes for 8-hour shifts
-                </p>
+              <div className="grid grid-cols-2 gap-4 items-end">
+                <div className="space-y-2">
+                  <Label htmlFor="break-minutes" className="text-sm font-medium">
+                    Required Break (minutes)
+                  </Label>
+                  <Input
+                    id="break-minutes"
+                    type="number"
+                    min="0"
+                    max="120"
+                    placeholder="30"
+                    value={scheduleTemplate.required_break_minutes}
+                    onChange={(e) => {
+                      const value = e.target.value === '' ? 0 : parseInt(e.target.value);
+                      setScheduleTemplate({
+                        ...scheduleTemplate,
+                        required_break_minutes: isNaN(value) ? 0 : value
+                      });
+                    }}
+                    className="bg-white"
+                  />
+                  <p className="text-xs text-gray-600">
+                    Typical break: 30 minutes for 8-hour shifts
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 h-10 pb-6">
+                  <Switch
+                    checked={scheduleTemplate.break_is_paid ?? false}
+                    onCheckedChange={(checked) =>
+                      setScheduleTemplate({ ...scheduleTemplate, break_is_paid: checked })
+                    }
+                  />
+                  <Label className="text-sm font-medium">Break is Paid</Label>
+                </div>
               </div>
             </CardContent>
           </Card>

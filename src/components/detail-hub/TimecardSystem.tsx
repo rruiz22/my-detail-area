@@ -12,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CalendarIcon, Download, Filter, Clock, User, DollarSign, AlertTriangle, Camera, Image as ImageIcon, Plus, FileText, Edit2, Ban, X, Search, FileSpreadsheet, Trash2, Eye, EyeOff, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
+import { CalendarIcon, Download, Filter, Clock, User, DollarSign, AlertTriangle, Camera, Image as ImageIcon, Plus, FileText, Edit2, Ban, X, Search, FileSpreadsheet, Trash2, Eye, EyeOff, CheckCircle2, XCircle, AlertCircle, Moon } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
@@ -30,6 +30,11 @@ import { useTabPersistence } from "@/hooks/useTabPersistence";
 import { useTimecardPersistence, type DateFilter } from "@/hooks/useTimecardPersistence";
 import { exportReportToPDF, exportReportToExcel } from "@/utils/reportExporters";
 import { createTimecardReport, createWeeklySummaryReport, type TimecardEntry, type TimecardSummary } from "@/utils/timecardExportUtils";
+import {
+  isOvernightShift,
+  getShiftDuration,
+  formatTimeWithOptionalDate
+} from "@/utils/timeTracking";
 
 /**
  * Timecard System - Real Database Integration
@@ -270,6 +275,8 @@ const TimecardSystem = () => {
       date: localDateString,
       clockIn: formatTime(entry.clock_in),
       clockOut: formatTime(entry.clock_out),
+      clockInRaw: entry.clock_in, // Preserve raw timestamp for overnight detection
+      clockOutRaw: entry.clock_out, // Preserve raw timestamp for overnight detection
       breakDuration: entry.break_duration_minutes || 0, // Use calculated total from detail_hub_breaks
       totalHours: entry.total_hours || 0,
       regularHours: entry.regular_hours || 0,
@@ -1191,19 +1198,64 @@ const TimecardSystem = () => {
                           ) : null}
                         </div>
                       </TableCell>
-                      <TableCell className="py-2 text-sm">{timecard.clockIn}</TableCell>
                       <TableCell className="py-2 text-sm">
-                        <div className="flex items-center gap-1.5">
-                          <span>{timecard.clockOut}</span>
-                          {timecard.punchOutMethod === 'auto_close' && (
-                            <Badge
-                              variant="outline"
-                              className="text-[9px] px-1 py-0 bg-amber-50 text-amber-700 border-amber-300"
-                              title={t('detail_hub.timecard.auto_closed_tooltip')}
-                            >
-                              Auto
-                            </Badge>
-                          )}
+                        {(() => {
+                          const overnight = timecard.clockOutRaw && timecard.clockInRaw
+                            ? isOvernightShift(timecard.clockInRaw, timecard.clockOutRaw)
+                            : false;
+                          return overnight
+                            ? <span className="text-xs">{formatTimeWithOptionalDate(timecard.clockInRaw, true)}</span>
+                            : <span>{timecard.clockIn}</span>;
+                        })()}
+                      </TableCell>
+                      <TableCell className="py-2 text-sm">
+                        <div className="flex flex-col gap-1">
+                          {(() => {
+                            const overnight = timecard.clockOutRaw && timecard.clockInRaw
+                              ? isOvernightShift(timecard.clockInRaw, timecard.clockOutRaw)
+                              : false;
+                            const duration = timecard.clockOutRaw && timecard.clockInRaw
+                              ? getShiftDuration(timecard.clockInRaw, timecard.clockOutRaw)
+                              : null;
+
+                            return (
+                              <>
+                                <div className="flex items-center gap-1">
+                                  {overnight && duration
+                                    ? <span className="text-xs">{formatTimeWithOptionalDate(timecard.clockOutRaw, true)}</span>
+                                    : <span>{timecard.clockOut}</span>
+                                  }
+                                  {overnight && duration && (
+                                    <span className="text-[9px] text-amber-600">
+                                      ({t('detail_hub.timecard.time_tracking.next_day_indicator')})
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-1 flex-wrap">
+                                  {overnight && (
+                                    <Badge variant="warning" className="text-[9px] px-1 py-0">
+                                      <Moon className="w-2 h-2 mr-0.5" />
+                                      {t('detail_hub.timecard.time_tracking.overnight_shift')}
+                                    </Badge>
+                                  )}
+                                  {duration?.isLongShift && (
+                                    <Badge variant="destructive" className="text-[9px] px-1 py-0">
+                                      {t('detail_hub.timecard.time_tracking.long_shift_warning')}
+                                    </Badge>
+                                  )}
+                                  {timecard.punchOutMethod === 'auto_close' && (
+                                    <Badge
+                                      variant="outline"
+                                      className="text-[9px] px-1 py-0 bg-amber-50 text-amber-700 border-amber-300"
+                                      title={t('detail_hub.timecard.auto_closed_tooltip')}
+                                    >
+                                      Auto
+                                    </Badge>
+                                  )}
+                                </div>
+                              </>
+                            );
+                          })()}
                         </div>
                       </TableCell>
                       <TableCell className="py-2 text-sm">
@@ -1384,19 +1436,64 @@ const TimecardSystem = () => {
                           ) : null}
                         </div>
                       </TableCell>
-                      <TableCell className="py-2 text-sm">{timecard.clockIn}</TableCell>
                       <TableCell className="py-2 text-sm">
-                        <div className="flex items-center gap-1.5">
-                          <span>{timecard.clockOut}</span>
-                          {timecard.punchOutMethod === 'auto_close' && (
-                            <Badge
-                              variant="outline"
-                              className="text-[9px] px-1 py-0 bg-amber-50 text-amber-700 border-amber-300"
-                              title={t('detail_hub.timecard.auto_closed_tooltip')}
-                            >
-                              Auto
-                            </Badge>
-                          )}
+                        {(() => {
+                          const overnight = timecard.clockOutRaw && timecard.clockInRaw
+                            ? isOvernightShift(timecard.clockInRaw, timecard.clockOutRaw)
+                            : false;
+                          return overnight
+                            ? <span className="text-xs">{formatTimeWithOptionalDate(timecard.clockInRaw, true)}</span>
+                            : <span>{timecard.clockIn}</span>;
+                        })()}
+                      </TableCell>
+                      <TableCell className="py-2 text-sm">
+                        <div className="flex flex-col gap-1">
+                          {(() => {
+                            const overnight = timecard.clockOutRaw && timecard.clockInRaw
+                              ? isOvernightShift(timecard.clockInRaw, timecard.clockOutRaw)
+                              : false;
+                            const duration = timecard.clockOutRaw && timecard.clockInRaw
+                              ? getShiftDuration(timecard.clockInRaw, timecard.clockOutRaw)
+                              : null;
+
+                            return (
+                              <>
+                                <div className="flex items-center gap-1">
+                                  {overnight && duration
+                                    ? <span className="text-xs">{formatTimeWithOptionalDate(timecard.clockOutRaw, true)}</span>
+                                    : <span>{timecard.clockOut}</span>
+                                  }
+                                  {overnight && duration && (
+                                    <span className="text-[9px] text-amber-600">
+                                      ({t('detail_hub.timecard.time_tracking.next_day_indicator')})
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-1 flex-wrap">
+                                  {overnight && (
+                                    <Badge variant="warning" className="text-[9px] px-1 py-0">
+                                      <Moon className="w-2 h-2 mr-0.5" />
+                                      {t('detail_hub.timecard.time_tracking.overnight_shift')}
+                                    </Badge>
+                                  )}
+                                  {duration?.isLongShift && (
+                                    <Badge variant="destructive" className="text-[9px] px-1 py-0">
+                                      {t('detail_hub.timecard.time_tracking.long_shift_warning')}
+                                    </Badge>
+                                  )}
+                                  {timecard.punchOutMethod === 'auto_close' && (
+                                    <Badge
+                                      variant="outline"
+                                      className="text-[9px] px-1 py-0 bg-amber-50 text-amber-700 border-amber-300"
+                                      title={t('detail_hub.timecard.auto_closed_tooltip')}
+                                    >
+                                      Auto
+                                    </Badge>
+                                  )}
+                                </div>
+                              </>
+                            );
+                          })()}
                         </div>
                       </TableCell>
                       <TableCell className="py-2 text-sm">

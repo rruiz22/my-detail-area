@@ -1,0 +1,86 @@
+=== PATCH PLAN FOR TimecardSystem.tsx ===
+
+OBJECTIVE: Add overnight shift and long shift visual indicators with MINIMAL changes
+
+CHANGES NEEDED:
+
+1. Add imports at top (after line 32):
+```typescript
+import {
+  isOvernightShift,
+  getShiftDuration,
+  formatTimeWithOptionalDate
+} from "@/utils/timeTracking";
+import { Moon } from "lucide-react"; // Add to existing lucide imports on line 15
+```
+
+2. Modify transformTimeEntry function (line 265-288) to preserve raw timestamps:
+Add these fields to the return object:
+```typescript
+return {
+  // ... existing fields ...
+  clockInRaw: entry.clock_in,     // NEW: preserve raw timestamp
+  clockOutRaw: entry.clock_out,   // NEW: preserve raw timestamp
+  // ... rest of existing fields ...
+};
+```
+
+3. Update table cells (lines 1194-1208) to show overnight indicators:
+REPLACE:
+```typescript
+<TableCell className="py-2 text-sm">{timecard.clockIn}</TableCell>
+<TableCell className="py-2 text-sm">
+  <div className="flex items-center gap-1.5">
+    <span>{timecard.clockOut}</span>
+    {timecard.punchOutMethod === 'auto_close' && (
+```
+
+WITH:
+```typescript
+<TableCell className="py-2 text-sm">
+  <div className="flex flex-col gap-0.5">
+    {(() => {
+      const overnight = timecard.clockOutRaw && timecard.clockInRaw
+        ? isOvernightShift(timecard.clockInRaw, timecard.clockOutRaw)
+        : false;
+      return overnight
+        ? <span className="text-xs">{formatTimeWithOptionalDate(timecard.clockInRaw, true)}</span>
+        : <span>{timecard.clockIn}</span>;
+    })()}
+  </div>
+</TableCell>
+<TableCell className="py-2 text-sm">
+  <div className="flex flex-col gap-0.5">
+    {(() => {
+      const overnight = timecard.clockOutRaw && timecard.clockInRaw
+        ? isOvernightShift(timecard.clockInRaw, timecard.clockOutRaw)
+        : false;
+      const duration = timecard.clockOutRaw && timecard.clockInRaw
+        ? getShiftDuration(timecard.clockInRaw, timecard.clockOutRaw)
+        : null;
+
+      return (
+        <div className="flex items-center gap-1">
+          {overnight && duration
+            ? <span className="text-xs">{formatTimeWithOptionalDate(timecard.clockOutRaw, true)}</span>
+            : <span>{timecard.clockOut}</span>
+          }
+          {overnight && (
+            <Badge variant="warning" className="text-[9px] px-1 py-0">
+              <Moon className="w-2 h-2 mr-0.5" />
+              {t('detail_hub.timecard.time_tracking.overnight_shift')}
+            </Badge>
+          )}
+          {duration?.isLongShift && (
+            <Badge variant="destructive" className="text-[9px] px-1 py-0">
+              {t('detail_hub.timecard.time_tracking.long_shift_warning')}
+            </Badge>
+          )}
+          {timecard.punchOutMethod === 'auto_close' && (
+```
+
+SAFETY NOTES:
+- Only modifies display logic, not data processing
+- Preserves all existing functionality
+- Adds optional visual enhancements
+- Backwards compatible (checks for null/undefined)

@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
 
@@ -149,8 +149,9 @@ const handler = async (req: Request): Promise<Response> => {
 
   } catch (error) {
     console.error('Error in auto-close function:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: errorMessage }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
@@ -172,12 +173,15 @@ async function sendReminder(punch: OverduePunch) {
 
   if (punch.employee_phone) {
     try {
+      // Format phone number with +1 if not already formatted
+      const formattedPhone = punch.employee_phone.startsWith('+')
+        ? punch.employee_phone
+        : `+1${punch.employee_phone.replace(/\D/g, '')}`;
+
       const smsResponse = await supabase.functions.invoke('enhanced-sms', {
         body: {
-          to: punch.employee_phone,
+          to: formattedPhone,
           message,
-          entityType: 'time_entry',
-          entityId: punch.time_entry_id,
           dealerId: punch.dealership_id
         }
       });
@@ -186,6 +190,8 @@ async function sendReminder(punch: OverduePunch) {
         smsSent = true;
         smsSid = smsResponse.data.messageSid;
         console.log(`SMS sent successfully: ${smsSid}`);
+      } else if (smsResponse.error) {
+        console.error('SMS error:', smsResponse.error);
       }
     } catch (error) {
       console.error('Error sending SMS:', error);
@@ -220,6 +226,14 @@ async function autoClosePunch(punch: OverduePunch) {
   const now = new Date().toISOString();
   const language = punch.employee_preferred_language || 'en';
 
+  // Determine clock_out time: use shift_end_datetime if it's after clock_in, otherwise use NOW
+  // This handles the edge case where someone clocks in AFTER their shift end time
+  const clockInTime = new Date(punch.clock_in).getTime();
+  const shiftEndTime = new Date(punch.shift_end_datetime).getTime();
+  const clockOutTime = shiftEndTime > clockInTime ? punch.shift_end_datetime : now;
+
+  console.log(`Clock in: ${punch.clock_in}, Shift end: ${punch.shift_end_datetime}, Using clock_out: ${clockOutTime}`);
+
   // Language-specific auto-close reason for database
   const autoCloseReason = language === 'es'
     ? `Auto-cerrado después de ${punch.employee_auto_close_window} minutos desde el fin del turno (${punch.shift_end_time}). ${punch.reminder_count} recordatorio(s) enviado(s).`
@@ -228,11 +242,14 @@ async function autoClosePunch(punch: OverduePunch) {
     : `Auto-closed after ${punch.employee_auto_close_window} minutes from shift end (${punch.shift_end_time}). ${punch.reminder_count} reminder(s) sent.`;
 
   // Close the time entry
+  // NOTE: Do NOT include punch_out_method as there's a check constraint that blocks it
+  // The constraint `detail_hub_time_entries_punch_out_method_check` only allows
+  // certain values and 'auto_close' is not in the allowed list
   const { error: updateError } = await supabase
     .from('detail_hub_time_entries')
     .update({
-      clock_out: punch.shift_end_datetime,
-      punch_out_method: 'auto_close',
+      clock_out: clockOutTime,
+      // punch_out_method intentionally omitted due to check constraint
       status: 'complete',
       auto_close_reason: autoCloseReason,
       auto_closed_at: now,
@@ -253,12 +270,15 @@ async function autoClosePunch(punch: OverduePunch) {
   if (punch.employee_phone) {
     try {
       const confirmationMessage = getAutoCloseConfirmationMessage(language);
+      // Format phone number with +1 if not already formatted
+      const formattedPhone = punch.employee_phone.startsWith('+')
+        ? punch.employee_phone
+        : `+1${punch.employee_phone.replace(/\D/g, '')}`;
+
       const smsResponse = await supabase.functions.invoke('enhanced-sms', {
         body: {
-          to: punch.employee_phone,
+          to: formattedPhone,
           message: confirmationMessage,
-          entityType: 'time_entry',
-          entityId: punch.time_entry_id,
           dealerId: punch.dealership_id
         }
       });
@@ -267,6 +287,8 @@ async function autoClosePunch(punch: OverduePunch) {
         confirmationSmsSent = true;
         confirmationSmsSid = smsResponse.data.messageSid;
         console.log(`Auto-close confirmation SMS sent: ${confirmationSmsSid}`);
+      } else if (smsResponse.error) {
+        console.error('Auto-close SMS error:', smsResponse.error);
       }
     } catch (error) {
       console.error('Error sending auto-close confirmation SMS:', error);

@@ -1,5 +1,5 @@
 /**
- * PunchHistoryCard Component
+ * PunchHistoryCard Component (Enhanced with Overnight Shift Detection)
  *
  * Displays recent punch history for an employee in the Kiosk modal
  * Shows last 5 time entries with visual indicators and smooth animations
@@ -9,6 +9,9 @@
  * - Visual status indicators (complete, active, disputed)
  * - Hours worked display
  * - Photo verification badges
+ * - Overnight shift detection and visual indicators
+ * - Long shift warnings (>10 hours)
+ * - Duration display with date badges
  * - Smooth scroll animations
  */
 
@@ -23,11 +26,18 @@ import {
   AlertCircle,
   Camera,
   Loader2,
-  History
+  History,
+  Moon
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { CACHE_TIMES, GC_TIMES } from "@/constants/cacheConfig";
+import {
+  isOvernightShift,
+  getShiftDuration,
+  formatTimeWithOptionalDate,
+  formatDuration
+} from "@/utils/timeTracking";
 
 interface PunchHistoryCardProps {
   employeeId: string;
@@ -45,6 +55,7 @@ interface TimeEntry {
   photo_in_url: string | null;
   photo_out_url: string | null;
   requires_manual_verification: boolean;
+  auto_close_reason: string | null;
 }
 
 export function PunchHistoryCard({ employeeId, limit = 5 }: PunchHistoryCardProps) {
@@ -69,14 +80,6 @@ export function PunchHistoryCard({ employeeId, limit = 5 }: PunchHistoryCardProp
     gcTime: GC_TIMES.SHORT,
     refetchOnMount: true,
   });
-
-  const formatTime = (date: string) => {
-    return format(new Date(date), 'h:mm a');
-  };
-
-  const formatDate = (date: string) => {
-    return format(new Date(date), 'MMM d, yyyy');
-  };
 
   const getStatusBadge = (entry: TimeEntry) => {
     if (entry.status === 'active') {
@@ -148,92 +151,136 @@ export function PunchHistoryCard({ employeeId, limit = 5 }: PunchHistoryCardProp
           // Punch history list
           <ScrollArea className="h-[300px] pr-4">
             <div className="space-y-3">
-              {entries.map((entry, index) => (
-                <div
-                  key={entry.id}
-                  className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-sm"
-                  style={{
-                    animation: `slideIn 0.3s ease-out ${index * 0.05}s both`
-                  }}
-                >
-                  {/* Header - Date and Status */}
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm font-medium text-gray-700">
-                      {formatDate(entry.clock_in)}
-                    </span>
-                    {getStatusBadge(entry)}
-                  </div>
+              {entries.map((entry, index) => {
+                // Calculate shift characteristics
+                const overnight = entry.clock_out ? isOvernightShift(entry.clock_in, entry.clock_out) : false;
+                const duration = entry.clock_out ? getShiftDuration(entry.clock_in, entry.clock_out) : null;
+                const isLong = duration ? duration.isLongShift : false;
 
-                  {/* Clock In/Out Times */}
-                  <div className="grid grid-cols-2 gap-4 mb-3">
-                    {/* Clock In */}
-                    <div>
-                      <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">
-                        <Clock className="w-3 h-3" />
-                        <span>{t('detail_hub.punch_clock.clock_in')}</span>
+                return (
+                  <div
+                    key={entry.id}
+                    className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-gray-300 transition-all duration-200 hover:shadow-sm"
+                    style={{
+                      animation: `slideIn 0.3s ease-out ${index * 0.05}s both`
+                    }}
+                  >
+                    {/* Header - Date and Status Badges */}
+                    <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
+                      <span className="text-sm font-medium text-gray-700">
+                        {format(new Date(entry.clock_in), 'MMM d, yyyy')}
+                      </span>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {/* Overnight Badge */}
+                        {overnight && (
+                          <Badge variant="warning" className="text-xs">
+                            <Moon className="w-3 h-3 mr-1" />
+                            {t('detail_hub.timecard.time_tracking.overnight_shift')}
+                          </Badge>
+                        )}
+
+                        {/* Long Shift Badge */}
+                        {isLong && (
+                          <Badge variant="destructive" className="text-xs">
+                            <AlertCircle className="w-3 h-3 mr-1" />
+                            {t('detail_hub.timecard.time_tracking.long_shift_warning')}
+                          </Badge>
+                        )}
+
+                        {/* Auto-closed Badge */}
+                        {entry.auto_close_reason && (
+                          <Badge variant="outline" className="text-xs border-amber-300 bg-amber-50 text-amber-700">
+                            {t('detail_hub.timecard.time_tracking.auto_closed_indicator')}
+                          </Badge>
+                        )}
+
+                        {/* Status Badge */}
+                        {getStatusBadge(entry)}
                       </div>
-                      <div className="text-sm font-semibold text-emerald-700">
-                        {formatTime(entry.clock_in)}
-                      </div>
-                      {entry.photo_in_url && (
-                        <Badge variant="outline" className="text-xs mt-1">
-                          <Camera className="w-3 h-3 mr-1" />
-                          {t('detail_hub.punch_clock.photo_verified')}
-                        </Badge>
-                      )}
                     </div>
 
-                    {/* Clock Out */}
-                    <div>
-                      <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">
-                        <Clock className="w-3 h-3" />
-                        <span>{t('detail_hub.punch_clock.clock_out')}</span>
-                      </div>
-                      {entry.clock_out ? (
-                        <>
-                          <div className="text-sm font-semibold text-red-600">
-                            {formatTime(entry.clock_out)}
-                          </div>
-                          {entry.photo_out_url && (
-                            <Badge variant="outline" className="text-xs mt-1">
-                              <Camera className="w-3 h-3 mr-1" />
-                              {t('detail_hub.punch_clock.photo_verified')}
-                            </Badge>
-                          )}
-                        </>
-                      ) : (
-                        <div className="text-sm text-gray-400 italic">
-                          {t('detail_hub.punch_clock.in_progress')}
+                    {/* Clock In/Out Times */}
+                    <div className="grid grid-cols-2 gap-4 mb-3">
+                      {/* Clock In */}
+                      <div>
+                        <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">
+                          <Clock className="w-3 h-3" />
+                          <span>{t('detail_hub.punch_clock.clock_in')}</span>
                         </div>
-                      )}
-                    </div>
-                  </div>
+                        <div className="text-sm font-semibold text-emerald-700">
+                          {overnight
+                            ? formatTimeWithOptionalDate(entry.clock_in, true)
+                            : format(new Date(entry.clock_in), 'h:mm a')
+                          }
+                        </div>
+                        {entry.photo_in_url && (
+                          <Badge variant="outline" className="text-xs mt-1">
+                            <Camera className="w-3 h-3 mr-1" />
+                            {t('detail_hub.punch_clock.photo_verified')}
+                          </Badge>
+                        )}
+                      </div>
 
-                  {/* Total Hours */}
-                  {entry.total_hours !== null && (
-                    <div className="pt-3 border-t border-gray-200">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-gray-600">
-                          {t('detail_hub.punch_clock.total_hours')}
-                        </span>
-                        <span className="text-sm font-bold text-gray-900">
-                          {entry.total_hours.toFixed(2)} {t('detail_hub.punch_clock.hours')}
-                        </span>
+                      {/* Clock Out */}
+                      <div>
+                        <div className="flex items-center gap-1 text-xs text-gray-500 mb-1">
+                          <Clock className="w-3 h-3" />
+                          <span>{t('detail_hub.punch_clock.clock_out')}</span>
+                        </div>
+                        {entry.clock_out ? (
+                          <>
+                            <div className="text-sm font-semibold text-red-600">
+                              {overnight
+                                ? formatTimeWithOptionalDate(entry.clock_out, true)
+                                : format(new Date(entry.clock_out), 'h:mm a')
+                              }
+                              {overnight && duration && (
+                                <span className="text-xs text-amber-600 ml-1">
+                                  ({t('detail_hub.timecard.time_tracking.next_day_indicator')})
+                                </span>
+                              )}
+                            </div>
+                            {entry.photo_out_url && (
+                              <Badge variant="outline" className="text-xs mt-1">
+                                <Camera className="w-3 h-3 mr-1" />
+                                {t('detail_hub.punch_clock.photo_verified')}
+                              </Badge>
+                            )}
+                          </>
+                        ) : (
+                          <div className="text-sm text-gray-400 italic">
+                            {t('detail_hub.punch_clock.in_progress')}
+                          </div>
+                        )}
                       </div>
                     </div>
-                  )}
 
-                  {/* Manual Verification Badge */}
-                  {entry.requires_manual_verification && (
-                    <div className="mt-2">
-                      <Badge variant="outline" className="text-xs border-amber-300 bg-amber-50 text-amber-700">
-                        <AlertCircle className="w-3 h-3 mr-1" />
-                        {t('detail_hub.punch_clock.requires_verification')}
-                      </Badge>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    {/* Duration Display */}
+                    {duration && (
+                      <div className="pt-3 border-t border-gray-200">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-600">
+                            {t('detail_hub.timecard.time_tracking.duration_label')}
+                          </span>
+                          <span className={`text-sm font-bold ${isLong ? 'text-red-600' : 'text-gray-900'}`}>
+                            {formatDuration(duration.hours, duration.minutes, t)}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Manual Verification Badge */}
+                    {entry.requires_manual_verification && (
+                      <div className="mt-2">
+                        <Badge variant="outline" className="text-xs border-amber-300 bg-amber-50 text-amber-700">
+                          <AlertCircle className="w-3 h-3 mr-1" />
+                          {t('detail_hub.punch_clock.requires_verification')}
+                        </Badge>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </ScrollArea>
         )}

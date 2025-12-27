@@ -8,26 +8,26 @@
  * Consolidates employee creation and assignment setup in a single guided flow.
  */
 
-import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import * as z from "zod";
 
 // UI Components
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
 // Components
@@ -35,43 +35,42 @@ import { ReminderPreviewDialog } from "./ReminderPreviewDialog";
 
 // Icons
 import {
+  AlertCircle,
+  Bell,
+  Building2,
   Calendar,
+  Check,
+  ChevronLeft,
+  ChevronRight,
   Clock,
-  Shield,
+  Coffee,
   Eye,
   EyeOff,
-  Sparkles,
-  Building2,
-  ChevronRight,
-  ChevronLeft,
-  Check,
-  AlertCircle,
-  Coffee,
-  Bell,
   Plus,
+  Settings,
+  Shield,
+  Sparkles,
   Trash2,
-  User,
-  Settings
+  User
 } from "lucide-react";
 
 // Utilities
-import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 import { useDealerships } from "@/hooks/useDealerships";
-import { useQueryClient } from "@tanstack/react-query";
-import {
-  useEmployeeAssignments,
-  useCreateAssignment,
-  useUpdateAssignment,
-  useDeleteAssignment,
-  type ScheduleTemplate,
-  type CreateAssignmentData
-} from "@/hooks/useEmployeeAssignments";
 import {
   useCreateEmployee,
   useUpdateEmployee,
   type DetailHubEmployee
 } from "@/hooks/useDetailHubDatabase";
-import { useToast } from "@/hooks/use-toast";
+import {
+  useCreateAssignment,
+  useDeleteAssignment,
+  useEmployeeAssignments,
+  useUpdateAssignment,
+  type ScheduleTemplate
+} from "@/hooks/useEmployeeAssignments";
+import { cn } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 
 // =====================================================
 // TYPES & VALIDATION
@@ -1195,113 +1194,247 @@ function AssignmentCard({
             </div>
           )}
 
-          {/* Shift Times */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>{t('detail_hub.wizard.shift_start')}</Label>
-              <Input
-                type="time"
-                value={schedule.shift_start_time || '08:00'}
-                onChange={(e) => onUpdate({
-                  schedule_template: { ...schedule, shift_start_time: e.target.value }
-                })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>{t('detail_hub.wizard.shift_end')}</Label>
-              <Input
-                type="time"
-                value={schedule.shift_end_time || '18:00'}
-                onChange={(e) => onUpdate({
-                  schedule_template: { ...schedule, shift_end_time: e.target.value }
-                })}
-              />
-            </div>
-          </div>
+          {/* Shift Times & Punch Windows Card */}
+          <Card className="border-blue-200 bg-blue-50/30">
+            <CardHeader className="py-3">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Clock className="h-4 w-4 text-blue-600" />
+                {t('detail_hub.wizard.shift_hours_title')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Shift Times */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-sm">{t('detail_hub.wizard.shift_start')}</Label>
+                  <Input
+                    type="time"
+                    value={schedule.shift_start_time || '08:00'}
+                    onChange={(e) => onUpdate({
+                      schedule_template: { ...schedule, shift_start_time: e.target.value }
+                    })}
+                    className="bg-white"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-sm">{t('detail_hub.wizard.shift_end')}</Label>
+                  <Input
+                    type="time"
+                    value={schedule.shift_end_time || '18:00'}
+                    onChange={(e) => onUpdate({
+                      schedule_template: { ...schedule, shift_end_time: e.target.value }
+                    })}
+                    className="bg-white"
+                  />
+                </div>
+              </div>
+
+              {/* Punch Windows */}
+              <div className="pt-3 border-t border-blue-100">
+                <h4 className="text-xs font-medium text-gray-700 mb-3">{t('detail_hub.wizard.punch_windows_title')}</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-xs">{t('detail_hub.wizard.early_punch')}</Label>
+                    <Input
+                      type="number"
+                      min="0"
+                      max="60"
+                      placeholder={t('detail_hub.wizard.no_limit')}
+                      value={schedule.early_punch_allowed_minutes ?? ''}
+                      onChange={(e) => {
+                        const value = e.target.value === '' ? undefined : parseInt(e.target.value);
+                        onUpdate({
+                          schedule_template: {
+                            ...schedule,
+                            early_punch_allowed_minutes: value !== undefined && isNaN(value) ? undefined : value
+                          }
+                        });
+                      }}
+                      className="bg-white"
+                    />
+                    <p className="text-[10px] text-gray-500">{t('detail_hub.wizard.early_punch_help')}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs">{t('detail_hub.wizard.late_punch')}</Label>
+                    <Input
+                      type="number"
+                      min="0"
+                      max="60"
+                      placeholder={t('detail_hub.wizard.no_limit')}
+                      value={schedule.late_punch_grace_minutes ?? ''}
+                      onChange={(e) => {
+                        const value = e.target.value === '' ? undefined : parseInt(e.target.value);
+                        onUpdate({
+                          schedule_template: {
+                            ...schedule,
+                            late_punch_grace_minutes: value !== undefined && isNaN(value) ? undefined : value
+                          }
+                        });
+                      }}
+                      className="bg-white"
+                    />
+                    <p className="text-[10px] text-gray-500">{t('detail_hub.wizard.late_punch_help')}</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Work Days */}
-          <div className="space-y-2">
-            <Label>{t('detail_hub.wizard.work_days')}</Label>
-            <div className="grid grid-cols-7 gap-1">
-              {[
-                { value: 0, label: 'S' },
-                { value: 1, label: 'M' },
-                { value: 2, label: 'T' },
-                { value: 3, label: 'W' },
-                { value: 4, label: 'T' },
-                { value: 5, label: 'F' },
-                { value: 6, label: 'S' },
-              ].map((day) => {
-                const isSelected = (schedule.days_of_week || []).includes(day.value);
-                return (
-                  <button
-                    key={day.value}
-                    type="button"
-                    onClick={() => {
-                      const current = schedule.days_of_week || [];
-                      const updated = isSelected
-                        ? current.filter((d) => d !== day.value)
-                        : [...current, day.value].sort();
-                      onUpdate({
-                        schedule_template: { ...schedule, days_of_week: updated }
-                      });
-                    }}
-                    className={cn(
-                      "h-9 w-full rounded border-2 text-sm font-semibold transition-all",
-                      isSelected
-                        ? "bg-emerald-500 border-emerald-600 text-white"
-                        : "bg-white border-gray-300 text-gray-700 hover:border-emerald-400"
-                    )}
-                  >
-                    {day.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+          <Card className="border-purple-200 bg-purple-50/30">
+            <CardHeader className="py-3">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-purple-600" />
+                {t('detail_hub.wizard.work_days')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <div className="grid grid-cols-7 gap-2">
+                  {[
+                    { value: 0, label: 'Sun', fullName: 'Sunday' },
+                    { value: 1, label: 'Mon', fullName: 'Monday' },
+                    { value: 2, label: 'Tue', fullName: 'Tuesday' },
+                    { value: 3, label: 'Wed', fullName: 'Wednesday' },
+                    { value: 4, label: 'Thu', fullName: 'Thursday' },
+                    { value: 5, label: 'Fri', fullName: 'Friday' },
+                    { value: 6, label: 'Sat', fullName: 'Saturday' },
+                  ].map((day) => {
+                    const isSelected = (schedule.days_of_week || []).includes(day.value);
+                    return (
+                      <button
+                        key={day.value}
+                        type="button"
+                        title={day.fullName}
+                        onClick={() => {
+                          const current = schedule.days_of_week || [];
+                          const updated = isSelected
+                            ? current.filter((d) => d !== day.value)
+                            : [...current, day.value].sort();
+                          onUpdate({
+                            schedule_template: { ...schedule, days_of_week: updated }
+                          });
+                        }}
+                        className={cn(
+                          "h-10 w-full rounded-lg border-2 text-sm font-semibold transition-all",
+                          isSelected
+                            ? "bg-emerald-500 border-emerald-600 text-white shadow-sm hover:bg-emerald-600"
+                            : "bg-white border-gray-300 text-gray-700 hover:border-emerald-400 hover:bg-emerald-50"
+                        )}
+                      >
+                        {day.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-xs text-gray-600 text-center">
+                  {t('detail_hub.wizard.days_selected', { count: (schedule.days_of_week || []).length })}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
 
-          {/* Break */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>{t('detail_hub.wizard.break_duration')}</Label>
-              <Input
-                type="number"
-                min="0"
-                max="120"
-                value={schedule.required_break_minutes ?? 30}
-                onChange={(e) => onUpdate({
-                  schedule_template: { ...schedule, required_break_minutes: parseInt(e.target.value) || 0 }
-                })}
-              />
-            </div>
-            <div className="flex items-center gap-2 pt-7">
-              <Switch
-                checked={schedule.break_is_paid ?? false}
-                onCheckedChange={(checked) => onUpdate({
-                  schedule_template: { ...schedule, break_is_paid: checked }
-                })}
-              />
-              <Label>{t('detail_hub.wizard.break_is_paid')}</Label>
-            </div>
-          </div>
+          {/* Break Configuration */}
+          <Card className="border-amber-200 bg-amber-50/30">
+            <CardHeader className="py-3">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Coffee className="h-4 w-4 text-amber-600" />
+                {t('detail_hub.wizard.break_config_title')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4 items-end">
+                <div className="space-y-2">
+                  <Label className="text-sm">{t('detail_hub.wizard.break_duration')}</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    max="120"
+                    value={schedule.required_break_minutes ?? 30}
+                    onChange={(e) => onUpdate({
+                      schedule_template: { ...schedule, required_break_minutes: parseInt(e.target.value) || 0 }
+                    })}
+                    className="bg-white"
+                  />
+                </div>
+                <div className="flex items-center gap-2 h-10">
+                  <Switch
+                    checked={schedule.break_is_paid ?? false}
+                    onCheckedChange={(checked) => onUpdate({
+                      schedule_template: { ...schedule, break_is_paid: checked }
+                    })}
+                  />
+                  <Label className="text-sm">{t('detail_hub.wizard.break_is_paid')}</Label>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Security Settings */}
+          <Card className="border-red-200 bg-red-50/30">
+            <CardHeader className="py-3">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 text-red-600" />
+                {t('detail_hub.wizard.security_settings_title')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-red-100">
+                <div>
+                  <p className="font-medium text-sm text-gray-900">
+                    {t('detail_hub.wizard.require_face_validation')}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {t('detail_hub.wizard.require_face_validation_help')}
+                  </p>
+                </div>
+                <Switch
+                  checked={schedule.require_face_validation ?? false}
+                  onCheckedChange={(checked) => onUpdate({
+                    schedule_template: { ...schedule, require_face_validation: checked }
+                  })}
+                />
+              </div>
+              {schedule.require_face_validation && (
+                <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                  <p className="text-xs text-amber-800 flex items-start gap-2">
+                    <AlertCircle className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
+                    <span>{t('detail_hub.wizard.face_validation_warning')}</span>
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
           {/* Auto-Close */}
-          <div className="space-y-3 pt-2 border-t">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
+          <Card className="border-indigo-200 bg-indigo-50/30">
+            <CardHeader className="py-3">
+              <CardTitle className="text-sm flex items-center gap-2">
                 <Bell className="h-4 w-4 text-indigo-600" />
-                <Label>{t('detail_hub.employees.auto_close_enabled')}</Label>
+                {t('detail_hub.employees.auto_close_section_title')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-indigo-100">
+                <div>
+                  <p className="font-medium text-sm text-gray-900">
+                    {t('detail_hub.employees.auto_close_enabled')}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {t('detail_hub.employees.auto_close_enabled_help')}
+                  </p>
+                </div>
+                <Switch
+                  checked={schedule.auto_close_enabled ?? false}
+                  onCheckedChange={(checked) => onUpdate({
+                    schedule_template: { ...schedule, auto_close_enabled: checked }
+                  })}
+                />
               </div>
-              <Switch
-                checked={schedule.auto_close_enabled ?? false}
-                onCheckedChange={(checked) => onUpdate({
-                  schedule_template: { ...schedule, auto_close_enabled: checked }
-                })}
-              />
-            </div>
 
             {schedule.auto_close_enabled && (
-              <div className="space-y-3 pt-2">
+              <div className="space-y-3 pt-2 border-t border-indigo-100">
+                <h4 className="text-xs font-medium text-gray-700">{t('detail_hub.employees.auto_close_timing')}</h4>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <Label className="text-xs">{t('detail_hub.wizard.reminder')}</Label>
@@ -1313,6 +1446,7 @@ function AssignmentCard({
                       onChange={(e) => onUpdate({
                         schedule_template: { ...schedule, auto_close_first_reminder: parseInt(e.target.value) || 30 }
                       })}
+                      className="bg-white"
                     />
                     <p className="text-[10px] text-gray-500">{t('detail_hub.wizard.reminder_help')}</p>
                   </div>
@@ -1326,6 +1460,7 @@ function AssignmentCard({
                       onChange={(e) => onUpdate({
                         schedule_template: { ...schedule, auto_close_window_minutes: parseInt(e.target.value) || 60 }
                       })}
+                      className="bg-white"
                     />
                     <p className="text-[10px] text-gray-500">{t('detail_hub.wizard.auto_close_help')}</p>
                   </div>
@@ -1353,7 +1488,24 @@ function AssignmentCard({
                 />
               </div>
             )}
-          </div>
+            </CardContent>
+          </Card>
+
+          {/* Notes */}
+          <Card className="border-gray-200 bg-gray-50/50">
+            <CardHeader className="py-3">
+              <CardTitle className="text-sm">{t('detail_hub.wizard.notes_title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Textarea
+                placeholder={t('detail_hub.wizard.notes_placeholder')}
+                value={assignment.notes || ''}
+                onChange={(e) => onUpdate({ notes: e.target.value })}
+                rows={2}
+                className="bg-white resize-none"
+              />
+            </CardContent>
+          </Card>
         </CardContent>
       </Card>
     );
