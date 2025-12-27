@@ -507,11 +507,13 @@ export function EmployeeWizardModal({
         }
       });
 
-      // Also invalidate assignments queries
+      // Invalidate all assignment-related queries (employee-assignments AND employee-assignments-map)
       queryClient.invalidateQueries({
         predicate: (query) => {
           const key = query.queryKey;
-          return Array.isArray(key) && key[0] === 'employee-assignments';
+          if (!Array.isArray(key)) return false;
+          const keyStr = String(key[0]);
+          return keyStr.includes('employee-assignments') || keyStr.includes('assignment');
         }
       });
 
