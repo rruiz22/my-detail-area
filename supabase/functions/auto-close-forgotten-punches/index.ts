@@ -7,6 +7,40 @@ const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 // =====================================================
+// HELPER: Call enhanced-sms function with proper auth
+// =====================================================
+
+async function sendSmsViaFunction(to: string, message: string, dealerId: number): Promise<{ success: boolean; messageSid?: string; error?: string }> {
+  try {
+    const response = await fetch(`${supabaseUrl}/functions/v1/enhanced-sms`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${supabaseServiceKey}`,
+      },
+      body: JSON.stringify({ to, message, dealerId }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`SMS function error (${response.status}): ${errorText}`);
+      return { success: false, error: `HTTP ${response.status}: ${errorText}` };
+    }
+
+    const data = await response.json();
+    if (data.messageSid) {
+      return { success: true, messageSid: data.messageSid };
+    } else {
+      return { success: false, error: data.error || 'No messageSid returned' };
+    }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('SMS function call failed:', errorMessage);
+    return { success: false, error: errorMessage };
+  }
+}
+
+// =====================================================
 // TYPES
 // =====================================================
 
@@ -178,20 +212,14 @@ async function sendReminder(punch: OverduePunch) {
         ? punch.employee_phone
         : `+1${punch.employee_phone.replace(/\D/g, '')}`;
 
-      const smsResponse = await supabase.functions.invoke('enhanced-sms', {
-        body: {
-          to: formattedPhone,
-          message,
-          dealerId: punch.dealership_id
-        }
-      });
+      const smsResult = await sendSmsViaFunction(formattedPhone, message, punch.dealership_id);
 
-      if (smsResponse.data?.messageSid) {
+      if (smsResult.success && smsResult.messageSid) {
         smsSent = true;
-        smsSid = smsResponse.data.messageSid;
+        smsSid = smsResult.messageSid;
         console.log(`SMS sent successfully: ${smsSid}`);
-      } else if (smsResponse.error) {
-        console.error('SMS error:', smsResponse.error);
+      } else {
+        console.error('SMS error:', smsResult.error);
       }
     } catch (error) {
       console.error('Error sending SMS:', error);
@@ -275,20 +303,14 @@ async function autoClosePunch(punch: OverduePunch) {
         ? punch.employee_phone
         : `+1${punch.employee_phone.replace(/\D/g, '')}`;
 
-      const smsResponse = await supabase.functions.invoke('enhanced-sms', {
-        body: {
-          to: formattedPhone,
-          message: confirmationMessage,
-          dealerId: punch.dealership_id
-        }
-      });
+      const smsResult = await sendSmsViaFunction(formattedPhone, confirmationMessage, punch.dealership_id);
 
-      if (smsResponse.data?.messageSid) {
+      if (smsResult.success && smsResult.messageSid) {
         confirmationSmsSent = true;
-        confirmationSmsSid = smsResponse.data.messageSid;
+        confirmationSmsSid = smsResult.messageSid;
         console.log(`Auto-close confirmation SMS sent: ${confirmationSmsSid}`);
-      } else if (smsResponse.error) {
-        console.error('Auto-close SMS error:', smsResponse.error);
+      } else {
+        console.error('Auto-close SMS error:', smsResult.error);
       }
     } catch (error) {
       console.error('Error sending auto-close confirmation SMS:', error);
